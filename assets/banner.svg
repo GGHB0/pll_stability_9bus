@@ -1,0 +1,51 @@
+<svg width="1600" height="520" viewBox="0 0 1600 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="130" y1="40" x2="1460" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B132B"/>
+      <stop offset="0.52" stop-color="#123C69"/>
+      <stop offset="1" stop-color="#1F7A8C"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="248" y1="124" x2="1017" y2="353" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F59E0B"/>
+      <stop offset="1" stop-color="#F97316"/>
+    </linearGradient>
+    <filter id="blur" x="0" y="0" width="1600" height="520" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="40"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="520" rx="32" fill="url(#bg)"/>
+  <g opacity="0.2" filter="url(#blur)">
+    <circle cx="1330" cy="110" r="110" fill="#38BDF8"/>
+    <circle cx="260" cy="430" r="120" fill="#F59E0B"/>
+  </g>
+
+  <path d="M0 382C144 330 242 299 357 291C497 281 599 329 707 323C820 317 902 234 1031 228C1172 221 1302 284 1600 382V520H0V382Z" fill="#08101F" fill-opacity="0.34"/>
+
+  <g opacity="0.9">
+    <path d="M123 305C173 305 173 208 223 208C273 208 273 339 323 339C373 339 373 168 423 168C473 168 473 267 523 267C573 267 573 237 623 237C673 237 673 328 723 328C773 328 773 128 823 128C873 128 873 289 923 289C973 289 973 249 1023 249C1073 249 1073 319 1123 319C1173 319 1173 186 1223 186C1273 186 1273 290 1323 290C1373 290 1373 256 1423 256" stroke="url(#accent)" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="223" cy="208" r="10" fill="#FFE7B0"/>
+    <circle cx="323" cy="339" r="10" fill="#FFE7B0"/>
+    <circle cx="423" cy="168" r="10" fill="#FFE7B0"/>
+    <circle cx="523" cy="267" r="10" fill="#FFE7B0"/>
+    <circle cx="623" cy="237" r="10" fill="#FFE7B0"/>
+    <circle cx="723" cy="328" r="10" fill="#FFE7B0"/>
+    <circle cx="823" cy="128" r="10" fill="#FFE7B0"/>
+    <circle cx="923" cy="289" r="10" fill="#FFE7B0"/>
+    <circle cx="1023" cy="249" r="10" fill="#FFE7B0"/>
+    <circle cx="1123" cy="319" r="10" fill="#FFE7B0"/>
+    <circle cx="1223" cy="186" r="10" fill="#FFE7B0"/>
+    <circle cx="1323" cy="290" r="10" fill="#FFE7B0"/>
+  </g>
+
+  <g opacity="0.16">
+    <rect x="1099" y="109" width="267" height="139" rx="20" fill="white"/>
+    <path d="M1141 213H1319" stroke="#D8E6F7" stroke-width="8" stroke-linecap="round"/>
+    <path d="M1141 179C1163 147 1184 147 1206 179C1228 211 1249 211 1271 179C1293 147 1314 147 1336 179" stroke="#F59E0B" stroke-width="8" stroke-linecap="round"/>
+  </g>
+
+  <text x="124" y="162" fill="white" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="5.5">POWER SYSTEM ANALYSIS</text>
+  <text x="121" y="240" fill="white" font-family="Segoe UI, Arial, sans-serif" font-size="74" font-weight="800">PLL Stability</text>
+  <text x="121" y="316" fill="#D7E9FF" font-family="Segoe UI, Arial, sans-serif" font-size="74" font-weight="300">in a 9-Bus Grid</text>
+  <text x="125" y="384" fill="#C9D7EA" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="500">Notebook-based analysis and Simulink validation</text>
+</svg>

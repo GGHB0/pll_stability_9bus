@@ -1,0 +1,35 @@
+# Python / Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# MATLAB / Simulink
+*.asv
+*.autosave
+*.slxc
+*.mex*
+*.mexa64
+*.mexw64
+*.mexmaci64
+slprj/
+sfprj/
+simulink_cache.xml
+Simulink Code Inspector/
+
+# MATLAB generated code and reports
+codegen/
+*.rtw
+*.tmw
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/

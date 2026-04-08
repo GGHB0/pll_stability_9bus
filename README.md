@@ -23,7 +23,7 @@ Este repositorio reune os materiais de estudo e os artefatos de simulacao usados
 
 | Arquivo | Descricao |
 | --- | --- |
-| `TCC.ipynb` | Notebook principal com o fluxo analitico e computacional do estudo. |
+| `pll_stability_9bus_analysis.ipynb` | Notebook principal com o fluxo analitico e computacional do estudo. |
 | `GridTiedInverterOptimalI2.slx` | Modelo em Simulink usado nas simulacoes do sistema. |
 
 ## Destaques
@@ -34,7 +34,7 @@ Este repositorio reune os materiais de estudo e os artefatos de simulacao usados
 
 ## Fluxo Sugerido
 
-1. Abrir `TCC.ipynb` para revisar a analise numerica e teorica.
+1. Abrir `pll_stability_9bus_analysis.ipynb` para revisar a analise numerica e teorica.
 2. Abrir `GridTiedInverterOptimalI2.slx` no MATLAB/Simulink para executar o modelo.
 3. Comparar os resultados analiticos com as respostas simuladas.
 
@@ -45,7 +45,7 @@ Este repositorio reune os materiais de estudo e os artefatos de simulacao usados
 |-- assets/
 |   `-- banner.svg
 |-- GridTiedInverterOptimalI2.slx
-|-- TCC.ipynb
+|-- pll_stability_9bus_analysis.ipynb
 |-- .gitignore
 `-- README.md
 ```

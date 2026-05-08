@@ -35,6 +35,6 @@ qsi = 0.707;
 wres = 9068.99682117109;
 Rth = 0.010038656529756919;
 Lth = 0.0011601815110534163;
-Ts   = 5e-6;    % Fundamental sample time       [s]
+Ts   = 5e-5;    % Fundamental sample time       [s]
 fsw  = 5000;   % Inverter switching frequency [Hz]
 Tsc  = 2e-4;    % Control sample time           [s]

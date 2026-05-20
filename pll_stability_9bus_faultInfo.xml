@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MF0 version="1.1" packageUris="http://schema.mathworks.com/mf0/faultinfo_datamodel/R2021a">
+  <faultinfo.FaultContainerSet type="faultinfo.FaultContainerSet" uuid="a34b4a4d-a0c4-46c6-bdcb-0457609df982">
+    <conditionals type="faultinfo.conditional.Conditional" uuid="768ca971-f116-47d7-9c5a-972b467d4991">
+      <checksum>bad9d2f8-5a7a-4caa-90d8-932001e736d1</checksum>
+      <condition>x == true</condition>
+      <mustBeLogged>false</mustBeLogged>
+      <name>SampleConditional</name>
+      <resyncRefBlkID></resyncRefBlkID>
+      <resyncUUID>00000000-0000-0000-0000-000000000000</resyncUUID>
+      <symbols type="faultinfo.conditional.ExpressionSymbol" uuid="4b492258-536c-46ff-8ebf-799ca3bc69d3">
+        <expression>true</expression>
+        <name>x</name>
+      </symbols>
+    </conditionals>
+    <faultContainers type="faultinfo.FaultContainer" uuid="38f7a4d6-db0f-40fa-9af6-6a41f754fbbb">
+      <activeFault type="faultinfo.SSFault" uuid="aec6d66c-d8f7-466f-afe3-da5e27e4ccba"/>
+      <faultedEntityID>SSSubelement|pll_stability_9bus:4506|Section interface</faultedEntityID>
+      <faultedEntityName>pll_stability_9bus/B8 to B9 100 km1/Section interface</faultedEntityName>
+      <faults type="faultinfo.SSFault" uuid="aec6d66c-d8f7-466f-afe3-da5e27e4ccba">
+        <checksum>f718a09d-7b62-47e3-96c3-71eaca84ecf2</checksum>
+        <faultDescription></faultDescription>
+        <faultName>B8ToB9100Km1_fault</faultName>
+        <resyncUUID>00000000-0000-0000-0000-000000000000</resyncUUID>
+        <triggerOn type="faultinfo.ManualTrigger" uuid="faaa02a2-073a-4014-8b8b-1177414e8891">
+          <active>false</active>
+          <isPersistent>false</isPersistent>
+        </triggerOn>
+      </faults>
+      <isEnabled>true</isEnabled>
+    </faultContainers>
+    <isEnabled>true</isEnabled>
+    <lastUpdatedAt>2026-05-20T00:24:31</lastUpdatedAt>
+    <modelName>pll_stability_9bus</modelName>
+    <modelUUID>f841ce15-da28-46d7-a0b7-7dae3c27396b</modelUUID>
+  </faultinfo.FaultContainerSet>
+  <faultinfo.FailureModeContainer type="faultinfo.FailureModeContainer" uuid="e7e2472c-c3de-438c-b41d-e91b839c52c2">
+    <failureModes type="faultinfo.FailureMode" uuid="02fdb4df-4c67-4a66-baa8-4130705d1e92">
+      <ID>1</ID>
+      <associatedFaults type="faultinfo.SSFault" uuid="aec6d66c-d8f7-466f-afe3-da5e27e4ccba"/>
+      <faultSubsystemName>B8ToB9100Km1_fault</faultSubsystemName>
+      <resyncUUID>00000000-0000-0000-0000-000000000000</resyncUUID>
+    </failureModes>
+    <faultModelName>pll_stability_9bus_FaultModel</faultModelName>
+    <faultModelUUID>bd8b43ff-fc1c-460d-b570-66954ab2ea5b</faultModelUUID>
+  </faultinfo.FailureModeContainer>
+</MF0>

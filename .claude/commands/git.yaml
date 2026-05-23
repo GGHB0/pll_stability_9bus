@@ -1,0 +1,26 @@
+commands:
+  commit:
+    description: Commit padrão do projeto
+    steps:
+      - git status
+      - git diff --staged
+      - git log --oneline -5
+      - git commit -m "<mensagem>"
+    rules:
+      - Nunca usar --no-verify
+      - Mensagem em inglês, imperativo, sem ponto final
+      - Co-authored-by quando gerado pelo Claude
+
+  push:
+    description: Push para remoto
+    requires_confirmation: true
+    steps:
+      - git push origin <branch>
+    rules:
+      - Nunca force-push em main sem confirmação explícita
+
+  branch:
+    description: Criar branch de feature
+    steps:
+      - git checkout -b <nome>
+    convention: "feat/<slug> | fix/<slug> | chore/<slug>"

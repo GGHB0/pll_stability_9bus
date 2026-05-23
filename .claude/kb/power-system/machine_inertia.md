@@ -97,3 +97,5 @@ O teste com H reduzido reproduz exatamente o contexto do apagão:
 Ver [[pll-contingencies]] — Cenário 4 (Alto RoCoF) para o trade-off Kp/Ki.
 Ver [[lvrt]] para requisitos durante o afundamento que precede o lock-loss.
 Ver [[ieee9bus]] para os parâmetros da rede onde o teste foi executado.
+Ver [[ons-2-11]] — paradoxo detecção vs. injeção: ONS_2_11 detecta a falta corretamente
+mas a injeção falha porque depende de θ̂ que está corrompido quando H é baixo.

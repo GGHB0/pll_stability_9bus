@@ -56,3 +56,39 @@ The `montar_Ybarra(n_barras, entrebarras, impedancias_barra, retornar)` function
 ## Performance Metrics
 
 Results are evaluated by: IAE (Integral Absolute Error of phase angle), ISE (Integral Square Error), phase error settling time, active/reactive power oscillations, and LVRT compliance per IEEE 1547-2018.
+
+## Knowledge Base (.claude/)
+
+The `.claude/` directory contains the project's persistent knowledge system:
+
+```
+.claude/
+├── kb/                        ← knowledge bases (Markdown, max 200 lines each)
+│   ├── project-scope.md       ← full TCC scope, chapter status, contingency table
+│   ├── pll/                   ← SRF-PLL theory, Kp/Ki methodology, contingency scenarios
+│   ├── inverter/              ← LCL filter, Simulink model architecture
+│   ├── power-system/          ← IEEE 9-bus topology, Thevenin methodology
+│   └── standards/             ← LVRT, IEEE 1547-2018
+├── commands/
+│   └── git.yaml               ← project git workflow conventions
+├── rules/
+│   └── limits.md              ← file size limits and kb folder map
+└── skills/
+    └── slx-explorer/          ← skill for inspecting .slx files via Python/XML
+```
+
+### Inspecting the Simulink Model Without MATLAB
+
+`.slx` files are ZIP archives containing XML. Use Python to read them directly:
+
+```python
+import zipfile, xml.etree.ElementTree as ET
+with zipfile.ZipFile('pll_stability_9bus.slx', 'r') as z:
+    xml = z.read('simulink/blockdiagram.xml').decode('utf-8', errors='replace')
+```
+
+Key system SIDs: root network (`system_root`), UFV Model/VSI (`3896`), Optimal Controller (`3963`), PWM Control/PI+Notch (`3974`), PWM comparator (`3997`). See `kb/inverter/simulink_model.md` for full map.
+
+### Kp/Ki Gain Note
+
+Gains are divided by 4 **twice**: once in the notebook (pu conversion, Z_base = 4 Ω) and once inside the Simulink Gain blocks. The double division compensates for a ~6× mismatch between V_base_LN and Vcc/2 in the SPWM normalization, combined with a ×2 factor from the notebook formula using `(L1+L2+Lest)` instead of `Lest`.

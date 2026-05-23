@@ -1,0 +1,90 @@
+---
+name: project-scope
+description: Escopo completo do TCC — título, autores, estrutura de capítulos, status e conexões entre os artefatos do projeto
+source: TCCs Victor e Bruno_V8.docx (comentado)
+---
+
+# Escopo do TCC — Visão Geral
+
+**Título:** Comportamento do SRF-PLL de Inversores Frente a Contingências em Sistemas Elétricos
+**Autores:** Bruno Henrique De Oliveira · Victor Hugo De Avelar Rezende
+**Orientador:** Prof. Dr. Oscar Cuaresma Zevallos
+**Coorientador:** Prof. Dr. André Guilherme Peixoto Alves (AGP) ← autor da TeseAGP.pdf
+**Instituição:** UERJ — Faculdade de Engenharia, 2025
+
+## Motivação Central
+
+Perturbação de 15/08/2023 no SIN brasileiro: 22.547 MW desconectados = 31% da carga nacional.
+ONS concluiu que inversores eólicos/fotovoltaicos tiveram desempenho "aquém dos modelos matemáticos".
+→ Lacuna entre comportamento simulado e real dos algoritmos de sincronismo.
+
+## Estrutura dos Capítulos
+
+| Cap. | Título | Status |
+|------|--------|--------|
+| 1 | Introdução + Motivação + Objetivos | **Redigido** |
+| 2 | Fundamentação Teórica | **Redigido** |
+| 3 | Metodologia de Projeto e Simulação | **Redigido** |
+| 4 | Análise e Discussão de Resultados | **Vazio** (só placeholders) |
+| — | Conclusão | Placeholder |
+
+**O capítulo 4 é a prioridade pendente do trabalho.**
+
+## Objetivos Específicos (Cap. 1)
+
+1. Modelagem matemática do sistema inversor-rede (foco na dinâmica do PLL em dq)
+2. Identificar condições que comprometem rastreamento de fase/frequência (via simulação EMT)
+3. Avaliar impactos: oscilações de potência, sobrecorrentes
+4. Analisar capacidade de suporte reativo (LVRT)
+5. Identificar fatores críticos: ganhos Kp/Ki do PI e impedância da rede
+
+## Plataforma Híbrida (Cap. 3)
+
+| Ferramenta | Papel |
+|---|---|
+| Python + NumPy/Pandas | Dimensionamento analítico LCL; Ybarra→Zbarra; Thevenin |
+| PSIM | Validação do estágio de potência; PWM; transitórios rápidos |
+| MATLAB/Simulink | Rede IEEE 9 barras completa; propagação de distúrbios |
+
+## Sistema Elétrico (Cap. 3.2.1)
+
+- **Base:** IEEE 9 barras (benchmark Anderson-Fouad)
+- **Adaptação:** G2 (Barra 2) substituído pelo VSI (IBR)
+- **Sistema híbrido:** G1 e G3 síncronos + VSI na Barra 2
+- **Thevenin para PSIM:** Z_th = Z22 da Zbarra (diagonal da inversa de Ybarra)
+- Ver [[pll-gains-methodology]] para os valores numéricos
+
+## Contingências Simuladas (4 cenários)
+
+| Cenário | Efeito no PLL |
+|---|---|
+| Afundamento simétrico | Redução de amplitude; sem sequência negativa |
+| Afundamento assimétrico | Introduz sequência negativa → oscilação de 2ª harmônica no dq |
+| Salto de fase (phase-angle jump) | Pode fazer o PLL perder o lock completamente |
+| Alto RoCoF | Rastreamento de frequência limitado pela largura de banda do PI |
+
+## Métricas de Avaliação
+
+- **IAE** — Integral do Erro Absoluto do ângulo de fase
+- **ISE** — Integral do Erro Quadrático
+- **ts** — Tempo de acomodação do erro de fase
+- Oscilações de potência ativa P e reativa Q
+- Conformidade com LVRT (IEEE 1547-2018)
+
+## Conexões entre Artefatos
+
+```
+TeseAGP.pdf (co-orientador AGP)
+  └─ Metodologia Kp/Ki → pll_stability_9bus_analysis.ipynb
+       └─ Parâmetros → pll_stability_9bus.slx (MATLAB/Simulink)
+
+Karimi-Ghartemani cap.6 → teoria SRF-PLL
+  └─ Modelo linearizado → projeto PI do PLL (Cap. 3.2.2)
+```
+
+## Ponto Crítico: Sequência Negativa
+
+Afundamentos assimétricos introduzem componente de sequência negativa.
+No referencial síncrono (dq), essa componente aparece como oscilação de **2ª harmônica** (120 Hz em 60 Hz).
+O SRF-PLL padrão não filtra essa oscilação → erro de rastreamento oscilatório → degradação de P e Q.
+Essa é a limitação central identificada no trabalho.

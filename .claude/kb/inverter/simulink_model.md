@@ -77,7 +77,10 @@ Entradas: id_ref, Vabc_grid, Iabc (pu)
 │
 ├── Park Transform1 / Park Transform2 (abc → dq)
 │
-├── MATLAB Function (SID=4439) — função customizada
+├── MATLAB Function (SID=4439) — função ONS_2_11 (chart_14.xml)
+│     Implementa suporte reativo per ONS Subm. 2.10 §5.8
+│     Saídas: id_ref, iq_ref, fault_flag
+│     Ver [[ons-2-11]] para código completo e lógica das 3 zonas
 │
 ├── PWM Control ─────────────────────────────────────
 │     Entradas: Idref, Iqref, Id, Iq

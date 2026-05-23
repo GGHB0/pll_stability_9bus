@@ -36,6 +36,20 @@ source: TCCs V8 cap.2.4, cap.4 (estrutura); pll_stability_9bus.slx
   mas a resposta transitória depende dos ganhos Kp/Ki → trade-off velocidade vs. ruído
 - **Contexto:** Problema sistêmico ligado à redução de inércia por IBRs (motivação do evento 15/08/2023)
 
+#### Observação Experimental — Teste com H Reduzido (Simulink, 2026-05)
+- **Setup:** H das máquinas G1/G3 reduzido artificialmente + curto-circuito trifásico aplicado e eliminado
+- **Resultado:** após eliminação do curto, `Pinv → 0` — inversor para de injetar mesmo com a rede restaurada
+- **Mecanismo passo a passo:**
+  1. H baixo → rotores de G1/G3 oscilam com amplitude muito maior (swing eq.: `M = 2H/ωs`)
+  2. Após clearance → RoCoF excede a largura de banda da SRF-PLL
+  3. Erro de fase PLL > 60° → estimativa θ̂ diverge de θ_real de forma crescente
+  4. Referencial dq corrompido → Id e Iq calculados com ângulo errado
+  5. Controlador injeta corrente em quadratura com a rede → P_ativa efetiva → 0
+- **Ligação com critério das áreas iguais:** com H baixo, o rotor ultrapassa o ângulo crítico
+  δ_cr durante o curto → área acelerante > desacelerante → máquinas perdem sincronismo
+  → tensão na Barra 2 torna-se caótica do ponto de vista da SRF-PLL
+- Ver [[machine-inertia]] para as equações e análise detalhada
+
 ## Métricas de Avaliação de Desempenho
 
 ```

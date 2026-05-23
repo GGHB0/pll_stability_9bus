@@ -16,6 +16,7 @@ description: Índice de navegação do sistema .claude/ — o que existe, onde e
 | `kb/inverter/lcl_filter.md` | Dimensionamento L1/L2/C1, critérios de ripple e ressonância, filtro Notch |
 | `kb/inverter/simulink_model.md` | Arquitetura completa do .slx: SIDs, InitFcn, hierarquia de subsistemas |
 | `kb/power-system/ieee9bus.md` | Topologia IEEE 9 barras, impedâncias, metodologia Ybarra→Zbarra→Z22 |
+| `kb/power-system/machine_inertia.md` | Equação de oscilação, critério das áreas iguais, cadeia H↓→RoCoF→PLL lock-loss→P=0 |
 | `kb/standards/lvrt.md` | LVRT IEEE 1547-2018, suporte reativo, ligação com evento 15/08/2023 |
 
 ## Comandos — `commands/`

@@ -1,0 +1,19 @@
+%% Trade-off central de Kp/Ki do SRF-PLL (Secao 4.3 - Analise de Sensibilidade)
+%% Fonte: .claude/kb/pll/pll_contingencies.md
+flowchart TB
+    Centro(("Ganhos Kp / Ki<br/>do PI"))
+    Alto["Kp, Ki <b>altos</b><br/>resposta rapida"]:::a
+    Baixo["Kp, Ki <b>baixos</b><br/>imunidade a ruido"]:::b
+
+    Centro --> Alto
+    Centro --> Baixo
+
+    Alto -- "bom em" --> R1["3. Salto de fase<br/>4. RoCoF alto"]:::good
+    Alto -- "ruim em" --> R2["2. Sag assimetrico<br/>(amplifica 120 Hz)"]:::bad
+    Baixo -- "bom em" --> R3["2. Sag assimetrico<br/>(filtra seq-)"]:::good
+    Baixo -- "ruim em" --> R4["3. Salto de fase<br/>4. RoCoF alto<br/>(perde lock)"]:::bad
+
+    classDef a fill:#d3f9d8,stroke:#2f9e44,color:#000
+    classDef b fill:#dbe4ff,stroke:#364fc7,color:#000
+    classDef good fill:#e6fcf5,stroke:#087f5b,color:#000
+    classDef bad  fill:#ffe3e3,stroke:#c92a2a,color:#000

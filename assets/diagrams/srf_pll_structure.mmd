@@ -1,0 +1,31 @@
+%% SRF-PLL — estrutura do laco com ganhos do projeto
+%% Fonte: .claude/kb/pll/srf_pll_theory.md + pll_gains_methodology.md
+flowchart LR
+    subgraph REDE["Rede - Barra 2 (IEEE 9)"]
+        Vabc["u_abc<br/>20 kV / 60 Hz"]
+    end
+
+    subgraph PLL["SRF-PLL (dqo-PLL)"]
+        direction LR
+        Park["abc -> dqo<br/>Transformada<br/>de Park"]
+        Ud["u_d ~ U"]
+        Uq(["u_q -> 0"])
+        PI["PI<br/>Kp = 8 . fg . (L1+L2+Lest)<br/>Ki = 32 . fg^2 . (L1+L2+Lest)"]
+        Som((+))
+        Wn["w_n = 2.pi.60"]
+        Integ["1/s"]
+        Phi["phi_estimado"]
+    end
+
+    Vabc --> Park
+    Park --> Ud
+    Park --> Uq
+    Uq --> PI --> Som
+    Wn --> Som
+    Som -- "w_estimado" --> Integ --> Phi
+    Phi -. realimentacao .-> Park
+
+    classDef fb fill:#fff3bf,stroke:#c79c00,color:#000
+    classDef io fill:#e7f5ff,stroke:#1971c2,color:#000
+    class Phi fb
+    class Vabc io

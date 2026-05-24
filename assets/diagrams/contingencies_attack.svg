@@ -131,7 +131,7 @@
       <line x1="0" y1="0" x2="120" y2="0" stroke="#cbd5e1" stroke-width="0.8"/>
       <path d="M 0 0 q 8 -18 16 0 q 8 18 16 0 q 8 -8 16 0 q 8 8 16 0 q 8 -4 16 0 q 8 4 16 0 q 8 -2 16 0"
             fill="none" stroke="#c92a2a" stroke-width="1.5"/>
-      <text x="60" y="22" text-anchor="middle" font-size="10" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">q</tspan>: amp. cai · ganho efetivo ↓</text>
+      <text x="60" y="22" text-anchor="middle" font-size="10" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">q</tspan>: amplitude cai</text>
     </g>
 
     <text x="290" y="60" font-size="10" fill="#0B132B">Impacto:</text>
@@ -225,6 +225,6 @@
 
     <text x="290" y="60" font-size="10" fill="#0B132B">Impacto:</text>
     <text x="290" y="75" font-size="10" fill="#0B132B">se erro fase &gt; 60°</text>
-    <text x="290" y="89" font-size="10" fill="#0B132B">→ I<tspan baseline-shift="sub" font-size="75%">d</tspan>, I<tspan baseline-shift="sub" font-size="75%">q</tspan> corrompidos · P→0</text>
+    <text x="290" y="89" font-size="10" fill="#0B132B">→ I<tspan baseline-shift="sub" font-size="75%">d</tspan>, I<tspan baseline-shift="sub" font-size="75%">q</tspan> corrompidos</text>
   </g>
 </svg>

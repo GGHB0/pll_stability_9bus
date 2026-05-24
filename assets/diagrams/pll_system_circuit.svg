@@ -73,7 +73,7 @@
   <line x1="525" y1="152" x2="595" y2="152" stroke="#0B132B" stroke-width="2"/>
 
   <!-- ============= Grid Thevenin: R_th + L_th ============= -->
-  <text x="640" y="124" text-anchor="middle" font-size="12" font-weight="600" fill="#0B132B">Z<tspan baseline-shift="sub" font-size="75%">th</tspan> (Barra 2 · IEEE 9)</text>
+  <text x="640" y="112" text-anchor="middle" font-size="12" font-weight="600" fill="#0B132B">Z<tspan baseline-shift="sub" font-size="75%">th</tspan> (Barra 2 · IEEE 9)</text>
   <rect x="595" y="142" width="30" height="20" fill="white" stroke="#0B132B" stroke-width="2"/>
   <text x="610" y="137" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">R<tspan baseline-shift="sub" font-size="75%">th</tspan></text>
   <line x1="625" y1="152" x2="640" y2="152" stroke="#0B132B" stroke-width="2"/>
@@ -95,8 +95,8 @@
   <text x="405" y="74" text-anchor="middle" font-size="11" font-weight="700" fill="#1971c2">V</text>
   <text x="423" y="60" font-size="11" font-style="italic" fill="#1971c2">u<tspan baseline-shift="sub" font-size="75%">abc</tspan>(PCC)</text>
 
-  <!-- Path from voltmeter to PLL block -->
-  <path d="M 416 70 L 510 70 L 510 333" fill="none" stroke="#1971c2" stroke-width="1.5" marker-end="url(#arrB)"/>
+  <!-- Path from voltmeter to PLL block (routed right of L2 to avoid the inductor) -->
+  <path d="M 416 70 L 560 70 L 560 333" fill="none" stroke="#1971c2" stroke-width="1.5" marker-end="url(#arrB)"/>
 
   <!-- ============= PLL block (amber, banner accent) ============= -->
   <rect x="170" y="338" width="580" height="50" fill="#fff7ed" stroke="#F97316" stroke-width="2" rx="6"/>

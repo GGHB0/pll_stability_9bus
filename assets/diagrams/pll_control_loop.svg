@@ -19,7 +19,7 @@
     <path d="M 0 -22 q 5 -8 10 0 q 5 8 10 0 q 5 -8 10 0 q 5 8 10 0" fill="none" stroke="#c92a2a" stroke-width="1.5"/>
     <path d="M 0 0   q 5 -8 10 0 q 5 8 10 0 q 5 -8 10 0 q 5 8 10 0" fill="none" stroke="#2f9e44" stroke-width="1.5"/>
     <path d="M 0 22  q 5 -8 10 0 q 5 8 10 0 q 5 -8 10 0 q 5 8 10 0" fill="none" stroke="#1971c2" stroke-width="1.5"/>
-    <text x="20" y="50" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">u_abc(t)</text>
+    <text x="20" y="50" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">abc</tspan>(t)</text>
   </g>
   <line x1="85" y1="150" x2="135" y2="150" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
 
@@ -31,16 +31,16 @@
 
   <!-- Output u_d (side, monitor) -->
   <line x1="250" y1="130" x2="295" y2="130" stroke="#1f2937" stroke-width="1.5"/>
-  <text x="271" y="123" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">u_d ≈ U</text>
+  <text x="271" y="123" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">d</tspan> ≈ U</text>
   <text x="305" y="133" font-size="10" fill="#6b7280">(amplitude)</text>
 
   <!-- Output u_q (main signal) -->
   <line x1="250" y1="170" x2="310" y2="170" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
-  <text x="278" y="163" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">u_q</text>
+  <text x="278" y="163" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">q</tspan></text>
 
   <!-- ============= PI controller (transfer function) ============= -->
   <rect x="310" y="150" width="120" height="45" fill="#e6fcf5" stroke="#0ca678" stroke-width="2" rx="5"/>
-  <text x="370" y="176" text-anchor="middle" font-size="14" font-weight="700" fill="#0B132B">K_p + K_i / s</text>
+  <text x="370" y="176" text-anchor="middle" font-size="14" font-weight="700" fill="#0B132B">K<tspan baseline-shift="sub" font-size="75%">p</tspan> + K<tspan baseline-shift="sub" font-size="75%">i</tspan> / s</text>
   <text x="370" y="210" text-anchor="middle" font-size="10" fill="#6b7280">controlador PI</text>
 
   <line x1="430" y1="172" x2="498" y2="172" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
@@ -54,7 +54,7 @@
 
   <!-- ============= omega_n feed-forward ============= -->
   <rect x="460" y="70" width="100" height="28" fill="white" stroke="#1f2937" stroke-width="1.5" rx="4"/>
-  <text x="510" y="89" text-anchor="middle" font-size="12" font-style="italic" fill="#0B132B">ω_n = 2π·60</text>
+  <text x="510" y="89" text-anchor="middle" font-size="12" font-style="italic" fill="#0B132B">ω<tspan baseline-shift="sub" font-size="75%">n</tspan> = 2π·60</text>
   <line x1="510" y1="98" x2="510" y2="159" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
   <text x="568" y="115" font-size="11" font-style="italic" fill="#6b7280">feed-forward</text>
 
@@ -81,6 +81,6 @@
   <!-- Bottom note: gains + characteristic equation -->
   <line x1="40" y1="305" x2="880" y2="305" stroke="#e5e7eb" stroke-width="1"/>
   <text x="460" y="324" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">
-    K_p = 8·f_g·(L₁+L₂+L_est)  ·  K_i = 32·f_g²·(L₁+L₂+L_est)  —  eq. característica:  s² + K_p·U·s + K_i·U = 0
+    K<tspan baseline-shift="sub" font-size="75%">p</tspan> = 8·f<tspan baseline-shift="sub" font-size="75%">g</tspan>·(L₁+L₂+L<tspan baseline-shift="sub" font-size="75%">est</tspan>)  ·  K<tspan baseline-shift="sub" font-size="75%">i</tspan> = 32·f<tspan baseline-shift="sub" font-size="75%">g</tspan>²·(L₁+L₂+L<tspan baseline-shift="sub" font-size="75%">est</tspan>)  —  eq. característica:  s² + K<tspan baseline-shift="sub" font-size="75%">p</tspan>·U·s + K<tspan baseline-shift="sub" font-size="75%">i</tspan>·U = 0
   </text>
 </svg>

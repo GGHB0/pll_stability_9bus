@@ -21,7 +21,7 @@
     <line x1="35" y1="158" x2="65" y2="158" stroke-width="3"/>
     <line x1="42" y1="166" x2="58" y2="166" stroke-width="2"/>
   </g>
-  <text x="50" y="125" text-anchor="middle" font-size="12" font-style="italic" fill="#0B132B">V_dc</text>
+  <text x="50" y="125" text-anchor="middle" font-size="12" font-style="italic" fill="#0B132B">V<tspan baseline-shift="sub" font-size="75%">dc</tspan></text>
 
   <line x1="50" y1="125" x2="120" y2="125" stroke="#0B132B" stroke-width="2"/>
   <line x1="50" y1="125" x2="50" y2="142" stroke="#0B132B" stroke-width="2"/>
@@ -54,11 +54,11 @@
   <line x1="405" y1="152" x2="405" y2="205" stroke="#0B132B" stroke-width="2"/>
   <line x1="389" y1="205" x2="421" y2="205" stroke="#0B132B" stroke-width="2.5"/>
   <line x1="389" y1="213" x2="421" y2="213" stroke="#0B132B" stroke-width="2.5"/>
-  <text x="432" y="213" font-size="12" font-style="italic" fill="#0B132B">C_f</text>
+  <text x="432" y="213" font-size="12" font-style="italic" fill="#0B132B">C<tspan baseline-shift="sub" font-size="75%">f</tspan></text>
 
   <line x1="405" y1="213" x2="405" y2="238" stroke="#0B132B" stroke-width="2"/>
   <rect x="394" y="238" width="22" height="32" fill="white" stroke="#0B132B" stroke-width="2"/>
-  <text x="432" y="259" font-size="12" font-style="italic" fill="#0B132B">R_d</text>
+  <text x="432" y="259" font-size="12" font-style="italic" fill="#0B132B">R<tspan baseline-shift="sub" font-size="75%">d</tspan></text>
 
   <line x1="405" y1="270" x2="405" y2="293" stroke="#0B132B" stroke-width="2"/>
   <line x1="388" y1="293" x2="422" y2="293" stroke="#0B132B" stroke-width="2.5"/>
@@ -73,13 +73,13 @@
   <line x1="525" y1="152" x2="595" y2="152" stroke="#0B132B" stroke-width="2"/>
 
   <!-- ============= Grid Thevenin: R_th + L_th ============= -->
-  <text x="640" y="124" text-anchor="middle" font-size="12" font-weight="600" fill="#0B132B">Z_th (Barra 2 · IEEE 9)</text>
+  <text x="640" y="124" text-anchor="middle" font-size="12" font-weight="600" fill="#0B132B">Z<tspan baseline-shift="sub" font-size="75%">th</tspan> (Barra 2 · IEEE 9)</text>
   <rect x="595" y="142" width="30" height="20" fill="white" stroke="#0B132B" stroke-width="2"/>
-  <text x="610" y="137" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">R_th</text>
+  <text x="610" y="137" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">R<tspan baseline-shift="sub" font-size="75%">th</tspan></text>
   <line x1="625" y1="152" x2="640" y2="152" stroke="#0B132B" stroke-width="2"/>
   <path d="M 640 152 q 7.5 -12 15 0 q 7.5 -12 15 0 q 7.5 -12 15 0"
         fill="none" stroke="#0B132B" stroke-width="2"/>
-  <text x="662" y="137" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">L_th</text>
+  <text x="662" y="137" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">L<tspan baseline-shift="sub" font-size="75%">th</tspan></text>
   <line x1="685" y1="152" x2="740" y2="152" stroke="#0B132B" stroke-width="2"/>
 
   <!-- ============= AC source (grid) ============= -->
@@ -93,7 +93,7 @@
   <line x1="405" y1="152" x2="405" y2="80" stroke="#1971c2" stroke-width="1.5" stroke-dasharray="4,3"/>
   <circle cx="405" cy="70" r="11" fill="white" stroke="#1971c2" stroke-width="1.5"/>
   <text x="405" y="74" text-anchor="middle" font-size="11" font-weight="700" fill="#1971c2">V</text>
-  <text x="423" y="60" font-size="11" font-style="italic" fill="#1971c2">u_abc(PCC)</text>
+  <text x="423" y="60" font-size="11" font-style="italic" fill="#1971c2">u<tspan baseline-shift="sub" font-size="75%">abc</tspan>(PCC)</text>
 
   <!-- Path from voltmeter to PLL block -->
   <path d="M 416 70 L 510 70 L 510 333" fill="none" stroke="#1971c2" stroke-width="1.5" marker-end="url(#arrB)"/>
@@ -101,5 +101,5 @@
   <!-- ============= PLL block (amber, banner accent) ============= -->
   <rect x="170" y="338" width="580" height="50" fill="#fff7ed" stroke="#F97316" stroke-width="2" rx="6"/>
   <text x="460" y="361" text-anchor="middle" font-size="13" font-weight="700" fill="#0B132B">SRF-PLL</text>
-  <text x="460" y="378" text-anchor="middle" font-size="11" fill="#0B132B">u_abc → Park → PI(K_p, K_i) ⊕ ω_n → 1/s → φ̂  (entregue ao controlador dq)</text>
+  <text x="460" y="378" text-anchor="middle" font-size="11" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">abc</tspan> → Park → PI(K<tspan baseline-shift="sub" font-size="75%">p</tspan>, K<tspan baseline-shift="sub" font-size="75%">i</tspan>) ⊕ ω<tspan baseline-shift="sub" font-size="75%">n</tspan> → 1/s → φ̂  (entregue ao controlador dq)</text>
 </svg>

@@ -40,7 +40,7 @@
   <line x1="280" y1="145" x2="280" y2="180" stroke="#0B132B" stroke-width="2"/>
   <line x1="268" y1="180" x2="292" y2="180" stroke="#0B132B" stroke-width="2.5"/>
   <line x1="268" y1="187" x2="292" y2="187" stroke="#0B132B" stroke-width="2.5"/>
-  <text x="300" y="187" font-size="11" font-style="italic" fill="#0B132B">C_f</text>
+  <text x="300" y="187" font-size="11" font-style="italic" fill="#0B132B">C<tspan baseline-shift="sub" font-size="75%">f</tspan></text>
   <line x1="280" y1="187" x2="280" y2="205" stroke="#0B132B" stroke-width="2"/>
   <line x1="268" y1="205" x2="292" y2="205" stroke="#0B132B" stroke-width="2.5"/>
   <line x1="272" y1="211" x2="288" y2="211" stroke="#0B132B" stroke-width="2"/>
@@ -54,7 +54,7 @@
 
   <!-- Z_th -->
   <rect x="430" y="135" width="55" height="20" fill="white" stroke="#0B132B" stroke-width="2"/>
-  <text x="457" y="149" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">Z_th</text>
+  <text x="457" y="149" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">Z<tspan baseline-shift="sub" font-size="75%">th</tspan></text>
   <line x1="485" y1="145" x2="535" y2="145" stroke="#0B132B" stroke-width="2"/>
 
   <!-- AC source -->
@@ -70,7 +70,7 @@
   <!-- PLL box -->
   <rect x="660" y="115" width="190" height="60" fill="#fff7ed" stroke="#F97316" stroke-width="2" rx="5"/>
   <text x="755" y="138" text-anchor="middle" font-size="12" font-weight="700" fill="#0B132B">SRF-PLL</text>
-  <text x="755" y="156" text-anchor="middle" font-size="10" fill="#0B132B">Park · PI(K_p,K_i) · 1/s</text>
+  <text x="755" y="156" text-anchor="middle" font-size="10" fill="#0B132B">Park · PI(K<tspan baseline-shift="sub" font-size="75%">p</tspan>,K<tspan baseline-shift="sub" font-size="75%">i</tspan>) · 1/s</text>
   <text x="755" y="170" text-anchor="middle" font-size="10" fill="#0B132B">→ φ̂ ao controlador dq</text>
   <line x1="289" y1="86" x2="660" y2="86" stroke="#1971c2" stroke-width="1.5"/>
   <path d="M 660 86 L 660 115" stroke="#1971c2" stroke-width="1.5" marker-end="url(#aD)"/>
@@ -131,7 +131,7 @@
       <line x1="0" y1="0" x2="120" y2="0" stroke="#cbd5e1" stroke-width="0.8"/>
       <path d="M 0 0 q 8 -18 16 0 q 8 18 16 0 q 8 -8 16 0 q 8 8 16 0 q 8 -4 16 0 q 8 4 16 0 q 8 -2 16 0"
             fill="none" stroke="#c92a2a" stroke-width="1.5"/>
-      <text x="60" y="22" text-anchor="middle" font-size="10" font-style="italic" fill="#0B132B">u_q: amp. cai · ganho efetivo ↓</text>
+      <text x="60" y="22" text-anchor="middle" font-size="10" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">q</tspan>: amp. cai · ganho efetivo ↓</text>
     </g>
 
     <text x="290" y="60" font-size="10" fill="#0B132B">Impacto:</text>
@@ -162,7 +162,7 @@
       <line x1="0" y1="0" x2="120" y2="0" stroke="#cbd5e1" stroke-width="0.8"/>
       <path d="M 0 -5 q 3 -6 6 0 q 3 6 6 0 q 3 -6 6 0 q 3 6 6 0 q 3 -6 6 0 q 3 6 6 0 q 3 -6 6 0 q 3 6 6 0 q 3 -6 6 0 q 3 6 6 0 q 3 -6 6 0 q 3 6 6 0 q 3 -6 6 0 q 3 6 6 0 q 3 -6 6 0 q 3 6 6 0 q 3 -6 6 0 q 3 6 6 0 q 3 -6 6 0 q 3 6 6 0"
             fill="none" stroke="#c92a2a" stroke-width="1.5"/>
-      <text x="60" y="22" text-anchor="middle" font-size="10" font-style="italic" fill="#0B132B">u_q: oscilação 120 Hz</text>
+      <text x="60" y="22" text-anchor="middle" font-size="10" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">q</tspan>: oscilação 120 Hz</text>
     </g>
 
     <text x="290" y="60" font-size="10" fill="#0B132B">Impacto:</text>
@@ -191,7 +191,7 @@
       <line x1="0" y1="0" x2="120" y2="0" stroke="#cbd5e1" stroke-width="0.8"/>
       <path d="M 0 0 L 40 0 L 40 -22 L 48 -10 L 56 -16 L 64 -8 L 72 -10 L 84 -4 L 96 -6 L 120 -3"
             fill="none" stroke="#e8590c" stroke-width="1.5"/>
-      <text x="60" y="22" text-anchor="middle" font-size="10" font-style="italic" fill="#0B132B">u_q: transitório abrupto</text>
+      <text x="60" y="22" text-anchor="middle" font-size="10" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">q</tspan>: transitório abrupto</text>
     </g>
 
     <text x="290" y="60" font-size="10" fill="#0B132B">Impacto:</text>
@@ -220,11 +220,11 @@
       <line x1="0" y1="0" x2="120" y2="0" stroke="#cbd5e1" stroke-width="0.8"/>
       <path d="M 0 0 q 10 -3 20 -4 q 10 -3 20 -6 q 10 -4 20 -8 q 10 -5 20 -10 q 10 -3 20 -12 q 10 -2 20 -14"
             fill="none" stroke="#e8590c" stroke-width="1.5"/>
-      <text x="60" y="22" text-anchor="middle" font-size="10" font-style="italic" fill="#0B132B">u_q: erro crescente</text>
+      <text x="60" y="22" text-anchor="middle" font-size="10" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">q</tspan>: erro crescente</text>
     </g>
 
     <text x="290" y="60" font-size="10" fill="#0B132B">Impacto:</text>
     <text x="290" y="75" font-size="10" fill="#0B132B">se erro fase &gt; 60°</text>
-    <text x="290" y="89" font-size="10" fill="#0B132B">→ I_d, I_q corrompidos · P→0</text>
+    <text x="290" y="89" font-size="10" fill="#0B132B">→ I<tspan baseline-shift="sub" font-size="75%">d</tspan>, I<tspan baseline-shift="sub" font-size="75%">q</tspan> corrompidos · P→0</text>
   </g>
 </svg>

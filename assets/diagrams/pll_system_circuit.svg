@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 400" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="arrL" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937"/>
+    </marker>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1971c2"/>
+    </marker>
+  </defs>
+
+  <rect width="920" height="400" fill="#ffffff"/>
+
+  <text x="460" y="26" text-anchor="middle" font-size="15" font-weight="700" fill="#0B132B">
+    Inversor grid-tied: filtro LCL + SRF-PLL amostrando o PCC (diagrama unifilar)
+  </text>
+
+  <!-- ============= DC bus / battery symbol ============= -->
+  <g stroke="#0B132B" stroke-width="2" fill="none">
+    <line x1="35" y1="142" x2="65" y2="142" stroke-width="3"/>
+    <line x1="42" y1="150" x2="58" y2="150" stroke-width="2"/>
+    <line x1="35" y1="158" x2="65" y2="158" stroke-width="3"/>
+    <line x1="42" y1="166" x2="58" y2="166" stroke-width="2"/>
+  </g>
+  <text x="50" y="125" text-anchor="middle" font-size="12" font-style="italic" fill="#0B132B">V_dc</text>
+
+  <line x1="50" y1="125" x2="120" y2="125" stroke="#0B132B" stroke-width="2"/>
+  <line x1="50" y1="125" x2="50" y2="142" stroke="#0B132B" stroke-width="2"/>
+  <line x1="50" y1="166" x2="50" y2="183" stroke="#0B132B" stroke-width="2"/>
+  <line x1="50" y1="183" x2="120" y2="183" stroke="#0B132B" stroke-width="2"/>
+
+  <!-- ============= VSI block ============= -->
+  <rect x="120" y="115" width="90" height="75" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2" rx="5"/>
+  <text x="165" y="142" text-anchor="middle" font-size="13" font-weight="700" fill="#0B132B">VSI</text>
+  <text x="165" y="159" text-anchor="middle" font-size="10" fill="#0B132B">3φ · 2 níveis</text>
+  <text x="165" y="174" text-anchor="middle" font-size="10" fill="#0B132B">SPWM 5 kHz</text>
+
+  <!-- 3-phase output indicator -->
+  <line x1="210" y1="152" x2="265" y2="152" stroke="#0B132B" stroke-width="2"/>
+  <line x1="232" y1="144" x2="244" y2="160" stroke="#0B132B" stroke-width="1.5"/>
+  <text x="238" y="140" text-anchor="middle" font-size="10" fill="#0B132B">3φ</text>
+
+  <!-- ============= L1 inductor (zigzag arcs) ============= -->
+  <path d="M 265 152 q 7.5 -12 15 0 q 7.5 -12 15 0 q 7.5 -12 15 0 q 7.5 -12 15 0"
+        fill="none" stroke="#0B132B" stroke-width="2"/>
+  <text x="295" y="134" text-anchor="middle" font-size="13" font-style="italic" fill="#0B132B">L₁</text>
+
+  <line x1="325" y1="152" x2="405" y2="152" stroke="#0B132B" stroke-width="2"/>
+
+  <!-- ============= PCC node ============= -->
+  <circle cx="405" cy="152" r="5" fill="#0B132B"/>
+  <text x="405" y="135" text-anchor="middle" font-size="12" font-weight="700" fill="#F97316">PCC</text>
+
+  <!-- ============= Cf + Rd branch to ground from PCC ============= -->
+  <line x1="405" y1="152" x2="405" y2="205" stroke="#0B132B" stroke-width="2"/>
+  <line x1="389" y1="205" x2="421" y2="205" stroke="#0B132B" stroke-width="2.5"/>
+  <line x1="389" y1="213" x2="421" y2="213" stroke="#0B132B" stroke-width="2.5"/>
+  <text x="432" y="213" font-size="12" font-style="italic" fill="#0B132B">C_f</text>
+
+  <line x1="405" y1="213" x2="405" y2="238" stroke="#0B132B" stroke-width="2"/>
+  <rect x="394" y="238" width="22" height="32" fill="white" stroke="#0B132B" stroke-width="2"/>
+  <text x="432" y="259" font-size="12" font-style="italic" fill="#0B132B">R_d</text>
+
+  <line x1="405" y1="270" x2="405" y2="293" stroke="#0B132B" stroke-width="2"/>
+  <line x1="388" y1="293" x2="422" y2="293" stroke="#0B132B" stroke-width="2.5"/>
+  <line x1="393" y1="300" x2="417" y2="300" stroke="#0B132B" stroke-width="2"/>
+  <line x1="398" y1="307" x2="412" y2="307" stroke="#0B132B" stroke-width="2"/>
+
+  <!-- ============= L2 inductor after PCC ============= -->
+  <line x1="405" y1="152" x2="465" y2="152" stroke="#0B132B" stroke-width="2"/>
+  <path d="M 465 152 q 7.5 -12 15 0 q 7.5 -12 15 0 q 7.5 -12 15 0 q 7.5 -12 15 0"
+        fill="none" stroke="#0B132B" stroke-width="2"/>
+  <text x="495" y="134" text-anchor="middle" font-size="13" font-style="italic" fill="#0B132B">L₂</text>
+  <line x1="525" y1="152" x2="595" y2="152" stroke="#0B132B" stroke-width="2"/>
+
+  <!-- ============= Grid Thevenin: R_th + L_th ============= -->
+  <text x="640" y="124" text-anchor="middle" font-size="12" font-weight="600" fill="#0B132B">Z_th (Barra 2 · IEEE 9)</text>
+  <rect x="595" y="142" width="30" height="20" fill="white" stroke="#0B132B" stroke-width="2"/>
+  <text x="610" y="137" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">R_th</text>
+  <line x1="625" y1="152" x2="640" y2="152" stroke="#0B132B" stroke-width="2"/>
+  <path d="M 640 152 q 7.5 -12 15 0 q 7.5 -12 15 0 q 7.5 -12 15 0"
+        fill="none" stroke="#0B132B" stroke-width="2"/>
+  <text x="662" y="137" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">L_th</text>
+  <line x1="685" y1="152" x2="740" y2="152" stroke="#0B132B" stroke-width="2"/>
+
+  <!-- ============= AC source (grid) ============= -->
+  <circle cx="770" cy="152" r="30" fill="white" stroke="#0B132B" stroke-width="2"/>
+  <path d="M 750 152 q 5 -12 10 0 q 5 12 10 0 q 5 -12 10 0 q 5 12 10 0"
+        fill="none" stroke="#0B132B" stroke-width="1.5"/>
+  <text x="770" y="198" text-anchor="middle" font-size="11" font-weight="600" fill="#0B132B">Rede</text>
+  <text x="770" y="211" text-anchor="middle" font-size="10" fill="#0B132B">20 kV · 60 Hz</text>
+
+  <!-- ============= Voltage probe at PCC ============= -->
+  <line x1="405" y1="152" x2="405" y2="80" stroke="#1971c2" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <circle cx="405" cy="70" r="11" fill="white" stroke="#1971c2" stroke-width="1.5"/>
+  <text x="405" y="74" text-anchor="middle" font-size="11" font-weight="700" fill="#1971c2">V</text>
+  <text x="423" y="60" font-size="11" font-style="italic" fill="#1971c2">u_abc(PCC)</text>
+
+  <!-- Path from voltmeter to PLL block -->
+  <path d="M 416 70 L 510 70 L 510 333" fill="none" stroke="#1971c2" stroke-width="1.5" marker-end="url(#arrB)"/>
+
+  <!-- ============= PLL block (amber, banner accent) ============= -->
+  <rect x="170" y="338" width="580" height="50" fill="#fff7ed" stroke="#F97316" stroke-width="2" rx="6"/>
+  <text x="460" y="361" text-anchor="middle" font-size="13" font-weight="700" fill="#0B132B">SRF-PLL</text>
+  <text x="460" y="378" text-anchor="middle" font-size="11" fill="#0B132B">u_abc → Park → PI(K_p, K_i) ⊕ ω_n → 1/s → φ̂  (entregue ao controlador dq)</text>
+</svg>

@@ -67,76 +67,33 @@ Analisar o desempenho dinamico e a robustez do SRF-PLL de inversores conectados 
 
 ## Arquitetura do SRF-PLL
 
-> Diagramas em Mermaid (renderizados nativamente pelo GitHub). Fontes editaveis em [`assets/diagrams/`](assets/diagrams/).
+> Diagramas com simbologia de circuito (LCL, fonte CA, Z_th) e de controle (somador, integrador, FT do PI). Fontes editaveis em [`assets/diagrams/`](assets/diagrams/).
 
-### 1. Estrutura do laco com os ganhos do projeto
+### 1. Circuito do inversor grid-tied com sondagem do PCC
 
-Detector de fase = transformada de Park; quando `u_q -> 0`, entao `phi_estimado -> phi_real` e `u_d -> U`. Malha de **tipo 2** (integrador no PI + integrador do VCO) → rastreia degraus de frequencia com erro nulo em regime.
+VSI alimenta o filtro **LCL** (L1-Cf+Rd-L2), que se conecta a rede pela impedancia de Thevenin `Z_th` da Barra 2. O SRF-PLL amostra a tensao trifasica do PCC e devolve a fase estimada `phi_chapeu` ao controlador dq.
 
-```mermaid
-flowchart LR
-    subgraph REDE["Rede - Barra 2 (IEEE 9)"]
-        Vabc["u_abc<br/>20 kV / 60 Hz"]
-    end
+<p align="center">
+  <img src="assets/diagrams/pll_system_circuit.svg" alt="Circuito unifilar do inversor grid-tied com filtro LCL e amostragem do PCC pelo SRF-PLL" width="100%">
+</p>
 
-    subgraph PLL["SRF-PLL (dqo-PLL)"]
-        direction LR
-        Park["abc -> dqo<br/>Transformada<br/>de Park"]
-        Ud["u_d ~ U"]
-        Uq(["u_q -> 0"])
-        PI["PI<br/>Kp = 8 . fg . (L1+L2+Lest)<br/>Ki = 32 . fg^2 . (L1+L2+Lest)"]
-        Som((+))
-        Wn["w_n = 2.pi.60"]
-        Integ["1/s"]
-        Phi["phi_estimado"]
-    end
+### 2. Diagrama de blocos do laco SRF-PLL
 
-    Vabc --> Park
-    Park --> Ud
-    Park --> Uq
-    Uq --> PI --> Som
-    Wn --> Som
-    Som -- "w_estimado" --> Integ --> Phi
-    Phi -. realimentacao .-> Park
+Detector de fase = transformada de Park; quando `u_q -> 0`, entao `phi_chapeu -> phi_real` e `u_d -> U`. Malha de **tipo 2** (integrador no PI + integrador do VCO) → rastreia degraus de frequencia com erro nulo em regime.
 
-    classDef fb fill:#fff3bf,stroke:#c79c00,color:#000
-    classDef io fill:#e7f5ff,stroke:#1971c2,color:#000
-    class Phi fb
-    class Vabc io
-```
+<p align="center">
+  <img src="assets/diagrams/pll_control_loop.svg" alt="Diagrama de blocos do laco SRF-PLL: Park, PI, somador, integrador, realimentacao de fase" width="100%">
+</p>
 
-**Modelo linear:** `s² + Kp.U.s + Ki.U = 0` → polos por `2.xi.wn` e `wn²/U`.
+### 3. Onde cada contingencia ataca o laco
 
-### 2. Como cada contingencia ataca o laco
+Marcadores numerados (1-4) no circuito de referencia indicam o ponto de injecao de cada falta; os paineis abaixo mostram o efeito qualitativo em `u_q` e o impacto no controle.
 
-```mermaid
-flowchart LR
-    SagSim["1. Sag simetrico<br/>U cai -> ganho<br/>efetivo cai"]:::c1
-    SagAss["2. Sag assimetrico<br/>seq. negativa -><br/>ripple 120 Hz em u_q"]:::c2
-    Salto["3. Salto de fase<br/>delta-phi subito >><br/>banda do PLL"]:::c3
-    RoCoF["4. Alto RoCoF<br/>dw/dt elevado<br/>(H baixo)"]:::c4
+<p align="center">
+  <img src="assets/diagrams/contingencies_attack.svg" alt="Circuito de referencia com 4 marcadores de contingencia e paineis de impacto em u_q" width="100%">
+</p>
 
-    Vabc["u_abc"] --> Park["Park abc/dqo"]
-    Park --> Uq["u_q"] --> PI["PI Kp/Ki"] --> Som((+))
-    Wn["w_n"] --> Som --> Integ["1/s"] --> Phi["phi_estimado"]
-    Phi -. realimentacao .-> Park
-
-    SagSim -. afeta U .-> Vabc
-    SagAss -. injeta seq- em .-> Vabc
-    Salto  -. descontinuidade em phi_i .-> Vabc
-    RoCoF  -. rampa de w em .-> Vabc
-
-    Saida["I_d, I_q corrompidos<br/>se erro de fase > ~60 graus<br/>=> P_inv -> 0"]:::out
-    Phi --> Saida
-
-    classDef c1 fill:#d0ebff,stroke:#1971c2,color:#000
-    classDef c2 fill:#ffe0e0,stroke:#c92a2a,color:#000
-    classDef c3 fill:#e6fcf5,stroke:#0ca678,color:#000
-    classDef c4 fill:#fff4e6,stroke:#e8590c,color:#000
-    classDef out fill:#f3f0ff,stroke:#5f3dc4,color:#000
-```
-
-### 3. Trade-off central de Kp / Ki (Secao 4.3)
+### 4. Trade-off central de Kp / Ki (Secao 4.3)
 
 ```mermaid
 flowchart TB

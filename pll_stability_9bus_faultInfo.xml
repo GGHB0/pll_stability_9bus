@@ -30,7 +30,7 @@
       <isEnabled>false</isEnabled>
     </faultContainers>
     <isEnabled>true</isEnabled>
-    <lastUpdatedAt>2026-05-20T18:37:07</lastUpdatedAt>
+    <lastUpdatedAt>2026-05-24T00:23:26</lastUpdatedAt>
     <modelName>pll_stability_9bus</modelName>
     <modelUUID>f841ce15-da28-46d7-a0b7-7dae3c27396b</modelUUID>
   </faultinfo.FaultContainerSet>

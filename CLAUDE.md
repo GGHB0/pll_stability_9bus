@@ -6,18 +6,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 TCC (Trabalho de Conclusão de Curso) em Engenharia Elétrica — UERJ 2025. Investigates the dynamic behavior of the **SRF-PLL** (Synchronous Reference Frame Phase-Locked Loop) algorithm in grid-tied inverters under severe network contingencies, motivated by the August 15, 2023 Brazilian grid disturbance that disconnected 22,547 MW (~31% of national load).
 
-## Repository Contents
+## Repository Layout
 
-| File | Purpose |
-|---|---|
-| `pll_stability_9bus_analysis.ipynb` | Analytical parameter calculation (Ybarra/Zbarra, Thevenin impedance, LCL filter sizing, PLL and current controller gains) |
-| `pll_stability_9bus.slx` | MATLAB/Simulink EMT model — grid-tied VSI with SRF-PLL on IEEE 9-bus system |
-| `GridTiedInverterOptimalI2.slx` | Secondary Simulink model (grid-tied inverter variant) |
+```
+pll_stability_9bus/
+├── pll_stability_9bus.slx              ← main Simulink model (root)
+├── params.m                            ← MATLAB workspace setup for the main model
+├── pll_stability_9bus_faultInfo.xml    ← Fault Analyzer metadata for the main model
+├── notebooks/
+│   └── pll_stability_9bus_analysis.ipynb   ← analytical parameter calculation
+├── simulink/                           ← auxiliary Simulink models
+│   ├── pll_stability_9bus_FaultModel.slx
+│   ├── GridTiedInverterOptimalI2.slx   ← MathWorks reference example
+│   ├── GridTiedInverterOptimalIData.m  ← params for the reference example
+│   ├── teste_isolado.slx               ← isolated sandbox
+│   └── archive/
+│       └── pll_stability_9bus.slx.original   ← backup of pre-modification model
+├── scripts/                            ← Python analysis scripts
+├── assets/                             ← diagrams, banner, figures
+└── .claude/                            ← knowledge base + skills (see below)
+```
+
+Before simulating the main model, run `params.m` in MATLAB to populate the workspace. Auxiliary models in `simulink/` are standalone (not referenced by the main model).
 
 ## Running the Notebook
 
 ```bash
-jupyter notebook pll_stability_9bus_analysis.ipynb
+jupyter notebook notebooks/pll_stability_9bus_analysis.ipynb
 # or
 jupyter lab
 ```

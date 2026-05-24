@@ -1,7 +1,7 @@
 ---
 name: lcl-filter
 description: Dimensionamento do filtro LCL do inversor VSC (TeseAGP p.102-104 + notebook célula 30)
-source: TeseAGP p.78-80 (eqs. 4.1, 3.52); pll_stability_9bus_analysis.ipynb célula 30
+source: TeseAGP p.78-80 (eqs. 4.1, 3.52); notebooks/pll_stability_9bus_analysis.ipynb célula 30
 ---
 
 # Filtro LCL — Dimensionamento

@@ -1,7 +1,7 @@
 ---
 name: pll-gains-methodology
 description: Metodologia de cálculo dos ganhos Kp/Ki do SRF-PLL usada no projeto (TeseAGP eqs 3.21-3.22 + notebook)
-source: TeseAGP p.107-109 (Figs. 4.4, 4.5); pll_stability_9bus_analysis.ipynb células 30/39
+source: TeseAGP p.107-109 (Figs. 4.4, 4.5); notebooks/pll_stability_9bus_analysis.ipynb células 30/39
 ---
 
 # Cálculo dos Ganhos do SRF-PLL — Metodologia do Projeto
@@ -20,7 +20,7 @@ onde:
 
 Origem das constantes 8 e 32: cancelamento polo-zero do controlador de corrente no referencial síncrono, projetado para frequência de cruzamento `ωgc ≈ 527,4 rad/s` com margem de fase `≈ 61,7°` (antes do Notch).
 
-## Implementação no Notebook (`pll_stability_9bus_analysis.ipynb`)
+## Implementação no Notebook (`notebooks/pll_stability_9bus_analysis.ipynb`)
 
 ```python
 # Célula 30 / 39

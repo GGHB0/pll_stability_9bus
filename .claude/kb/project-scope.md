@@ -75,7 +75,7 @@ ONS concluiu que inversores eólicos/fotovoltaicos tiveram desempenho "aquém do
 
 ```
 TeseAGP.pdf (co-orientador AGP)
-  └─ Metodologia Kp/Ki → pll_stability_9bus_analysis.ipynb
+  └─ Metodologia Kp/Ki → notebooks/pll_stability_9bus_analysis.ipynb
        └─ Parâmetros → pll_stability_9bus.slx (MATLAB/Simulink)
 
 Karimi-Ghartemani cap.6 → teoria SRF-PLL

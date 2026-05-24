@@ -175,10 +175,17 @@ Esse valor e usado como parametro de rede no dimensionamento do filtro e no proj
 
 ## Conteudo do Repositorio
 
-| Arquivo | Descricao |
+| Caminho | Descricao |
 |---|---|
-| `pll_stability_9bus_analysis.ipynb` | Calculo analitico: Ybarra/Zbarra, Thevenin, filtro LCL e ganhos do controlador |
-| `pll_stability_9bus.slx` | Modelo Simulink do inversor grid-tied com SRF-PLL no sistema de 9 barras |
+| `pll_stability_9bus.slx` | Modelo Simulink principal — inversor grid-tied com SRF-PLL no sistema de 9 barras |
+| `params.m` | Parametros MATLAB carregados no workspace antes de simular o modelo principal |
+| `notebooks/pll_stability_9bus_analysis.ipynb` | Calculo analitico: Ybarra/Zbarra, Thevenin, filtro LCL e ganhos do controlador |
+| `simulink/pll_stability_9bus_FaultModel.slx` | Subsistema de falta usado em estudos auxiliares |
+| `simulink/GridTiedInverterOptimalI2.slx` + `GridTiedInverterOptimalIData.m` | Modelo de referencia (exemplo MathWorks) e seus parametros |
+| `simulink/teste_isolado.slx` | Sandbox para testes isolados |
+| `simulink/archive/pll_stability_9bus.slx.original` | Backup do modelo principal antes das modificacoes |
+| `scripts/` | Scripts Python de analise (ex.: graficos de inercia) |
+| `assets/` | Diagramas, banner e figuras do README |
 
 ---
 

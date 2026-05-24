@@ -88,3 +88,41 @@ uq = cos(φo)·uα + sin(φo)·uβ = (u - Uo·sin(φo))·cos(φo) = e·cos(φo)
 
 Este `uq` é exatamente o sinal `z` que alimenta o PI no EPLL monofásico (Fig. 2.1 do livro).
 A estimação de amplitude `ud ≈ Uo` em regime permanente fecha a equivalência via LPF `ωc/(s+ωc)`.
+
+---
+
+## Projeto do Compensador H(s) — Yazdani-Iravani §8.3.4–8.3.5
+
+### Requisitos de H(s)
+
+1. **Polo em s=0** — para rastrear o componente rampa ω₀t (referência do PLL) com erro nulo.
+2. **Zeros complexos em ±j2ω₀** — para atenuar o ripple de 2ª harmônica (120 Hz para 60 Hz) gerado pela componente de sequência negativa da tensão.
+
+Sob tensão desbalanceada com coeficiente de sequência negativa k1:
+```
+Vsq = −k1·V̂s·sin(2ω₀t + 2θ₀)   ← distúrbio a 2ω₀ que H(s) deve atenuar
+```
+k1 típico ≈ 0,01 em operação normal; k1 até 0,5 durante falta monofásica.
+
+### H(s) Estruturado — Exemplo 8.1 (ω₀=2π×60, V̂s=391 V, ωc=200 rad/s, MF=60°)
+
+```
+H(s) = 685,42 · [s² + (2ω₀)²] · [s² + 166s + 6889]
+               ──────────────────────────────────────────────────
+               s · [s² + 1508s + (2ω₀)²] · [s² + 964s + 232324]
+```
+
+Limites: ωmin = 2π×55 rad/s, ωmax = 2π×65 rad/s.
+Transitório de partida: ~70 ms saturado em ωmin → acomodação em ~150 ms.
+
+### PI Simples vs. H(s) Estruturado
+
+| Aspecto | PI simples (H = Kp + Ki/s) | H(s) estruturado |
+|---------|--------------------------|------------------|
+| Zeros em ±j2ω₀ | não | sim |
+| Ripple 120 Hz em ω, ρ | não atenuado | fortemente atenuado |
+| Complexidade | baixa | alta (4ª ordem) |
+
+O PLL do projeto usa bloco Simscape (`Sinusoidal Measurement (PLL, Three-Phase)`) com ganhos
+equivalentes a PI simples — ver [[pll-gains-methodology]]. Sem zeros em ±j2ω₀, o
+cenário de falta assimétrica é o mais crítico — ver [[pll-contingencies]].

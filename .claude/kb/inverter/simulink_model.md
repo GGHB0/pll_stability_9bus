@@ -100,6 +100,29 @@ Entradas: id_ref, Vabc_grid, Iabc (pu)
 └── Saída: S → Gate driver
 ```
 
+## Scopes e Extração de Dados (slx-runner)
+
+30 Scopes no total. Os principais para o TCC (com SID e sinais):
+
+| Scope | SID | Subsistema | Sinais (porta → descrição) |
+|---|---|---|---|
+| `Ang` | 3967 | 3963 Optimal Controller | p1 → **ângulo PLL** (rad) |
+| `MDQ` | 3972 | 3963 | p1 → modulação Mdq |
+| `Active & Reactive Power` | 4022 | 4021 | p1 → P_inv (pu), p2 → Q_inv (pu) |
+| `Currents` | 4023 | 4021 | p1 → Iabc_inv (pu), p2 → Iabc_grid (pu) |
+| `Voltages` | 4078 | 4021 | p1 → Vabc_inv, p2 → Vabc_grid, p3 → Vab_synch |
+| `id` | 4079 | 4021 | p1 → id ref + medido (pu) |
+| `iq` | 4080 | 4021 | p1 → iq ref + medido (pu) |
+| `Bus 1`…`Bus 9` | 4138…4392 | 4396 monitor | p1→P, p2→Q, p3→V por barra |
+| `Ang barra` | 4494 | root | p1 → ângulo de barra Simscape |
+
+Extração via `slx-runner` skill (não modifica o .slx):
+```python
+from runner import run_simulation
+data = run_simulation(signals=['ang_pll', 'p_inv', 'q_inv'])
+```
+Ver `.claude/skills/slx-runner/SKILL.md` para uso completo.
+
 ## Observações Importantes
 
 - **Kp e Ki são divididos por 4** tanto no notebook quanto no modelo — consistente.

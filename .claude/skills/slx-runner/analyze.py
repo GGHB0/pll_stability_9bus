@@ -131,6 +131,51 @@ def plot_currents(t, iabc_inv, iabc_grid=None, fault_time=None, save_path=None):
         plt.savefig(save_path, dpi=150, bbox_inches='tight')
     return fig
 
+def plot_angle_comparison(t, ang_vdd, ang_pll, rep_seq=None, fault_time=None,
+                          save_path=None):
+    """
+    Compara os três ângulos do modelo: referência (RepSeq ωt), estimativa
+    Fourier (mod'd) e estimativa PLL.
+
+    ang_vdd   : mod(Fourier_angle + RepSeq, 2π) — porta 1 do scope Ang Vdd
+    ang_pll   : ângulo estimado pelo SRF-PLL
+    rep_seq   : sinal da Repeating Sequence (ωt rampa, opcional)
+    """
+    t = np.asarray(t)
+    n = 3 if rep_seq is not None else 2
+    fig, axes = plt.subplots(n, 1, figsize=(11, 3 * n), sharex=True)
+
+    row = 0
+    if rep_seq is not None:
+        axes[row].plot(t, np.asarray(rep_seq) * 180 / np.pi, 'k', lw=0.8,
+                       label='RepSeq ωt (ref)')
+        axes[row].set_ylabel('RepSeq (°)')
+        axes[row].legend(fontsize=8)
+        axes[row].grid(alpha=0.3)
+        row += 1
+
+    axes[row].plot(t, np.asarray(ang_vdd) * 180 / np.pi, 'g',
+                   label='Fourier+RepSeq mod 2π')
+    axes[row].set_ylabel('Ângulo Fourier (°)')
+    axes[row].legend(fontsize=8)
+    axes[row].grid(alpha=0.3)
+    row += 1
+
+    axes[row].plot(t, np.unwrap(np.asarray(ang_pll)) * 180 / np.pi, 'b',
+                   label='AngPLL (SRF-PLL)')
+    axes[row].set_ylabel('AngPLL (°)')
+    axes[row].set_xlabel('Tempo (s)')
+    axes[row].legend(fontsize=8)
+    axes[row].grid(alpha=0.3)
+
+    _vline(axes, fault_time)
+    fig.suptitle('Comparação de Ângulos: Fourier × PLL × Referência', y=1.01)
+    plt.tight_layout()
+    if save_path:
+        plt.savefig(save_path, dpi=150, bbox_inches='tight')
+    return fig
+
+
 def print_metrics(metrics):
     """Imprime tabela de métricas formatada."""
     print("─" * 45)

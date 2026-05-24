@@ -113,13 +113,33 @@ Entradas: id_ref, Vabc_grid, Iabc (pu)
 | `Voltages` | 4078 | 4021 | p1 → Vabc_inv, p2 → Vabc_grid, p3 → Vab_synch |
 | `id` | 4079 | 4021 | p1 → id ref + medido (pu) |
 | `iq` | 4080 | 4021 | p1 → iq ref + medido (pu) |
+| `Ang Vdd` | 4495 | 3896 UFV | p1 → mod(Fourier+RepSeq,2π), p2 → AngPLL |
+| `Ang Vdd1` | 4501 | 3896 UFV | p1 → fase Fourier bruta de Va_inv (rad) |
 | `Bus 1`…`Bus 9` | 4138…4392 | 4396 monitor | p1→P, p2→Q, p3→V por barra |
 | `Ang barra` | 4494 | root | p1 → ângulo de barra Simscape |
+
+### Cadeia Fourier → Ângulo Absoluto (subsistema UFV, SID 3896)
+
+```
+Va_inverter (Vabc_inverter via From2)
+  → Demux (SID 4490)
+  → Fourier Analysis (SID 4486, f=60 Hz, n=[1]) — extrai fase φ do fundamental
+        out:2 (fase φ) ──┐
+                         ├─ Sum (SID 4497, ++) ─→ Mod(⋅, 2π) ─→ Ang Vdd p1
+Repeating Sequence ──────┘        (SID 4502)      (ângulo absoluto wrapped)
+(SID 4500, 0→2π em T=1/60 s = ωt)
+        out:2 (fase φ) ──→ Ang Vdd1 p1   (fase bruta, antes do mod)
+
+AngPLL (via Goto SID 4504 no Optimal Controller, tag=AngPLL)
+  → From3 (SID 4505) → Ang Vdd p2   (PLL para comparação direta)
+```
 
 Extração via `slx-runner` skill (não modifica o .slx):
 ```python
 from runner import run_simulation
-data = run_simulation(signals=['ang_pll', 'p_inv', 'q_inv'])
+from analyze import plot_angle_comparison
+data = run_simulation(signals=['ang_pll', 'ang_vdd', 'rep_seq', 'p_inv', 'q_inv'])
+plot_angle_comparison(data['t'], data['ang_vdd'], data['ang_pll'], data['rep_seq'])
 ```
 Ver `.claude/skills/slx-runner/SKILL.md` para uso completo.
 

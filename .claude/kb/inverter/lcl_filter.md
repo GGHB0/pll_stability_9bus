@@ -64,6 +64,13 @@ wres = sqrt((L1+L2+Lg) / (L1*(L2+Lg)*C1))
 | C1 | 6,8 µF | fres = 3,34 kHz < fs/2 = 6 kHz |
 | fres | 2,07–3,34 kHz | varia com Lg de 6 mH a 0 mH |
 
+## Vcc — Base AGP vs Override de Simulação
+
+Notebook usa `Vcc = ((V_rms·500)/220)·2 = 90 909 V` (base teórica AGP).
+`params.m` aplica override `×1,5 → 136 364 V` por necessidade prática da simulação.
+**L₁/L₂/C₁/R_d ficam idênticos** porque foram calculados com Vcc = 90 909 V em ambos.
+Ver [[params-workflow]] para regras de regeneração.
+
 ## Amortecimento Ativo (Notch)
 
 Quando Rd = 0 (sem resistência externa), usa-se filtro Notch em cascata:

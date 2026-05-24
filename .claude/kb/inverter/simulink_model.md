@@ -10,7 +10,7 @@ source: pll_stability_9bus.slx (extraído via XML interno)
 
 ```matlab
 omega  = 2π × 60          % rad/s
-Vcc    = 136363.6 V       % barramento CC (90909.09 × 1.5)
+Vcc    = 136363.6 V       % barramento CC (90909.09 × 1.5) — override de simulação, ver [[params-workflow]]
 Ts     = 5e-6 s           % passo EMT (200 kHz)
 fsw    = 5000 Hz          % frequência de chaveamento
 Tsc    = 2e-4 s           % passo do controle (5 kHz)

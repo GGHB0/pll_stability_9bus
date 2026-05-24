@@ -22,6 +22,7 @@ Subpastas criadas sob demanda, quando o primeiro conteúdo chegar:
 | `kb/pll/` | Teoria SRF-PLL + implementação Simulink do PLL |
 | `kb/inverter/` | VSI, filtro LCL, controle de corrente |
 | `kb/power-system/` | IEEE 9 barras, Ybarra, Thevenin |
+| `kb/simulation/` | Workflow notebook↔params.m, Vcc override, runtime (Ts/fsw/Tsc) |
 | `kb/standards/` | IEEE 1547-2018, ONS, LVRT |
 | `kb/events/` | Apagão BR agosto 2023 |
 

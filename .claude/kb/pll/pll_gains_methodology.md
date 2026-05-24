@@ -67,7 +67,7 @@ V_base = 20 kV,  S_base = 100 MVA,  Z_base = 4 Ω
 fg = 60 Hz,  fs = 5 kHz  (chaveamento)
 k = 0.0095  (razão L2/L1)
 
-Vcc = (V_base * 500/220) * 2   # tensão CC proporcional à base
+Vcc = (V_base * 500/220) * 2   # tensão CC base AGP — params.m aplica ×1.5; Kp/Ki invariantes (ver [[params-workflow]])
 L1  = Vcc / (Iripple * 24 * fs)
 L2  = k * L1
 C1  = 3 * C1x   # C1x = (L1+L2)/(L1·L2·(π·fs)²)

@@ -83,6 +83,7 @@ The `.claude/` directory contains the project's persistent knowledge system:
 │   ├── pll/                   ← SRF-PLL theory, Kp/Ki methodology, contingency scenarios
 │   ├── inverter/              ← LCL filter, Simulink model architecture
 │   ├── power-system/          ← IEEE 9-bus topology, Thevenin methodology
+│   ├── simulation/            ← notebook↔params.m workflow, Vcc override, runtime config
 │   └── standards/             ← LVRT, IEEE 1547-2018
 ├── commands/
 │   └── git.yaml               ← project git workflow conventions

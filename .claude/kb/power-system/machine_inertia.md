@@ -1,19 +1,27 @@
 ---
 name: machine-inertia
-description: Inércia das máquinas síncronas, equação de oscilação, RoCoF e impacto na SRF-PLL — inclui observação experimental do teste Simulink
-source: análise do TCC — teste de curto-circuito com H reduzido (2026-05); Anderson-Fouad cap.2
+description: Constante H, swing equation, critério das áreas iguais e impacto direto na SRF-PLL — cadeia H↓ → RoCoF↑ → lock-loss observada no Simulink
+source: Anderson-Fouad cap.2; teste Simulink TCC 2026-05
 ---
 
 # Inércia das Máquinas e Impacto na SRF-PLL
 
 ## Constante de Inércia H
 
-```
-H = E_cinética_na_velocidade_síncrona / S_nominal   [s]
-```
+Fórmula: `H = ½·J·ωs² / S_nom` [s] — tempo que a máquina forneceria potência nominal só com energia cinética.
 
-Valores típicos: geradores a vapor 2–9 s, hídro 2–4 s, IBRs → H ≈ 0 (sem inércia física).
-No IEEE 9-bus do TCC: G1 H ≈ 23,6 s; G2 H ≈ 6,4 s; G3 H ≈ 3,0 s (Anderson-Fouad).
+| Tipo de Gerador | H [s] | Observação |
+|---|---|---|
+| Turbina a vapor (grande) | 4–9 | Alta velocidade, grande volante |
+| Turbina a gás | 2–4 | Menores que vapor |
+| Gerador hídrico | 2–4 | Depende do rotor e velocidade |
+| Nuclear | 5–7 | Grandes rotores de baixa velocidade |
+| IEEE 9-bus G1 | 23,64 | Anderson-Fouad — valor atipicamente alto |
+| IEEE 9-bus G2 | 6,40 | Padrão térmico |
+| IEEE 9-bus G3 | 3,01 | Padrão hídrico |
+| IBR (solar/eólica) | ≈ 0 | Sem acoplamento eletromecânico |
+
+IBRs não contribuem para H do sistema a menos que emulação de inércia virtual esteja ativa (ver [[virtual-inertia]]).
 
 ## Equação de Oscilação (Swing Equation)
 
@@ -23,7 +31,7 @@ No IEEE 9-bus do TCC: G1 H ≈ 23,6 s; G2 H ≈ 6,4 s; G3 H ≈ 3,0 s (Anderson-
 
 - `M = 2H/ωs` — constante de inércia em [s²/rad]
 - Quanto menor H → maior aceleração angular para o mesmo desequilíbrio Pm - Pe
-- RoCoF aproximado imediatamente após o distúrbio:
+- RoCoF imediatamente após o distúrbio:
   ```
   RoCoF ≈ (fn / 2H) · (ΔP / S_base)   [Hz/s]
   ```
@@ -42,12 +50,11 @@ Instável → δcl > δcr  (rotor ultrapassa o ângulo crítico)
 ```
 
 Com H baixo: o rotor percorre muito mais ângulo durante o mesmo tempo de falta
-→ δcl cresce → maior probabilidade de δcl > δcr → perda de sincronismo das máquinas síncronas.
+→ δcl cresce → maior probabilidade de δcl > δcr → perda de sincronismo.
 
 ## Cadeia de Causa e Efeito Observada no Simulink
 
-**Teste:** H de G1/G3 reduzido artificialmente + curto-circuito trifásico aplicado (t=0,3 s)
-e eliminado (t=0,5 s).
+**Teste:** H de G1/G3 reduzido artificialmente + curto-circuito trifásico (t=0,3 s → t=0,5 s).
 
 ```
 H ↓
@@ -73,7 +80,7 @@ A SRF-PLL tem largura de banda finita determinada por Kp/Ki:
 Se o RoCoF da rede excede a taxa máxima rastreável pelo laço:
 - O integrador do PI acumula erro mais rápido do que o VCO consegue corrigir
 - θ̂ (estimado) diverge de θ (real) de forma crescente
-- Referencial dq fica desalinhado → componentes Id, Iq computadas erroneamente
+- Referencial dq fica desalinhado → Id, Iq computados erroneamente
 - O controlador de corrente injeta potência em quadratura com a rede → P_ativa → 0
 
 ## Estimativa da Largura de Banda Prática (IEEE 9-bus TCC)
@@ -99,3 +106,5 @@ Ver [[lvrt]] para requisitos durante o afundamento que precede o lock-loss.
 Ver [[ieee9bus]] para os parâmetros da rede onde o teste foi executado.
 Ver [[ons-2-11]] — paradoxo detecção vs. injeção: ONS_2_11 detecta a falta corretamente
 mas a injeção falha porque depende de θ̂ que está corrompido quando H é baixo.
+Ver [[inertia-estimation]] — como H_sys é medido e por que cai com IBRs.
+Ver [[virtual-inertia]] — como inversores grid-forming emulam H para mitigar o problema.

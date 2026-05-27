@@ -69,6 +69,28 @@ H ↓
 **Resultado observado:** após a eliminação do curto, a potência ativa do inversor vai a
 zero em vez de recuperar — mesmo que a tensão da rede volte. O PLL perdeu o lock.
 
+## Varredura Recente de H e Reatância de Curto (2026-05)
+
+**Parâmetros testados:**
+- Máquinas síncronas alteradas: **G1 e G3**
+- Entrada variada: segundos de inércia `H` das máquinas
+- Severidade da falta: reatância de curto entre **2% e 20%** do valor base
+- Valor base adotado para a reatância: **529 ohms**
+- Faixa absoluta aproximada: `10,58 ohms` a `105,8 ohms`
+
+**Achado principal:** nos testes recentes, qualquer valor de inércia acima de
+aproximadamente **0,1 s** nas máquinas G1/G3 foi suficiente para evitar o colapso
+total observado no caso de baixíssima inércia.
+
+Interpretação: abaixo desse limiar, o sistema fica muito leve do ponto de vista
+eletromecânico. A falta acelera/desacelera os rotores de forma brusca e, depois da
+eliminação da contingência, a tensão tenta retornar, mas o ângulo e a frequência
+locais variam rápido demais para a SRF-PLL se manter sincronizada.
+
+Esse resultado não deve ser tratado como limite universal de estabilidade. Ele é um
+limiar empírico do modelo atual, com a topologia IEEE 9 barras, parametrização atual
+do inversor, ganhos atuais do PLL e faixa de reatância de curto testada.
+
 ## Por que o PLL Perde Lock?
 
 A SRF-PLL tem largura de banda finita determinada por Kp/Ki:

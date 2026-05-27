@@ -173,6 +173,23 @@ Esse valor e usado como parametro de rede no dimensionamento do filtro e no proj
 
 ---
 
+## Achados Recentes dos Testes
+
+- A inercia das maquinas sincronas **G1 e G3** passou a ser variavel critica na analise.
+- Foram testados diferentes valores de segundos de inercia com reatancia de curto entre
+  **2% e 20%** do valor base de **529 ohms**.
+- No modelo atual, valores de inercia acima de aproximadamente **0,1 s** evitaram o
+  colapso total observado nos casos de baixissima inercia.
+- O colapso aparece principalmente na recuperacao pos-contingencia: o PLL tenta voltar
+  ao sincronismo, entra em oscilacao/loop de erro e perde sua funcao de referencia.
+- Quando o PLL perde a referencia angular, `Id` e `Iq` deixam de seguir trajetorias
+  coerentes e a injecao de potencia do inversor se torna desorganizada.
+- Tentativas de notch/filtros para reduzir componentes de **120 Hz** em curtos
+  assimetricos nao resolveram os casos severos de baixa inercia; o filtro segue util
+  para ripple de sequencia negativa, mas nao substitui uma solucao para lock-loss.
+
+---
+
 ## Conteudo do Repositorio
 
 | Caminho | Descricao |

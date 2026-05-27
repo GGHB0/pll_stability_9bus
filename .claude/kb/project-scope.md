@@ -88,3 +88,18 @@ Afundamentos assimétricos introduzem componente de sequência negativa.
 No referencial síncrono (dq), essa componente aparece como oscilação de **2ª harmônica** (120 Hz em 60 Hz).
 O SRF-PLL padrão não filtra essa oscilação → erro de rastreamento oscilatório → degradação de P e Q.
 Essa é a limitação central identificada no trabalho.
+
+## Achados Recentes para o Capítulo 4 (2026-05)
+
+- A análise de resultados deve destacar a interação entre **baixa inércia nas máquinas
+  G1/G3**, severidade do curto e perda de sincronismo do SRF-PLL.
+- Foi feita varredura com `H` das máquinas e reatância de curto entre **2% e 20%**
+  de **529 ohms**.
+- Nos testes atuais, `H > 0,1 s` evitou o colapso total; abaixo/próximo desse valor,
+  o sistema entra em região crítica.
+- O colapso observado ocorre na recuperação pós-contingência: o PLL tenta retornar,
+  acumula erro/oscila em loop e deixa de fornecer uma referência angular útil.
+- `Id` e `Iq` deixam de seguir trajetória coerente quando `theta_hat` se perde.
+- As tentativas de notch/filtro para remover componentes de `120 Hz` não resolveram
+  os casos severos; elas seguem relevantes para curtos assimétricos moderados, mas
+  não substituem uma solução estrutural para baixa inércia e lock-loss.

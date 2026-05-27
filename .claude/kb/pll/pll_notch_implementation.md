@@ -72,6 +72,33 @@ Uso no Simulink:
 - `Transfer Fcn` para implementacao continua
 - `Discrete Transfer Fcn` com `Sample time = Tsc` para implementacao digital
 
+## Coeficientes discretos validados no projeto
+
+No modelo `pll_stability_9bus.slx`, o notch foi validado com `Tsc = 2e-4 s`,
+`f_notch = 120 Hz`, `zeta_z = 0.01` e `zeta_p = 0.20`. Para o bloco
+`Discrete Transfer Fcn`, use os coeficientes abaixo:
+
+```matlab
+num_notch_d = [0.9723401207349347, -1.9198159829792367, 0.9694285544965067];
+den_notch_d = [1.0, -1.9198159829792367, 0.9417686752314415];
+```
+
+Configuracao recomendada do bloco:
+
+```text
+Numerator:     num_notch_d
+Denominator:   den_notch_d
+Initial states: [0 0]
+Sample time:    Tsc
+```
+
+Observacao pratica:
+- o campo `Initial states` nao deve receber `Tsc`
+- coeficientes no formato `s^2 + a*s + b` precisam ser discretizados antes de
+  entrar no `Discrete Transfer Fcn`
+- se o bloco estiver em um caminho de controle rapido, manter a implementacao
+  em `Discrete Transfer Fcn` evita misturar dinamica continua com amostragem
+
 ## Como seria dentro do PLL
 
 Se o PLL estiver aberto em blocos:
@@ -138,9 +165,27 @@ Parametros internos observados:
 - `Kp_LF = 460`
 - `Ki_LF = 105820`
 - `F0 = 60`
+ - o bloco de notch discreto deve ser alimentado com `num_notch_d` e `den_notch_d`
+   vindos do `params.m`, nao com coeficientes de dominio `s`
 
 Se esse bloco fosse reimplementado de forma aberta no `Optimal controller`, o notch
 entraria exatamente entre o seletor do eixo `q` e o PI do `Loop Filter`.
+
+## Resultado das tentativas recentes (2026-05)
+
+Foram testadas mudanças de filtragem para reduzir a influência das variáveis de
+`120 Hz` na leitura do PLL durante curtos assimétricos. A hipótese era que um novo
+filtro notch, ajustado para `2*f0`, poderia impedir que a sequência negativa
+contaminasse `uq`, `theta`, `Id` e `Iq`.
+
+**Resultado prático:** as tentativas não foram bem sucedidas para os colapsos mais
+severos de baixa inércia. O notch ajuda a explicar e atacar o ripple de `120 Hz`,
+mas não resolve a perda de referência quando a dinâmica eletromecânica pós-falta
+leva o PLL para fora da sua região de captura.
+
+Leitura correta para o projeto: o notch continua válido para curtos assimétricos
+moderados; para baixa inércia + contingência severa, a limitação dominante passa a
+ser o lock-loss do PLL e não apenas a filtragem da segunda harmônica.
 
 ## Resumo
 
@@ -148,3 +193,5 @@ entraria exatamente entre o seletor do eixo `q` e o PI do `Loop Filter`.
 - `DSOGI/DDSRF` = troca estrutural para lidar melhor com desequilibrio
 - em rede de `60 Hz`, o notch deve mirar `120 Hz`
 - no projeto, a discretizacao natural e `Tsc = 2e-4 s`
+- para `Discrete Transfer Fcn`, `Initial states = [0 0]` e parte da
+  configuracao correta, nao um detalhe opcional

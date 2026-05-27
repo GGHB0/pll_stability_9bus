@@ -50,6 +50,24 @@ source: TCCs V8 cap.2.4, cap.4 (estrutura); pll_stability_9bus.slx
   → tensão na Barra 2 torna-se caótica do ponto de vista da SRF-PLL
 - Ver [[machine-inertia]] para as equações e análise detalhada
 
+#### Atualização Experimental — Varredura H x Xcurto (2026-05)
+- **Máquinas alteradas:** G1 e G3, mantendo o inversor grid-following na Barra 2.
+- **Entrada testada:** diferentes valores de segundos de inércia `H`.
+- **Reatância de curto:** variação de **2% a 20%** do valor base de **529 ohms**
+  (`10,58 ohms` a `105,8 ohms`).
+- **Achado empírico:** para a parametrização atual, valores de `H > 0,1 s` evitaram
+  o colapso total do sistema nos casos testados.
+- **Região crítica:** com inércia próxima ou abaixo desse patamar, faltas severas
+  fazem o PLL tentar retornar ao sincronismo depois da contingência, entrar em
+  oscilação/loop de erro derivativo e perder sua função de referência.
+- **Sintoma em dq:** `Id` e `Iq` deixam de seguir uma trajetória organizada; em
+  colapsos grandes e com pouca inércia próxima, as correntes se desalinham porque
+  o ângulo estimado `theta_hat` já não representa a tensão real do PAC.
+
+Leitura para o Cap. 4: a falha não é apenas "baixa tensão durante o curto". O ponto
+crítico é a recuperação pós-falta em baixa inércia: o sistema elétrico tenta voltar,
+mas o referencial usado pelo controle do inversor passa a estar errado.
+
 ## Métricas de Avaliação de Desempenho
 
 ```

@@ -17,6 +17,7 @@ description: Índice de navegação do sistema .claude/ — o que existe, onde e
 | `kb/inverter/simulink_model.md` | Arquitetura completa do .slx: SIDs, InitFcn, hierarquia de subsistemas |
 | `kb/power-system/ieee9bus.md` | Topologia IEEE 9 barras, impedâncias, metodologia Ybarra→Zbarra→Z22 |
 | `kb/power-system/machine_inertia.md` | Equação de oscilação, critério das áreas iguais, cadeia H↓→RoCoF→PLL lock-loss→P=0 |
+| `kb/simulation/reuniao_2026_05_inercia_pll.md` | Texto de apoio para reunião sobre varredura de inércia, reatância de curto, colapso do PLL e tentativas de notch |
 | `kb/standards/lvrt.md` | LVRT IEEE 1547-2018, suporte reativo, ligação com evento 15/08/2023 |
 | `kb/standards/ons_2_11.md` | Função ONS_2_11 do Simulink: código completo, lógica de 3 zonas, base regulatória ONS §5.8 pp.30-31 |
 

@@ -1,97 +1,128 @@
 ---
 name: params-workflow
-description: Workflow notebook ↔ MATLAB/Simulink — divisão de responsabilidades entre notebook (teoria AGP) e params.m (runtime), divergência intencional do Vcc, gerador notebook_params.m
-source: notebooks/pll_stability_9bus_analysis.ipynb (última célula); params.m; notebook_params.m (auto-gerado)
+description: Workflow notebook -> MATLAB/Simulink for separating theoretical AGP calculations from runtime params.m values, including the intentional Vcc divergence and notebook_params.m generation
+source: notebooks/pll_stability_9bus_analysis.ipynb (last cell); params.m; notebook_params.m (auto-generated)
 ---
 
-# Workflow de Parâmetros — Notebook ↔ MATLAB
+# Parameter Workflow - Notebook -> MATLAB
 
-## Fontes de Verdade
+## Sources of Truth
 
-| Arquivo | Papel | Sobrescreve? |
+| File | Role | Overwrites? |
 |---|---|---|
-| `notebooks/pll_stability_9bus_analysis.ipynb` | Cálculo teórico (base AGP) | — |
-| `params.m` | Workspace do Simulink em runtime | **manual** |
-| `notebook_params.m` | Snapshot dos cálculos do notebook | auto (gitignored) |
+| `notebooks/pll_stability_9bus_analysis.ipynb` | Theoretical calculation (AGP base) | - |
+| `params.m` | Simulink runtime workspace | manual |
+| `notebook_params.m` | Snapshot of notebook calculations | auto (gitignored) |
 
-`params.m` é a **fonte de verdade do que roda no Simulink**. O notebook é a fonte
-do *cálculo teórico*. Os dois podem divergir propositalmente (ver Vcc abaixo).
+`params.m` is the source of truth for what runs in Simulink. The notebook is the
+source of the theoretical calculation. The two can diverge on purpose.
 
-## Divergência Intencional do Vcc
+## Intentional Vcc Divergence
 
-| Onde | Fórmula | Valor |
+| Where | Formula | Value |
 |---|---|---|
-| Notebook | `Vcc = ((V_rms · 500)/220) · 2` | **90 909 V** (base AGP) |
-| `params.m` | `Vcc = 90909.09 · 1.5` | **136 364 V** (override de simulação) |
+| Notebook | `Vcc = ((V_rms * 500)/220) * 2` | 90 909 V (AGP base) |
+| `params.m` | `Vcc = 90909.09 * 1.5` | 136 364 V (simulation override) |
 
-O fator ×1,5 do `params.m` **não** vem do design teórico — foi ajuste manual
-necessário pra estabilidade da simulação. **Os demais valores (L₁, L₂, C₁,
-K_p/4, K_i/4, ω_res, R_th, L_th) batem exatamente** entre notebook e `params.m`
-porque foram todos calculados com `Vcc = 90 909 V`.
+The `*1.5` factor in `params.m` does not come from the theoretical design. It is a
+manual tuning used to stabilize the simulation. The other values (`L1`, `L2`,
+`C1`, `Kp/4`, `Ki/4`, `wres`, `Rth`, `Lth`) match the notebook because they were
+calculated from the same base.
 
-### Por que Kp/Ki/ω_res são invariantes ao Vcc
+## Why Kp/Ki/wres stay invariant to Vcc
 
-A fórmula AGP `Kp = 8·fg·(L₁+L₂+L_est)` escala linearmente com L. Como
-`L₁ ∝ Vcc` (pela equação do ripple), `Kp ∝ Vcc` também — mas
-`ω_n² = Ki/L` cancela o Vcc:
+`Kp = 8 * fg * (L1 + L2 + Lest)` scales linearly with `L`. Since `L1` is
+proportional to `Vcc`, `Kp` is also proportional to `Vcc`, but:
 
+```text
+wn^2 = Ki / L = const
+wres = sqrt((L1 + L2)/(L1 * L2 * C1))
 ```
-Ki ∝ Vcc   e   L ∝ Vcc   →   ω_n² = Ki/L = const
-ω_res = sqrt((L₁+L₂)/(L₁·L₂·C₁))  →  Vcc cancela porque L ∝ Vcc, C ∝ 1/Vcc
+
+So changing `Vcc` only changes the absolute inductance values, not the dynamics.
+See [[pll-gains-methodology]] for the gain derivation.
+
+## Derived parameters for discrete blocks
+
+When `params.m` feeds blocks like `Discrete Transfer Fcn`, use coefficients that
+are already discretized in the format expected by Simulink. For the 120 Hz notch
+used in the PLL of this project:
+
+```matlab
+f_notch = 2 * F0;
+wn_notch = 2 * pi * f_notch;
+zeta_z_notch = 0.01;
+zeta_p_notch = 0.20;
+
+num_notch_d = [0.9723401207349347, -1.9198159829792367, 0.9694285544965067];
+den_notch_d = [1.0, -1.9198159829792367, 0.9417686752314415];
 ```
 
-Resultado: trocar Vcc só muda as **indutâncias absolutas**, não a dinâmica.
-Ver [[pll-gains-methodology]] para a derivação dos ganhos.
+Recommended block setup:
 
-## Gerador `notebook_params.m`
+```text
+Numerator:      num_notch_d
+Denominator:    den_notch_d
+Initial states: [0 0]
+Sample time:    Tsc
+```
 
-Última célula do notebook escreve `notebook_params.m` na raiz do projeto.
-Conteúdo: snapshot MATLAB de todos os parâmetros calculados.
+Notes:
+- `Initial states` must not receive `Tsc`
+- `num_notch_d` and `den_notch_d` must exist in the workspace before simulation
+- if the filter changes from discrete to continuous, the coefficients must be
+  recomputed; do not reuse the same vectors
+
+## notebook_params.m generator
+
+The last notebook cell writes `notebook_params.m` into the project root. It
+contains a MATLAB snapshot of all calculated parameters.
 
 ```python
 out_path = (cwd.parent if cwd.name == 'notebooks' else cwd) / 'notebook_params.m'
 out_path.write_text(content, encoding='utf-8')
 ```
 
-### Por que arquivo separado (e não sobrescreve `params.m`)?
+### Why a separate file instead of overwriting `params.m`?
 
-1. **Preserva o override manual do Vcc** em `params.m`.
-2. Permite diff entre teoria (notebook) e runtime (params.m) sem acidentes.
-3. Fica gitignored — não polui commits com derivados.
+1. It preserves the manual `Vcc` override in `params.m`.
+2. It lets us diff theory vs runtime safely.
+3. It is gitignored, so it does not pollute commits with derived output.
 
-### Quando regerar `notebook_params.m`
+### When to regenerate `notebook_params.m`
 
-Sempre que mudar no notebook qualquer um destes:
+Whenever the notebook changes any of these:
 
-- `k` (razão L₂/L₁, atual 0,0095)
-- `Iripple` (atual 0,61 % do pico)
-- `fs` (chaveamento, atual 5 kHz)
-- Topologia da rede / Thevenin
+- `k` (L2/L1 ratio, current 0.0095)
+- `Iripple` (current 0.61% of the peak)
+- `fs` (switching frequency, current 5 kHz)
+- Network topology or Thevenin values
 
-### Como propagar pro `params.m`
+### How to propagate changes to `params.m`
 
-1. Rodar todas as células do notebook (gera `notebook_params.m`).
-2. Comparar `notebook_params.m` vs `params.m`.
-3. Copiar os valores novos pra `params.m` **mantendo o `*1.5` no Vcc**.
-4. Não copiar `Ts`, `fsw`, `Tsc` (só existem em `params.m`, não no notebook).
+1. Run all notebook cells (generates `notebook_params.m`).
+2. Compare `notebook_params.m` vs `params.m`.
+3. Copy the new values into `params.m` while keeping the `*1.5` in `Vcc`.
+4. Do not copy `Ts`, `fsw`, or `Tsc` from the notebook; they exist only in
+   `params.m`.
 
-## Campos exclusivos de `params.m`
+## Fields exclusive to `params.m`
 
-Não vêm do notebook, são config de simulação:
+These do not come from the notebook; they are simulation configuration:
 
 ```matlab
-Ts   = 5e-6;    % Passo EMT (200 kHz)
-fsw  = 5000;    % Freq. chaveamento PWM [Hz]
-Tsc  = 2e-4;    % Passo do controle (5 kHz)
+Ts   = 5e-6;    % EMT step (200 kHz)
+fsw  = 5000;    % PWM switching frequency [Hz]
+Tsc  = 2e-4;    % Control step (5 kHz)
 ```
 
-Ver [[simulink-model]] para como esses entram no InitFcn.
+See [[simulink-model]] for how these enter the InitFcn.
 
 ## .gitignore
 
-```
+```text
 # Auto-generated by analysis notebook
 notebook_params.m
 ```
 
-`notebook_params.m` **nunca** deve ser commitado — é derivado puro.
+`notebook_params.m` should never be committed; it is a pure derivative.

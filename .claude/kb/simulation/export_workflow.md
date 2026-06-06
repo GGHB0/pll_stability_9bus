@@ -7,67 +7,61 @@ description: Como extrair sinais do Simulink e exportar para Python via CSV — 
 
 ## Sinais disponíveis no logsout
 
-Após rodar a simulação, o workspace contém `logsout_IEEE9BusLoadflow` (Simulink.SimulationData.Dataset) com 5 sinais logados:
+Após rodar a simulação, o workspace contém `logsout_IEEE9BusLoadflow` (Simulink.SimulationData.Dataset) com 8 sinais logados:
 
-| Nome | Conteúdo |
-|---|---|
-| `Pinverter` | Potência ativa do inversor (pu) |
-| `Qinverter` | Potência reativa do inversor (pu) |
-| `iabc_inverter` | Correntes trifásicas do inversor (pu) |
-| `iabc_grid` | Correntes trifásicas da rede (pu) |
-| `vab_sync` | Tensão de sincronismo Vab |
+| Nome no logsout | Conteúdo | Dimensão |
+|---|---|---|
+| `Pinverter` | Potência ativa do inversor (pu) | escalar |
+| `Qinverter` | Potência reativa do inversor (pu) | escalar |
+| `Ang_pll` | Ângulo estimado pelo PLL θ̂ (rad) | escalar |
+| `Ang_Rede` | Ângulo de referência da rede θ_ref (rad) | escalar |
+| `id` | Corrente de eixo d (pu) | vetor 2 col |
+| `Iq` | Corrente de eixo q (pu) | vetor 2 col |
+| `iabc_inverter` | Correntes trifásicas do inversor (pu) | vetor 3 col |
+| `iabc_grid` | Correntes trifásicas da rede (pu) | escalar |
 
 > `tout` não é salvo automaticamente — usar `P.Values.Time` para obter o vetor de tempo.
+> `id` e `Iq` têm 2 colunas (medida e referência) — usar `(:,1)` para a corrente medida.
 
 ## Script MATLAB de exportação
 
+Script em `scripts/export_sim_data.m`. Resumo:
+
 ```matlab
-P   = logsout_IEEE9BusLoadflow.get('Pinverter');
-Q   = logsout_IEEE9BusLoadflow.get('Qinverter');
-Ii  = logsout_IEEE9BusLoadflow.get('iabc_inverter');
-Ig  = logsout_IEEE9BusLoadflow.get('iabc_grid');
-Vab = logsout_IEEE9BusLoadflow.get('vab_sync');
+ds = logsout_IEEE9BusLoadflow;
+P      = ds.get('Pinverter');
+Q      = ds.get('Qinverter');
+AngPLL = ds.get('Ang_pll');
+AngRed = ds.get('Ang_Rede');
+Id     = ds.get('id');
+Iq     = ds.get('Iq');
 
 t = P.Values.Time;
+theta_err = AngPLL.Values.Data - AngRed.Values.Data;
 
 T = table(t, P.Values.Data, Q.Values.Data, ...
-    'VariableNames', {'t_s', 'P_pu', 'Q_pu'});
+    AngPLL.Values.Data, AngRed.Values.Data, theta_err, ...
+    Id.Values.Data(:,1), Iq.Values.Data(:,1), ...
+    'VariableNames', {'t_s','P_pu','Q_pu', ...
+    'theta_pll_rad','theta_ref_rad','theta_err_rad','id_pu','iq_pu'});
 
 writetable(T, 'sim_data.csv');
 ```
 
-Usar `pwd` no Command Window para confirmar a pasta de destino.
+## Script Python de análise
 
-## Leitura no Python
+Script em `scripts/analyze_sim_data.py`. Calcula IAE, ISE, ts, ΔP, ΔQ e plota 6 painéis.
 
 ```python
-import pandas as pd
-
+import numpy as np, pandas as pd
 df = pd.read_csv('sim_data.csv')
+theta_err = df['theta_err_rad'].to_numpy()
+t = df['t_s'].to_numpy()
+mask = t >= 0.5          # ajustar T_FAULT conforme cenário
+IAE = np.trapz(np.abs(theta_err[mask]), t[mask])
+ISE = np.trapz(theta_err[mask]**2, t[mask])
 ```
 
-## Métricas calculadas no Python
+## Colunas do CSV
 
-```python
-import numpy as np
-
-# IAE e ISE do erro de fase (requer theta_err exportado separadamente)
-IAE = np.trapz(np.abs(df['theta_err_rad']), df['t_s'])
-ISE = np.trapz(df['theta_err_rad']**2, df['t_s'])
-
-# Ripple de P e Q (janela pós-falta)
-pos_falta = df['t_s'] > 0.5
-delta_P = df.loc[pos_falta, 'P_pu'].max() - df.loc[pos_falta, 'P_pu'].min()
-delta_Q = df.loc[pos_falta, 'Q_pu'].max() - df.loc[pos_falta, 'Q_pu'].min()
-
-# Tempo de acomodação do erro de fase
-tol = 0.02
-fora = df[np.abs(df['theta_err_rad']) > tol]
-ts = fora['t_s'].iloc[-1] if not fora.empty else 0.0
-```
-
-## Pendência
-
-O sinal de erro de fase do PLL (`theta_err`) não está no logsout atual.
-Para incluí-lo: no Simulink, dentro de system_3963 (Optimal Controller),
-clicar com botão direito na linha de saída do somador (θ̂ - θ_grid) → Log signal.
+`t_s`, `P_pu`, `Q_pu`, `theta_pll_rad`, `theta_ref_rad`, `theta_err_rad`, `id_pu`, `iq_pu`

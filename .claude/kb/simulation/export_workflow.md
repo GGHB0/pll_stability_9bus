@@ -65,3 +65,20 @@ ISE = np.trapz(theta_err[mask]**2, t[mask])
 ## Colunas do CSV
 
 `t_s`, `P_pu`, `Q_pu`, `theta_pll_rad`, `theta_ref_rad`, `theta_err_rad`, `id_pu`, `iq_pu`
+
+## Ambiente Python
+
+O projeto tem `.venv` e `requirements.txt` com `numpy`, `pandas`, `matplotlib`.
+`.venv` está no `.gitignore` — não é versionado.
+
+Para recriar:
+```powershell
+python -m venv .venv
+.venv\Scripts\pip install -r requirements.txt
+```
+
+Para ativar e rodar a análise:
+```powershell
+.venv\Scripts\Activate.ps1
+python scripts\analyze_sim_data.py
+```

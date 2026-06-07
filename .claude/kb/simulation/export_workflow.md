@@ -35,9 +35,13 @@ de um Mux de 4 entradas `[idref, id, iqref, iq]`:
 
 ## Script MATLAB: `scripts/export_sim_data.m`
 
-Exporta 10 colunas para CSV com interpolação multi-taxa:
+Exporta 10 colunas para CSV com interpolação multi-taxa.
+Caminho portável — funciona em qualquer máquina sem editar o script:
 
 ```matlab
+% Raiz do projeto detectada a partir do .slx aberto
+proj_root = fileparts(get_param(bdroot, 'FileName'));
+
 ds = logsout_IEEE9BusLoadflow;
 t  = ds.get('Pinverter').Values.Time;   % eixo comum (Tsc)
 
@@ -50,8 +54,32 @@ iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear','extrap');
 iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear','extrap');
 theta_err = ang_pll - ang_red;
 
-writetable(T, 'C:\projetos\pll_stability_9bus\output\sim_data.csv');
+csv_path = fullfile(proj_root, 'output', 'sim_data.csv');
+writetable(T, csv_path);
 ```
+
+Após exportar o CSV, o script chama automaticamente `app.py` via `system()` e
+abre `output/pll_metrics.html` no navegador com `web(html_path)`.
+
+## Execução automática via StopFcn
+
+O pipeline completo pode ser disparado automaticamente ao fim de cada simulação
+configurando o **StopFcn** do modelo Simulink:
+
+**Modeling → Model Properties → Callbacks → StopFcn:**
+
+```matlab
+proj_root = fileparts(get_param(bdroot, 'FileName'));
+run(fullfile(proj_root, 'scripts', 'export_sim_data.m'));
+```
+
+Fluxo resultante:
+```
+▶ Simular  →  StopFcn  →  export_sim_data.m  →  sim_data.csv  →  app.py  →  pll_metrics.html
+```
+
+> `fileparts(get_param(bdroot,'FileName'))` retorna o diretório do `.slx` aberto —
+> portável entre máquinas independente de onde o repositório foi clonado.
 
 ## Colunas do CSV (10 colunas)
 

@@ -1,6 +1,10 @@
 %% export_sim_data.m
 % Exporta sinais logados para CSV após rodar a simulação.
-% Rode params.m antes de simular. Execute este script no Command Window.
+% Rode params.m antes de simular. Execute este script no Command Window
+% ou via StopFcn do modelo (funciona com qualquer caminho de repositório).
+
+% Raiz do projeto: diretório do .slx aberto (portável entre máquinas)
+proj_root = fileparts(get_param(bdroot, 'FileName'));
 
 ds = logsout_IEEE9BusLoadflow;
 
@@ -42,6 +46,29 @@ T = table(t, ...
     'VariableNames', {'t_s','P_pu','Q_pu','theta_pll_rad','theta_ref_rad','theta_err_rad', ...
                       'id_ref_pu','id_pu','iq_ref_pu','iq_pu'});
 
-csv_path = 'C:\projetos\pll_stability_9bus\output\sim_data.csv';
+csv_path = fullfile(proj_root, 'output', 'sim_data.csv');
 writetable(T, csv_path);
 fprintf('Exportado: %d amostras\nCSV salvo em: %s\n', height(T), csv_path);
+
+%% Gera relatório HTML com Python
+python_exe = fullfile(proj_root, '.venv', 'Scripts', 'python.exe');
+app_py     = fullfile(proj_root, 'app.py');
+
+if isfile(python_exe)
+    cmd = sprintf('"%s" "%s"', python_exe, app_py);
+    fprintf('\nRodando: %s\n', cmd);
+    [status, out] = system(cmd);
+    disp(out);
+    if status == 0
+        html_path = fullfile(proj_root, 'output',  'pll_metrics.html');
+        fprintf('Relatorio gerado: %s\n', html_path);
+        % Abre o HTML no navegador padrao
+        web(html_path);
+    else
+        warning('export_sim_data:python', 'app.py retornou erro (status=%d).', status);
+    end
+else
+    warning('export_sim_data:venv', ...
+        'Venv nao encontrado em %s\nRode manualmente: .venv\\Scripts\\python.exe app.py', ...
+        python_exe);
+end

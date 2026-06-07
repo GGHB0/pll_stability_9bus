@@ -19,8 +19,13 @@ t = P.Values.Time;
 % Interpola sinais com taxa diferente sobre t
 ang_pll = interp1(AngPLL.Values.Time, AngPLL.Values.Data, t, 'linear', 'extrap');
 ang_red = interp1(AngRed.Values.Time, AngRed.Values.Data, t, 'linear', 'extrap');
-id_pu   = interp1(Id.Values.Time,    Id.Values.Data(:,1),  t, 'linear', 'extrap');
-iq_pu   = interp1(Iq.Values.Time,    Iq.Values.Data(:,1),  t, 'linear', 'extrap');
+% id e Iq: cada sinal é mux [ref, medido]
+%   Data(:,1) = referência (id_ref / iq_ref)
+%   Data(:,2) = sinal real medido (com ruído do controle)
+id_ref_pu = interp1(Id.Values.Time, Id.Values.Data(:,1), t, 'linear', 'extrap');
+id_pu     = interp1(Id.Values.Time, Id.Values.Data(:,2), t, 'linear', 'extrap');
+iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
+iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
 
 theta_err = ang_pll - ang_red;
 
@@ -30,9 +35,13 @@ T = table(t, ...
     ang_pll, ...
     ang_red, ...
     theta_err, ...
+    id_ref_pu, ...
     id_pu, ...
+    iq_ref_pu, ...
     iq_pu, ...
-    'VariableNames', {'t_s','P_pu','Q_pu','theta_pll_rad','theta_ref_rad','theta_err_rad','id_pu','iq_pu'});
+    'VariableNames', {'t_s','P_pu','Q_pu','theta_pll_rad','theta_ref_rad','theta_err_rad', ...
+                      'id_ref_pu','id_pu','iq_ref_pu','iq_pu'});
 
-writetable(T, 'sim_data.csv');
-fprintf('Exportado: %d amostras em sim_data.csv\n', height(T));
+csv_path = 'C:\projetos\pll_stability_9bus\output\sim_data.csv';
+writetable(T, csv_path);
+fprintf('Exportado: %d amostras\nCSV salvo em: %s\n', height(T), csv_path);

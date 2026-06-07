@@ -10,92 +10,128 @@ TCC (Trabalho de Conclusão de Curso) em Engenharia Elétrica — UERJ 2025. Inv
 
 ```
 pll_stability_9bus/
-├── pll_stability_9bus.slx              ← main Simulink model (root)
-├── params.m                            ← MATLAB workspace setup for the main model
-├── pll_stability_9bus_faultInfo.xml    ← Fault Analyzer metadata for the main model
+├── app.py                              ← entry point Python (python app.py)
+├── params.m                            ← MATLAB workspace setup (rodar antes de simular)
+├── pll_stability_9bus.slx              ← modelo Simulink principal (raiz)
+├── pll_stability_9bus_faultInfo.xml    ← metadados do Fault Analyzer
+├── requirements.txt                    ← numpy, pandas, plotly
+├── src/                                ← pacote Python de análise
+│   ├── __init__.py                     ← expõe SimData, ChartBuilder, HTMLRenderer
+│   ├── config.py                       ← T_FAULT, TOL_RAD, paletas, caminhos
+│   ├── loader.py                       ← SimData: lê CSV, calcula IAE/ISE/ts/ΔP/ΔQ
+│   ├── chart.py                        ← ChartBuilder: monta subplots Plotly
+│   └── renderer.py                     ← HTMLRenderer: gera relatório HTML
+├── scripts/
+│   ├── export_sim_data.m               ← exporta logsout → output/sim_data.csv
+│   └── analyze_sim_data.py             ← script legado (substituído por app.py)
 ├── notebooks/
-│   └── pll_stability_9bus_analysis.ipynb   ← analytical parameter calculation
-├── simulink/                           ← auxiliary Simulink models
+│   └── pll_stability_9bus_analysis.ipynb   ← cálculo analítico de parâmetros
+├── simulink/                           ← modelos Simulink auxiliares
 │   ├── pll_stability_9bus_FaultModel.slx
-│   ├── GridTiedInverterOptimalI2.slx   ← MathWorks reference example
-│   ├── GridTiedInverterOptimalIData.m  ← params for the reference example
-│   ├── teste_isolado.slx               ← isolated sandbox
+│   ├── GridTiedInverterOptimalI2.slx   ← referência MathWorks
+│   ├── GridTiedInverterOptimalIData.m
+│   ├── teste_isolado.slx
 │   └── archive/
-│       └── pll_stability_9bus.slx.original   ← backup of pre-modification model
-├── scripts/                            ← Python analysis scripts
-├── assets/                             ← diagrams, banner, figures
-└── .claude/                            ← knowledge base + skills (see below)
+│       └── pll_stability_9bus.slx.original
+├── output/                             ← gerado em runtime (não versionado)
+│   ├── sim_data.csv                    ← exportado pelo MATLAB
+│   └── pll_metrics.html                ← relatório gerado pelo Python
+├── assets/                             ← diagramas, figuras, banner
+└── .claude/                            ← base de conhecimento + skills
 ```
 
-Before simulating the main model, run `params.m` in MATLAB to populate the workspace. Auxiliary models in `simulink/` are standalone (not referenced by the main model).
+## Workflow de Simulação → Relatório
 
-## Running the Notebook
+```
+1. MATLAB: abrir pll_stability_9bus.slx → rodar params.m → simular
+2. MATLAB: >> export_sim_data          (gera output/sim_data.csv)
+3. Python: .venv\Scripts\python app.py (gera output/pll_metrics.html)
+```
+
+## Rodando o Pacote Python
+
+```powershell
+# Configuração do ambiente (uma vez)
+python -m venv .venv
+.venv\Scripts\pip install -r requirements.txt
+
+# Gerar relatório (após exportar CSV do MATLAB)
+.venv\Scripts\python.exe app.py
+
+# Caminhos customizados
+.venv\Scripts\python.exe app.py --csv output/sim_data.csv --out output/relatorio.html
+```
+
+`app.py` instancia `SimData → ChartBuilder → HTMLRenderer` e salva o HTML com
+toggle de tema light/dark, 5 cards de métricas e subplots Plotly interativos.
+
+## Rodando o Notebook
 
 ```bash
 jupyter notebook notebooks/pll_stability_9bus_analysis.ipynb
-# or
-jupyter lab
 ```
 
-Dependencies: `numpy`, `pandas`, `math` (standard library). No `requirements.txt` exists — install manually if needed:
+Dependências: `numpy`, `pandas`, `math` (stdlib). Rodar células de cima para baixo
+— variáveis de células anteriores são reutilizadas ao longo do notebook.
 
-```bash
-pip install numpy pandas jupyter
-```
+## Modelos Simulink
 
-Run all cells top-to-bottom; cells are sequentially dependent (variables defined in earlier cells are reused throughout).
+Abrir `.slx` no **MATLAB/Simulink R202x**. O modelo simula cenários EMT para
+4 tipos de contingência: afundamento simétrico, afundamento assimétrico (introduz
+sequência negativa → oscilações de 2ª harmônica no PLL), salto de ângulo e alto RoCoF.
 
-## Simulink Models
+Antes de simular: `>> params.m` no Command Window. Modelos em `simulink/` são
+standalone — não referenciados pelo modelo principal.
 
-Open `.slx` files in **MATLAB/Simulink** (R202x). The model simulates EMT (Electromagnetic Transient) scenarios for four contingency types: symmetric voltage sag, asymmetric voltage sag (introduces negative sequence → 2nd harmonic oscillations in PLL), phase-angle jump, and high RoCoF.
-
-## System Parameters (key values used across notebook and model)
+## Parâmetros do Sistema
 
 - Base: 20 kV / 100 MVA / 60 Hz
-- IEEE 9-bus network; inverter connected at Bus 2
-- Thevenin impedance computed as `Z_ii` diagonal of `inv(Ybarra)` at the connection bus
-- LCL filter resonance: `ω_res = 9068.99 rad/s`, damping `ξ = 0.707`, switching freq `fs = 5 kHz`
-- PLL gains derived from: `Kp = 8·60·(L1+L2+Lest)`, `Ki = 32·60²·(L1+L2+Lest)`
+- Rede IEEE 9 barras; inversor conectado na Barra 2
+- Impedância de Thevenin: diagonal `Z_ii` de `inv(Ybarra)` na barra de conexão
+- Ressonância do filtro LCL: `ω_res = 9068.99 rad/s`, `ξ = 0.707`, `fs = 5 kHz`
+- Ganhos do PLL: `Kp = 8·60·(L1+L2+Lest)`, `Ki = 32·60²·(L1+L2+Lest)`
+- Vcc no modelo: 136.364 kV (×1.5 override proposital vs 90.9 kV do notebook)
 
-## Notebook Architecture
+## Sinais Logados (logsout_IEEE9BusLoadflow)
 
-The notebook follows a linear calculation pipeline:
+| Sinal | Conteúdo | Colunas |
+|---|---|---|
+| `Pinverter`, `Qinverter` | Potência ativa/reativa (pu) | 1 |
+| `Ang_pll`, `Ang_Rede` | Ângulos PLL e rede (rad) | 1 |
+| `id` | **Mux [id_ref, id_medido]** (pu) | 2 |
+| `Iq` | **Mux [iq_ref, iq_medido]** (pu) | 2 |
+| `iabc_inverter`, `iabc_grid` | Correntes trifásicas (pu) | 3 |
 
-1. **Network construction** — builds `Ybarra` via `montar_Ybarra()`, inverts to get `Zbarra`
-2. **Thevenin equivalent** — extracts `Z22` (diagonal element at connection bus)
-3. **LCL filter sizing** — computes `L1`, `L2`, `Cf`, damping resistors `Rd1`/`Rd2`
-4. **Controller design** — PLL gains `Kp`/`Ki` and current controller tuning (pole-zero cancellation)
+`Ang_pll` e `iabc` correm a Ts=5 µs; demais a Tsc=200 µs → interpolar sobre t de `Pinverter`.
 
-The `montar_Ybarra(n_barras, entrebarras, impedancias_barra, retornar)` function is the core utility: pass `retornar="Y"` for admittance matrix, `retornar="Z"` for impedance matrix (inverts internally).
+## Métricas de Desempenho
 
-## Performance Metrics
-
-Results are evaluated by: IAE (Integral Absolute Error of phase angle), ISE (Integral Square Error), phase error settling time, active/reactive power oscillations, and LVRT compliance per IEEE 1547-2018.
+IAE, ISE, tempo de acomodação ts (critério ±1.15° = 0.02 rad), ΔP, ΔQ pós-falta.
+Calculados por `SimData` em `src/loader.py`. Conformidade LVRT per IEEE 1547-2018.
 
 ## Knowledge Base (.claude/)
 
-The `.claude/` directory contains the project's persistent knowledge system:
-
 ```
 .claude/
-├── kb/                        ← knowledge bases (Markdown, max 200 lines each)
-│   ├── project-scope.md       ← full TCC scope, chapter status, contingency table
-│   ├── pll/                   ← SRF-PLL theory, Kp/Ki methodology, contingency scenarios
-│   ├── inverter/              ← LCL filter, Simulink model architecture
-│   ├── power-system/          ← IEEE 9-bus topology, Thevenin methodology
-│   ├── simulation/            ← notebook↔params.m workflow, Vcc override, runtime config
-│   └── standards/             ← LVRT, IEEE 1547-2018
+├── kb/
+│   ├── project-scope.md       ← escopo TCC, status dos capítulos, tabela de contingências
+│   ├── pll/                   ← teoria SRF-PLL, metodologia Kp/Ki, cenários de contingência
+│   ├── inverter/              ← filtro LCL, arquitetura Simulink, referência VSC
+│   ├── power-system/          ← IEEE 9 barras, Thevenin, inércia, VSG
+│   ├── simulation/            ← workflow export, override Vcc, runtime (Ts/fsw/Tsc)
+│   ├── standards/             ← LVRT, IEEE 1547-2018, ONS
+│   └── python/                ← padrões Python clean code + pipeline NumPy/Pandas/Plotly
 ├── commands/
-│   └── git.yaml               ← project git workflow conventions
+│   └── git.yaml               ← convenções de git do projeto
 ├── rules/
-│   └── limits.md              ← file size limits and kb folder map
+│   └── limits.md              ← limite 200 linhas/arquivo, mapa de pastas do kb
 └── skills/
-    └── slx-explorer/          ← skill for inspecting .slx files via Python/XML
+    └── slx-explorer/          ← inspeção de .slx via Python/XML (sem MATLAB)
 ```
 
-### Inspecting the Simulink Model Without MATLAB
+## Inspecionando o Modelo Simulink Sem MATLAB
 
-`.slx` files are ZIP archives containing XML. Use Python to read them directly:
+Arquivos `.slx` são ZIPs com XML internamente:
 
 ```python
 import zipfile, xml.etree.ElementTree as ET
@@ -103,8 +139,13 @@ with zipfile.ZipFile('pll_stability_9bus.slx', 'r') as z:
     xml = z.read('simulink/blockdiagram.xml').decode('utf-8', errors='replace')
 ```
 
-Key system SIDs: root network (`system_root`), UFV Model/VSI (`3896`), Optimal Controller (`3963`), PWM Control/PI+Notch (`3974`), PWM comparator (`3997`). See `kb/inverter/simulink_model.md` for full map.
+SIDs principais: rede raiz (`system_root`), UFV Model/VSI (`3896`), Optimal Controller
+(`3963`), PWM Control/PI+Notch (`3974`), PWM comparator (`3997`), Measurement (`4021`).
+Ver `kb/inverter/simulink_model.md` para o mapa completo.
 
-### Kp/Ki Gain Note
+## Nota sobre os Ganhos Kp/Ki
 
-Gains are divided by 4 **twice**: once in the notebook (pu conversion, Z_base = 4 Ω) and once inside the Simulink Gain blocks. The double division compensates for a ~6× mismatch between V_base_LN and Vcc/2 in the SPWM normalization, combined with a ×2 factor from the notebook formula using `(L1+L2+Lest)` instead of `Lest`.
+Os ganhos são divididos por 4 **duas vezes**: uma no notebook (conversão pu,
+Z_base = 4 Ω) e outra dentro dos blocos Gain do Simulink. A dupla divisão compensa
+um mismatch de ~6× entre V_base_LN e Vcc/2 na normalização do SPWM, combinado
+com fator ×2 por usar `(L1+L2+Lest)` ao invés de `Lest` na fórmula.

@@ -8,6 +8,8 @@
   <img alt="Jupyter Notebook" src="https://img.shields.io/badge/Jupyter-Notebook-F37626?style=for-the-badge&logo=jupyter&logoColor=white">
   <img alt="MATLAB" src="https://img.shields.io/badge/MATLAB-R202x-FF6F00?style=for-the-badge&logo=mathworks&logoColor=white">
   <img alt="Simulink" src="https://img.shields.io/badge/Simulink-Model-FF8C00?style=for-the-badge">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white">
+  <img alt="Plotly" src="https://img.shields.io/badge/Plotly-Interactive-3F4F75?style=for-the-badge&logo=plotly&logoColor=white">
   <img alt="Power Systems" src="https://img.shields.io/badge/Power%20Systems-9%20Bus-0F766E?style=for-the-badge">
 </p>
 
@@ -169,7 +171,26 @@ Esse valor e usado como parametro de rede no dimensionamento do filtro e no proj
 2. **Dimensionamento do filtro LCL** — calculo de L1, L2, Cf e resistores de amortecimento
 3. **Projeto dos controladores** — ganhos Kp e Ki do PLL e do controlador de corrente
 4. **Simulacao EMT** — execucao dos cenarios de contingencia no Simulink
-5. **Analise de resultados** — IAE, ISE, tempo de acomodacao e conformidade LVRT
+5. **Exportacao** — `scripts/export_sim_data.m` converte `logsout` em CSV
+6. **Analise de resultados** — `app.py` calcula IAE, ISE, ts, ΔP, ΔQ e gera relatorio HTML interativo
+
+## Pipeline de Analise
+
+```
+MATLAB/Simulink          Python (src/)
+──────────────           ─────────────────────────────────────
+params.m                 SimData      → lê CSV, calcula métricas
+   ↓                     ChartBuilder → subplots Plotly multi-painel
+simular .slx             HTMLRenderer → HTML com toggle light/dark
+   ↓
+export_sim_data.m  →  output/sim_data.csv  →  app.py  →  output/pll_metrics.html
+```
+
+```powershell
+# Gerar relatorio apos simular e exportar CSV:
+.venv\Scripts\python.exe app.py
+# Saida: output/pll_metrics.html (abrir no navegador)
+```
 
 ---
 
@@ -195,14 +216,19 @@ Esse valor e usado como parametro de rede no dimensionamento do filtro e no proj
 | Caminho | Descricao |
 |---|---|
 | `pll_stability_9bus.slx` | Modelo Simulink principal — inversor grid-tied com SRF-PLL no sistema de 9 barras |
-| `params.m` | Parametros MATLAB carregados no workspace antes de simular o modelo principal |
-| `notebooks/pll_stability_9bus_analysis.ipynb` | Calculo analitico: Ybarra/Zbarra, Thevenin, filtro LCL e ganhos do controlador |
-| `simulink/pll_stability_9bus_FaultModel.slx` | Subsistema de falta usado em estudos auxiliares |
-| `simulink/GridTiedInverterOptimalI2.slx` + `GridTiedInverterOptimalIData.m` | Modelo de referencia (exemplo MathWorks) e seus parametros |
+| `params.m` | Parametros MATLAB: rodar no Command Window antes de simular |
+| `app.py` | Entry point Python — gera `output/pll_metrics.html` a partir do CSV |
+| `src/` | Pacote Python: `SimData`, `ChartBuilder`, `HTMLRenderer`, `config` |
+| `requirements.txt` | Dependencias Python: numpy, pandas, plotly |
+| `scripts/export_sim_data.m` | Exporta `logsout_IEEE9BusLoadflow` → `output/sim_data.csv` |
+| `scripts/analyze_sim_data.py` | Script legado de analise (substituido por `app.py`) |
+| `notebooks/pll_stability_9bus_analysis.ipynb` | Calculo analitico: Ybarra/Zbarra, Thevenin, filtro LCL e ganhos |
+| `output/` | Gerado em runtime: `sim_data.csv` (MATLAB) e `pll_metrics.html` (Python) |
+| `simulink/pll_stability_9bus_FaultModel.slx` | Subsistema de falta para estudos auxiliares |
+| `simulink/GridTiedInverterOptimalI2.slx` | Modelo de referencia MathWorks com seus parametros |
 | `simulink/teste_isolado.slx` | Sandbox para testes isolados |
-| `simulink/archive/pll_stability_9bus.slx.original` | Backup do modelo principal antes das modificacoes |
-| `scripts/` | Scripts Python de analise (ex.: graficos de inercia) |
-| `assets/` | Diagramas, banner e figuras do README |
+| `simulink/archive/` | Backup do modelo antes das modificacoes |
+| `assets/` | Diagramas SVG, banner e figuras do README |
 
 ---
 
@@ -210,7 +236,8 @@ Esse valor e usado como parametro de rede no dimensionamento do filtro e no proj
 
 - **MATLAB/Simulink** — simulacao EMT e analise de sistemas de controle
 - **PSIM** — eletronica de potencia, harmonicos e transitorios
-- **Python / Jupyter** — calculo analitico de parametros
+- **Python 3.11+ / Jupyter** — calculo analitico de parametros e pipeline de analise pos-simulacao
+- **Plotly** — relatorio HTML interativo com graficos multi-painel e toggle light/dark
 
 ---
 

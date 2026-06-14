@@ -16,7 +16,7 @@ Id     = ds.get('id');
 Iq     = ds.get('Iq');
 Iabc   = ds.get('iabc_inverter');
 Igrid  = ds.get('iabc_grid');
-Vab    = ds.get('vab_sync');   % retorna [] com warning se nome errado
+
 
 % Eixo de tempo comum = P (Tsc = 2e-4 s)
 t = P.Values.Time;
@@ -42,6 +42,7 @@ iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
 iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
 
 % ── |V| Barra 2: magnitude instantânea (pu) ──────────────────────────────
+Vab = ds.get('vab_sync');   % retorna [] com warning se nome errado
 has_vbus2 = ~isempty(Vab);
 if has_vbus2
     if isa(Vab, 'Simulink.SimulationData.Signal')

@@ -7,7 +7,7 @@ description: Workflow validado Simulink → MATLAB → Python para o modelo pll_
 
 ## Sinais disponíveis no logsout
 
-`logsout_IEEE9BusLoadflow` (Simulink.SimulationData.Dataset) — 8 entradas:
+`logsout_IEEE9BusLoadflow` (Simulink.SimulationData.Dataset) — 9 entradas:
 
 | Nome | Conteúdo | Dimensão | Taxa |
 |---|---|---|---|
@@ -19,6 +19,10 @@ description: Workflow validado Simulink → MATLAB → Python para o modelo pll_
 | `Iq` | **Mux [iq_ref, iq_medido]** (pu) | 2 colunas | Tsc |
 | `iabc_inverter` | Correntes trifásicas inversor (pu) | 3 colunas | Ts |
 | `iabc_grid` | Correntes trifásicas rede (pu) | 3 colunas | Ts |
+| `V_bus2` | **Magnitude escalar** \|V\| Barra 2 (V ou pu) | escalar | Tsc |
+
+> `V_bus2` é um sinal escalar de magnitude — **não** é trifásico. Não aplicar transformada de Clarke.
+> O script normaliza pela média pré-falta (`t < T_FAULT`) para obter `vbus2_pu`.
 
 ### Estrutura interna de `id` e `Iq`
 
@@ -52,19 +56,26 @@ T_angles = table(t_fast, ang_fast, ang_red_fast, theta_err_fast, ...
 writetable(T_angles, fullfile(proj_root, 'output', 'sim_data_angles.csv'));
 ```
 
-### CSV 2 — potência e correntes (eixo lento, Tsc)
+### CSV 2 — potência, correntes e tensão (eixo lento, Tsc)
 
 ```matlab
-t = P.Values.Time;   % eixo Tsc
+t       = P.Values.Time;   % eixo Tsc
+T_FAULT = 0.5;             % instante da falta (s)
 
 id_ref_pu = interp1(Id.Values.Time, Id.Values.Data(:,1), t, 'linear', 'extrap');
 id_pu     = interp1(Id.Values.Time, Id.Values.Data(:,2), t, 'linear', 'extrap');
 iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
 iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
 
-T = table(t, P.Values.Data, Q.Values.Data, id_ref_pu, id_pu, iq_ref_pu, iq_pu, ...
-    'VariableNames', {'t_s','P_pu','Q_pu','id_ref_pu','id_pu','iq_ref_pu','iq_pu'});
-writetable(T, fullfile(proj_root, 'output', 'sim_data.csv'));
+% V_bus2 é escalar — extrai e normaliza diretamente (sem Clarke)
+V_bus2 = ds.get('V_bus2');
+if ~isempty(V_bus2)
+    ts_v     = V_bus2.Values;          % timeseries ou timetable
+    t_v      = ts_v.Time;
+    vmag     = ts_v.Data(:,1);
+    Vmag_nom = mean(vmag(t_v < T_FAULT));
+    vbus2_pu = interp1(t_v, vmag / Vmag_nom, t, 'linear', 'extrap');
+end
 ```
 
 Após exportar, o script chama `app.py` via `system()` e abre o HTML no navegador.
@@ -73,8 +84,10 @@ Após exportar, o script chama `app.py` via `system()` e abre o HTML no navegado
 
 | Arquivo | Colunas | Taxa | Uso |
 |---|---|---|---|
-| `output/sim_data.csv` | `t_s, P_pu, Q_pu, id_ref_pu, id_pu, iq_ref_pu, iq_pu` | Tsc | eixo de tempo principal do Python |
+| `output/sim_data.csv` | `t_s, P_pu, Q_pu, id_ref_pu, id_pu, iq_ref_pu, iq_pu [, vbus2_pu]` | Tsc | eixo de tempo principal do Python |
 | `output/sim_data_angles.csv` | `t_s, theta_pll_rad, theta_ref_rad, theta_err_rad` | Ts | alta resolução para θ_err e IAE/ISE/ts |
+
+> `vbus2_pu` é opcional: incluído quando `V_bus2` existe no logsout. Python detecta via `"vbus2_pu" in df.columns`.
 
 > Formato legado (colunas de ângulo dentro de `sim_data.csv`) ainda é suportado pelo Python.
 

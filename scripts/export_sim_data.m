@@ -16,7 +16,7 @@ Id     = ds.get('id');
 Iq     = ds.get('Iq');
 Iabc   = ds.get('iabc_inverter');
 Igrid  = ds.get('iabc_grid');
-Vab    = ds.get('vab_sync');
+Vab    = ds.get('vab_sync');   % retorna [] com warning se nome errado
 
 % Eixo de tempo comum = P (Tsc = 2e-4 s)
 t = P.Values.Time;
@@ -42,31 +42,42 @@ iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
 iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
 
 % ── |V| Barra 2: magnitude instantânea (pu) ──────────────────────────────
-% vab_sync pode ser Signal, timeseries ou timetable dependendo do MATLAB/Simulink
-if isa(Vab, 'Simulink.SimulationData.Signal')
-    vab_inner = Vab.Values;
+has_vbus2 = ~isempty(Vab);
+if has_vbus2
+    if isa(Vab, 'Simulink.SimulationData.Signal')
+        vab_inner = Vab.Values;
+    else
+        vab_inner = Vab;
+    end
+    if isa(vab_inner, 'timetable')
+        t_v      = seconds(vab_inner.Time);
+        vab_data = vab_inner.Variables;
+    else  % timeseries
+        t_v      = vab_inner.Time;
+        vab_data = vab_inner.Data;
+    end
+    Va   = vab_data(:,1);
+    Vb   = vab_data(:,2);
+    Vc   = -(Va + Vb);
+    Vmag = sqrt((Va.^2 + Vb.^2 + Vc.^2) * (2/3));
+    idx_pre  = t_v < 0.5;
+    Vmag_nom = mean(Vmag(idx_pre));
+    vbus2_pu = interp1(t_v, Vmag / Vmag_nom, t, 'linear', 'extrap');
 else
-    vab_inner = Vab;
+    fprintf('\nAVISO: vab_sync nao encontrado. Sinais disponiveis no dataset:\n');
+    for k = 1:ds.numElements
+        fprintf('  [%d] %s\n', k, ds{k}.Name);
+    end
+    fprintf('Ajuste o nome do sinal em export_sim_data.m (linha com ds.get).\n\n');
 end
-if isa(vab_inner, 'timetable')
-    t_v      = seconds(vab_inner.Time);
-    vab_data = vab_inner.Variables;
-else  % timeseries
-    t_v      = vab_inner.Time;
-    vab_data = vab_inner.Data;
-end
-Va = vab_data(:,1);
-Vb = vab_data(:,2);
-Vc   = -(Va + Vb);
-% Magnitude do vetor de Clarke: sqrt(2/3 * (Va²+Vb²+Vc²)) = pico da fundamental
-Vmag = sqrt((Va.^2 + Vb.^2 + Vc.^2) * (2/3));
-% Normaliza pelo valor médio pré-falta → pu
-idx_pre  = t_v < 0.5;
-Vmag_nom = mean(Vmag(idx_pre));
-vbus2_pu = interp1(t_v, Vmag / Vmag_nom, t, 'linear', 'extrap');
 
-T = table(t, P.Values.Data, Q.Values.Data, id_ref_pu, id_pu, iq_ref_pu, iq_pu, vbus2_pu, ...
-    'VariableNames', {'t_s','P_pu','Q_pu','id_ref_pu','id_pu','iq_ref_pu','iq_pu','vbus2_pu'});
+if has_vbus2
+    T = table(t, P.Values.Data, Q.Values.Data, id_ref_pu, id_pu, iq_ref_pu, iq_pu, vbus2_pu, ...
+        'VariableNames', {'t_s','P_pu','Q_pu','id_ref_pu','id_pu','iq_ref_pu','iq_pu','vbus2_pu'});
+else
+    T = table(t, P.Values.Data, Q.Values.Data, id_ref_pu, id_pu, iq_ref_pu, iq_pu, ...
+        'VariableNames', {'t_s','P_pu','Q_pu','id_ref_pu','id_pu','iq_ref_pu','iq_pu'});
+end
 
 csv_path = fullfile(proj_root, 'output', 'sim_data.csv');
 writetable(T, csv_path);

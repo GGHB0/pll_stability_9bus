@@ -42,9 +42,16 @@ iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
 iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
 
 % ── |V| Barra 2: magnitude instantânea (pu) ──────────────────────────────
-t_v  = Vab.Values.Time;
-Va   = Vab.Values.Data(:,1);
-Vb   = Vab.Values.Data(:,2);
+% vab_sync (Simscape) pode ser timeseries direto ou Signal wrapper
+if isprop(Vab, 'Values')
+    t_v = Vab.Values.Time;
+    Va  = Vab.Values.Data(:,1);
+    Vb  = Vab.Values.Data(:,2);
+else
+    t_v = Vab.Time;
+    Va  = Vab.Data(:,1);
+    Vb  = Vab.Data(:,2);
+end
 Vc   = -(Va + Vb);
 % Magnitude do vetor de Clarke: sqrt(2/3 * (Va²+Vb²+Vc²)) = pico da fundamental
 Vmag = sqrt((Va.^2 + Vb.^2 + Vc.^2) * (2/3));

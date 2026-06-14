@@ -1,0 +1,9 @@
+folder: standards
+description: Normas e requisitos de rede relevantes ao TCC — LVRT/IEEE 1547-2018 e função ONS Submódulo 2.10
+files:
+  - file: lvrt.md
+    name: lvrt-standards
+    description: Requisitos LVRT e IEEE 1547-2018 relevantes para avaliação do SRF-PLL
+  - file: ons_2_11.md
+    name: ons-2-11
+    description: Função MATLAB ONS_2_11 — injeção de corrente reativa sob defeito (ONS Submódulo 2.10 §5.8); código completo extraído do pll_stability_9bus.slx

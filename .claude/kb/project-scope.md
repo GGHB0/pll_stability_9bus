@@ -30,6 +30,11 @@ ONS concluiu que inversores eólicos/fotovoltaicos tiveram desempenho "aquém do
 
 **O capítulo 4 é a prioridade pendente do trabalho.**
 
+> Estado granular Cap. 4 (2026-06): apenas títulos existem. 4.1.1 contém só ".".
+> Subseções a redigir: 4.1.1, 4.1.2, 4.2.1, 4.3.1, 4.3.2.
+> **4.2.2 (salto de fase) NÃO será implementado** — instrução do Oscar.
+> Mapa completo do documento: `.claude/kb/tcc-word/content_map.md`.
+
 ## Objetivos Específicos (Cap. 1)
 
 1. Modelagem matemática do sistema inversor-rede (foco na dinâmica do PLL em dq)
@@ -103,3 +108,15 @@ Essa é a limitação central identificada no trabalho.
 - As tentativas de notch/filtro para remover componentes de `120 Hz` não resolveram
   os casos severos; elas seguem relevantes para curtos assimétricos moderados, mas
   não substituem uma solução estrutural para baixa inércia e lock-loss.
+
+## Problemas Estruturais do DOCX (2026-06)
+
+Levantados na revisão completa do `TCCs Victor e Bruno_V8_revisado.docx` (307 parágrafos):
+
+1. Seção "A Necessidade das Transformadas de Referência" sem número (Ttulo2 antes de 2.1).
+2. Subseções 2.4.1/2.4.2/2.4.3 com estilo `Ttulo4` em vez de `Ttulo3`.
+3. [FIGURA 3.1] referenciada 2× em 3.2.2 (§215, §220) sem placeholder no texto.
+4. Seção 3.3 (adicionada por Claude) sem acentuação correta em todo o texto.
+5. Lista de referências final mistura template UERJ com refs reais do TCC.
+
+Tratamento e priorização: `.claude/kb/tcc-word/docx_structure.md` → "Pendências Priorizadas".

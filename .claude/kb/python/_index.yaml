@@ -1,0 +1,34 @@
+folder: python
+description: Padrões e referências Python para o projeto — conceitos da linguagem, padrões de design e pipeline NumPy/Pandas/Plotly
+files:
+  - file: index.md
+    description: Índice narrativo dos padrões Python do projeto
+  - file: quick-reference.md
+    description: Referência rápida de sintaxe e idiomas Python usados no src/
+  - file: specs/python-standards.yaml
+    description: Especificação formal dos padrões de código Python adotados no projeto
+subfolders:
+  - folder: concepts
+    description: Conceitos da linguagem — context managers, dataclasses, generators, type hints
+    files:
+      - file: context-managers.md
+        description: with statement, __enter__/__exit__ e contextlib para gerenciamento de recursos
+      - file: dataclasses.md
+        description: "@dataclass com slots, frozen, kw_only para Python 3.11+"
+      - file: generators.md
+        description: Funções geradoras, yield, send e generator expressions para avaliação lazy
+      - file: type-hints.md
+        description: Type annotations, generics, Self e sintaxe Python 3.12+ para código limpo
+  - folder: patterns
+    description: Padrões de design aplicados ao projeto — arquitetura, erros, parsing e pipeline analítico
+    files:
+      - file: clean-architecture.md
+        description: Estrutura de código limpo, convenções de nomes e organização de módulos
+      - file: error-handling.md
+        description: Hierarquia de exceções, erros customizados e padrões de recuperação
+      - file: file-parser.md
+        description: Parsing de arquivos com generators e context managers para processamento eficiente em memória
+      - file: functional-patterns.md
+        description: Comprehensions, map, filter, reduce e functools para transformações de dados
+      - file: numpy-pandas-plotly.md
+        description: Pipeline de análise de sinais temporais com NumPy/Pandas/Plotly — padrões usados no src/

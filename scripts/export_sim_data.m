@@ -42,7 +42,7 @@ iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
 iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
 
 % ── |V| Barra 2: magnitude instantânea (pu) ──────────────────────────────
-Vab = ds.get('vab_sync');   % retorna [] com warning se nome errado
+Vab = ds.get('V_bus2');   % retorna [] com warning se nome errado
 has_vbus2 = ~isempty(Vab);
 if has_vbus2
     if isa(Vab, 'Simulink.SimulationData.Signal')
@@ -57,15 +57,19 @@ if has_vbus2
         t_v      = vab_inner.Time;
         vab_data = vab_inner.Data;
     end
-    Va   = vab_data(:,1);
-    Vb   = vab_data(:,2);
-    Vc   = -(Va + Vb);
+    Va = vab_data(:,1);
+    Vb = vab_data(:,2);
+    if size(vab_data, 2) >= 3
+        Vc = vab_data(:,3);          % Vabc — usa coluna 3 diretamente
+    else
+        Vc = -(Va + Vb);             % Vab — reconstrói Vc por Kirchhoff
+    end
     Vmag = sqrt((Va.^2 + Vb.^2 + Vc.^2) * (2/3));
     idx_pre  = t_v < 0.5;
     Vmag_nom = mean(Vmag(idx_pre));
     vbus2_pu = interp1(t_v, Vmag / Vmag_nom, t, 'linear', 'extrap');
 else
-    fprintf('\nAVISO: vab_sync nao encontrado. Sinais disponiveis no dataset:\n');
+    fprintf('\nAVISO: V_bus2 nao encontrado. Sinais disponiveis no dataset:\n');
     for k = 1:ds.numElements
         fprintf('  [%d] %s\n', k, ds{k}.Name);
     end

@@ -16,10 +16,12 @@ Id     = ds.get('id');
 Iq     = ds.get('Iq');
 Iabc   = ds.get('iabc_inverter');
 Igrid  = ds.get('iabc_grid');
+V_bus2 = ds.get('V_bus2');   % magnitude |V| Barra 2 (escalar, pu ou V)
 
 
 % Eixo de tempo comum = P (Tsc = 2e-4 s)
-t = P.Values.Time;
+t       = P.Values.Time;
+T_FAULT = 0.5;   % instante da falta (s)
 
 % ── Tabela rápida: ângulos nativos a Ts (não interpolados) ───────────────
 t_fast         = AngPLL.Values.Time;
@@ -41,39 +43,26 @@ id_pu     = interp1(Id.Values.Time, Id.Values.Data(:,2), t, 'linear', 'extrap');
 iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
 iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
 
-% ── |V| Barra 2: magnitude instantânea (pu) ──────────────────────────────
-Vab = ds.get('V_bus2');   % retorna [] com warning se nome errado
-has_vbus2 = ~isempty(Vab);
+% ── |V| Barra 2: sinal escalar (magnitude), normaliza para pu ────────────
+has_vbus2 = ~isempty(V_bus2);
 if has_vbus2
-    if isa(Vab, 'Simulink.SimulationData.Signal')
-        vab_inner = Vab.Values;
+    if isa(V_bus2, 'Simulink.SimulationData.Signal')
+        ts_v = V_bus2.Values;
     else
-        vab_inner = Vab;
+        ts_v = V_bus2;
     end
-    if isa(vab_inner, 'timetable')
-        t_v      = seconds(vab_inner.Time);
-        vab_data = vab_inner.Variables;
-    else  % timeseries
-        t_v      = vab_inner.Time;
-        vab_data = vab_inner.Data;
-    end
-    Va = vab_data(:,1);
-    Vb = vab_data(:,2);
-    if size(vab_data, 2) >= 3
-        Vc = vab_data(:,3);          % Vabc — usa coluna 3 diretamente
+    if isa(ts_v, 'timetable')
+        t_v    = seconds(ts_v.Time);
+        vmag   = ts_v.Variables(:,1);
     else
-        Vc = -(Va + Vb);             % Vab — reconstrói Vc por Kirchhoff
+        t_v    = ts_v.Time;
+        vmag   = ts_v.Data(:,1);
     end
-    Vmag = sqrt((Va.^2 + Vb.^2 + Vc.^2) * (2/3));
-    idx_pre  = t_v < 0.5;
-    Vmag_nom = mean(Vmag(idx_pre));
-    vbus2_pu = interp1(t_v, Vmag / Vmag_nom, t, 'linear', 'extrap');
+    idx_pre  = t_v < T_FAULT;
+    Vmag_nom = mean(vmag(idx_pre));
+    vbus2_pu = interp1(t_v, vmag / Vmag_nom, t, 'linear', 'extrap');
 else
-    fprintf('\nAVISO: V_bus2 nao encontrado. Sinais disponiveis no dataset:\n');
-    for k = 1:ds.numElements
-        fprintf('  [%d] %s\n', k, ds{k}.Name);
-    end
-    fprintf('Ajuste o nome do sinal em export_sim_data.m (linha com ds.get).\n\n');
+    fprintf('\nAVISO: V_bus2 nao encontrado no dataset.\n');
 end
 
 if has_vbus2

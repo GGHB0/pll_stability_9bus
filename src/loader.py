@@ -100,6 +100,10 @@ class SimData:
         else:
             self.theta_pll = self.theta_ref = None
 
+        # ── tensão Barra 2 ───────────────────────────────────────────────────
+        self.has_vbus2 = "vbus2_pu" in self._cols
+        self.vbus2 = self._df["vbus2_pu"].to_numpy() if self.has_vbus2 else None
+
         # ── correntes dq ─────────────────────────────────────────────────────
         if self.has_dq:
             self.id_meas = self._df["id_pu"].to_numpy()
@@ -132,8 +136,9 @@ class SimData:
         else:
             metrics["IAE"] = metrics["ISE"] = metrics["ts"] = None
 
-        metrics["dP"] = float(self.P[mask].max() - self.P[mask].min())
-        metrics["dQ"] = float(self.Q[mask].max() - self.Q[mask].min())
+        metrics["dP"]   = float(self.P[mask].max() - self.P[mask].min())
+        metrics["dQ"]   = float(self.Q[mask].max() - self.Q[mask].min())
+        metrics["vmin"] = float(self.vbus2[mask].min()) if self.vbus2 is not None else None
         return metrics
 
     # ── __repr__ ─────────────────────────────────────────────────────────────

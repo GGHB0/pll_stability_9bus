@@ -15,8 +15,8 @@ import plotly
 import plotly.graph_objects as go
 
 from .config import (
-    T_FAULT, TOL_RAD,
-    IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH, DP_THRESH, DQ_THRESH,
+    T_FAULT, TOL_RAD, LVRT_THRESHOLD,
+    IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH, DP_THRESH, DQ_THRESH, VBUS2_MIN_THRESH,
 )
 from .loader import SimData
 
@@ -172,12 +172,22 @@ function toggleTheme() {{
     # ── internos: classificação ──────────────────────────────────────────────
 
     @staticmethod
-    def _classify(val: float | None, thresholds: tuple[float, float]) -> str:
-        """Retorna 'good', 'warn' ou 'bad' conforme limiares (bom_máx, moderado_máx)."""
+    def _classify(
+        val: float | None,
+        thresholds: tuple[float, float],
+        lower_is_better: bool = True,
+    ) -> str:
+        """Retorna 'good', 'warn' ou 'bad' conforme limiares.
+
+        lower_is_better=True (padrão): (bom_máx, moderado_máx) — ex.: IAE, ts
+        lower_is_better=False:         (bom_mín, warn_mín)      — ex.: V_min
+        """
         if val is None:
             return "neutral"
         lo, hi = thresholds
-        return "good" if val <= lo else ("warn" if val <= hi else "bad")
+        if lower_is_better:
+            return "good" if val <= lo else ("warn" if val <= hi else "bad")
+        return "good" if val >= lo else ("warn" if val >= hi else "bad")
 
     # ── internos: cards ──────────────────────────────────────────────────────
 
@@ -201,6 +211,9 @@ function toggleTheme() {{
              f"±{np.degrees(TOL_RAD):.1f}°",
              "Tempo de acomodação do PLL",
              self._classify(ts_delta, TS_DELTA_THRESH)),
+            ("V min", _v(m.get("vmin"), 3), "pu",   "Bus 2",
+             f"Tensão mínima pós-falta (LVRT ≥ {LVRT_THRESHOLD} pu)",
+             self._classify(m.get("vmin"), VBUS2_MIN_THRESH, lower_is_better=False)),
             ("ΔP",   _v(m.get("dP"),  3), "pu",     "pós-falta",
              "Oscilação de potência ativa",
              self._classify(m.get("dP"), DP_THRESH)),
@@ -269,6 +282,26 @@ function toggleTheme() {{
                     " indicando resposta lenta."
                 )
 
+        vmin = m.get("vmin")
+        if vmin is not None:
+            cls = self._classify(vmin, VBUS2_MIN_THRESH, lower_is_better=False)
+            if cls == "good":
+                parts.append(
+                    f"A tensão na Barra 2 permaneceu próxima do nominal"
+                    f" (V_min = {vmin:.3f} pu)."
+                )
+            elif cls == "warn":
+                parts.append(
+                    f"A tensão na Barra 2 sofreu afundamento moderado"
+                    f" (V_min = {vmin:.3f} pu) — abaixo do limiar LVRT de"
+                    f" {LVRT_THRESHOLD} pu."
+                )
+            else:
+                parts.append(
+                    f"A tensão na Barra 2 sofreu afundamento severo"
+                    f" (V_min = {vmin:.3f} pu) — condição crítica de LVRT."
+                )
+
         if dp is not None:
             cls = self._classify(dp, DP_THRESH)
             if cls == "good":
@@ -283,10 +316,11 @@ function toggleTheme() {{
                     " — risco de disparo de proteção."
                 )
 
-        # veredicto geral: pior status entre IAE, ts e ΔP
+        # veredicto geral: pior status entre IAE, ts, V_min e ΔP
         statuses = [
             self._classify(iae, IAE_THRESH),
             self._classify((ts - T_FAULT) if ts is not None else None, TS_DELTA_THRESH),
+            self._classify(vmin, VBUS2_MIN_THRESH, lower_is_better=False),
             self._classify(dp, DP_THRESH),
         ]
         if "bad" in statuses:
@@ -421,10 +455,10 @@ body, .card, .header, .chart-wrap, .badge, .toggle-btn,
 /* ── Cards ── */
 .cards {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 14px; margin-bottom: 22px;
 }
-@media(max-width: 720px){ .cards { grid-template-columns: repeat(3,1fr) } }
+@media(max-width: 860px){ .cards { grid-template-columns: repeat(3,1fr) } }
 @media(max-width: 460px){ .cards { grid-template-columns: repeat(2,1fr) } }
 
 .card {

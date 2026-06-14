@@ -16,6 +16,7 @@ Id     = ds.get('id');
 Iq     = ds.get('Iq');
 Iabc   = ds.get('iabc_inverter');
 Igrid  = ds.get('iabc_grid');
+Vab    = ds.get('vab_sync');
 
 % Eixo de tempo comum = P (Tsc = 2e-4 s)
 t = P.Values.Time;
@@ -40,8 +41,20 @@ id_pu     = interp1(Id.Values.Time, Id.Values.Data(:,2), t, 'linear', 'extrap');
 iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
 iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
 
-T = table(t, P.Values.Data, Q.Values.Data, id_ref_pu, id_pu, iq_ref_pu, iq_pu, ...
-    'VariableNames', {'t_s','P_pu','Q_pu','id_ref_pu','id_pu','iq_ref_pu','iq_pu'});
+% ── |V| Barra 2: magnitude instantânea (pu) ──────────────────────────────
+t_v  = Vab.Values.Time;
+Va   = Vab.Values.Data(:,1);
+Vb   = Vab.Values.Data(:,2);
+Vc   = -(Va + Vb);
+% Magnitude do vetor de Clarke: sqrt(2/3 * (Va²+Vb²+Vc²)) = pico da fundamental
+Vmag = sqrt((Va.^2 + Vb.^2 + Vc.^2) * (2/3));
+% Normaliza pelo valor médio pré-falta → pu
+idx_pre  = t_v < 0.5;
+Vmag_nom = mean(Vmag(idx_pre));
+vbus2_pu = interp1(t_v, Vmag / Vmag_nom, t, 'linear', 'extrap');
+
+T = table(t, P.Values.Data, Q.Values.Data, id_ref_pu, id_pu, iq_ref_pu, iq_pu, vbus2_pu, ...
+    'VariableNames', {'t_s','P_pu','Q_pu','id_ref_pu','id_pu','iq_ref_pu','iq_pu','vbus2_pu'});
 
 csv_path = fullfile(proj_root, 'output', 'sim_data.csv');
 writetable(T, csv_path);

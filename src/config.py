@@ -19,6 +19,8 @@ ISE_THRESH      = (0.005, 0.020)  # rad²·s
 TS_DELTA_THRESH = (0.10,  0.30)   # s após T_FAULT
 DP_THRESH       = (0.10,  0.30)   # pu
 DQ_THRESH       = (0.15,  0.40)   # pu
+VBUS2_MIN_THRESH = (0.90,  0.50)  # pu — bom > 0.90, crítico < 0.50 (LVRT IEEE 1547)
+LVRT_THRESHOLD   = 0.88           # pu — linha de referência no gráfico
 
 # ── Paletas de traços ────────────────────────────────────────────────────────
 # Light mode

@@ -75,14 +75,14 @@ class ChartBuilder:
 
         if kind == "ang":
             self._add(go.Scatter(
-                x=t, y=np.degrees(d.theta_pll),
-                name="θ̂ PLL", mode="lines",
-                line=dict(width=1.8)),
+                x=t, y=np.degrees(d.theta_ref),
+                name="θ Rede", mode="lines",
+                line=dict(width=2.0)),
                 row)
             self._add(go.Scatter(
-                x=t, y=np.degrees(d.theta_ref),
-                name="θ rede", mode="lines",
-                line=dict(width=1.4, dash="dash")),
+                x=t, y=np.degrees(d.theta_pll),
+                name="θ̂ PLL", mode="lines",
+                line=dict(width=1.4, dash="dot")),
                 row)
 
         elif kind == "err":

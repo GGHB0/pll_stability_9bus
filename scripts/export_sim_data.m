@@ -20,9 +20,19 @@ Igrid  = ds.get('iabc_grid');
 % Eixo de tempo comum = P (Tsc = 2e-4 s)
 t = P.Values.Time;
 
-% Interpola sinais com taxa diferente sobre t
-ang_pll = interp1(AngPLL.Values.Time, AngPLL.Values.Data, t, 'linear', 'extrap');
-ang_red = interp1(AngRed.Values.Time, AngRed.Values.Data, t, 'linear', 'extrap');
+% Eixo de tempo rápido (Ts=5µs) — usado para theta_err de alta resolução
+t_fast       = AngPLL.Values.Time;
+ang_fast     = AngPLL.Values.Data;
+% Ang_Rede é Repeating Sequence ideal 60 Hz: reconstruída analiticamente
+% em t_fast para garantir sincronismo perfeito de amostragem com Ang_pll
+ang_red_fast = mod(t_fast * 2*pi*60, 2*pi);
+theta_err_fast = wrapToPi(ang_fast - ang_red_fast);
+
+% Interpola tudo para o eixo lento (t = P.Values.Time, Tsc=2e-4 s)
+ang_pll   = interp1(t_fast, ang_fast,        t, 'linear', 'extrap');
+ang_red   = interp1(t_fast, ang_red_fast,    t, 'linear', 'extrap');
+theta_err = interp1(t_fast, theta_err_fast,  t, 'linear', 'extrap');
+
 % id e Iq: cada sinal é mux [ref, medido]
 %   Data(:,1) = referência (id_ref / iq_ref)
 %   Data(:,2) = sinal real medido (com ruído do controle)
@@ -30,8 +40,6 @@ id_ref_pu = interp1(Id.Values.Time, Id.Values.Data(:,1), t, 'linear', 'extrap');
 id_pu     = interp1(Id.Values.Time, Id.Values.Data(:,2), t, 'linear', 'extrap');
 iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
 iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
-
-theta_err = ang_pll - ang_red;
 
 T = table(t, ...
     P.Values.Data, ...

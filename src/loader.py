@@ -36,11 +36,31 @@ class SimData:
 
         # ── ângulos ──────────────────────────────────────────────────────────
         if "theta_err_rad" in self._cols:
-            self.theta_err = self._df["theta_err_rad"].to_numpy()
+            raw = self._df["theta_err_rad"].to_numpy()
         elif self.has_ang:
-            self.theta_err = (
+            raw = (
                 self._df["theta_pll_rad"] - self._df["theta_ref_rad"]
             ).to_numpy()
+        else:
+            raw = None
+
+        # Ang_pll and Ang_Rede are sawtooth-wrapped (0→2π→0); wrapping to
+        # [-π, π] removes ±2π spikes from misaligned resets.
+        # Baseline = value of the error at the last sample before T_FAULT so
+        # that theta_err ≈ 0 at the fault instant, making IAE/ISE/ts measure
+        # only the fault-induced deviation (not pre-existing drift from the
+        # Repeating-Sequence reference mismatch).
+        if raw is not None:
+            wrapped = np.arctan2(np.sin(raw), np.cos(raw))
+            t_arr = self._df["t_s"].to_numpy()
+            idx_fault = int(np.searchsorted(t_arr, T_FAULT))
+            if idx_fault > 0:
+                baseline = float(wrapped[idx_fault - 1])
+                wrapped = np.arctan2(
+                    np.sin(wrapped - baseline),
+                    np.cos(wrapped - baseline),
+                )
+            self.theta_err = wrapped
         else:
             self.theta_err = None
 

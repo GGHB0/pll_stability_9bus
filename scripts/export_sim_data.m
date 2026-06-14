@@ -20,43 +20,33 @@ Igrid  = ds.get('iabc_grid');
 % Eixo de tempo comum = P (Tsc = 2e-4 s)
 t = P.Values.Time;
 
-% Eixo de tempo rápido (Ts=5µs) — usado para theta_err de alta resolução
-t_fast       = AngPLL.Values.Time;
-ang_fast     = AngPLL.Values.Data;
-% Ang_Rede é Repeating Sequence ideal 60 Hz: reconstruída analiticamente
-% em t_fast para garantir sincronismo perfeito de amostragem com Ang_pll
-ang_red_fast = mod(t_fast * 2*pi*60, 2*pi);
+% ── Tabela rápida: ângulos nativos a Ts (não interpolados) ───────────────
+t_fast         = AngPLL.Values.Time;
+ang_fast       = AngPLL.Values.Data;
+ang_red_fast   = interp1(AngRed.Values.Time, AngRed.Values.Data, t_fast, 'linear', 'extrap');
 theta_err_fast = wrapToPi(ang_fast - ang_red_fast);
 
-% Interpola tudo para o eixo lento (t = P.Values.Time, Tsc=2e-4 s)
-ang_pll   = interp1(t_fast, ang_fast,        t, 'linear', 'extrap');
-ang_red   = interp1(t_fast, ang_red_fast,    t, 'linear', 'extrap');
-theta_err = interp1(t_fast, theta_err_fast,  t, 'linear', 'extrap');
+T_angles = table(t_fast, ang_fast, ang_red_fast, theta_err_fast, ...
+    'VariableNames', {'t_s','theta_pll_rad','theta_ref_rad','theta_err_rad'});
 
-% id e Iq: cada sinal é mux [ref, medido]
-%   Data(:,1) = referência (id_ref / iq_ref)
-%   Data(:,2) = sinal real medido (com ruído do controle)
+angles_path = fullfile(proj_root, 'output', 'sim_data_angles.csv');
+writetable(T_angles, angles_path);
+fprintf('Angulos exportados: %d amostras (Ts=%.0e s)\nCSV salvo em: %s\n', ...
+    height(T_angles), t_fast(2)-t_fast(1), angles_path);
+
+% ── Tabela lenta: potência e correntes dq a Tsc ──────────────────────────
 id_ref_pu = interp1(Id.Values.Time, Id.Values.Data(:,1), t, 'linear', 'extrap');
 id_pu     = interp1(Id.Values.Time, Id.Values.Data(:,2), t, 'linear', 'extrap');
 iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
 iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
 
-T = table(t, ...
-    P.Values.Data, ...
-    Q.Values.Data, ...
-    ang_pll, ...
-    ang_red, ...
-    theta_err, ...
-    id_ref_pu, ...
-    id_pu, ...
-    iq_ref_pu, ...
-    iq_pu, ...
-    'VariableNames', {'t_s','P_pu','Q_pu','theta_pll_rad','theta_ref_rad','theta_err_rad', ...
-                      'id_ref_pu','id_pu','iq_ref_pu','iq_pu'});
+T = table(t, P.Values.Data, Q.Values.Data, id_ref_pu, id_pu, iq_ref_pu, iq_pu, ...
+    'VariableNames', {'t_s','P_pu','Q_pu','id_ref_pu','id_pu','iq_ref_pu','iq_pu'});
 
 csv_path = fullfile(proj_root, 'output', 'sim_data.csv');
 writetable(T, csv_path);
-fprintf('Exportado: %d amostras\nCSV salvo em: %s\n', height(T), csv_path);
+fprintf('Potencia/correntes exportadas: %d amostras (Tsc=%.0e s)\nCSV salvo em: %s\n', ...
+    height(T), t(2)-t(1), csv_path);
 
 %% Gera relatório HTML com Python
 python_exe = fullfile(proj_root, '.venv', 'Scripts', 'python.exe');

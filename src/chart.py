@@ -74,20 +74,23 @@ class ChartBuilder:
         t = d.t
 
         if kind == "ang":
+            t_ang = d.t_fast if d.t_fast is not None else t
             self._add(go.Scatter(
-                x=t, y=np.degrees(d.theta_ref),
+                x=t_ang, y=np.degrees(d.theta_ref),
                 name="θ Rede", mode="lines",
                 line=dict(width=2.0)),
                 row)
             self._add(go.Scatter(
-                x=t, y=np.degrees(d.theta_pll),
+                x=t_ang, y=np.degrees(d.theta_pll),
                 name="θ̂ PLL", mode="lines",
                 line=dict(width=1.4, dash="dot")),
                 row)
 
         elif kind == "err":
+            t_err = d.t_fast if d.t_fast is not None else t
+            err   = d.theta_err_fast if d.theta_err_fast is not None else d.theta_err
             self._add(go.Scatter(
-                x=t, y=np.degrees(d.theta_err),
+                x=t_err, y=np.degrees(err),
                 name="Erro de fase", mode="lines",
                 line=dict(width=1.8)),
                 row)

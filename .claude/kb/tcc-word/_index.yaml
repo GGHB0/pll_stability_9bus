@@ -1,0 +1,24 @@
+folder: tcc-word
+description: Estrutura OOXML, mapa de conteúdo e texto completo de todas as seções do TCCs Victor e Bruno_V8_revisado.docx
+files:
+  - file: docx_structure.md
+    name: tcc-docx-structure
+    description: Estrutura OOXML do documento, padrões XML, IDs usados (bm 57, ins 21, pid 8) e pendências priorizadas P1/P2/P3
+  - file: content_map.md
+    name: tcc-docx-content-map
+    description: Mapa seção a seção — estado atual, problemas estruturais e inventário de figuras; revisão completa jun/2026 (307 parágrafos)
+  - file: full_prefacio.md
+    name: tcc-full-prefacio
+    description: Texto completo das páginas pré-textuais — capa, folha de rosto, resumo, abstract, listas e sumário
+  - file: full_intro.md
+    name: tcc-full-intro
+    description: Texto completo da Introdução — contextualização, motivação (apagão 08/2023), objetivos e referências [1]–[9]
+  - file: full_cap2.md
+    name: tcc-full-cap2
+    description: Texto completo do Cap.2 — Fundamentação Teórica: transformadas Clarke/Park, controle P/Q, SRF-PLL, contingências e requisitos LVRT/ONS
+  - file: full_cap3.md
+    name: tcc-full-cap3
+    description: Texto completo do Cap.3 — Metodologia: plataforma híbrida (Python/PSIM/MATLAB), IEEE 9 barras, filtro LCL, PI corrente, SRF-PLL, protocolos de contingência
+  - file: full_cap4.md
+    name: tcc-full-cap4
+    description: Texto completo do Cap.4 — Análise e Discussão de Resultados (quase vazio, só títulos), Conclusão (placeholder) e Referências finais

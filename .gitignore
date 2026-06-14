@@ -44,3 +44,6 @@ desktop.ini
 
 # Claude Code local settings (machine-specific)
 .claude/settings.local.json
+
+# Paths pessoais do workflow de edição do TCC DOCX — não commitar
+.claude/skills/tcc-docx-editor/config.py

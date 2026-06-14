@@ -1,0 +1,12 @@
+folder: inverter
+description: Filtro LCL, arquitetura do modelo Simulink e referência de controle VSC em dq-frame
+files:
+  - file: lcl_filter.md
+    name: lcl-filter
+    description: Dimensionamento do filtro LCL do inversor VSC (TeseAGP p.102-104 + notebook célula 30)
+  - file: simulink_model.md
+    name: simulink-model
+    description: Arquitetura completa do modelo pll_stability_9bus.slx — hierarquia de subsistemas, parâmetros do InitFcn e implementação do controle
+  - file: vsc_reference.md
+    name: vsc-reference
+    description: Modelo e controle do VSC grid-imposed em dq-frame — referência Yazdani-Iravani Cap. 8 e Apêndice B

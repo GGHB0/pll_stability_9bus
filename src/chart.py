@@ -13,7 +13,7 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from .config import T_FAULT, TOL_RAD, LIGHT_COLORS, DARK_COLORS
+from .config import T_FAULT, TOL_RAD, LVRT_THRESHOLD, LIGHT_COLORS, DARK_COLORS
 from .loader import SimData
 
 
@@ -57,6 +57,8 @@ class ChartBuilder:
             panels.append(("ang", "Ângulo (°)"))
         if d.theta_err is not None:
             panels.append(("err", "Erro de fase (°)"))
+        if d.has_vbus2:
+            panels.append(("vbus", "|V| Barra 2 (pu)"))
         panels.append(("P", "P (pu)"))
         panels.append(("Q", "Q (pu)"))
         if d.has_dq:
@@ -74,20 +76,23 @@ class ChartBuilder:
         t = d.t
 
         if kind == "ang":
+            t_ang = d.t_fast if d.t_fast is not None else t
             self._add(go.Scatter(
-                x=t, y=np.degrees(d.theta_pll),
-                name="θ̂ PLL", mode="lines",
-                line=dict(width=1.8)),
+                x=t_ang, y=np.degrees(d.theta_ref),
+                name="θ Rede", mode="lines",
+                line=dict(width=2.0)),
                 row)
             self._add(go.Scatter(
-                x=t, y=np.degrees(d.theta_ref),
-                name="θ rede", mode="lines",
-                line=dict(width=1.4, dash="dash")),
+                x=t_ang, y=np.degrees(d.theta_pll),
+                name="θ̂ PLL", mode="lines",
+                line=dict(width=1.4, dash="dot")),
                 row)
 
         elif kind == "err":
+            t_err = d.t_fast if d.t_fast is not None else t
+            err   = d.theta_err_fast if d.theta_err_fast is not None else d.theta_err
             self._add(go.Scatter(
-                x=t, y=np.degrees(d.theta_err),
+                x=t_err, y=np.degrees(err),
                 name="Erro de fase", mode="lines",
                 line=dict(width=1.8)),
                 row)
@@ -98,6 +103,21 @@ class ChartBuilder:
                     line=dict(color="rgba(220,50,50,0.45)",
                               width=1.1, dash="dash"),
                     row=row, col=1)
+
+        elif kind == "vbus":
+            self._add(go.Scatter(
+                x=t, y=d.vbus2,
+                name="|V| Bus 2", mode="lines",
+                line=dict(width=1.8)),
+                row)
+            self._fig.add_hline(
+                y=1.0,
+                line=dict(color="rgba(100,100,100,0.25)", width=1.0, dash="dot"),
+                row=row, col=1)
+            self._fig.add_hline(
+                y=LVRT_THRESHOLD,
+                line=dict(color="rgba(220,50,50,0.45)", width=1.1, dash="dash"),
+                row=row, col=1)
 
         elif kind == "P":
             self._add(go.Scatter(

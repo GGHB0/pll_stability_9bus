@@ -1,0 +1,12 @@
+folder: simulation
+description: Workflows de simulação — exportação Simulink→Python, params.m, e notas de reuniões técnicas
+files:
+  - file: export_workflow.md
+    name: export-workflow
+    description: Workflow validado Simulink → MATLAB → Python para o modelo pll_stability_9bus (logsout, V_bus2 escalar, sim_data.csv)
+  - file: params_workflow.md
+    name: params-workflow
+    description: Workflow notebook → MATLAB/Simulink separando cálculos teóricos AGP dos valores runtime em params.m, incluindo a divergência intencional de Vcc
+  - file: reuniao_2026_05_inercia_pll.md
+    name: reuniao-2026-05-inercia-pll
+    description: Texto de apoio para reunião sobre novos testes de inércia, reatância de curto, colapso do PLL e tentativas de filtragem notch (semana 2026-05)

@@ -116,7 +116,19 @@ fsw  = 5000;    % PWM switching frequency [Hz]
 Tsc  = 2e-4;    % Control step (5 kHz)
 ```
 
-See [[simulink-model]] for how these enter the InitFcn.
+To speed up a simulation run, `Ts` can be temporarily changed to `5e-5` directly
+in `params.m`. There is no override in InitFcn — `params.m` is the single place to edit.
+
+## InitFcn
+
+The model InitFcn contains a single line that calls `params.m` at load time:
+
+```matlab
+run(fullfile(fileparts(which(bdroot)), 'params.m'));
+```
+
+`fileparts(which(bdroot))` resolves the directory of the open `.slx`, so the call
+is portable across machines regardless of the current working directory.
 
 ## .gitignore
 

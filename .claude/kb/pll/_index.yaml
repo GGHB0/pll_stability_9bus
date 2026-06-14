@@ -1,0 +1,15 @@
+folder: pll
+description: Teoria SRF-PLL, projeto de ganhos, cenários de contingência e implementação do filtro notch
+files:
+  - file: srf_pll_theory.md
+    name: srf-pll-theory
+    description: Teoria do SRF-PLL — estrutura, modelo linear, projeto de ganhos (Karimi-Ghartemani cap.6)
+  - file: pll_gains_methodology.md
+    name: pll-gains-methodology
+    description: Metodologia de cálculo dos ganhos Kp/Ki do SRF-PLL usada no projeto (TeseAGP eqs 3.21-3.22 + notebook)
+  - file: pll_contingencies.md
+    name: pll-contingencies
+    description: Os 4 cenários de contingência simulados, efeitos no SRF-PLL e métricas de avaliação
+  - file: pll_notch_implementation.md
+    name: pll-notch-implementation
+    description: Aplicação prática de notch em SRF-PLL, ponto de inserção em uq, implementação MATLAB/Simulink e relação com o bloco de biblioteca do projeto

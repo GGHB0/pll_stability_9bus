@@ -13,6 +13,13 @@ HTML_OUT   = PROJ_ROOT / "output" / "pll_metrics.html"
 T_FAULT  = 0.5        # instante da falta (s)
 TOL_RAD  = 0.02       # ±1.15° — critério de acomodação do PLL (rad)
 
+# Limiares de classificação: (bom_máx, moderado_máx); acima → crítico
+IAE_THRESH      = (0.05,  0.15)   # rad·s
+ISE_THRESH      = (0.005, 0.020)  # rad²·s
+TS_DELTA_THRESH = (0.10,  0.30)   # s após T_FAULT
+DP_THRESH       = (0.10,  0.30)   # pu
+DQ_THRESH       = (0.15,  0.40)   # pu
+
 # ── Paletas de traços ────────────────────────────────────────────────────────
 # Light mode
 LIGHT_COLORS = [

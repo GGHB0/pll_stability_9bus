@@ -14,7 +14,10 @@ import numpy as np
 import plotly
 import plotly.graph_objects as go
 
-from .config import T_FAULT, TOL_RAD
+from .config import (
+    T_FAULT, TOL_RAD,
+    IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH, DP_THRESH, DQ_THRESH,
+)
 from .loader import SimData
 
 
@@ -85,6 +88,8 @@ class HTMLRenderer:
 
   <div class="cards">{cards_html}
   </div>
+
+  {self._story_html()}
 
   <div class="chart-wrap">
     <div class="chart-header">
@@ -164,6 +169,16 @@ function toggleTheme() {{
 </body>
 </html>"""
 
+    # ── internos: classificação ──────────────────────────────────────────────
+
+    @staticmethod
+    def _classify(val: float | None, thresholds: tuple[float, float]) -> str:
+        """Retorna 'good', 'warn' ou 'bad' conforme limiares (bom_máx, moderado_máx)."""
+        if val is None:
+            return "neutral"
+        lo, hi = thresholds
+        return "good" if val <= lo else ("warn" if val <= hi else "bad")
+
     # ── internos: cards ──────────────────────────────────────────────────────
 
     def _cards_html(self) -> str:
@@ -172,29 +187,126 @@ function toggleTheme() {{
         def _v(val, decimals):
             return f"{val:.{decimals}f}" if val is not None else "—"
 
+        ts_val   = m.get("ts")
+        ts_delta = (ts_val - T_FAULT) if ts_val is not None else None
+
         cards = [
             ("IAE",  _v(m.get("IAE"), 3), "rad·s",  "∫|e| dt",
-             "Erro de fase acumulado (pós-falta)"),
+             "Erro de fase acumulado (pós-falta)",
+             self._classify(m.get("IAE"), IAE_THRESH)),
             ("ISE",  _v(m.get("ISE"), 4), "rad²·s", "∫e² dt",
-             "Energia do erro de fase"),
-            ("tₛ",   _v(m.get("ts"),  3), "s",
+             "Energia do erro de fase",
+             self._classify(m.get("ISE"), ISE_THRESH)),
+            ("tₛ",   _v(ts_val, 3), "s",
              f"±{np.degrees(TOL_RAD):.1f}°",
-             "Tempo de acomodação do PLL"),
+             "Tempo de acomodação do PLL",
+             self._classify(ts_delta, TS_DELTA_THRESH)),
             ("ΔP",   _v(m.get("dP"),  3), "pu",     "pós-falta",
-             "Oscilação de potência ativa"),
+             "Oscilação de potência ativa",
+             self._classify(m.get("dP"), DP_THRESH)),
             ("ΔQ",   _v(m.get("dQ"),  3), "pu",     "pós-falta",
-             "Oscilação de potência reativa"),
+             "Oscilação de potência reativa",
+             self._classify(m.get("dQ"), DQ_THRESH)),
         ]
 
         return "\n".join(
             f"""
-    <div class="card" title="{tip}">
+    <div class="card {status}" title="{tip}">
       <p class="c-name">{name}</p>
       <p class="c-val">{val}<span class="c-unit">{unit}</span></p>
       <p class="c-sub">{sub}</p>
     </div>"""
-            for name, val, unit, sub, tip in cards
+            for name, val, unit, sub, tip, status in cards
         )
+
+    # ── internos: narrativa pós-falta ────────────────────────────────────────
+
+    def _story_html(self) -> str:
+        m   = self._d.metrics
+        iae = m.get("IAE")
+        ise = m.get("ISE")
+        ts  = m.get("ts")
+        dp  = m.get("dP")
+        dq  = m.get("dQ")
+
+        parts: list[str] = []
+
+        if iae is not None:
+            cls = self._classify(iae, IAE_THRESH)
+            if cls == "good":
+                parts.append(
+                    f"O erro de fase acumulado foi baixo (IAE = {iae:.3f} rad·s),"
+                    " indicando resposta rápida do PLL à perturbação."
+                )
+            elif cls == "warn":
+                parts.append(
+                    f"O IAE de {iae:.3f} rad·s indica desempenho moderado —"
+                    " o PLL compensou o erro em tempo razoável."
+                )
+            else:
+                parts.append(
+                    f"O IAE elevado de {iae:.3f} rad·s revela acumulação"
+                    " significativa de erro de fase após a falta."
+                )
+
+        if ts is not None:
+            dt  = ts - T_FAULT
+            cls = self._classify(dt, TS_DELTA_THRESH)
+            tol = np.degrees(TOL_RAD)
+            if cls == "good":
+                parts.append(
+                    f"O PLL acomodou em Δt = {dt:.2f} s (tₛ = {ts:.3f} s),"
+                    f" dentro do critério ±{tol:.1f}°."
+                )
+            elif cls == "warn":
+                parts.append(
+                    f"O tempo de acomodação foi de Δt = {dt:.2f} s (tₛ = {ts:.3f} s)"
+                    " — dentro dos limites, mas com margem reduzida."
+                )
+            else:
+                parts.append(
+                    f"O PLL levou Δt = {dt:.2f} s para recuperar (tₛ = {ts:.3f} s),"
+                    " indicando resposta lenta."
+                )
+
+        if dp is not None:
+            cls = self._classify(dp, DP_THRESH)
+            if cls == "good":
+                parts.append(f"A potência ativa foi pouco afetada (ΔP = {dp:.3f} pu).")
+            elif cls == "warn":
+                parts.append(
+                    f"Houve oscilação moderada de potência ativa (ΔP = {dp:.3f} pu)."
+                )
+            else:
+                parts.append(
+                    f"A oscilação de potência ativa foi severa (ΔP = {dp:.3f} pu)"
+                    " — risco de disparo de proteção."
+                )
+
+        # veredicto geral: pior status entre IAE, ts e ΔP
+        statuses = [
+            self._classify(iae, IAE_THRESH),
+            self._classify((ts - T_FAULT) if ts is not None else None, TS_DELTA_THRESH),
+            self._classify(dp, DP_THRESH),
+        ]
+        if "bad" in statuses:
+            verdict_cls, verdict_txt = "bad",  "Desempenho crítico"
+        elif "warn" in statuses:
+            verdict_cls, verdict_txt = "warn", "Desempenho satisfatório"
+        elif "good" in statuses:
+            verdict_cls, verdict_txt = "good", "Desempenho excelente"
+        else:
+            verdict_cls, verdict_txt = "neutral", "Dados insuficientes"
+
+        text = " ".join(parts) or "Dados insuficientes para análise narrativa."
+
+        return f"""<div class="story">
+    <div class="story-body">
+      <p class="story-title">Diagnóstico pós-falta</p>
+      <p class="story-text">{text}</p>
+    </div>
+    <div class="story-verdict {verdict_cls}">{verdict_txt}</div>
+  </div>"""
 
     # ── internos: contagem de painéis ────────────────────────────────────────
 
@@ -348,6 +460,53 @@ body, .card, .header, .chart-wrap, .badge, .toggle-btn,
 }
 .c-unit { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: .3px }
 .c-sub  { font-size: 10.5px; color: var(--muted); margin-top: 6px }
+
+/* ── Card status (good / warn / bad) ── */
+.card.good::before  { background: linear-gradient(90deg, #16a34a, #15803d) }
+.card.warn::before  { background: linear-gradient(90deg, #d97706, #b45309) }
+.card.bad::before   { background: linear-gradient(90deg, #dc2626, #991b1b) }
+[data-theme="dark"] .card.good::before { background: linear-gradient(90deg,#4ade80,#16a34a) }
+[data-theme="dark"] .card.warn::before { background: linear-gradient(90deg,#fbbf24,#d97706) }
+[data-theme="dark"] .card.bad::before  { background: linear-gradient(90deg,#f87171,#dc2626) }
+
+.card.good .c-val { color: #16a34a }
+.card.warn .c-val { color: #b45309 }
+.card.bad  .c-val { color: #dc2626 }
+[data-theme="dark"] .card.good .c-val { color: #4ade80 }
+[data-theme="dark"] .card.warn .c-val { color: #fbbf24 }
+[data-theme="dark"] .card.bad  .c-val { color: #f87171 }
+
+/* ── Story (diagnóstico narrativo) ── */
+.story {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--sh);
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.story-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .6px; color: var(--muted); margin-bottom: 6px;
+}
+.story-text { font-size: 13px; color: var(--text); line-height: 1.6 }
+.story-verdict {
+  flex-shrink: 0; white-space: nowrap;
+  font-size: 12px; font-weight: 700;
+  padding: 8px 18px; border-radius: 999px;
+}
+.story-verdict.good    { background: #dcfce7; color: #15803d }
+.story-verdict.warn    { background: #fef3c7; color: #b45309 }
+.story-verdict.bad     { background: #fee2e2; color: #991b1b }
+.story-verdict.neutral { background: var(--border); color: var(--muted) }
+[data-theme="dark"] .story-verdict.good    { background: #14532d; color: #4ade80 }
+[data-theme="dark"] .story-verdict.warn    { background: #451a03; color: #fbbf24 }
+[data-theme="dark"] .story-verdict.bad     { background: #450a0a; color: #f87171 }
+[data-theme="dark"] .story-verdict.neutral { background: var(--border); color: var(--muted) }
 
 /* ── Chart ── */
 .chart-wrap {

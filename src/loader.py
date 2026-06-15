@@ -2,14 +2,14 @@
 loader.py — Carrega os CSVs exportados pelo MATLAB e calcula métricas pós-falta.
 
 Classe principal: SimData
-    .t, .P, .Q, .theta_err      → arrays NumPy prontos para plotar
+    .t, .P_ufv, .Q_ufv, .theta_err → arrays NumPy prontos para plotar
     .t_fast, .theta_pll_fast,   → ângulos na taxa nativa Ts (alta resolução)
     .theta_ref_fast, .theta_err_fast
     .metrics                     → dict com IAE, ISE, ts, dP, dQ
-    .has_ang, .has_dq, .has_ref  → flags de disponibilidade de colunas
+    .has_ang, .has_dq_ufv, .has_ref_ufv → flags de disponibilidade de colunas
 
 Dois CSVs exportados pelo MATLAB:
-    sim_data.csv        → P, Q, id, iq a Tsc (eixo lento)
+    sim_data.csv        → P_ufv, Q_ufv, id_ufv, iq_ufv a Tsc (eixo lento)
     sim_data_angles.csv → theta_pll, theta_ref, theta_err a Ts (eixo rápido)
 """
 
@@ -31,14 +31,16 @@ class SimData:
         self._cols  = set(self._df.columns)
 
         # ── flags ────────────────────────────────────────────────────────────
-        self.has_ang = {"theta_pll_rad", "theta_ref_rad"} <= self._cols  # formato legado
-        self.has_dq  = {"id_pu", "iq_pu"} <= self._cols
-        self.has_ref = {"id_ref_pu", "iq_ref_pu"} <= self._cols
+        self.has_ang      = {"theta_pll_rad", "theta_ref_rad"} <= self._cols  # formato legado
+        self.has_dq_ufv   = {"id_ufv_pu", "iq_ufv_pu"} <= self._cols
+        self.has_ref_ufv  = {"id_ufv_ref_pu", "iq_ufv_ref_pu"} <= self._cols
+        self.has_vdq_ufv  = {"vd_ufv_pu", "vq_ufv_pu"} <= self._cols
+        self.has_vdq_rede = {"vd_rede_pu", "vq_rede_pu"} <= self._cols
 
         # ── eixo de tempo e sinais principais ────────────────────────────────
-        self.t = self._df["t_s"].to_numpy()
-        self.P = self._df["P_pu"].to_numpy()
-        self.Q = self._df["Q_pu"].to_numpy()
+        self.t     = self._df["t_s"].to_numpy()
+        self.P_ufv = self._df["P_ufv_pu"].to_numpy()
+        self.Q_ufv = self._df["Q_ufv_pu"].to_numpy()
 
         # ── ângulos: arquivo dedicado (alta resolução) ou colunas legadas ────
         angles_path = self._path.with_name("sim_data_angles.csv")
@@ -104,18 +106,31 @@ class SimData:
         self.has_vbus2 = "vbus2_pu" in self._cols
         self.vbus2 = self._df["vbus2_pu"].to_numpy() if self.has_vbus2 else None
 
-        # ── correntes dq ─────────────────────────────────────────────────────
-        if self.has_dq:
-            self.id_meas = self._df["id_pu"].to_numpy()
-            self.iq_meas = self._df["iq_pu"].to_numpy()
+        # ── tensões dq inversor e rede ───────────────────────────────────────
+        if self.has_vdq_ufv:
+            self.vd_ufv = self._df["vd_ufv_pu"].to_numpy()
+            self.vq_ufv = self._df["vq_ufv_pu"].to_numpy()
         else:
-            self.id_meas = self.iq_meas = None
+            self.vd_ufv = self.vq_ufv = None
 
-        if self.has_ref:
-            self.id_ref = self._df["id_ref_pu"].to_numpy()
-            self.iq_ref = self._df["iq_ref_pu"].to_numpy()
+        if self.has_vdq_rede:
+            self.vd_rede = self._df["vd_rede_pu"].to_numpy()
+            self.vq_rede = self._df["vq_rede_pu"].to_numpy()
         else:
-            self.id_ref = self.iq_ref = None
+            self.vd_rede = self.vq_rede = None
+
+        # ── correntes dq ─────────────────────────────────────────────────────
+        if self.has_dq_ufv:
+            self.id_ufv_meas = self._df["id_ufv_pu"].to_numpy()
+            self.iq_ufv_meas = self._df["iq_ufv_pu"].to_numpy()
+        else:
+            self.id_ufv_meas = self.iq_ufv_meas = None
+
+        if self.has_ref_ufv:
+            self.id_ufv_ref = self._df["id_ufv_ref_pu"].to_numpy()
+            self.iq_ufv_ref = self._df["iq_ufv_ref_pu"].to_numpy()
+        else:
+            self.id_ufv_ref = self.iq_ufv_ref = None
 
         # ── métricas ─────────────────────────────────────────────────────────
         self.metrics = self._compute_metrics()
@@ -136,8 +151,8 @@ class SimData:
         else:
             metrics["IAE"] = metrics["ISE"] = metrics["ts"] = None
 
-        metrics["dP"]   = float(self.P[mask].max() - self.P[mask].min())
-        metrics["dQ"]   = float(self.Q[mask].max() - self.Q[mask].min())
+        metrics["dP_ufv"] = float(self.P_ufv[mask].max() - self.P_ufv[mask].min())
+        metrics["dQ_ufv"] = float(self.Q_ufv[mask].max() - self.Q_ufv[mask].min())
         metrics["vmin"] = float(self.vbus2[mask].min()) if self.vbus2 is not None else None
         return metrics
 
@@ -149,5 +164,5 @@ class SimData:
         return (
             f"SimData(n={n}, "
             f"IAE={m.get('IAE')}, ISE={m.get('ISE')}, "
-            f"ts={m.get('ts')}, dP={m.get('dP'):.4f}, dQ={m.get('dQ'):.4f})"
+            f"ts={m.get('ts')}, dP_ufv={m.get('dP_ufv'):.4f}, dQ_ufv={m.get('dQ_ufv'):.4f})"
         )

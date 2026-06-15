@@ -1,102 +1,124 @@
 %% export_sim_data.m
-% Exporta sinais logados para CSV após rodar a simulação.
-% Rode params.m antes de simular. Execute este script no Command Window
-% ou via StopFcn do modelo (funciona com qualquer caminho de repositório).
+% Exporta logsout para CSV e gera relatório HTML.
+% Chamado via StopFcn do modelo — não requer edição de path.
 
-% Raiz do projeto: diretório do .slx aberto (portável entre máquinas)
 proj_root = fileparts(get_param(bdroot, 'FileName'));
+ds        = logsout_IEEE9BusLoadflow;
+T_FAULT   = 0.5;   % instante da falta (s)
 
-ds = logsout_IEEE9BusLoadflow;
+export_angles(ds, proj_root);
+export_slow(ds, proj_root, T_FAULT);
+run_python(proj_root);
 
-P      = ds.get('Pinverter');
-Q      = ds.get('Qinverter');
-AngPLL = ds.get('Ang_pll');
-AngRed = ds.get('Ang_Rede');
-Id     = ds.get('id');
-Iq     = ds.get('Iq');
-Iabc   = ds.get('iabc_inverter');
-Igrid  = ds.get('iabc_grid');
-V_bus2 = ds.get('V_bus2');   % magnitude |V| Barra 2 (escalar, pu ou V)
+% ═══════════════════════════════════════════════════════════════════════════
+function export_angles(ds, proj_root)
+% CSV 1: ângulos PLL e rede na taxa nativa Ts (eixo rápido).
+    AngPLL = ds.get('Ang_pll');
+    AngRed = ds.get('Ang_Rede');
 
+    t_fast         = AngPLL.Values.Time;
+    ang_fast       = AngPLL.Values.Data;
+    ang_red_fast   = interp1(AngRed.Values.Time, AngRed.Values.Data, ...
+                             t_fast, 'linear', 'extrap');
+    theta_err_fast = wrapToPi(ang_fast - ang_red_fast);
 
-% Eixo de tempo comum = P (Tsc = 2e-4 s)
-t       = P.Values.Time;
-T_FAULT = 0.5;   % instante da falta (s)
+    T = table(t_fast, ang_fast, ang_red_fast, theta_err_fast, ...
+        'VariableNames', {'t_s','theta_pll_rad','theta_ref_rad','theta_err_rad'});
 
-% ── Tabela rápida: ângulos nativos a Ts (não interpolados) ───────────────
-t_fast         = AngPLL.Values.Time;
-ang_fast       = AngPLL.Values.Data;
-ang_red_fast   = interp1(AngRed.Values.Time, AngRed.Values.Data, t_fast, 'linear', 'extrap');
-theta_err_fast = wrapToPi(ang_fast - ang_red_fast);
+    out = fullfile(proj_root, 'output', 'sim_data_angles.csv');
+    writetable(T, out);
+    fprintf('Angulos: %d amostras → %s\n', height(T), out);
+end
 
-T_angles = table(t_fast, ang_fast, ang_red_fast, theta_err_fast, ...
-    'VariableNames', {'t_s','theta_pll_rad','theta_ref_rad','theta_err_rad'});
+% ═══════════════════════════════════════════════════════════════════════════
+function export_slow(ds, proj_root, T_FAULT)
+% CSV 2: potência, correntes dq e tensões a Tsc (eixo lento).
+    t = ds.get('Pinverter').Values.Time;
 
-angles_path = fullfile(proj_root, 'output', 'sim_data_angles.csv');
-writetable(T_angles, angles_path);
-fprintf('Angulos exportados: %d amostras (Ts=%.0e s)\nCSV salvo em: %s\n', ...
-    height(T_angles), t_fast(2)-t_fast(1), angles_path);
+    T = build_base_table(ds, t, T_FAULT);
+    T = add_vdq_cols(T, ds, t, T_FAULT, 'Vdq_Inverter', 'vd_ufv_pu',  'vq_ufv_pu');
+    T = add_vdq_cols(T, ds, t, T_FAULT, 'Vdq_rede',     'vd_rede_pu', 'vq_rede_pu');
+    T = add_vbus2_col(T, ds, t, T_FAULT);
 
-% ── Tabela lenta: potência e correntes dq a Tsc ──────────────────────────
-id_ref_pu = interp1(Id.Values.Time, Id.Values.Data(:,1), t, 'linear', 'extrap');
-id_pu     = interp1(Id.Values.Time, Id.Values.Data(:,2), t, 'linear', 'extrap');
-iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
-iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
+    out = fullfile(proj_root, 'output', 'sim_data.csv');
+    writetable(T, out);
+    fprintf('Potencia/correntes: %d amostras → %s\n', height(T), out);
+end
 
-% ── |V| Barra 2: sinal escalar (magnitude), normaliza para pu ────────────
-has_vbus2 = ~isempty(V_bus2);
-if has_vbus2
-    if isa(V_bus2, 'Simulink.SimulationData.Signal')
-        ts_v = V_bus2.Values;
+% ───────────────────────────────────────────────────────────────────────────
+function T = build_base_table(ds, t, ~)
+% Colunas sempre presentes: P, Q, id, iq (UFV).
+    P  = ds.get('Pinverter');
+    Q  = ds.get('Qinverter');
+    Id = ds.get('id');
+    Iq = ds.get('Iq');
+
+    id_ref_pu = interp1(Id.Values.Time, Id.Values.Data(:,1), t, 'linear', 'extrap');
+    id_pu     = interp1(Id.Values.Time, Id.Values.Data(:,2), t, 'linear', 'extrap');
+    iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
+    iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
+
+    T = table(t, P.Values.Data, Q.Values.Data, id_ref_pu, id_pu, iq_ref_pu, iq_pu, ...
+        'VariableNames', {'t_s','P_ufv_pu','Q_ufv_pu', ...
+                          'id_ufv_ref_pu','id_ufv_pu','iq_ufv_ref_pu','iq_ufv_pu'});
+end
+
+% ───────────────────────────────────────────────────────────────────────────
+function T = add_vdq_cols(T, ds, t, T_FAULT, sig_name, col_d, col_q)
+% Adiciona colunas Vd/Vq normalizadas pelo valor pré-falta de Vd.
+% Pré-falta: Vd ≈ |V|, Vq ≈ 0 (PLL travado).
+    sig = ds.get(sig_name);
+    if isempty(sig), return; end
+
+    t_sig = sig.Values.Time;
+    vd    = sig.Values.Data(:,1);
+    vq    = sig.Values.Data(:,2);
+    Vnom  = mean(vd(t_sig < T_FAULT));
+
+    T.(col_d) = interp1(t_sig, vd / Vnom, t, 'linear', 'extrap');
+    T.(col_q) = interp1(t_sig, vq / Vnom, t, 'linear', 'extrap');
+end
+
+% ───────────────────────────────────────────────────────────────────────────
+function T = add_vbus2_col(T, ds, t, T_FAULT)
+% Adiciona coluna vbus2_pu (magnitude escalar da Barra 2, normalizada).
+    sig = ds.get('V_bus2');
+    if isempty(sig), return; end
+
+    if isa(sig, 'Simulink.SimulationData.Signal')
+        ts_v = sig.Values;
     else
-        ts_v = V_bus2;
+        ts_v = sig;
     end
     if isa(ts_v, 'timetable')
-        t_v    = seconds(ts_v.Time);
-        vmag   = ts_v.Variables(:,1);
+        t_v  = seconds(ts_v.Time);
+        vmag = ts_v.Variables(:,1);
     else
-        t_v    = ts_v.Time;
-        vmag   = ts_v.Data(:,1);
+        t_v  = ts_v.Time;
+        vmag = ts_v.Data(:,1);
     end
-    idx_pre  = t_v < T_FAULT;
-    Vmag_nom = mean(vmag(idx_pre));
-    vbus2_pu = interp1(t_v, vmag / Vmag_nom, t, 'linear', 'extrap');
-else
-    fprintf('\nAVISO: V_bus2 nao encontrado no dataset.\n');
+
+    Vnom       = mean(vmag(t_v < T_FAULT));
+    T.vbus2_pu = interp1(t_v, vmag / Vnom, t, 'linear', 'extrap');
 end
 
-if has_vbus2
-    T = table(t, P.Values.Data, Q.Values.Data, id_ref_pu, id_pu, iq_ref_pu, iq_pu, vbus2_pu, ...
-        'VariableNames', {'t_s','P_pu','Q_pu','id_ref_pu','id_pu','iq_ref_pu','iq_pu','vbus2_pu'});
-else
-    T = table(t, P.Values.Data, Q.Values.Data, id_ref_pu, id_pu, iq_ref_pu, iq_pu, ...
-        'VariableNames', {'t_s','P_pu','Q_pu','id_ref_pu','id_pu','iq_ref_pu','iq_pu'});
-end
+% ═══════════════════════════════════════════════════════════════════════════
+function run_python(proj_root)
+% Chama app.py e abre o HTML no navegador padrão.
+    python_exe = fullfile(proj_root, '.venv', 'Scripts', 'python.exe');
+    app_py     = fullfile(proj_root, 'app.py');
 
-csv_path = fullfile(proj_root, 'output', 'sim_data.csv');
-writetable(T, csv_path);
-fprintf('Potencia/correntes exportadas: %d amostras (Tsc=%.0e s)\nCSV salvo em: %s\n', ...
-    height(T), t(2)-t(1), csv_path);
+    if ~isfile(python_exe)
+        warning('export_sim_data:venv', ...
+            'Venv nao encontrado. Rode manualmente: .venv\\Scripts\\python.exe app.py');
+        return;
+    end
 
-%% Gera relatório HTML com Python
-python_exe = fullfile(proj_root, '.venv', 'Scripts', 'python.exe');
-app_py     = fullfile(proj_root, 'app.py');
-
-if isfile(python_exe)
-    cmd = sprintf('"%s" "%s"', python_exe, app_py);
-    fprintf('\nRodando: %s\n', cmd);
-    [status, out] = system(cmd);
+    [status, out] = system(sprintf('"%s" "%s"', python_exe, app_py));
     disp(out);
     if status == 0
-        html_path = fullfile(proj_root, 'output',  'pll_metrics.html');
-        fprintf('Relatorio gerado: %s\n', html_path);
-        % Abre o HTML no navegador padrao
-        web(html_path);
+        web(fullfile(proj_root, 'output', 'pll_metrics.html'));
     else
         warning('export_sim_data:python', 'app.py retornou erro (status=%d).', status);
     end
-else
-    warning('export_sim_data:venv', ...
-        'Venv nao encontrado em %s\nRode manualmente: .venv\\Scripts\\python.exe app.py', ...
-        python_exe);
 end

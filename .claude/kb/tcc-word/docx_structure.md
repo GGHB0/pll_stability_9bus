@@ -99,7 +99,8 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
 | Recurso | IDs usados | Próximo disponível |
 |---|---|---|
 | Bookmark IDs | 0–53 (originais) + 54, 55, 56 (Seção 3.3) | **57** |
-| `w:ins` IDs | 1–20 (Seção 3.3, script gen_section33.py) | **21** |
+| `w:ins` IDs | 1–20 (Seção 3.3) + 21–32 (correções Oscar) | **33** |
+| `w:del` IDs | 21–32 (compartilhados com ins — ver acima) | **33** |
 | `pid` internos (paraId body) | 1–7 | **8** |
 
 > Antes de inserir novos elementos, sempre buscar o maior ID existente no XML
@@ -112,6 +113,15 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
   - 3.3.2 Afundamento Assimétrico (2 parágrafos + [TABELA 3.2])
   - ⚠️ Texto adicionado **sem acentuação** — corrigir em edição futura
 
+- **Correções dos comentários do Oscar** (jun/2026, script gen_oscar_fixes.py):
+  - #1 Resumo: "do algoritmo de sincronismo" → "da técnica de sincronismo de fase"
+  - #3 Resumo: sentença IAE/ISE removida (tracked delete)
+  - #6 Intro: "os inversores...insubstituível" → texto GFL com serviços ancilares
+  - #13 Cap.2 intro: "O objetivo é apresentar" → "Apresentar", "a operação" → "à operação"
+  - #14 Cap.2: "sistema de sincronismo " removido (SRF-PLL agora é a sigla direta)
+  - #17/#21/#24/#29: Ttulo4 → Ttulo3 com pPrChange (Clarke, Park, Arq.Controle, PWM)
+  - Arquivo: `C:\Temp\tcc_oscar_fixes.docx` → copiado para OneDrive como `V8_oscar_fixes.docx`
+
 > Mapa completo do documento seção a seção: `.claude/kb/tcc-word/content_map.md`
 
 ## Pendências Priorizadas
@@ -122,8 +132,8 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
    mas o placeholder não existe no texto. Inserir placeholder italic-centralizado:
    `[FIGURA 3.1 – Circuito do VSI trifásico de dois níveis com filtro LCL e blocos de controle PWM.]`
    após o parágrafo §220 (após "...é ilustrado na Figura 3.1").
-2. **Estilo errado em 2.4.1/2.4.2/2.4.3** — usam `Ttulo4`, deveriam ser `Ttulo3`.
-   Trocar `<w:pStyle w:val="Ttulo4"/>` → `Ttulo3` e ajustar sz/szCs=28, spacing=281.
+2. **~~Estilo errado em 2.4.1/2.4.2/2.4.3~~** — ✅ FEITO (gen_oscar_fixes.py): Clarke, Park,
+   Arquitetura de Controle e PWM agora são Ttulo3 (tracked change).
 3. **Seção sem número** — "A Necessidade das Transformadas de Referência" é `Ttulo2`
    antes de 2.1, sem numeração. Renumerar como "2.0" ou rebaixar a corpo.
    **NÃO alterar sem confirmação do Oscar/Victor.**

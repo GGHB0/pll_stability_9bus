@@ -214,12 +214,12 @@ function toggleTheme() {{
             ("V min", _v(m.get("vmin"), 3), "pu",   "Bus 2",
              f"Tensão mínima pós-falta (LVRT ≥ {LVRT_THRESHOLD} pu)",
              self._classify(m.get("vmin"), VBUS2_MIN_THRESH, lower_is_better=False)),
-            ("ΔP",   _v(m.get("dP"),  3), "pu",     "pós-falta",
-             "Oscilação de potência ativa",
-             self._classify(m.get("dP"), DP_THRESH)),
-            ("ΔQ",   _v(m.get("dQ"),  3), "pu",     "pós-falta",
-             "Oscilação de potência reativa",
-             self._classify(m.get("dQ"), DQ_THRESH)),
+            ("ΔP UFV", _v(m.get("dP_ufv"), 3), "pu",   "pós-falta",
+             "Oscilação de potência ativa (UFV)",
+             self._classify(m.get("dP_ufv"), DP_THRESH)),
+            ("ΔQ UFV", _v(m.get("dQ_ufv"), 3), "pu",   "pós-falta",
+             "Oscilação de potência reativa (UFV)",
+             self._classify(m.get("dQ_ufv"), DQ_THRESH)),
         ]
 
         return "\n".join(
@@ -239,8 +239,8 @@ function toggleTheme() {{
         iae = m.get("IAE")
         ise = m.get("ISE")
         ts  = m.get("ts")
-        dp  = m.get("dP")
-        dq  = m.get("dQ")
+        dp  = m.get("dP_ufv")
+        dq  = m.get("dQ_ufv")
 
         parts: list[str] = []
 

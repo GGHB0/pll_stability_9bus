@@ -61,12 +61,16 @@ class ChartBuilder:
             panels.append(("vbus", "|V| Barra 2 (pu)"))
         panels.append(("P", "P (pu)"))
         panels.append(("Q", "Q (pu)"))
-        if d.has_dq:
-            if d.has_ref:
-                panels.append(("id", "iₓ (pu)"))
-                panels.append(("iq", "iᵱ (pu)"))
+        if d.has_dq_ufv:
+            if d.has_ref_ufv:
+                panels.append(("id", "iₓ UFV (pu)"))
+                panels.append(("iq", "iᵱ UFV (pu)"))
             else:
-                panels.append(("dq_legacy", "Corrente dq (pu)"))
+                panels.append(("dq_legacy", "Corrente dq UFV (pu)"))
+        if d.has_vdq_ufv:
+            panels.append(("vdq_ufv", "Vdq Inversor (pu)"))
+        if d.has_vdq_rede:
+            panels.append(("vdq_rede", "Vdq Rede (pu)"))
         return panels
 
     # ── internos: renderização de cada painel ─────────────────────────────────
@@ -121,52 +125,76 @@ class ChartBuilder:
 
         elif kind == "P":
             self._add(go.Scatter(
-                x=t, y=d.P,
-                name="P ativa", mode="lines",
+                x=t, y=d.P_ufv,
+                name="P UFV", mode="lines",
                 line=dict(width=1.8)),
                 row)
 
         elif kind == "Q":
             self._add(go.Scatter(
-                x=t, y=d.Q,
-                name="Q reativa", mode="lines",
+                x=t, y=d.Q_ufv,
+                name="Q UFV", mode="lines",
                 line=dict(width=1.8)),
                 row)
 
         elif kind == "dq_legacy":
             self._add(go.Scatter(
-                x=t, y=d.id_meas,
-                name="i<sub>d</sub>", mode="lines",
+                x=t, y=d.id_ufv_meas,
+                name="i<sub>d</sub> UFV", mode="lines",
                 line=dict(width=1.8)),
                 row)
             self._add(go.Scatter(
-                x=t, y=d.iq_meas,
-                name="i<sub>q</sub>", mode="lines",
+                x=t, y=d.iq_ufv_meas,
+                name="i<sub>q</sub> UFV", mode="lines",
                 line=dict(width=1.4, dash="dot")),
                 row)
 
         elif kind == "id":
             self._add(go.Scatter(
-                x=t, y=d.id_meas,
-                name="i<sub>d</sub> medido", mode="lines",
+                x=t, y=d.id_ufv_meas,
+                name="i<sub>d</sub> UFV medido", mode="lines",
                 line=dict(width=1.4)),
                 row)
             self._add(go.Scatter(
-                x=t, y=d.id_ref,
-                name="i<sub>d</sub> ref", mode="lines",
+                x=t, y=d.id_ufv_ref,
+                name="i<sub>d</sub> UFV ref", mode="lines",
                 line=dict(width=2.0, dash="dash")),
                 row)
 
         elif kind == "iq":
             self._add(go.Scatter(
-                x=t, y=d.iq_meas,
-                name="i<sub>q</sub> medido", mode="lines",
+                x=t, y=d.iq_ufv_meas,
+                name="i<sub>q</sub> UFV medido", mode="lines",
                 line=dict(width=1.4)),
                 row)
             self._add(go.Scatter(
-                x=t, y=d.iq_ref,
-                name="i<sub>q</sub> ref", mode="lines",
+                x=t, y=d.iq_ufv_ref,
+                name="i<sub>q</sub> UFV ref", mode="lines",
                 line=dict(width=2.0, dash="dash")),
+                row)
+
+        elif kind == "vdq_ufv":
+            self._add(go.Scatter(
+                x=t, y=d.vd_ufv,
+                name="V<sub>d</sub> Inv", mode="lines",
+                line=dict(width=1.8)),
+                row)
+            self._add(go.Scatter(
+                x=t, y=d.vq_ufv,
+                name="V<sub>q</sub> Inv", mode="lines",
+                line=dict(width=1.4, dash="dot")),
+                row)
+
+        elif kind == "vdq_rede":
+            self._add(go.Scatter(
+                x=t, y=d.vd_rede,
+                name="V<sub>d</sub> Rede", mode="lines",
+                line=dict(width=1.8)),
+                row)
+            self._add(go.Scatter(
+                x=t, y=d.vq_rede,
+                name="V<sub>q</sub> Rede", mode="lines",
+                line=dict(width=1.4, dash="dot")),
                 row)
 
     def _add_panel_annotations(self, label: str, row: int, n: int) -> None:

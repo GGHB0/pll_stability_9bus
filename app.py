@@ -17,29 +17,43 @@ from src import SimData, ChartBuilder, HTMLRenderer
 from src.config import CSV_PATH, HTML_OUT
 
 
+def _latest_results_csv() -> Path:
+    """Retorna o sim_data.csv mais recente em output/results/, ou CSV_PATH como fallback."""
+    results_dir = CSV_PATH.parent / "results"
+    if results_dir.exists():
+        candidates = list(results_dir.glob("*/sim_data.csv"))
+        if candidates:
+            return max(candidates, key=lambda p: p.stat().st_mtime)
+    return CSV_PATH
+
+
 def parse_args() -> argparse.Namespace:
+    default_csv = _latest_results_csv()
     p = argparse.ArgumentParser(
         description="Gera relatório HTML com métricas e gráficos do SRF-PLL."
     )
     p.add_argument(
         "--csv",
         type=Path,
-        default=CSV_PATH,
+        default=default_csv,
         metavar="PATH",
-        help=f"Caminho do CSV de entrada (padrão: {CSV_PATH})",
+        help=f"Caminho do CSV de entrada (padrão: mais recente em output/results/ ou {CSV_PATH})",
     )
     p.add_argument(
         "--out",
         type=Path,
-        default=HTML_OUT,
+        default=None,
         metavar="PATH",
-        help=f"Caminho do HTML de saída (padrão: {HTML_OUT})",
+        help="Caminho do HTML de saída (padrão: pll_metrics.html na mesma pasta do CSV)",
     )
     return p.parse_args()
 
 
 def main() -> None:
     args = parse_args()
+
+    # HTML de saída: mesma pasta do CSV se não especificado
+    out_path: Path = args.out if args.out is not None else args.csv.parent / "pll_metrics.html"
 
     # 1. Carregar dados e calcular métricas
     print(f"📂  Lendo: {args.csv}")
@@ -66,7 +80,7 @@ def main() -> None:
     # 3. Renderizar HTML
     print("\n🖊   Gerando HTML...")
     renderer = HTMLRenderer(data, fig, trace_map)
-    out = renderer.render(args.out)
+    out = renderer.render(out_path)
     print(f"    ✅  Salvo em: {out}")
 
 

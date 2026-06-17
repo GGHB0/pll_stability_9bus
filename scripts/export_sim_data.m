@@ -4,14 +4,25 @@
 
 proj_root = fileparts(get_param(bdroot, 'FileName'));
 ds        = logsout_IEEE9BusLoadflow;
-T_FAULT   = 0.5;   % instante da falta (s)
 
-export_angles(ds, proj_root);
-export_slow(ds, proj_root, T_FAULT);
-run_python(proj_root);
+% ── Parâmetros do cenário (definidos em params.m; fallback se não existirem) ──
+T_FAULT    = ws_var('T_FAULT',    0.5);
+T_CLEAR    = ws_var('T_CLEAR',    0.6);
+FAULT_BUS  = ws_var('FAULT_BUS',  0);
+FAULT_TYPE = ws_var('FAULT_TYPE', 'unknown');
+
+% ── Pasta de saída estruturada ─────────────────────────────────────────────
+scenario   = sprintf('bus%d_%s', FAULT_BUS, FAULT_TYPE);
+out_dir    = fullfile(proj_root, 'output', 'results', scenario);
+if ~isfolder(out_dir), mkdir(out_dir); end
+
+export_angles(ds, out_dir);
+export_slow(ds, out_dir, T_FAULT);
+save_fault_info(out_dir, FAULT_BUS, FAULT_TYPE, T_FAULT, T_CLEAR);
+run_python(proj_root, out_dir);
 
 % ═══════════════════════════════════════════════════════════════════════════
-function export_angles(ds, proj_root)
+function export_angles(ds, out_dir)
 % CSV 1: ângulos PLL e rede na taxa nativa Ts (eixo rápido).
     AngPLL = ds.get('Ang_pll');
     AngRed = ds.get('Ang_Rede');
@@ -25,13 +36,13 @@ function export_angles(ds, proj_root)
     T = table(t_fast, ang_fast, ang_red_fast, theta_err_fast, ...
         'VariableNames', {'t_s','theta_pll_rad','theta_ref_rad','theta_err_rad'});
 
-    out = fullfile(proj_root, 'output', 'sim_data_angles.csv');
+    out = fullfile(out_dir, 'sim_data_angles.csv');
     writetable(T, out);
     fprintf('Angulos: %d amostras → %s\n', height(T), out);
 end
 
 % ═══════════════════════════════════════════════════════════════════════════
-function export_slow(ds, proj_root, T_FAULT)
+function export_slow(ds, out_dir, T_FAULT)
 % CSV 2: potência, correntes dq e tensões a Tsc (eixo lento).
     t = ds.get('Pinverter').Values.Time;
 
@@ -44,7 +55,7 @@ function export_slow(ds, proj_root, T_FAULT)
     T = add_gen_scalar(T, ds, t, 'Ang_G3', 'ang_g3_rad');
     T = add_gen_scalar(T, ds, t, 'Pe_G3',  'pe_g3_pu');
 
-    out = fullfile(proj_root, 'output', 'sim_data.csv');
+    out = fullfile(out_dir, 'sim_data.csv');
     writetable(T, out);
     fprintf('Potencia/correntes: %d amostras → %s\n', height(T), out);
 end
@@ -117,21 +128,51 @@ function T = add_gen_scalar(T, ds, t, sig_name, col_name)
 end
 
 % ═══════════════════════════════════════════════════════════════════════════
-function run_python(proj_root)
-% Chama app.py e abre o HTML no navegador padrão.
+function save_fault_info(out_dir, bus, ftype, t_fault, t_clear)
+% Salva metadados do cenário como fault_info.json na pasta de saída.
+    info.fault_bus  = bus;
+    info.fault_type = ftype;
+    info.t_fault    = t_fault;
+    info.t_clear    = t_clear;
+    info.duration_s = t_clear - t_fault;
+    info.timestamp  = datestr(now, 'yyyy-mm-ddTHH:MM:SS');
+    info.model      = get_param(bdroot, 'Name');
+
+    fid = fopen(fullfile(out_dir, 'fault_info.json'), 'w');
+    fprintf(fid, '%s\n', jsonencode(info, 'PrettyPrint', true));
+    fclose(fid);
+    fprintf('fault_info.json → %s\n', out_dir);
+end
+
+% ───────────────────────────────────────────────────────────────────────────
+function val = ws_var(name, default)
+% Lê variável do workspace base; retorna default se não existir.
+    if evalin('base', sprintf('exist(''%s'', ''var'')', name))
+        val = evalin('base', name);
+    else
+        val = default;
+    end
+end
+
+% ═══════════════════════════════════════════════════════════════════════════
+function run_python(proj_root, out_dir)
+% Chama app.py apontando para o CSV do cenário e abre o HTML no navegador.
     python_exe = fullfile(proj_root, '.venv', 'Scripts', 'python.exe');
     app_py     = fullfile(proj_root, 'app.py');
+    csv_path   = fullfile(out_dir, 'sim_data.csv');
+    html_out   = fullfile(out_dir, 'pll_metrics.html');
 
     if ~isfile(python_exe)
         warning('export_sim_data:venv', ...
-            'Venv nao encontrado. Rode manualmente: .venv\\Scripts\\python.exe app.py');
+            'Venv nao encontrado. Rode manualmente: .venv\\Scripts\\python.exe app.py --csv "%s"', csv_path);
         return;
     end
 
-    [status, out] = system(sprintf('"%s" "%s"', python_exe, app_py));
+    cmd = sprintf('"%s" "%s" --csv "%s" --out "%s"', python_exe, app_py, csv_path, html_out);
+    [status, out] = system(cmd);
     disp(out);
     if status == 0
-        web(fullfile(proj_root, 'output', 'pll_metrics.html'));
+        web(html_out);
     else
         warning('export_sim_data:python', 'app.py retornou erro (status=%d).', status);
     end

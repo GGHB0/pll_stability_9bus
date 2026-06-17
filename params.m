@@ -24,6 +24,12 @@ Ts   = 5e-5;    % Fundamental sample time       [s]
 fsw  = 5000;   % Inverter switching frequency [Hz]
 Tsc  = 2e-4;    % Control sample time           [s]
 
+%% Fault scenario — alterar antes de cada simulação
+FAULT_BUS  = 7;          % Barra do curto (numeração IEEE 9 barras)
+FAULT_TYPE = '3ph';      % '3ph' | 'lg' | 'll' | 'llg' | 'phase_jump' | 'rocof'
+T_FAULT    = 0.5;        % Instante do curto [s]
+T_CLEAR    = 0.6;        % Instante de remoção [s]
+
 %% Discrete notch for the PLL/PWM loop
 f_notch = 2 * F0;        % 120 Hz for a 60 Hz grid
 wn_notch = 2 * pi * f_notch;

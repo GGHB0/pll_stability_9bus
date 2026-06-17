@@ -39,6 +39,10 @@ function export_slow(ds, proj_root, T_FAULT)
     T = add_vdq_cols(T, ds, t, T_FAULT, 'Vdq_Inverter', 'vd_ufv_pu',  'vq_ufv_pu');
     T = add_vdq_cols(T, ds, t, T_FAULT, 'Vdq_rede',     'vd_rede_pu', 'vq_rede_pu');
     T = add_vbus2_col(T, ds, t, T_FAULT);
+    T = add_gen_scalar(T, ds, t, 'Ang_G1', 'ang_g1_rad');
+    T = add_gen_scalar(T, ds, t, 'Pe_G1',  'pe_g1_pu');
+    T = add_gen_scalar(T, ds, t, 'Ang_G3', 'ang_g3_rad');
+    T = add_gen_scalar(T, ds, t, 'Pe_G3',  'pe_g3_pu');
 
     out = fullfile(proj_root, 'output', 'sim_data.csv');
     writetable(T, out);
@@ -100,6 +104,16 @@ function T = add_vbus2_col(T, ds, t, T_FAULT)
 
     Vnom       = mean(vmag(t_v < T_FAULT));
     T.vbus2_pu = interp1(t_v, vmag / Vnom, t, 'linear', 'extrap');
+end
+
+% ───────────────────────────────────────────────────────────────────────────
+function T = add_gen_scalar(T, ds, t, sig_name, col_name)
+% Adiciona coluna escalar de gerador (ângulo rad ou potência pu) interpolada em t.
+    sig = ds.get(sig_name);
+    if isempty(sig), return; end
+    t_s = sig.Values.Time;
+    v   = sig.Values.Data(:,1);
+    T.(col_name) = interp1(t_s, v, t, 'linear', 'extrap');
 end
 
 % ═══════════════════════════════════════════════════════════════════════════

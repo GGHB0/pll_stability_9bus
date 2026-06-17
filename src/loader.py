@@ -102,6 +102,22 @@ class SimData:
         else:
             self.theta_pll = self.theta_ref = None
 
+        # ── geradores G1 e G3 ────────────────────────────────────────────────
+        self.has_gen1 = {"ang_g1_rad", "pe_g1_pu"} <= self._cols
+        self.has_gen3 = {"ang_g3_rad", "pe_g3_pu"} <= self._cols
+
+        if self.has_gen1:
+            self.ang_g1 = self._df["ang_g1_rad"].to_numpy()
+            self.pe_g1  = self._df["pe_g1_pu"].to_numpy()
+        else:
+            self.ang_g1 = self.pe_g1 = None
+
+        if self.has_gen3:
+            self.ang_g3 = self._df["ang_g3_rad"].to_numpy()
+            self.pe_g3  = self._df["pe_g3_pu"].to_numpy()
+        else:
+            self.ang_g3 = self.pe_g3 = None
+
         # ── tensão Barra 2 ───────────────────────────────────────────────────
         self.has_vbus2 = "vbus2_pu" in self._cols
         self.vbus2 = self._df["vbus2_pu"].to_numpy() if self.has_vbus2 else None

@@ -7,7 +7,7 @@ description: Workflow validado Simulink → MATLAB → Python para o modelo pll_
 
 ## Sinais disponíveis no logsout
 
-`logsout_IEEE9BusLoadflow` (Simulink.SimulationData.Dataset) — 9 entradas:
+`logsout_IEEE9BusLoadflow` (Simulink.SimulationData.Dataset) — 13 entradas:
 
 | Nome | Conteúdo | Dimensão | Taxa |
 |---|---|---|---|
@@ -22,6 +22,10 @@ description: Workflow validado Simulink → MATLAB → Python para o modelo pll_
 | `V_bus2` | **Magnitude escalar** \|V\| Barra 2 (V ou pu) | escalar | Tsc |
 | `Vdq_Inverter` | **Mux [Vd_inv, Vq_inv, ...]** tensão dq no inversor | ≥2 colunas (1=d, 2=q) | Tsc |
 | `Vdq_rede` | **Mux [Vd_rede, Vq_rede, ...]** tensão dq da rede | ≥2 colunas (1=d, 2=q) | Tsc |
+| `Ang_G1` | Ângulo do rotor de G1 (rad elétrico) | escalar | Tsc |
+| `Pe_G1` | Potência elétrica de G1 (pu) | escalar | Tsc |
+| `Ang_G3` | Ângulo do rotor de G3 (rad elétrico) | escalar | Tsc |
+| `Pe_G3` | Potência elétrica de G3 (pu) | escalar | Tsc |
 
 > `V_bus2` é um sinal escalar de magnitude — **não** é trifásico. Não aplicar transformada de Clarke.
 > O script normaliza pela média pré-falta (`t < T_FAULT`) para obter `vbus2_pu`.
@@ -86,10 +90,10 @@ Após exportar, o script chama `app.py` via `system()` e abre o HTML no navegado
 
 | Arquivo | Colunas | Taxa | Uso |
 |---|---|---|---|
-| `output/sim_data.csv` | `t_s, P_ufv_pu, Q_ufv_pu, id_ufv_ref_pu, id_ufv_pu, iq_ufv_ref_pu, iq_ufv_pu [, vd_ufv_pu, vq_ufv_pu, vd_rede_pu, vq_rede_pu, vbus2_pu]` | Tsc | eixo de tempo principal do Python |
+| `output/sim_data.csv` | `t_s, P_ufv_pu, Q_ufv_pu, id_ufv_ref_pu, id_ufv_pu, iq_ufv_ref_pu, iq_ufv_pu [, vd_ufv_pu, vq_ufv_pu, vd_rede_pu, vq_rede_pu, vbus2_pu, ang_g1_rad, pe_g1_pu, ang_g3_rad, pe_g3_pu]` | Tsc | eixo de tempo principal do Python |
 | `output/sim_data_angles.csv` | `t_s, theta_pll_rad, theta_ref_rad, theta_err_rad` | Ts | alta resolução para θ_err e IAE/ISE/ts |
 
-> Sufixo `_ufv` identifica sinais do inversor UFV; `_rede` identifica sinais da rede. Quando variáveis dos geradores forem adicionadas, seguirão padrão `_gen1`, `_gen2`, etc.
+> Sufixo `_ufv` identifica sinais do inversor UFV; `_rede` identifica sinais da rede. Geradores síncronos: padrão `ang_g{n}_rad` / `pe_g{n}_pu` (ex: `ang_g1_rad`, `pe_g3_pu`).
 > `Vdq_*` são normalizados pelo valor pré-falta de `Vd` (componente d). Pré-falta: `Vd ≈ 1 pu`, `Vq ≈ 0`.
 
 > `vbus2_pu` é opcional: incluído quando `V_bus2` existe no logsout. Python detecta via `"vbus2_pu" in df.columns`.
@@ -139,6 +143,17 @@ src/
 | `theta_ref_fast` | Ts | θ_ref analítico |
 | `theta_err_fast` | Ts | erro de fase corrigido (baseline removida) |
 | `theta_err` | Tsc | theta_err_fast interpolado para eixo lento (métricas) |
+
+### Atributos de geradores expostos por `SimData`
+
+| Atributo | Flag | Descrição |
+|---|---|---|
+| `ang_g1` | `has_gen1` | ângulo do rotor G1 (rad), eixo Tsc |
+| `pe_g1` | `has_gen1` | potência elétrica G1 (pu), eixo Tsc |
+| `ang_g3` | `has_gen3` | ângulo do rotor G3 (rad), eixo Tsc |
+| `pe_g3` | `has_gen3` | potência elétrica G3 (pu), eixo Tsc |
+
+Flags `has_gen1` / `has_gen3` → `True` apenas se ambas as colunas existirem no CSV.
 
 ### Métricas calculadas
 

@@ -67,10 +67,9 @@ class ChartBuilder:
                 panels.append(("iq", "iᵱ UFV (pu)"))
             else:
                 panels.append(("dq_legacy", "Corrente dq UFV (pu)"))
-        if d.has_vdq_ufv:
-            panels.append(("vdq_ufv", "Vdq Inversor (pu)"))
-        if d.has_vdq_rede:
-            panels.append(("vdq_rede", "Vdq Rede (pu)"))
+        if d.has_vdq_ufv or d.has_vdq_rede:
+            panels.append(("vd_track", "V<sub>d</sub> (pu)"))
+            panels.append(("vq_track", "V<sub>q</sub> (pu)"))
         return panels
 
     # ── internos: renderização de cada painel ─────────────────────────────────
@@ -173,29 +172,37 @@ class ChartBuilder:
                 line=dict(width=2.0, dash="dash")),
                 row)
 
-        elif kind == "vdq_ufv":
-            self._add(go.Scatter(
-                x=t, y=d.vd_ufv,
-                name="V<sub>d</sub> Inv", mode="lines",
-                line=dict(width=1.8)),
-                row)
-            self._add(go.Scatter(
-                x=t, y=d.vq_ufv,
-                name="V<sub>q</sub> Inv", mode="lines",
-                line=dict(width=1.4, dash="dot")),
-                row)
+        elif kind == "vd_track":
+            if d.has_vdq_rede:
+                self._add(go.Scatter(
+                    x=t, y=d.vd_rede,
+                    name="V<sub>d</sub> Rede", mode="lines",
+                    line=dict(width=2.0)),
+                    row)
+            if d.has_vdq_ufv:
+                self._add(go.Scatter(
+                    x=t, y=d.vd_ufv,
+                    name="V<sub>d</sub> Inv (PLL)", mode="lines",
+                    line=dict(width=1.4, dash="dot")),
+                    row)
 
-        elif kind == "vdq_rede":
-            self._add(go.Scatter(
-                x=t, y=d.vd_rede,
-                name="V<sub>d</sub> Rede", mode="lines",
-                line=dict(width=1.8)),
-                row)
-            self._add(go.Scatter(
-                x=t, y=d.vq_rede,
-                name="V<sub>q</sub> Rede", mode="lines",
-                line=dict(width=1.4, dash="dot")),
-                row)
+        elif kind == "vq_track":
+            if d.has_vdq_rede:
+                self._add(go.Scatter(
+                    x=t, y=d.vq_rede,
+                    name="V<sub>q</sub> Rede", mode="lines",
+                    line=dict(width=2.0)),
+                    row)
+            if d.has_vdq_ufv:
+                self._add(go.Scatter(
+                    x=t, y=d.vq_ufv,
+                    name="V<sub>q</sub> Inv (PLL)", mode="lines",
+                    line=dict(width=1.4, dash="dot")),
+                    row)
+            self._fig.add_hline(
+                y=0.0,
+                line=dict(color="rgba(100,100,100,0.25)", width=1.0, dash="dot"),
+                row=row, col=1)
 
     def _add_panel_annotations(self, label: str, row: int, n: int) -> None:
         yref = "y domain" if row == 1 else f"y{row} domain"

@@ -16,9 +16,9 @@ Fórmula: `H = ½·J·ωs² / S_nom` [s] — tempo que a máquina forneceria pot
 | Turbina a gás | 2–4 | Menores que vapor |
 | Gerador hídrico | 2–4 | Depende do rotor e velocidade |
 | Nuclear | 5–7 | Grandes rotores de baixa velocidade |
-| IEEE 9-bus G1 | 23,64 | Anderson-Fouad — valor atipicamente alto |
-| IEEE 9-bus G2 | 6,40 | Padrão térmico |
-| IEEE 9-bus G3 | 3,01 | Padrão hídrico |
+| IEEE 9-bus G1 | 23,64 | Hidro, 247,5 MVA — H_máq=9,55 s na base própria, convertido para 100 MVA |
+| IEEE 9-bus G2 | 6,40  | Vapor, 192 MVA — H_máq=3,33 s na base própria, convertido para 100 MVA |
+| IEEE 9-bus G3 | 3,01  | Vapor, 128 MVA — H_máq=2,35 s na base própria, convertido para 100 MVA |
 | IBR (solar/eólica) | ≈ 0 | Sem acoplamento eletromecânico |
 
 IBRs não contribuem para H do sistema a menos que emulação de inércia virtual esteja ativa (ver [[virtual-inertia]]).

@@ -70,6 +70,9 @@ class ChartBuilder:
         if d.has_vdq_ufv or d.has_vdq_rede:
             panels.append(("vd_track", "V<sub>d</sub> (pu)"))
             panels.append(("vq_track", "V<sub>q</sub> (pu)"))
+        if d.has_gen1 or d.has_gen3:
+            panels.append(("ang_gen", "Ângulo rotor (°)"))
+            panels.append(("pe_gen", "Pe geradores (pu)"))
         return panels
 
     # ── internos: renderização de cada painel ─────────────────────────────────
@@ -203,6 +206,34 @@ class ChartBuilder:
                 y=0.0,
                 line=dict(color="rgba(100,100,100,0.25)", width=1.0, dash="dot"),
                 row=row, col=1)
+
+        elif kind == "ang_gen":
+            if d.has_gen1:
+                self._add(go.Scatter(
+                    x=t, y=np.degrees(d.ang_g1),
+                    name="δ G1", mode="lines",
+                    line=dict(width=1.8)),
+                    row)
+            if d.has_gen3:
+                self._add(go.Scatter(
+                    x=t, y=np.degrees(d.ang_g3),
+                    name="δ G3", mode="lines",
+                    line=dict(width=1.8)),
+                    row)
+
+        elif kind == "pe_gen":
+            if d.has_gen1:
+                self._add(go.Scatter(
+                    x=t, y=d.pe_g1,
+                    name="Pe G1", mode="lines",
+                    line=dict(width=1.8)),
+                    row)
+            if d.has_gen3:
+                self._add(go.Scatter(
+                    x=t, y=d.pe_g3,
+                    name="Pe G3", mode="lines",
+                    line=dict(width=1.8)),
+                    row)
 
     def _add_panel_annotations(self, label: str, row: int, n: int) -> None:
         yref = "y domain" if row == 1 else f"y{row} domain"

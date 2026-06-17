@@ -89,10 +89,10 @@ Detector de fase = transformada de Park; quando `u_q -> 0`, entao `phi_chapeu ->
 
 ### 3. Onde cada contingencia ataca o laco
 
-Marcadores numerados (1-4) no circuito de referencia indicam o ponto de injecao de cada falta; os paineis abaixo mostram o efeito qualitativo em `u_q` e o impacto no controle.
+Marcadores no circuito de referencia indicam o ponto de injecao de cada falta; os paineis abaixo mostram o efeito qualitativo em `u_q` e o impacto no controle.
 
 <p align="center">
-  <img src="assets/diagrams/contingencies_attack.svg" alt="Circuito de referencia com 4 marcadores de contingencia e paineis de impacto em u_q" width="100%">
+  <img src="assets/diagrams/contingencies_attack.svg" alt="Circuito de referencia com marcadores de contingencia e paineis de impacto em u_q" width="100%">
 </p>
 
 ### 4. Trade-off central de Kp / Ki (Secao 4.3)
@@ -106,10 +106,10 @@ flowchart TB
     Centro --> Alto
     Centro --> Baixo
 
-    Alto -- "bom em" --> R1["3. Salto de fase<br/>4. RoCoF alto"]:::good
+    Alto -- "bom em" --> R1["1. Sag simetrico<br/>(recuperacao rapida)"]:::good
     Alto -- "ruim em" --> R2["2. Sag assimetrico<br/>(amplifica 120 Hz)"]:::bad
     Baixo -- "bom em" --> R3["2. Sag assimetrico<br/>(filtra seq-)"]:::good
-    Baixo -- "ruim em" --> R4["3. Salto de fase<br/>4. RoCoF alto<br/>(perde lock)"]:::bad
+    Baixo -- "ruim em" --> R4["1. Sag simetrico<br/>(resposta lenta)"]:::bad
 
     classDef a fill:#d3f9d8,stroke:#2f9e44,color:#000
     classDef b fill:#dbe4ff,stroke:#364fc7,color:#000
@@ -150,8 +150,6 @@ Esse valor e usado como parametro de rede no dimensionamento do filtro e no proj
 |---|---|
 | Afundamento simetrico | Falta trifasica — reducao de amplitude sem sequencia negativa |
 | Afundamento assimetrico | Introduz sequencia negativa — gera oscilacoes de 2a harmonica no PLL |
-| Salto de fase (Phase-Angle Jump) | Mudanca abrupta de fase — pode causar perda de sincronismo |
-| Alta RoCoF | Elevada taxa de variacao de frequencia — desafio ao rastreamento |
 
 ---
 

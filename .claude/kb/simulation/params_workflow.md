@@ -119,16 +119,25 @@ Tsc  = 2e-4;    % Control step (5 kHz)
 To speed up a simulation run, `Ts` can be temporarily changed to `5e-5` directly
 in `params.m`. There is no override in InitFcn — `params.m` is the single place to edit.
 
-## InitFcn
+## InitFcn e StopFcn
 
-The model InitFcn contains a single line that calls `params.m` at load time:
+**InitFcn** — carrega `params.m` ao abrir o modelo:
 
 ```matlab
-run(fullfile(fileparts(which(bdroot)), 'params.m'));
+proj_root = fileparts(get_param(bdroot, 'FileName'));
+run(fullfile(proj_root, 'params.m'))
 ```
 
-`fileparts(which(bdroot))` resolves the directory of the open `.slx`, so the call
-is portable across machines regardless of the current working directory.
+**StopFcn** — exporta dados e gera relatório ao fim da simulação:
+
+```matlab
+proj_root = fileparts(get_param(bdroot, 'FileName'));
+run(fullfile(proj_root, 'scripts', 'export_sim_data.m'))
+```
+
+`get_param(bdroot, 'FileName')` retorna o caminho completo do `.slx` aberto;
+`fileparts` extrai o diretório. Portável — funciona em qualquer máquina sem
+editar o script. `params.m` fica na **raiz do projeto**, não em `scripts/`.
 
 ## .gitignore
 

@@ -20,6 +20,8 @@ description: Workflow validado Simulink → MATLAB → Python para o modelo pll_
 | `iabc_inverter` | Correntes trifásicas inversor (pu) | 3 colunas | Ts |
 | `iabc_grid` | Correntes trifásicas rede (pu) | 3 colunas | Ts |
 | `V_bus2` | **Magnitude escalar** \|V\| Barra 2 (V ou pu) | escalar | Tsc |
+| `Vdq_Inverter` | **Mux [Vd_inv, Vq_inv, ...]** tensão dq no inversor | ≥2 colunas (1=d, 2=q) | Tsc |
+| `Vdq_rede` | **Mux [Vd_rede, Vq_rede, ...]** tensão dq da rede | ≥2 colunas (1=d, 2=q) | Tsc |
 
 > `V_bus2` é um sinal escalar de magnitude — **não** é trifásico. Não aplicar transformada de Clarke.
 > O script normaliza pela média pré-falta (`t < T_FAULT`) para obter `vbus2_pu`.
@@ -62,10 +64,10 @@ writetable(T_angles, fullfile(proj_root, 'output', 'sim_data_angles.csv'));
 t       = P.Values.Time;   % eixo Tsc
 T_FAULT = 0.5;             % instante da falta (s)
 
-id_ref_pu = interp1(Id.Values.Time, Id.Values.Data(:,1), t, 'linear', 'extrap');
-id_pu     = interp1(Id.Values.Time, Id.Values.Data(:,2), t, 'linear', 'extrap');
-iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap');
-iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap');
+id_ref_pu = interp1(Id.Values.Time, Id.Values.Data(:,1), t, 'linear', 'extrap');  % → id_ufv_ref_pu no CSV
+id_pu     = interp1(Id.Values.Time, Id.Values.Data(:,2), t, 'linear', 'extrap');  % → id_ufv_pu
+iq_ref_pu = interp1(Iq.Values.Time, Iq.Values.Data(:,1), t, 'linear', 'extrap'); % → iq_ufv_ref_pu
+iq_pu     = interp1(Iq.Values.Time, Iq.Values.Data(:,2), t, 'linear', 'extrap'); % → iq_ufv_pu
 
 % V_bus2 é escalar — extrai e normaliza diretamente (sem Clarke)
 V_bus2 = ds.get('V_bus2');
@@ -84,8 +86,11 @@ Após exportar, o script chama `app.py` via `system()` e abre o HTML no navegado
 
 | Arquivo | Colunas | Taxa | Uso |
 |---|---|---|---|
-| `output/sim_data.csv` | `t_s, P_pu, Q_pu, id_ref_pu, id_pu, iq_ref_pu, iq_pu [, vbus2_pu]` | Tsc | eixo de tempo principal do Python |
+| `output/sim_data.csv` | `t_s, P_ufv_pu, Q_ufv_pu, id_ufv_ref_pu, id_ufv_pu, iq_ufv_ref_pu, iq_ufv_pu [, vd_ufv_pu, vq_ufv_pu, vd_rede_pu, vq_rede_pu, vbus2_pu]` | Tsc | eixo de tempo principal do Python |
 | `output/sim_data_angles.csv` | `t_s, theta_pll_rad, theta_ref_rad, theta_err_rad` | Ts | alta resolução para θ_err e IAE/ISE/ts |
+
+> Sufixo `_ufv` identifica sinais do inversor UFV; `_rede` identifica sinais da rede. Quando variáveis dos geradores forem adicionadas, seguirão padrão `_gen1`, `_gen2`, etc.
+> `Vdq_*` são normalizados pelo valor pré-falta de `Vd` (componente d). Pré-falta: `Vd ≈ 1 pu`, `Vq ≈ 0`.
 
 > `vbus2_pu` é opcional: incluído quando `V_bus2` existe no logsout. Python detecta via `"vbus2_pu" in df.columns`.
 
@@ -118,7 +123,7 @@ src/
 
 ### Lógica de leitura em `SimData`
 
-1. Lê `sim_data.csv` → `self.t`, `self.P`, `self.Q`, correntes dq
+1. Lê `sim_data.csv` → `self.t`, `self.P_ufv`, `self.Q_ufv`, correntes dq UFV
 2. Procura `sim_data_angles.csv` na mesma pasta:
    - **Se existe**: carrega `t_fast`, `theta_pll_fast`, `theta_ref_fast`; aplica
      baseline correction (remove drift pré-falta); interpola `theta_err` para `self.t`
@@ -137,13 +142,14 @@ src/
 
 ### Métricas calculadas
 
-| Métrica | Fórmula | Janela |
+| Métrica (chave dict) | Fórmula | Janela |
 |---|---|---|
-| IAE | ∫\|θ_err\| dt | t ≥ T_FAULT |
-| ISE | ∫θ_err² dt | t ≥ T_FAULT |
-| ts | último t com \|θ_err\| > TOL_RAD | t ≥ T_FAULT |
-| ΔP | max(P) − min(P) | t ≥ T_FAULT |
-| ΔQ | max(Q) − min(Q) | t ≥ T_FAULT |
+| `IAE` | ∫\|θ_err\| dt | t ≥ T_FAULT |
+| `ISE` | ∫θ_err² dt | t ≥ T_FAULT |
+| `ts` | último t com \|θ_err\| > TOL_RAD | t ≥ T_FAULT |
+| `dP_ufv` | max(P_ufv) − min(P_ufv) | t ≥ T_FAULT |
+| `dQ_ufv` | max(Q_ufv) − min(Q_ufv) | t ≥ T_FAULT |
+| `vmin` | min(vbus2_pu) | t ≥ T_FAULT |
 
 > `np.trapezoid` (NumPy ≥ 2.0). Baseline correction: subtrai `theta_err[idx_fault-1]`
 > antes de T_FAULT para zerar drift da Repeating Sequence de referência.

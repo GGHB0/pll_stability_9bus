@@ -54,8 +54,8 @@ def main() -> None:
         print(f"    ts  = {m['ts']:.4f} s")
     else:
         print("    (ângulos não disponíveis — IAE/ISE/ts omitidos)")
-    print(f"    ΔP  = {m['dP']:.4f} pu")
-    print(f"    ΔQ  = {m['dQ']:.4f} pu")
+    print(f"    ΔP  = {m['dP_ufv']:.4f} pu")
+    print(f"    ΔQ  = {m['dQ_ufv']:.4f} pu")
 
     # 2. Construir figura Plotly
     print("\n📈  Construindo gráficos...")

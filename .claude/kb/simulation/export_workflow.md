@@ -125,6 +125,22 @@ src/
 └── renderer.py → HTMLRenderer: HTML com tema light/dark
 ```
 
+### Painéis gerados por `ChartBuilder` (ordem de exibição)
+
+| Painel | Kind | Condição | Conteúdo |
+|--------|------|----------|----------|
+| Ângulo (°) | `ang` | `has_ang` | θ Rede + θ̂ PLL |
+| Erro de fase (°) | `err` | `theta_err is not None` | erro com banda ±TOL_RAD |
+| \|V\| Barra 2 (pu) | `vbus` | `has_vbus2` | tensão normalizada + linha LVRT |
+| P (pu) | `P` | sempre | P UFV |
+| Q (pu) | `Q` | sempre | Q UFV |
+| iₓ UFV (pu) | `id` | `has_ref_ufv` | id medido + id ref |
+| iᵱ UFV (pu) | `iq` | `has_ref_ufv` | iq medido + iq ref |
+| Vd (pu) | `vd_track` | `has_vdq_*` | Vd rede + Vd inversor |
+| Vq (pu) | `vq_track` | `has_vdq_*` | Vq rede + Vq inversor |
+| Ângulo rotor (°) | `ang_gen` | `has_gen1 or has_gen3` | δ G1 e/ou δ G3 em graus |
+| Pe geradores (pu) | `pe_gen` | `has_gen1 or has_gen3` | Pe G1 e/ou Pe G3 |
+
 ### Lógica de leitura em `SimData`
 
 1. Lê `sim_data.csv` → `self.t`, `self.P_ufv`, `self.Q_ufv`, correntes dq UFV

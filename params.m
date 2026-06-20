@@ -24,11 +24,32 @@ Ts   = 5e-5;    % Fundamental sample time       [s]
 fsw  = 5000;   % Inverter switching frequency [Hz]
 Tsc  = 2e-4;    % Control sample time           [s]
 
-%% Fault scenario — alterar antes de cada simulação
-FAULT_BUS  = 7;          % Barra do curto (numeração IEEE 9 barras)
-FAULT_TYPE = '3ph';      % '3ph' | 'lg' | 'll' | 'llg' | 'phase_jump' | 'rocof'
-T_FAULT    = 0.5;        % Instante do curto [s]
-T_CLEAR    = 0.6;        % Instante de remoção [s]
+%% Cenário de simulação — alterar antes de cada rodada
+%
+%  FAULT_TYPE  | Descrição                          | Pasta de saída
+%  ------------|------------------------------------|--------------------------
+%  'regime'    | Regime permanente, sem falta       | output/results/regime/
+%  '3phase'    | Curto trifásico simétrico          | output/results/bus{N}/3phase/
+%  '2phase_ground' | Bifásico com terra (seq. neg.) | output/results/bus{N}/2phase_ground/
+%  '2phase'    | Bifásico sem terra                 | output/results/bus{N}/2phase/
+%  '1phase_ground' | Monofásico (mais frequente)    | output/results/bus{N}/1phase_ground/
+%
+%  Para regime permanente, use FAULT_TYPE='regime' e FAULT_BUS=0.
+%  T_FAULT/T_CLEAR são ignorados na exportação quando FAULT_TYPE='regime'.
+
+% Linhas do IEEE 9 barras: 1-4, 4-5, 5-6, 3-6, 6-7, 7-8, 8-2, 8-9, 9-4
+%
+%  Falta em BARRA:  FAULT_BUS = N;      FAULT_LINE = [];
+%  Falta em LINHA:  FAULT_BUS = 0;      FAULT_LINE = [A, B];
+%  Regime perm.:    FAULT_TYPE='regime'; FAULT_BUS = 0; FAULT_LINE = [];
+
+FAULT_BUS  = 7;           % Barra do curto (0 se falta em linha ou regime)
+FAULT_LINE = [];          % Par [A, B] para falta em linha; [] para falta em barra
+FAULT_TYPE = '3phase';    % Ver tabela acima
+
+T_FAULT    = 0.5;         % Instante de aplicação da falta [s]
+T_CLEAR    = 0.6;         % Instante de remoção da falta   [s]
+T_DUR      = T_CLEAR - T_FAULT;  % Duração da falta [s]  (calculado automaticamente)
 
 %% Discrete notch for the PLL/PWM loop
 f_notch = 2 * F0;        % 120 Hz for a 60 Hz grid

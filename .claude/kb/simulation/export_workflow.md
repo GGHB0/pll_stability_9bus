@@ -90,16 +90,19 @@ Após exportar, o script chama `app.py` via `system()` e abre o HTML no navegado
 
 ```
 output/results/
+├── regime/              ← regime permanente (sem falta — cenário global, não por barra)
 └── bus{1..9}/
-    ├── regime/          ← regime permanente (sem falta)
     ├── 3phase/          ← falta trifásica simétrica
-    ├── 2phase_ground/   ← falta bifásica com terra (introduz seq. negativa → 2ª harmônica no PLL)
+    ├── 2phase_ground/   ← falta bifásica com terra (seq. negativa → 2ª harmônica no PLL)
     ├── 2phase/          ← falta fase-fase sem terra
     └── 1phase_ground/   ← falta monofásica (mais frequente na prática)
 ```
 
-Cada subpasta recebe: `sim_data.csv`, `sim_data_angles.csv`, `fault_info.json`.
-O caminho de saída no script é montado como `output/results/bus{N}/{fault_type}/`.
+`regime` fica na raiz de `results/` porque representa o sistema inteiro em operação normal,
+sem associação a uma barra específica. Faltas ficam em `bus{N}/{fault_type}/`.
+
+Cada pasta recebe: `sim_data.csv`, `sim_data_angles.csv`, `fault_info.json`.
+Roteamento no script: `FAULT_TYPE == 'regime'` → `results/regime/`; caso contrário → `results/bus{N}/{fault_type}/`.
 
 ## Arquivos de saída (por cenário)
 
@@ -116,6 +119,38 @@ O caminho de saída no script é montado como `output/results/bus{N}/{fault_type
 
 > Formato legado (colunas de ângulo dentro de `sim_data.csv`) ainda é suportado pelo Python.
 
+## Configuração do cenário em `params.m`
+
+Antes de cada simulação, editar apenas estas linhas na seção `%% Cenário de simulação`:
+
+```matlab
+% Falta em BARRA:  FAULT_BUS = N;      FAULT_LINE = [];
+% Falta em LINHA:  FAULT_BUS = 0;      FAULT_LINE = [A, B];
+% Regime perm.:    FAULT_TYPE='regime'; FAULT_BUS = 0; FAULT_LINE = [];
+
+FAULT_BUS  = 7;           % Barra do curto (0 se falta em linha ou regime)
+FAULT_LINE = [];          % Par [A, B] para falta em linha; [] para falta em barra
+FAULT_TYPE = '3phase';    % Ver tabela abaixo
+
+T_FAULT    = 0.5;         % Instante de aplicação da falta [s]
+T_CLEAR    = 0.6;         % Instante de remoção da falta   [s]
+T_DUR      = T_CLEAR - T_FAULT;  % Duração [s] — calculado automaticamente
+```
+
+| `FAULT_TYPE`      | Descrição                        | Pasta de saída                         |
+|-------------------|----------------------------------|----------------------------------------|
+| `'regime'`        | Regime permanente, sem falta     | `output/results/regime/`               |
+| `'3phase'`        | Curto trifásico simétrico        | `output/results/bus{N}/3phase/`        |
+| `'2phase_ground'` | Bifásico com terra (seq. neg.)   | `output/results/bus{N}/2phase_ground/` |
+| `'2phase'`        | Bifásico sem terra               | `output/results/bus{N}/2phase/`        |
+| `'1phase_ground'` | Monofásico (mais frequente)      | `output/results/bus{N}/1phase_ground/` |
+
+Faltas em linha usam `FAULT_LINE = [A, B]` (A < B por convenção) → pasta `output/results/line{A}_{B}/{fault_type}/`.
+
+Linhas do IEEE 9 barras: **1-4, 4-5, 5-6, 3-6, 6-7, 7-8, 8-2, 8-9, 9-4**.
+
+`export_sim_data.m` lê essas variáveis via `ws_var()` e roteia automaticamente para a pasta correta.
+
 ## Execução automática via StopFcn
 
 **Modeling → Model Properties → Callbacks → StopFcn:**
@@ -127,9 +162,9 @@ run(fullfile(proj_root, 'scripts', 'export_sim_data.m'));
 
 Fluxo resultante:
 ```
-▶ Simular → StopFcn → export_sim_data.m → output/results/bus{N}/{fault_type}/sim_data.csv
-                                         → output/results/bus{N}/{fault_type}/sim_data_angles.csv
-                                         → output/results/bus{N}/{fault_type}/fault_info.json
+▶ Simular → StopFcn → export_sim_data.m ─┬─[regime]──→ output/results/regime/
+                                          └─[falta]───→ output/results/bus{N}/{fault_type}/
+                                            (cada pasta recebe sim_data.csv, sim_data_angles.csv, fault_info.json)
 ```
 
 ## Arquitetura Python: pacote `src/`

@@ -5,15 +5,27 @@
 proj_root = fileparts(get_param(bdroot, 'FileName'));
 ds        = logsout_IEEE9BusLoadflow;
 
-% ── Parâmetros do cenário (definidos em params.m; fallback se não existirem) ──
+% ── Parâmetros do cenário (definidos em params.m) ─────────────────────────
 T_FAULT    = ws_var('T_FAULT',    0.5);
 T_CLEAR    = ws_var('T_CLEAR',    0.6);
 FAULT_BUS  = ws_var('FAULT_BUS',  0);
-FAULT_TYPE = ws_var('FAULT_TYPE', 'unknown');
+FAULT_TYPE = ws_var('FAULT_TYPE', 'regime');
+
+if strcmp(FAULT_TYPE, 'regime')
+    fprintf('Cenário: REGIME PERMANENTE\n');
+else
+    fprintf('Cenário: bus%d / %s | t_fault=%.3f s | t_clear=%.3f s | dur=%.3f s\n', ...
+            FAULT_BUS, FAULT_TYPE, T_FAULT, T_CLEAR, T_CLEAR - T_FAULT);
+end
 
 % ── Pasta de saída estruturada ─────────────────────────────────────────────
-scenario   = sprintf('bus%d_%s', FAULT_BUS, FAULT_TYPE);
-out_dir    = fullfile(proj_root, 'output', 'results', scenario);
+% Regime permanente: output/results/regime/  (sem barra — cenário global)
+% Falta em barra N:  output/results/bus{N}/{fault_type}/
+if strcmp(FAULT_TYPE, 'regime')
+    out_dir = fullfile(proj_root, 'output', 'results', 'regime');
+else
+    out_dir = fullfile(proj_root, 'output', 'results', sprintf('bus%d', FAULT_BUS), FAULT_TYPE);
+end
 if ~isfolder(out_dir), mkdir(out_dir); end
 
 export_angles(ds, out_dir);

@@ -19,7 +19,7 @@ if ~isfolder(out_dir), mkdir(out_dir); end
 export_angles(ds, out_dir);
 export_slow(ds, out_dir, T_FAULT);
 save_fault_info(out_dir, FAULT_BUS, FAULT_TYPE, T_FAULT, T_CLEAR);
-run_python(proj_root, out_dir);
+fprintf('Exportação concluída → %s\n', out_dir);
 
 % ═══════════════════════════════════════════════════════════════════════════
 function export_angles(ds, out_dir)
@@ -154,26 +154,3 @@ function val = ws_var(name, default)
     end
 end
 
-% ═══════════════════════════════════════════════════════════════════════════
-function run_python(proj_root, out_dir)
-% Chama app.py apontando para o CSV do cenário e abre o HTML no navegador.
-    python_exe = fullfile(proj_root, '.venv', 'Scripts', 'python.exe');
-    app_py     = fullfile(proj_root, 'app.py');
-    csv_path   = fullfile(out_dir, 'sim_data.csv');
-    html_out   = fullfile(out_dir, 'pll_metrics.html');
-
-    if ~isfile(python_exe)
-        warning('export_sim_data:venv', ...
-            'Venv nao encontrado. Rode manualmente: .venv\\Scripts\\python.exe app.py --csv "%s"', csv_path);
-        return;
-    end
-
-    cmd = sprintf('"%s" "%s" --csv "%s" --out "%s"', python_exe, app_py, csv_path, html_out);
-    [status, out] = system(cmd);
-    disp(out);
-    if status == 0
-        web(html_out);
-    else
-        warning('export_sim_data:python', 'app.py retornou erro (status=%d).', status);
-    end
-end

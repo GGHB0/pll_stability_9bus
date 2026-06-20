@@ -86,12 +86,28 @@ end
 
 Após exportar, o script chama `app.py` via `system()` e abre o HTML no navegador.
 
-## Arquivos de saída
+## Estrutura de pastas de resultados
+
+```
+output/results/
+└── bus{1..9}/
+    ├── regime/          ← regime permanente (sem falta)
+    ├── 3phase/          ← falta trifásica simétrica
+    ├── 2phase_ground/   ← falta bifásica com terra (introduz seq. negativa → 2ª harmônica no PLL)
+    ├── 2phase/          ← falta fase-fase sem terra
+    └── 1phase_ground/   ← falta monofásica (mais frequente na prática)
+```
+
+Cada subpasta recebe: `sim_data.csv`, `sim_data_angles.csv`, `fault_info.json`.
+O caminho de saída no script é montado como `output/results/bus{N}/{fault_type}/`.
+
+## Arquivos de saída (por cenário)
 
 | Arquivo | Colunas | Taxa | Uso |
 |---|---|---|---|
-| `output/sim_data.csv` | `t_s, P_ufv_pu, Q_ufv_pu, id_ufv_ref_pu, id_ufv_pu, iq_ufv_ref_pu, iq_ufv_pu [, vd_ufv_pu, vq_ufv_pu, vd_rede_pu, vq_rede_pu, vbus2_pu, ang_g1_rad, pe_g1_pu, ang_g3_rad, pe_g3_pu]` | Tsc | eixo de tempo principal do Python |
-| `output/sim_data_angles.csv` | `t_s, theta_pll_rad, theta_ref_rad, theta_err_rad` | Ts | alta resolução para θ_err e IAE/ISE/ts |
+| `sim_data.csv` | `t_s, P_ufv_pu, Q_ufv_pu, id_ufv_ref_pu, id_ufv_pu, iq_ufv_ref_pu, iq_ufv_pu [, vd_ufv_pu, vq_ufv_pu, vd_rede_pu, vq_rede_pu, vbus2_pu, ang_g1_rad, pe_g1_pu, ang_g3_rad, pe_g3_pu]` | Tsc | eixo de tempo principal do Python |
+| `sim_data_angles.csv` | `t_s, theta_pll_rad, theta_ref_rad, theta_err_rad` | Ts | alta resolução para θ_err e IAE/ISE/ts |
+| `fault_info.json` | `fault_bus, fault_type, t_fault, t_clear, duration_s, timestamp, model` | — | metadados do cenário para rastreabilidade |
 
 > Sufixo `_ufv` identifica sinais do inversor UFV; `_rede` identifica sinais da rede. Geradores síncronos: padrão `ang_g{n}_rad` / `pe_g{n}_pu` (ex: `ang_g1_rad`, `pe_g3_pu`).
 > `Vdq_*` são normalizados pelo valor pré-falta de `Vd` (componente d). Pré-falta: `Vd ≈ 1 pu`, `Vq ≈ 0`.
@@ -111,8 +127,9 @@ run(fullfile(proj_root, 'scripts', 'export_sim_data.m'));
 
 Fluxo resultante:
 ```
-▶ Simular → StopFcn → export_sim_data.m → sim_data.csv
-                                         → sim_data_angles.csv → app.py → pll_metrics.html
+▶ Simular → StopFcn → export_sim_data.m → output/results/bus{N}/{fault_type}/sim_data.csv
+                                         → output/results/bus{N}/{fault_type}/sim_data_angles.csv
+                                         → output/results/bus{N}/{fault_type}/fault_info.json
 ```
 
 ## Arquitetura Python: pacote `src/`

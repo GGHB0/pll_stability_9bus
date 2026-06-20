@@ -27,6 +27,23 @@ Geradores:
 - G2 @ Bus 2 (18 kV)   → via TF 2-7 conecta à Barra 7 (230 kV)
 - G3 @ Bus 3 (13.8 kV) → via TF 3-9 conecta à Barra 9 (230 kV)
 
+## Diagrama Unifilar Autoral
+
+Arquivo SVG criado para o TCC: `assets/diagrams/ieee9bus_unifilar.svg`
+
+Convenções do diagrama:
+- Fundo branco, fonte Segoe UI, viewBox 920×680
+- Barras de 230 kV: traço espesso preto vertical (⊥ ao condutor horizontal)
+- Barras de gerador (1, 2, 3): traço espesso verde (#166534) ou âmbar (#b45309 para Bus 2/UFV)
+- Transformadores T1/T2/T3: par de círculos (símbolo IEC), cor azul (#1e40af)
+  - T2 centralizado entre B2 e B7: cx=174, cx=200
+  - T3 centralizado entre B9 e B3: cx=719, cx=745
+- Linhas de transmissão: traço fino (#4b5563), conexão perpendicular ao corpo das barras
+  - L5-7 e L6-9: saem lateral da barra vertical → descem até barra horizontal
+  - L4-5 e L4-6: saem da base das barras 5/6 → dobra → entram pelo topo da Barra 4
+- Parâmetros R/X/B em três linhas separadas, próximos à respectiva linha
+- Cargas A/B/C: traço vermelho (#b91c1c) com seta apontando para baixo
+
 ## Adaptação para o TCC
 
 **G2 (Barra 2) substituído pelo inversor VSI grid-tied** com PLL SRF.

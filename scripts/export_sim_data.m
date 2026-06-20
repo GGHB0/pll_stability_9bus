@@ -9,20 +9,30 @@ ds        = logsout_IEEE9BusLoadflow;
 T_FAULT    = ws_var('T_FAULT',    0.5);
 T_CLEAR    = ws_var('T_CLEAR',    0.6);
 FAULT_BUS  = ws_var('FAULT_BUS',  0);
+FAULT_LINE = ws_var('FAULT_LINE', []);
 FAULT_TYPE = ws_var('FAULT_TYPE', 'regime');
+
+is_line_fault = ~isempty(FAULT_LINE) && numel(FAULT_LINE) == 2;
 
 if strcmp(FAULT_TYPE, 'regime')
     fprintf('Cenário: REGIME PERMANENTE\n');
+elseif is_line_fault
+    fprintf('Cenário: line%d_%d / %s | t_fault=%.3f s | t_clear=%.3f s | dur=%.3f s\n', ...
+            min(FAULT_LINE), max(FAULT_LINE), FAULT_TYPE, T_FAULT, T_CLEAR, T_CLEAR - T_FAULT);
 else
     fprintf('Cenário: bus%d / %s | t_fault=%.3f s | t_clear=%.3f s | dur=%.3f s\n', ...
             FAULT_BUS, FAULT_TYPE, T_FAULT, T_CLEAR, T_CLEAR - T_FAULT);
 end
 
 % ── Pasta de saída estruturada ─────────────────────────────────────────────
-% Regime permanente: output/results/regime/  (sem barra — cenário global)
-% Falta em barra N:  output/results/bus{N}/{fault_type}/
+% Regime permanente:  output/results/regime/
+% Falta em linha A-B: output/results/line{A}_{B}/{fault_type}/  (A < B)
+% Falta em barra N:   output/results/bus{N}/{fault_type}/
 if strcmp(FAULT_TYPE, 'regime')
     out_dir = fullfile(proj_root, 'output', 'results', 'regime');
+elseif is_line_fault
+    A = min(FAULT_LINE);  B = max(FAULT_LINE);
+    out_dir = fullfile(proj_root, 'output', 'results', sprintf('line%d_%d', A, B), FAULT_TYPE);
 else
     out_dir = fullfile(proj_root, 'output', 'results', sprintf('bus%d', FAULT_BUS), FAULT_TYPE);
 end
@@ -30,7 +40,7 @@ if ~isfolder(out_dir), mkdir(out_dir); end
 
 export_angles(ds, out_dir);
 export_slow(ds, out_dir, T_FAULT);
-save_fault_info(out_dir, FAULT_BUS, FAULT_TYPE, T_FAULT, T_CLEAR);
+save_fault_info(out_dir, FAULT_BUS, FAULT_LINE, FAULT_TYPE, T_FAULT, T_CLEAR);
 fprintf('Exportação concluída → %s\n', out_dir);
 
 % ═══════════════════════════════════════════════════════════════════════════
@@ -140,9 +150,14 @@ function T = add_gen_scalar(T, ds, t, sig_name, col_name)
 end
 
 % ═══════════════════════════════════════════════════════════════════════════
-function save_fault_info(out_dir, bus, ftype, t_fault, t_clear)
+function save_fault_info(out_dir, bus, fault_line, ftype, t_fault, t_clear)
 % Salva metadados do cenário como fault_info.json na pasta de saída.
     info.fault_bus  = bus;
+    if ~isempty(fault_line) && numel(fault_line) == 2
+        info.fault_line = [min(fault_line), max(fault_line)];
+    else
+        info.fault_line = [];
+    end
     info.fault_type = ftype;
     info.t_fault    = t_fault;
     info.t_clear    = t_clear;

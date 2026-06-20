@@ -90,19 +90,24 @@ Após exportar, o script chama `app.py` via `system()` e abre o HTML no navegado
 
 ```
 output/results/
-├── regime/              ← regime permanente (sem falta — cenário global, não por barra)
-└── bus{1..9}/
-    ├── 3phase/          ← falta trifásica simétrica
-    ├── 2phase_ground/   ← falta bifásica com terra (seq. negativa → 2ª harmônica no PLL)
-    ├── 2phase/          ← falta fase-fase sem terra
-    └── 1phase_ground/   ← falta monofásica (mais frequente na prática)
+├── regime/                   ← regime permanente (cenário global, sem barra)
+├── bus{1..9}/
+│   ├── 3phase/
+│   ├── 2phase_ground/
+│   ├── 2phase/
+│   └── 1phase_ground/
+└── line{A}_{B}/              ← falta em linha (A < B por convenção)
+    ├── 3phase/               ← linhas: 1-4, 4-5, 5-6, 3-6, 6-7, 7-8, 8-2, 8-9, 9-4
+    ├── 2phase_ground/
+    ├── 2phase/
+    └── 1phase_ground/
 ```
 
-`regime` fica na raiz de `results/` porque representa o sistema inteiro em operação normal,
-sem associação a uma barra específica. Faltas ficam em `bus{N}/{fault_type}/`.
+`regime` fica na raiz de `results/` — representa o sistema inteiro em operação normal.
+Faltas em barra: `bus{N}/{fault_type}/`. Faltas em linha: `line{A}_{B}/{fault_type}/` (A < B).
 
 Cada pasta recebe: `sim_data.csv`, `sim_data_angles.csv`, `fault_info.json`.
-Roteamento no script: `FAULT_TYPE == 'regime'` → `results/regime/`; caso contrário → `results/bus{N}/{fault_type}/`.
+`fault_info.json` inclui campo `fault_line: [A, B]` quando for falta em linha (senão `[]`).
 
 ## Arquivos de saída (por cenário)
 
@@ -162,8 +167,9 @@ run(fullfile(proj_root, 'scripts', 'export_sim_data.m'));
 
 Fluxo resultante:
 ```
-▶ Simular → StopFcn → export_sim_data.m ─┬─[regime]──→ output/results/regime/
-                                          └─[falta]───→ output/results/bus{N}/{fault_type}/
+▶ Simular → StopFcn → export_sim_data.m ─┬─[regime]──────→ output/results/regime/
+                                          ├─[linha A-B]───→ output/results/line{A}_{B}/{fault_type}/
+                                          └─[barra N]─────→ output/results/bus{N}/{fault_type}/
                                             (cada pasta recebe sim_data.csv, sim_data_angles.csv, fault_info.json)
 ```
 

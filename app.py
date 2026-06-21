@@ -1,12 +1,9 @@
-﻿"""
-app.py - Ponto de entrada do analisador PLL-IEEE9Bus.
-
-Uso:
-    .venv/Scripts/python.exe app.py
-    .venv/Scripts/python.exe app.py --csv output/sim_data.csv
-    .venv/Scripts/python.exe app.py --out output/relatorio.html
 """
+app.py — Gerador de relatório PLL-IEEE9Bus com múltiplos cenários.
 
+Varre output/results/**/sim_data.csv e gera um HTML com seletor de cenário.
+Uso: .venv/Scripts/python.exe app.py [--out PATH]
+"""
 import sys
 import argparse
 from pathlib import Path
@@ -14,63 +11,93 @@ from pathlib import Path
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 from src import SimData, ChartBuilder, HTMLRenderer
-from src.config import CSV_PATH, HTML_OUT
+
+RESULTS_DIR = Path("output/results")
+DEFAULT_OUT = Path("output/pll_metrics.html")
+
+FAULT_LABELS: dict[str, str] = {
+    "3phase":        "Trifásica",
+    "1phase_ground": "Monofásica-terra",
+    "2phase":        "Bifásica",
+    "2phase_ground": "Bifásica-terra",
+}
 
 
-def _latest_results_csv() -> Path:
-    """Retorna o sim_data.csv mais recente em output/results/, ou CSV_PATH como fallback."""
-    results_dir = CSV_PATH.parent / "results"
-    if results_dir.exists():
-        candidates = list(results_dir.glob("*/sim_data.csv"))
-        if candidates:
-            return max(candidates, key=lambda p: p.stat().st_mtime)
-    return CSV_PATH
+def _scenario_label(key: str) -> str:
+    if key == "regime":
+        return "Regime permanente"
+    parts = key.split("/")
+    if len(parts) == 2:
+        loc, fault = parts
+        fl = FAULT_LABELS.get(fault, fault)
+        if loc.startswith("bus"):
+            return f"Barra {loc[3:]} — {fl}"
+        if loc.startswith("line"):
+            return f"Linha {loc[4:].replace('_', '-')} — {fl}"
+    return key
 
 
-def parse_args() -> argparse.Namespace:
-    default_csv = _latest_results_csv()
-    p = argparse.ArgumentParser(
-        description="Gera relatorio HTML com metricas e graficos do SRF-PLL."
-    )
-    p.add_argument("--csv", type=Path, default=default_csv, metavar="PATH",
-                   help=f"CSV de entrada (padrao: mais recente em output/results/ ou {CSV_PATH})")
-    p.add_argument("--out", type=Path, default=None, metavar="PATH",
-                   help="HTML de saida (padrao: pll_metrics.html na mesma pasta do CSV)")
-    return p.parse_args()
+def _sort_key(key: str) -> tuple:
+    if key == "regime":
+        return (0, 0, 0, "")
+    parts = key.split("/")
+    loc   = parts[0]
+    fault = parts[1] if len(parts) > 1 else ""
+    if loc.startswith("bus"):
+        try:
+            n = int(loc[3:])
+        except ValueError:
+            n = 0
+        return (1, n, 0, fault)
+    if loc.startswith("line"):
+        nums = loc[4:].split("_")
+        a = int(nums[0]) if nums else 0
+        b = int(nums[1]) if len(nums) > 1 else 0
+        return (2, a, b, fault)
+    return (3, 0, 0, key)
+
+
+def scan_scenarios(results_dir: Path) -> dict[str, Path]:
+    """Retorna {key: csv_path} de todos os sim_data.csv abaixo de results_dir."""
+    raw = {
+        csv.parent.relative_to(results_dir).as_posix(): csv
+        for csv in results_dir.glob("**/sim_data.csv")
+    }
+    return dict(sorted(raw.items(), key=lambda kv: _sort_key(kv[0])))
 
 
 def main() -> None:
-    args = parse_args()
-    out_path: Path = args.out if args.out is not None else args.csv.parent / "pll_metrics.html"
+    p = argparse.ArgumentParser(description="Gera relatorio HTML PLL-IEEE9Bus.")
+    p.add_argument("--out", type=Path, default=DEFAULT_OUT, metavar="PATH",
+                   help=f"HTML de saida (padrao: {DEFAULT_OUT})")
+    args = p.parse_args()
 
-    # 1. Carregar dados
-    print(f"Lendo: {args.csv}")
-    data = SimData(args.csv)
-    print(f"    {data}")
+    scenarios_csv = scan_scenarios(RESULTS_DIR)
+    if not scenarios_csv:
+        print(f"Nenhum sim_data.csv encontrado em {RESULTS_DIR}")
+        return
 
-    m = data.metrics
-    print("\nMetricas pos-falta:")
-    if m["IAE"] is not None:
-        print(f"    IAE = {m['IAE']:.4f} rad*s")
-        print(f"    ISE = {m['ISE']:.4f} rad2*s")
-        print(f"    ts  = {m['ts']:.4f} s")
-    else:
-        print("    (angulos nao disponiveis - IAE/ISE/ts omitidos)")
-    print(f"    dP  = {m['dP_ufv']:.4f} pu")
-    print(f"    dQ  = {m['dQ_ufv']:.4f} pu")
+    print(f"Cenarios encontrados: {len(scenarios_csv)}")
+    scenarios: dict[str, dict] = {}
+    for key, csv_path in scenarios_csv.items():
+        print(f"  [{key}] carregando...", end=" ", flush=True)
+        data    = SimData(csv_path)
+        builder = ChartBuilder(data)
+        fig_inv, fig_sys, tm_inv, tm_sys = builder.build_sections()
+        n = len(fig_inv.data) + (len(fig_sys.data) if fig_sys else 0)
+        scenarios[key] = {
+            "data":    data,
+            "label":   _scenario_label(key),
+            "fig_inv": fig_inv,
+            "fig_sys": fig_sys,
+            "tm_inv":  tm_inv,
+            "tm_sys":  tm_sys,
+        }
+        print(f"{n} tracas")
 
-    # 2. Construir figuras Plotly
-    print("\nConstruindo graficos...")
-    builder = ChartBuilder(data)
-    fig_inv, fig_sys, tm_inv, tm_sys = builder.build_sections()
-    n_total = len(fig_inv.data) + (len(fig_sys.data) if fig_sys else 0)
-    print(f"    {n_total} tracas ({len(tm_inv)} inv, {len(tm_sys)} sys)")
-
-    # 3. Renderizar HTML
     print("\nGerando HTML...")
-    renderer = HTMLRenderer(data, fig_inv, fig_sys, tm_inv, tm_sys)
-    out = renderer.render(out_path)
-    print(f"    Salvo em: {out}")
+    out = HTMLRenderer(scenarios).render(args.out)
+    print(f"Salvo em: {out}")
 
 
 if __name__ == "__main__":

@@ -1,7 +1,8 @@
-﻿"""
-renderer.py — Gera o HTML final com header, cards de métricas e Plotly embutido.
+"""
+renderer.py — Gera o HTML final com seletor de cenário, cards e Plotly embutido.
 
-HTMLRenderer.render(out_path) → escreve o HTML e retorna o Path.
+HTMLRenderer(scenarios).render(out_path) → escreve o HTML e retorna o Path.
+scenarios: dict[key, {data, label, fig_inv, fig_sys, tm_inv, tm_sys}]
 """
 from __future__ import annotations
 
@@ -20,55 +21,47 @@ from .loader import SimData
 
 
 class HTMLRenderer:
-    """Renderiza o relatório HTML com duas seções de gráficos (Inversor / Sistema)."""
+    """Renderiza relatório HTML multi-cenário com seletor e duas seções de gráficos."""
 
-    def __init__(
-        self,
-        data: SimData,
-        fig_inv: go.Figure,
-        fig_sys: go.Figure | None,
-        trace_map_inv: list[tuple[int, str, str]],
-        trace_map_sys: list[tuple[int, str, str]],
-    ) -> None:
-        self._d = data
-        self._fig_inv = fig_inv
-        self._fig_sys = fig_sys
-        self._tm_inv  = trace_map_inv
-        self._tm_sys  = trace_map_sys
+    def __init__(self, scenarios: dict[str, dict]) -> None:
+        # {key: {data, label, fig_inv, fig_sys, tm_inv, tm_sys}}
+        self._scenarios = scenarios
 
     # ── API pública ──────────────────────────────────────────────────────────
 
     def render(self, out_path: Path) -> Path:
-        html = self._build_html()
-        out_path.write_text(html, encoding="utf-8")
+        out_path.write_text(self._build_html(), encoding="utf-8")
         return out_path
 
     # ── HTML ─────────────────────────────────────────────────────────────────
 
     def _build_html(self) -> str:
-        inv_json = self._fig_inv.to_json()
-        sys_json = self._fig_sys.to_json() if self._fig_sys else "null"
+        first_key    = next(iter(self._scenarios))
+        first_key_js = json.dumps(first_key)
 
-        def _cols(tm, idx):
-            return json.dumps([x[idx] for x in tm])
+        sc_js: dict = {}
+        for key, sc in self._scenarios.items():
+            d  = sc["data"]
+            fi = sc["fig_inv"]
+            fs = sc["fig_sys"]
+            ti = sc["tm_inv"]
+            ts = sc["tm_sys"]
+            sc_js[key] = {
+                "invData":   json.loads(fi.to_json()),
+                "sysData":   json.loads(fs.to_json()) if fs else None,
+                "invLight":  [x[1] for x in ti],
+                "invDark":   [x[2] for x in ti],
+                "invIdx":    [x[0] for x in ti],
+                "sysLight":  [x[1] for x in ts],
+                "sysDark":   [x[2] for x in ts],
+                "sysIdx":    [x[0] for x in ts],
+                "cardsHtml": self._cards_html(d),
+                "storyHtml": self._story_html(d),
+                "hasSys":    fs is not None,
+            }
 
-        inv_light = _cols(self._tm_inv, 1)
-        inv_dark  = _cols(self._tm_inv, 2)
-        inv_idx   = _cols(self._tm_inv, 0)
-        sys_light = _cols(self._tm_sys, 1)
-        sys_dark  = _cols(self._tm_sys, 2)
-        sys_idx   = _cols(self._tm_sys, 0)
-
-        sys_section = ""
-        if self._fig_sys is not None:
-            sys_section = f"""
-  <div class="chart-section" id="sec-sys">
-    <div class="section-header">
-      <span class="section-title">Sistema 9-Bus</span>
-      <span class="fault-badge">Falta em t = {T_FAULT} s</span>
-    </div>
-    <div id="plot-sys"></div>
-  </div>"""
+        scenarios_js = json.dumps(sc_js)
+        select_html  = self._select_html()
 
         return f"""<!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
@@ -100,11 +93,15 @@ class HTMLRenderer:
   </div>
 </header>
 
+<div class="filter-bar">
+  <span class="filter-label">Cenário</span>
+  {select_html}
+</div>
+
 <main class="main">
 
-  {self._cards_html()}
-
-  {self._story_html()}
+  <div id="cards-area"></div>
+  <div id="story-area"></div>
 
   <div class="chart-section" id="sec-inv">
     <div class="section-header">
@@ -113,7 +110,15 @@ class HTMLRenderer:
     </div>
     <div id="plot-inv"></div>
   </div>
-{sys_section}
+
+  <div class="chart-section" id="sec-sys" style="display:none">
+    <div class="section-header">
+      <span class="section-title">Sistema 9-Bus</span>
+      <span class="fault-badge">Falta em t = {T_FAULT} s</span>
+    </div>
+    <div id="plot-sys"></div>
+  </div>
+
   <div class="footer">
     <span>SRF-PLL Analyzer</span>
     <span class="footer-dot"></span>
@@ -125,27 +130,13 @@ class HTMLRenderer:
 </main>
 
 <script>
-var invData = {inv_json};
-var sysData = {sys_json};
-
-var gdInv = document.getElementById("plot-inv");
-var gdSys = document.getElementById("plot-sys");
-
-Plotly.newPlot(gdInv, invData.data, invData.layout, {{
-  responsive: true, displaylogo: false,
-  modeBarButtonsToRemove: ["select2d","lasso2d","autoScale2d"],
-  toImageButtonOptions: {{ format: "svg", filename: "pll_inv" }},
-}});
-
-if (gdSys && sysData) {{
-  Plotly.newPlot(gdSys, sysData.data, sysData.layout, {{
-    responsive: true, displaylogo: false,
-    modeBarButtonsToRemove: ["select2d","lasso2d","autoScale2d"],
-    toImageButtonOptions: {{ format: "svg", filename: "pll_sys" }},
-  }});
-}}
-
+var SCENARIOS = {scenarios_js};
+var currentKey = {first_key_js};
 var isDark = false;
+
+var gdInv  = document.getElementById("plot-inv");
+var gdSys  = document.getElementById("plot-sys");
+var secSys = document.getElementById("sec-sys");
 
 var BASE_LIGHT = {{
   paper_bgcolor: "#ffffff", plot_bgcolor: "#ffffff",
@@ -160,6 +151,12 @@ var BASE_DARK = {{
   "hoverlabel.bgcolor": "#1f2937", "hoverlabel.bordercolor": "#374151",
 }};
 
+var PLOTLY_CFG = {{
+  responsive: true, displaylogo: false,
+  modeBarButtonsToRemove: ["select2d", "lasso2d", "autoScale2d"],
+  toImageButtonOptions: {{ format: "svg" }},
+}};
+
 function axisUpdates(figData, isDarkMode) {{
   var upd = {{}};
   Object.keys(figData.layout).forEach(function(k) {{
@@ -171,34 +168,86 @@ function axisUpdates(figData, isDarkMode) {{
   return upd;
 }}
 
-var invLight = {inv_light};
-var invDark  = {inv_dark};
-var invIdx   = {inv_idx};
-var sysLight = {sys_light};
-var sysDark  = {sys_dark};
-var sysIdx   = {sys_idx};
-
 function applyTheme(gd, figData, lightC, darkC, tIdx, isDarkMode) {{
   if (!gd || !figData) return;
-  var layout = Object.assign({{}}, isDarkMode ? BASE_DARK : BASE_LIGHT, axisUpdates(figData, isDarkMode));
+  var layout = Object.assign({{}}, isDarkMode ? BASE_DARK : BASE_LIGHT,
+                             axisUpdates(figData, isDarkMode));
   Plotly.relayout(gd, layout);
   tIdx.forEach(function(ti, i) {{
     Plotly.restyle(gd, {{"line.color": [(isDarkMode ? darkC : lightC)[i]]}}, [ti]);
   }});
 }}
 
+function switchScenario(key) {{
+  currentKey = key;
+  var sc = SCENARIOS[key];
+
+  Plotly.react(gdInv, sc.invData.data, sc.invData.layout, PLOTLY_CFG);
+
+  if (sc.hasSys) {{
+    secSys.style.display = "";
+    Plotly.react(gdSys, sc.sysData.data, sc.sysData.layout, PLOTLY_CFG);
+  }} else {{
+    secSys.style.display = "none";
+  }}
+
+  document.getElementById("cards-area").innerHTML = sc.cardsHtml;
+  document.getElementById("story-area").innerHTML = sc.storyHtml;
+
+  applyTheme(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx, isDark);
+  if (sc.hasSys) {{
+    applyTheme(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx, isDark);
+  }}
+}}
+
 function toggleTheme() {{
   isDark = !isDark;
   document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
-  applyTheme(gdInv, invData, invLight, invDark, invIdx, isDark);
-  applyTheme(gdSys, sysData, sysLight, sysDark, sysIdx, isDark);
+  var sc = SCENARIOS[currentKey];
+  applyTheme(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx, isDark);
+  if (sc.hasSys) {{
+    applyTheme(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx, isDark);
+  }}
   document.getElementById("ico").textContent = isDark ? "☀️" : "🌙";
   document.getElementById("lbl").textContent = isDark ? "Light mode" : "Dark mode";
 }}
+
+switchScenario(currentKey);
 </script>
 
 </body>
 </html>"""
+
+    # ── Select ───────────────────────────────────────────────────────────────
+
+    def _select_html(self) -> str:
+        regime_opts: list[str] = []
+        bus_opts:    list[str] = []
+        line_opts:   list[str] = []
+
+        for key, sc in self._scenarios.items():
+            opt = f'<option value="{key}">{sc["label"]}</option>'
+            loc = key.split("/")[0]
+            if key == "regime":
+                regime_opts.append(opt)
+            elif loc.startswith("bus"):
+                bus_opts.append(opt)
+            elif loc.startswith("line"):
+                line_opts.append(opt)
+
+        groups: list[str] = []
+        if regime_opts:
+            groups.append(f'<optgroup label="Regime">{"".join(regime_opts)}</optgroup>')
+        if bus_opts:
+            groups.append(f'<optgroup label="Barras">{"".join(bus_opts)}</optgroup>')
+        if line_opts:
+            groups.append(f'<optgroup label="Linhas">{"".join(line_opts)}</optgroup>')
+
+        return (
+            '<select id="scenario-picker" onchange="switchScenario(this.value)">'
+            + "".join(groups)
+            + "</select>"
+        )
 
     # ── Cards ────────────────────────────────────────────────────────────────
 
@@ -211,8 +260,8 @@ function toggleTheme() {{
             return "good" if val <= lo else ("warn" if val <= hi else "bad")
         return "good" if val >= lo else ("warn" if val >= hi else "bad")
 
-    def _cards_html(self) -> str:
-        m = self._d.metrics
+    def _cards_html(self, data: SimData) -> str:
+        m = data.metrics
 
         def _v(val, decimals):
             return f"{val:.{decimals}f}" if val is not None else "—"
@@ -238,13 +287,13 @@ function toggleTheme() {{
         ts_delta = (ts_val - T_FAULT) if ts_val is not None else None
 
         pll = "".join([
-            _card("IAE",  _v(m.get("IAE"), 3), "rad·s",  "∫|e| dt",
+            _card("IAE", _v(m.get("IAE"), 3), "rad·s", "∫|e| dt",
                   "Erro de fase acumulado",
                   self._classify(m.get("IAE"), IAE_THRESH)),
-            _card("ISE",  _v(m.get("ISE"), 4), "rad²·s", "∫e² dt",
+            _card("ISE", _v(m.get("ISE"), 4), "rad²·s", "∫e² dt",
                   "Energia do erro de fase",
                   self._classify(m.get("ISE"), ISE_THRESH)),
-            _card("tₛ",  _v(ts_val, 3), "s",
+            _card("tₛ", _v(ts_val, 3), "s",
                   f"±{np.degrees(TOL_RAD):.1f}°",
                   "Tempo de acomodação do PLL",
                   self._classify(ts_delta, TS_DELTA_THRESH)),
@@ -260,7 +309,7 @@ function toggleTheme() {{
         ])
 
         sys = "".join([
-            _card("V min",   _v(m.get("vmin"),    3), "pu", "Barra 2",
+            _card("V min", _v(m.get("vmin"), 3), "pu", "Barra 2",
                   f"Tensão mínima pós-falta (LVRT ≥ {LVRT_THRESHOLD} pu)",
                   self._classify(m.get("vmin"), VBUS2_MIN_THRESH, lower_is_better=False)),
         ])
@@ -273,11 +322,11 @@ function toggleTheme() {{
 
     # ── Narrativa ────────────────────────────────────────────────────────────
 
-    def _story_html(self) -> str:
-        m   = self._d.metrics
-        iae = m.get("IAE")
-        ts  = m.get("ts")
-        dp  = m.get("dP_ufv")
+    def _story_html(self, data: SimData) -> str:
+        m    = data.metrics
+        iae  = m.get("IAE")
+        ts   = m.get("ts")
+        dp   = m.get("dP_ufv")
         vmin = m.get("vmin")
 
         parts: list[str] = []
@@ -327,23 +376,25 @@ function toggleTheme() {{
             self._classify(dp, DP_THRESH),
         ]
         if "bad" in statuses:
-            verdict_cls, verdict_txt = "bad",  "Desempenho crítico"
+            verdict_cls, verdict_txt = "bad",     "Desempenho crítico"
         elif "warn" in statuses:
-            verdict_cls, verdict_txt = "warn", "Desempenho satisfatório"
+            verdict_cls, verdict_txt = "warn",    "Desempenho satisfatório"
         elif "good" in statuses:
-            verdict_cls, verdict_txt = "good", "Desempenho excelente"
+            verdict_cls, verdict_txt = "good",    "Desempenho excelente"
         else:
             verdict_cls, verdict_txt = "neutral", "Dados insuficientes"
 
         text = " ".join(parts) or "Dados insuficientes para análise narrativa."
 
-        return f"""<div class="story {verdict_cls}">
-    <div class="story-body">
-      <p class="story-title">Diagnóstico pós-falta</p>
-      <p class="story-text">{text}</p>
-    </div>
-    <div class="story-verdict {verdict_cls}">{verdict_txt}</div>
-  </div>"""
+        return (
+            f'<div class="story {verdict_cls}">'
+            f'<div class="story-body">'
+            f'<p class="story-title">Diagnóstico pós-falta</p>'
+            f'<p class="story-text">{text}</p>'
+            f'</div>'
+            f'<div class="story-verdict {verdict_cls}">{verdict_txt}</div>'
+            f'</div>'
+        )
 
     # ── CSS ──────────────────────────────────────────────────────────────────
 
@@ -435,6 +486,30 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 }
 .toggle-btn:hover  { box-shadow: var(--sh-md); transform: translateY(-1px) }
 .toggle-btn:active { transform: translateY(0) }
+
+/* ── Filter bar ── */
+.filter-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 28px;
+  display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 64px; z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,.04);
+  transition: background .28s, border-color .28s;
+}
+.filter-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .7px; color: var(--muted); white-space: nowrap;
+}
+#scenario-picker {
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  color: var(--text); background: var(--btn-bg);
+  border: 1.5px solid var(--btn-bdr); border-radius: 8px;
+  padding: 7px 12px; cursor: pointer;
+  min-width: 260px; max-width: 480px;
+  transition: border-color .2s, background .28s, color .28s;
+}
+#scenario-picker:focus { outline: none; border-color: var(--accent); }
 
 /* ── Layout ── */
 .main {

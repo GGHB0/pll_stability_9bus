@@ -55,6 +55,7 @@ class HTMLRenderer:
                 "sysLight":  [x[1] for x in ts],
                 "sysDark":   [x[2] for x in ts],
                 "sysIdx":    [x[0] for x in ts],
+                "label":     sc["label"],
                 "cardsHtml": self._cards_html(d),
                 "storyHtml": self._story_html(d),
                 "hasSys":    fs is not None,
@@ -96,9 +97,15 @@ class HTMLRenderer:
 <div class="filter-bar">
   <span class="filter-label">Cenário</span>
   {select_html}
+  <button class="toggle-btn diag-btn" id="diagram-toggle" onclick="toggleDiagram()">🗺 Mapa IEEE 9-bus</button>
 </div>
 
 <main class="main">
+
+  <div class="diagram-section" id="diagram-section">
+{self._svg_section_html()}
+    <p class="diag-hint">Clique em uma barra ou linha para selecionar o cenário de falta</p>
+  </div>
 
   <div id="cards-area"></div>
   <div id="story-area"></div>
@@ -198,6 +205,96 @@ function switchScenario(key) {{
   if (sc.hasSys) {{
     applyTheme(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx, isDark);
   }}
+
+  highlightSVG(key);
+}}
+
+// ── SVG diagram interactivity ─────────────────────────────────────────────
+
+var svgLocMap = {{}};
+(function() {{
+  Object.keys(SCENARIOS).forEach(function(k) {{
+    var loc = (k === "regime") ? "regime" : k.split("/")[0];
+    if (!svgLocMap[loc]) svgLocMap[loc] = [];
+    svgLocMap[loc].push(k);
+  }});
+  document.querySelectorAll("[data-loc]").forEach(function(el) {{
+    var loc = el.getAttribute("data-loc");
+    if (svgLocMap[loc]) {{
+      el.classList.add("has-data");
+      el.addEventListener("click", function(e) {{
+        e.stopPropagation();
+        selectLocation(loc, el);
+      }});
+    }}
+  }});
+}})();
+
+var _tip = null;
+
+function selectLocation(loc, el) {{
+  var keys = svgLocMap[loc];
+  if (!keys || !keys.length) return;
+  if (keys.length === 1) {{
+    _closeTip();
+    document.getElementById("scenario-picker").value = keys[0];
+    switchScenario(keys[0]);
+  }} else {{
+    _showTip(keys, el);
+  }}
+}}
+
+function _showTip(keys, el) {{
+  _closeTip();
+  var d = document.createElement("div");
+  d.className = "svg-tip";
+  var html = "<p class='svg-tip-h'>Tipo de falta</p>";
+  keys.forEach(function(k) {{
+    var lbl = (SCENARIOS[k] && SCENARIOS[k].label) ? SCENARIOS[k].label : k;
+    html += "<button class='svg-tip-btn' onclick=\"_pickKey('" + k + "')\">"+lbl+"</button>";
+  }});
+  d.innerHTML = html;
+  document.body.appendChild(d);
+  var r = el.getBoundingClientRect();
+  var tx = r.right + window.scrollX + 10;
+  if (tx + 210 > window.innerWidth) tx = r.left + window.scrollX - 220;
+  d.style.left = Math.max(4, tx) + "px";
+  d.style.top  = (r.top + window.scrollY) + "px";
+  _tip = d;
+  setTimeout(function() {{ document.addEventListener("click", _outsideClick); }}, 50);
+}}
+
+function _outsideClick(e) {{
+  if (_tip && !_tip.contains(e.target)) _closeTip();
+}}
+
+function _closeTip() {{
+  if (_tip) {{ _tip.remove(); _tip = null; }}
+  document.removeEventListener("click", _outsideClick);
+}}
+
+function _pickKey(k) {{
+  _closeTip();
+  document.getElementById("scenario-picker").value = k;
+  switchScenario(k);
+}}
+
+function highlightSVG(key) {{
+  document.querySelectorAll("[data-loc].svg-active").forEach(function(el) {{
+    el.classList.remove("svg-active");
+  }});
+  var loc = (key === "regime") ? "regime" : key.split("/")[0];
+  var el = document.querySelector("[data-loc='" + loc + "']");
+  if (el) el.classList.add("svg-active");
+}}
+
+function toggleDiagram() {{
+  var sec = document.getElementById("diagram-section");
+  var btn = document.getElementById("diagram-toggle");
+  var hidden = sec.style.display === "none";
+  sec.style.display = hidden ? "" : "none";
+  btn.innerHTML = hidden ? "🗺&nbsp;Mapa IEEE 9-bus" : "🗺&nbsp;Ocultar mapa";
+  btn.style.opacity = hidden ? "1" : "0.85";
 }}
 
 function toggleTheme() {{
@@ -217,6 +314,16 @@ switchScenario(currentKey);
 
 </body>
 </html>"""
+
+    # ── SVG diagram ─────────────────────────────────────────────────────────
+
+    def _svg_section_html(self) -> str:
+        from .config import PROJ_ROOT
+        svg_path = PROJ_ROOT / "assets" / "diagrams" / "ieee9bus_unifilar.svg"
+        try:
+            return svg_path.read_text(encoding="utf-8")
+        except FileNotFoundError:
+            return ""
 
     # ── Select ───────────────────────────────────────────────────────────────
 
@@ -645,4 +752,51 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
   width: 3px; height: 3px; border-radius: 50%;
   background: var(--muted); flex-shrink: 0;
 }
+
+/* ── Filter bar extras ── */
+.diag-btn { font-size: 12px; padding: 6px 14px; opacity: 1; transition: opacity .2s, box-shadow .2s, transform .2s, background .28s, color .28s, border-color .28s }
+
+/* ── Diagram section ── */
+.diagram-section {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--sh);
+  padding: 12px 16px 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: background .28s, border-color .28s;
+}
+.diagram-section svg {
+  width: 100%; max-width: 920px; height: auto;
+  display: block; margin: 0 auto; border-radius: 8px;
+}
+.diag-hint {
+  text-align: center; font-size: 10.5px; color: var(--muted);
+  margin-top: 4px; letter-spacing: .2px;
+}
+
+/* ── SVG tooltip ── */
+.svg-tip {
+  position: absolute;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--sh-md);
+  padding: 10px 8px;
+  z-index: 500;
+  min-width: 190px;
+  transition: background .28s, border-color .28s;
+}
+.svg-tip-h {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .6px; color: var(--muted); margin-bottom: 6px; padding: 0 6px;
+}
+.svg-tip-btn {
+  display: block; width: 100%; text-align: left;
+  padding: 7px 10px; background: transparent; border: none;
+  border-radius: 7px; font-family: inherit; font-size: 12.5px;
+  font-weight: 500; color: var(--text); cursor: pointer;
+}
+.svg-tip-btn:hover { background: var(--bg) }
 """

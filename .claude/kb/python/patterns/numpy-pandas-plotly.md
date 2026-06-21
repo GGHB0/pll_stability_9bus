@@ -52,58 +52,74 @@ fora = t_pf[np.abs(e_pf) > TOL_RAD]
 ts   = float(fora[-1]) if len(fora) else float(t_pf[0])
 ```
 
-## Subplots Plotly multi-painel
+## Subplots Plotly — layout misto (single / pair)
+
+`ChartBuilder.build_sections()` retorna `(fig_inv, fig_sys, tm_inv, tm_sys)` — duas
+figuras separadas (Inversor UFV e Sistema 9-Bus), cada uma com layout de 2 colunas
+onde linhas podem ser full-width (`_S`) ou par lado-a-lado (`_P`, não usado atualmente).
 
 ```python
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
+_S = "single"   # linha inteira — colspan 2
+_P = "pair"     # dois subplots lado a lado
 
-n = 5   # número de painéis
-fig = make_subplots(rows=n, cols=1, shared_xaxes=True, vertical_spacing=0.05)
-
-fig.add_trace(
-    go.Scatter(x=t, y=np.degrees(theta_err),
-               name="Erro (°)", mode="lines",
-               line=dict(width=1.8, color="#2563eb")),
-    row=1, col=1,
-)
-
-# Linha horizontal de tolerância
-fig.add_hline(y=np.degrees(TOL_RAD),
-              line=dict(color="rgba(220,50,50,0.45)", width=1.1, dash="dash"),
-              row=1, col=1)
-
-# Linha vertical da falta
-fig.add_vline(x=T_FAULT,
-              line=dict(color="rgba(100,100,100,0.25)", width=1.1, dash="dot"),
-              row=1, col=1)
+specs = [
+    [{"type": "scatter", "colspan": 2}, None] if r[0] == _S
+    else [{"type": "scatter"}, {"type": "scatter"}]
+    for r in rows
+]
+fig = make_subplots(rows=n, cols=2, shared_xaxes=True,
+                    vertical_spacing=0.07, specs=specs)
 ```
 
-## Tema light/dark via JSON + JS
+Painéis combinados (múltiplas curvas no mesmo subplot):
+- `dq_combined` — id med, id ref, iq med, iq ref  
+- `vdq_combined` — Vd Rede, Vq Rede, Vd Inv, Vq Inv  
+- `pq_combined` — P UFV, Q UFV
 
-Estratégia usada em `src/renderer.py`: exportar a figura como JSON e injetar
-no HTML — o JS faz `Plotly.relayout` + `Plotly.restyle` por traço.
+Contador de eixos `ax` incrementa +1 por linha `_S`, +2 por linha `_P`.
+
+## Multi-legenda (uma por subplot)
+
+Cada traço recebe `trace.legend = "legend{n}"` antes de ser adicionado.
+`_place_legends()` posiciona cada legenda:
+- Linhas `_S`: fora à direita (`x=1.01`, `xanchor="left"`)
+- Linhas `_P`: dentro do subplot, canto superior-direito
 
 ```python
-import json
-
-fig_json   = fig.to_json()                              # string JSON da figura
-light_cols = json.dumps(["#2563eb", "#dc2626", ...])    # cores por traço
-dark_cols  = json.dumps(["#60a5fa", "#f87171", ...])
-trace_idx  = json.dumps([0, 1, 2, ...])                 # índices dos traços
+key = "legend" if ax == 1 else f"legend{ax}"
+fig.update_layout(**{key: dict(x=1.01, y=y_mid, ...)})
 ```
 
-No JS:
+## Tema light/dark — duas figuras
+
+Exportar cada figura como JSON e injetar no HTML:
+
+```python
+fig_json = fig.to_json()  # string JSON
+```
+
+No JS, `axisUpdates()` itera `Object.keys(figData.layout)` para encontrar
+todos os eixos dinamicamente (robusto a qualquer configuração):
+
 ```javascript
-var figData = /* JSON injetado pelo Python */;
-Plotly.newPlot(gd, figData.data, figData.layout, {responsive: true});
-
-function toggleTheme() {
-  Plotly.relayout(gd, isDark ? LAYOUT_DARK : LAYOUT_LIGHT);
-  traceIdx.forEach(function(ti, i) {
-    Plotly.restyle(gd, {"line.color": [cols[i]]}, [ti]);
+function axisUpdates(figData, isDarkMode) {
+  var upd = {};
+  Object.keys(figData.layout).forEach(function(k) {
+    if (k.startsWith("xaxis") || k.startsWith("yaxis")) {
+      upd[k+".gridcolor"]     = isDarkMode ? "#1f2937" : "#f1f5f9";
+      upd[k+".zerolinecolor"] = isDarkMode ? "#374151" : "#e5e7eb";
+    }
+  });
+  return upd;
+}
+function applyTheme(gd, figData, lightC, darkC, tIdx, isDark) {
+  Plotly.relayout(gd, Object.assign({}, isDark ? BASE_DARK : BASE_LIGHT,
+                                    axisUpdates(figData, isDark)));
+  tIdx.forEach(function(ti, i) {
+    Plotly.restyle(gd, {"line.color": [(isDark ? darkC : lightC)[i]]}, [ti]);
   });
 }
+// toggleTheme() chama applyTheme para gdInv e gdSys
 ```
 
 ## trace_map — rastreamento de cores por traço
@@ -111,10 +127,7 @@ function toggleTheme() {
 ```python
 trace_map: list[tuple[int, str, str]] = []
 # (índice do traço na fig, cor light, cor dark)
-
-def add(trace, row, lc, dc):
-    fig.add_trace(trace, row=row, col=1)
-    trace_map.append((len(fig.data) - 1, lc, dc))
+# adicionado em ChartBuilder._add() a cada go.Scatter inserido
 ```
 
 ## Encoding no Windows

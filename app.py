@@ -1,5 +1,5 @@
-"""
-app.py — Ponto de entrada do analisador PLL-IEEE9Bus.
+﻿"""
+app.py - Ponto de entrada do analisador PLL-IEEE9Bus.
 
 Uso:
     .venv/Scripts/python.exe app.py
@@ -30,58 +30,47 @@ def _latest_results_csv() -> Path:
 def parse_args() -> argparse.Namespace:
     default_csv = _latest_results_csv()
     p = argparse.ArgumentParser(
-        description="Gera relatório HTML com métricas e gráficos do SRF-PLL."
+        description="Gera relatorio HTML com metricas e graficos do SRF-PLL."
     )
-    p.add_argument(
-        "--csv",
-        type=Path,
-        default=default_csv,
-        metavar="PATH",
-        help=f"Caminho do CSV de entrada (padrão: mais recente em output/results/ ou {CSV_PATH})",
-    )
-    p.add_argument(
-        "--out",
-        type=Path,
-        default=None,
-        metavar="PATH",
-        help="Caminho do HTML de saída (padrão: pll_metrics.html na mesma pasta do CSV)",
-    )
+    p.add_argument("--csv", type=Path, default=default_csv, metavar="PATH",
+                   help=f"CSV de entrada (padrao: mais recente em output/results/ ou {CSV_PATH})")
+    p.add_argument("--out", type=Path, default=None, metavar="PATH",
+                   help="HTML de saida (padrao: pll_metrics.html na mesma pasta do CSV)")
     return p.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-
-    # HTML de saída: mesma pasta do CSV se não especificado
     out_path: Path = args.out if args.out is not None else args.csv.parent / "pll_metrics.html"
 
-    # 1. Carregar dados e calcular métricas
-    print(f"📂  Lendo: {args.csv}")
+    # 1. Carregar dados
+    print(f"Lendo: {args.csv}")
     data = SimData(args.csv)
     print(f"    {data}")
 
     m = data.metrics
-    print("\n📊  Métricas pós-falta:")
+    print("\nMetricas pos-falta:")
     if m["IAE"] is not None:
-        print(f"    IAE = {m['IAE']:.4f} rad·s")
-        print(f"    ISE = {m['ISE']:.4f} rad²·s")
+        print(f"    IAE = {m['IAE']:.4f} rad*s")
+        print(f"    ISE = {m['ISE']:.4f} rad2*s")
         print(f"    ts  = {m['ts']:.4f} s")
     else:
-        print("    (ângulos não disponíveis — IAE/ISE/ts omitidos)")
-    print(f"    ΔP  = {m['dP_ufv']:.4f} pu")
-    print(f"    ΔQ  = {m['dQ_ufv']:.4f} pu")
+        print("    (angulos nao disponiveis - IAE/ISE/ts omitidos)")
+    print(f"    dP  = {m['dP_ufv']:.4f} pu")
+    print(f"    dQ  = {m['dQ_ufv']:.4f} pu")
 
-    # 2. Construir figura Plotly
-    print("\n📈  Construindo gráficos...")
+    # 2. Construir figuras Plotly
+    print("\nConstruindo graficos...")
     builder = ChartBuilder(data)
-    fig, trace_map = builder.build()
-    print(f"    {len(fig.data)} traços, {len(trace_map)} com tema dinâmico")
+    fig_inv, fig_sys, tm_inv, tm_sys = builder.build_sections()
+    n_total = len(fig_inv.data) + (len(fig_sys.data) if fig_sys else 0)
+    print(f"    {n_total} tracas ({len(tm_inv)} inv, {len(tm_sys)} sys)")
 
     # 3. Renderizar HTML
-    print("\n🖊   Gerando HTML...")
-    renderer = HTMLRenderer(data, fig, trace_map)
+    print("\nGerando HTML...")
+    renderer = HTMLRenderer(data, fig_inv, fig_sys, tm_inv, tm_sys)
     out = renderer.render(out_path)
-    print(f"    ✅  Salvo em: {out}")
+    print(f"    Salvo em: {out}")
 
 
 if __name__ == "__main__":

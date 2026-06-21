@@ -1,10 +1,8 @@
-"""
+﻿"""
 renderer.py — Gera o HTML final com header, cards de métricas e Plotly embutido.
 
-Classe principal: HTMLRenderer
-    .render(out_path)  → escreve o arquivo HTML e retorna o Path
+HTMLRenderer.render(out_path) → escreve o HTML e retorna o Path.
 """
-
 from __future__ import annotations
 
 import json
@@ -22,35 +20,55 @@ from .loader import SimData
 
 
 class HTMLRenderer:
-    """Renderiza o relatório HTML completo a partir de SimData + figura Plotly."""
+    """Renderiza o relatório HTML com duas seções de gráficos (Inversor / Sistema)."""
 
     def __init__(
         self,
         data: SimData,
-        fig: go.Figure,
-        trace_map: list[tuple[int, str, str]],
+        fig_inv: go.Figure,
+        fig_sys: go.Figure | None,
+        trace_map_inv: list[tuple[int, str, str]],
+        trace_map_sys: list[tuple[int, str, str]],
     ) -> None:
         self._d = data
-        self._fig = fig
-        self._trace_map = trace_map
+        self._fig_inv = fig_inv
+        self._fig_sys = fig_sys
+        self._tm_inv  = trace_map_inv
+        self._tm_sys  = trace_map_sys
 
     # ── API pública ──────────────────────────────────────────────────────────
 
     def render(self, out_path: Path) -> Path:
-        """Gera o HTML e salva em out_path. Retorna o Path."""
         html = self._build_html()
         out_path.write_text(html, encoding="utf-8")
         return out_path
 
-    # ── internos: composição do HTML ─────────────────────────────────────────
+    # ── HTML ─────────────────────────────────────────────────────────────────
 
     def _build_html(self) -> str:
-        fig_json   = self._fig.to_json()
-        n_panels   = self._count_panels()
-        light_cols = json.dumps([c for _, c, _ in self._trace_map])
-        dark_cols  = json.dumps([c for _, _, c in self._trace_map])
-        trace_idx  = json.dumps([i for i, _, _ in self._trace_map])
-        cards_html = self._cards_html()
+        inv_json = self._fig_inv.to_json()
+        sys_json = self._fig_sys.to_json() if self._fig_sys else "null"
+
+        def _cols(tm, idx):
+            return json.dumps([x[idx] for x in tm])
+
+        inv_light = _cols(self._tm_inv, 1)
+        inv_dark  = _cols(self._tm_inv, 2)
+        inv_idx   = _cols(self._tm_inv, 0)
+        sys_light = _cols(self._tm_sys, 1)
+        sys_dark  = _cols(self._tm_sys, 2)
+        sys_idx   = _cols(self._tm_sys, 0)
+
+        sys_section = ""
+        if self._fig_sys is not None:
+            sys_section = f"""
+  <div class="chart-section" id="sec-sys">
+    <div class="section-header">
+      <span class="section-title">Sistema 9-Bus</span>
+      <span class="fault-badge">Falta em t = {T_FAULT} s</span>
+    </div>
+    <div id="plot-sys"></div>
+  </div>"""
 
         return f"""<!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
@@ -65,7 +83,6 @@ class HTMLRenderer:
 </head>
 <body>
 
-<!-- ── Header ── -->
 <header class="header">
   <div class="h-left">
     <div class="h-logo">φ</div>
@@ -83,22 +100,20 @@ class HTMLRenderer:
   </div>
 </header>
 
-<!-- ── Main ── -->
 <main class="main">
 
-  <div class="cards">{cards_html}
-  </div>
+  {self._cards_html()}
 
   {self._story_html()}
 
-  <div class="chart-wrap">
-    <div class="chart-header">
-      <span class="chart-title">Sinais temporais</span>
-      <span class="fault-badge">⚡ Falta em t = {T_FAULT} s</span>
+  <div class="chart-section" id="sec-inv">
+    <div class="section-header">
+      <span class="section-title">Inversor UFV</span>
+      <span class="fault-badge">Falta em t = {T_FAULT} s</span>
     </div>
-    <div id="plot"></div>
+    <div id="plot-inv"></div>
   </div>
-
+{sys_section}
   <div class="footer">
     <span>SRF-PLL Analyzer</span>
     <span class="footer-dot"></span>
@@ -109,58 +124,74 @@ class HTMLRenderer:
 
 </main>
 
-<!-- ── Scripts ── -->
 <script>
-var figData = {fig_json};
-var gd = document.getElementById("plot");
+var invData = {inv_json};
+var sysData = {sys_json};
 
-Plotly.newPlot(gd, figData.data, figData.layout, {{
-  responsive: true,
-  displaylogo: false,
+var gdInv = document.getElementById("plot-inv");
+var gdSys = document.getElementById("plot-sys");
+
+Plotly.newPlot(gdInv, invData.data, invData.layout, {{
+  responsive: true, displaylogo: false,
   modeBarButtonsToRemove: ["select2d","lasso2d","autoScale2d"],
-  toImageButtonOptions: {{ format: "svg", filename: "pll_metrics" }},
+  toImageButtonOptions: {{ format: "svg", filename: "pll_inv" }},
 }});
+
+if (gdSys && sysData) {{
+  Plotly.newPlot(gdSys, sysData.data, sysData.layout, {{
+    responsive: true, displaylogo: false,
+    modeBarButtonsToRemove: ["select2d","lasso2d","autoScale2d"],
+    toImageButtonOptions: {{ format: "svg", filename: "pll_sys" }},
+  }});
+}}
 
 var isDark = false;
 
-var LAYOUT_LIGHT = {{
+var BASE_LIGHT = {{
   paper_bgcolor: "#ffffff", plot_bgcolor: "#ffffff",
   "font.color": "#0f172a",
   "legend.bgcolor": "rgba(0,0,0,0)",
   "hoverlabel.bgcolor": "#ffffff", "hoverlabel.bordercolor": "#e2e8f0",
 }};
-var LAYOUT_DARK = {{
+var BASE_DARK = {{
   paper_bgcolor: "#111827", plot_bgcolor: "#111827",
   "font.color": "#f9fafb",
   "legend.bgcolor": "rgba(0,0,0,0)",
   "hoverlabel.bgcolor": "#1f2937", "hoverlabel.bordercolor": "#374151",
 }};
 
-var n = {n_panels};
-for (var i = 1; i <= n; i++) {{
-  var s = i === 1 ? "" : String(i);
-  LAYOUT_LIGHT["xaxis" + s + ".gridcolor"]     = "#f1f5f9";
-  LAYOUT_LIGHT["xaxis" + s + ".zerolinecolor"] = "#e2e8f0";
-  LAYOUT_LIGHT["yaxis" + s + ".gridcolor"]     = "#f1f5f9";
-  LAYOUT_LIGHT["yaxis" + s + ".zerolinecolor"] = "#e2e8f0";
-  LAYOUT_DARK ["xaxis" + s + ".gridcolor"]     = "#1f2937";
-  LAYOUT_DARK ["xaxis" + s + ".zerolinecolor"] = "#374151";
-  LAYOUT_DARK ["yaxis" + s + ".gridcolor"]     = "#1f2937";
-  LAYOUT_DARK ["yaxis" + s + ".zerolinecolor"] = "#374151";
+function axisUpdates(figData, isDarkMode) {{
+  var upd = {{}};
+  Object.keys(figData.layout).forEach(function(k) {{
+    if (k.startsWith("xaxis") || k.startsWith("yaxis")) {{
+      upd[k + ".gridcolor"]     = isDarkMode ? "#1f2937" : "#f1f5f9";
+      upd[k + ".zerolinecolor"] = isDarkMode ? "#374151" : "#e5e7eb";
+    }}
+  }});
+  return upd;
 }}
 
-var lightColors = {light_cols};
-var darkColors  = {dark_cols};
-var traceIdx    = {trace_idx};
+var invLight = {inv_light};
+var invDark  = {inv_dark};
+var invIdx   = {inv_idx};
+var sysLight = {sys_light};
+var sysDark  = {sys_dark};
+var sysIdx   = {sys_idx};
+
+function applyTheme(gd, figData, lightC, darkC, tIdx, isDarkMode) {{
+  if (!gd || !figData) return;
+  var layout = Object.assign({{}}, isDarkMode ? BASE_DARK : BASE_LIGHT, axisUpdates(figData, isDarkMode));
+  Plotly.relayout(gd, layout);
+  tIdx.forEach(function(ti, i) {{
+    Plotly.restyle(gd, {{"line.color": [(isDarkMode ? darkC : lightC)[i]]}}, [ti]);
+  }});
+}}
 
 function toggleTheme() {{
   isDark = !isDark;
   document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
-  Plotly.relayout(gd, isDark ? LAYOUT_DARK : LAYOUT_LIGHT);
-  var cols = isDark ? darkColors : lightColors;
-  traceIdx.forEach(function(ti, i) {{
-    Plotly.restyle(gd, {{"line.color": [cols[i]]}}, [ti]);
-  }});
+  applyTheme(gdInv, invData, invLight, invDark, invIdx, isDark);
+  applyTheme(gdSys, sysData, sysLight, sysDark, sysIdx, isDark);
   document.getElementById("ico").textContent = isDark ? "☀️" : "🌙";
   document.getElementById("lbl").textContent = isDark ? "Light mode" : "Dark mode";
 }}
@@ -169,19 +200,10 @@ function toggleTheme() {{
 </body>
 </html>"""
 
-    # ── internos: classificação ──────────────────────────────────────────────
+    # ── Cards ────────────────────────────────────────────────────────────────
 
     @staticmethod
-    def _classify(
-        val: float | None,
-        thresholds: tuple[float, float],
-        lower_is_better: bool = True,
-    ) -> str:
-        """Retorna 'good', 'warn' ou 'bad' conforme limiares.
-
-        lower_is_better=True (padrão): (bom_máx, moderado_máx) — ex.: IAE, ts
-        lower_is_better=False:         (bom_mín, warn_mín)      — ex.: V_min
-        """
+    def _classify(val, thresholds, lower_is_better=True):
         if val is None:
             return "neutral"
         lo, hi = thresholds
@@ -189,134 +211,115 @@ function toggleTheme() {{
             return "good" if val <= lo else ("warn" if val <= hi else "bad")
         return "good" if val >= lo else ("warn" if val >= hi else "bad")
 
-    # ── internos: cards ──────────────────────────────────────────────────────
-
     def _cards_html(self) -> str:
         m = self._d.metrics
 
         def _v(val, decimals):
             return f"{val:.{decimals}f}" if val is not None else "—"
 
+        def _card(name, val, unit, sub, tip, status):
+            return (
+                f'\n    <div class="card {status}" title="{tip}">'
+                f'\n      <p class="c-name">{name}</p>'
+                f'\n      <p class="c-val">{val}<span class="c-unit">{unit}</span></p>'
+                f'\n      <p class="c-sub">{sub}</p>'
+                f'\n    </div>'
+            )
+
+        def _group(label, cards_inner):
+            return (
+                f'\n  <div class="card-section">'
+                f'\n    <p class="cg-label">{label}</p>'
+                f'\n    <div class="cards-row">{cards_inner}\n    </div>'
+                f'\n  </div>'
+            )
+
         ts_val   = m.get("ts")
         ts_delta = (ts_val - T_FAULT) if ts_val is not None else None
 
-        cards = [
-            ("IAE",  _v(m.get("IAE"), 3), "rad·s",  "∫|e| dt",
-             "Erro de fase acumulado (pós-falta)",
-             self._classify(m.get("IAE"), IAE_THRESH)),
-            ("ISE",  _v(m.get("ISE"), 4), "rad²·s", "∫e² dt",
-             "Energia do erro de fase",
-             self._classify(m.get("ISE"), ISE_THRESH)),
-            ("tₛ",   _v(ts_val, 3), "s",
-             f"±{np.degrees(TOL_RAD):.1f}°",
-             "Tempo de acomodação do PLL",
-             self._classify(ts_delta, TS_DELTA_THRESH)),
-            ("V min", _v(m.get("vmin"), 3), "pu",   "Bus 2",
-             f"Tensão mínima pós-falta (LVRT ≥ {LVRT_THRESHOLD} pu)",
-             self._classify(m.get("vmin"), VBUS2_MIN_THRESH, lower_is_better=False)),
-            ("ΔP UFV", _v(m.get("dP_ufv"), 3), "pu",   "pós-falta",
-             "Oscilação de potência ativa (UFV)",
-             self._classify(m.get("dP_ufv"), DP_THRESH)),
-            ("ΔQ UFV", _v(m.get("dQ_ufv"), 3), "pu",   "pós-falta",
-             "Oscilação de potência reativa (UFV)",
-             self._classify(m.get("dQ_ufv"), DQ_THRESH)),
-        ]
+        pll = "".join([
+            _card("IAE",  _v(m.get("IAE"), 3), "rad·s",  "∫|e| dt",
+                  "Erro de fase acumulado",
+                  self._classify(m.get("IAE"), IAE_THRESH)),
+            _card("ISE",  _v(m.get("ISE"), 4), "rad²·s", "∫e² dt",
+                  "Energia do erro de fase",
+                  self._classify(m.get("ISE"), ISE_THRESH)),
+            _card("tₛ",  _v(ts_val, 3), "s",
+                  f"±{np.degrees(TOL_RAD):.1f}°",
+                  "Tempo de acomodação do PLL",
+                  self._classify(ts_delta, TS_DELTA_THRESH)),
+        ])
 
-        return "\n".join(
-            f"""
-    <div class="card {status}" title="{tip}">
-      <p class="c-name">{name}</p>
-      <p class="c-val">{val}<span class="c-unit">{unit}</span></p>
-      <p class="c-sub">{sub}</p>
-    </div>"""
-            for name, val, unit, sub, tip, status in cards
+        inv = "".join([
+            _card("ΔP UFV", _v(m.get("dP_ufv"), 3), "pu", "pós-falta",
+                  "Oscilação de potência ativa (UFV)",
+                  self._classify(m.get("dP_ufv"), DP_THRESH)),
+            _card("ΔQ UFV", _v(m.get("dQ_ufv"), 3), "pu", "pós-falta",
+                  "Oscilação de potência reativa (UFV)",
+                  self._classify(m.get("dQ_ufv"), DQ_THRESH)),
+        ])
+
+        sys = "".join([
+            _card("V min",   _v(m.get("vmin"),    3), "pu", "Barra 2",
+                  f"Tensão mínima pós-falta (LVRT ≥ {LVRT_THRESHOLD} pu)",
+                  self._classify(m.get("vmin"), VBUS2_MIN_THRESH, lower_is_better=False)),
+        ])
+
+        return (
+            _group("Desempenho do PLL", pll) + "\n"
+            + _group("Inversor UFV", inv) + "\n"
+            + _group("Sistema 9-Bus", sys)
         )
 
-    # ── internos: narrativa pós-falta ────────────────────────────────────────
+    # ── Narrativa ────────────────────────────────────────────────────────────
 
     def _story_html(self) -> str:
         m   = self._d.metrics
         iae = m.get("IAE")
-        ise = m.get("ISE")
         ts  = m.get("ts")
         dp  = m.get("dP_ufv")
-        dq  = m.get("dQ_ufv")
+        vmin = m.get("vmin")
 
         parts: list[str] = []
 
         if iae is not None:
             cls = self._classify(iae, IAE_THRESH)
             if cls == "good":
-                parts.append(
-                    f"O erro de fase acumulado foi baixo (IAE = {iae:.3f} rad·s),"
-                    " indicando resposta rápida do PLL à perturbação."
-                )
+                parts.append(f"Erro de fase acumulado baixo (IAE = {iae:.3f} rad·s) — resposta rápida do PLL.")
             elif cls == "warn":
-                parts.append(
-                    f"O IAE de {iae:.3f} rad·s indica desempenho moderado —"
-                    " o PLL compensou o erro em tempo razoável."
-                )
+                parts.append(f"IAE de {iae:.3f} rad·s — desempenho moderado, PLL recuperou em tempo razoável.")
             else:
-                parts.append(
-                    f"O IAE elevado de {iae:.3f} rad·s revela acumulação"
-                    " significativa de erro de fase após a falta."
-                )
+                parts.append(f"IAE elevado de {iae:.3f} rad·s — acumulação significativa de erro de fase.")
 
         if ts is not None:
             dt  = ts - T_FAULT
             cls = self._classify(dt, TS_DELTA_THRESH)
             tol = np.degrees(TOL_RAD)
             if cls == "good":
-                parts.append(
-                    f"O PLL acomodou em Δt = {dt:.2f} s (tₛ = {ts:.3f} s),"
-                    f" dentro do critério ±{tol:.1f}°."
-                )
+                parts.append(f"Acomodação em Δt = {dt:.2f} s (tₛ = {ts:.3f} s), dentro do critério ±{tol:.1f}°.")
             elif cls == "warn":
-                parts.append(
-                    f"O tempo de acomodação foi de Δt = {dt:.2f} s (tₛ = {ts:.3f} s)"
-                    " — dentro dos limites, mas com margem reduzida."
-                )
+                parts.append(f"Acomodação em Δt = {dt:.2f} s (tₛ = {ts:.3f} s) — dentro dos limites, margem reduzida.")
             else:
-                parts.append(
-                    f"O PLL levou Δt = {dt:.2f} s para recuperar (tₛ = {ts:.3f} s),"
-                    " indicando resposta lenta."
-                )
+                parts.append(f"PLL levou Δt = {dt:.2f} s para recuperar (tₛ = {ts:.3f} s) — resposta lenta.")
 
-        vmin = m.get("vmin")
         if vmin is not None:
             cls = self._classify(vmin, VBUS2_MIN_THRESH, lower_is_better=False)
             if cls == "good":
-                parts.append(
-                    f"A tensão na Barra 2 permaneceu próxima do nominal"
-                    f" (V_min = {vmin:.3f} pu)."
-                )
+                parts.append(f"Tensão na Barra 2 próxima do nominal (V_min = {vmin:.3f} pu).")
             elif cls == "warn":
-                parts.append(
-                    f"A tensão na Barra 2 sofreu afundamento moderado"
-                    f" (V_min = {vmin:.3f} pu) — abaixo do limiar LVRT de"
-                    f" {LVRT_THRESHOLD} pu."
-                )
+                parts.append(f"Afundamento moderado na Barra 2 (V_min = {vmin:.3f} pu) — abaixo do limiar LVRT.")
             else:
-                parts.append(
-                    f"A tensão na Barra 2 sofreu afundamento severo"
-                    f" (V_min = {vmin:.3f} pu) — condição crítica de LVRT."
-                )
+                parts.append(f"Afundamento severo na Barra 2 (V_min = {vmin:.3f} pu) — condição crítica de LVRT.")
 
         if dp is not None:
             cls = self._classify(dp, DP_THRESH)
             if cls == "good":
-                parts.append(f"A potência ativa foi pouco afetada (ΔP = {dp:.3f} pu).")
+                parts.append(f"Potência ativa pouco afetada (ΔP = {dp:.3f} pu).")
             elif cls == "warn":
-                parts.append(
-                    f"Houve oscilação moderada de potência ativa (ΔP = {dp:.3f} pu)."
-                )
+                parts.append(f"Oscilação moderada de potência ativa (ΔP = {dp:.3f} pu).")
             else:
-                parts.append(
-                    f"A oscilação de potência ativa foi severa (ΔP = {dp:.3f} pu)"
-                    " — risco de disparo de proteção."
-                )
+                parts.append(f"Oscilação severa de potência ativa (ΔP = {dp:.3f} pu) — risco de disparo de proteção.")
 
-        # veredicto geral: pior status entre IAE, ts, V_min e ΔP
         statuses = [
             self._classify(iae, IAE_THRESH),
             self._classify((ts - T_FAULT) if ts is not None else None, TS_DELTA_THRESH),
@@ -334,7 +337,7 @@ function toggleTheme() {{
 
         text = " ".join(parts) or "Dados insuficientes para análise narrativa."
 
-        return f"""<div class="story">
+        return f"""<div class="story {verdict_cls}">
     <div class="story-body">
       <p class="story-title">Diagnóstico pós-falta</p>
       <p class="story-text">{text}</p>
@@ -342,19 +345,7 @@ function toggleTheme() {{
     <div class="story-verdict {verdict_cls}">{verdict_txt}</div>
   </div>"""
 
-    # ── internos: contagem de painéis ────────────────────────────────────────
-
-    def _count_panels(self) -> int:
-        """Reconta quantos subplots existem na figura."""
-        layout = self._fig.layout
-        count = 1
-        i = 2
-        while getattr(layout, f"yaxis{i}", None) is not None:
-            count += 1
-            i += 1
-        return count
-
-    # ── internos: CSS ────────────────────────────────────────────────────────
+    # ── CSS ──────────────────────────────────────────────────────────────────
 
     @staticmethod
     def _css() -> str:
@@ -393,7 +384,6 @@ function toggleTheme() {{
   --btn-fg:    #d1d5db;
   --btn-bdr:   #374151;
 }
-
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0 }
 body {
   font-family: Inter, "Segoe UI", system-ui, sans-serif;
@@ -402,7 +392,7 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
-body, .card, .header, .chart-wrap, .badge, .toggle-btn,
+body, .card, .header, .chart-section, .badge, .toggle-btn,
 .c-val, .c-name, .c-sub, .c-unit {
   transition: background .28s, color .28s, border-color .28s, box-shadow .28s;
 }
@@ -452,15 +442,18 @@ body, .card, .header, .chart-wrap, .badge, .toggle-btn,
   padding: 28px 24px 48px;
 }
 
-/* ── Cards ── */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 14px; margin-bottom: 22px;
+/* ── Card sections ── */
+.card-section { margin-bottom: 18px }
+.cg-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .7px; color: var(--muted);
+  margin-bottom: 9px;
 }
-@media(max-width: 860px){ .cards { grid-template-columns: repeat(3,1fr) } }
-@media(max-width: 460px){ .cards { grid-template-columns: repeat(2,1fr) } }
-
+.cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
 .card {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -475,13 +468,10 @@ body, .card, .header, .chart-wrap, .badge, .toggle-btn,
   background: linear-gradient(90deg, #2563eb, #7c3aed);
   border-radius: var(--radius) var(--radius) 0 0;
 }
-[data-theme="dark"] .card::before {
-  background: linear-gradient(90deg, #60a5fa, #a78bfa);
-}
+[data-theme="dark"] .card::before { background: linear-gradient(90deg,#60a5fa,#a78bfa) }
 .card:hover {
   box-shadow: var(--sh-md); transform: translateY(-2px);
-  transition: box-shadow .18s, transform .18s,
-              background .28s, border-color .28s;
+  transition: box-shadow .18s, transform .18s, background .28s, border-color .28s;
 }
 .c-name {
   font-size: 11px; font-weight: 600; text-transform: uppercase;
@@ -495,14 +485,13 @@ body, .card, .header, .chart-wrap, .badge, .toggle-btn,
 .c-unit { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: .3px }
 .c-sub  { font-size: 10.5px; color: var(--muted); margin-top: 6px }
 
-/* ── Card status (good / warn / bad) ── */
-.card.good::before  { background: linear-gradient(90deg, #16a34a, #15803d) }
-.card.warn::before  { background: linear-gradient(90deg, #d97706, #b45309) }
-.card.bad::before   { background: linear-gradient(90deg, #dc2626, #991b1b) }
+/* ── Card status ── */
+.card.good::before  { background: linear-gradient(90deg,#16a34a,#15803d) }
+.card.warn::before  { background: linear-gradient(90deg,#d97706,#b45309) }
+.card.bad::before   { background: linear-gradient(90deg,#dc2626,#991b1b) }
 [data-theme="dark"] .card.good::before { background: linear-gradient(90deg,#4ade80,#16a34a) }
 [data-theme="dark"] .card.warn::before { background: linear-gradient(90deg,#fbbf24,#d97706) }
 [data-theme="dark"] .card.bad::before  { background: linear-gradient(90deg,#f87171,#dc2626) }
-
 .card.good .c-val { color: #16a34a }
 .card.warn .c-val { color: #b45309 }
 .card.bad  .c-val { color: #dc2626 }
@@ -510,19 +499,23 @@ body, .card, .header, .chart-wrap, .badge, .toggle-btn,
 [data-theme="dark"] .card.warn .c-val { color: #fbbf24 }
 [data-theme="dark"] .card.bad  .c-val { color: #f87171 }
 
-/* ── Story (diagnóstico narrativo) ── */
+/* ── Story ── */
 .story {
   background: var(--surface);
   border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--sh);
   padding: 16px 20px;
   margin-bottom: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
 }
+.story.good { border-left-color: #16a34a }
+.story.warn { border-left-color: #d97706 }
+.story.bad  { border-left-color: #dc2626 }
+[data-theme="dark"] .story.good { border-left-color: #4ade80 }
+[data-theme="dark"] .story.warn { border-left-color: #fbbf24 }
+[data-theme="dark"] .story.bad  { border-left-color: #f87171 }
 .story-title {
   font-size: 11px; font-weight: 700; text-transform: uppercase;
   letter-spacing: .6px; color: var(--muted); margin-bottom: 6px;
@@ -542,29 +535,30 @@ body, .card, .header, .chart-wrap, .badge, .toggle-btn,
 [data-theme="dark"] .story-verdict.bad     { background: #450a0a; color: #f87171 }
 [data-theme="dark"] .story-verdict.neutral { background: var(--border); color: var(--muted) }
 
-/* ── Chart ── */
-.chart-wrap {
+/* ── Chart sections ── */
+.chart-section {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--sh);
-  overflow: hidden; padding: 4px 4px 0;
+  overflow: hidden;
+  margin-bottom: 20px;
 }
-.chart-header {
+.section-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 18px 10px;
+  padding: 14px 20px 12px;
   border-bottom: 1px solid var(--border);
 }
-.chart-title {
-  font-size: 13px; font-weight: 600; color: var(--text);
-  display: flex; align-items: center; gap: 8px;
+.section-title {
+  font-size: 13px; font-weight: 700; color: var(--text);
+  letter-spacing: -.1px;
 }
 .fault-badge {
   font-size: 10px; font-weight: 600; color: #b45309;
-  background: #fef3c7; border-radius: 6px; padding: 2px 8px;
+  background: #fef3c7; border-radius: 6px; padding: 3px 9px;
 }
 [data-theme="dark"] .fault-badge { color: #fcd34d; background: #451a03 }
-#plot { width: 100% }
+#plot-inv, #plot-sys { width: 100% }
 
 /* ── Footer ── */
 .footer {

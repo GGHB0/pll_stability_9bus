@@ -248,12 +248,18 @@ function _showTip(keys, el) {{
   _closeTip();
   var d = document.createElement("div");
   d.className = "svg-tip";
-  var html = "<p class='svg-tip-h'>Tipo de falta</p>";
+  var h = document.createElement("p");
+  h.className = "svg-tip-h";
+  h.textContent = "Tipo de falta";
+  d.appendChild(h);
   keys.forEach(function(k) {{
     var lbl = (SCENARIOS[k] && SCENARIOS[k].label) ? SCENARIOS[k].label : k;
-    html += "<button class='svg-tip-btn' onclick=\"_pickKey('" + k + "')\">"+lbl+"</button>";
+    var btn = document.createElement("button");
+    btn.className = "svg-tip-btn";
+    btn.textContent = lbl;
+    btn.onclick = (function(key) {{ return function() {{ _pickKey(key); }}; }})(k);
+    d.appendChild(btn);
   }});
-  d.innerHTML = html;
   document.body.appendChild(d);
   var r = el.getBoundingClientRect();
   var tx = r.right + window.scrollX + 10;

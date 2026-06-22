@@ -20,7 +20,7 @@ qsi = 0.707;
 wres = 9068.99682117109;
 Rth = 0.010038656529756919;
 Lth = 0.0011601815110534163;
-Ts   = 5e-5;    % Fundamental sample time       [s]
+Ts   = 5e-6;    % Fundamental sample time       [s]
 fsw  = 5000;   % Inverter switching frequency [Hz]
 Tsc  = 2e-4;    % Control sample time           [s]
 
@@ -43,12 +43,12 @@ Tsc  = 2e-4;    % Control sample time           [s]
 %  Falta em LINHA:  FAULT_BUS = 0;      FAULT_LINE = [A, B];
 %  Regime perm.:    FAULT_TYPE='regime'; FAULT_BUS = 0; FAULT_LINE = [];
 
-FAULT_BUS  = 7;           % Barra do curto (0 se falta em linha ou regime)
+FAULT_BUS  = 5;           % Barra do curto (0 se falta em linha ou regime)
 FAULT_LINE = [];          % Par [A, B] para falta em linha; [] para falta em barra
-FAULT_TYPE = '3phase';    % Ver tabela acima
+FAULT_TYPE = '2phase';    % Ver tabela acima
 
-T_FAULT    = 0.5;         % Instante de aplicação da falta [s]
-T_CLEAR    = 0.6;         % Instante de remoção da falta   [s]
+T_FAULT    = 0.2;         % Instante de aplicação da falta [s]
+T_CLEAR    = 0.3;         % Instante de remoção da falta   [s]
 T_DUR      = T_CLEAR - T_FAULT;  % Duração da falta [s]  (calculado automaticamente)
 
 %% Discrete notch for the PLL/PWM loop

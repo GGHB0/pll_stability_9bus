@@ -160,16 +160,25 @@ class SimData:
         if self.theta_err is not None:
             t_pf = self.t[mask]
             e_pf = self.theta_err[mask]
-            metrics["IAE"] = float(np.trapezoid(np.abs(e_pf), t_pf))
-            metrics["ISE"] = float(np.trapezoid(e_pf ** 2,    t_pf))
-            fora = t_pf[np.abs(e_pf) > TOL_RAD]
-            metrics["ts"]  = float(fora[-1]) if len(fora) else float(t_pf[0])
+            if len(t_pf) == 0:
+                metrics["IAE"] = metrics["ISE"] = metrics["ts"] = None
+            else:
+                metrics["IAE"] = float(np.trapezoid(np.abs(e_pf), t_pf))
+                metrics["ISE"] = float(np.trapezoid(e_pf ** 2,    t_pf))
+                fora = t_pf[np.abs(e_pf) > TOL_RAD]
+                metrics["ts"]  = float(fora[-1]) if len(fora) else float(t_pf[0])
         else:
             metrics["IAE"] = metrics["ISE"] = metrics["ts"] = None
 
-        metrics["dP_ufv"] = float(self.P_ufv[mask].max() - self.P_ufv[mask].min())
-        metrics["dQ_ufv"] = float(self.Q_ufv[mask].max() - self.Q_ufv[mask].min())
-        metrics["vmin"] = float(self.vbus2[mask].min()) if self.vbus2 is not None else None
+        p_pf = self.P_ufv[mask]
+        q_pf = self.Q_ufv[mask]
+        metrics["dP_ufv"] = float(p_pf.max() - p_pf.min()) if len(p_pf) else None
+        metrics["dQ_ufv"] = float(q_pf.max() - q_pf.min()) if len(q_pf) else None
+        if self.vbus2 is not None:
+            v_pf = self.vbus2[mask]
+            metrics["vmin"] = float(v_pf.min()) if len(v_pf) else None
+        else:
+            metrics["vmin"] = None
         return metrics
 
     # ── __repr__ ─────────────────────────────────────────────────────────────

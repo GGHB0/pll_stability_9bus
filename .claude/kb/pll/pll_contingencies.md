@@ -68,31 +68,43 @@ Leitura para o Cap. 4: a falha não é apenas "baixa tensão durante o curto". O
 crítico é a recuperação pós-falta em baixa inércia: o sistema elétrico tenta voltar,
 mas o referencial usado pelo controle do inversor passa a estar errado.
 
-#### Valor Nominal ONS — Resistência de Aterramento 0,2 pu
-
-O professor especificou **R_falta = 0,2 pu** como resistência de aterramento para os
-cenários de teste alinhados com a função do ONS:
+#### Resistência de Falta Adotada — 0,02 pu (10,6 Ω)
 
 ```
 Z_base (rede 230 kV) = (230e3)² / (100e6) = 529 Ω
-R_falta = 0,2 × 529 = 105,8 Ω
+R_falta = 0,02 × 529 = 10,58 Ω   ← valor padrão no bloco de falta do .slx
 ```
 
-No bloco de falta do .slx: a fórmula `529 * fator` deve usar `fator = 0.20` para este cenário.
-O valor atual padrão no XML é `529 * 0.02` (0,02 pu = 10,58 Ω) — alterar antes de simular o cenário ONS.
+**Fundamentação da escolha de 0,02 pu:**
 
-**Comportamento físico observado (falta resistiva vs. sólida):**
+Faltas em linhas de transmissão de 230 kV apresentam dois componentes resistivos reais:
+
+| Componente | Valor típico | Observação |
+|---|---|---|
+| Resistência de arco elétrico | 5–20 Ω | Varia com corrente e comprimento do arco |
+| Resistência de aterramento de torre | 20–50 Ω | Depende da resistividade do solo |
+
+0,02 pu = 10,6 Ω representa uma **falta de arco de baixa impedância** — próxima de um
+curto metálico, correspondendo ao pior caso prático em transmissão (arco curto, solo de
+baixa resistividade). Justificativas para adotar este valor no TCC:
+
+1. **Severidade máxima para o PLL**: afundamento de tensão mais profundo → malha do PLL
+   opera no seu limite de rastreamento — cenário mais exigente para avaliar os ganhos Kp/Ki.
+2. **Coerência com análise de estabilidade**: valores próximos da falta sólida são os mais
+   utilizados em estudos de estabilidade transitória (Anderson & Fouad, Kundur cap. 15).
+3. **Valor padrão do modelo**: já configurado no bloco de falta do .slx (`529 * 0.02`),
+   evitando inconsistência entre modelo e análise.
+
+**Comportamento físico: falta resistiva vs. sólida**
 
 | R_falta | Comportamento dos rotores G1/G3 | Motivo |
 |---|---|---|
 | ~0 Ω (bolted) | Aceleram (ω > 1 pu) | P_elétrica colapsa → Pmec > Pelec |
 | 0,2 pu (105,8 Ω) | **Desaceleram** (ω < 1 pu) | Falta absorve ~160 MW → age como carga |
+| 0,02 pu (10,6 Ω) | **Aceleram** (ω > 1 pu) | Comportamento clássico de curto — P_elétrica colapsa |
 
-A 0,2 pu, a resistência de falta dissipa potência real (~3 × V²_LN / R ≈ 160 MW em pré-falta),
-mais que dobrando a carga do sistema (cargas nominais = 315 MW). Os geradores tentam suprir
-essa demanda extra; o governor não responde rápido o suficiente → desaceleração.
-Terminal voltages se comportam normalmente (afundamento + recuperação) — o diagnóstico do
-comportamento "como carga adicionada" é fisicamente correto para este nível de impedância.
+A 0,2 pu a resistência dissipa ~160 MW (dobra a carga nominal de 315 MW) → deceleração.
+A 0,02 pu o colapso de P_elétrica domina → aceleração, critério das áreas iguais aplicável.
 
 ## Métricas de Avaliação de Desempenho
 

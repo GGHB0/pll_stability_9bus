@@ -33,10 +33,9 @@ codegen/
 notebook_params.m
 
 # Runtime output (gerado pelo MATLAB + Python — não versionar)
-output/sim_data.csv
-output/sim_data_angles.csv
-output/pll_metrics.html
-output/pll_metrics.png
+output/
+# Resultados de simulação do Bruno — versionados
+!output/results/
 
 # OS / editor
 .DS_Store

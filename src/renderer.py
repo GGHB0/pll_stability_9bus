@@ -164,47 +164,51 @@ var PLOTLY_CFG = {{
   toImageButtonOptions: {{ format: "svg" }},
 }};
 
-function axisUpdates(figData, isDarkMode) {{
-  var upd = {{}};
+function themedLayout(figData, isDarkMode) {{
+  var base = isDarkMode ? BASE_DARK : BASE_LIGHT;
+  var axUpd = {{}};
   Object.keys(figData.layout).forEach(function(k) {{
     if (k.startsWith("xaxis") || k.startsWith("yaxis")) {{
-      upd[k + ".gridcolor"]     = isDarkMode ? "#1f2937" : "#f1f5f9";
-      upd[k + ".zerolinecolor"] = isDarkMode ? "#374151" : "#e5e7eb";
+      axUpd[k + ".gridcolor"]     = isDarkMode ? "#1f2937" : "#f1f5f9";
+      axUpd[k + ".zerolinecolor"] = isDarkMode ? "#374151" : "#e5e7eb";
     }}
   }});
-  return upd;
+  return Object.assign({{}}, figData.layout, base, axUpd);
 }}
 
-function applyTheme(gd, figData, lightC, darkC, tIdx, isDarkMode) {{
-  if (!gd || !figData) return;
-  var layout = Object.assign({{}}, isDarkMode ? BASE_DARK : BASE_LIGHT,
-                             axisUpdates(figData, isDarkMode));
-  Plotly.relayout(gd, layout);
-  tIdx.forEach(function(ti, i) {{
-    Plotly.restyle(gd, {{"line.color": [(isDarkMode ? darkC : lightC)[i]]}}, [ti]);
+function themedData(data, lightC, darkC, tIdx, isDarkMode) {{
+  var colors = isDarkMode ? darkC : lightC;
+  return data.map(function(trace, i) {{
+    var pos = tIdx.indexOf(i);
+    if (pos === -1) return trace;
+    return Object.assign({{}}, trace, {{
+      line: Object.assign({{}}, trace.line, {{ color: colors[pos] }})
+    }});
   }});
+}}
+
+function reactThemedChart(gd, figData, lightC, darkC, tIdx) {{
+  Plotly.react(gd,
+    themedData(figData.data, lightC, darkC, tIdx, isDark),
+    themedLayout(figData, isDark),
+    PLOTLY_CFG);
 }}
 
 function switchScenario(key) {{
   currentKey = key;
   var sc = SCENARIOS[key];
 
-  Plotly.react(gdInv, sc.invData.data, sc.invData.layout, PLOTLY_CFG);
+  reactThemedChart(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx);
 
   if (sc.hasSys) {{
     secSys.style.display = "";
-    Plotly.react(gdSys, sc.sysData.data, sc.sysData.layout, PLOTLY_CFG);
+    reactThemedChart(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx);
   }} else {{
     secSys.style.display = "none";
   }}
 
   document.getElementById("cards-area").innerHTML = sc.cardsHtml;
   document.getElementById("story-area").innerHTML = sc.storyHtml;
-
-  applyTheme(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx, isDark);
-  if (sc.hasSys) {{
-    applyTheme(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx, isDark);
-  }}
 
   highlightSVG(key);
 }}
@@ -307,9 +311,9 @@ function toggleTheme() {{
   isDark = !isDark;
   document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
   var sc = SCENARIOS[currentKey];
-  applyTheme(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx, isDark);
+  reactThemedChart(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx);
   if (sc.hasSys) {{
-    applyTheme(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx, isDark);
+    reactThemedChart(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx);
   }}
   document.getElementById("ico").textContent = isDark ? "☀️" : "🌙";
   document.getElementById("lbl").textContent = isDark ? "Light mode" : "Dark mode";

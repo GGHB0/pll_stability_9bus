@@ -10,7 +10,7 @@ CSV_PATH   = PROJ_ROOT / "output" / "sim_data.csv"
 HTML_OUT   = PROJ_ROOT / "output" / "pll_metrics.html"
 
 # ── Parâmetros de simulação ─────────────────────────────────────────────────
-T_FAULT  = 0.5        # instante da falta (s)
+T_FAULT  = 0.1        # instante da falta (s)
 TOL_RAD  = 0.02       # ±1.15° — critério de acomodação do PLL (rad)
 
 # Limiares de classificação: (bom_máx, moderado_máx); acima → crítico

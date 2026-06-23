@@ -66,7 +66,7 @@ writetable(T_angles, fullfile(proj_root, 'output', 'sim_data_angles.csv'));
 
 ```matlab
 t       = P.Values.Time;   % eixo Tsc
-T_FAULT = 0.5;             % instante da falta (s)
+T_FAULT = 0.1;             % instante da falta (s) — os primeiros ~0.09 s são transitório de inicialização
 
 id_ref_pu = interp1(Id.Values.Time, Id.Values.Data(:,1), t, 'linear', 'extrap');  % → id_ufv_ref_pu no CSV
 id_pu     = interp1(Id.Values.Time, Id.Values.Data(:,2), t, 'linear', 'extrap');  % → id_ufv_pu
@@ -137,8 +137,8 @@ FAULT_BUS  = 7;           % Barra do curto (0 se falta em linha ou regime)
 FAULT_LINE = [];          % Par [A, B] para falta em linha; [] para falta em barra
 FAULT_TYPE = '3phase';    % Ver tabela abaixo
 
-T_FAULT    = 0.5;         % Instante de aplicação da falta [s]
-T_CLEAR    = 0.6;         % Instante de remoção da falta   [s]
+T_FAULT    = 0.1;         % Instante de aplicação da falta [s] — os primeiros ~0.09 s são transitório de inicialização
+T_CLEAR    = 0.6;         % Instante de remoção da falta   [s]  ← confirmar valor atual
 T_DUR      = T_CLEAR - T_FAULT;  % Duração [s] — calculado automaticamente
 ```
 

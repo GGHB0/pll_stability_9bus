@@ -68,6 +68,32 @@ Leitura para o Cap. 4: a falha não é apenas "baixa tensão durante o curto". O
 crítico é a recuperação pós-falta em baixa inércia: o sistema elétrico tenta voltar,
 mas o referencial usado pelo controle do inversor passa a estar errado.
 
+#### Valor Nominal ONS — Resistência de Aterramento 0,2 pu
+
+O professor especificou **R_falta = 0,2 pu** como resistência de aterramento para os
+cenários de teste alinhados com a função do ONS:
+
+```
+Z_base (rede 230 kV) = (230e3)² / (100e6) = 529 Ω
+R_falta = 0,2 × 529 = 105,8 Ω
+```
+
+No bloco de falta do .slx: a fórmula `529 * fator` deve usar `fator = 0.20` para este cenário.
+O valor atual padrão no XML é `529 * 0.02` (0,02 pu = 10,58 Ω) — alterar antes de simular o cenário ONS.
+
+**Comportamento físico observado (falta resistiva vs. sólida):**
+
+| R_falta | Comportamento dos rotores G1/G3 | Motivo |
+|---|---|---|
+| ~0 Ω (bolted) | Aceleram (ω > 1 pu) | P_elétrica colapsa → Pmec > Pelec |
+| 0,2 pu (105,8 Ω) | **Desaceleram** (ω < 1 pu) | Falta absorve ~160 MW → age como carga |
+
+A 0,2 pu, a resistência de falta dissipa potência real (~3 × V²_LN / R ≈ 160 MW em pré-falta),
+mais que dobrando a carga do sistema (cargas nominais = 315 MW). Os geradores tentam suprir
+essa demanda extra; o governor não responde rápido o suficiente → desaceleração.
+Terminal voltages se comportam normalmente (afundamento + recuperação) — o diagnóstico do
+comportamento "como carga adicionada" é fisicamente correto para este nível de impedância.
+
 ## Métricas de Avaliação de Desempenho
 
 ```

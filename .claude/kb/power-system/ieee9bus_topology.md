@@ -7,9 +7,25 @@ description: Topologia do IEEE 9-bus modificado — base, adaptação TCC, carga
 
 ## Base do Sistema
 
+### Rede física (Simscape Electrical — valores declarados no .slx)
+
+| Nível | Tensão nominal | Nota |
+|---|---|---|
+| Barras 4–9 (transmissão) | **230 kV** | busbars Bus4…Bus9 |
+| Bus1 / Gen1 | **16,5 kV** | SRated=247,5 MVA, 60 Hz |
+| Bus2 / UFV | **18 kV** | G2 original 192 MVA substituído pelo UFV |
+| Bus3 / Gen3 | **13,8 kV** | SRated=128 MVA, 60 Hz |
+
+Frequência nominal: **60 Hz** (confirmado em busbars, linhas e máquinas).  
+Fonte MathWorks (modelo base): https://www.mathworks.com/help/releases/R2025b/sps/ug/ieee-9-bus.html
+
+### Base per-unit (controle e análise Python)
+
 ```
 V_base = 20 kV    S_base = 100 MVA    Z_base = 4 Ω    f = 60 Hz
 ```
+
+Essa base de 100 MVA / 20 kV é usada na normalização do controle (params.m) e no pipeline Python — **não é declarada no Simscape**, que opera em unidades físicas (V, A, W).
 
 ## Topologia Original
 

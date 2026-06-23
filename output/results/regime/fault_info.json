@@ -1,0 +1,10 @@
+{
+  "fault_bus": 1,
+  "fault_line": [],
+  "fault_type": "regime",
+  "t_fault": 0.2,
+  "t_clear": 0.3,
+  "duration_s": 0.099999999999999978,
+  "timestamp": "2026-06-22T19:18:43",
+  "model": "pll_stability_9bus"
+}

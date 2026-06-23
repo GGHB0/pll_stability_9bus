@@ -1,0 +1,10 @@
+{
+  "fault_bus": 4,
+  "fault_line": [],
+  "fault_type": "3phase",
+  "t_fault": 0.2,
+  "t_clear": 0.3,
+  "duration_s": 0.099999999999999978,
+  "timestamp": "2026-06-21T20:28:11",
+  "model": "pll_stability_9bus"
+}

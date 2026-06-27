@@ -10,6 +10,11 @@ Vcc = 90909.09090909091*1.5;
 kp_pll = 460;
 ki_pll = 105820;
 
+BAD_PLL = false;          % true → kp_pll mal dimensionado (×0.2)
+if BAD_PLL
+    kp_pll = kp_pll * 0.2;
+end
+
 Lfault = 0.005305164769729845; 
 L1 = 0.03042088602562317;
 L2 = 0.0002889984172434201;

@@ -124,6 +124,24 @@ Cada pasta recebe: `sim_data.csv`, `sim_data_angles.csv`, `fault_info.json`.
 
 > Formato legado (colunas de ângulo dentro de `sim_data.csv`) ainda é suportado pelo Python.
 
+## Flag BAD_PLL em `params.m`
+
+Simula PLL mal dimensionado: multiplica `kp_pll` por 0,2 (ganho proporcional reduzido para 20% do nominal).
+
+```matlab
+BAD_PLL = false;          % true → kp_pll mal dimensionado (×0.2)
+if BAD_PLL
+    kp_pll = kp_pll * 0.2;
+end
+```
+
+| `BAD_PLL` | `kp_pll` efetivo | Uso |
+|-----------|-----------------|-----|
+| `false`   | 460 (nominal)   | Operação normal / cenário de referência |
+| `true`    | 92 (×0,2)       | Cenário de PLL mal dimensionado — resposta lenta, possível instabilidade |
+
+> Ao exportar resultados com `BAD_PLL = true`, usar pasta de saída diferenciada (ex.: `bus5/3phase_bad_pll/`) para não sobrescrever resultados nominais.
+
 ## Configuração do cenário em `params.m`
 
 Antes de cada simulação, editar apenas estas linhas na seção `%% Cenário de simulação`:

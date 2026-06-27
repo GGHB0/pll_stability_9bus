@@ -13,35 +13,9 @@
         <name>x</name>
       </symbols>
     </conditionals>
-    <faultContainers type="faultinfo.FaultContainer" uuid="80e46f00-b306-4259-99d3-f101be313aa0">
-      <activeFault type="faultinfo.SSFault" uuid="8afb15de-8b7e-4fc8-87cd-2c1cbff07ed1"/>
-      <faultedEntityID>SSSubelement|pll_stability_9bus:4506|Section interface</faultedEntityID>
-      <faultedEntityName>pll_stability_9bus/B8 to B9 100 km1/Section interface</faultedEntityName>
-      <faults type="faultinfo.SSFault" uuid="8afb15de-8b7e-4fc8-87cd-2c1cbff07ed1">
-        <checksum>10c825ae-5df9-4aee-8f79-fe8cc5df36f3</checksum>
-        <faultDescription></faultDescription>
-        <faultName>B8ToB9100Km1_fault</faultName>
-        <resyncUUID>00000000-0000-0000-0000-000000000000</resyncUUID>
-        <triggerOn type="faultinfo.TimedTrigger" uuid="34945d9d-6abe-4156-a10f-a189d736082a">
-          <startTime>0.0</startTime>
-          <isPersistent>true</isPersistent>
-        </triggerOn>
-      </faults>
-      <isEnabled>false</isEnabled>
-    </faultContainers>
     <isEnabled>true</isEnabled>
-    <lastUpdatedAt>2026-06-06T18:03:23</lastUpdatedAt>
+    <lastUpdatedAt>2026-06-26T18:33:02</lastUpdatedAt>
     <modelName>pll_stability_9bus</modelName>
-    <modelUUID>f841ce15-da28-46d7-a0b7-7dae3c27396b</modelUUID>
+    <modelUUID>556402fc-85d7-4866-b291-9d7dac6d0f0c</modelUUID>
   </faultinfo.FaultContainerSet>
-  <faultinfo.FailureModeContainer type="faultinfo.FailureModeContainer" uuid="b44c931f-229f-4f60-a0d4-beab0a871454">
-    <failureModes type="faultinfo.FailureMode" uuid="7e2fdda3-1d1f-47ec-975c-03d57a1b6204">
-      <ID>1</ID>
-      <associatedFaults type="faultinfo.SSFault" uuid="8afb15de-8b7e-4fc8-87cd-2c1cbff07ed1"/>
-      <faultSubsystemName>B8ToB9100Km1_fault</faultSubsystemName>
-      <resyncUUID>00000000-0000-0000-0000-000000000000</resyncUUID>
-    </failureModes>
-    <faultModelName>pll_stability_9bus_FaultModel</faultModelName>
-    <faultModelUUID>271494bf-ead4-4590-a66d-512b6b56d24d</faultModelUUID>
-  </faultinfo.FailureModeContainer>
 </MF0>

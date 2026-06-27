@@ -11,6 +11,7 @@ T_CLEAR    = ws_var('T_CLEAR',    0.6);
 FAULT_BUS  = ws_var('FAULT_BUS',  0);
 FAULT_LINE = ws_var('FAULT_LINE', []);
 FAULT_TYPE = ws_var('FAULT_TYPE', 'regime');
+BAD_PLL    = ws_var('BAD_PLL',    false);
 
 is_line_fault = ~isempty(FAULT_LINE) && numel(FAULT_LINE) == 2;
 
@@ -28,19 +29,24 @@ end
 % Regime permanente:  output/results/regime/
 % Falta em linha A-B: output/results/line{A}_{B}/{fault_type}/  (A < B)
 % Falta em barra N:   output/results/bus{N}/{fault_type}/
+folder_type = FAULT_TYPE;
+if BAD_PLL
+    folder_type = [FAULT_TYPE, '_bad_pll'];
+end
+
 if strcmp(FAULT_TYPE, 'regime')
-    out_dir = fullfile(proj_root, 'output', 'results', 'regime');
+    out_dir = fullfile(proj_root, 'output', 'results', folder_type);
 elseif is_line_fault
     A = min(FAULT_LINE);  B = max(FAULT_LINE);
-    out_dir = fullfile(proj_root, 'output', 'results', sprintf('line%d_%d', A, B), FAULT_TYPE);
+    out_dir = fullfile(proj_root, 'output', 'results', sprintf('line%d_%d', A, B), folder_type);
 else
-    out_dir = fullfile(proj_root, 'output', 'results', sprintf('bus%d', FAULT_BUS), FAULT_TYPE);
+    out_dir = fullfile(proj_root, 'output', 'results', sprintf('bus%d', FAULT_BUS), folder_type);
 end
 if ~isfolder(out_dir), mkdir(out_dir); end
 
 export_angles(ds, out_dir);
 export_slow(ds, out_dir, T_FAULT);
-save_fault_info(out_dir, FAULT_BUS, FAULT_LINE, FAULT_TYPE, T_FAULT, T_CLEAR);
+save_fault_info(out_dir, FAULT_BUS, FAULT_LINE, FAULT_TYPE, T_FAULT, T_CLEAR, BAD_PLL);
 fprintf('Exportação concluída → %s\n', out_dir);
 
 % ═══════════════════════════════════════════════════════════════════════════
@@ -150,7 +156,7 @@ function T = add_gen_scalar(T, ds, t, sig_name, col_name)
 end
 
 % ═══════════════════════════════════════════════════════════════════════════
-function save_fault_info(out_dir, bus, fault_line, ftype, t_fault, t_clear)
+function save_fault_info(out_dir, bus, fault_line, ftype, t_fault, t_clear, bad_pll)
 % Salva metadados do cenário como fault_info.json na pasta de saída.
     info.fault_bus  = bus;
     if ~isempty(fault_line) && numel(fault_line) == 2
@@ -162,6 +168,7 @@ function save_fault_info(out_dir, bus, fault_line, ftype, t_fault, t_clear)
     info.t_fault    = t_fault;
     info.t_clear    = t_clear;
     info.duration_s = t_clear - t_fault;
+    info.bad_pll    = bad_pll;
     info.timestamp  = datestr(now, 'yyyy-mm-ddTHH:MM:SS');
     info.model      = get_param(bdroot, 'Name');
 

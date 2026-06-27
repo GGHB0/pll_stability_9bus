@@ -124,9 +124,11 @@ Cada pasta recebe: `sim_data.csv`, `sim_data_angles.csv`, `fault_info.json`.
 
 > Formato legado (colunas de ângulo dentro de `sim_data.csv`) ainda é suportado pelo Python.
 
-## Flag BAD_PLL em `params.m`
+## Flag BAD_PLL
 
-Simula PLL mal dimensionado: multiplica `kp_pll` por 0,2 (ganho proporcional reduzido para 20% do nominal).
+Simula PLL mal dimensionado: `kp_pll` reduzido a 20% do nominal.
+
+**`params.m`** — define o flag e aplica o ganho reduzido antes da simulação:
 
 ```matlab
 BAD_PLL = false;          % true → kp_pll mal dimensionado (×0.2)
@@ -135,12 +137,24 @@ if BAD_PLL
 end
 ```
 
-| `BAD_PLL` | `kp_pll` efetivo | Uso |
-|-----------|-----------------|-----|
-| `false`   | 460 (nominal)   | Operação normal / cenário de referência |
-| `true`    | 92 (×0,2)       | Cenário de PLL mal dimensionado — resposta lenta, possível instabilidade |
+**`export_sim_data.m`** — lê `BAD_PLL` do workspace e roteia a pasta de saída:
 
-> Ao exportar resultados com `BAD_PLL = true`, usar pasta de saída diferenciada (ex.: `bus5/3phase_bad_pll/`) para não sobrescrever resultados nominais.
+```matlab
+BAD_PLL = ws_var('BAD_PLL', false);
+% ...
+folder_type = FAULT_TYPE;
+if BAD_PLL
+    folder_type = [FAULT_TYPE, '_bad_pll'];
+end
+% out_dir → output/results/bus{N}/{fault_type}_bad_pll/
+```
+
+O campo `bad_pll` também é salvo em `fault_info.json`.
+
+| `BAD_PLL` | `kp_pll` efetivo | Pasta de saída (ex.: bus5 / 3phase) |
+|-----------|-----------------|-------------------------------------|
+| `false`   | 460 (nominal)   | `output/results/bus5/3phase/`        |
+| `true`    | 92 (×0,2)       | `output/results/bus5/3phase_bad_pll/`|
 
 ## Configuração do cenário em `params.m`
 

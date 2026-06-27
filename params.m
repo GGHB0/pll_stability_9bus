@@ -7,6 +7,9 @@ Theta0 = 0;    % Initial PLL angle [rad]
 %% Control Parameters
 Vcc = 90909.09090909091*1.5;
 
+kp_pll = 460;
+ki_pll = 105820;
+
 Lfault = 0.005305164769729845; 
 L1 = 0.03042088602562317;
 L2 = 0.0002889984172434201;

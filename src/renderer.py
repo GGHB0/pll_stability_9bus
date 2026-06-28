@@ -39,6 +39,8 @@ class HTMLRenderer:
         first_key    = next(iter(self._scenarios))
         first_key_js = json.dumps(first_key)
 
+        has_bad_pll = any(sc.get("bad_pll", False) for sc in self._scenarios.values())
+
         sc_js: dict = {}
         for key, sc in self._scenarios.items():
             d  = sc["data"]
@@ -59,10 +61,12 @@ class HTMLRenderer:
                 "cardsHtml": self._cards_html(d),
                 "storyHtml": self._story_html(d),
                 "hasSys":    fs is not None,
+                "badPll":    sc.get("bad_pll", False),
             }
 
-        scenarios_js = json.dumps(sc_js)
-        select_html  = self._select_html()
+        scenarios_js  = json.dumps(sc_js)
+        select_html   = self._select_html()
+        pll_toggle_html = self._pll_toggle_html() if has_bad_pll else ""
 
         return f"""<!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
@@ -97,6 +101,7 @@ class HTMLRenderer:
 <div class="filter-bar">
   <span class="filter-label">Cenário</span>
   {select_html}
+  {pll_toggle_html}
   <button class="toggle-btn diag-btn" id="diagram-toggle" onclick="toggleDiagram()">🗺 Mapa IEEE 9-bus</button>
 </div>
 
@@ -140,6 +145,7 @@ class HTMLRenderer:
 var SCENARIOS = {scenarios_js};
 var currentKey = {first_key_js};
 var isDark = false;
+var pllMode = "nominal";
 
 var gdInv  = document.getElementById("plot-inv");
 var gdSys  = document.getElementById("plot-sys");
@@ -236,9 +242,50 @@ var svgLocMap = {{}};
 
 var _tip = null;
 
+function setPllMode(mode) {{
+  pllMode = mode;
+  document.querySelectorAll(".pll-btn").forEach(function(b) {{
+    b.classList.toggle("active", b.dataset.mode === mode);
+  }});
+  document.querySelectorAll("#scenario-picker option").forEach(function(opt) {{
+    var isBad = SCENARIOS[opt.value] && SCENARIOS[opt.value].badPll;
+    opt.hidden = (mode === "nominal") ? isBad : !isBad;
+  }});
+  document.querySelectorAll("#scenario-picker optgroup").forEach(function(og) {{
+    og.hidden = !Array.from(og.querySelectorAll("option")).some(function(o) {{ return !o.hidden; }});
+  }});
+  var equiv = _findEquiv(currentKey, mode);
+  if (equiv) {{
+    document.getElementById("scenario-picker").value = equiv;
+    switchScenario(equiv);
+  }}
+}}
+
+function _findEquiv(key, mode) {{
+  if (mode === "bad") {{
+    var parts = key.split("/");
+    var badKey = parts.length === 2
+      ? parts[0] + "/" + parts[1] + "_bad_pll"
+      : key + "_bad_pll";
+    return SCENARIOS[badKey] ? badKey : _firstOfMode(true);
+  }} else {{
+    var nomKey = key.replace("_bad_pll", "");
+    return SCENARIOS[nomKey] ? nomKey : _firstOfMode(false);
+  }}
+}}
+
+function _firstOfMode(isBad) {{
+  return Object.keys(SCENARIOS).find(function(k) {{
+    return SCENARIOS[k].badPll === isBad;
+  }}) || null;
+}}
+
 function selectLocation(loc, el) {{
-  var keys = svgLocMap[loc];
-  if (!keys || !keys.length) return;
+  var allKeys = svgLocMap[loc] || [];
+  var keys = allKeys.filter(function(k) {{
+    return SCENARIOS[k].badPll === (pllMode === "bad");
+  }});
+  if (!keys.length) return;
   if (keys.length === 1) {{
     _closeTip();
     document.getElementById("scenario-picker").value = keys[0];
@@ -343,13 +390,14 @@ switchScenario(currentKey);
         line_opts:   list[str] = []
 
         for key, sc in self._scenarios.items():
-            opt = f'<option value="{key}">{sc["label"]}</option>'
-            loc = key.split("/")[0]
-            if key == "regime":
+            pll_attr = 'data-pll="bad"' if sc.get("bad_pll", False) else 'data-pll="nominal"'
+            opt = f'<option value="{key}" {pll_attr}>{sc["label"]}</option>'
+            clean_loc = key.replace("_bad_pll", "").split("/")[0]
+            if clean_loc == "regime":
                 regime_opts.append(opt)
-            elif loc.startswith("bus"):
+            elif clean_loc.startswith("bus"):
                 bus_opts.append(opt)
-            elif loc.startswith("line"):
+            elif clean_loc.startswith("line"):
                 line_opts.append(opt)
 
         groups: list[str] = []
@@ -364,6 +412,17 @@ switchScenario(currentKey);
             '<select id="scenario-picker" onchange="switchScenario(this.value)">'
             + "".join(groups)
             + "</select>"
+        )
+
+    def _pll_toggle_html(self) -> str:
+        return (
+            '<span class="filter-label" style="margin-left:8px">PLL</span>'
+            '<div class="pll-toggle">'
+            '<button class="pll-btn active" data-mode="nominal" '
+            'onclick="setPllMode(\'nominal\')">Nominal</button>'
+            '<button class="pll-btn" data-mode="bad" '
+            'onclick="setPllMode(\'bad\')">Mal dimensionado</button>'
+            '</div>'
         )
 
     # ── Cards ────────────────────────────────────────────────────────────────
@@ -765,6 +824,27 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 
 /* ── Filter bar extras ── */
 .diag-btn { font-size: 12px; padding: 6px 14px; opacity: 1; transition: opacity .2s, box-shadow .2s, transform .2s, background .28s, color .28s, border-color .28s }
+
+/* ── PLL toggle ── */
+.pll-toggle {
+  display: flex; border: 1.5px solid var(--btn-bdr);
+  border-radius: 999px; overflow: hidden;
+  background: var(--btn-bg);
+  transition: border-color .28s, background .28s;
+}
+.pll-btn {
+  font-family: inherit; font-size: 12px; font-weight: 600;
+  padding: 6px 14px; background: transparent;
+  border: none; cursor: pointer;
+  color: var(--muted);
+  transition: background .18s, color .18s;
+  white-space: nowrap;
+}
+.pll-btn:hover { color: var(--text) }
+.pll-btn.active {
+  background: var(--accent); color: #fff;
+}
+[data-theme="dark"] .pll-btn.active { color: #0f172a }
 
 /* ── Diagram section ── */
 .diagram-section {

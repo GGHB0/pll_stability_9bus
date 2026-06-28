@@ -23,10 +23,15 @@ FAULT_LABELS: dict[str, str] = {
 }
 
 
+def _is_bad_pll(key: str) -> bool:
+    return key.split("/")[-1].endswith("_bad_pll")
+
+
 def _scenario_label(key: str) -> str:
-    if key == "regime":
+    clean = key.replace("_bad_pll", "")
+    if clean == "regime":
         return "Regime permanente"
-    parts = key.split("/")
+    parts = clean.split("/")
     if len(parts) == 2:
         loc, fault = parts
         fl = FAULT_LABELS.get(fault, fault)
@@ -34,13 +39,15 @@ def _scenario_label(key: str) -> str:
             return f"Barra {loc[3:]} — {fl}"
         if loc.startswith("line"):
             return f"Linha {loc[4:].replace('_', '-')} — {fl}"
-    return key
+    return clean
 
 
 def _sort_key(key: str) -> tuple:
-    if key == "regime":
-        return (0, 0, 0, "")
-    parts = key.split("/")
+    bad   = 1 if _is_bad_pll(key) else 0
+    clean = key.replace("_bad_pll", "")
+    if clean == "regime":
+        return (0, 0, 0, "", bad)
+    parts = clean.split("/")
     loc   = parts[0]
     fault = parts[1] if len(parts) > 1 else ""
     if loc.startswith("bus"):
@@ -48,13 +55,13 @@ def _sort_key(key: str) -> tuple:
             n = int(loc[3:])
         except ValueError:
             n = 0
-        return (1, n, 0, fault)
+        return (1, n, 0, fault, bad)
     if loc.startswith("line"):
         nums = loc[4:].split("_")
         a = int(nums[0]) if nums else 0
         b = int(nums[1]) if len(nums) > 1 else 0
-        return (2, a, b, fault)
-    return (3, 0, 0, key)
+        return (2, a, b, fault, bad)
+    return (3, 0, 0, key, bad)
 
 
 def scan_scenarios(results_dir: Path) -> dict[str, Path]:
@@ -88,6 +95,7 @@ def main() -> None:
         scenarios[key] = {
             "data":    data,
             "label":   _scenario_label(key),
+            "bad_pll": _is_bad_pll(key),
             "fig_inv": fig_inv,
             "fig_sys": fig_sys,
             "tm_inv":  tm_inv,

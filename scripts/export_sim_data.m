@@ -72,6 +72,8 @@ end
 % ═══════════════════════════════════════════════════════════════════════════
 function export_slow(ds, out_dir, T_FAULT)
 % CSV 2: potência, correntes dq e tensões a Tsc (eixo lento).
+    S_BASE = 100e6;  % VA — base do sistema (100 MVA), mesma base de Pinverter/Qinverter
+
     t = ds.get('Pinverter').Values.Time;
 
     T = build_base_table(ds, t, T_FAULT);
@@ -84,10 +86,10 @@ function export_slow(ds, out_dir, T_FAULT)
     T = add_scalar_col(T, ds, t, 'Pe_G1',   'pe_g1_pu');
     T = add_scalar_col(T, ds, t, 'Ang_G3',  'ang_g3_rad');
     T = add_scalar_col(T, ds, t, 'Pe_G3',   'pe_g3_pu');
-    T = add_scalar_col(T, ds, t, 'P_bus1',  'p_bus1_pu');
-    T = add_scalar_col(T, ds, t, 'Q_bus1',  'q_bus1_pu');
-    T = add_scalar_col(T, ds, t, 'P_bus3',  'p_bus3_pu');
-    T = add_scalar_col(T, ds, t, 'Q_bus3',  'q_bus3_pu');
+    T = add_power_col(T, ds, t, 'P_bus1',  'p_bus1_pu', S_BASE);
+    T = add_power_col(T, ds, t, 'Q_bus1',  'q_bus1_pu', S_BASE);
+    T = add_power_col(T, ds, t, 'P_bus3',  'p_bus3_pu', S_BASE);
+    T = add_power_col(T, ds, t, 'Q_bus3',  'q_bus3_pu', S_BASE);
 
     out = fullfile(out_dir, 'sim_data.csv');
     writetable(T, out);
@@ -154,12 +156,24 @@ end
 
 % ───────────────────────────────────────────────────────────────────────────
 function T = add_scalar_col(T, ds, t, sig_name, col_name)
-% Adiciona coluna escalar (ângulo, potência) interpolada em t. Para sinais
-% Mux de 2 elementos (ex.: P_bus1, Q_bus1), usa apenas a coluna (1).
+% Adiciona coluna escalar (ângulo, potência já em pu — ex.: Pe_G1) interpolada
+% em t. Para sinais Mux de 2 elementos, usa apenas a coluna (1).
     sig = ds.get(sig_name);
     if isempty(sig), return; end
     t_s = sig.Values.Time;
     v   = sig.Values.Data(:,1);
+    T.(col_name) = interp1(t_s, v, t, 'linear', 'extrap');
+end
+
+% ───────────────────────────────────────────────────────────────────────────
+function T = add_power_col(T, ds, t, sig_name, col_name, S_base)
+% Adiciona coluna de potência em pu (base S_base), extraindo a coluna (1) de
+% sinais Mux (ex.: P_bus1, Q_bus1). Diferente de add_scalar_col: estes sinais
+% vêm de medições brutas Simscape (W/VAr), sem normalização prévia no modelo.
+    sig = ds.get(sig_name);
+    if isempty(sig), return; end
+    t_s = sig.Values.Time;
+    v   = sig.Values.Data(:,1) / S_base;
     T.(col_name) = interp1(t_s, v, t, 'linear', 'extrap');
 end
 

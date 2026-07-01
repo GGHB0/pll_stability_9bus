@@ -3,7 +3,10 @@ description: Workflows de simulação — exportação Simulink→Python, params
 files:
   - file: export_workflow.md
     name: export-workflow
-    description: Workflow validado Simulink → MATLAB → Python para o modelo pll_stability_9bus (logsout, V_bus2 escalar, sim_data.csv)
+    description: Workflow validado Simulink → MATLAB → Python (logsout, sinais de barra P/Q/V, normalização pu, sim_data.csv)
+  - file: python_pipeline.md
+    name: python-pipeline
+    description: Arquitetura Python (src/) que consome sim_data.csv — SimData, ChartBuilder, painéis, métricas
   - file: params_workflow.md
     name: params-workflow
     description: Workflow notebook → MATLAB/Simulink separando cálculos teóricos AGP dos valores runtime em params.m, incluindo a divergência intencional de Vcc

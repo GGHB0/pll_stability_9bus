@@ -118,6 +118,14 @@ Entradas: id_ref, Vabc_grid, Iabc (pu)
 | `Bus 1`…`Bus 9` | 4138…4392 | 4396 monitor | p1→P, p2→Q, p3→V por barra |
 | `Ang barra` | 4494 | root | p1 → ângulo de barra Simscape |
 
+> **P/Q do monitor de barras saem em unidades físicas (W/VAr), não pu** — taps
+> `Goto`/`From` diretos das Busbars (SID 1887 Bus1, SID 3494 Bus3) via
+> `PS-Simulink Converter`, sem nenhum Gain de normalização. Diferente do bloco
+> "Inverter Active & Reactive Power" (SID 4055, alimenta `Pinverter`/`Qinverter`),
+> que recebe `Vabc`/`Iabc` já em pu. O export MATLAB (`add_power_col`, ver
+> `kb/simulation/export_workflow.md`) divide `P_bus{N}`/`Q_bus{N}` por
+> `S_base = 100 MVA` para corrigir isso.
+
 ### Cadeia Fourier → Ângulo Absoluto (subsistema UFV, SID 3896)
 
 ```

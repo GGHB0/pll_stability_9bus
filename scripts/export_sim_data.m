@@ -77,11 +77,17 @@ function export_slow(ds, out_dir, T_FAULT)
     T = build_base_table(ds, t, T_FAULT);
     T = add_vdq_cols(T, ds, t, T_FAULT, 'Vdq_Inverter', 'vd_ufv_pu',  'vq_ufv_pu');
     T = add_vdq_cols(T, ds, t, T_FAULT, 'Vdq_rede',     'vd_rede_pu', 'vq_rede_pu');
-    T = add_vbus2_col(T, ds, t, T_FAULT);
-    T = add_gen_scalar(T, ds, t, 'Ang_G1', 'ang_g1_rad');
-    T = add_gen_scalar(T, ds, t, 'Pe_G1',  'pe_g1_pu');
-    T = add_gen_scalar(T, ds, t, 'Ang_G3', 'ang_g3_rad');
-    T = add_gen_scalar(T, ds, t, 'Pe_G3',  'pe_g3_pu');
+    T = add_vmag_col(T, ds, t, T_FAULT, 'V_bus1', 'vbus1_pu');
+    T = add_vmag_col(T, ds, t, T_FAULT, 'V_bus2', 'vbus2_pu');
+    T = add_vmag_col(T, ds, t, T_FAULT, 'V_bus3', 'vbus3_pu');
+    T = add_scalar_col(T, ds, t, 'Ang_G1',  'ang_g1_rad');
+    T = add_scalar_col(T, ds, t, 'Pe_G1',   'pe_g1_pu');
+    T = add_scalar_col(T, ds, t, 'Ang_G3',  'ang_g3_rad');
+    T = add_scalar_col(T, ds, t, 'Pe_G3',   'pe_g3_pu');
+    T = add_scalar_col(T, ds, t, 'P_bus1',  'p_bus1_pu');
+    T = add_scalar_col(T, ds, t, 'Q_bus1',  'q_bus1_pu');
+    T = add_scalar_col(T, ds, t, 'P_bus3',  'p_bus3_pu');
+    T = add_scalar_col(T, ds, t, 'Q_bus3',  'q_bus3_pu');
 
     out = fullfile(out_dir, 'sim_data.csv');
     writetable(T, out);
@@ -123,9 +129,10 @@ function T = add_vdq_cols(T, ds, t, T_FAULT, sig_name, col_d, col_q)
 end
 
 % ───────────────────────────────────────────────────────────────────────────
-function T = add_vbus2_col(T, ds, t, T_FAULT)
-% Adiciona coluna vbus2_pu (magnitude escalar da Barra 2, normalizada).
-    sig = ds.get('V_bus2');
+function T = add_vmag_col(T, ds, t, T_FAULT, sig_name, col_name)
+% Adiciona coluna de magnitude escalar de barra (V_bus1/2/3), normalizada
+% pelo valor médio pré-falta.
+    sig = ds.get(sig_name);
     if isempty(sig), return; end
 
     if isa(sig, 'Simulink.SimulationData.Signal')
@@ -141,13 +148,14 @@ function T = add_vbus2_col(T, ds, t, T_FAULT)
         vmag = ts_v.Data(:,1);
     end
 
-    Vnom       = mean(vmag(t_v < T_FAULT));
-    T.vbus2_pu = interp1(t_v, vmag / Vnom, t, 'linear', 'extrap');
+    Vnom         = mean(vmag(t_v < T_FAULT));
+    T.(col_name) = interp1(t_v, vmag / Vnom, t, 'linear', 'extrap');
 end
 
 % ───────────────────────────────────────────────────────────────────────────
-function T = add_gen_scalar(T, ds, t, sig_name, col_name)
-% Adiciona coluna escalar de gerador (ângulo rad ou potência pu) interpolada em t.
+function T = add_scalar_col(T, ds, t, sig_name, col_name)
+% Adiciona coluna escalar (ângulo, potência) interpolada em t. Para sinais
+% Mux de 2 elementos (ex.: P_bus1, Q_bus1), usa apenas a coluna (1).
     sig = ds.get(sig_name);
     if isempty(sig), return; end
     t_s = sig.Values.Time;

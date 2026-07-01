@@ -118,9 +118,30 @@ class SimData:
         else:
             self.ang_g3 = self.pe_g3 = None
 
-        # ── tensão Barra 2 ───────────────────────────────────────────────────
+        # ── tensões de barra ─────────────────────────────────────────────────
+        self.has_vbus1 = "vbus1_pu" in self._cols
+        self.vbus1 = self._df["vbus1_pu"].to_numpy() if self.has_vbus1 else None
+
         self.has_vbus2 = "vbus2_pu" in self._cols
         self.vbus2 = self._df["vbus2_pu"].to_numpy() if self.has_vbus2 else None
+
+        self.has_vbus3 = "vbus3_pu" in self._cols
+        self.vbus3 = self._df["vbus3_pu"].to_numpy() if self.has_vbus3 else None
+
+        # ── P/Q de barra (coluna (1) do Mux — sinal medido) ─────────────────
+        self.has_pq_bus1 = {"p_bus1_pu", "q_bus1_pu"} <= self._cols
+        if self.has_pq_bus1:
+            self.p_bus1 = self._df["p_bus1_pu"].to_numpy()
+            self.q_bus1 = self._df["q_bus1_pu"].to_numpy()
+        else:
+            self.p_bus1 = self.q_bus1 = None
+
+        self.has_pq_bus3 = {"p_bus3_pu", "q_bus3_pu"} <= self._cols
+        if self.has_pq_bus3:
+            self.p_bus3 = self._df["p_bus3_pu"].to_numpy()
+            self.q_bus3 = self._df["q_bus3_pu"].to_numpy()
+        else:
+            self.p_bus3 = self.q_bus3 = None
 
         # ── tensões dq inversor e rede ───────────────────────────────────────
         if self.has_vdq_ufv:

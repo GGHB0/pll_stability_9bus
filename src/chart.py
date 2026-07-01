@@ -63,12 +63,16 @@ class ChartBuilder:
     def _sys_rows(self) -> list:
         d = self._d
         rows: list = []
-        if d.has_vbus2:
-            rows.append((_S, "vbus", "|V| Barra 2 (pu)"))
+        if d.has_vbus1 or d.has_vbus2 or d.has_vbus3:
+            rows.append((_S, "vbus_combined", "|V| Barras (pu)"))
         if d.has_gen1 or d.has_gen3:
             rows.append((_P,
                 ("ang_gen", "Ângulo rotor (°)"),
                 ("pe_gen",  "Pe geradores (pu)")))
+        if d.has_pq_bus1 or d.has_pq_bus3:
+            rows.append((_P,
+                ("p_bus",  "P Barras 1/3 (pu)"),
+                ("q_bus",  "Q Barras 1/3 (pu)")))
         return rows
 
     # ── Construção da figura ─────────────────────────────────────────────────
@@ -225,9 +229,16 @@ class ChartBuilder:
                                     line=dict(color="rgba(220,50,50,0.45)", width=1.1, dash="dash"),
                                     row=row, col=col)
 
-        elif kind == "vbus":
-            self._add(go.Scatter(x=t, y=d.vbus2,
-                                 name="|V| Bus 2", mode="lines", line=dict(width=1.8)), row, col)
+        elif kind == "vbus_combined":
+            if d.has_vbus1:
+                self._add(go.Scatter(x=t, y=d.vbus1,
+                                     name="|V| Bus 1", mode="lines", line=dict(width=1.8)), row, col)
+            if d.has_vbus2:
+                self._add(go.Scatter(x=t, y=d.vbus2,
+                                     name="|V| Bus 2", mode="lines", line=dict(width=1.8)), row, col)
+            if d.has_vbus3:
+                self._add(go.Scatter(x=t, y=d.vbus3,
+                                     name="|V| Bus 3", mode="lines", line=dict(width=1.8)), row, col)
             self._fig.add_hline(y=1.0,
                                 line=dict(color="rgba(100,100,100,0.25)", width=1.0, dash="dot"),
                                 row=row, col=col)
@@ -287,3 +298,19 @@ class ChartBuilder:
             if d.has_gen3:
                 self._add(go.Scatter(x=t, y=d.pe_g3,
                                      name="Pe G3", mode="lines", line=dict(width=1.8)), row, col)
+
+        elif kind == "p_bus":
+            if d.has_pq_bus1:
+                self._add(go.Scatter(x=t, y=d.p_bus1,
+                                     name="P Bus 1", mode="lines", line=dict(width=1.8)), row, col)
+            if d.has_pq_bus3:
+                self._add(go.Scatter(x=t, y=d.p_bus3,
+                                     name="P Bus 3", mode="lines", line=dict(width=1.8)), row, col)
+
+        elif kind == "q_bus":
+            if d.has_pq_bus1:
+                self._add(go.Scatter(x=t, y=d.q_bus1,
+                                     name="Q Bus 1", mode="lines", line=dict(width=1.8)), row, col)
+            if d.has_pq_bus3:
+                self._add(go.Scatter(x=t, y=d.q_bus3,
+                                     name="Q Bus 3", mode="lines", line=dict(width=1.8)), row, col)

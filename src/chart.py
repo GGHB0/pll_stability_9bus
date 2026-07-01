@@ -65,10 +65,6 @@ class ChartBuilder:
         rows: list = []
         if d.has_vbus1 or d.has_vbus2 or d.has_vbus3:
             rows.append((_S, "vbus_combined", "|V| Barras (pu)"))
-        if d.has_gen1 or d.has_gen3:
-            rows.append((_P,
-                ("ang_gen", "Ângulo rotor (°)"),
-                ("pe_gen",  "Pe geradores (pu)")))
         if d.has_pq_bus1 or d.has_pq_bus3:
             rows.append((_P,
                 ("p_bus",  "P Barras 1/3 (pu)"),
@@ -282,22 +278,6 @@ class ChartBuilder:
             self._fig.add_hline(y=0.0,
                                 line=dict(color="rgba(100,100,100,0.25)", width=1.0, dash="dot"),
                                 row=row, col=col)
-
-        elif kind == "ang_gen":
-            if d.has_gen1:
-                self._add(go.Scatter(x=t, y=np.degrees(d.ang_g1),
-                                     name="δ G1", mode="lines", line=dict(width=1.8)), row, col)
-            if d.has_gen3:
-                self._add(go.Scatter(x=t, y=np.degrees(d.ang_g3),
-                                     name="δ G3", mode="lines", line=dict(width=1.8)), row, col)
-
-        elif kind == "pe_gen":
-            if d.has_gen1:
-                self._add(go.Scatter(x=t, y=d.pe_g1,
-                                     name="Pe G1", mode="lines", line=dict(width=1.8)), row, col)
-            if d.has_gen3:
-                self._add(go.Scatter(x=t, y=d.pe_g3,
-                                     name="Pe G3", mode="lines", line=dict(width=1.8)), row, col)
 
         elif kind == "p_bus":
             if d.has_pq_bus1:

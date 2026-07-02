@@ -29,11 +29,16 @@ Ver `kb/simulation/export_workflow.md` para o formato de `sim_data.csv` consumid
 
 ### Seção Sistema (`_sys_rows`)
 
+Painéis agrupados por barra (não combinados), na ordem Bus 2 → Bus 1 → Bus 3
+— facilita comparar cada barra isoladamente:
+
 | Painel | Kind | Condição | Conteúdo |
 |--------|------|----------|----------|
-| \|V\| Barras (pu) | `vbus_combined` | `has_vbus1 or has_vbus2 or has_vbus3` | \|V\| Bus 1/2/3 + linha LVRT |
-| P Barras 1/3 (pu) | `p_bus` | `has_pq_bus1 or has_pq_bus3` | P Bus 1 e/ou P Bus 3 |
-| Q Barras 1/3 (pu) | `q_bus` | `has_pq_bus1 or has_pq_bus3` | Q Bus 1 e/ou Q Bus 3 |
+| \|V\| Bus 2 (pu) | `vbus2` | `has_vbus2` | \|V\| Bus 2 + linha LVRT |
+| \|V\| Bus 1 (pu) | `vbus1` | `has_vbus1` | \|V\| Bus 1 + linha LVRT |
+| P Bus 1 (pu) \| Q Bus 1 (pu) | `p_bus1` / `q_bus1` | `has_pq_bus1` | P/Q da Barra 1, lado a lado |
+| \|V\| Bus 3 (pu) | `vbus3` | `has_vbus3` | \|V\| Bus 3 + linha LVRT |
+| P Bus 3 (pu) \| Q Bus 3 (pu) | `p_bus3` / `q_bus3` | `has_pq_bus3` | P/Q da Barra 3, lado a lado |
 
 > Painéis "Ângulo rotor (δ G1/G3)" e "Pe geradores" foram **removidos** (2026-07) —
 > ângulo de rotor não normalizado crescia linearmente e perdeu relevância na análise

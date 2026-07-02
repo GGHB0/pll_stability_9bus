@@ -5,7 +5,7 @@ config.py — Constantes globais do projeto PLL-IEEE9Bus.
 from pathlib import Path
 
 # ── Caminhos ────────────────────────────────────────────────────────────────
-PROJ_ROOT  = Path(__file__).resolve().parent.parent
+PROJ_ROOT  = Path(__file__).resolve().parent.parent.parent
 CSV_PATH   = PROJ_ROOT / "output" / "sim_data.csv"
 HTML_OUT   = PROJ_ROOT / "output" / "pll_metrics.html"
 

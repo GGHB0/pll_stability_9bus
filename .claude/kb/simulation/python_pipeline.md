@@ -23,6 +23,13 @@ Reorganizado em subpacotes (2026-07) — antes eram 4 arquivos soltos em `src/`.
 os subpacotes diretamente. Imports internos usam `..config`/`..pipeline` (relativos
 ao nível do subpacote, não ao topo de `src/`).
 
+> ⚠️ **Gotcha `PROJ_ROOT`**: `src/config/settings.py` está um nível mais fundo
+> que o antigo `src/config.py`. `PROJ_ROOT = Path(__file__).resolve().parent.parent.parent`
+> (3× `.parent` — settings.py → config/ → src/ → raiz). Se um subpacote for
+> movido de nível novamente, recalcular essa contagem; um `.parent` a menos
+> quebra `CSV_PATH`/`HTML_OUT`/o SVG do mapa unifilar silenciosamente
+> (`PROJ_ROOT` aponta para `src/`, `assets/` não é encontrado, mapa some do HTML).
+
 Ver `kb/simulation/export_workflow.md` para o formato de `sim_data.csv` consumido aqui.
 
 ## Painéis gerados por `ChartBuilder`
@@ -54,6 +61,32 @@ Painéis agrupados por barra (não combinados), na ordem Bus 2 → Bus 1 → Bus
 > ângulo de rotor não normalizado crescia linearmente e perdeu relevância na análise
 > atual. Os dados brutos (`ang_g1`, `pe_g1`, `ang_g3`, `pe_g3`) continuam sendo
 > exportados/carregados por `SimData`, só não são mais plotados.
+
+## Formatação dos eixos (`ChartBuilder._apply_layout`)
+
+`update_yaxes(exponentformat="none")` global — desativa o auto-prefixo SI do
+Plotly (µ/k/M) nos ticks do eixo Y. Necessário porque pu é adimensional: sem
+essa opção, valores pequenos (ex. P/Q de barra em regime) ganhavam rótulos
+tipo "2µ", que não fazem sentido fora de unidades físicas (W, V etc.).
+
+> ⚠️ **Gotcha `_label` em linhas `_P` (pair)**: `xref` do rótulo de painel
+> **tem** que ser `f"x{ax_idx} domain"` (relativo ao eixo x daquela coluna),
+> nunca `"paper"`. Com `"paper"`, `x=0.01` sempre cai na borda esquerda da
+> figura inteira — em linha `_S` (largura cheia) isso coincide com a borda do
+> próprio painel, mas em linha `_P` o rótulo da coluna 2 (ex. "Q Bus 1 (pu)")
+> era desenhado sobre o painel da coluna 1, fantasma atrás da legenda.
+
+## Subtítulo de grupo por barra (`ChartBuilder._group_title`)
+
+Linhas de `_sys_rows()` aceitam um 4º elemento opcional (`str | None`) com o
+nome do grupo (ex. `"Barra 1"`) — setado só na 1ª linha de cada barra, `None`
+nas seguintes, para não repetir o subtítulo. `_make_figure` detecta
+`has_groups = any(len(r) == 4 and r[-1] for r in rows)` e passa `extra_top=True`
+para `_apply_layout`, que aumenta a margem superior da figura (`t=34` vs `t=16`)
+— sem isso o subtítulo do 1º grupo (que fica *acima* do domínio da 1ª linha,
+`y=1.16` em coordenada de domínio) é cortado pela margem padrão.
+`_group_title` usa `xref="paper"` (rótulo de grupo é full-width, diferente de
+`_label` que é por-coluna) + uma linha divisória (`add_shape`) em `y=1.08`.
 
 ## Lógica de leitura em `SimData`
 

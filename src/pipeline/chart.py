@@ -64,19 +64,25 @@ class ChartBuilder:
         d = self._d
         rows: list = []
         if d.has_vbus2:
-            rows.append((_S, "vbus2", "|V| Bus 2 (pu)"))
+            rows.append((_S, "vbus2", "|V| Bus 2 (pu)", "Barra 2"))
+
+        grp1 = "Barra 1"
         if d.has_vbus1:
-            rows.append((_S, "vbus1", "|V| Bus 1 (pu)"))
+            rows.append((_S, "vbus1", "|V| Bus 1 (pu)", grp1))
+            grp1 = None
         if d.has_pq_bus1:
             rows.append((_P,
                 ("p_bus1", "P Bus 1 (pu)"),
-                ("q_bus1", "Q Bus 1 (pu)")))
+                ("q_bus1", "Q Bus 1 (pu)"), grp1))
+
+        grp3 = "Barra 3"
         if d.has_vbus3:
-            rows.append((_S, "vbus3", "|V| Bus 3 (pu)"))
+            rows.append((_S, "vbus3", "|V| Bus 3 (pu)", grp3))
+            grp3 = None
         if d.has_pq_bus3:
             rows.append((_P,
                 ("p_bus3", "P Bus 3 (pu)"),
-                ("q_bus3", "Q Bus 3 (pu)")))
+                ("q_bus3", "Q Bus 3 (pu)"), grp3))
         return rows
 
     # ── Construção da figura ─────────────────────────────────────────────────
@@ -97,11 +103,16 @@ class ChartBuilder:
         self._ci = 0
         self._trace_map = []
 
+        has_groups = any(len(r) == 4 and r[-1] for r in rows)
+
         ax = 0
         for ri, row_spec in enumerate(rows, 1):
+            group = row_spec[-1] if len(row_spec) == 4 else None
             if row_spec[0] == _S:
-                _, kind, label = row_spec
+                _, kind, label = row_spec[:3]
                 ax += 1
+                if group:
+                    self._group_title(group, ax)
                 self._legend_key = "legend" if ax == 1 else f"legend{ax}"
                 self._add_panel(kind, ri, 1)
                 self._label(label, ax)
@@ -109,9 +120,11 @@ class ChartBuilder:
                 self._fig.update_yaxes(gridcolor="#f0f2f5", zerolinecolor="#e5e7eb",
                                        tickfont_size=10, row=ri, col=1)
             else:
-                _, (k1, l1), (k2, l2) = row_spec
+                _, (k1, l1), (k2, l2) = row_spec[:3]
                 ax1, ax2 = ax + 1, ax + 2
                 ax += 2
+                if group:
+                    self._group_title(group, ax1)
                 self._legend_key = "legend" if ax1 == 1 else f"legend{ax1}"
                 self._add_panel(k1, ri, 1)
                 self._label(l1, ax1)
@@ -126,18 +139,34 @@ class ChartBuilder:
                 self._fig.update_yaxes(gridcolor="#f0f2f5", zerolinecolor="#e5e7eb",
                                        tickfont_size=10, row=ri, col=2)
 
-        self._apply_layout(n)
+        self._apply_layout(n, extra_top=has_groups)
         self._place_legends(rows)
         return self._fig, self._trace_map
 
     # ── Helpers de figura ────────────────────────────────────────────────────
 
     def _label(self, text: str, ax_idx: int) -> None:
+        xref = "x domain" if ax_idx == 1 else f"x{ax_idx} domain"
         yref = "y domain" if ax_idx == 1 else f"y{ax_idx} domain"
         self._fig.add_annotation(
-            text=f"<b>{text}</b>", xref="paper", yref=yref,
+            text=f"<b>{text}</b>", xref=xref, yref=yref,
             x=0.01, y=0.97, xanchor="left", yanchor="top",
             font=dict(size=10, color="#6b7280"), showarrow=False,
+        )
+
+    def _group_title(self, text: str, ax_idx: int) -> None:
+        """Subtítulo de divisão por barra, ancorado acima da 1ª linha do grupo."""
+        yref = "y domain" if ax_idx == 1 else f"y{ax_idx} domain"
+        self._fig.add_annotation(
+            text=text.upper(), xref="paper", yref=yref,
+            x=0, y=1.16, xanchor="left", yanchor="bottom",
+            font=dict(size=11, color="#334155", family="Inter, Segoe UI, system-ui, sans-serif"),
+            showarrow=False,
+        )
+        self._fig.add_shape(
+            type="line", xref="paper", yref=yref,
+            x0=0, x1=1, y0=1.08, y1=1.08,
+            line=dict(color="#e2e8f0", width=1),
         )
 
     def _vline(self, row: int, col: int) -> None:
@@ -147,13 +176,17 @@ class ChartBuilder:
             row=row, col=col,
         )
 
-    def _apply_layout(self, n_rows: int) -> None:
+    def _apply_layout(self, n_rows: int, extra_top: bool = False) -> None:
         self._fig.update_xaxes(
             title_text="Tempo (s)", gridcolor="#f0f2f5",
             zerolinecolor="#e5e7eb", tickfont_size=10,
         )
+        # pu é adimensional — sem prefixo SI (µ/k/M) nos ticks do eixo Y
+        self._fig.update_yaxes(exponentformat="none")
+        # espaço extra no topo para o subtítulo "Barra N" da 1ª linha do grupo
+        top_margin = 34 if extra_top else 16
         self._fig.update_layout(
-            margin=dict(t=16, b=16, l=60, r=100),
+            margin=dict(t=top_margin, b=16, l=60, r=100),
             paper_bgcolor="#ffffff", plot_bgcolor="#ffffff",
             font=dict(family="Inter, Segoe UI, system-ui, sans-serif", size=12, color="#111827"),
             hovermode="x unified",

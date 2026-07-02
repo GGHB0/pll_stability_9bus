@@ -6,12 +6,22 @@ description: Arquitetura Python (src/) que consome sim_data.csv — SimData, Cha
 # Pipeline Python: `src/`
 
 ```
-app.py          ← entry point (python app.py [--csv PATH] [--out PATH])
+app.py                  ← entry point (python app.py [--out PATH]); varre output/results/**/sim_data.csv
 src/
-├── loader.py   → SimData: lê sim_data.csv + sim_data_angles.csv, calcula métricas
-├── chart.py    → ChartBuilder: subplots Plotly (usa t_fast para painéis de ângulo)
-└── renderer.py → HTMLRenderer: HTML com tema light/dark
+├── __init__.py         → reexporta SimData, ChartBuilder, HTMLRenderer (API pública)
+├── config/
+│   └── settings.py     → T_FAULT, TOL_RAD, thresholds, paletas, caminhos
+├── pipeline/            → CSV → dados → figuras Plotly
+│   ├── loader.py         → SimData: lê sim_data.csv + sim_data_angles.csv, calcula métricas
+│   └── chart.py           → ChartBuilder: subplots Plotly (usa t_fast p/ painéis de ângulo)
+└── report/               → figuras → HTML
+    └── renderer.py         → HTMLRenderer: HTML multi-cenário com tema light/dark
 ```
+
+Reorganizado em subpacotes (2026-07) — antes eram 4 arquivos soltos em `src/`.
+`src/__init__.py` continua a única superfície pública; `app.py` não referencia
+os subpacotes diretamente. Imports internos usam `..config`/`..pipeline` (relativos
+ao nível do subpacote, não ao topo de `src/`).
 
 Ver `kb/simulation/export_workflow.md` para o formato de `sim_data.csv` consumido aqui.
 
@@ -85,5 +95,5 @@ antes de `T_FAULT` para zerar drift da Repeating Sequence de referência.
 # Exportar do MATLAB (após simular): >> export_sim_data   (Command Window)
 
 .venv\Scripts\python.exe app.py
-.venv\Scripts\python.exe app.py --csv output/sim_data.csv --out output/relatorio.html
+.venv\Scripts\python.exe app.py --out output/relatorio.html
 ```

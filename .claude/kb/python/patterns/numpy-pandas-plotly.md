@@ -5,8 +5,8 @@ description: Pipeline de análise de sinais temporais com NumPy/Pandas/Plotly �
 
 # NumPy · Pandas · Plotly — Pipeline de Sinais
 
-> **Contexto**: padrões específicos usados em `src/loader.py`, `src/chart.py`, `src/renderer.py`
-> para análise dos sinais exportados do Simulink.
+> **Contexto**: padrões específicos usados em `src/pipeline/loader.py`, `src/pipeline/chart.py`,
+> `src/report/renderer.py` para análise dos sinais exportados do Simulink.
 
 ## Leitura de CSV com Pandas
 
@@ -150,7 +150,7 @@ Necessário para caracteres como `Δ`, `θ`, `·` no PowerShell/cmd.
 | violeta | `#9333ea` | `#c084fc` |
 | ciano | `#0891b2` | `#22d3ee` |
 
-Definidas em `src/config.py` como `LIGHT_COLORS` / `DARK_COLORS`.
+Definidas em `src/config/settings.py` como `LIGHT_COLORS` / `DARK_COLORS`.
 
 ## SVG interativo embutido no HTML
 
@@ -197,4 +197,4 @@ O `<style>` do SVG inline torna-se CSS global — usar seletores específicos
 
 - [File Parser](file-parser.md) — padrão geral de leitura de arquivos
 - [Clean Architecture](clean-architecture.md) — estrutura do pacote `src/`
-- `src/loader.py`, `src/chart.py`, `src/renderer.py` — implementação real
+- `src/pipeline/loader.py`, `src/pipeline/chart.py`, `src/report/renderer.py` — implementação real

@@ -17,10 +17,10 @@ pll_stability_9bus/
 ├── requirements.txt                    ← numpy, pandas, plotly
 ├── src/                                ← pacote Python de análise
 │   ├── __init__.py                     ← expõe SimData, ChartBuilder, HTMLRenderer
-│   ├── config.py                       ← T_FAULT, TOL_RAD, paletas, caminhos
-│   ├── loader.py                       ← SimData: lê CSV, calcula IAE/ISE/ts/ΔP/ΔQ
-│   ├── chart.py                        ← ChartBuilder: monta subplots Plotly
-│   └── renderer.py                     ← HTMLRenderer: gera relatório HTML
+│   ├── config/settings.py              ← T_FAULT, TOL_RAD, paletas, caminhos
+│   ├── pipeline/loader.py              ← SimData: lê CSV, calcula IAE/ISE/ts/ΔP/ΔQ
+│   ├── pipeline/chart.py               ← ChartBuilder: monta subplots Plotly
+│   └── report/renderer.py              ← HTMLRenderer: gera relatório HTML
 ├── scripts/
 │   ├── export_sim_data.m               ← exporta logsout → output/sim_data.csv
 │   └── analyze_sim_data.py             ← script legado (substituído por app.py)
@@ -107,7 +107,7 @@ standalone — não referenciados pelo modelo principal.
 ## Métricas de Desempenho
 
 IAE, ISE, tempo de acomodação ts (critério ±1.15° = 0.02 rad), ΔP_ufv, ΔQ_ufv pós-falta.
-Calculados por `SimData` em `src/loader.py`. Conformidade LVRT per IEEE 1547-2018.
+Calculados por `SimData` em `src/pipeline/loader.py`. Conformidade LVRT per IEEE 1547-2018.
 
 Atributos `SimData`: `P_ufv`, `Q_ufv`, `id_ufv_meas`, `iq_ufv_meas`, `id_ufv_ref`, `iq_ufv_ref`.
 Flags: `has_dq_ufv`, `has_ref_ufv`. Colunas CSV: `P_ufv_pu`, `Q_ufv_pu`, `id_ufv_pu`, `iq_ufv_pu`, `id_ufv_ref_pu`, `iq_ufv_ref_pu`.

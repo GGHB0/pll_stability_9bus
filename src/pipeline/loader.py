@@ -19,7 +19,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from .config import T_FAULT, TOL_RAD
+from ..config import T_FAULT, TOL_RAD
 
 
 class SimData:

@@ -13,11 +13,11 @@ import numpy as np
 import plotly
 import plotly.graph_objects as go
 
-from .config import (
+from ..config import (
     T_FAULT, TOL_RAD, LVRT_THRESHOLD,
     IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH, DP_THRESH, DQ_THRESH, VBUS2_MIN_THRESH,
 )
-from .loader import SimData
+from ..pipeline.loader import SimData
 
 
 class HTMLRenderer:
@@ -375,7 +375,7 @@ switchScenario(currentKey);
     # ── SVG diagram ─────────────────────────────────────────────────────────
 
     def _svg_section_html(self) -> str:
-        from .config import PROJ_ROOT
+        from ..config import PROJ_ROOT
         svg_path = PROJ_ROOT / "assets" / "diagrams" / "ieee9bus_unifilar.svg"
         try:
             return svg_path.read_text(encoding="utf-8")

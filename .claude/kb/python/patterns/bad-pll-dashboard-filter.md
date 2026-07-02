@@ -53,7 +53,7 @@ scenarios[key] = {
 }
 ```
 
-## Mudanças em `src/renderer.py`
+## Mudanças em `src/report/renderer.py`
 
 ### Python
 

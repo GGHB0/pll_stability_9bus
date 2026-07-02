@@ -10,7 +10,7 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from .config import T_FAULT, TOL_RAD, LVRT_THRESHOLD, LIGHT_COLORS, DARK_COLORS
+from ..config import T_FAULT, TOL_RAD, LVRT_THRESHOLD, LIGHT_COLORS, DARK_COLORS
 from .loader import SimData
 
 _S = "single"   # linha inteira (colspan 2)

@@ -108,19 +108,36 @@ para `_apply_layout`, que aumenta a margem superior da figura (`t=34` vs `t=16`)
 | `ang_g1`, `pe_g1` | `has_gen1` | ângulo (rad) / Pe (pu) do rotor G1 — **não plotado**, só carregado |
 | `ang_g3`, `pe_g3` | `has_gen3` | idem para G3 — **não plotado**, só carregado |
 
+## `t_fault`/`t_clear` por cenário (`SimData.__init__`)
+
+`SimData` lê `fault_info.json` (salvo por `export_sim_data.m` ao lado do CSV,
+ver [[export-workflow]]) e expõe `self.t_fault`/`self.t_clear` (float ou `None`).
+`fault_type == "regime"` → ambos `None` (sem falta, sem linha nos gráficos).
+Fallback: `T_FAULT` de `config/settings.py` só é usado se o JSON não existir.
+Este valor real (não a constante global `T_FAULT`) é o que alimenta:
+- `ChartBuilder._vline` — duas linhas tracejadas (vermelha em `t_fault`,
+  cinza em `t_clear`) em todo painel de série temporal; nenhuma em regime.
+- `_compute_metrics` e a baseline correction do ângulo (linha 91-95) — janela
+  `t ≥ t_fault` real do cenário, não mais a constante desatualizada.
+- `HTMLRenderer` — `sc_js[key]["tFault"/"tClear"]` viaja para o JS; a função
+  `updateFaultUI(sc)` atualiza o header e os badges "Falta: t = X – Y s" a
+  cada `switchScenario`, e `_cards_html`/`_story_html` usam
+  `data.t_fault or T_FAULT` no lugar da constante global para `Δt = ts − t_fault`.
+
 ## Métricas calculadas (`_compute_metrics`)
 
 | Métrica (chave dict) | Fórmula | Janela |
 |---|---|---|
-| `IAE` | ∫\|θ_err\| dt | t ≥ T_FAULT |
-| `ISE` | ∫θ_err² dt | t ≥ T_FAULT |
-| `ts` | último t com \|θ_err\| > TOL_RAD | t ≥ T_FAULT |
-| `dP_ufv` | max(P_ufv) − min(P_ufv) | t ≥ T_FAULT |
-| `dQ_ufv` | max(Q_ufv) − min(Q_ufv) | t ≥ T_FAULT |
-| `vmin` | min(vbus2_pu) | t ≥ T_FAULT |
+| `IAE` | ∫\|θ_err\| dt | t ≥ t_fault |
+| `ISE` | ∫θ_err² dt | t ≥ t_fault |
+| `ts` | último t com \|θ_err\| > TOL_RAD | t ≥ t_fault |
+| `dP_ufv` | max(P_ufv) − min(P_ufv) | t ≥ t_fault |
+| `dQ_ufv` | max(Q_ufv) − min(Q_ufv) | t ≥ t_fault |
+| `vmin` | min(vbus2_pu) | t ≥ t_fault |
 
+`t_fault` acima é `self.t_fault` (real do cenário, fallback `T_FAULT` global).
 `np.trapezoid` (NumPy ≥ 2.0). Baseline correction: subtrai `theta_err[idx_fault-1]`
-antes de `T_FAULT` para zerar drift da Repeating Sequence de referência.
+antes de `t_fault` para zerar drift da Repeating Sequence de referência.
 
 ## Rodar
 

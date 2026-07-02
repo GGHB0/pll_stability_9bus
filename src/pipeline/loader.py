@@ -14,6 +14,7 @@ Dois CSVs exportados pelo MATLAB:
 """
 
 from __future__ import annotations
+import json
 from pathlib import Path
 
 import numpy as np
@@ -29,6 +30,20 @@ class SimData:
         self._path = Path(csv_path)
         self._df   = pd.read_csv(self._path)
         self._cols  = set(self._df.columns)
+
+        # ── instante de falta (t_fault/t_clear reais do cenário) ───────────────
+        # fault_info.json é salvo por export_sim_data.m ao lado do CSV. Regime
+        # permanente não tem falta: t_fault/t_clear ficam None (sem linhas no gráfico).
+        self.t_fault: float | None = T_FAULT
+        self.t_clear: float | None = None
+        info_path = self._path.with_name("fault_info.json")
+        if info_path.exists():
+            info = json.loads(info_path.read_text(encoding="utf-8"))
+            if info.get("fault_type") == "regime":
+                self.t_fault = self.t_clear = None
+            else:
+                self.t_fault = info.get("t_fault", T_FAULT)
+                self.t_clear = info.get("t_clear")
 
         # ── flags ────────────────────────────────────────────────────────────
         self.has_ang      = {"theta_pll_rad", "theta_ref_rad"} <= self._cols  # formato legado
@@ -76,7 +91,8 @@ class SimData:
         if raw is not None:
             wrapped = np.arctan2(np.sin(raw), np.cos(raw))
             t_arr = self._df["t_s"].to_numpy()
-            idx_fault = int(np.searchsorted(t_arr, T_FAULT))
+            t_fault = self.t_fault if self.t_fault is not None else T_FAULT
+            idx_fault = int(np.searchsorted(t_arr, t_fault))
             baseline = float(wrapped[idx_fault - 1]) if idx_fault > 0 else 0.0
             if baseline != 0.0:
                 wrapped = np.arctan2(np.sin(wrapped - baseline), np.cos(wrapped - baseline))
@@ -175,7 +191,8 @@ class SimData:
     # ── internos ─────────────────────────────────────────────────────────────
 
     def _compute_metrics(self) -> dict:
-        mask = self.t >= T_FAULT
+        t_fault = self.t_fault if self.t_fault is not None else T_FAULT
+        mask = self.t >= t_fault
         metrics: dict = {}
 
         if self.theta_err is not None:

@@ -10,7 +10,7 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from ..config import T_FAULT, TOL_RAD, LVRT_THRESHOLD, LIGHT_COLORS, DARK_COLORS
+from ..config import TOL_RAD, LVRT_THRESHOLD, LIGHT_COLORS, DARK_COLORS
 from .loader import SimData
 
 _S = "single"   # linha inteira (colspan 2)
@@ -170,11 +170,20 @@ class ChartBuilder:
         )
 
     def _vline(self, row: int, col: int) -> None:
-        self._fig.add_vline(
-            x=T_FAULT,
-            line=dict(color="rgba(100,100,100,0.25)", width=1.1, dash="dot"),
-            row=row, col=col,
-        )
+        """Marca início/fim da falta (t_fault/t_clear reais do cenário); nenhuma linha em regime."""
+        d = self._d
+        if d.t_fault is not None:
+            self._fig.add_vline(
+                x=d.t_fault,
+                line=dict(color="rgba(220,50,50,0.5)", width=1.2, dash="dash"),
+                row=row, col=col,
+            )
+        if d.t_clear is not None:
+            self._fig.add_vline(
+                x=d.t_clear,
+                line=dict(color="rgba(100,100,100,0.4)", width=1.2, dash="dash"),
+                row=row, col=col,
+            )
 
     def _apply_layout(self, n_rows: int, extra_top: bool = False) -> None:
         self._fig.update_xaxes(

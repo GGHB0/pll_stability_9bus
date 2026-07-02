@@ -62,6 +62,8 @@ class HTMLRenderer:
                 "storyHtml": self._story_html(d),
                 "hasSys":    fs is not None,
                 "badPll":    sc.get("bad_pll", False),
+                "tFault":    d.t_fault,
+                "tClear":    d.t_clear,
             }
 
         scenarios_js  = json.dumps(sc_js)
@@ -86,7 +88,7 @@ class HTMLRenderer:
     <div class="h-logo">φ</div>
     <div>
       <div class="h-title">SRF-PLL &nbsp;·&nbsp; IEEE 9-Bus</div>
-      <div class="h-sub">Análise pós-falta &nbsp;·&nbsp; T<sub>fault</sub> = {T_FAULT} s</div>
+      <div class="h-sub" id="header-sub">Análise pós-falta</div>
     </div>
     <span class="badge">UERJ 2025</span>
   </div>
@@ -118,7 +120,7 @@ class HTMLRenderer:
   <div class="chart-section" id="sec-inv">
     <div class="section-header">
       <span class="section-title">Inversor UFV</span>
-      <span class="fault-badge">Falta em t = {T_FAULT} s</span>
+      <span class="fault-badge" id="badge-inv"></span>
     </div>
     <div id="plot-inv"></div>
   </div>
@@ -126,7 +128,7 @@ class HTMLRenderer:
   <div class="chart-section" id="sec-sys" style="display:none">
     <div class="section-header">
       <span class="section-title">Sistema 9-Bus</span>
-      <span class="fault-badge">Falta em t = {T_FAULT} s</span>
+      <span class="fault-badge" id="badge-sys"></span>
     </div>
     <div id="plot-sys"></div>
   </div>
@@ -150,6 +152,9 @@ var pllMode = "nominal";
 var gdInv  = document.getElementById("plot-inv");
 var gdSys  = document.getElementById("plot-sys");
 var secSys = document.getElementById("sec-sys");
+var headerSub = document.getElementById("header-sub");
+var badgeInv  = document.getElementById("badge-inv");
+var badgeSys  = document.getElementById("badge-sys");
 
 var BASE_LIGHT = {{
   paper_bgcolor: "#ffffff", plot_bgcolor: "#ffffff",
@@ -200,10 +205,29 @@ function reactThemedChart(gd, figData, lightC, darkC, tIdx) {{
     PLOTLY_CFG);
 }}
 
+function updateFaultUI(sc) {{
+  if (sc.tFault == null) {{
+    headerSub.textContent = "Análise em regime permanente";
+    badgeInv.style.display = "none";
+    badgeSys.style.display = "none";
+    return;
+  }}
+  headerSub.innerHTML = "Análise pós-falta &nbsp;·&nbsp; T<sub>fault</sub> = "
+    + sc.tFault.toFixed(2) + " s";
+  var txt = (sc.tClear != null)
+    ? "Falta: t = " + sc.tFault.toFixed(2) + " – " + sc.tClear.toFixed(2) + " s"
+    : "Falta em t = " + sc.tFault.toFixed(2) + " s";
+  badgeInv.textContent = txt;
+  badgeInv.style.display = "";
+  badgeSys.textContent = txt;
+  badgeSys.style.display = "";
+}}
+
 function switchScenario(key) {{
   currentKey = key;
   var sc = SCENARIOS[key];
 
+  updateFaultUI(sc);
   reactThemedChart(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx);
 
   if (sc.hasSys) {{
@@ -459,8 +483,9 @@ switchScenario(currentKey);
                 f'\n  </div>'
             )
 
+        t_fault  = data.t_fault if data.t_fault is not None else T_FAULT
         ts_val   = m.get("ts")
-        ts_delta = (ts_val - T_FAULT) if ts_val is not None else None
+        ts_delta = (ts_val - t_fault) if ts_val is not None else None
 
         pll = "".join([
             _card("IAE", _v(m.get("IAE"), 3), "rad·s", "∫|e| dt",
@@ -499,7 +524,8 @@ switchScenario(currentKey);
     # ── Narrativa ────────────────────────────────────────────────────────────
 
     def _story_html(self, data: SimData) -> str:
-        m    = data.metrics
+        m       = data.metrics
+        t_fault = data.t_fault if data.t_fault is not None else T_FAULT
         iae  = m.get("IAE")
         ts   = m.get("ts")
         dp   = m.get("dP_ufv")
@@ -517,7 +543,7 @@ switchScenario(currentKey);
                 parts.append(f"IAE elevado de {iae:.3f} rad·s — acumulação significativa de erro de fase.")
 
         if ts is not None:
-            dt  = ts - T_FAULT
+            dt  = ts - t_fault
             cls = self._classify(dt, TS_DELTA_THRESH)
             tol = np.degrees(TOL_RAD)
             if cls == "good":
@@ -547,7 +573,7 @@ switchScenario(currentKey);
 
         statuses = [
             self._classify(iae, IAE_THRESH),
-            self._classify((ts - T_FAULT) if ts is not None else None, TS_DELTA_THRESH),
+            self._classify((ts - t_fault) if ts is not None else None, TS_DELTA_THRESH),
             self._classify(vmin, VBUS2_MIN_THRESH, lower_is_better=False),
             self._classify(dp, DP_THRESH),
         ]

@@ -24,7 +24,7 @@ description: Workflow validado Simulink → MATLAB → Python para o modelo pll_
 | `Vdq_rede` | **Mux [Vd_rede, Vq_rede, ...]** tensão dq da rede | ≥2 colunas (1=d, 2=q) | Tsc |
 | `Ang_G1`, `Ang_G3` | Ângulo do rotor (rad elétrico) | escalar | Tsc |
 | `Pe_G1`, `Pe_G3` | Potência elétrica do gerador (pu — já normalizada pela máquina) | escalar | Tsc |
-| `P_bus1`, `Q_bus1`, `P_bus3`, `Q_bus3` | P/Q medidos na barra (**W/VAr brutos**, não pu) | escalar (Mux coluna 1 relevante) | Tsc |
+| `P_bus1`, `Q_bus1`, `P_bus3`, `Q_bus3` | P/Q medidos na barra (**MW/MVAr brutos**, não pu) | escalar (Mux coluna 1 relevante) | Tsc |
 
 > `Ang_pll` e `iabc` rodam a Ts (eixo rápido); demais sinais a Tsc (eixo lento).
 > `V_bus{N}` é escalar de magnitude — **não** aplicar transformada de Clarke.
@@ -60,11 +60,17 @@ Exporta **dois CSVs separados** (preserva a taxa nativa de cada grupo). Caminho 
 | `add_vdq_cols` | `Vdq_Inverter`, `Vdq_rede` | ÷ média pré-falta de Vd |
 | `add_vmag_col` | `V_bus1/2/3` | ÷ média pré-falta (pu relativo, não pu absoluto) |
 | `add_scalar_col` | `Ang_G1/G3`, `Pe_G1/G3` | nenhuma — sinal já pu (ângulo em rad) |
-| `add_power_col` | `P_bus1`, `Q_bus1`, `P_bus3`, `Q_bus3` | ÷ `S_BASE = 100e6` (100 MVA, base do sistema) |
+| `add_power_col` | `P_bus1`, `Q_bus1`, `P_bus3`, `Q_bus3` | ÷ `S_BASE_MVA = 100` (100 MVA, base do sistema) |
 
-`add_power_col(T, ds, t, sig_name, col_name, S_base)` extrai a coluna (1) do Mux e
-divide por `S_base` antes de interpolar — mesma base de 100 MVA usada em todo o
-pipeline Python (ver `V_base = 20 kV, S_base = 100 MVA` em `kb/power-system/ieee9bus_topology.md`).
+`add_power_col(T, ds, t, sig_name, col_name, S_base_mva)` extrai a coluna (1) do
+Mux e divide por `S_base_mva` antes de interpolar — mesma base de 100 MVA usada
+em todo o pipeline Python (ver `V_base = 20 kV, S_base = 100 MVA` em
+`kb/power-system/ieee9bus_topology.md`).
+
+> ⚠️ **Gotcha unidade**: `P_bus1/3`, `Q_bus1/3` saem do Busbar (Simscape) já em
+> **MW/MVAr**, não em W/VAr — confirmado pelo usuário (2026-07). Dividir por
+> `100e6` (achando que era W) gera pu ~1e6× menor que o correto; a base certa
+> para esses 4 sinais é `100` (MVA), não `100e6` (VA).
 
 > Sinais Mux de 2 elementos onde só a coluna (1) é pertinente (P_bus1, Q_bus1, P_bus3,
 > Q_bus3): confirmado pelo usuário — sempre usar `Data(:,1)`.

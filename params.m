@@ -52,7 +52,7 @@ Tsc  = 2e-4;    % Control sample time           [s]
 %  Falta em LINHA:  FAULT_BUS = 0;      FAULT_LINE = [A, B];
 %  Regime perm.:    FAULT_TYPE='regime'; FAULT_BUS = 0; FAULT_LINE = [];
 
-FAULT_BUS  = 7;           % Barra do curto (0 se falta em linha ou regime)
+FAULT_BUS  = 4;           % Barra do curto (0 se falta em linha ou regime)
 FAULT_LINE = [];          % Par [A, B] para falta em linha; [] para falta em barra
 FAULT_TYPE = '1phase';    % Ver tabela acima
 

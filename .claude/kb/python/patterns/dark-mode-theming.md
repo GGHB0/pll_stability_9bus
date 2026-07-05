@@ -1,6 +1,6 @@
 ---
 name: dark-mode-theming
-description: Gotcha do tema escuro no dashboard HTML — annotations/shapes de chart.py têm cor fixa e precisam de override manual no JS
+description: Gotcha do tema escuro no dashboard HTML — annotations/shapes com cor fixa, bug de chave "eixo.propriedade" flat no axUpd, e plot_bgcolor sem contraste com o card
 ---
 
 # Tema Escuro: Annotations e Shapes de `chart.py`
@@ -56,3 +56,55 @@ Qualquer novo `add_annotation`/`add_shape` com cor fixa em `chart.py` **não**
 vai se re-temar sozinho — precisa entrar explicitamente em `themedLayout()`.
 Se o novo elemento não puder ser distinguido por `xref`, usar outro campo
 estável (ex. `font.size`) como critério, seguindo o mesmo padrão.
+
+## Fix 2 (2026-07): bug real era outro — chave "eixo.propriedade" nunca aplicava
+
+Usuário reportou que **continuava** ruim de enxergar mesmo após o fix acima.
+Investigação revelou a causa raiz de verdade: `axUpd` construía chaves flat
+tipo `"xaxis.gridcolor"` (string com ponto) e mesclava tudo com um único
+`Object.assign` no nível raiz do layout:
+
+```javascript
+// bug: cria uma propriedade literal chamada "xaxis.gridcolor" no objeto,
+// NÃO faz layout.xaxis.gridcolor = ... (Plotly.react não entende dotted-path
+// em layout novo — isso só funciona em Plotly.relayout/restyle)
+axUpd[k + ".gridcolor"] = isDarkMode ? "#1f2937" : "#f1f5f9";
+...
+return Object.assign({}, figData.layout, base, axUpd, {...});
+```
+
+Resultado: `gridcolor`/`zerolinecolor` **nunca foram sobrescritos** em nenhum
+tema — todo eixo ficava preso no valor claro gravado pelo `chart.py`
+(`gridcolor: "#f0f2f5"`, quase branco), invisível sobre qualquer fundo escuro.
+Confirmado inspecionando `gd._fullLayout.xaxis.gridcolor` (retornava o valor
+claro) vs. `gd.layout["xaxis.gridcolor"]` (a chave malformada existia, mas
+solta, sem efeito).
+
+Fix — construir o objeto do eixo aninhado corretamente, com spread das
+props originais:
+
+```javascript
+var axUpd = {};
+Object.keys(figData.layout).forEach(function(k) {
+  if (k.startsWith("xaxis") || k.startsWith("yaxis")) {
+    axUpd[k] = Object.assign({}, figData.layout[k], {
+      gridcolor:     isDarkMode ? "#31425c" : "#f1f5f9",
+      zerolinecolor: isDarkMode ? "#4b5d7a" : "#e5e7eb",
+    });
+  }
+});
+```
+
+Aproveitado para também clarear `plot_bgcolor` no dark mode — antes era
+idêntico ao `paper_bgcolor` (`#111827`, igual ao `--card-bg` do CSS), então a
+área de plotagem não tinha nenhuma separação visual do card ao redor.
+Agora `BASE_DARK.plot_bgcolor = "#1a2436"` (um tom acima), com grid/zeroline
+recalibrados para contraste com esse novo fundo.
+
+### Gotcha ⚠️ geral sobre `Plotly.react`
+
+Nunca usar chaves `"eixo.propriedade"` (dotted string) num objeto de layout
+passado para `Plotly.react`/`Plotly.newPlot` — isso só é válido em
+`Plotly.relayout(gd, {"xaxis.gridcolor": ...})`. Para atualizar uma
+propriedade de eixo dentro de um layout completo, sempre aninhar:
+`layout.xaxis = Object.assign({}, layout.xaxis, { prop: valor })`.

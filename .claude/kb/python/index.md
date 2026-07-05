@@ -23,6 +23,10 @@
 | [patterns/error-handling.md](patterns/error-handling.md) | Exception hierarchy, custom errors, recovery patterns |
 | [patterns/functional-patterns.md](patterns/functional-patterns.md) | Comprehensions, map, filter, reduce, functools |
 | [patterns/numpy-pandas-plotly.md](patterns/numpy-pandas-plotly.md) | Pipeline de sinais temporais: NumPy/Pandas/Plotly — padrões do projeto |
+| [patterns/bad-pll-dashboard-filter.md](patterns/bad-pll-dashboard-filter.md) | Toggle PLL nominal/mal dimensionado no dashboard HTML |
+| [patterns/comparison-table.md](patterns/comparison-table.md) | Tabela comparativa de cenários, ordenável, filtrada por modo PLL |
+| [patterns/dark-mode-theming.md](patterns/dark-mode-theming.md) | Gotcha do tema escuro — annotations/shapes com cor fixa em chart.py |
+| [patterns/header-branding.md](patterns/header-branding.md) | Logo UERJ embutido (base64) + fix do label do toggle de mapa |
 
 ### Specs (Machine-Readable)
 

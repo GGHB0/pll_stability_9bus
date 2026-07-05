@@ -189,7 +189,7 @@ var BASE_LIGHT = {{
   "hoverlabel.bgcolor": "#ffffff", "hoverlabel.bordercolor": "#e2e8f0",
 }};
 var BASE_DARK = {{
-  paper_bgcolor: "#111827", plot_bgcolor: "#111827",
+  paper_bgcolor: "#111827", plot_bgcolor: "#1a2436",
   "font.color": "#f9fafb",
   "legend.bgcolor": "rgba(0,0,0,0)",
   "hoverlabel.bgcolor": "#1f2937", "hoverlabel.bordercolor": "#374151",
@@ -206,8 +206,10 @@ function themedLayout(figData, isDarkMode) {{
   var axUpd = {{}};
   Object.keys(figData.layout).forEach(function(k) {{
     if (k.startsWith("xaxis") || k.startsWith("yaxis")) {{
-      axUpd[k + ".gridcolor"]     = isDarkMode ? "#1f2937" : "#f1f5f9";
-      axUpd[k + ".zerolinecolor"] = isDarkMode ? "#374151" : "#e5e7eb";
+      axUpd[k] = Object.assign({{}}, figData.layout[k], {{
+        gridcolor:     isDarkMode ? "#31425c" : "#f1f5f9",
+        zerolinecolor: isDarkMode ? "#4b5d7a" : "#e5e7eb",
+      }});
     }}
   }});
   // _label (rótulo de painel) usa xref "x.../x{{n}} domain"; _group_title (subtítulo

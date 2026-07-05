@@ -4,6 +4,21 @@ Registro das alterações no pipeline Python e no relatório `output/pll_metrics
 para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 
+## 2026-07-05 — Story refinado: rótulos contextuais + zoom clamped
+
+Arquivos: `src/report/renderer.py`, `.claude/kb/dashboard/cards/cards-metricas.md`
+
+- **Rótulo contextual de P/Q**: em falta, continua "Recuperação" (mede
+  recuperação pós-clear). Em regime permanente, muda para **"Oscilação de
+  potência"** (reflete instabilidade induzida pelo PLL sem contingência),
+  com textos ajustados ("estável em operação normal" vs "sem oscilação
+  residual após a falta").
+- **Zoom na falta clampado**: `tEnd` agora exposto em `SCENARIOS` para
+  evitar que o range do zoom ultrapasse o final da simulação — `Math.min()`
+  aplicado ao xAxis range máximo. Antes, cenários com `t_clear + 0.5 > t[-1]`
+  tentavam renderizar além dos dados (ex. bus4/1phase: 0.4 + 0.5 = 0.9 s, mas
+  `t[-1] = 0.424 s`).
+
 ## 2026-07-05 — Diagnóstico em lista de tópicos
 
 Arquivos: `src/report/renderer.py`

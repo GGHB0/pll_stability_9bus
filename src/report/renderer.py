@@ -66,6 +66,7 @@ class HTMLRenderer:
                 "badPll":    sc.get("bad_pll", False),
                 "tFault":    d.t_fault,
                 "tClear":    d.t_clear,
+                "tEnd":      d.t[-1] if len(d.t) > 0 else None,
             }
 
         scenarios_js  = json.dumps(sc_js)
@@ -333,9 +334,14 @@ var _syncingZoom = false;
 function _applyZoom() {{
   var sc = SCENARIOS[currentKey];
   var upd = (zoomFault && sc.tFault != null)
-    ? {{ "xaxis.range": [sc.tFault - 0.1,
-         (sc.tClear != null ? sc.tClear : sc.tFault) + 0.5],
-         "xaxis.autorange": false }}
+    ? {{
+        "xaxis.range": [
+          sc.tFault - 0.1,
+          Math.min((sc.tClear != null ? sc.tClear : sc.tFault) + 0.5,
+                   sc.tEnd != null ? sc.tEnd : Infinity)
+        ],
+        "xaxis.autorange": false
+      }}
     : {{ "xaxis.autorange": true }};
   _syncingZoom = true;
   var ps = [Plotly.relayout(gdInv, upd)];
@@ -941,21 +947,30 @@ switchScenario(currentKey);
                 parts.append(("bad", "Erro acumulado",
                               f"IAE = {iae:.3f} rad·s — acumulação significativa."))
 
-        # ── recuperação do inversor (janela pós-clear) ───────────────────────
+        # ── recuperação (pós-clear) ou estabilidade de P/Q (regime) ──────────
         dp_cls = self._classify(dp, DP_THRESH)
         if dp is not None:
-            win = "em regime" if is_regime else "após a eliminação da falta"
+            label = "Oscilação de potência" if is_regime else "Recuperação"
             if dp_cls == "good":
-                parts.append(("good", "Recuperação",
-                              f"ΔP = {dp:.3f} pu {win}, sem oscilação residual."))
+                if is_regime:
+                    parts.append(("good", label,
+                                  f"ΔP = {dp:.3f} pu — estável em operação normal."))
+                else:
+                    parts.append(("good", label,
+                                  f"ΔP = {dp:.3f} pu, sem oscilação residual após a falta."))
             elif dp_cls == "warn":
-                parts.append(("warn", "Recuperação",
+                parts.append(("warn", label,
                               f"Oscilação moderada de potência ativa "
                               f"(ΔP = {dp:.3f} pu)."))
             else:
-                parts.append(("bad", "Recuperação",
-                              f"Oscilação severa de potência ativa {win} "
-                              f"(ΔP = {dp:.3f} pu) — risco de atuação de proteção."))
+                if is_regime:
+                    parts.append(("bad", label,
+                                  f"Oscilação sustentada em regime "
+                                  f"(ΔP = {dp:.3f} pu) — risco de atuação de proteção."))
+                else:
+                    parts.append(("bad", label,
+                                  f"Oscilação severa após a falta "
+                                  f"(ΔP = {dp:.3f} pu) — risco de atuação de proteção."))
 
         # Veredito: só métricas de desempenho/recuperação — a severidade do
         # afundamento (V min) é contexto e fica de fora

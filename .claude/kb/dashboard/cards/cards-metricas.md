@@ -52,10 +52,12 @@ métrica (mesmas cores dos cards; `neutral` usa `var(--muted)`).
 Ordem fixa dos itens: **Distúrbio** (falta de X ms, profundidade do sag vs
 LVRT — vira "Cenário" neutro em regime) → **Pico de fase** →
 **Acomodação** (ou "não reacomodou") → **Erro acumulado** (IAE) →
-**Recuperação** (ΔP pós-clear). Redação específica por classe, encurtada
-porque o rótulo já carrega o assunto. Item só aparece nas mesmas condições
-das frases antigas (ex.: pico `good` continua omitido). Sem `parts`,
-fallback `<p class="story-text">Dados insuficientes…</p>`.
+**Recuperação** (ΔP pós-clear, rótulo em falta) ou **Oscilação de potência**
+(ΔP em regime, para refletir instabilidade induzida pelo PLL sem
+contingência). Redação específica por classe, encurtada porque o rótulo já
+carrega o assunto. Item só aparece nas mesmas condições das frases antigas
+(ex.: pico `good` continua omitido). Sem `parts`, fallback
+`<p class="story-text">Dados insuficientes…</p>`.
 
 **Veredito** (chip à direita): pior classe entre as métricas de
 **desempenho/recuperação** (IAE, ISE, tₛ/settled, pico, ΔP, ΔQ) — `V min NÃO

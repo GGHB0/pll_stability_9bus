@@ -14,30 +14,47 @@ dotted-path (**válido em relayout**, ao contrário de `Plotly.react` — ver
 [[dark-mode-theming]]):
 
 ```javascript
-function _zoomUpd(figData, range) {
-  var upd = {};
-  Object.keys(figData.layout).forEach(function(k) {
-    if (k.indexOf("xaxis") === 0) {
-      if (range) { upd[k + ".range"] = range; upd[k + ".autorange"] = false; }
-      else       { upd[k + ".autorange"] = true; }
-    }
-  });
-  return upd;
-}
-Plotly.relayout(gdInv, _zoomUpd(sc.invData, range));
-if (sc.hasSys) Plotly.relayout(gdSys, _zoomUpd(sc.sysData, range));
+var upd = (zoomFault && sc.tFault != null)
+  ? { "xaxis.range": [...], "xaxis.autorange": false }
+  : { "xaxis.autorange": true };
+Plotly.relayout(gdInv, upd);
+if (sc.hasSys) Plotly.relayout(gdSys, upd);
 ```
 
 ### Gotcha ⚠️ `shared_xaxes` não cobre a coluna 2
 
 `shared_xaxes=True` no make_subplots liga os eixos por `matches` **por
-coluna**: setar só `"xaxis.range"` zooma a cadeia da coluna 1, mas os painéis
-pareados (P/Q Bus na coluna 2) têm cadeia própria e ficam de fora. Por isso
-`_zoomUpd` varre **todas** as chaves `xaxis*` do layout da figura.
+coluna**: os painéis pareados (P/Q Bus na coluna 2) têm cadeia própria e não
+seguem zoom feito na coluna 1 — nem por botão, nem por arrasto. Fix na
+origem (`chart.py::_apply_layout`): linkar todo eixo não-raiz ao raiz:
+
+```python
+for ax_name in self._fig.layout:
+    if ax_name.startswith("xaxis") and ax_name != "xaxis":
+        self._fig.layout[ax_name].matches = "x"
+```
+
+Com isso basta atualizar `"xaxis.range"` que a figura inteira segue — e o
+zoom **manual** (arrasto) em qualquer painel também move os demais.
+
+### Sincronização entre as duas figuras (`_bridgeZoom`)
+
+Inversor ↔ Sistema são gráficos Plotly separados; `matches` não cruza
+figuras. `_bridgeZoom` escuta `plotly_relayout` de cada gd e replica o range
+na outra figura. Detalhes:
+
+- `_extractXZoom(ev)` aceita os três formatos de payload: `"xaxisN.range"`
+  (array), `"xaxisN.range[0]"/"[1]"` (arrasto real do usuário) e
+  `"xaxisN.autorange"` (duplo-clique).
+- Trava `_syncingZoom` evita loop infinito (o relayout replicado dispararia a
+  ponte de volta); `_applyZoom` também usa a trava.
+- `.on` só existe após o 1º plot do div — `_ensureBridges()` registra sob
+  demanda em `switchScenario` (a seção Sistema pode não existir no 1º cenário).
+- Handlers `.on` sobrevivem a `Plotly.react` (ficam no elemento DOM).
 
 Como `Plotly.react` reseta o range, `_applyZoom()` é chamado **depois** dos
-reacts em `switchScenario` e `toggleTheme` — o zoom persiste entre cenários
-e temas.
+reacts em `switchScenario` e `toggleTheme` — o zoom do botão persiste entre
+cenários e temas (o zoom manual não persiste: react restaura autorange).
 
 ## 👻 Fantasma nominal × BAD_PLL
 

@@ -4,14 +4,17 @@ Registro das alterações no pipeline Python e no relatório `output/pll_metrics
 para revisão posterior. Detalhes técnicos de cada item estão nos patterns do KB
 (`.claude/kb/python/patterns/`).
 
-## 2026-07-05 — Zoom na falta em todos os painéis
+## 2026-07-05 — Zoom sincronizado em todos os gráficos
 
-Arquivo: `src/report/renderer.py`
+Arquivos: `src/pipeline/chart.py`, `src/report/renderer.py`
 
-- **Fix**: o zoom só alcançava a cadeia de eixos da coluna 1 — os painéis
-  pareados P/Q Bus 1/3 (coluna 2 da seção Sistema 9-Bus) têm cadeia de
-  `matches` própria e não zoomavam. `_zoomUpd()` agora varre todas as chaves
-  `xaxis*` do layout de cada figura.
+- **Todos os eixos X linkados** (`matches="x"` em `_apply_layout`): qualquer
+  zoom — botão "Zoom na falta", arrasto manual ou duplo-clique — vale para
+  todos os painéis da figura, incluindo os pareados P/Q Bus da coluna 2
+  (antes fora da cadeia de `shared_xaxes`, que liga só por coluna).
+- **Ponte Inversor ↔ Sistema** (`_bridgeZoom`): zoom manual numa seção
+  replica o range na outra via evento `plotly_relayout`, com trava anti-loop;
+  duplo-clique (autorange) também sincroniza.
 
 ## 2026-07-05 — Overlays de análise e controles novos (`bc428d7`)
 

@@ -309,26 +309,66 @@ function toggleZoomFault() {{
   _applyZoom();
 }}
 
-// Varre TODOS os eixos X da figura: os painéis pareados (col 2) têm cadeia
-// de "matches" própria — só "xaxis.range" não os alcança.
-function _zoomUpd(figData, range) {{
-  var upd = {{}};
-  Object.keys(figData.layout).forEach(function(k) {{
-    if (k.indexOf("xaxis") === 0) {{
-      if (range) {{ upd[k + ".range"] = range; upd[k + ".autorange"] = false; }}
-      else       {{ upd[k + ".autorange"] = true; }}
-    }}
-  }});
-  return upd;
-}}
+// Todos os eixos X têm matches="x" (setado no chart.py) — basta atualizar o
+// eixo raiz de cada figura que os demais painéis seguem.
+var _syncingZoom = false;
 
 function _applyZoom() {{
   var sc = SCENARIOS[currentKey];
-  var range = (zoomFault && sc.tFault != null)
-    ? [sc.tFault - 0.1, (sc.tClear != null ? sc.tClear : sc.tFault) + 0.5]
-    : null;
-  Plotly.relayout(gdInv, _zoomUpd(sc.invData, range));
-  if (sc.hasSys) Plotly.relayout(gdSys, _zoomUpd(sc.sysData, range));
+  var upd = (zoomFault && sc.tFault != null)
+    ? {{ "xaxis.range": [sc.tFault - 0.1,
+         (sc.tClear != null ? sc.tClear : sc.tFault) + 0.5],
+         "xaxis.autorange": false }}
+    : {{ "xaxis.autorange": true }};
+  _syncingZoom = true;
+  var ps = [Plotly.relayout(gdInv, upd)];
+  if (sc.hasSys) ps.push(Plotly.relayout(gdSys, upd));
+  Promise.all(ps).then(function() {{ _syncingZoom = false; }});
+}}
+
+// ── Sincroniza zoom manual (arrasto/duplo-clique) entre Inversor e Sistema ──
+
+function _extractXZoom(ev) {{
+  var keys = Object.keys(ev);
+  for (var i = 0; i < keys.length; i++) {{
+    if (/^xaxis\\d*\\.autorange$/.test(keys[i]) && ev[keys[i]]) return {{ auto: true }};
+  }}
+  for (var i = 0; i < keys.length; i++) {{
+    var m = keys[i].match(/^(xaxis\\d*)\\.range(\\[0\\])?$/);
+    if (m) {{
+      var ax = m[1];
+      var range = ev[ax + ".range"] ||
+                  [ev[ax + ".range[0]"], ev[ax + ".range[1]"]];
+      return {{ range: range }};
+    }}
+  }}
+  return null;
+}}
+
+function _bridgeZoom(src, dstGetter) {{
+  src.on("plotly_relayout", function(ev) {{
+    if (_syncingZoom) return;
+    var z = _extractXZoom(ev || {{}});
+    if (!z) return;
+    var dst = dstGetter();
+    if (!dst || !dst.data) return;
+    var upd = z.auto ? {{ "xaxis.autorange": true }}
+                     : {{ "xaxis.range": z.range, "xaxis.autorange": false }};
+    _syncingZoom = true;
+    Plotly.relayout(dst, upd).then(function() {{ _syncingZoom = false; }});
+  }});
+}}
+
+// .on só existe depois do 1º plot de cada div — registra sob demanda
+function _ensureBridges() {{
+  if (gdInv.on && !gdInv._zoomBridged) {{
+    gdInv._zoomBridged = true;
+    _bridgeZoom(gdInv, function() {{ return SCENARIOS[currentKey].hasSys ? gdSys : null; }});
+  }}
+  if (gdSys.on && !gdSys._zoomBridged) {{
+    gdSys._zoomBridged = true;
+    _bridgeZoom(gdSys, function() {{ return gdInv; }});
+  }}
 }}
 
 function _syncCtrlButtons() {{
@@ -379,6 +419,7 @@ function switchScenario(key) {{
   }} else {{
     secSys.style.display = "none";
   }}
+  _ensureBridges();
   _applyZoom();
 
   document.getElementById("cards-area").innerHTML = sc.cardsHtml;

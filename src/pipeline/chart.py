@@ -244,6 +244,11 @@ class ChartBuilder:
             title_text="Tempo (s)", gridcolor="#f0f2f5",
             zerolinecolor="#e5e7eb", tickfont_size=10,
         )
+        # shared_xaxes só liga eixos por coluna; linkar TODOS ao eixo raiz faz
+        # qualquer zoom (botão, arrasto, duplo-clique) valer para todos os painéis
+        for ax_name in self._fig.layout:
+            if ax_name.startswith("xaxis") and ax_name != "xaxis":
+                self._fig.layout[ax_name].matches = "x"
         # pu é adimensional — sem prefixo SI (µ/k/M) nos ticks do eixo Y
         self._fig.update_yaxes(exponentformat="none")
         # espaço extra no topo para o subtítulo "Barra N" da 1ª linha do grupo

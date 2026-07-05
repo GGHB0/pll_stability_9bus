@@ -11,6 +11,7 @@ TCC (Trabalho de Conclusão de Curso) em Engenharia Elétrica — UERJ 2025. Inv
 ```
 pll_stability_9bus/
 ├── app.py                              ← entry point Python (python app.py)
+├── CHANGELOG.md                        ← histórico de alterações do dashboard (por commit)
 ├── params.m                            ← MATLAB workspace setup (rodar antes de simular)
 ├── pll_stability_9bus.slx              ← modelo Simulink principal (raiz)
 ├── pll_stability_9bus_faultInfo.xml    ← metadados do Fault Analyzer

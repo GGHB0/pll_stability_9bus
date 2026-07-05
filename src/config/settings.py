@@ -10,16 +10,19 @@ CSV_PATH   = PROJ_ROOT / "output" / "sim_data.csv"
 HTML_OUT   = PROJ_ROOT / "output" / "pll_metrics.html"
 
 # ── Parâmetros de simulação ─────────────────────────────────────────────────
-T_FAULT  = 0.2        # fallback (s) — usado só se fault_info.json não existir; valor real por cenário vem do JSON
+T_FAULT  = 0.2        # fallback (s) se fault_info.json não existir; em regime permanente
+                      # também corta o transitório de partida da janela de métricas
 TOL_RAD  = 0.02       # ±1.15° — critério de acomodação do PLL (rad)
 
 # Limiares de classificação: (bom_máx, moderado_máx); acima → crítico
-IAE_THRESH      = (0.05,  0.15)   # rad·s
+IAE_THRESH      = (0.05,  0.15)   # rad·s — erro de fase pós-falta
 ISE_THRESH      = (0.005, 0.020)  # rad²·s
-TS_DELTA_THRESH = (0.10,  0.30)   # s após T_FAULT
-DP_THRESH       = (0.10,  0.30)   # pu
-DQ_THRESH       = (0.15,  0.40)   # pu
-VBUS2_MIN_THRESH = (0.90,  0.50)  # pu — bom > 0.90, crítico < 0.50 (LVRT IEEE 1547)
+TS_DELTA_THRESH = (0.10,  0.30)   # s após t_fault
+DP_THRESH       = (0.10,  0.50)   # pu — excursão de P na janela pós-clear
+DQ_THRESH       = (0.15,  0.60)   # pu — excursão de Q na janela pós-clear
+PEAK_ERR_DEG_THRESH = (20.0, 60.0)  # ° — pico de |erro de fase| pós-falta
+SYNC_LOSS_DEG    = 90.0           # ° — acima disso: perda de sincronismo do PLL
+VBUS2_MIN_THRESH = (0.90,  0.50)  # pu — severidade do afundamento (LVRT IEEE 1547)
 LVRT_THRESHOLD   = 0.88           # pu — linha de referência no gráfico
 
 # ── Paletas de traços ────────────────────────────────────────────────────────

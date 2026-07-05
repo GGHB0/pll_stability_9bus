@@ -15,7 +15,8 @@ import plotly.graph_objects as go
 
 from ..config import (
     T_FAULT, TOL_RAD, LVRT_THRESHOLD,
-    IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH, DP_THRESH, DQ_THRESH, VBUS2_MIN_THRESH,
+    IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH, DP_THRESH, DQ_THRESH,
+    PEAK_ERR_DEG_THRESH, SYNC_LOSS_DEG, VBUS2_MIN_THRESH,
 )
 from ..pipeline.loader import SimData
 
@@ -138,6 +139,7 @@ class HTMLRenderer:
             <th data-key="iae">IAE (rad·s)</th>
             <th data-key="ise">ISE (rad²·s)</th>
             <th data-key="ts">tₛ (s)</th>
+            <th data-key="peak">|θ_err| pico (°)</th>
             <th data-key="dp">ΔP (pu)</th>
             <th data-key="dq">ΔQ (pu)</th>
             <th data-key="vmin">Vmin (pu)</th>
@@ -483,7 +485,7 @@ function renderComparisonTable() {{
     var active = (k === currentKey) ? " cmp-active" : "";
     return "<tr class=\\"cmp-row" + active + "\\" onclick=\\"_pickTableRow('" + k + "')\\">"
       + "<td class=\\"cmp-label\\">" + sc.label + "</td>"
-      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.dp) + _cmpCell(r.dq) + _cmpCell(r.vmin)
+      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.dp) + _cmpCell(r.dq) + _cmpCell(r.vmin)
       + "</tr>";
   }}).join("");
 }}
@@ -735,9 +737,8 @@ switchScenario(currentKey);
     def _table_row_data(self, data: SimData) -> dict:
         """Uma linha da tabela comparativa: {métrica: {val, raw, cls}} por cenário."""
         m = data.metrics
-        t_fault  = data.t_fault if data.t_fault is not None else T_FAULT
         ts_val   = m.get("ts")
-        ts_delta = (ts_val - t_fault) if ts_val is not None else None
+        peak_deg = float(np.degrees(m["peak_err"])) if m.get("peak_err") is not None else None
 
         def cell(val, decimals, thresholds, lower_is_better=True):
             return {
@@ -746,14 +747,21 @@ switchScenario(currentKey);
                 "cls": self._classify(val, thresholds, lower_is_better),
             }
 
+        if m.get("settled") is False:
+            # não acomodou na janela simulada: ordena pelo fim da simulação
+            ts_cell = {"val": f"&gt; {data.t[-1]:.2f}", "raw": float(data.t[-1]), "cls": "bad"}
+        else:
+            ts_cell = {
+                "val": f"{ts_val:.3f}" if ts_val is not None else "—",
+                "raw": ts_val,
+                "cls": self._classify(m.get("ts_delta"), TS_DELTA_THRESH),
+            }
+
         return {
             "iae":  cell(m.get("IAE"), 3, IAE_THRESH),
             "ise":  cell(m.get("ISE"), 4, ISE_THRESH),
-            "ts":   {
-                "val": f"{ts_val:.3f}" if ts_val is not None else "—",
-                "raw": ts_val,
-                "cls": self._classify(ts_delta, TS_DELTA_THRESH),
-            },
+            "ts":   ts_cell,
+            "peak": cell(peak_deg, 1, PEAK_ERR_DEG_THRESH),
             "dp":   cell(m.get("dP_ufv"), 3, DP_THRESH),
             "dq":   cell(m.get("dQ_ufv"), 3, DQ_THRESH),
             "vmin": cell(m.get("vmin"), 3, VBUS2_MIN_THRESH, lower_is_better=False),
@@ -782,9 +790,27 @@ switchScenario(currentKey);
                 f'\n  </div>'
             )
 
-        t_fault  = data.t_fault if data.t_fault is not None else T_FAULT
-        ts_val   = m.get("ts")
-        ts_delta = (ts_val - t_fault) if ts_val is not None else None
+        is_regime = data.t_fault is None
+        ts_val    = m.get("ts")
+        peak_deg  = float(np.degrees(m["peak_err"])) if m.get("peak_err") is not None else None
+
+        # tₛ: três estados — acomodou, não acomodou na janela, sem dado
+        if m.get("settled") is False:
+            ts_card = _card("tₛ", f"&gt; {data.t[-1]:.2f}", "s", "não acomodou",
+                            f"Erro de fase ainda fora de ±{np.degrees(TOL_RAD):.2f}° "
+                            "ao fim da janela simulada", "bad")
+        else:
+            ts_card = _card("tₛ", _v(ts_val, 3), "s",
+                            f"±{np.degrees(TOL_RAD):.2f}°",
+                            "Tempo de acomodação do PLL",
+                            self._classify(m.get("ts_delta"), TS_DELTA_THRESH))
+
+        sync_loss = peak_deg is not None and peak_deg >= SYNC_LOSS_DEG
+        peak_card = _card("|θ_err| pico", _v(peak_deg, 1), "°",
+                          "perda de sincronismo" if sync_loss else "máx |θ̂ − θ_rede|",
+                          f"Pico do erro de fase pós-falta (≥ {SYNC_LOSS_DEG:.0f}° "
+                          "indica escorregamento do PLL)",
+                          self._classify(peak_deg, PEAK_ERR_DEG_THRESH))
 
         pll = "".join([
             _card("IAE", _v(m.get("IAE"), 3), "rad·s", "∫|e| dt",
@@ -793,105 +819,179 @@ switchScenario(currentKey);
             _card("ISE", _v(m.get("ISE"), 4), "rad²·s", "∫e² dt",
                   "Energia do erro de fase",
                   self._classify(m.get("ISE"), ISE_THRESH)),
-            _card("tₛ", _v(ts_val, 3), "s",
-                  f"±{np.degrees(TOL_RAD):.1f}°",
-                  "Tempo de acomodação do PLL",
-                  self._classify(ts_delta, TS_DELTA_THRESH)),
+            ts_card,
+            peak_card,
         ])
 
+        rec_sub = "regime" if is_regime else "pós-clear"
         inv = "".join([
-            _card("ΔP UFV", _v(m.get("dP_ufv"), 3), "pu", "pós-falta",
-                  "Oscilação de potência ativa (UFV)",
+            _card("ΔP UFV", _v(m.get("dP_ufv"), 3), "pu", rec_sub,
+                  "Excursão de potência ativa na recuperação (UFV)",
                   self._classify(m.get("dP_ufv"), DP_THRESH)),
-            _card("ΔQ UFV", _v(m.get("dQ_ufv"), 3), "pu", "pós-falta",
-                  "Oscilação de potência reativa (UFV)",
+            _card("ΔQ UFV", _v(m.get("dQ_ufv"), 3), "pu", rec_sub,
+                  "Excursão de potência reativa na recuperação (UFV)",
                   self._classify(m.get("dQ_ufv"), DQ_THRESH)),
         ])
 
-        sys = "".join([
+        # Severidade: contexto do distúrbio — cor indica profundidade do sag,
+        # mas não entra no veredito de desempenho
+        sev_cards = [
             _card("V min", _v(m.get("vmin"), 3), "pu", "Barra 2",
-                  f"Tensão mínima pós-falta (LVRT ≥ {LVRT_THRESHOLD} pu)",
+                  f"Tensão mínima na Barra 2 (LVRT ≥ {LVRT_THRESHOLD} pu) — "
+                  "severidade do distúrbio",
                   self._classify(m.get("vmin"), VBUS2_MIN_THRESH, lower_is_better=False)),
-        ])
+        ]
+        if data.t_fault is not None and data.t_clear is not None:
+            dur_ms = (data.t_clear - data.t_fault) * 1e3
+            sev_cards.append(
+                _card("Duração", f"{dur_ms:.0f}", "ms",
+                      f"t = {data.t_fault:.2f} – {data.t_clear:.2f} s",
+                      "Duração da falta aplicada", "neutral"))
+        sev_label = "Sistema 9-Bus" if is_regime else "Severidade do distúrbio"
 
         return (
-            _group("Desempenho do PLL", pll) + "\n"
-            + _group("Inversor UFV", inv) + "\n"
-            + _group("Sistema 9-Bus", sys)
+            _group(sev_label, "".join(sev_cards)) + "\n"
+            + _group("Desempenho do PLL", pll) + "\n"
+            + _group("Recuperação do inversor", inv)
         )
 
     # ── Narrativa ────────────────────────────────────────────────────────────
 
     def _story_html(self, data: SimData) -> str:
-        m       = data.metrics
-        t_fault = data.t_fault if data.t_fault is not None else T_FAULT
-        iae  = m.get("IAE")
-        ts   = m.get("ts")
-        dp   = m.get("dP_ufv")
-        vmin = m.get("vmin")
+        m         = data.metrics
+        is_regime = data.t_fault is None
+        iae      = m.get("IAE")
+        ts       = m.get("ts")
+        ts_delta = m.get("ts_delta")
+        settled  = m.get("settled")
+        dp       = m.get("dP_ufv")
+        dq       = m.get("dQ_ufv")
+        vmin     = m.get("vmin")
+        peak_deg = float(np.degrees(m["peak_err"])) if m.get("peak_err") is not None else None
+        tol      = round(float(np.degrees(TOL_RAD)), 2)
 
-        parts: list[str] = []
+        # (classe do semáforo, rótulo, texto) — vira <li> na lista do diagnóstico
+        parts: list[tuple[str, str, str]] = []
 
+        # ── contexto: severidade do distúrbio (não entra no veredito) ────────
+        if is_regime:
+            parts.append(("neutral", "Cenário",
+                          "Operação em regime permanente, sem contingência aplicada — "
+                          "métricas calculadas descartando o transitório de partida "
+                          f"(t ≥ {T_FAULT:.2f} s)."))
+        elif vmin is not None:
+            sev = self._classify(vmin, VBUS2_MIN_THRESH, lower_is_better=False)
+            dur = (f" de {(data.t_clear - data.t_fault) * 1e3:.0f} ms"
+                   if data.t_clear is not None else "")
+            if sev == "good":
+                parts.append(("good", "Distúrbio",
+                              f"Falta{dur} com afundamento leve na Barra 2 "
+                              f"(V_min = {vmin:.3f} pu)."))
+            elif sev == "warn":
+                parts.append(("warn", "Distúrbio",
+                              f"Falta{dur} com afundamento moderado na Barra 2 "
+                              f"(V_min = {vmin:.3f} pu, abaixo do limiar LVRT)."))
+            else:
+                parts.append(("bad", "Distúrbio",
+                              f"Falta{dur} com afundamento severo na Barra 2 "
+                              f"(V_min = {vmin:.3f} pu) — condição crítica de LVRT."))
+
+        # ── resposta do PLL ──────────────────────────────────────────────────
+        peak_cls = self._classify(peak_deg, PEAK_ERR_DEG_THRESH)
+        if peak_deg is not None:
+            if peak_deg >= SYNC_LOSS_DEG:
+                parts.append(("bad", "Pico de fase",
+                              f"{peak_deg:.0f}° — perda de sincronismo do PLL "
+                              "(escorregamento)."))
+            elif peak_cls == "bad":
+                parts.append(("bad", "Pico de fase",
+                              f"Excursão elevada, de até {peak_deg:.0f}°."))
+            elif peak_cls == "warn":
+                parts.append(("warn", "Pico de fase",
+                              f"Excursão de até {peak_deg:.0f}° durante o distúrbio."))
+
+        ts_cls = "bad" if settled is False else self._classify(ts_delta, TS_DELTA_THRESH)
+        if settled is False:
+            parts.append(("bad", "Acomodação",
+                          "O PLL não reacomodou dentro da janela simulada "
+                          f"(erro fora de ±{tol:.2f}° em t = {data.t[-1]:.2f} s)."))
+        elif ts is not None:
+            if ts_cls == "good":
+                parts.append(("good", "Acomodação",
+                              f"Δt = {ts_delta:.2f} s (tₛ = {ts:.3f} s), "
+                              f"dentro do critério ±{tol:.2f}°."))
+            elif ts_cls == "warn":
+                parts.append(("warn", "Acomodação",
+                              f"Δt = {ts_delta:.2f} s (tₛ = {ts:.3f} s) — "
+                              "dentro dos limites, margem reduzida."))
+            else:
+                parts.append(("bad", "Acomodação",
+                              f"Δt = {ts_delta:.2f} s (tₛ = {ts:.3f} s) — "
+                              "resposta lenta."))
+
+        iae_cls = self._classify(iae, IAE_THRESH)
         if iae is not None:
-            cls = self._classify(iae, IAE_THRESH)
-            if cls == "good":
-                parts.append(f"Erro de fase acumulado baixo (IAE = {iae:.3f} rad·s) — resposta rápida do PLL.")
-            elif cls == "warn":
-                parts.append(f"IAE de {iae:.3f} rad·s — desempenho moderado, PLL recuperou em tempo razoável.")
+            if iae_cls == "good":
+                parts.append(("good", "Erro acumulado",
+                              f"IAE = {iae:.3f} rad·s, baixo."))
+            elif iae_cls == "warn":
+                parts.append(("warn", "Erro acumulado",
+                              f"IAE = {iae:.3f} rad·s — acúmulo moderado."))
             else:
-                parts.append(f"IAE elevado de {iae:.3f} rad·s — acumulação significativa de erro de fase.")
+                parts.append(("bad", "Erro acumulado",
+                              f"IAE = {iae:.3f} rad·s — acumulação significativa."))
 
-        if ts is not None:
-            dt  = ts - t_fault
-            cls = self._classify(dt, TS_DELTA_THRESH)
-            tol = np.degrees(TOL_RAD)
-            if cls == "good":
-                parts.append(f"Acomodação em Δt = {dt:.2f} s (tₛ = {ts:.3f} s), dentro do critério ±{tol:.1f}°.")
-            elif cls == "warn":
-                parts.append(f"Acomodação em Δt = {dt:.2f} s (tₛ = {ts:.3f} s) — dentro dos limites, margem reduzida.")
-            else:
-                parts.append(f"PLL levou Δt = {dt:.2f} s para recuperar (tₛ = {ts:.3f} s) — resposta lenta.")
-
-        if vmin is not None:
-            cls = self._classify(vmin, VBUS2_MIN_THRESH, lower_is_better=False)
-            if cls == "good":
-                parts.append(f"Tensão na Barra 2 próxima do nominal (V_min = {vmin:.3f} pu).")
-            elif cls == "warn":
-                parts.append(f"Afundamento moderado na Barra 2 (V_min = {vmin:.3f} pu) — abaixo do limiar LVRT.")
-            else:
-                parts.append(f"Afundamento severo na Barra 2 (V_min = {vmin:.3f} pu) — condição crítica de LVRT.")
-
+        # ── recuperação do inversor (janela pós-clear) ───────────────────────
+        dp_cls = self._classify(dp, DP_THRESH)
         if dp is not None:
-            cls = self._classify(dp, DP_THRESH)
-            if cls == "good":
-                parts.append(f"Potência ativa pouco afetada (ΔP = {dp:.3f} pu).")
-            elif cls == "warn":
-                parts.append(f"Oscilação moderada de potência ativa (ΔP = {dp:.3f} pu).")
+            win = "em regime" if is_regime else "após a eliminação da falta"
+            if dp_cls == "good":
+                parts.append(("good", "Recuperação",
+                              f"ΔP = {dp:.3f} pu {win}, sem oscilação residual."))
+            elif dp_cls == "warn":
+                parts.append(("warn", "Recuperação",
+                              f"Oscilação moderada de potência ativa "
+                              f"(ΔP = {dp:.3f} pu)."))
             else:
-                parts.append(f"Oscilação severa de potência ativa (ΔP = {dp:.3f} pu) — risco de disparo de proteção.")
+                parts.append(("bad", "Recuperação",
+                              f"Oscilação severa de potência ativa {win} "
+                              f"(ΔP = {dp:.3f} pu) — risco de atuação de proteção."))
 
+        # Veredito: só métricas de desempenho/recuperação — a severidade do
+        # afundamento (V min) é contexto e fica de fora
         statuses = [
-            self._classify(iae, IAE_THRESH),
-            self._classify((ts - t_fault) if ts is not None else None, TS_DELTA_THRESH),
-            self._classify(vmin, VBUS2_MIN_THRESH, lower_is_better=False),
-            self._classify(dp, DP_THRESH),
+            iae_cls,
+            self._classify(m.get("ISE"), ISE_THRESH),
+            ts_cls,
+            peak_cls,
+            dp_cls,
+            self._classify(dq, DQ_THRESH),
         ]
         if "bad" in statuses:
             verdict_cls, verdict_txt = "bad",     "Desempenho crítico"
         elif "warn" in statuses:
-            verdict_cls, verdict_txt = "warn",    "Desempenho satisfatório"
+            verdict_cls, verdict_txt = "warn",    "Desempenho em atenção"
         elif "good" in statuses:
-            verdict_cls, verdict_txt = "good",    "Desempenho excelente"
+            verdict_cls, verdict_txt = "good",    "Desempenho bom"
         else:
             verdict_cls, verdict_txt = "neutral", "Dados insuficientes"
 
-        text = " ".join(parts) or "Dados insuficientes para análise narrativa."
+        if parts:
+            items = "".join(
+                f'<li class="{cls}"><b>{label}</b> — {text}</li>'
+                for cls, label, text in parts
+            )
+            body = f'<ul class="story-list">{items}</ul>'
+        else:
+            body = ('<p class="story-text">Dados insuficientes para análise '
+                    'narrativa.</p>')
+        title = "Diagnóstico — regime permanente" if is_regime else "Diagnóstico pós-falta"
 
         return (
             f'<div class="story {verdict_cls}">'
             f'<div class="story-body">'
-            f'<p class="story-title">Diagnóstico pós-falta</p>'
-            f'<p class="story-text">{text}</p>'
+            f'<p class="story-title">{title}</p>'
+            f'{body}'
             f'</div>'
             f'<div class="story-verdict {verdict_cls}">{verdict_txt}</div>'
             f'</div>'
@@ -1090,6 +1190,24 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
   letter-spacing: .6px; color: var(--muted); margin-bottom: 6px;
 }
 .story-text { font-size: 13px; color: var(--text); line-height: 1.6 }
+.story-list {
+  list-style: none; margin: 0; padding: 0;
+  font-size: 13px; color: var(--text); line-height: 1.55;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.story-list li { position: relative; padding-left: 18px }
+.story-list li::before {
+  content: ""; position: absolute; left: 0; top: .42em;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--muted);
+}
+.story-list li.good::before { background: #16a34a }
+.story-list li.warn::before { background: #d97706 }
+.story-list li.bad::before  { background: #dc2626 }
+[data-theme="dark"] .story-list li.good::before { background: #4ade80 }
+[data-theme="dark"] .story-list li.warn::before { background: #fbbf24 }
+[data-theme="dark"] .story-list li.bad::before  { background: #f87171 }
+.story-list b { font-weight: 600 }
 .story-verdict {
   flex-shrink: 0; white-space: nowrap;
   font-size: 12px; font-weight: 700;

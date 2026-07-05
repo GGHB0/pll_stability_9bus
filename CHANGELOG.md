@@ -4,6 +4,51 @@ Registro das alterações no pipeline Python e no relatório `output/pll_metrics
 para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 
+## 2026-07-05 — Diagnóstico em lista de tópicos
+
+Arquivos: `src/report/renderer.py`
+
+- **Story em tópicos**: o diagnóstico deixou de ser um parágrafo corrido
+  (frases concatenadas com espaço) e virou `<ul class="story-list">` — um
+  item por métrica, com rótulo em negrito (Distúrbio / Pico de fase /
+  Acomodação / Erro acumulado / Recuperação) e bolinha colorida pelo
+  semáforo daquela métrica (mesmas cores good/warn/bad dos cards; contexto
+  de regime usa dot neutro). Frases encurtadas onde o rótulo já carrega o
+  assunto. Só apresentação: métricas, condições de exibição e veredito
+  inalterados. Ver `kb/dashboard/cards/cards-metricas.md`.
+
+## 2026-07-05 — Reavaliação dos cards e do diagnóstico de falta
+
+Arquivos: `src/pipeline/loader.py`, `src/config/settings.py`, `src/report/renderer.py`, `app.py`
+
+Motivação: 11 dos 12 cenários recebiam veredito "Desempenho crítico" — o
+semáforo não discriminava nada. Auditoria completa em
+`kb/dashboard/cards/cards-metricas.md`.
+
+- **ΔP/ΔQ agora na janela pós-clear** (`t ≥ t_clear`): mede a recuperação,
+  não o colapso durante o afundamento (que dava ΔP ≈ 1 pu em toda falta).
+  Thresholds recalibrados (`DP_THRESH` (0.10, 0.50), `DQ_THRESH` (0.15, 0.60)).
+- **tₛ honesto**: se \|θ_err\| segue fora de ±1.15° nos últimos 2 ms da
+  simulação → `ts = None`, `settled = False`; card/tabela mostram
+  "> t_end s / não acomodou" (bad) em vez de um tₛ falso na última amostra
+  (acontecia em 7 dos 12 cenários). Loader também expõe `ts_delta`.
+- **Novo card e coluna \|θ_err\| pico (°)** (`peak_err`): a métrica que mais
+  separa cenários (1° a 178°); ≥ 90° marca "perda de sincronismo".
+- **Cards reagrupados**: "Severidade do distúrbio" (V min + duração da falta,
+  contexto), "Desempenho do PLL" (IAE, ISE, tₛ, pico), "Recuperação do
+  inversor" (ΔP/ΔQ pós-clear).
+- **Veredito só de desempenho**: V min (severidade) saiu do cálculo — falta
+  severa com PLL exemplar não vira mais "crítico". Labels: crítico /
+  em atenção / bom. Distribuição resultante: 1 good, 3 warn, 8 bad (justificados).
+- **Story reordenado**: contexto da falta (duração + sag vs LVRT) → resposta
+  do PLL (pico, acomodação/não acomodou, IAE) → recuperação (ΔP); narrativa
+  própria para regime permanente (antes ganhava "Diagnóstico pós-falta" com
+  T_FAULT de fallback).
+- **Regime permanente**: métricas descartam o transitório de partida
+  (janela `t ≥ T_FAULT`); antes o V min de regime capturava o V = 0 inicial.
+- Fix menor: label "Monofásica" para pastas `1phase` em `app.py`; tolerância
+  exibida como ±1.15° (antes ±1.1°).
+
 ## 2026-07-05 — Legenda invisível no dark mode + KB do dashboard
 
 Arquivos: `src/report/renderer.py`, `.claude/kb/dashboard/`

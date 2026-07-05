@@ -1,6 +1,6 @@
 ---
 name: pipeline-dados
-description: SimData (loader.py) — leitura dos CSVs do MATLAB, correção do erro de fase, métricas IAE/ISE/tₛ/ΔP/ΔQ/Vmin e frequência estimada do PLL
+description: SimData (loader.py) — leitura dos CSVs do MATLAB, correção do erro de fase, métricas em duas janelas (IAE/ISE/tₛ/pico pós-falta; ΔP/ΔQ pós-clear) e frequência estimada do PLL
 ---
 
 # Pipeline de Dados (src/pipeline/loader.py)
@@ -37,17 +37,23 @@ Descoberta de cenários e roteamento BAD_PLL: ver `kb/simulation/export_workflow
 O erro do eixo rápido é interpolado para o eixo lento (`np.interp`) antes da
 correção — as métricas são calculadas no eixo lento.
 
-## Métricas pós-falta (`_compute_metrics`)
+## Métricas (`_compute_metrics`) — duas janelas
 
-Janela: `t >= t_fault`. Integrais por `np.trapezoid`.
+- **Pós-falta** (`t ≥ t_fault`): erro de fase (IAE/ISE/tₛ/pico) e `vmin`.
+- **Pós-clear** (`t ≥ t_clear`): `dP_ufv`/`dQ_ufv` — mede a *recuperação*,
+  não o colapso durante o afundamento (senão toda falta daria ΔP ≈ 1 pu).
+- **Regime** (`t_fault` None): ambas viram `t ≥ T_FAULT` para descartar o
+  transitório de partida da simulação (V parte de 0).
 
 | Métrica | Definição |
 |---|---|
-| `IAE` | ∫\|e\|dt (rad·s) |
+| `IAE` | ∫\|e\|dt (rad·s), pós-falta |
 | `ISE` | ∫e²dt (rad²·s) |
-| `ts` | última amostra com \|e\| > `TOL_RAD` (±0.02 rad ≈ ±1.15°); se nunca sai, primeiro instante pós-falta |
-| `dP_ufv`, `dQ_ufv` | max − min de P/Q pós-falta (pu) |
-| `vmin` | mínimo de `vbus2` pós-falta (pu) — comparado ao LVRT |
+| `peak_err` | max \|e\| pós-falta (rad) — cards mostram em °, ≥90° = perda de sincronismo |
+| `ts` / `settled` | última amostra com \|e\| > `TOL_RAD` (±0.02 rad ≈ ±1.15°). Se \|e\| ainda está fora nos últimos 2 ms da janela → `ts = None`, `settled = False` ("não acomodou" — evita tₛ falso no fim da simulação) |
+| `ts_delta` | `ts − t_fault` (base da classificação good/warn/bad) |
+| `dP_ufv`, `dQ_ufv` | max − min de P/Q **pós-clear** (pu) |
+| `vmin` | mínimo de `vbus2` pós-falta (pu) — severidade do sag vs LVRT |
 
 Sinal ausente → métrica `None` → "—" nos cards/tabela.
 

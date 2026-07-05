@@ -1,6 +1,6 @@
 ---
 name: cards-metricas
-description: Cards de métricas em 3 grupos com semáforo good/warn/bad e diagnóstico narrativo (story) com veredito por cenário
+description: Cards em 3 grupos (severidade / desempenho PLL / recuperação) com semáforo good/warn/bad, estado "não acomodou", pico de erro de fase e diagnóstico em lista de tópicos com veredito só de desempenho
 ---
 
 # Cards de Métricas e Diagnóstico Narrativo (renderer.py)
@@ -11,34 +11,57 @@ só injeta o HTML em `#cards-area`/`#story-area`, sem recomputar nada no browser
 
 ## 3 grupos de cards (`_cards_html`)
 
-| Grupo | Cards | Fonte |
+| Grupo | Cards | Papel |
 |---|---|---|
-| Desempenho do PLL | IAE (rad·s), ISE (rad²·s), tₛ (s, critério ±1.15°) | `metrics` do [[pipeline-dados]] |
-| Inversor UFV | ΔP UFV, ΔQ UFV (pu, pós-falta) | idem |
-| Sistema 9-Bus | V min (pu, Barra 2, vs LVRT) | idem |
+| Severidade do distúrbio | V min (pu, Barra 2, vs LVRT), Duração da falta (ms, t_fault–t_clear) | **Contexto** — quão dura foi a falta; fora do veredito |
+| Desempenho do PLL | IAE (rad·s), ISE (rad²·s), tₛ (s, ±1.15°), \|θ_err\| pico (°) | Julga o PLL |
+| Recuperação do inversor | ΔP UFV, ΔQ UFV (pu, **pós-clear**) | Julga a recuperação após eliminar a falta |
 
-Cada card: nome, valor (ou "—" se `None`), unidade, subtítulo (ex.: "∫|e| dt")
-e tooltip via `title=`.
+Fonte: `metrics` do [[pipeline-dados]] (duas janelas: pós-falta e pós-clear).
+Em regime permanente: grupo de severidade vira "Sistema 9-Bus" (sem card de
+duração), subtítulo de ΔP/ΔQ vira "regime", story tem narrativa própria.
+
+Estados especiais:
+- **tₛ "não acomodou"** (`settled = False`): valor "> t_end s", classe `bad` —
+  substitui o tₛ falso que reportava a última amostra da simulação.
+- **\|θ_err\| pico ≥ `SYNC_LOSS_DEG` (90°)**: subtítulo vira
+  "perda de sincronismo" (escorregamento do PLL, ex. BAD_PLL com 178°).
+
+Cada card: nome, valor (ou "—" se `None`), unidade, subtítulo e tooltip via `title=`.
 
 ## Semáforo (`_classify`)
 
 Thresholds em `config/settings.py`: `IAE_THRESH`, `ISE_THRESH`,
-`TS_DELTA_THRESH`, `DP_THRESH`, `DQ_THRESH`, `VBUS2_MIN_THRESH`.
-Classe CSS `good`/`warn`/`bad` (borda/fundo do card) — `lower_is_better=False`
-só para V min. Para tₛ o classificado é o **Δt = tₛ − t_fault**, não o tₛ
-absoluto (cenários com t_fault diferente ficam comparáveis).
+`TS_DELTA_THRESH`, `DP_THRESH`, `DQ_THRESH` (pós-clear),
+`PEAK_ERR_DEG_THRESH`, `VBUS2_MIN_THRESH` (`lower_is_better=False`).
+Para tₛ o classificado é `ts_delta = tₛ − t_fault` (vem pronto do loader).
+Calibrados sobre a distribuição real dos 12 cenários (2026-07): recuperação
+limpa ΔP ≈ 0.02–0.06, problemática ≈ 1.7–3.4; pico saudável 1°, faltas
+trifásicas remotas ~26–35° (warn), BAD_PLL 178° (bad).
 
-Os mesmos thresholds/classes alimentam as células da tabela comparativa
+Os mesmos thresholds/classes alimentam a tabela comparativa
 (`_table_row_data` → `metricsRow`) — ver [[comparison-table]].
 
-## Story: diagnóstico pós-falta (`_story_html`)
+## Story: diagnóstico em tópicos (`_story_html`)
 
-Parágrafo narrativo montado por frases condicionais (uma por métrica
-disponível: IAE, Δt de acomodação, V min, ΔP), cada frase com redação
-específica para good/warn/bad — ex.: "Afundamento severo na Barra 2
-(V_min = 0.123 pu) — condição crítica de LVRT."
+Lista `<ul class="story-list">` (antes era parágrafo corrido). Cada item é
+uma tupla `(classe, rótulo, texto)` renderizada como `<li>` com rótulo em
+negrito e bolinha `::before` colorida pela classe do semáforo daquela
+métrica (mesmas cores dos cards; `neutral` usa `var(--muted)`).
 
-**Veredito** (chip à direita do texto): pior classe entre as 4 métricas —
-`bad` → "Desempenho crítico", `warn` → "Desempenho satisfatório",
-`good` → "Desempenho excelente", nenhuma disponível → "Dados insuficientes".
-A classe também colore a borda esquerda do bloco `.story`.
+Ordem fixa dos itens: **Distúrbio** (falta de X ms, profundidade do sag vs
+LVRT — vira "Cenário" neutro em regime) → **Pico de fase** →
+**Acomodação** (ou "não reacomodou") → **Erro acumulado** (IAE) →
+**Recuperação** (ΔP pós-clear). Redação específica por classe, encurtada
+porque o rótulo já carrega o assunto. Item só aparece nas mesmas condições
+das frases antigas (ex.: pico `good` continua omitido). Sem `parts`,
+fallback `<p class="story-text">Dados insuficientes…</p>`.
+
+**Veredito** (chip à direita): pior classe entre as métricas de
+**desempenho/recuperação** (IAE, ISE, tₛ/settled, pico, ΔP, ΔQ) — `V min NÃO
+entra`: falta severa com PLL exemplar não vira "crítico" (ex. Barra 8
+trifásica: V_min 0.107 mas veredito "em atenção"). Labels: `bad` →
+"Desempenho crítico", `warn` → "Desempenho em atenção", `good` →
+"Desempenho bom", nada disponível → "Dados insuficientes". A classe também
+colore a borda esquerda do bloco `.story`; título vira "Diagnóstico —
+regime permanente" quando não há falta.

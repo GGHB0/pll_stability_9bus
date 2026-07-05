@@ -5,7 +5,8 @@ Classe principal: SimData
     .t, .P_ufv, .Q_ufv, .theta_err → arrays NumPy prontos para plotar
     .t_fast, .theta_pll_fast,   → ângulos na taxa nativa Ts (alta resolução)
     .theta_ref_fast, .theta_err_fast
-    .metrics                     → dict com IAE, ISE, ts, dP, dQ
+    .metrics                     → dict com IAE, ISE, ts, ts_delta, settled,
+                                   peak_err, dP/dQ (pós-clear), vmin
     .has_ang, .has_dq_ufv, .has_ref_ufv → flags de disponibilidade de colunas
 
 Dois CSVs exportados pelo MATLAB:
@@ -222,27 +223,44 @@ class SimData:
         self.has_freq = True
 
     def _compute_metrics(self) -> dict:
-        t_fault = self.t_fault if self.t_fault is not None else T_FAULT
-        mask = self.t >= t_fault
-        metrics: dict = {}
+        """Métricas em duas janelas: pós-falta (t ≥ t_fault → erro de fase, V_min)
+        e pós-clear (t ≥ t_clear → ΔP/ΔQ de recuperação, sem o afundamento em si).
+        Regime permanente (t_fault None) usa t ≥ T_FAULT nas duas janelas para
+        descartar o transitório de partida da simulação (V parte de 0)."""
+        is_regime = self.t_fault is None
+        t_start = min(T_FAULT, float(self.t[-1])) if is_regime else self.t_fault
+        t_rec   = self.t_clear if (not is_regime and self.t_clear is not None) else t_start
+        mask     = self.t >= t_start
+        mask_rec = self.t >= t_rec
+        metrics: dict = {
+            "IAE": None, "ISE": None, "ts": None, "ts_delta": None,
+            "peak_err": None, "settled": None,
+        }
 
         if self.theta_err is not None:
             t_pf = self.t[mask]
             e_pf = self.theta_err[mask]
-            if len(t_pf) == 0:
-                metrics["IAE"] = metrics["ISE"] = metrics["ts"] = None
-            else:
-                metrics["IAE"] = float(np.trapezoid(np.abs(e_pf), t_pf))
-                metrics["ISE"] = float(np.trapezoid(e_pf ** 2,    t_pf))
+            if len(t_pf):
+                metrics["IAE"]      = float(np.trapezoid(np.abs(e_pf), t_pf))
+                metrics["ISE"]      = float(np.trapezoid(e_pf ** 2,    t_pf))
+                metrics["peak_err"] = float(np.abs(e_pf).max())
                 fora = t_pf[np.abs(e_pf) > TOL_RAD]
-                metrics["ts"]  = float(fora[-1]) if len(fora) else float(t_pf[0])
-        else:
-            metrics["IAE"] = metrics["ISE"] = metrics["ts"] = None
+                # "Acomodou" exige |e| dentro da tolerância até o fim da janela
+                # (margem de 2 ms); sem isso o último sample fora vira ts falso
+                # em cenários que nunca reacomodam dentro da simulação.
+                if len(fora) == 0:
+                    metrics["ts"], metrics["settled"] = float(t_pf[0]), True
+                elif float(fora[-1]) >= float(t_pf[-1]) - 2e-3:
+                    metrics["ts"], metrics["settled"] = None, False
+                else:
+                    metrics["ts"], metrics["settled"] = float(fora[-1]), True
+                if metrics["ts"] is not None:
+                    metrics["ts_delta"] = metrics["ts"] - t_start
 
-        p_pf = self.P_ufv[mask]
-        q_pf = self.Q_ufv[mask]
-        metrics["dP_ufv"] = float(p_pf.max() - p_pf.min()) if len(p_pf) else None
-        metrics["dQ_ufv"] = float(q_pf.max() - q_pf.min()) if len(q_pf) else None
+        p_rec = self.P_ufv[mask_rec]
+        q_rec = self.Q_ufv[mask_rec]
+        metrics["dP_ufv"] = float(p_rec.max() - p_rec.min()) if len(p_rec) else None
+        metrics["dQ_ufv"] = float(q_rec.max() - q_rec.min()) if len(q_rec) else None
         if self.vbus2 is not None:
             v_pf = self.vbus2[mask]
             metrics["vmin"] = float(v_pf.min()) if len(v_pf) else None

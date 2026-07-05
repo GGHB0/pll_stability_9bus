@@ -8,11 +8,11 @@ Histórico de mudanças por commit: `CHANGELOG.md` na raiz do repo.
 
 | Pasta | Arquivo | Cobre |
 |---|---|---|
-| `dados/` | [pipeline-dados.md](dados/pipeline-dados.md) | SimData: CSV, interpolação, métricas IAE/ISE/tₛ/ΔP/ΔQ, frequência PLL, fault_info.json |
+| `dados/` | [pipeline-dados.md](dados/pipeline-dados.md) | SimData: CSV, interpolação, métricas em 2 janelas (pós-falta/pós-clear), frequência PLL, fault_info.json |
 | `graficos/` | [construcao-graficos.md](graficos/construcao-graficos.md) | ChartBuilder: subplots, paletas, legendas por eixo, decimação, eixos linkados |
 | `graficos/` | [chart-analysis-overlays.md](graficos/chart-analysis-overlays.md) | Janela de falta, hierarquia θ̂ PLL, marcador tₛ, envelope LVRT, painel de frequência |
 | `graficos/` | [dashboard-zoom-ghost.md](graficos/dashboard-zoom-ghost.md) | Zoom na falta sincronizado, fantasma nominal×BAD_PLL, export PNG 3× |
-| `cards/` | [cards-metricas.md](cards/cards-metricas.md) | 3 grupos de cards, semáforo good/warn/bad, diagnóstico narrativo (story) |
+| `cards/` | [cards-metricas.md](cards/cards-metricas.md) | Cards severidade/PLL/recuperação, "não acomodou", pico θ_err, veredito só de desempenho |
 | `cards/` | [comparison-table.md](cards/comparison-table.md) | Tabela comparativa de cenários, ordenável, filtrada por modo PLL |
 | `layout/` | [estrutura-html.md](layout/estrutura-html.md) | Esqueleto do HTML, filter-bar, SCENARIOS/switchScenario, mapa SVG |
 | `layout/` | [dark-mode-theming.md](layout/dark-mode-theming.md) | Temas light/dark: themedLayout e os 4 fixes de re-tema (gotcha dotted-key) |

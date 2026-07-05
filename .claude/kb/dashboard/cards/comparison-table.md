@@ -21,9 +21,8 @@ Método novo, paralelo a `_cards_html`, reaproveitando `_classify`:
 ```python
 def _table_row_data(self, data: SimData) -> dict:
     m = data.metrics
-    t_fault  = data.t_fault if data.t_fault is not None else T_FAULT
     ts_val   = m.get("ts")
-    ts_delta = (ts_val - t_fault) if ts_val is not None else None
+    peak_deg = float(np.degrees(m["peak_err"])) if m.get("peak_err") is not None else None
 
     def cell(val, decimals, thresholds, lower_is_better=True):
         return {
@@ -35,17 +34,22 @@ def _table_row_data(self, data: SimData) -> dict:
     return {
         "iae": cell(m.get("IAE"), 3, IAE_THRESH),
         "ise": cell(m.get("ISE"), 4, ISE_THRESH),
-        "ts":  {"val": f"{ts_val:.3f}" if ts_val is not None else "—",
-                "raw": ts_val, "cls": self._classify(ts_delta, TS_DELTA_THRESH)},
-        "dp":  cell(m.get("dP_ufv"), 3, DP_THRESH),
-        "dq":  cell(m.get("dQ_ufv"), 3, DQ_THRESH),
+        "ts":   ts_cell,   # ver casos especiais abaixo
+        "peak": cell(peak_deg, 1, PEAK_ERR_DEG_THRESH),
+        "dp":  cell(m.get("dP_ufv"), 3, DP_THRESH),   # janela pós-clear
+        "dq":  cell(m.get("dQ_ufv"), 3, DQ_THRESH),   # janela pós-clear
         "vmin": cell(m.get("vmin"), 3, VBUS2_MIN_THRESH, lower_is_better=False),
     }
 ```
 
-`ts` é o único caso especial: `val`/`raw` exibem/ordenam por `ts_val` absoluto
-(mesma leitura dos cards), mas `cls` classifica por `ts_delta` (margem em
-relação a `t_fault`) — igual à lógica já usada em `_cards_html`.
+Casos especiais (mesma lógica de `_cards_html`, ver [[cards-metricas]]):
+
+- `ts`: `val`/`raw` exibem/ordenam por `ts_val` absoluto, mas `cls` classifica
+  por `metrics["ts_delta"]` (margem em relação a `t_fault`). Se
+  `metrics["settled"] is False` a célula vira `"&gt; t_end"` com `raw = t_end`
+  (ordena junto dos piores) e `cls = "bad"` — cenário não acomodou na janela.
+- `peak`: pico do erro de fase em graus (`np.degrees(metrics["peak_err"])`),
+  coluna `|θ_err| pico (°)`.
 
 Em `_build_html`, cada `sc_js[key]` ganha `"metricsRow": self._table_row_data(d)`.
 
@@ -53,8 +57,8 @@ Em `_build_html`, cada `sc_js[key]` ganha `"metricsRow": self._table_row_data(d)
 
 Botão `#table-toggle` ao lado do `#diagram-toggle` no `filter-bar`; seção
 `#table-section` (`display:none` por padrão) com `<table id="cmp-table">` —
-cabeçalho com `data-key` por coluna (`iae`, `ise`, `ts`, `dp`, `dq`, `vmin`,
-mais `label` não-ordenável) e `<tbody id="cmp-tbody">` vazio, populado por JS.
+cabeçalho com `data-key` por coluna (`iae`, `ise`, `ts`, `peak`, `dp`, `dq`,
+`vmin`, mais `label` não-ordenável) e `<tbody id="cmp-tbody">` vazio, populado por JS.
 
 ### JS — render e ordenação
 
@@ -80,7 +84,7 @@ function renderComparisonTable() {
     var active = (k === currentKey) ? " cmp-active" : "";
     return "<tr class=\"cmp-row" + active + "\" onclick=\"_pickTableRow('" + k + "')\">"
       + "<td class=\"cmp-label\">" + sc.label + "</td>"
-      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.dp) + _cmpCell(r.dq) + _cmpCell(r.vmin)
+      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.dp) + _cmpCell(r.dq) + _cmpCell(r.vmin)
       + "</tr>";
   }).join("");
 }

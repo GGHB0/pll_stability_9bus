@@ -185,10 +185,41 @@ class SimData:
         else:
             self.id_ufv_ref = self.iq_ufv_ref = None
 
+        # ── frequência estimada do PLL ───────────────────────────────────────
+        self._estimate_freq()
+
         # ── métricas ─────────────────────────────────────────────────────────
         self.metrics = self._compute_metrics()
 
     # ── internos ─────────────────────────────────────────────────────────────
+
+    def _estimate_freq(self) -> None:
+        """f̂ = dθ̂/dt / 2π (Hz) por diferença central com janela ~1 ms.
+
+        A diferença com passo largo (k amostras ≈ 0,5 ms para cada lado) já
+        atua como filtro passa-baixa, suprimindo o ripple de chaveamento sem
+        precisar de convolução sobre os milhões de pontos do eixo rápido.
+        """
+        if self.theta_pll_fast is not None:
+            t, th = self.t_fast, self.theta_pll_fast
+        elif self.theta_pll is not None:
+            t, th = self.t, self.theta_pll
+        else:
+            t = th = None
+
+        if t is None or len(t) < 3:
+            self.t_freq = self.f_pll = None
+            self.has_freq = False
+            return
+
+        th_u = np.unwrap(th)
+        dt = float(np.median(np.diff(t[: min(len(t), 1000)])))
+        k = max(1, int(round(5e-4 / dt))) if dt > 0 else 1
+        if 2 * k >= len(t):
+            k = 1
+        self.f_pll = (th_u[2 * k:] - th_u[:-2 * k]) / (t[2 * k:] - t[:-2 * k]) / (2.0 * np.pi)
+        self.t_freq = t[k:-k]
+        self.has_freq = True
 
     def _compute_metrics(self) -> dict:
         t_fault = self.t_fault if self.t_fault is not None else T_FAULT

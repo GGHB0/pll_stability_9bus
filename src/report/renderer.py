@@ -70,6 +70,10 @@ class HTMLRenderer:
         scenarios_js  = json.dumps(sc_js)
         select_html   = self._select_html()
         pll_toggle_html = self._pll_toggle_html() if has_bad_pll else ""
+        ghost_btn_html = (
+            '<button class="toggle-btn diag-btn" id="ghost-toggle" '
+            'onclick="toggleGhost()">👻&nbsp;Comparar PLL</button>'
+        ) if has_bad_pll else ""
         uerj_logo_html = self._uerj_logo_html()
 
         return f"""<!DOCTYPE html>
@@ -108,6 +112,8 @@ class HTMLRenderer:
   {pll_toggle_html}
   <button class="toggle-btn diag-btn" id="diagram-toggle" onclick="toggleDiagram()">🗺 Mapa IEEE 9-bus</button>
   <button class="toggle-btn diag-btn" id="table-toggle" onclick="toggleTable()">📊 Comparativo</button>
+  <button class="toggle-btn diag-btn" id="zoom-fault" onclick="toggleZoomFault()">🔍&nbsp;Zoom na falta</button>
+  {ghost_btn_html}
 </div>
 
 <main class="main">
@@ -197,7 +203,8 @@ var BASE_DARK = {{
 var PLOTLY_CFG = {{
   responsive: true, displaylogo: false,
   modeBarButtonsToRemove: ["select2d", "lasso2d", "autoScale2d"],
-  toImageButtonOptions: {{ format: "svg" }},
+  // PNG em alta resolução (scale 3) pronto para as figuras do TCC DOCX
+  toImageButtonOptions: {{ format: "png", scale: 3 }},
 }};
 
 function themedLayout(figData, isDarkMode) {{
@@ -221,7 +228,11 @@ function themedLayout(figData, isDarkMode) {{
       : (isGroupTitle ? "#334155" : "#6b7280");
     return Object.assign({{}}, a, {{ font: Object.assign({{}}, a.font, {{ color: color }}) }});
   }});
+  // Só a divisória do _group_title (xref "paper") é re-temada. Os demais shapes
+  // (vlines/vrect de falta, hlines LVRT, banda de tolerância) vêm de add_vline/
+  // add_hline/add_vrect do chart.py e devem MANTER a cor semântica própria.
   var shapes = (figData.layout.shapes || []).map(function(s) {{
+    if (s.xref !== "paper") return s;
     return Object.assign({{}}, s, {{
       line: Object.assign({{}}, s.line, {{ color: isDarkMode ? "#374151" : "#e2e8f0" }})
     }});
@@ -240,11 +251,89 @@ function themedData(data, lightC, darkC, tIdx, isDarkMode) {{
   }});
 }}
 
-function reactThemedChart(gd, figData, lightC, darkC, tIdx) {{
-  Plotly.react(gd,
-    themedData(figData.data, lightC, darkC, tIdx, isDark),
-    themedLayout(figData, isDark),
-    PLOTLY_CFG);
+function reactThemedChart(gd, figData, lightC, darkC, tIdx, which) {{
+  PLOTLY_CFG.toImageButtonOptions.filename =
+    "pll_" + currentKey.split("/").join("_") + "_" + which;
+  var data = themedData(figData.data, lightC, darkC, tIdx, isDark)
+    .concat(_ghostData(which));
+  Plotly.react(gd, data, themedLayout(figData, isDark), PLOTLY_CFG);
+}}
+
+// ── Fantasma: sobrepõe o cenário equivalente do outro modo PLL ────────────
+
+var ghostMode = false;
+
+function _exactEquiv(key) {{
+  var sc = SCENARIOS[key];
+  if (!sc) return null;
+  var other = sc.badPll ? key.replace("_bad_pll", "") : key + "_bad_pll";
+  return SCENARIOS[other] ? other : null;
+}}
+
+function _ghostData(which) {{
+  if (!ghostMode) return [];
+  var other = _exactEquiv(currentKey);
+  if (!other) return [];
+  var o = SCENARIOS[other];
+  var fig = (which === "sys") ? o.sysData : o.invData;
+  var idx = (which === "sys") ? o.sysIdx  : o.invIdx;
+  if (!fig) return [];
+  var colors = isDark ? ((which === "sys") ? o.sysDark : o.invDark)
+                      : ((which === "sys") ? o.sysLight : o.invLight);
+  var tag = o.badPll ? " (PLL ruim)" : " (nominal)";
+  // mesma cor do traço principal; pontilhado + opacidade marcam o fantasma
+  return idx.map(function(i, pos) {{
+    var tr = fig.data[i];
+    return Object.assign({{}}, tr, {{
+      opacity: 0.5,
+      line: Object.assign({{}}, tr.line, {{ color: colors[pos], dash: "dot", width: 1.2 }}),
+      name: (tr.name || "") + tag,
+      showlegend: false,
+      hoverinfo: "skip",
+    }});
+  }});
+}}
+
+function toggleGhost() {{
+  ghostMode = !ghostMode;
+  switchScenario(currentKey);
+}}
+
+// ── Zoom na janela de falta ───────────────────────────────────────────────
+
+var zoomFault = false;
+
+function toggleZoomFault() {{
+  zoomFault = !zoomFault;
+  _syncCtrlButtons();
+  _applyZoom();
+}}
+
+function _applyZoom() {{
+  var sc = SCENARIOS[currentKey];
+  var upd = (zoomFault && sc.tFault != null)
+    ? {{ "xaxis.range": [sc.tFault - 0.1,
+         (sc.tClear != null ? sc.tClear : sc.tFault) + 0.5],
+         "xaxis.autorange": false }}
+    : {{ "xaxis.autorange": true }};
+  Plotly.relayout(gdInv, upd);
+  if (sc.hasSys) Plotly.relayout(gdSys, upd);
+}}
+
+function _syncCtrlButtons() {{
+  var sc = SCENARIOS[currentKey];
+  var zbtn = document.getElementById("zoom-fault");
+  if (sc.tFault == null) zoomFault = false;
+  zbtn.disabled = (sc.tFault == null);
+  zbtn.classList.toggle("active", zoomFault);
+  zbtn.innerHTML = zoomFault ? "🔍&nbsp;Visão completa" : "🔍&nbsp;Zoom na falta";
+  var gbtn = document.getElementById("ghost-toggle");
+  if (gbtn) {{
+    if (_exactEquiv(currentKey) == null) ghostMode = false;
+    gbtn.disabled = (_exactEquiv(currentKey) == null);
+    gbtn.classList.toggle("active", ghostMode);
+    gbtn.innerHTML = ghostMode ? "👻&nbsp;Ocultar comparação" : "👻&nbsp;Comparar PLL";
+  }}
 }}
 
 function updateFaultUI(sc) {{
@@ -269,15 +358,17 @@ function switchScenario(key) {{
   currentKey = key;
   var sc = SCENARIOS[key];
 
+  _syncCtrlButtons();
   updateFaultUI(sc);
-  reactThemedChart(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx);
+  reactThemedChart(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx, "inv");
 
   if (sc.hasSys) {{
     secSys.style.display = "";
-    reactThemedChart(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx);
+    reactThemedChart(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx, "sys");
   }} else {{
     secSys.style.display = "none";
   }}
+  _applyZoom();
 
   document.getElementById("cards-area").innerHTML = sc.cardsHtml;
   document.getElementById("story-area").innerHTML = sc.storyHtml;
@@ -483,10 +574,11 @@ function toggleTheme() {{
   isDark = !isDark;
   document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
   var sc = SCENARIOS[currentKey];
-  reactThemedChart(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx);
+  reactThemedChart(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx, "inv");
   if (sc.hasSys) {{
-    reactThemedChart(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx);
+    reactThemedChart(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx, "sys");
   }}
+  _applyZoom();
   document.getElementById("ico").textContent = isDark ? "☀️" : "🌙";
   document.getElementById("lbl").textContent = isDark ? "Light mode" : "Dark mode";
 }}
@@ -983,6 +1075,9 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 
 /* ── Filter bar extras ── */
 .diag-btn { font-size: 12px; padding: 6px 14px; opacity: 1; transition: opacity .2s, box-shadow .2s, transform .2s, background .28s, color .28s, border-color .28s }
+.diag-btn.active { background: var(--accent); color: #fff; border-color: var(--accent) }
+[data-theme="dark"] .diag-btn.active { color: #0f172a }
+.diag-btn:disabled { opacity: .4; cursor: not-allowed; pointer-events: none }
 
 /* ── PLL toggle ── */
 .pll-toggle {

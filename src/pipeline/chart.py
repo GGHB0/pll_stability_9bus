@@ -55,6 +55,8 @@ class ChartBuilder:
             rows.append((_S, "ang", "Ângulo (°)"))
         if d.theta_err is not None:
             rows.append((_S, "err", "Erro de fase (°)"))
+        if d.has_freq:
+            rows.append((_S, "freq", "Frequência PLL (Hz)"))
         if d.has_dq_ufv:
             rows.append((_S, "dq_combined", "Corrente dq UFV (pu)"))
         if d.has_vdq_ufv or d.has_vdq_rede:
@@ -172,20 +174,70 @@ class ChartBuilder:
         )
 
     def _vline(self, row: int, col: int) -> None:
-        """Marca início/fim da falta (t_fault/t_clear reais do cenário); nenhuma linha em regime."""
+        """Destaca a janela de falta: faixa sombreada + vlines de início (vermelha)
+        e limpeza (verde). Nenhuma marca em regime permanente."""
         d = self._d
+        if d.t_fault is not None and d.t_clear is not None:
+            self._fig.add_vrect(
+                x0=d.t_fault, x1=d.t_clear,
+                fillcolor="rgba(220,50,50,0.07)", line_width=0, layer="below",
+                row=row, col=col,
+            )
         if d.t_fault is not None:
             self._fig.add_vline(
                 x=d.t_fault,
-                line=dict(color="rgba(220,50,50,0.5)", width=1.2, dash="dash"),
+                line=dict(color="rgba(220,50,50,0.75)", width=2.0, dash="dash"),
                 row=row, col=col,
             )
         if d.t_clear is not None:
             self._fig.add_vline(
                 x=d.t_clear,
-                line=dict(color="rgba(100,100,100,0.4)", width=1.2, dash="dash"),
+                line=dict(color="rgba(22,163,74,0.65)", width=2.0, dash="dash"),
                 row=row, col=col,
             )
+
+    def _ts_marker(self, t_err: np.ndarray, err: np.ndarray, row: int, col: int) -> None:
+        """Marca no gráfico de erro o instante de acomodação tₛ calculado no loader."""
+        d = self._d
+        ts_val = d.metrics.get("ts")
+        if ts_val is None or d.t_fault is None:
+            return
+        y_ts = float(np.interp(ts_val, t_err, np.degrees(err)))
+        marker = go.Scatter(
+            x=[ts_val], y=[y_ts], mode="markers+text",
+            text=["t<sub>s</sub>"], textposition="top right",
+            textfont=dict(size=11, color="#16a34a"),
+            marker=dict(size=9, symbol="diamond", color="#16a34a",
+                        line=dict(width=1, color="#ffffff")),
+            name="tₛ", showlegend=False,
+            hovertemplate="tₛ = %{x:.3f} s<extra></extra>",
+        )
+        marker.legend = self._legend_key
+        self._fig.add_trace(marker, row=row, col=col)
+
+    # Envelope LVRT IEEE 1547-2018 Categoria II: (Δt após a falta, V mínimo de
+    # ride-through obrigatório) — 0.30 pu/0.16 s, 0.45 pu/0.32 s, 0.65 pu/3 s,
+    # 0.88 pu operação contínua.
+    _LVRT_STEPS = ((0.16, 0.30), (0.32, 0.45), (3.0, 0.65))
+
+    def _lvrt_envelope(self, row: int, col: int) -> None:
+        """Curva degrau V×t de ride-through, ancorada em t_fault (só no |V| Bus 2)."""
+        d = self._d
+        t0, t_end = d.t_fault, float(d.t[-1])
+        xs, ys = [t0], [self._LVRT_STEPS[0][1]]
+        for i, (dt_step, _v) in enumerate(self._LVRT_STEPS):
+            next_v = self._LVRT_STEPS[i + 1][1] if i + 1 < len(self._LVRT_STEPS) else 0.88
+            xs.append(min(t0 + dt_step, t_end))
+            ys.append(next_v)
+        xs.append(t_end)
+        ys.append(0.88)
+        env = go.Scatter(
+            x=xs, y=ys, mode="lines", line_shape="hv",
+            line=dict(color="rgba(220,50,50,0.7)", width=1.6, dash="dash"),
+            name="LVRT 1547 Cat II", hoverinfo="skip",
+        )
+        env.legend = self._legend_key
+        self._fig.add_trace(env, row=row, col=col)
 
     def _apply_layout(self, n_rows: int, extra_top: bool = False) -> None:
         self._fig.update_xaxes(
@@ -264,11 +316,13 @@ class ChartBuilder:
         t = d.t
 
         if kind == "ang":
+            # θ̂ PLL é o protagonista (sólido, mais grosso, 1ª cor da paleta);
+            # θ Rede vira referência de fundo (fino, tracejado)
             t_ang = d.t_fast if d.t_fast is not None else t
-            self._add(go.Scatter(x=t_ang, y=np.degrees(d.theta_ref),
-                                 name="θ Rede", mode="lines", line=dict(width=2.0)), row, col)
             self._add(go.Scatter(x=t_ang, y=np.degrees(d.theta_pll),
-                                 name="θ̂ PLL", mode="lines", line=dict(width=1.4, dash="dot")), row, col)
+                                 name="θ̂ PLL", mode="lines", line=dict(width=2.4)), row, col)
+            self._add(go.Scatter(x=t_ang, y=np.degrees(d.theta_ref),
+                                 name="θ Rede", mode="lines", line=dict(width=1.1, dash="dash")), row, col)
 
         elif kind == "err":
             t_err = d.t_fast if d.t_fast is not None else t
@@ -276,10 +330,21 @@ class ChartBuilder:
             self._add(go.Scatter(x=t_err, y=np.degrees(err),
                                  name="Erro de fase", mode="lines", line=dict(width=1.8)), row, col)
             tol_deg = np.degrees(TOL_RAD)
+            self._fig.add_hrect(y0=-tol_deg, y1=tol_deg,
+                                fillcolor="rgba(22,163,74,0.08)", line_width=0, layer="below",
+                                row=row, col=col)
             for sign in (+1, -1):
                 self._fig.add_hline(y=sign * tol_deg,
-                                    line=dict(color="rgba(220,50,50,0.45)", width=1.1, dash="dash"),
+                                    line=dict(color="rgba(22,163,74,0.4)", width=1.0, dash="dot"),
                                     row=row, col=col)
+            self._ts_marker(t_err, err, row, col)
+
+        elif kind == "freq":
+            self._add(go.Scatter(x=d.t_freq, y=d.f_pll,
+                                 name="f̂ PLL", mode="lines", line=dict(width=1.8)), row, col)
+            self._fig.add_hline(y=60.0,
+                                line=dict(color="rgba(100,100,100,0.35)", width=1.0, dash="dot"),
+                                row=row, col=col)
 
         elif kind in ("vbus1", "vbus2", "vbus3"):
             vbus_map = {"vbus1": (d.vbus1, "|V| Bus 1"), "vbus2": (d.vbus2, "|V| Bus 2"),
@@ -290,9 +355,12 @@ class ChartBuilder:
             self._fig.add_hline(y=1.0,
                                 line=dict(color="rgba(100,100,100,0.25)", width=1.0, dash="dot"),
                                 row=row, col=col)
-            self._fig.add_hline(y=LVRT_THRESHOLD,
-                                line=dict(color="rgba(220,50,50,0.45)", width=1.1, dash="dash"),
-                                row=row, col=col)
+            if kind == "vbus2" and d.t_fault is not None:
+                self._lvrt_envelope(row, col)
+            else:
+                self._fig.add_hline(y=LVRT_THRESHOLD,
+                                    line=dict(color="rgba(220,50,50,0.45)", width=1.1, dash="dash"),
+                                    row=row, col=col)
 
         elif kind == "pq_combined":
             self._add(go.Scatter(x=t, y=d.P_ufv,

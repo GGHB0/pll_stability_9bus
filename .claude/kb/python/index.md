@@ -27,6 +27,8 @@
 | [patterns/comparison-table.md](patterns/comparison-table.md) | Tabela comparativa de cenários, ordenável, filtrada por modo PLL |
 | [patterns/dark-mode-theming.md](patterns/dark-mode-theming.md) | Gotcha do tema escuro — annotations/shapes com cor fixa em chart.py |
 | [patterns/header-branding.md](patterns/header-branding.md) | Logo UERJ embutido (base64) + fix do label do toggle de mapa |
+| [patterns/chart-analysis-overlays.md](patterns/chart-analysis-overlays.md) | Janela de falta, hierarquia θ̂ PLL, marcador tₛ, envelope LVRT, painel de frequência |
+| [patterns/dashboard-zoom-ghost.md](patterns/dashboard-zoom-ghost.md) | Zoom na falta, overlay fantasma nominal×BAD_PLL, export PNG hi-res |
 
 ### Specs (Machine-Readable)
 

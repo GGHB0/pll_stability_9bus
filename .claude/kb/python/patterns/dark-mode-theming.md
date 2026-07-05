@@ -108,3 +108,25 @@ passado para `Plotly.react`/`Plotly.newPlot` — isso só é válido em
 `Plotly.relayout(gd, {"xaxis.gridcolor": ...})`. Para atualizar uma
 propriedade de eixo dentro de um layout completo, sempre aninhar:
 `layout.xaxis = Object.assign({}, layout.xaxis, { prop: valor })`.
+
+## Fix 3 (2026-07): re-tema de shapes engolia as linhas de falta/LVRT
+
+O map de `shapes` do Fix 1 repintava **todas** as shapes com o cinza da
+divisória — mas `add_vline`/`add_hline`/`add_vrect` do `chart.py` também
+viram entradas em `layout.shapes`. Resultado: as vlines vermelhas de falta,
+os limites LVRT e a banda de tolerância eram repintados de cinza claro a
+cada `Plotly.react` (troca de tema OU de cenário), nos DOIS temas.
+
+Fix — filtrar pela mesma chave estável usada nas annotations: só a divisória
+do `_group_title` tem `xref === "paper"`:
+
+```javascript
+var shapes = (figData.layout.shapes || []).map(function(s) {
+  if (s.xref !== "paper") return s;  // shapes de dados mantêm cor semântica
+  return Object.assign({}, s, { line: ... });
+});
+```
+
+Corolário do gotcha do Fix 1: ao re-temar coleções (`annotations`, `shapes`)
+em massa, **sempre filtrar pelo subconjunto que realmente precisa** — o
+Plotly joga vlines/hlines/vrects na mesma lista que shapes manuais.

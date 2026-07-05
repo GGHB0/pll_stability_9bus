@@ -109,8 +109,9 @@ standalone — não referenciados pelo modelo principal.
 IAE, ISE, tempo de acomodação ts (critério ±1.15° = 0.02 rad), ΔP_ufv, ΔQ_ufv pós-falta.
 Calculados por `SimData` em `src/pipeline/loader.py`. Conformidade LVRT per IEEE 1547-2018.
 
-Atributos `SimData`: `P_ufv`, `Q_ufv`, `id_ufv_meas`, `iq_ufv_meas`, `id_ufv_ref`, `iq_ufv_ref`.
-Flags: `has_dq_ufv`, `has_ref_ufv`. Colunas CSV: `P_ufv_pu`, `Q_ufv_pu`, `id_ufv_pu`, `iq_ufv_pu`, `id_ufv_ref_pu`, `iq_ufv_ref_pu`.
+Atributos `SimData`: `P_ufv`, `Q_ufv`, `id_ufv_meas`, `iq_ufv_meas`, `id_ufv_ref`, `iq_ufv_ref`,
+`f_pll`/`t_freq` (frequência estimada do PLL em Hz, derivada de θ̂).
+Flags: `has_dq_ufv`, `has_ref_ufv`, `has_freq`. Colunas CSV: `P_ufv_pu`, `Q_ufv_pu`, `id_ufv_pu`, `iq_ufv_pu`, `id_ufv_ref_pu`, `iq_ufv_ref_pu`.
 Quando variáveis dos geradores forem adicionadas, usar sufixo `_gen1`, `_gen2` etc.
 
 ## Knowledge Base (.claude/)

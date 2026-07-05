@@ -210,7 +210,22 @@ function themedLayout(figData, isDarkMode) {{
       axUpd[k + ".zerolinecolor"] = isDarkMode ? "#374151" : "#e5e7eb";
     }}
   }});
-  return Object.assign({{}}, figData.layout, base, axUpd);
+  // _label (rótulo de painel) usa xref "x.../x{{n}} domain"; _group_title (subtítulo
+  // de barra) usa xref "paper" — só essas duas cores vêm fixas do chart.py (não
+  // herdam layout.font, então precisam de override manual por tema aqui.
+  var annotations = (figData.layout.annotations || []).map(function(a) {{
+    var isGroupTitle = a.xref === "paper";
+    var color = isDarkMode
+      ? (isGroupTitle ? "#cbd5e1" : "#9ca3af")
+      : (isGroupTitle ? "#334155" : "#6b7280");
+    return Object.assign({{}}, a, {{ font: Object.assign({{}}, a.font, {{ color: color }}) }});
+  }});
+  var shapes = (figData.layout.shapes || []).map(function(s) {{
+    return Object.assign({{}}, s, {{
+      line: Object.assign({{}}, s.line, {{ color: isDarkMode ? "#374151" : "#e2e8f0" }})
+    }});
+  }});
+  return Object.assign({{}}, figData.layout, base, axUpd, {{ annotations: annotations, shapes: shapes }});
 }}
 
 function themedData(data, lightC, darkC, tIdx, isDarkMode) {{

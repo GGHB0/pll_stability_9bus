@@ -26,14 +26,18 @@ def _uerj_logo_html(self) -> str:
 
 Arquivo fonte: `assets/uerj.png` (16.643 bytes, salvo manualmente pelo usuário
 — não em `assets/logos/`). Chamado em `_build_html` junto com `select_html`/
-`pll_toggle_html` e injetado antes do `.h-logo` (φ) em `.h-left`:
+`pll_toggle_html` e injetado como primeiro elemento de `.h-left`:
 
 ```html
 <div class="h-left">
   {uerj_logo_html}
-  <div class="h-logo">φ</div>
-  ...
+  <div>
+    <div class="h-title">...
 ```
+
+> O quadrado roxo `.h-logo` (φ) que existia ao lado foi **removido** em
+> 2026-07 a pedido do usuário — o logo da UERJ passou a ser a única marca
+> visual do header (HTML e bloco CSS `.h-logo` apagados do `renderer.py`).
 
 CSS: `.h-uerj-logo { height: 36px; width: auto; flex-shrink: 0 }`.
 

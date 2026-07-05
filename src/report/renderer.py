@@ -88,7 +88,6 @@ class HTMLRenderer:
 <header class="header">
   <div class="h-left">
     {uerj_logo_html}
-    <div class="h-logo">φ</div>
     <div>
       <div class="h-title">SRF-PLL &nbsp;·&nbsp; IEEE 9-Bus</div>
       <div class="h-sub" id="header-sub">Análise pós-falta</div>
@@ -802,14 +801,6 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 }
 .h-left { display: flex; align-items: center; gap: 14px }
 .h-uerj-logo { height: 36px; width: auto; flex-shrink: 0 }
-.h-logo {
-  width: 40px; height: 40px; border-radius: 11px;
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 20px; font-weight: 800;
-  flex-shrink: 0; user-select: none;
-  box-shadow: 0 2px 8px rgba(37,99,235,.35);
-}
 .h-title { font-size: 15px; font-weight: 700; letter-spacing: -.2px; line-height: 1.2 }
 .h-sub   { font-size: 12px; color: var(--muted); margin-top: 2px }
 .badge {

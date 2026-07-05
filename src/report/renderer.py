@@ -60,6 +60,7 @@ class HTMLRenderer:
                 "label":     sc["label"],
                 "cardsHtml": self._cards_html(d),
                 "storyHtml": self._story_html(d),
+                "metricsRow": self._table_row_data(d),
                 "hasSys":    fs is not None,
                 "badPll":    sc.get("bad_pll", False),
                 "tFault":    d.t_fault,
@@ -105,6 +106,7 @@ class HTMLRenderer:
   {select_html}
   {pll_toggle_html}
   <button class="toggle-btn diag-btn" id="diagram-toggle" onclick="toggleDiagram()">🗺 Mapa IEEE 9-bus</button>
+  <button class="toggle-btn diag-btn" id="table-toggle" onclick="toggleTable()">📊 Comparativo</button>
 </div>
 
 <main class="main">
@@ -116,6 +118,28 @@ class HTMLRenderer:
 
   <div id="cards-area"></div>
   <div id="story-area"></div>
+
+  <div class="table-section" id="table-section" style="display:none">
+    <div class="section-header">
+      <span class="section-title">Comparativo de cenários</span>
+    </div>
+    <div class="table-wrap">
+      <table class="cmp-table" id="cmp-table">
+        <thead>
+          <tr>
+            <th data-key="label">Cenário</th>
+            <th data-key="iae">IAE (rad·s)</th>
+            <th data-key="ise">ISE (rad²·s)</th>
+            <th data-key="ts">tₛ (s)</th>
+            <th data-key="dp">ΔP (pu)</th>
+            <th data-key="dq">ΔQ (pu)</th>
+            <th data-key="vmin">Vmin (pu)</th>
+          </tr>
+        </thead>
+        <tbody id="cmp-tbody"></tbody>
+      </table>
+    </div>
+  </div>
 
   <div class="chart-section" id="sec-inv">
     <div class="section-header">
@@ -241,7 +265,66 @@ function switchScenario(key) {{
   document.getElementById("story-area").innerHTML = sc.storyHtml;
 
   highlightSVG(key);
+  renderComparisonTable();
 }}
+
+// ── Tabela comparativa ────────────────────────────────────────────────────
+
+var sortState = {{ key: null, dir: 1 }};
+
+function toggleTable() {{
+  var sec = document.getElementById("table-section");
+  var btn = document.getElementById("table-toggle");
+  var hidden = sec.style.display === "none";
+  sec.style.display = hidden ? "" : "none";
+  btn.style.opacity = hidden ? "1" : "0.85";
+}}
+
+function _sortVal(key, k) {{
+  return (key === "label") ? SCENARIOS[k].label : SCENARIOS[k].metricsRow[key].raw;
+}}
+
+function _cmpCell(cell) {{
+  return "<td class=\\"cmp-" + cell.cls + "\\">" + cell.val + "</td>";
+}}
+
+function renderComparisonTable() {{
+  var keys = Object.keys(SCENARIOS).filter(function(k) {{
+    return SCENARIOS[k].badPll === (pllMode === "bad");
+  }});
+  if (sortState.key) {{
+    keys.sort(function(a, b) {{
+      var ra = _sortVal(sortState.key, a), rb = _sortVal(sortState.key, b);
+      if (ra == null) return 1;
+      if (rb == null) return -1;
+      if (ra < rb) return -sortState.dir;
+      if (ra > rb) return sortState.dir;
+      return 0;
+    }});
+  }}
+  document.getElementById("cmp-tbody").innerHTML = keys.map(function(k) {{
+    var sc = SCENARIOS[k], r = sc.metricsRow;
+    var active = (k === currentKey) ? " cmp-active" : "";
+    return "<tr class=\\"cmp-row" + active + "\\" onclick=\\"_pickTableRow('" + k + "')\\">"
+      + "<td class=\\"cmp-label\\">" + sc.label + "</td>"
+      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.dp) + _cmpCell(r.dq) + _cmpCell(r.vmin)
+      + "</tr>";
+  }}).join("");
+}}
+
+function _pickTableRow(k) {{
+  document.getElementById("scenario-picker").value = k;
+  switchScenario(k);
+}}
+
+document.querySelectorAll("#cmp-table thead th[data-key]").forEach(function(th) {{
+  th.addEventListener("click", function() {{
+    var key = th.getAttribute("data-key");
+    sortState.dir = (sortState.key === key) ? -sortState.dir : 1;
+    sortState.key = key;
+    renderComparisonTable();
+  }});
+}});
 
 // ── SVG diagram interactivity ─────────────────────────────────────────────
 
@@ -459,6 +542,33 @@ switchScenario(currentKey);
         if lower_is_better:
             return "good" if val <= lo else ("warn" if val <= hi else "bad")
         return "good" if val >= lo else ("warn" if val >= hi else "bad")
+
+    def _table_row_data(self, data: SimData) -> dict:
+        """Uma linha da tabela comparativa: {métrica: {val, raw, cls}} por cenário."""
+        m = data.metrics
+        t_fault  = data.t_fault if data.t_fault is not None else T_FAULT
+        ts_val   = m.get("ts")
+        ts_delta = (ts_val - t_fault) if ts_val is not None else None
+
+        def cell(val, decimals, thresholds, lower_is_better=True):
+            return {
+                "val": f"{val:.{decimals}f}" if val is not None else "—",
+                "raw": val,
+                "cls": self._classify(val, thresholds, lower_is_better),
+            }
+
+        return {
+            "iae":  cell(m.get("IAE"), 3, IAE_THRESH),
+            "ise":  cell(m.get("ISE"), 4, ISE_THRESH),
+            "ts":   {
+                "val": f"{ts_val:.3f}" if ts_val is not None else "—",
+                "raw": ts_val,
+                "cls": self._classify(ts_delta, TS_DELTA_THRESH),
+            },
+            "dp":   cell(m.get("dP_ufv"), 3, DP_THRESH),
+            "dq":   cell(m.get("dQ_ufv"), 3, DQ_THRESH),
+            "vmin": cell(m.get("vmin"), 3, VBUS2_MIN_THRESH, lower_is_better=False),
+        }
 
     def _cards_html(self, data: SimData) -> str:
         m = data.metrics
@@ -891,6 +1001,30 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
   text-align: center; font-size: 10.5px; color: var(--muted);
   margin-top: 4px; letter-spacing: .2px;
 }
+
+/* ── Tabela comparativa ── */
+.table-wrap { overflow-x: auto; padding: 4px 4px 8px }
+.cmp-table { width: 100%; border-collapse: collapse; font-size: 12.5px }
+.cmp-table th, .cmp-table td { padding: 9px 14px; text-align: right; white-space: nowrap }
+.cmp-table th:first-child, .cmp-table td:first-child { text-align: left }
+.cmp-table thead th {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--muted);
+  border-bottom: 1.5px solid var(--border);
+  cursor: pointer; user-select: none;
+}
+.cmp-table thead th:hover { color: var(--text) }
+.cmp-table tbody tr { border-bottom: 1px solid var(--border); cursor: pointer }
+.cmp-table tbody tr:hover { background: var(--bg) }
+.cmp-table tbody tr.cmp-active { background: var(--badge-bg) }
+.cmp-label { font-weight: 600; color: var(--text) }
+.cmp-good    { color: #16a34a; font-weight: 600 }
+.cmp-warn    { color: #b45309; font-weight: 600 }
+.cmp-bad     { color: #dc2626; font-weight: 600 }
+.cmp-neutral { color: var(--muted) }
+[data-theme="dark"] .cmp-good { color: #4ade80 }
+[data-theme="dark"] .cmp-warn { color: #fbbf24 }
+[data-theme="dark"] .cmp-bad  { color: #f87171 }
 
 /* ── SVG tooltip ── */
 .svg-tip {

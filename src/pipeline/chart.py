@@ -16,6 +16,8 @@ from .loader import SimData
 _S = "single"   # linha inteira (colspan 2)
 _P = "pair"     # dois painéis lado a lado
 
+_MAX_POINTS = 5000  # cap de pontos/trace no HTML — ver kb/simulation/python_pipeline.md
+
 
 class ChartBuilder:
     """Monta subplots Plotly separados por seção temática."""
@@ -243,6 +245,10 @@ class ChartBuilder:
     # ── _add ────────────────────────────────────────────────────────────────
 
     def _add(self, trace: go.BaseTraceType, row: int, col: int = 1) -> None:
+        x, y = np.asarray(trace.x), np.asarray(trace.y)
+        if len(x) > _MAX_POINTS:
+            step = int(np.ceil(len(x) / _MAX_POINTS))
+            trace.x, trace.y = x[::step], y[::step]
         lc = LIGHT_COLORS[self._ci % len(LIGHT_COLORS)]
         dc = DARK_COLORS[self._ci % len(DARK_COLORS)]
         self._ci += 1

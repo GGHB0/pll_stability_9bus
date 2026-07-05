@@ -147,3 +147,29 @@ antes de `t_fault` para zerar drift da Repeating Sequence de referência.
 .venv\Scripts\python.exe app.py
 .venv\Scripts\python.exe app.py --out output/relatorio.html
 ```
+
+## Decimação de traces no HTML (`ChartBuilder._add`, 2026-07)
+
+Histórico: nenhuma camada do pipeline fazia downsampling dos arrays antes de
+serializar para Plotly — cada trace ia para o JSON embutido no `<script>`
+inline do `renderer.py` na resolução nativa do CSV. Com `sim_data.csv` em
+120.002 linhas (Tsc) × ~17 traces/cenário, `output/pll_metrics.html` chegou a
+**~175 MB** com 4 cenários e **~570 MB** com 12 (incl. `bad_pll`, 200.002
+linhas). Sintoma: cards/gráficos vazios no primeiro load — script grande
+demais para o browser parsear a tempo (recarregar eventualmente resolvia).
+
+Fix implementado em `_add` ([chart.py](../../../src/pipeline/chart.py)):
+decimação por passo uniforme, cap `_MAX_POINTS = 5000` por trace —
+`step = ceil(len(x) / 5000)`, depois `x[::step]`, `y[::step]`. Ponto único
+de aplicação: todo `go.Scatter` passa por `_add` antes de `fig.add_trace`,
+então nenhuma chamada em `_add_panel` precisou mudar.
+
+**Por que não decimar em `loader.py`**: `_compute_metrics` (IAE/ISE/ts/ΔP/ΔQ)
+usa os arrays brutos de `SimData` (`theta_err`, `P_ufv`, etc.) — decimar ali
+enviesaria as métricas. A decimação fica isolada em `chart.py`, que só cuida
+de visualização; `loader.py` continua entregando resolução total.
+
+**Trade-off aceito**: transientes muito estreitos (ex. o instante exato do
+afundamento) podem perder forma exata entre duas amostras decimadas — mas
+`t_fault`/`t_clear` continuam marcados por `_vline` independente da
+decimação, então o instante em si não se perde, só a curva entre amostras.

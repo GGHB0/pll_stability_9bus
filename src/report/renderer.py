@@ -70,6 +70,7 @@ class HTMLRenderer:
         scenarios_js  = json.dumps(sc_js)
         select_html   = self._select_html()
         pll_toggle_html = self._pll_toggle_html() if has_bad_pll else ""
+        uerj_logo_html = self._uerj_logo_html()
 
         return f"""<!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
@@ -86,6 +87,7 @@ class HTMLRenderer:
 
 <header class="header">
   <div class="h-left">
+    {uerj_logo_html}
     <div class="h-logo">φ</div>
     <div>
       <div class="h-title">SRF-PLL &nbsp;·&nbsp; IEEE 9-Bus</div>
@@ -479,6 +481,18 @@ switchScenario(currentKey);
 </body>
 </html>"""
 
+    # ── Logo UERJ ───────────────────────────────────────────────────────────
+
+    def _uerj_logo_html(self) -> str:
+        from ..config import PROJ_ROOT
+        import base64
+        logo_path = PROJ_ROOT / "assets" / "uerj.png"
+        try:
+            b64 = base64.b64encode(logo_path.read_bytes()).decode("ascii")
+        except FileNotFoundError:
+            return ""
+        return f'<img class="h-uerj-logo" src="data:image/png;base64,{b64}" alt="UERJ">'
+
     # ── SVG diagram ─────────────────────────────────────────────────────────
 
     def _svg_section_html(self) -> str:
@@ -770,6 +784,7 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
   display: flex; align-items: center; justify-content: space-between;
 }
 .h-left { display: flex; align-items: center; gap: 14px }
+.h-uerj-logo { height: 36px; width: auto; flex-shrink: 0 }
 .h-logo {
   width: 40px; height: 40px; border-radius: 11px;
   background: linear-gradient(135deg, #2563eb, #7c3aed);

@@ -187,17 +187,17 @@ var headerSub = document.getElementById("header-sub");
 var badgeInv  = document.getElementById("badge-inv");
 var badgeSys  = document.getElementById("badge-sys");
 
+// Cores por tema, aplicadas ANINHADAS em themedLayout — chave dotted
+// ("font.color") é ignorada por Plotly.react (só relayout aceita).
 var BASE_LIGHT = {{
-  paper_bgcolor: "#ffffff", plot_bgcolor: "#ffffff",
-  "font.color": "#0f172a",
-  "legend.bgcolor": "rgba(0,0,0,0)",
-  "hoverlabel.bgcolor": "#ffffff", "hoverlabel.bordercolor": "#e2e8f0",
+  paper: "#ffffff", plot: "#ffffff", font: "#0f172a",
+  legendInnerBg: "rgba(255,255,255,0.8)",
+  hoverBg: "#ffffff", hoverBorder: "#e2e8f0",
 }};
 var BASE_DARK = {{
-  paper_bgcolor: "#111827", plot_bgcolor: "#1a2436",
-  "font.color": "#f9fafb",
-  "legend.bgcolor": "rgba(0,0,0,0)",
-  "hoverlabel.bgcolor": "#1f2937", "hoverlabel.bordercolor": "#374151",
+  paper: "#111827", plot: "#1a2436", font: "#f9fafb",
+  legendInnerBg: "rgba(26,36,54,0.85)",
+  hoverBg: "#1f2937", hoverBorder: "#374151",
 }};
 
 var PLOTLY_CFG = {{
@@ -208,7 +208,13 @@ var PLOTLY_CFG = {{
 }};
 
 function themedLayout(figData, isDarkMode) {{
-  var base = isDarkMode ? BASE_DARK : BASE_LIGHT;
+  var C = isDarkMode ? BASE_DARK : BASE_LIGHT;
+  var base = {{
+    paper_bgcolor: C.paper, plot_bgcolor: C.plot,
+    font: Object.assign({{}}, figData.layout.font, {{ color: C.font }}),
+    hoverlabel: Object.assign({{}}, figData.layout.hoverlabel,
+                              {{ bgcolor: C.hoverBg, bordercolor: C.hoverBorder }}),
+  }};
   var axUpd = {{}};
   Object.keys(figData.layout).forEach(function(k) {{
     if (k.startsWith("xaxis") || k.startsWith("yaxis")) {{
@@ -216,6 +222,15 @@ function themedLayout(figData, isDarkMode) {{
         gridcolor:     isDarkMode ? "#31425c" : "#f1f5f9",
         zerolinecolor: isDarkMode ? "#4b5d7a" : "#e5e7eb",
       }});
+    }}
+    // legendas múltiplas (legend, legend2, …): fonte segue o tema; só a bgcolor
+    // das internas (semi-opaca, painéis pareados) é re-temada — externas ficam
+    // transparentes como vieram do chart.py
+    if (k.startsWith("legend")) {{
+      var lg = figData.layout[k] || {{}};
+      var upd = {{ font: Object.assign({{}}, lg.font, {{ color: C.font }}) }};
+      if (lg.bgcolor && lg.bgcolor !== "rgba(0,0,0,0)") upd.bgcolor = C.legendInnerBg;
+      axUpd[k] = Object.assign({{}}, lg, upd);
     }}
   }});
   // _label (rótulo de painel) usa xref "x.../x{{n}} domain"; _group_title (subtítulo

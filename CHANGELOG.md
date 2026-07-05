@@ -1,8 +1,26 @@
 # Changelog — Dashboard HTML (src/)
 
 Registro das alterações no pipeline Python e no relatório `output/pll_metrics.html`,
-para revisão posterior. Detalhes técnicos de cada item estão nos patterns do KB
-(`.claude/kb/python/patterns/`).
+para revisão posterior. Detalhes técnicos de cada item estão em
+`.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
+
+## 2026-07-05 — Legenda invisível no dark mode + KB do dashboard
+
+Arquivos: `src/report/renderer.py`, `.claude/kb/dashboard/`
+
+- **Fix: legenda não aparecia no dark mode.** Mesma causa raiz do fix do
+  dark mode (`6af6e3e`): `BASE_DARK`/`BASE_LIGHT` ainda tinham chaves dotted
+  (`"font.color"`, `"legend.bgcolor"`, `"hoverlabel.*"`) que `Plotly.react`
+  ignora — o texto das legendas ficava `#111827` sobre paper `#111827`.
+  Agora `font`/`hoverlabel` são aplicados aninhados e TODAS as legendas
+  nomeadas (`legend`, `legend2`, …) recebem fonte do tema; a bgcolor
+  semi-opaca das legendas internas (painéis pareados) é re-temada para
+  `rgba(26,36,54,0.85)` no dark. Ver `kb/dashboard/layout/dark-mode-theming.md` (Fix 4).
+- **KB reorganizado**: nova pasta `.claude/kb/dashboard/` com subpastas
+  `dados/`, `graficos/`, `cards/`, `layout/` — os 6 patterns do dashboard
+  migraram de `kb/python/patterns/` e ganharam 4 docs novos
+  (pipeline de dados, construção dos gráficos, cards/story, estrutura HTML).
+  Entrada: `kb/dashboard/index.md`.
 
 ## 2026-07-05 — Zoom sincronizado em todos os gráficos
 
@@ -50,7 +68,7 @@ Arquivos: `src/pipeline/loader.py`, `src/pipeline/chart.py`, `src/report/rendere
   repintava TODAS as shapes (incluindo vlines de falta, hlines LVRT e bandas)
   com a cor da divisória de grupo, a cada troca de tema ou cenário, nos dois
   temas. Agora só shapes com `xref === "paper"` são re-temadas.
-  Ver `kb/python/patterns/dark-mode-theming.md` (Fix 3).
+  Ver `kb/dashboard/layout/dark-mode-theming.md` (Fix 3).
 
 ## 2026-07-05 — Remoção do símbolo φ do header (`8b24f47`)
 
@@ -65,7 +83,7 @@ Arquivos: `src/pipeline/loader.py`, `src/pipeline/chart.py`, `src/report/rendere
   aninhando o objeto do eixo (`axUpd[k] = Object.assign({}, layout[k], {...})`).
 - `plot_bgcolor` do dark mode clareado para `#1a2436` (antes idêntico ao card),
   com grid `#31425c` e zeroline `#4b5d7a` recalibrados.
-  Ver `kb/python/patterns/dark-mode-theming.md` (Fix 2).
+  Ver `kb/dashboard/layout/dark-mode-theming.md` (Fix 2).
 
 ## 2026-07-05 — Contraste de rótulos no dark mode (`7626d19`)
 

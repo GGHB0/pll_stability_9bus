@@ -121,6 +121,7 @@ Quando variáveis dos geradores forem adicionadas, usar sufixo `_gen1`, `_gen2` 
 .claude/
 ├── kb/
 │   ├── project-scope.md       ← escopo TCC, status dos capítulos, tabela de contingências
+│   ├── dashboard/             ← relatório HTML: dados/, graficos/, cards/, layout/ (ver index.md)
 │   ├── pll/                   ← teoria SRF-PLL, metodologia Kp/Ki, cenários de contingência
 │   ├── inverter/              ← filtro LCL, arquitetura Simulink, referência VSC
 │   ├── power-system/          ← IEEE 9 barras, Thevenin, inércia, VSG

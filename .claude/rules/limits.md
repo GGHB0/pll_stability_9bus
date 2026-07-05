@@ -30,5 +30,6 @@ Subpastas criadas sob demanda, quando o primeiro conteúdo chegar:
 | `kb/simulation/` | Workflow notebook↔params.m, Vcc override, runtime (Ts/fsw/Tsc) |
 | `kb/standards/` | IEEE 1547-2018, ONS, LVRT |
 | `kb/events/` | Apagão BR agosto 2023 |
+| `kb/dashboard/` | Relatório HTML, com subpastas `dados/`, `graficos/`, `cards/`, `layout/` |
 
 MATLAB/Simulink é ferramenta — conhecimento sobre implementação vai na pasta do tema, não em pasta separada.

@@ -457,7 +457,7 @@ function toggleDiagram() {{
   var btn = document.getElementById("diagram-toggle");
   var hidden = sec.style.display === "none";
   sec.style.display = hidden ? "" : "none";
-  btn.innerHTML = hidden ? "🗺&nbsp;Mapa IEEE 9-bus" : "🗺&nbsp;Ocultar mapa";
+  btn.innerHTML = hidden ? "🗺&nbsp;Ocultar mapa" : "🗺&nbsp;Mapa IEEE 9-bus";
   btn.style.opacity = hidden ? "1" : "0.85";
 }}
 

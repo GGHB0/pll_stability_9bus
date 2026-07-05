@@ -4,6 +4,15 @@ Registro das alterações no pipeline Python e no relatório `output/pll_metrics
 para revisão posterior. Detalhes técnicos de cada item estão nos patterns do KB
 (`.claude/kb/python/patterns/`).
 
+## 2026-07-05 — Zoom na falta em todos os painéis
+
+Arquivo: `src/report/renderer.py`
+
+- **Fix**: o zoom só alcançava a cadeia de eixos da coluna 1 — os painéis
+  pareados P/Q Bus 1/3 (coluna 2 da seção Sistema 9-Bus) têm cadeia de
+  `matches` própria e não zoomavam. `_zoomUpd()` agora varre todas as chaves
+  `xaxis*` do layout de cada figura.
+
 ## 2026-07-05 — Overlays de análise e controles novos (`bc428d7`)
 
 Arquivos: `src/pipeline/loader.py`, `src/pipeline/chart.py`, `src/report/renderer.py`

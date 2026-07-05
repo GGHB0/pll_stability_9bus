@@ -14,18 +14,30 @@ dotted-path (**válido em relayout**, ao contrário de `Plotly.react` — ver
 [[dark-mode-theming]]):
 
 ```javascript
-var upd = (zoomFault && sc.tFault != null)
-  ? { "xaxis.range": [sc.tFault - 0.1, (sc.tClear != null ? sc.tClear : sc.tFault) + 0.5],
-      "xaxis.autorange": false }
-  : { "xaxis.autorange": true };
-Plotly.relayout(gdInv, upd);
-if (sc.hasSys) Plotly.relayout(gdSys, upd);
+function _zoomUpd(figData, range) {
+  var upd = {};
+  Object.keys(figData.layout).forEach(function(k) {
+    if (k.indexOf("xaxis") === 0) {
+      if (range) { upd[k + ".range"] = range; upd[k + ".autorange"] = false; }
+      else       { upd[k + ".autorange"] = true; }
+    }
+  });
+  return upd;
+}
+Plotly.relayout(gdInv, _zoomUpd(sc.invData, range));
+if (sc.hasSys) Plotly.relayout(gdSys, _zoomUpd(sc.sysData, range));
 ```
 
-`shared_xaxes=True` no make_subplots gera eixos com `matches` — setar só
-`xaxis.range` propaga para todos os subplots. Como `Plotly.react` reseta o
-range, `_applyZoom()` é chamado **depois** dos reacts em `switchScenario` e
-`toggleTheme` — o zoom persiste entre cenários e temas.
+### Gotcha ⚠️ `shared_xaxes` não cobre a coluna 2
+
+`shared_xaxes=True` no make_subplots liga os eixos por `matches` **por
+coluna**: setar só `"xaxis.range"` zooma a cadeia da coluna 1, mas os painéis
+pareados (P/Q Bus na coluna 2) têm cadeia própria e ficam de fora. Por isso
+`_zoomUpd` varre **todas** as chaves `xaxis*` do layout da figura.
+
+Como `Plotly.react` reseta o range, `_applyZoom()` é chamado **depois** dos
+reacts em `switchScenario` e `toggleTheme` — o zoom persiste entre cenários
+e temas.
 
 ## 👻 Fantasma nominal × BAD_PLL
 

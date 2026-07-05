@@ -7,6 +7,11 @@ applies_to: [kb, commands, rules]
 # Limites de Arquivo
 
 - Nenhum arquivo dentro de `.claude/` pode ultrapassar **200 linhas**.
+- Qualquer arquivo `.md` do repositório (não só `.claude/`) que ultrapassar
+  **200 linhas** deve ser fragmentado em arquivos menores por subtema —
+  proativamente, sem esperar o usuário pedir.
+  - **Exceção**: `README.md` — ponto de entrada padrão do projeto, fica de
+    fora dessa regra mesmo acima de 200 linhas.
 - Se o conteúdo crescer além disso, dividir em arquivos menores por tema.
 - Formatos aceitos por pasta:
   - `kb/` → `.md` (texto narrativo, bases de conhecimento)

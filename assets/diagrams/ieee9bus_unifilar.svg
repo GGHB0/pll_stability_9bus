@@ -101,7 +101,7 @@
 <circle cx="174" cy="178" r="13" fill="#ffffff" stroke="#1e40af" stroke-width="2.2"/>
 <circle cx="200" cy="178" r="13" fill="#ffffff" stroke="#1e40af" stroke-width="2.2"/>
 <text x="187" y="205" text-anchor="middle" font-size="8" font-weight="600" fill="#1e40af">T2</text>
-<text x="187" y="215" text-anchor="middle" font-size="7" fill="#374151">20/230 kV</text>
+<text x="187" y="215" text-anchor="middle" font-size="7" fill="#374151">18/230 kV</text>
 <text x="187" y="224" text-anchor="middle" font-size="7" fill="#374151">X = j0.0625 pu</text>
 <circle cx="719" cy="178" r="13" fill="#ffffff" stroke="#1e40af" stroke-width="2.2"/>
 <circle cx="745" cy="178" r="13" fill="#ffffff" stroke="#1e40af" stroke-width="2.2"/>
@@ -135,7 +135,7 @@
   <rect class="hlr" x="97" y="145" width="24" height="76" rx="4"/>
   <line x1="109" y1="152" x2="109" y2="204" stroke="#b45309" stroke-width="5.5" stroke-linecap="round"/>
   <text x="109" y="141" text-anchor="middle" font-size="9" font-weight="700" fill="#b45309">2</text>
-  <text x="109" y="217" text-anchor="middle" font-size="7.5" fill="#b45309">20 kV</text>
+  <text x="109" y="217" text-anchor="middle" font-size="7.5" fill="#b45309">18 kV</text>
 </g>
 
 <!-- BUS 7 -->

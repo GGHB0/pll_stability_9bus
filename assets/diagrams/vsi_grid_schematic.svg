@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 320" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0B132B"/>
+    </marker>
+    <marker id="arrCtrl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F97316"/>
+    </marker>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1971c2"/>
+    </marker>
+  </defs>
+
+  <rect width="820" height="320" fill="#ffffff"/>
+
+  <text x="410" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#0B132B">
+    Diagrama esquemático de um VSI conectado à rede elétrica
+  </text>
+
+  <!-- ============= Primary DC source (GD renewable) ============= -->
+  <rect x="30" y="110" width="120" height="70" fill="#f0fdf4" stroke="#166534" stroke-width="2" rx="6"/>
+  <text x="90" y="138" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">Fonte Primária</text>
+  <text x="90" y="154" text-anchor="middle" font-size="10" fill="#166534">(GD: solar / eólica)</text>
+  <text x="90" y="168" text-anchor="middle" font-size="10" font-style="italic" fill="#166534">V<tspan baseline-shift="sub" font-size="75%">dc</tspan></text>
+
+  <!-- arrow DC source -> VSI -->
+  <line x1="150" y1="145" x2="205" y2="145" stroke="#0B132B" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="177" y="137" text-anchor="middle" font-size="9" fill="#0B132B">CC</text>
+
+  <!-- ============= VSI block ============= -->
+  <rect x="205" y="105" width="130" height="80" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2" rx="6"/>
+  <text x="270" y="135" text-anchor="middle" font-size="13" font-weight="700" fill="#0B132B">VSI</text>
+  <text x="270" y="151" text-anchor="middle" font-size="10" fill="#0B132B">Inversor Fonte</text>
+  <text x="270" y="164" text-anchor="middle" font-size="10" fill="#0B132B">de Tensão</text>
+  <text x="270" y="177" text-anchor="middle" font-size="9" fill="#0B132B">(CC → CA, 2 níveis)</text>
+
+  <!-- arrow VSI -> filter -->
+  <line x1="335" y1="145" x2="390" y2="145" stroke="#0B132B" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="362" y="137" text-anchor="middle" font-size="9" fill="#0B132B">3φ</text>
+
+  <!-- ============= Coupling filter block (generic) ============= -->
+  <rect x="390" y="112" width="105" height="66" fill="#fef3c7" stroke="#b45309" stroke-width="2" rx="6"/>
+  <text x="442" y="140" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">Filtro de</text>
+  <text x="442" y="155" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">Acoplamento</text>
+  <text x="442" y="169" text-anchor="middle" font-size="9" fill="#b45309">(LCL)</text>
+
+  <!-- arrow filter -> PCC -->
+  <line x1="495" y1="145" x2="545" y2="145" stroke="#0B132B" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- ============= PCC node ============= -->
+  <circle cx="550" cy="145" r="5" fill="#0B132B"/>
+  <text x="550" y="126" text-anchor="middle" font-size="12" font-weight="700" fill="#F97316">PAC</text>
+
+  <!-- arrow PCC -> grid -->
+  <line x1="555" y1="145" x2="610" y2="145" stroke="#0B132B" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- ============= Grid (transmission network symbol) ============= -->
+  <circle cx="660" cy="145" r="45" fill="white" stroke="#0B132B" stroke-width="2"/>
+  <path d="M 625 145 q 8 -18 16 0 q 8 18 16 0 q 8 -18 16 0 q 8 18 16 0"
+        fill="none" stroke="#0B132B" stroke-width="1.5"/>
+  <text x="660" y="205" text-anchor="middle" font-size="12" font-weight="700" fill="#0B132B">Rede Elétrica</text>
+  <text x="660" y="219" text-anchor="middle" font-size="10" fill="#0B132B">(sistema IEEE 9 barras)</text>
+
+  <!-- ============= Digital control block (abstract, below VSI) ============= -->
+  <rect x="195" y="235" width="290" height="55" fill="#fff7ed" stroke="#F97316" stroke-width="2" stroke-dasharray="5,3" rx="6"/>
+  <text x="340" y="258" text-anchor="middle" font-size="11" font-weight="700" fill="#0B132B">Controle Digital</text>
+  <text x="340" y="274" text-anchor="middle" font-size="10" fill="#0B132B">PWM · malhas de corrente dq · SRF-PLL</text>
+
+  <!-- control -> VSI gating -->
+  <line x1="270" y1="235" x2="270" y2="185" stroke="#F97316" stroke-width="2" marker-end="url(#arrCtrl)"/>
+
+  <!-- voltage sensing PCC -> control -->
+  <path d="M 550 150 L 550 262 L 485 262" fill="none" stroke="#1971c2" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrB)"/>
+  <text x="560" y="210" font-size="10" font-style="italic" fill="#1971c2">u<tspan baseline-shift="sub" font-size="75%">abc</tspan>(PAC)</text>
+</svg>

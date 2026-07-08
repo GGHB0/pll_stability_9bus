@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8743", "--directory", "output"],
       "port": 8743
+    },
+    {
+      "name": "assets-static",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8744", "--directory", "assets/diagrams"],
+      "port": 8744
     }
   ]
 }

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 640" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="arrAxis" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937"/>
+    </marker>
+  </defs>
+
+  <rect width="760" height="640" fill="#ffffff"/>
+
+  <text x="380" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#0B132B">
+    Requisito de injeção de corrente reativa sob defeito — ONS Submódulo 2.10 §5.8
+  </text>
+
+  <!-- ============= Dead-band highlight (0,85 a 1,10 pu) ============= -->
+  <rect x="413" y="110" width="95" height="430" fill="#fff3bf" opacity="0.7"/>
+
+  <!-- ============= Axes ============= -->
+  <line x1="90" y1="560" x2="90" y2="110" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arrAxis)"/>
+  <line x1="60" y1="340" x2="670" y2="340" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arrAxis)"/>
+
+  <text x="70" y="122" text-anchor="middle" font-size="14" font-style="italic" fill="#0B132B">ΔI<tspan baseline-shift="sub" font-size="75%">Q</tspan>/I<tspan baseline-shift="sub" font-size="75%">n</tspan></text>
+  <text x="680" y="345" font-size="14" font-style="italic" fill="#0B132B">V(pu)</text>
+
+  <!-- ============= Y tick labels + guide lines ============= -->
+  <line x1="85" y1="160" x2="90" y2="160" stroke="#1f2937" stroke-width="1.5"/>
+  <text x="75" y="164" text-anchor="end" font-size="12" fill="#0B132B">1</text>
+  <line x1="85" y1="520" x2="90" y2="520" stroke="#1f2937" stroke-width="1.5"/>
+  <text x="75" y="524" text-anchor="end" font-size="12" fill="#0B132B">-1</text>
+
+  <!-- ============= X tick labels ============= -->
+  <line x1="280" y1="340" x2="280" y2="345" stroke="#1f2937" stroke-width="1.5"/>
+  <text x="280" y="362" text-anchor="middle" font-size="12" fill="#0B132B">V1</text>
+  <line x1="413" y1="340" x2="413" y2="345" stroke="#1f2937" stroke-width="1.5"/>
+  <text x="413" y="362" text-anchor="middle" font-size="12" fill="#0B132B">0,85</text>
+  <line x1="508" y1="340" x2="508" y2="345" stroke="#1f2937" stroke-width="1.5"/>
+  <text x="508" y="362" text-anchor="middle" font-size="12" fill="#0B132B">1,10</text>
+  <line x1="546" y1="340" x2="546" y2="345" stroke="#1f2937" stroke-width="1.5"/>
+  <text x="546" y="362" text-anchor="middle" font-size="12" fill="#0B132B">V2</text>
+
+  <!-- ============= Dashed reference guides ============= -->
+  <line x1="90" y1="160" x2="280" y2="160" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="280" y1="160" x2="280" y2="340" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="546" y1="340" x2="546" y2="520" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="90" y1="520" x2="546" y2="520" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- ============= Curve: flat(1) -> ramp -> flat(0) -> ramp -> flat(-1) ============= -->
+  <path d="M 90 160 L 280 160 L 413 340 L 508 340 L 546 520 L 650 520"
+        fill="none" stroke="#1971c2" stroke-width="2.5"/>
+
+  <!-- ============= Region labels ============= -->
+  <text x="185" y="145" text-anchor="middle" font-size="11.5" fill="#0B132B">Fornecimento</text>
+  <text x="185" y="159" text-anchor="middle" font-size="11.5" fill="#0B132B">Pot. Reativa</text>
+
+  <text x="598" y="548" text-anchor="middle" font-size="11.5" fill="#0B132B">Consumo</text>
+  <text x="598" y="562" text-anchor="middle" font-size="11.5" fill="#0B132B">Pot. Reativa</text>
+
+  <!-- ============= Equations panel ============= -->
+  <text x="30" y="600" font-size="11.5" font-style="italic" fill="#0B132B">ΔI<tspan baseline-shift="sub" font-size="75%">Q</tspan> = I<tspan baseline-shift="sub" font-size="75%">Q</tspan> - I<tspan baseline-shift="sub" font-size="75%">Q0</tspan>   ·   I<tspan baseline-shift="sub" font-size="75%">Q</tspan> = corrente reativa   ·   I<tspan baseline-shift="sub" font-size="75%">Q0</tspan> = corrente reativa pré-distúrbio   ·   I<tspan baseline-shift="sub" font-size="75%">n</tspan> = corrente nominal</text>
+  <text x="30" y="620" font-size="11.5" font-style="italic" fill="#0B132B">V<tspan baseline-shift="sub" font-size="75%">(pu)</tspan> = V<tspan baseline-shift="sub" font-size="75%">pos</tspan> / V<tspan baseline-shift="sub" font-size="75%">n</tspan>   ·   V<tspan baseline-shift="sub" font-size="75%">pos</tspan> = tensão de sequência positiva nos terminais   ·   ajuste padrão: V1 = 0,5 pu, V2 = 1,2 pu</text>
+</svg>

@@ -8,6 +8,9 @@ Diagramas usados na secao "Arquitetura do SRF-PLL" do README principal.
 | `pll_control_loop.svg` | SVG (controle) | Blocos do laco SRF-PLL: Park, PI (Kp+Ki/s), somador, integrador 1/s, realimentacao de fase | `.claude/kb/pll/srf_pll_theory.md`, `.claude/kb/pll/pll_gains_methodology.md` |
 | `contingencies_attack.svg` | SVG (circuito + controle) | Circuito de referencia com 4 marcadores de falta + paineis dos 4 cenarios com mini-formas de onda de u_q | `.claude/kb/pll/pll_contingencies.md` |
 | `gains_tradeoff.mmd` | Mermaid | Trade-off Kp/Ki (Secao 4.3 - Analise de Sensibilidade) | `.claude/kb/pll/pll_contingencies.md` |
+| `vsi_grid_schematic.svg` / `.png` | SVG (blocos) | Figura 2.1 do TCC — esquematico generico VSI conectado a rede (fonte CC -> VSI -> filtro LCL -> PAC -> rede), com bloco de controle digital abstrato | `.claude/kb/tcc-word/content_map.md` |
+| `voltage_sag_profile.svg` / `.png` | SVG (curva) | Figura 2.6 do TCC — perfil caracteristico de afundamento de tensao V(t): profundidade, duracao, tensao residual, limiar 0,9 pu | `.claude/kb/pll/pll_contingencies.md`, Bollen 2000 |
+| `vsi_lcl_pwm_circuit.svg` / `.png` | SVG (circuito) | Figura 3.1 do TCC — circuito VSI trifasico 2 niveis (S1-S6 + diodos), filtro LCL (L1/Cf/L2), sensores i_abc e u_abc, PAC Barra 2, bloco de controle SPWM | `.claude/kb/inverter/lcl_filter.md`, `.claude/kb/inverter/simulink_model.md` |
 
 ## Convencoes visuais
 

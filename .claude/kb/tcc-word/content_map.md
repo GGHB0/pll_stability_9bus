@@ -17,7 +17,7 @@ metadata:
 ## Introdução (sem número)
 
 - ✅ Contextualização: transição energética, desafios de integração de renováveis
-- ✅ Motivação: apagão 15/08/2023 no SIN — 22.547 MW = 31% da carga nacional; ONS concluiu que inversores tiveram desempenho "aquém dos modelos matemáticos"
+- ✅ Motivação: apagão 15/08/2023 no SIN — 23.368 MW = 34,5% da carga do SIN; ONS concluiu que inversores tiveram desempenho "aquém dos modelos matemáticos"
 - ✅ Vulnerabilidade do SRF-PLL: dependência de sinal de tensão de boa qualidade
 - ✅ Objetivos específicos (5 itens)
 - ✅ Referências [1]–[9] (Mohan, Xiong, Yazdani, Teodorescu, Enhanced PLL, Wu-Wang, RAP-ONS)

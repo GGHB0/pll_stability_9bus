@@ -14,7 +14,7 @@ source: TCCs Victor e Bruno_V8.docx (comentado)
 
 ## Motivação Central
 
-Perturbação de 15/08/2023 no SIN brasileiro: 22.547 MW desconectados = 31% da carga nacional.
+Perturbação de 15/08/2023 no SIN brasileiro: 23.368 MW desconectados = 34,5% da carga do SIN.
 ONS concluiu que inversores eólicos/fotovoltaicos tiveram desempenho "aquém dos modelos matemáticos".
 → Lacuna entre comportamento simulado e real dos algoritmos de sincronismo.
 

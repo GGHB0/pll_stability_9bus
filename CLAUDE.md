@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-TCC (Trabalho de Conclusão de Curso) em Engenharia Elétrica — UERJ 2025. Investigates the dynamic behavior of the **SRF-PLL** (Synchronous Reference Frame Phase-Locked Loop) algorithm in grid-tied inverters under severe network contingencies, motivated by the August 15, 2023 Brazilian grid disturbance that disconnected 22,547 MW (~31% of national load).
+TCC (Trabalho de Conclusão de Curso) em Engenharia Elétrica — UERJ 2025. Investigates the dynamic behavior of the **SRF-PLL** (Synchronous Reference Frame Phase-Locked Loop) algorithm in grid-tied inverters under severe network contingencies, motivated by the August 15, 2023 Brazilian grid disturbance that disconnected 23,368 MW (~34.5% of SIN load).
 
 ## Repository Layout
 

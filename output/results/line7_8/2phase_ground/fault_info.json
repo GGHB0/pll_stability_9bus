@@ -1,0 +1,14 @@
+{
+  "fault_bus": 0,
+  "fault_line": [
+    7,
+    8
+  ],
+  "fault_type": "2phase_ground",
+  "t_fault": 0.6,
+  "t_clear": 0.7,
+  "duration_s": 0.099999999999999978,
+  "bad_pll": false,
+  "timestamp": "2026-07-10T14:29:17",
+  "model": "pll_stability_9bus"
+}

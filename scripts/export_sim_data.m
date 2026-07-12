@@ -45,6 +45,7 @@ end
 if ~isfolder(out_dir), mkdir(out_dir); end
 
 export_angles(ds, out_dir);
+export_abc(ds, out_dir);
 export_slow(ds, out_dir, T_FAULT);
 save_fault_info(out_dir, FAULT_BUS, FAULT_LINE, FAULT_TYPE, T_FAULT, T_CLEAR, BAD_PLL);
 fprintf('Exportação concluída → %s\n', out_dir);
@@ -67,6 +68,32 @@ function export_angles(ds, out_dir)
     out = fullfile(out_dir, 'sim_data_angles.csv');
     writetable(T, out);
     fprintf('Angulos: %d amostras → %s\n', height(T), out);
+end
+
+% ═══════════════════════════════════════════════════════════════════════════
+function export_abc(ds, out_dir)
+% CSV 3: correntes trifásicas abc na taxa nativa (espectro em abc — a
+% sequência zero das faltas à terra só existe aqui, o dq a perde).
+    Iinv = ds.get('iabc_inverter');
+    if isempty(Iinv), return; end
+
+    t_s = Iinv.Values.Time;
+    d   = Iinv.Values.Data;
+    T = table(t_s, d(:,1), d(:,2), d(:,3), ...
+        'VariableNames', {'t_s','ia_ufv_pu','ib_ufv_pu','ic_ufv_pu'});
+
+    Igrid = ds.get('iabc_grid');
+    if ~isempty(Igrid)
+        tg = Igrid.Values.Time;
+        dg = Igrid.Values.Data;
+        T.ia_grid_pu = interp1(tg, dg(:,1), t_s, 'linear', 'extrap');
+        T.ib_grid_pu = interp1(tg, dg(:,2), t_s, 'linear', 'extrap');
+        T.ic_grid_pu = interp1(tg, dg(:,3), t_s, 'linear', 'extrap');
+    end
+
+    out = fullfile(out_dir, 'sim_data_abc.csv');
+    writetable(T, out);
+    fprintf('Correntes abc: %d amostras → %s\n', height(T), out);
 end
 
 % ═══════════════════════════════════════════════════════════════════════════

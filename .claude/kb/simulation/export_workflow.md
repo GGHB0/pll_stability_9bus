@@ -29,6 +29,13 @@ description: Workflow validado Simulink → MATLAB → Python para o modelo pll_
 > `Ang_pll` e `iabc` rodam a Ts (eixo rápido); demais sinais a Tsc (eixo lento).
 > `V_bus{N}` é escalar de magnitude — **não** aplicar transformada de Clarke.
 
+> ⚠️ **Discrepância observada (2026-07-12)**: nos CSVs exportados em
+> `output/results/` as taxas estão **invertidas** — `sim_data.csv` a 5 µs e
+> `sim_data_angles.csv` a 200 µs. Ou o logging do modelo mudou (decimação dos
+> sinais trocada) ou a tabela acima está desatualizada. Pipeline Python não
+> quebra (interpola pelo tempo real), mas conferir no Simulink qual taxa cada
+> sinal logado usa hoje. Ver nota em [[pipeline-dados]].
+
 ### Origem estrutural: por que P_bus/Q_bus não são pu mas Pinverter/Qinverter são
 
 Ver `.claude/kb/inverter/simulink_model.md` (seção Scopes/Bus monitor, SID 4396).
@@ -48,7 +55,7 @@ explicitamente (ver abaixo), diferente de `Pinverter`/`Qinverter`.
 
 ## Script MATLAB: `scripts/export_sim_data.m`
 
-Exporta **dois CSVs separados** (preserva a taxa nativa de cada grupo). Caminho portável:
+Exporta **três CSVs separados** (preserva a taxa nativa de cada grupo). Caminho portável:
 `proj_root = fileparts(get_param(bdroot, 'FileName'))`.
 
 - **CSV 1** (`sim_data_angles.csv`, eixo Ts): `t_s, theta_pll_rad, theta_ref_rad, theta_err_rad`.
@@ -75,6 +82,15 @@ em todo o pipeline Python (ver `V_base = 20 kV, S_base = 100 MVA` em
 > Sinais Mux de 2 elementos onde só a coluna (1) é pertinente (P_bus1, Q_bus1, P_bus3,
 > Q_bus3): confirmado pelo usuário — sempre usar `Data(:,1)`.
 
+- **CSV 3** (`sim_data_abc.csv`, taxa nativa de `iabc_inverter`, 2026-07-12):
+  `t_s, ia/ib/ic_ufv_pu` + `ia/ib/ic_grid_pu` (se `iabc_grid` estiver logado,
+  interpoladas no mesmo eixo). Função `export_abc`; pulada silenciosamente se
+  `iabc_inverter` não existir no logsout. Uso: espectro em abc **verdadeiro**
+  — a Park inversa dos sinais dq perde a sequência zero das faltas à terra.
+  Consumo Python: `SimData.t_abc`/`ia_ufv`/… (flags `has_iabc_ufv`/`_grid`);
+  alimenta o painel "Corrente i_a UFV (abc)" do espectro
+  ([[espectro-fourier]]) — só aparece após **re-exportar** os cenários.
+
 Após exportar, o `StopFcn` chama `export_sim_data.m`, que por sua vez pode disparar
 `app.py` (ver `kb/simulation/python_pipeline.md`).
 
@@ -91,7 +107,8 @@ Linhas do IEEE 9 barras: **1-4, 4-5, 5-6, 3-6, 6-7, 7-8, 8-2, 8-9, 9-4**.
 `fault_type` ∈ `{3phase, 2phase_ground, 2phase, 1phase_ground}`; sufixo `_bad_pll`
 quando `BAD_PLL=true` (ver [[bad-pll-scenario]]).
 
-Cada pasta recebe: `sim_data.csv`, `sim_data_angles.csv`, `fault_info.json`.
+Cada pasta recebe: `sim_data.csv`, `sim_data_angles.csv`, `sim_data_abc.csv`
+(se `iabc_inverter` logado) e `fault_info.json`.
 
 ## Colunas de `sim_data.csv`
 

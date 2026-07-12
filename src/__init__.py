@@ -9,6 +9,7 @@ Subpacotes:
 
 from .pipeline.loader   import SimData
 from .pipeline.chart    import ChartBuilder
+from .pipeline.spectrum import SpectrumBuilder
 from .report.renderer   import HTMLRenderer
 
-__all__ = ["SimData", "ChartBuilder", "HTMLRenderer"]
+__all__ = ["SimData", "ChartBuilder", "SpectrumBuilder", "HTMLRenderer"]

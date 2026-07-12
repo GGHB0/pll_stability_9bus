@@ -17,10 +17,11 @@ pll_stability_9bus/
 ├── pll_stability_9bus_faultInfo.xml    ← metadados do Fault Analyzer
 ├── requirements.txt                    ← numpy, pandas, plotly
 ├── src/                                ← pacote Python de análise
-│   ├── __init__.py                     ← expõe SimData, ChartBuilder, HTMLRenderer
+│   ├── __init__.py                     ← expõe SimData, ChartBuilder, SpectrumBuilder, HTMLRenderer
 │   ├── config/settings.py              ← T_FAULT, TOL_RAD, paletas, caminhos
 │   ├── pipeline/loader.py              ← SimData: lê CSV, calcula IAE/ISE/ts/ΔP/ΔQ
 │   ├── pipeline/chart.py               ← ChartBuilder: monta subplots Plotly
+│   ├── pipeline/spectrum.py            ← SpectrumBuilder: FFT segmentada pré/falta/pós (dq)
 │   └── report/renderer.py              ← HTMLRenderer: gera relatório HTML
 ├── scripts/
 │   ├── export_sim_data.m               ← exporta logsout → output/sim_data.csv

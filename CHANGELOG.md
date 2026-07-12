@@ -3,174 +3,80 @@
 Registro das alterações no pipeline Python e no relatório `output/pll_metrics.html`,
 para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
+Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
-## 2026-07-05 — Story refinado: rótulos contextuais + zoom clamped
+## 2026-07-12 — Export de correntes abc + painel fase A no espectro
 
-Arquivos: `src/report/renderer.py`, `.claude/kb/dashboard/cards/cards-metricas.md`
+Arquivos: `scripts/export_sim_data.m`, `src/pipeline/loader.py`,
+`src/pipeline/spectrum.py`
 
-- **Rótulo contextual de P/Q**: em falta, continua "Recuperação" (mede
-  recuperação pós-clear). Em regime permanente, muda para **"Oscilação de
-  potência"** (reflete instabilidade induzida pelo PLL sem contingência),
-  com textos ajustados ("estável em operação normal" vs "sem oscilação
-  residual após a falta").
-- **Zoom na falta clampado**: `tEnd` agora exposto em `SCENARIOS` para
-  evitar que o range do zoom ultrapasse o final da simulação — `Math.min()`
-  aplicado ao xAxis range máximo. Antes, cenários com `t_clear + 0.5 > t[-1]`
-  tentavam renderizar além dos dados (ex. bus4/1phase: 0.4 + 0.5 = 0.9 s, mas
-  `t[-1] = 0.424 s`).
+- **CSV 3 `sim_data_abc.csv`** (novo, taxa nativa): `export_abc` exporta
+  `iabc_inverter` (colunas `ia/ib/ic_ufv_pu`) e, se logado, `iabc_grid`
+  (`ia/ib/ic_grid_pu` interpoladas no mesmo eixo). Motivação: espectro em
+  abc verdadeiro — a Park inversa perde a sequência zero das faltas à terra.
+- **Loader**: carrega o CSV abc quando existe (`t_abc`, `ia/ib/ic_ufv`,
+  `ia/ib/ic_grid`, flags `has_iabc_ufv`/`has_iabc_grid`); CSVs antigos
+  seguem funcionando sem ele.
+- **Espectro**: 4º painel "Corrente i_a UFV (abc)" quando há dados abc.
+  Contexto (validado com fase A reconstruída): em abc a fundamental fica em
+  60 Hz (~0 dB) e a **sequência negativa cai também em 60 Hz** — invisível
+  (+0.1 dB na falta 1φ); o ripple dq de 120 Hz vira banda lateral em 180 Hz
+  (−14.7 dB). Por isso o painel abc **complementa** os painéis dq (onde a
+  seq. negativa aparece isolada em 120 Hz), não os substitui.
+- ⚠️ O painel só aparece após **re-exportar** os cenários no MATLAB
+  (os CSVs atuais não têm abc).
 
-## 2026-07-05 — Diagnóstico em lista de tópicos
+## 2026-07-12 — T_SETTLE: partida do PLL fora de todos os cálculos
 
-Arquivos: `src/report/renderer.py`
+Arquivos: `src/config/settings.py`, `src/config/__init__.py`,
+`src/pipeline/loader.py`, `src/pipeline/spectrum.py`
 
-- **Story em tópicos**: o diagnóstico deixou de ser um parágrafo corrido
-  (frases concatenadas com espaço) e virou `<ul class="story-list">` — um
-  item por métrica, com rótulo em negrito (Distúrbio / Pico de fase /
-  Acomodação / Erro acumulado / Recuperação) e bolinha colorida pelo
-  semáforo daquela métrica (mesmas cores good/warn/bad dos cards; contexto
-  de regime usa dot neutro). Frases encurtadas onde o rótulo já carrega o
-  assunto. Só apresentação: métricas, condições de exibição e veredito
-  inalterados. Ver `kb/dashboard/cards/cards-metricas.md`.
+Motivação (pedido do usuário): o PLL leva ~0.08 s para travar na rede no
+início da simulação — esse transitório é partida, não falta de desempenho,
+e não deve contaminar métrica nenhuma, principalmente o Fourier.
 
-## 2026-07-05 — Reavaliação dos cards e do diagnóstico de falta
+- **Nova constante `T_SETTLE = 0.1 s`**: medida nos dados (bus6/1phase) —
+  o sinal mais lento é |V| Bus 2, que acomoda em 0.078 s (θ_err em 0.039 s,
+  P em 0.034 s, Q em 0.062 s). 0.1 s dá margem e ainda deixa 0.2 s de
+  pré-falta limpo antes de t_fault = 0.3 s.
+- **Espectro de Fourier**: janela pré-falta passa de `[T_FAULT=0.2, t_fault]`
+  para `[T_SETTLE=0.1, t_fault]` — exclui a partida por critério documentado
+  (antes era acidente da constante de fallback) e **dobra a janela**:
+  resolução de 10 Hz → 5 Hz. Regime usa `[T_SETTLE, t_end]`.
+- **Integrais IAE/ISE e demais métricas** (`_compute_metrics`): janelas
+  clampadas em `max(t_fault, T_SETTLE)`; regime usa `T_SETTLE` no lugar de
+  `T_FAULT`. Com t_fault = 0.3 s nos cenários atuais, os valores de falta
+  não mudam — o clamp protege cenários futuros com falta precoce.
+- **Fora do escopo (decisão do usuário: só Python)**: a normalização pu no
+  MATLAB (`export_sim_data.m`, `Vnom = mean(vmag(t < T_FAULT))`) ainda
+  inclui a partida → viés de ~1.1% nas colunas `vbus*_pu`/`vd/vq`
+  (regime fica em 0.9887 pu em vez de 1.0). Corrigir exige editar o .m e
+  re-exportar os cenários.
 
-Arquivos: `src/pipeline/loader.py`, `src/config/settings.py`, `src/report/renderer.py`, `app.py`
+## 2026-07-12 — Espectro de Fourier segmentado (pedido do orientador)
 
-Motivação: 11 dos 12 cenários recebiam veredito "Desempenho crítico" — o
-semáforo não discriminava nada. Auditoria completa em
-`kb/dashboard/cards/cards-metricas.md`.
+Arquivos: `src/pipeline/spectrum.py` (novo), `src/config/settings.py`,
+`src/__init__.py`, `src/pipeline/__init__.py`, `app.py`,
+`src/report/renderer.py`, `.claude/kb/dashboard/graficos/espectro-fourier.md`
 
-- **ΔP/ΔQ agora na janela pós-clear** (`t ≥ t_clear`): mede a recuperação,
-  não o colapso durante o afundamento (que dava ΔP ≈ 1 pu em toda falta).
-  Thresholds recalibrados (`DP_THRESH` (0.10, 0.50), `DQ_THRESH` (0.15, 0.60)).
-- **tₛ honesto**: se \|θ_err\| segue fora de ±1.15° nos últimos 2 ms da
-  simulação → `ts = None`, `settled = False`; card/tabela mostram
-  "> t_end s / não acomodou" (bad) em vez de um tₛ falso na última amostra
-  (acontecia em 7 dos 12 cenários). Loader também expõe `ts_delta`.
-- **Novo card e coluna \|θ_err\| pico (°)** (`peak_err`): a métrica que mais
-  separa cenários (1° a 178°); ≥ 90° marca "perda de sincronismo".
-- **Cards reagrupados**: "Severidade do distúrbio" (V min + duração da falta,
-  contexto), "Desempenho do PLL" (IAE, ISE, tₛ, pico), "Recuperação do
-  inversor" (ΔP/ΔQ pós-clear).
-- **Veredito só de desempenho**: V min (severidade) saiu do cálculo — falta
-  severa com PLL exemplar não vira mais "crítico". Labels: crítico /
-  em atenção / bom. Distribuição resultante: 1 good, 3 warn, 8 bad (justificados).
-- **Story reordenado**: contexto da falta (duração + sag vs LVRT) → resposta
-  do PLL (pico, acomodação/não acomodou, IAE) → recuperação (ΔP); narrativa
-  própria para regime permanente (antes ganhava "Diagnóstico pós-falta" com
-  T_FAULT de fallback).
-- **Regime permanente**: métricas descartam o transitório de partida
-  (janela `t ≥ T_FAULT`); antes o V min de regime capturava o V = 0 inicial.
-- Fix menor: label "Monofásica" para pastas `1phase` em `app.py`; tolerância
-  exibida como ±1.15° (antes ±1.1°).
+- **Nova seção "Espectro de Fourier — referencial dq"**: FFT de amplitude
+  (Hann, média removida, grade uniforme por reamostragem) de θ_err, i_q e
+  Q UFV, com um traço por segmento temporal — **pré-falta** (cinza),
+  **falta** (vermelho), **pós-falta** (azul); cenário de regime vira traço
+  único. Eixo y em **dB re 1 pu/rad** (20·log10, piso −100 dB), formato
+  Amplitude (dB) × Hz da literatura, pedido do orientador; x default
+  0–1500 Hz (duplo-clique expande até 2 kHz).
+- **Marcadores físicos**: vlines em 120 Hz (2ª harmônica no dq = sequência
+  negativa da falta assimétrica) e 1443 Hz (ressonância do filtro LCL).
+- **Validação**: falta 1φ bus6 → pico de 120 Hz no θ_err durante a falta
+  12× maior que na 3φ equivalente (2,73e-2 vs 2,20e-3 rad).
+- Integrado ao tema dark/light, ao seletor de cenário e ao fantasma
+  nominal×BAD_PLL; zoom na falta (domínio do tempo) não afeta o espectro.
+- Custo no HTML: ~95 KB/cenário (~1,7 MB total).
 
-## 2026-07-05 — Legenda invisível no dark mode + KB do dashboard
+## Entradas anteriores
 
-Arquivos: `src/report/renderer.py`, `.claude/kb/dashboard/`
-
-- **Fix: legenda não aparecia no dark mode.** Mesma causa raiz do fix do
-  dark mode (`6af6e3e`): `BASE_DARK`/`BASE_LIGHT` ainda tinham chaves dotted
-  (`"font.color"`, `"legend.bgcolor"`, `"hoverlabel.*"`) que `Plotly.react`
-  ignora — o texto das legendas ficava `#111827` sobre paper `#111827`.
-  Agora `font`/`hoverlabel` são aplicados aninhados e TODAS as legendas
-  nomeadas (`legend`, `legend2`, …) recebem fonte do tema; a bgcolor
-  semi-opaca das legendas internas (painéis pareados) é re-temada para
-  `rgba(26,36,54,0.85)` no dark. Ver `kb/dashboard/layout/dark-mode-theming.md` (Fix 4).
-- **KB reorganizado**: nova pasta `.claude/kb/dashboard/` com subpastas
-  `dados/`, `graficos/`, `cards/`, `layout/` — os 6 patterns do dashboard
-  migraram de `kb/python/patterns/` e ganharam 4 docs novos
-  (pipeline de dados, construção dos gráficos, cards/story, estrutura HTML).
-  Entrada: `kb/dashboard/index.md`.
-
-## 2026-07-05 — Zoom sincronizado em todos os gráficos
-
-Arquivos: `src/pipeline/chart.py`, `src/report/renderer.py`
-
-- **Todos os eixos X linkados** (`matches="x"` em `_apply_layout`): qualquer
-  zoom — botão "Zoom na falta", arrasto manual ou duplo-clique — vale para
-  todos os painéis da figura, incluindo os pareados P/Q Bus da coluna 2
-  (antes fora da cadeia de `shared_xaxes`, que liga só por coluna).
-- **Ponte Inversor ↔ Sistema** (`_bridgeZoom`): zoom manual numa seção
-  replica o range na outra via evento `plotly_relayout`, com trava anti-loop;
-  duplo-clique (autorange) também sincroniza.
-
-## 2026-07-05 — Overlays de análise e controles novos (`bc428d7`)
-
-Arquivos: `src/pipeline/loader.py`, `src/pipeline/chart.py`, `src/report/renderer.py`
-
-### Novos recursos de análise
-- **Painel "Frequência PLL (Hz)"**: `SimData._estimate_freq()` calcula
-  `f̂ = dθ̂/dt / 2π` por diferença central com janela ~1 ms sobre o eixo rápido.
-  Novos atributos: `f_pll`, `t_freq`, flag `has_freq`. Hline de 60 Hz no painel.
-- **Envelope LVRT IEEE 1547-2018 Cat II** no painel |V| Bus 2: curva degrau V×t
-  ancorada em `t_fault` (0.30 pu/0.16 s → 0.45/0.32 s → 0.65/3 s → 0.88 contínuo).
-  Substitui a hline fixa de `LVRT_THRESHOLD` (mantida em Bus 1/3 e em regime).
-- **Marcador de tₛ** no gráfico de erro de fase: diamante verde no instante de
-  acomodação + banda de tolerância ±1.15° sombreada em verde translúcido.
-
-### Melhorias de visualização
-- **Janela de falta em destaque**: faixa vermelha translúcida entre
-  `t_fault`/`t_clear` + vlines mais grossas (2.0) — vermelha no início da falta,
-  verde na limpeza (era cinza fina).
-- **Hierarquia no painel de ângulo**: θ̂ PLL agora é sólido, largura 2.4 e
-  primeira cor da paleta; θ Rede fino e tracejado (antes era o inverso).
-
-### Controles novos na filter-bar
-- **🔍 Zoom na falta**: enquadra o eixo X de todos os subplots em
-  `[t_fault−0.1, t_clear+0.5]`; persiste entre cenários/temas; desabilita em regime.
-- **👻 Comparar PLL**: sobrepõe o cenário BAD_PLL equivalente como fantasma
-  pontilhado (mesma cor, opacidade 0.5); desabilita quando não há par exato.
-- **Export PNG 3×**: botão de câmera do modebar exporta em alta resolução com
-  filename por cenário/seção (era SVG sem nome).
-
-### Correção
-- **Re-tema de shapes repintava linhas semânticas de cinza**: o `themedLayout`
-  repintava TODAS as shapes (incluindo vlines de falta, hlines LVRT e bandas)
-  com a cor da divisória de grupo, a cada troca de tema ou cenário, nos dois
-  temas. Agora só shapes com `xref === "paper"` são re-temadas.
-  Ver `kb/dashboard/layout/dark-mode-theming.md` (Fix 3).
-
-## 2026-07-05 — Remoção do símbolo φ do header (`8b24f47`)
-
-- Removido o quadrado roxo com "φ" do header (`<div class="h-logo">` + bloco CSS);
-  o logo da UERJ passou a ser a única marca visual, ao lado do título.
-
-## 2026-07-05 — Fix real do dark mode (`6af6e3e`)
-
-- **Causa raiz**: `themedLayout` construía chaves flat `"xaxis.gridcolor"`
-  (dotted string) que `Plotly.react` ignora silenciosamente — gridlines nunca
-  foram re-temadas e ficavam quase brancas sobre fundo escuro. Corrigido
-  aninhando o objeto do eixo (`axUpd[k] = Object.assign({}, layout[k], {...})`).
-- `plot_bgcolor` do dark mode clareado para `#1a2436` (antes idêntico ao card),
-  com grid `#31425c` e zeroline `#4b5d7a` recalibrados.
-  Ver `kb/dashboard/layout/dark-mode-theming.md` (Fix 2).
-
-## 2026-07-05 — Contraste de rótulos no dark mode (`7626d19`)
-
-- Annotations (`_label`, `_group_title`) e shape divisória re-temadas por tema
-  via `xref` como discriminador (cores fixas do `chart.py` não herdam do layout).
-
-## 2026-07-05 — Logo UERJ no header (`45ff9c7`)
-
-- `_uerj_logo_html()`: embute `assets/uerj.png` como base64 (HTML segue
-  portátil); degrada silenciosamente se o arquivo não existir.
-
-## 2026-07-05 — Label do toggle de mapa (`0d2541c`)
-
-- Corrigido ternário invertido em `toggleDiagram()`; regra adotada: o label de
-  um botão toggle descreve sempre a **próxima ação**, nunca o estado atual.
-
-## 2026-07-05 — Decimação + tabela comparativa (`46f08c3`)
-
-- Decimação de traces (`_MAX_POINTS = 5000` por trace) em `chart.py`:
-  HTML caiu de ~570 MB para ~23,7 MB.
-- Seção "Comparativo de cenários": tabela ordenável com IAE/ISE/tₛ/ΔP/ΔQ/Vmin
-  por cenário, filtrada pelo modo PLL, clique na linha troca o cenário.
-
-## 2026-07-01 — Reestruturação do pacote (`1d19283` … `992e4e3`)
-
-- `src/` dividido em `config/` (settings), `pipeline/` (loader, chart) e
-  `report/` (renderer); entry point `app.py`.
-- Linhas de falta dinâmicas por cenário lendo `fault_info.json` (t_fault/t_clear
-  reais exportados pelo MATLAB); base de normalização de P/Q de barra corrigida
-  para MVA.
+- [2026-07-01 a 2026-07-05](docs/changelog/2026-07-early.md) — reestruturação
+  do pacote `src/`, decimação (570 MB → 23,7 MB), tabela comparativa, fixes de
+  dark mode, overlays de análise (LVRT, tₛ, frequência PLL), zoom sincronizado,
+  reavaliação dos cards e veredito.

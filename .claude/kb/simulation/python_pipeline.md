@@ -8,12 +8,13 @@ description: Arquitetura Python (src/) que consome sim_data.csv — SimData, Cha
 ```
 app.py                  ← entry point (python app.py [--out PATH]); varre output/results/**/sim_data.csv
 src/
-├── __init__.py         → reexporta SimData, ChartBuilder, HTMLRenderer (API pública)
+├── __init__.py         → reexporta SimData, ChartBuilder, SpectrumBuilder, HTMLRenderer (API pública)
 ├── config/
-│   └── settings.py     → T_FAULT, TOL_RAD, thresholds, paletas, caminhos
+│   └── settings.py     → T_FAULT, T_SETTLE, TOL_RAD, thresholds, paletas, constantes de espectro, caminhos
 ├── pipeline/            → CSV → dados → figuras Plotly
 │   ├── loader.py         → SimData: lê sim_data.csv + sim_data_angles.csv, calcula métricas
-│   └── chart.py           → ChartBuilder: subplots Plotly (usa t_fast p/ painéis de ângulo)
+│   ├── chart.py           → ChartBuilder: subplots Plotly (usa t_fast p/ painéis de ângulo)
+│   └── spectrum.py        → SpectrumBuilder: FFT segmentada pré/falta/pós em dB (ver kb/dashboard/graficos/espectro-fourier.md)
 └── report/               → figuras → HTML
     └── renderer.py         → HTMLRenderer: HTML multi-cenário com tema light/dark
 ```
@@ -128,14 +129,17 @@ Este valor real (não a constante global `T_FAULT`) é o que alimenta:
 
 | Métrica (chave dict) | Fórmula | Janela |
 |---|---|---|
-| `IAE` | ∫\|θ_err\| dt | t ≥ t_fault |
-| `ISE` | ∫θ_err² dt | t ≥ t_fault |
-| `ts` | último t com \|θ_err\| > TOL_RAD | t ≥ t_fault |
-| `dP_ufv` | max(P_ufv) − min(P_ufv) | t ≥ t_fault |
-| `dQ_ufv` | max(Q_ufv) − min(Q_ufv) | t ≥ t_fault |
-| `vmin` | min(vbus2_pu) | t ≥ t_fault |
+| `IAE` | ∫\|θ_err\| dt | t ≥ max(t_fault, T_SETTLE) |
+| `ISE` | ∫θ_err² dt | t ≥ max(t_fault, T_SETTLE) |
+| `ts` | último t com \|θ_err\| > TOL_RAD | t ≥ max(t_fault, T_SETTLE) |
+| `dP_ufv` | max(P_ufv) − min(P_ufv) | t ≥ max(t_clear, T_SETTLE) |
+| `dQ_ufv` | max(Q_ufv) − min(Q_ufv) | t ≥ max(t_clear, T_SETTLE) |
+| `vmin` | min(vbus2_pu) | t ≥ max(t_fault, T_SETTLE) |
 
 `t_fault` acima é `self.t_fault` (real do cenário, fallback `T_FAULT` global).
+`T_SETTLE = 0.1 s` (2026-07-12) clampa toda janela de cálculo: a partida do
+PLL (~0.08 s até travar) não entra em integral nenhuma nem na FFT; regime
+usa `t ≥ T_SETTLE` direto. Ver `kb/dashboard/dados/pipeline-dados.md`.
 `np.trapezoid` (NumPy ≥ 2.0). Baseline correction: subtrai `theta_err[idx_fault-1]`
 antes de `t_fault` para zerar drift da Repeating Sequence de referência.
 

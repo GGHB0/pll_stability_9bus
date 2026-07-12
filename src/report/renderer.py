@@ -47,22 +47,29 @@ class HTMLRenderer:
             d  = sc["data"]
             fi = sc["fig_inv"]
             fs = sc["fig_sys"]
+            fp = sc.get("fig_spec")
             ti = sc["tm_inv"]
             ts = sc["tm_sys"]
+            tp = sc.get("tm_spec") or []
             sc_js[key] = {
                 "invData":   json.loads(fi.to_json()),
                 "sysData":   json.loads(fs.to_json()) if fs else None,
+                "specData":  json.loads(fp.to_json()) if fp else None,
                 "invLight":  [x[1] for x in ti],
                 "invDark":   [x[2] for x in ti],
                 "invIdx":    [x[0] for x in ti],
                 "sysLight":  [x[1] for x in ts],
                 "sysDark":   [x[2] for x in ts],
                 "sysIdx":    [x[0] for x in ts],
+                "specLight": [x[1] for x in tp],
+                "specDark":  [x[2] for x in tp],
+                "specIdx":   [x[0] for x in tp],
                 "label":     sc["label"],
                 "cardsHtml": self._cards_html(d),
                 "storyHtml": self._story_html(d),
                 "metricsRow": self._table_row_data(d),
                 "hasSys":    fs is not None,
+                "hasSpec":   fp is not None,
                 "badPll":    sc.get("bad_pll", False),
                 "tFault":    d.t_fault,
                 "tClear":    d.t_clear,
@@ -167,6 +174,14 @@ class HTMLRenderer:
     <div id="plot-sys"></div>
   </div>
 
+  <div class="chart-section" id="sec-spec" style="display:none">
+    <div class="section-header">
+      <span class="section-title">Espectro de Fourier — referencial dq</span>
+      <span class="spec-hint">fundamental → DC · seq. negativa → 120 Hz · duplo-clique expande até 2 kHz</span>
+    </div>
+    <div id="plot-spec"></div>
+  </div>
+
   <div class="footer">
     <span>SRF-PLL Analyzer</span>
     <span class="footer-dot"></span>
@@ -183,9 +198,11 @@ var currentKey = {first_key_js};
 var isDark = false;
 var pllMode = "nominal";
 
-var gdInv  = document.getElementById("plot-inv");
-var gdSys  = document.getElementById("plot-sys");
-var secSys = document.getElementById("sec-sys");
+var gdInv   = document.getElementById("plot-inv");
+var gdSys   = document.getElementById("plot-sys");
+var gdSpec  = document.getElementById("plot-spec");
+var secSys  = document.getElementById("sec-sys");
+var secSpec = document.getElementById("sec-spec");
 var headerSub = document.getElementById("header-sub");
 var badgeInv  = document.getElementById("badge-inv");
 var badgeSys  = document.getElementById("badge-sys");
@@ -293,11 +310,12 @@ function _ghostData(which) {{
   var other = _exactEquiv(currentKey);
   if (!other) return [];
   var o = SCENARIOS[other];
-  var fig = (which === "sys") ? o.sysData : o.invData;
-  var idx = (which === "sys") ? o.sysIdx  : o.invIdx;
+  var fig = (which === "sys") ? o.sysData : (which === "spec") ? o.specData : o.invData;
+  var idx = (which === "sys") ? o.sysIdx  : (which === "spec") ? o.specIdx  : o.invIdx;
   if (!fig) return [];
-  var colors = isDark ? ((which === "sys") ? o.sysDark : o.invDark)
-                      : ((which === "sys") ? o.sysLight : o.invLight);
+  var colors = isDark
+    ? ((which === "sys") ? o.sysDark  : (which === "spec") ? o.specDark  : o.invDark)
+    : ((which === "sys") ? o.sysLight : (which === "spec") ? o.specLight : o.invLight);
   var tag = o.badPll ? " (PLL ruim)" : " (nominal)";
   // mesma cor do traço principal; pontilhado + opacidade marcam o fantasma
   return idx.map(function(i, pos) {{
@@ -441,6 +459,12 @@ function switchScenario(key) {{
     reactThemedChart(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx, "sys");
   }} else {{
     secSys.style.display = "none";
+  }}
+  if (sc.hasSpec) {{
+    secSpec.style.display = "";
+    reactThemedChart(gdSpec, sc.specData, sc.specLight, sc.specDark, sc.specIdx, "spec");
+  }} else {{
+    secSpec.style.display = "none";
   }}
   _ensureBridges();
   _applyZoom();
@@ -652,6 +676,9 @@ function toggleTheme() {{
   reactThemedChart(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx, "inv");
   if (sc.hasSys) {{
     reactThemedChart(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx, "sys");
+  }}
+  if (sc.hasSpec) {{
+    reactThemedChart(gdSpec, sc.specData, sc.specLight, sc.specDark, sc.specIdx, "spec");
   }}
   _applyZoom();
   document.getElementById("ico").textContent = isDark ? "☀️" : "🌙";
@@ -1260,7 +1287,8 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
   background: #fef3c7; border-radius: 6px; padding: 3px 9px;
 }
 [data-theme="dark"] .fault-badge { color: #fcd34d; background: #451a03 }
-#plot-inv, #plot-sys { width: 100% }
+.spec-hint { font-size: 10.5px; color: var(--muted); letter-spacing: .2px }
+#plot-inv, #plot-sys, #plot-spec { width: 100% }
 
 /* ── Footer ── */
 .footer {

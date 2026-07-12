@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from ..config import T_FAULT, TOL_RAD
+from ..config import T_FAULT, T_SETTLE, TOL_RAD
 
 
 class SimData:
@@ -118,6 +118,26 @@ class SimData:
             self.theta_ref = self._df["theta_ref_rad"].to_numpy()
         else:
             self.theta_pll = self.theta_ref = None
+
+        # ── correntes abc (sim_data_abc.csv, taxa nativa — espectro fase A) ──
+        self.has_iabc_ufv = self.has_iabc_grid = False
+        self.t_abc = self.ia_ufv = self.ib_ufv = self.ic_ufv = None
+        self.ia_grid = self.ib_grid = self.ic_grid = None
+        abc_path = self._path.with_name("sim_data_abc.csv")
+        if abc_path.exists():
+            df_abc = pd.read_csv(abc_path)
+            cols_abc = set(df_abc.columns)
+            self.t_abc = df_abc["t_s"].to_numpy()
+            if {"ia_ufv_pu", "ib_ufv_pu", "ic_ufv_pu"} <= cols_abc:
+                self.ia_ufv = df_abc["ia_ufv_pu"].to_numpy()
+                self.ib_ufv = df_abc["ib_ufv_pu"].to_numpy()
+                self.ic_ufv = df_abc["ic_ufv_pu"].to_numpy()
+                self.has_iabc_ufv = True
+            if {"ia_grid_pu", "ib_grid_pu", "ic_grid_pu"} <= cols_abc:
+                self.ia_grid = df_abc["ia_grid_pu"].to_numpy()
+                self.ib_grid = df_abc["ib_grid_pu"].to_numpy()
+                self.ic_grid = df_abc["ic_grid_pu"].to_numpy()
+                self.has_iabc_grid = True
 
         # ── geradores G1 e G3 ────────────────────────────────────────────────
         self.has_gen1 = {"ang_g1_rad", "pe_g1_pu"} <= self._cols
@@ -225,11 +245,14 @@ class SimData:
     def _compute_metrics(self) -> dict:
         """Métricas em duas janelas: pós-falta (t ≥ t_fault → erro de fase, V_min)
         e pós-clear (t ≥ t_clear → ΔP/ΔQ de recuperação, sem o afundamento em si).
-        Regime permanente (t_fault None) usa t ≥ T_FAULT nas duas janelas para
-        descartar o transitório de partida da simulação (V parte de 0)."""
+        Nenhuma janela começa antes de T_SETTLE: o transitório de partida do PLL
+        (trava em ~0.08 s) não é falta de desempenho e fica fora das integrais.
+        Regime permanente (t_fault None) usa t ≥ T_SETTLE nas duas janelas."""
         is_regime = self.t_fault is None
-        t_start = min(T_FAULT, float(self.t[-1])) if is_regime else self.t_fault
+        t_start = min(T_SETTLE, float(self.t[-1])) if is_regime \
+            else max(self.t_fault, T_SETTLE)
         t_rec   = self.t_clear if (not is_regime and self.t_clear is not None) else t_start
+        t_rec   = max(t_rec, T_SETTLE)
         mask     = self.t >= t_start
         mask_rec = self.t >= t_rec
         metrics: dict = {

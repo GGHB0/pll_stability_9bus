@@ -63,12 +63,15 @@ do cenário equivalente do outro modo PLL no mesmo gráfico:
 
 - `_exactEquiv(key)`: par exato `key ↔ key + "_bad_pll"` — **sem** fallback
   para `_firstOfMode` (diferente de `_findEquiv`); sem par → botão disabled.
-- `_ghostData(which)`: mapeia só os índices de `invIdx`/`sysIdx` (traces de
-  dados — exclui marcador tₛ e envelope LVRT) com **a mesma cor** do trace
-  principal + `dash:"dot"`, `width:1.2`, `opacity:0.5`, `showlegend:false`,
-  `hoverinfo:"skip"` (o hover unificado ficaria ilegível em dobro).
+- `_ghostData(which)`: mapeia só os índices de `invIdx`/`sysIdx`/`specIdx`
+  (traces de dados — exclui marcador tₛ e envelope LVRT) com **a mesma cor**
+  do trace principal + `dash:"dot"`, `width:1.2`, `opacity:0.5`,
+  `showlegend:false`, `hoverinfo:"skip"` (o hover unificado ficaria ilegível
+  em dobro).
 - Injetado em `reactThemedChart` via `.concat(_ghostData(which))` — o
-  parâmetro `which` ("inv"/"sys") foi adicionado à assinatura.
+  parâmetro `which` ("inv"/"sys"/"spec") seleciona a figura. No espectro
+  ([[espectro-fourier]]) o ghost compara direto o pico de 120 Hz
+  nominal × PLL mal dimensionado.
 
 Mesma cor + pontilhado/esmaecido = "mesmo sinal, outro PLL" — a degradação
 aparece lado a lado sem alternar o toggle de memória.

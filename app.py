@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-from src import SimData, ChartBuilder, HTMLRenderer
+from src import SimData, ChartBuilder, SpectrumBuilder, HTMLRenderer
 
 RESULTS_DIR = Path("output/results")
 DEFAULT_OUT = Path("output/pll_metrics.html")
@@ -92,15 +92,19 @@ def main() -> None:
         data    = SimData(csv_path)
         builder = ChartBuilder(data)
         fig_inv, fig_sys, tm_inv, tm_sys = builder.build_sections()
-        n = len(fig_inv.data) + (len(fig_sys.data) if fig_sys else 0)
+        fig_spec, tm_spec = SpectrumBuilder(data).build()
+        n = (len(fig_inv.data) + (len(fig_sys.data) if fig_sys else 0)
+             + (len(fig_spec.data) if fig_spec else 0))
         scenarios[key] = {
-            "data":    data,
-            "label":   _scenario_label(key),
-            "bad_pll": _is_bad_pll(key),
-            "fig_inv": fig_inv,
-            "fig_sys": fig_sys,
-            "tm_inv":  tm_inv,
-            "tm_sys":  tm_sys,
+            "data":     data,
+            "label":    _scenario_label(key),
+            "bad_pll":  _is_bad_pll(key),
+            "fig_inv":  fig_inv,
+            "fig_sys":  fig_sys,
+            "fig_spec": fig_spec,
+            "tm_inv":   tm_inv,
+            "tm_sys":   tm_sys,
+            "tm_spec":  tm_spec,
         }
         print(f"{n} tracas")
 

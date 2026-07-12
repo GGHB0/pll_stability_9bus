@@ -8,13 +8,22 @@ description: SimData (loader.py) — leitura dos CSVs do MATLAB, correção do e
 `SimData(csv_path)` carrega um cenário e expõe arrays NumPy + `metrics`.
 Descoberta de cenários e roteamento BAD_PLL: ver `kb/simulation/export_workflow.md`.
 
-## Dois CSVs por cenário + fault_info.json
+## Três CSVs por cenário + fault_info.json
 
-| Arquivo | Taxa | Conteúdo |
+| Arquivo | Taxa nominal | Conteúdo |
 |---|---|---|
-| `sim_data.csv` | Tsc = 200 µs (eixo lento `t`) | P/Q UFV, correntes dq, tensões de barra, P/Q de barra, geradores |
-| `sim_data_angles.csv` | Ts = 5 µs (eixo rápido `t_fast`) | `theta_pll_rad`, `theta_ref_rad`, `theta_err_rad` |
+| `sim_data.csv` | Tsc = 200 µs (eixo `t`) | P/Q UFV, correntes dq, tensões de barra, P/Q de barra, geradores |
+| `sim_data_angles.csv` | Ts = 5 µs (eixo `t_fast`) | `theta_pll_rad`, `theta_ref_rad`, `theta_err_rad` |
+| `sim_data_abc.csv` | nativa de `iabc_inverter` (eixo `t_abc`) | `ia/ib/ic_ufv_pu` (+ `_grid_pu` se logado) — flags `has_iabc_ufv`/`has_iabc_grid`; opcional, painel abc do espectro |
 | `fault_info.json` | — | `fault_type`, `t_fault`, `t_clear` reais do cenário |
+
+> ⚠️ **Taxas invertidas nos CSVs atuais** (medido 2026-07-12): `sim_data.csv`
+> está com dt = 5 µs (120.001 amostras/0,6 s) e `sim_data_angles.csv` com
+> dt = 200 µs (3.001 amostras) — o oposto do nominal acima. Loader e
+> SpectrumBuilder são imunes (interpolação/`dt` mediano), mas o "eixo rápido"
+> dos ângulos hoje tem MENOS resolução que o lento. Verificar no modelo se a
+> troca de decimação no logging foi intencional antes de confiar em análises
+> que dependam da resolução de θ (ripple de chaveamento, por ex.).
 
 - `fault_type == "regime"` → `t_fault = t_clear = None` (sem linhas de falta,
   botão de zoom desabilitado no HTML).
@@ -39,11 +48,22 @@ correção — as métricas são calculadas no eixo lento.
 
 ## Métricas (`_compute_metrics`) — duas janelas
 
-- **Pós-falta** (`t ≥ t_fault`): erro de fase (IAE/ISE/tₛ/pico) e `vmin`.
-- **Pós-clear** (`t ≥ t_clear`): `dP_ufv`/`dQ_ufv` — mede a *recuperação*,
-  não o colapso durante o afundamento (senão toda falta daria ΔP ≈ 1 pu).
-- **Regime** (`t_fault` None): ambas viram `t ≥ T_FAULT` para descartar o
-  transitório de partida da simulação (V parte de 0).
+- **Pós-falta** (`t ≥ max(t_fault, T_SETTLE)`): erro de fase (IAE/ISE/tₛ/pico)
+  e `vmin`.
+- **Pós-clear** (`t ≥ max(t_clear, T_SETTLE)`): `dP_ufv`/`dQ_ufv` — mede a
+  *recuperação*, não o colapso durante o afundamento (senão toda falta daria
+  ΔP ≈ 1 pu).
+- **Regime** (`t_fault` None): ambas viram `t ≥ T_SETTLE`.
+
+**`T_SETTLE = 0.1 s`** (settings.py, 2026-07-12): nenhuma janela de cálculo
+começa antes disso — a partida do PLL (trava em ~0.08 s; pior sinal é |V|
+Bus 2 em 0.078 s) é inicialização, não desempenho, e fica fora das integrais
+e da FFT ([[espectro-fourier]]). Com `t_fault = 0.3 s` nos cenários atuais o
+clamp é inócuo nas faltas; muda o regime (antes usava `T_FAULT = 0.2` de
+fallback). ⚠️ A normalização pu do MATLAB (`Vnom = mean(vmag(t < T_FAULT))`
+em `export_sim_data.m`) ainda inclui a partida → viés de ~1.1% em
+`vbus*_pu`/`vd/vq` (regime lê 0.9887 pu); correção ficou fora do escopo
+(decisão do usuário: só Python) e exigiria re-exportar.
 
 | Métrica | Definição |
 |---|---|
@@ -67,3 +87,11 @@ passo largo (k amostras ≈ 0,5 ms para cada lado, ~1 ms de janela):
 - Usa `theta_pll_fast` (fallback `theta_pll`); expõe `f_pll`, `t_freq`
   (encurtado em k de cada lado) e a flag `has_freq`.
 - Alimenta o painel "Frequência PLL (Hz)" — ver [[chart-analysis-overlays]].
+
+## Consumidores do SimData
+
+- `ChartBuilder` (séries temporais) — [[construcao-graficos]].
+- `SpectrumBuilder` (FFT segmentada pré-falta/falta/pós-falta em dB) —
+  consome `t`/`t_fast`, `theta_err(_fast)`, `iq_ufv_meas`, `Q_ufv` e
+  `t_fault`/`t_clear`; ver [[espectro-fourier]].
+- `HTMLRenderer` (cards/story/tabela) — usa `metrics` direto.

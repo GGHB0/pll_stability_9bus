@@ -21,14 +21,16 @@ pré-computado em Python e embutido no objeto `SCENARIOS`.
 3. `#diagram-section` — SVG unifilar clicável.
 4. `#cards-area` / `#story-area` — HTML pré-gerado ([[cards-metricas]]).
 5. `#table-section` — comparativo, oculto por padrão ([[comparison-table]]).
-6. `#sec-inv` (`#plot-inv`) e `#sec-sys` (`#plot-sys`) — as duas figuras
-   Plotly; `#sec-sys` some quando `hasSys` é falso.
+6. `#sec-inv` (`#plot-inv`), `#sec-sys` (`#plot-sys`) e `#sec-spec`
+   (`#plot-spec`, espectro de Fourier — [[espectro-fourier]]) — as figuras
+   Plotly; `#sec-sys`/`#sec-spec` somem quando `hasSys`/`hasSpec` é falso.
 7. `.footer`.
 
 ## Objeto SCENARIOS
 
-`{key: {invData, sysData, invLight/invDark/invIdx (trace_map), sysLight/…,
-label, cardsHtml, storyHtml, metricsRow, hasSys, badPll, tFault, tClear}}`.
+`{key: {invData, sysData, specData, invLight/invDark/invIdx (trace_map),
+sysLight/…, specLight/…, label, cardsHtml, storyHtml, metricsRow, hasSys,
+hasSpec, badPll, tFault, tClear}}`.
 `key` = pasta do cenário, ex. `"bus7/3phase"`, `"line7_8/3phase_bad_pll"`.
 
 ## Fluxo `switchScenario(key)`
@@ -37,7 +39,8 @@ label, cardsHtml, storyHtml, metricsRow, hasSys, badPll, tFault, tClear}}`.
    (sem par exato nominal↔bad_pll).
 2. `updateFaultUI(sc)` — subtítulo do header + badges "Falta: t = …" das
    seções (ocultos em regime).
-3. `reactThemedChart` para inv e sys (re-colore por tema + concatena ghost).
+3. `reactThemedChart` para inv, sys e spec (re-colore por tema + concatena
+   ghost; o zoom na falta NÃO se aplica ao spec, cujo eixo x é em Hz).
 4. `_ensureBridges()` + `_applyZoom()` — sincronização de zoom.
 5. Injeta `cardsHtml`/`storyHtml`, `highlightSVG(key)`,
    `renderComparisonTable()`.

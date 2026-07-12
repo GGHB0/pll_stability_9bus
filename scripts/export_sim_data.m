@@ -72,8 +72,8 @@ end
 
 % ═══════════════════════════════════════════════════════════════════════════
 function export_abc(ds, out_dir)
-% CSV 3: correntes trifásicas abc na taxa nativa (espectro em abc — a
-% sequência zero das faltas à terra só existe aqui, o dq a perde).
+% CSV 3: correntes e tensões trifásicas abc na taxa nativa (espectro em
+% abc — a sequência zero das faltas à terra só existe aqui, o dq a perde).
     Iinv = ds.get('iabc_inverter');
     if isempty(Iinv), return; end
 
@@ -91,9 +91,27 @@ function export_abc(ds, out_dir)
         T.ic_grid_pu = interp1(tg, dg(:,3), t_s, 'linear', 'extrap');
     end
 
+    Vinv = ds.get('vabc_inverter');
+    if ~isempty(Vinv)
+        tv = Vinv.Values.Time;
+        dv = Vinv.Values.Data;
+        T.va_ufv_pu = interp1(tv, dv(:,1), t_s, 'linear', 'extrap');
+        T.vb_ufv_pu = interp1(tv, dv(:,2), t_s, 'linear', 'extrap');
+        T.vc_ufv_pu = interp1(tv, dv(:,3), t_s, 'linear', 'extrap');
+    end
+
+    Vgrid = ds.get('vabc_grid');
+    if ~isempty(Vgrid)
+        tvg = Vgrid.Values.Time;
+        dvg = Vgrid.Values.Data;
+        T.va_grid_pu = interp1(tvg, dvg(:,1), t_s, 'linear', 'extrap');
+        T.vb_grid_pu = interp1(tvg, dvg(:,2), t_s, 'linear', 'extrap');
+        T.vc_grid_pu = interp1(tvg, dvg(:,3), t_s, 'linear', 'extrap');
+    end
+
     out = fullfile(out_dir, 'sim_data_abc.csv');
     writetable(T, out);
-    fprintf('Correntes abc: %d amostras → %s\n', height(T), out);
+    fprintf('Correntes/tensões abc: %d amostras → %s\n', height(T), out);
 end
 
 % ═══════════════════════════════════════════════════════════════════════════

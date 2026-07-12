@@ -123,6 +123,9 @@ class SpectrumBuilder:
             # seq. negativa cai TAMBÉM em 60 Hz — usar junto com os painéis dq
             sigs.append(("Corrente i<sub>a</sub> UFV (abc)",
                          d.t_abc, d.ia_ufv, "pu"))
+        if d.has_vabc_ufv:
+            sigs.append(("Tensão v<sub>a</sub> UFV (abc)",
+                         d.t_abc, d.va_ufv, "pu"))
         return sigs
 
     # ── Helpers de figura ────────────────────────────────────────────────────

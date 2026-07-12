@@ -5,6 +5,25 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-12 — Export de tensões abc + painel v_a no espectro
+
+Arquivos: `pll_stability_9bus.slx`, `scripts/export_sim_data.m`,
+`src/pipeline/loader.py`, `src/pipeline/spectrum.py`
+
+- **Modelo**: signal logging habilitado (via `matlab -batch`) nas saídas
+  `Vabc_inverter`/`Vabc_grid` do subsistema `UFV Model/Scopes` (mesma
+  configuração já usada em `iabc_inverter`/`iabc_grid`) — nomes de log
+  `vabc_inverter`/`vabc_grid`. Confirmado no XML do `.slx`: 21 → 23 sinais
+  logados.
+- **`export_abc`** ganha `va/vb/vc_ufv_pu` e `va/vb/vc_grid_pu` no mesmo
+  `sim_data_abc.csv` (já em pu na medição, sem normalização adicional) —
+  pula em silêncio se o sinal não estiver logado, como as correntes.
+- **Loader**: flags `has_vabc_ufv`/`has_vabc_grid`, arrays `va/vb/vc_ufv`
+  e `va/vb/vc_grid`.
+- **Espectro**: 5º painel "Tensão v_a UFV (abc)".
+- ⚠️ Exige **re-exportar** os cenários (`.slx` atualizado + `git pull`
+  antes de simular) — ver `.claude/kb/simulation/resimulacao-abc.md`.
+
 ## 2026-07-12 — Export de correntes abc + painel fase A no espectro
 
 Arquivos: `scripts/export_sim_data.m`, `src/pipeline/loader.py`,

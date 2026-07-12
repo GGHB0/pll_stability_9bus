@@ -111,6 +111,7 @@ Entradas: id_ref, Vabc_grid, Iabc (pu)
 | `Active & Reactive Power` | 4022 | 4021 | p1 → P_inv (pu), p2 → Q_inv (pu) |
 | `Currents` | 4023 | 4021 | p1 → Iabc_inv (pu), p2 → Iabc_grid (pu) |
 | `Voltages` | 4078 | 4021 | p1 → Vabc_inv, p2 → Vabc_grid, p3 → Vab_synch |
+| `From2`/`From1` (Vabc) | 4032/4025 | 4021 Scopes | logging habilitado 2026-07-12 (`vabc_inverter`/`vabc_grid`) → `sim_data_abc.csv`, ver [[export-workflow]] |
 | `id` | 4079 | 4021 | p1 → id ref + medido (pu) |
 | `iq` | 4080 | 4021 | p1 → iq ref + medido (pu) |
 | `Ang Vdd` | 4495 | 3896 UFV | p1 → mod(Fourier+RepSeq,2π), p2 → AngPLL |

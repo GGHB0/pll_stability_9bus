@@ -41,6 +41,10 @@ durante a falta, vs 2,20e-3 na 3φ equivalente (12×).
    (medido: +0.1 dB na falta 1φ); o ripple dq de 120 Hz vira banda lateral
    em 180 Hz. O painel abc complementa os dq (formato familiar, harmônicas
    em 300/420 Hz), mas a assinatura do TCC vive nos painéis dq.
+5. v_a UFV em abc (`t_abc`/`va_ufv`, 2026-07-12) — só quando `has_vabc_ufv`.
+   Mesmo CSV/eixo do painel de corrente abc. Exigiu habilitar o signal
+   logging de `Vabc_inverter`/`Vabc_grid` no `.slx` (não estava logado antes;
+   `Iabc_inverter`/`_grid` já estavam) — ver [[export-workflow]].
 
 **Segmentos (um traço por segmento, cores fixas em `SPEC_SEG_COLORS`):**
 

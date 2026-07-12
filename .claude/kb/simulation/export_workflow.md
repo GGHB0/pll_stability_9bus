@@ -19,6 +19,8 @@ description: Workflow validado Simulink → MATLAB → Python para o modelo pll_
 | `Iq` | **Mux [iq_ref, iq_medido]** (pu) | 2 colunas | Tsc |
 | `iabc_inverter` | Correntes trifásicas inversor (pu) | 3 colunas | Ts |
 | `iabc_grid` | Correntes trifásicas rede (pu) | 3 colunas | Ts |
+| `vabc_inverter` | Tensões trifásicas inversor (pu) | 3 colunas | Ts |
+| `vabc_grid` | Tensões trifásicas rede (pu) | 3 colunas | Ts |
 | `V_bus1`, `V_bus2`, `V_bus3` | Magnitude escalar \|V\| da barra (V, bruto) | escalar | Tsc |
 | `Vdq_Inverter` | **Mux [Vd_inv, Vq_inv, ...]** tensão dq no inversor | ≥2 colunas (1=d, 2=q) | Tsc |
 | `Vdq_rede` | **Mux [Vd_rede, Vq_rede, ...]** tensão dq da rede | ≥2 colunas (1=d, 2=q) | Tsc |
@@ -90,6 +92,13 @@ em todo o pipeline Python (ver `V_base = 20 kV, S_base = 100 MVA` em
   Consumo Python: `SimData.t_abc`/`ia_ufv`/… (flags `has_iabc_ufv`/`_grid`);
   alimenta o painel "Corrente i_a UFV (abc)" do espectro
   ([[espectro-fourier]]) — só aparece após **re-exportar** os cenários.
+- **Tensões abc** (mesmo CSV 3, 2026-07-12): `va/vb/vc_ufv_pu` +
+  `va/vb/vc_grid_pu`, já em pu na medição (sem normalização adicional).
+  Exigiu habilitar o signal logging de `Vabc_inverter`/`Vabc_grid` no
+  `.slx` (blocos `From` em `UFV Model/Scopes`, mesmo padrão de
+  `iabc_inverter`/`_grid`) — feito via `matlab -batch`
+  (`set_param(outPort, 'DataLogging', 'on')`). Flags `has_vabc_ufv`/`_grid`;
+  alimenta o painel "Tensão v_a UFV (abc)" ([[espectro-fourier]]).
 
 Após exportar, o `StopFcn` chama `export_sim_data.m`, que por sua vez pode disparar
 `app.py` (ver `kb/simulation/python_pipeline.md`).

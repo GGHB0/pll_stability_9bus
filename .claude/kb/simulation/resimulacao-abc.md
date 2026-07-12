@@ -1,32 +1,39 @@
 ---
 name: resimulacao-abc
-description: Runbook de re-simulação (Bruno) — regenerar os 18 cenários para exportar sim_data_abc.csv (correntes trifásicas, painel abc do espectro)
+description: Runbook de re-simulação (Bruno) — regenerar os 18 cenários para exportar sim_data_abc.csv (correntes e tensões trifásicas, painéis abc do espectro)
 ---
 
 # Re-simulação para export abc (runbook)
 
 **Responsável: Bruno.** Objetivo: re-rodar os cenários já existentes para que
-o export gere o novo `sim_data_abc.csv` (correntes trifásicas `iabc_inverter`
-/`iabc_grid`) — ele alimenta o painel "Corrente i_a UFV (abc)" do espectro de
+o export gere o novo `sim_data_abc.csv` (correntes `iabc_inverter`/`iabc_grid`
+e, desde 2026-07-12, tensões `vabc_inverter`/`vabc_grid`) — alimenta os
+painéis "Corrente i_a UFV (abc)" e "Tensão v_a UFV (abc)" do espectro de
 Fourier no dashboard ([[espectro-fourier]]).
 
-Nada mais mudou no modelo: são as mesmas simulações de antes, só o script de
-export (`scripts/export_sim_data.m`) ganhou um CSV a mais. Detalhes do export:
-[[export-workflow]].
+⚠️ **Desta vez o `.slx` também mudou**, não só o script: foi habilitado o
+signal logging de `Vabc_inverter`/`Vabc_grid` em `UFV Model/Scopes` (mesmo
+padrão das correntes `iabc_*`, já logadas). Por isso, `git pull` **antes**
+de abrir o modelo é obrigatório — sem o `.slx` atualizado a tensão abc não
+sai (o script de export continua rodando normalmente, só pula essas
+colunas). Detalhes do export: [[export-workflow]].
 
 ## Passo a passo (por cenário)
 
-1. Abrir `pll_stability_9bus.slx` (raiz do repo) no MATLAB.
-2. Editar o topo de `params.m` com o cenário da tabela abaixo e rodar
+1. `git pull` (traz o `.slx` com o logging de tensão + o script atualizado).
+2. Abrir `pll_stability_9bus.slx` (raiz do repo) no MATLAB.
+3. Editar o topo de `params.m` com o cenário da tabela abaixo e rodar
    `>> params` no Command Window.
-3. Simular (▶). Ao terminar, o `StopFcn` exporta sozinho — conferir no
-   Command Window a linha `Correntes abc: N amostras → ...`.
-4. Verificar que `sim_data_abc.csv` apareceu na pasta do cenário em
-   `output/results/`.
+4. Simular (▶). Ao terminar, o `StopFcn` exporta sozinho — conferir no
+   Command Window a linha `Correntes/tensões abc: N amostras → ...`.
+5. Verificar que `sim_data_abc.csv` apareceu na pasta do cenário em
+   `output/results/` e que tem as colunas `va_ufv_pu`/`vb_ufv_pu`/`vc_ufv_pu`
+   (abrir o CSV ou `head` rápido) — não só as `ia/ib/ic_ufv_pu`.
 
-> ⚠️ Se a linha "Correntes abc" **não** aparecer no log, o sinal
+> ⚠️ Se a linha "Correntes/tensões abc" **não** aparecer no log, o sinal
 > `iabc_inverter` não está no logsout (a função pula em silêncio) —
-> avisar o Victor para inspecionar o modelo.
+> avisar o Victor. Se a linha aparecer mas o CSV não tiver as colunas
+> `va/vb/vc_ufv_pu`, o `.slx` local está desatualizado (falta o `git pull`).
 
 ## Checklist — 18 cenários (estado de 2026-07-12)
 
@@ -66,6 +73,8 @@ assimétrica com a assinatura de sequência negativa mais clara.
 .venv\Scripts\python.exe app.py
 ```
 
-Regenera `output/pll_metrics.html`; o painel abc aparece automaticamente em
-cada cenário que tiver o `sim_data_abc.csv`. Cenários ainda não re-simulados
-continuam funcionando com os 3 painéis dq (o CSV abc é opcional).
+Regenera `output/pll_metrics.html`; os painéis de corrente e tensão abc
+aparecem automaticamente em cada cenário que tiver as colunas correspondentes
+no `sim_data_abc.csv`. Cenários ainda não re-simulados (ou re-simulados antes
+do `git pull` do `.slx`) continuam funcionando com os 3 painéis dq — os
+painéis abc são opcionais e independentes um do outro.

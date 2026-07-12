@@ -9,9 +9,10 @@ Classe principal: SimData
                                    peak_err, dP/dQ (pós-clear), vmin
     .has_ang, .has_dq_ufv, .has_ref_ufv → flags de disponibilidade de colunas
 
-Dois CSVs exportados pelo MATLAB:
+Três CSVs exportados pelo MATLAB:
     sim_data.csv        → P_ufv, Q_ufv, id_ufv, iq_ufv a Tsc (eixo lento)
     sim_data_angles.csv → theta_pll, theta_ref, theta_err a Ts (eixo rápido)
+    sim_data_abc.csv    → correntes/tensões trifásicas abc (opcional)
 """
 
 from __future__ import annotations
@@ -119,10 +120,13 @@ class SimData:
         else:
             self.theta_pll = self.theta_ref = None
 
-        # ── correntes abc (sim_data_abc.csv, taxa nativa — espectro fase A) ──
+        # ── correntes/tensões abc (sim_data_abc.csv, taxa nativa — espectro fase A) ──
         self.has_iabc_ufv = self.has_iabc_grid = False
+        self.has_vabc_ufv = self.has_vabc_grid = False
         self.t_abc = self.ia_ufv = self.ib_ufv = self.ic_ufv = None
         self.ia_grid = self.ib_grid = self.ic_grid = None
+        self.va_ufv = self.vb_ufv = self.vc_ufv = None
+        self.va_grid = self.vb_grid = self.vc_grid = None
         abc_path = self._path.with_name("sim_data_abc.csv")
         if abc_path.exists():
             df_abc = pd.read_csv(abc_path)
@@ -138,6 +142,16 @@ class SimData:
                 self.ib_grid = df_abc["ib_grid_pu"].to_numpy()
                 self.ic_grid = df_abc["ic_grid_pu"].to_numpy()
                 self.has_iabc_grid = True
+            if {"va_ufv_pu", "vb_ufv_pu", "vc_ufv_pu"} <= cols_abc:
+                self.va_ufv = df_abc["va_ufv_pu"].to_numpy()
+                self.vb_ufv = df_abc["vb_ufv_pu"].to_numpy()
+                self.vc_ufv = df_abc["vc_ufv_pu"].to_numpy()
+                self.has_vabc_ufv = True
+            if {"va_grid_pu", "vb_grid_pu", "vc_grid_pu"} <= cols_abc:
+                self.va_grid = df_abc["va_grid_pu"].to_numpy()
+                self.vb_grid = df_abc["vb_grid_pu"].to_numpy()
+                self.vc_grid = df_abc["vc_grid_pu"].to_numpy()
+                self.has_vabc_grid = True
 
         # ── geradores G1 e G3 ────────────────────────────────────────────────
         self.has_gen1 = {"ang_g1_rad", "pe_g1_pu"} <= self._cols

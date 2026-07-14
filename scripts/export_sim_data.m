@@ -72,41 +72,24 @@ end
 
 % ═══════════════════════════════════════════════════════════════════════════
 function export_abc(ds, out_dir)
-% CSV 3: correntes e tensões trifásicas abc na taxa nativa (espectro em
-% abc — a sequência zero das faltas à terra só existe aqui, o dq a perde).
+% CSV 3: correntes e tensões trifásicas abc do inversor na taxa nativa
+% (espectro em abc — a sequência zero das faltas à terra só existe aqui,
+% o dq a perde). Só existem os logs do lado inversor (iabc/vabc_inverter).
     Iinv = ds.get('iabc_inverter');
-    if isempty(Iinv), return; end
+    if ~has_series(Iinv), return; end
 
     t_s = Iinv.Values.Time;
     d   = Iinv.Values.Data;
     T = table(t_s, d(:,1), d(:,2), d(:,3), ...
         'VariableNames', {'t_s','ia_ufv_pu','ib_ufv_pu','ic_ufv_pu'});
 
-    Igrid = ds.get('iabc_grid');
-    if ~isempty(Igrid)
-        tg = Igrid.Values.Time;
-        dg = Igrid.Values.Data;
-        T.ia_grid_pu = interp1(tg, dg(:,1), t_s, 'linear', 'extrap');
-        T.ib_grid_pu = interp1(tg, dg(:,2), t_s, 'linear', 'extrap');
-        T.ic_grid_pu = interp1(tg, dg(:,3), t_s, 'linear', 'extrap');
-    end
-
     Vinv = ds.get('vabc_inverter');
-    if ~isempty(Vinv)
+    if has_series(Vinv)
         tv = Vinv.Values.Time;
         dv = Vinv.Values.Data;
         T.va_ufv_pu = interp1(tv, dv(:,1), t_s, 'linear', 'extrap');
         T.vb_ufv_pu = interp1(tv, dv(:,2), t_s, 'linear', 'extrap');
         T.vc_ufv_pu = interp1(tv, dv(:,3), t_s, 'linear', 'extrap');
-    end
-
-    Vgrid = ds.get('vabc_grid');
-    if ~isempty(Vgrid)
-        tvg = Vgrid.Values.Time;
-        dvg = Vgrid.Values.Data;
-        T.va_grid_pu = interp1(tvg, dvg(:,1), t_s, 'linear', 'extrap');
-        T.vb_grid_pu = interp1(tvg, dvg(:,2), t_s, 'linear', 'extrap');
-        T.vc_grid_pu = interp1(tvg, dvg(:,3), t_s, 'linear', 'extrap');
     end
 
     out = fullfile(out_dir, 'sim_data_abc.csv');
@@ -244,6 +227,14 @@ function save_fault_info(out_dir, bus, fault_line, ftype, t_fault, t_clear, bad_
     fprintf(fid, '%s\n', jsonencode(info, 'PrettyPrint', true));
     fclose(fid);
     fprintf('fault_info.json → %s\n', out_dir);
+end
+
+% ───────────────────────────────────────────────────────────────────────────
+function ok = has_series(sig)
+% true se o sinal existe e tem >=2 amostras. interp1 exige >=2 pontos de origem;
+% um From sem Goto correspondente resolve para constante (1 amostra) e quebraria
+% a exportação inteira — este guard omite o sinal em vez de derrubar o StopFcn.
+    ok = ~isempty(sig) && numel(sig.Values.Time) >= 2;
 end
 
 % ───────────────────────────────────────────────────────────────────────────

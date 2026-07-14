@@ -18,9 +18,7 @@ description: Workflow validado Simulink → MATLAB → Python para o modelo pll_
 | `id` | **Mux [id_ref, id_medido]** (pu) | 2 colunas | Tsc |
 | `Iq` | **Mux [iq_ref, iq_medido]** (pu) | 2 colunas | Tsc |
 | `iabc_inverter` | Correntes trifásicas inversor (pu) | 3 colunas | Ts |
-| `iabc_grid` | Correntes trifásicas rede (pu) | 3 colunas | Ts |
 | `vabc_inverter` | Tensões trifásicas inversor (pu) | 3 colunas | Ts |
-| `vabc_grid` | Tensões trifásicas rede (pu) | 3 colunas | Ts |
 | `V_bus1`, `V_bus2`, `V_bus3` | Magnitude escalar \|V\| da barra (V, bruto) | escalar | Tsc |
 | `Vdq_Inverter` | **Mux [Vd_inv, Vq_inv, ...]** tensão dq no inversor | ≥2 colunas (1=d, 2=q) | Tsc |
 | `Vdq_rede` | **Mux [Vd_rede, Vq_rede, ...]** tensão dq da rede | ≥2 colunas (1=d, 2=q) | Tsc |
@@ -30,6 +28,17 @@ description: Workflow validado Simulink → MATLAB → Python para o modelo pll_
 
 > `Ang_pll` e `iabc` rodam a Ts (eixo rápido); demais sinais a Tsc (eixo lento).
 > `V_bus{N}` é escalar de magnitude — **não** aplicar transformada de Clarke.
+
+> ⚠️ **Não existe medição abc do lado grid** (2026-07-13). Só há
+> `iabc_inverter`/`vabc_inverter`. Os `From` `iabc_grid`/`vabc_grid` que
+> existiam no `.slx` apontavam para tags `Goto` inexistentes → resolviam para
+> constante (1 amostra) → derrubavam o `interp1` do export com
+> *"Interpolation requires at least two sample points"*. `export_abc` foi
+> alinhado para exportar **só** o lado inversor. A única outra fonte abc é
+> `Vabc`/`Iabc` do subsistema "Measurement inverter1" (SID 3948, dentro do UFV
+> Model), hoje sem consumidor. Se um dia quiser abc do grid de verdade, é
+> preciso rotear um sensor trifásico no PCC e criar os `Goto` `*_grid` no
+> Simulink — **não** basta editar o `.m`.
 
 > ⚠️ **Discrepância observada (2026-07-12)**: nos CSVs exportados em
 > `output/results/` as taxas estão **invertidas** — `sim_data.csv` a 5 µs e
@@ -85,20 +94,21 @@ em todo o pipeline Python (ver `V_base = 20 kV, S_base = 100 MVA` em
 > Q_bus3): confirmado pelo usuário — sempre usar `Data(:,1)`.
 
 - **CSV 3** (`sim_data_abc.csv`, taxa nativa de `iabc_inverter`, 2026-07-12):
-  `t_s, ia/ib/ic_ufv_pu` + `ia/ib/ic_grid_pu` (se `iabc_grid` estiver logado,
-  interpoladas no mesmo eixo). Função `export_abc`; pulada silenciosamente se
-  `iabc_inverter` não existir no logsout. Uso: espectro em abc **verdadeiro**
-  — a Park inversa dos sinais dq perde a sequência zero das faltas à terra.
-  Consumo Python: `SimData.t_abc`/`ia_ufv`/… (flags `has_iabc_ufv`/`_grid`);
-  alimenta o painel "Corrente i_a UFV (abc)" do espectro
-  ([[espectro-fourier]]) — só aparece após **re-exportar** os cenários.
-- **Tensões abc** (mesmo CSV 3, 2026-07-12): `va/vb/vc_ufv_pu` +
-  `va/vb/vc_grid_pu`, já em pu na medição (sem normalização adicional).
-  Exigiu habilitar o signal logging de `Vabc_inverter`/`Vabc_grid` no
-  `.slx` (blocos `From` em `UFV Model/Scopes`, mesmo padrão de
-  `iabc_inverter`/`_grid`) — feito via `matlab -batch`
-  (`set_param(outPort, 'DataLogging', 'on')`). Flags `has_vabc_ufv`/`_grid`;
-  alimenta o painel "Tensão v_a UFV (abc)" ([[espectro-fourier]]).
+  `t_s, ia/ib/ic_ufv_pu`. Função `export_abc`; pulada via guard `has_series`
+  (`~isempty && numel(Time) >= 2`) se `iabc_inverter` não existir/tiver <2
+  amostras. Uso: espectro em abc **verdadeiro** — a Park inversa dos sinais dq
+  perde a sequência zero das faltas à terra. Consumo Python:
+  `SimData.t_abc`/`ia_ufv`/… (flag `has_iabc_ufv`); alimenta o painel
+  "Corrente i_a UFV (abc)" do espectro ([[espectro-fourier]]) — só aparece
+  após **re-exportar** os cenários.
+- **Tensões abc** (mesmo CSV 3, 2026-07-12): `va/vb/vc_ufv_pu`, já em pu na
+  medição (sem normalização adicional), com o mesmo guard `has_series`. Flag
+  `has_vabc_ufv`; alimenta o painel "Tensão v_a UFV (abc)"
+  ([[espectro-fourier]]).
+
+> **Colunas `*_grid_pu` foram removidas do export (2026-07-13)** — não existiam
+> logs de origem. O loader Python (`has_iabc_grid`/`has_vabc_grid`) continua
+> tolerante à ausência delas; os painéis grid simplesmente não são gerados.
 
 Após exportar, o `StopFcn` chama `export_sim_data.m`, que por sua vez pode disparar
 `app.py` (ver `kb/simulation/python_pipeline.md`).
@@ -117,7 +127,7 @@ Linhas do IEEE 9 barras: **1-4, 4-5, 5-6, 3-6, 6-7, 7-8, 8-2, 8-9, 9-4**.
 quando `BAD_PLL=true` (ver [[bad-pll-scenario]]).
 
 Cada pasta recebe: `sim_data.csv`, `sim_data_angles.csv`, `sim_data_abc.csv`
-(se `iabc_inverter` logado) e `fault_info.json`.
+(se `iabc_inverter` logado com ≥2 amostras) e `fault_info.json`.
 
 ## Colunas de `sim_data.csv`
 

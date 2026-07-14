@@ -3,11 +3,11 @@ spectrum.py — Espectro de Fourier por segmento temporal.
 
 SpectrumBuilder(data).build() → (fig | None, trace_map)
 
-Cada sinal trifásico da fase A (corrente i_a, tensão v_a) vira um painel; cada
-segmento (pré-falta / falta / pós-falta, ou janela única em regime) vira um
-traço de amplitude |FFT|. No referencial abc a fundamental fica em 60 Hz (não
-vira DC como no dq) e a sequência negativa da falta assimétrica também cai em
-60 Hz — por isso a média removida aqui tira só o offset, não a fundamental.
+Cada sinal trifásico da fase A (corrente i_a, tensão v_a) vira um painel; o
+tempo é partido em dois segmentos — "antes do defeito" e "depois do defeito" —
+no formato do gráfico de referência (amplitude linear, curva vermelha antes /
+azul depois). No referencial abc a fundamental fica em 60 Hz (não vira DC como
+no dq); a média removida aqui tira só o offset, não a fundamental.
 """
 from __future__ import annotations
 
@@ -16,23 +16,22 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from ..config import (
-    T_SETTLE, SPEC_FMAX_HZ, SPEC_XRANGE_HZ, F_FUND_HZ, F_RES_LCL_HZ,
+    T_SETTLE, SPEC_FMAX_HZ, SPEC_XRANGE_HZ, SPEC_MARKERS,
     SPEC_SEG_COLORS,
 )
 from .loader import SimData
 
 _MIN_DUR_S   = 0.05   # janela menor que isso → df > 20 Hz, não resolve 120 Hz
 _MIN_SAMPLES = 64
-_AMP_FLOOR   = 1e-5   # piso de amplitude → −100 dB (evita log(0) e ruído numérico)
 
 
 def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
                         fmax: float = SPEC_FMAX_HZ):
-    """|FFT| de amplitude em dB: reamostra em grade uniforme, remove a média
-    (offset DC; no abc a fundamental de 60 Hz permanece) e aplica janela de
-    Hann. Retorna (f, amp_db) com
-    0 < f ≤ fmax e amp_db = 20·log10(amp) re 1 pu/rad (piso −100 dB), ou None
-    se o segmento for curto demais."""
+    """|FFT| de amplitude LINEAR (pu): reamostra em grade uniforme, remove a
+    média (offset DC; no abc a fundamental de 60 Hz permanece) e aplica janela
+    de Hann. Retorna (f, amp) com 0 < f ≤ fmax e amp em pu — escala linear
+    destaca os picos discretos (60 Hz + harmônicas) sobre o piso de ruído, ao
+    contrário do dB. Retorna None se o segmento for curto demais."""
     if len(t) < _MIN_SAMPLES or (t[-1] - t[0]) < _MIN_DUR_S:
         return None
     dt = float(np.median(np.diff(t)))
@@ -45,8 +44,7 @@ def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
     amp = 2.0 * np.abs(np.fft.rfft(y_u * w)) / w.sum()
     f   = np.fft.rfftfreq(len(y_u), dt)
     m   = (f > 0) & (f <= fmax)
-    amp_db = 20.0 * np.log10(np.maximum(amp[m], _AMP_FLOOR))
-    return f[m], amp_db
+    return f[m], amp[m]
 
 
 class SpectrumBuilder:
@@ -74,16 +72,16 @@ class SpectrumBuilder:
                 res = _amplitude_spectrum(t[mask], y[mask])
                 if res is None:
                     continue
-                f, amp_db = res
+                f, amp = res
                 lc, dc = SPEC_SEG_COLORS[seg_name]
                 fig.add_trace(go.Scatter(
-                    x=f, y=amp_db, name=seg_name, mode="lines",
+                    x=f, y=amp, name=seg_name, mode="lines",
                     line=dict(width=1.6, color=lc),
                     legendgroup=seg_name, showlegend=(ri == 1),
-                    hovertemplate="%{x:.0f} Hz · %{y:.1f} dB<extra>" + seg_name + "</extra>",
+                    hovertemplate="%{x:.0f} Hz · %{y:.3g} " + unit + "<extra>" + seg_name + "</extra>",
                 ), row=ri, col=1)
                 tm.append((len(fig.data) - 1, lc, dc))
-            self._label(fig, f"{label} — dB re 1 {unit}", ri)
+            self._label(fig, f"{label} — amplitude ({unit})", ri)
 
         self._marker_lines(fig, n)
         self._apply_layout(fig, n)
@@ -92,20 +90,19 @@ class SpectrumBuilder:
     # ── Segmentos e sinais ───────────────────────────────────────────────────
 
     def _segments(self) -> list[tuple[str, float, float]]:
-        """Janelas de análise. Pré-falta começa em T_SETTLE (config) para
-        descartar o transitório de partida do PLL — não é falta de desempenho,
-        é o PLL ainda travando na rede."""
+        """Duas janelas no formato do gráfico de referência: "antes do defeito"
+        e "depois do defeito", cortadas em t_fault. A janela de antes começa em
+        T_SETTLE (config) para descartar o transitório de partida do PLL — não é
+        falta de desempenho, é o PLL ainda travando na rede. A de depois junta
+        falta + pós-falta numa curva só."""
         d = self._d
         t_end = float(d.t[-1])
         if d.t_fault is None:
             return [("Regime", min(T_SETTLE, t_end), t_end)]
-        segs = [("Pré-falta", min(T_SETTLE, d.t_fault), d.t_fault)]
-        if d.t_clear is not None and d.t_clear < t_end:
-            segs.append(("Falta", d.t_fault, d.t_clear))
-            segs.append(("Pós-falta", d.t_clear, t_end))
-        else:
-            segs.append(("Falta", d.t_fault, t_end))
-        return segs
+        return [
+            ("Antes do defeito",  min(T_SETTLE, d.t_fault), d.t_fault),
+            ("Depois do defeito", d.t_fault, t_end),
+        ]
 
     def _signals(self) -> list[tuple[str, np.ndarray, np.ndarray, str]]:
         """Só os sinais trifásicos da fase A (corrente i_a e tensão v_a). No abc
@@ -135,19 +132,18 @@ class SpectrumBuilder:
 
     @staticmethod
     def _marker_lines(fig: go.Figure, n_rows: int) -> None:
-        """Linhas de referência: 60 Hz (fundamental/seq. negativa no abc) e
-        ressonância LCL."""
-        markers = ((F_FUND_HZ, "rgba(220,50,50,0.55)", "f = 60 Hz"),
-                   (F_RES_LCL_HZ, "rgba(147,51,234,0.5)", "f<sub>res</sub> LCL"))
-        for freq, color, text in markers:
+        """Linhas tracejadas nas principais frequências (SPEC_MARKERS):
+        fundamental 60 Hz, harmônicas ímpares e ressonância LCL."""
+        color = "rgba(120,120,130,0.45)"
+        for freq, text in SPEC_MARKERS:
             if freq > SPEC_FMAX_HZ:
                 continue
             for ri in range(1, n_rows + 1):
                 fig.add_vline(x=freq,
-                              line=dict(color=color, width=1.2, dash="dash"),
+                              line=dict(color=color, width=1.1, dash="dash"),
                               row=ri, col=1)
             fig.add_annotation(
-                text=text, x=freq, xref="x", yref="y domain", y=1.06,
+                text=text, x=freq, xref="x", yref="y domain", y=1.05,
                 xanchor="left", font=dict(size=9, color="#6b7280"),
                 showarrow=False,
             )
@@ -162,7 +158,8 @@ class SpectrumBuilder:
             if ax_name.startswith("xaxis") and ax_name != "xaxis":
                 fig.layout[ax_name].matches = "x"
         fig.update_yaxes(
-            title_text="Amplitude (dB)", title_font_size=11,
+            title_text="Amplitude (pu)", title_font_size=11,
+            rangemode="tozero",
             gridcolor="#f0f2f5", zerolinecolor="#e5e7eb",
             tickfont_size=10,
         )

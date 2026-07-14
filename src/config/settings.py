@@ -35,8 +35,21 @@ F_FUND_HZ      = 60.0     # Hz — fundamental no abc; seq. negativa da falta ca
 F_2H_HZ        = 120.0    # Hz — 2ª harmônica no dq (sequência negativa da falta)
 F_RES_LCL_HZ   = 1443.4   # Hz — ressonância do filtro LCL (ω_res = 9068.99 rad/s)
 
-# Cores por segmento temporal: {segmento: (light, dark)}
+# Frequências marcadas no espectro abc (vline tracejada + rótulo): fundamental,
+# harmônicas ímpares características do inversor e ressonância do filtro LCL.
+SPEC_MARKERS = (
+    (F_FUND_HZ,      "f<sub>1</sub>"),
+    (3 * F_FUND_HZ,  "3f<sub>1</sub>"),
+    (5 * F_FUND_HZ,  "5f<sub>1</sub>"),
+    (7 * F_FUND_HZ,  "7f<sub>1</sub>"),
+    (F_RES_LCL_HZ,   "f<sub>res</sub> LCL"),
+)
+
+# Cores por segmento temporal: {segmento: (light, dark)}. No espectro abc há só
+# dois segmentos (antes/depois do defeito) no formato do gráfico de referência.
 SPEC_SEG_COLORS = {
+    "Antes do defeito":  ("#dc2626", "#f87171"),  # vermelho — pré-falta
+    "Depois do defeito": ("#2563eb", "#60a5fa"),  # azul — falta + pós-falta
     "Pré-falta": ("#64748b", "#94a3b8"),
     "Falta":     ("#dc2626", "#f87171"),
     "Pós-falta": ("#2563eb", "#60a5fa"),

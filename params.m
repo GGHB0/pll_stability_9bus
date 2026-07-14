@@ -52,12 +52,12 @@ Tsc  = 2e-4;    % Control sample time           [s]
 %  Falta em LINHA:  FAULT_BUS = 0;      FAULT_LINE = [A, B];
 %  Regime perm.:    FAULT_TYPE='regime'; FAULT_BUS = 0; FAULT_LINE = [];
 
-FAULT_BUS  = 0;           % Barra do curto (0 se falta em linha ou regime)
-FAULT_LINE = [7,8];          % Par [A, B] para falta em linha; [] para falta em barra
-FAULT_TYPE = '2phase_ground';    % Ver tabela acima
+FAULT_BUS  = 7;           % Barra do curto (0 se falta em linha ou regime)
+FAULT_LINE = [];          % Par [A, B] para falta em linha; [] para falta em barra
+FAULT_TYPE = '2phase';    % Ver tabela acima
 
-T_FAULT    = 0.6;         % Instante de aplicação da falta [s]
-T_CLEAR    = 0.7;         % Instante de remoção da falta   [s]
+T_FAULT    = 0.3;         % Instante de aplicação da falta [s]
+T_CLEAR    = 0.4;         % Instante de remoção da falta   [s]
 T_DUR      = T_CLEAR - T_FAULT;  % Duração da falta [s]  (calculado automaticamente)
 
 %% Discrete notch for the PLL/PWM loop

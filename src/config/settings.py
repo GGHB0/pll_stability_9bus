@@ -45,15 +45,14 @@ SPEC_MARKERS = (
     (F_RES_LCL_HZ,   "f<sub>res</sub> LCL"),
 )
 
-# Cores por segmento temporal: {segmento: (light, dark)}. No espectro abc há só
-# dois segmentos (antes/depois do defeito) no formato do gráfico de referência.
+# Cores por segmento temporal: {segmento: (light, dark)}. No espectro abc há
+# três segmentos (pré-falta/durante a falta/pós-falta); cenários em regime
+# permanente (sem falta) usam só "Regime".
 SPEC_SEG_COLORS = {
-    "Antes do defeito":  ("#dc2626", "#f87171"),  # vermelho — pré-falta
-    "Depois do defeito": ("#2563eb", "#60a5fa"),  # azul — falta + pós-falta
-    "Pré-falta": ("#64748b", "#94a3b8"),
-    "Falta":     ("#dc2626", "#f87171"),
-    "Pós-falta": ("#2563eb", "#60a5fa"),
-    "Regime":    ("#2563eb", "#60a5fa"),
+    "Pré-falta":       ("#64748b", "#94a3b8"),  # cinza
+    "Durante a falta": ("#dc2626", "#f87171"),  # vermelho
+    "Pós-falta":       ("#2563eb", "#60a5fa"),  # azul
+    "Regime":          ("#2563eb", "#60a5fa"),
 }
 
 # ── Paletas de traços ────────────────────────────────────────────────────────

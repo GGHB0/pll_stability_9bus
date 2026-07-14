@@ -4,10 +4,10 @@ spectrum.py — Espectro de Fourier por segmento temporal.
 SpectrumBuilder(data).build() → (fig | None, trace_map)
 
 Cada sinal trifásico da fase A (corrente i_a, tensão v_a) vira um painel; o
-tempo é partido em dois segmentos — "antes do defeito" e "depois do defeito" —
-no formato do gráfico de referência (amplitude linear, curva vermelha antes /
-azul depois). No referencial abc a fundamental fica em 60 Hz (não vira DC como
-no dq); a média removida aqui tira só o offset, não a fundamental.
+tempo é partido em três segmentos — pré-falta, durante a falta e pós-falta —
+no formato do gráfico de referência (amplitude linear, cinza/vermelho/azul).
+No referencial abc a fundamental fica em 60 Hz (não vira DC como no dq); a
+média removida aqui tira só o offset, não a fundamental.
 """
 from __future__ import annotations
 
@@ -90,19 +90,23 @@ class SpectrumBuilder:
     # ── Segmentos e sinais ───────────────────────────────────────────────────
 
     def _segments(self) -> list[tuple[str, float, float]]:
-        """Duas janelas no formato do gráfico de referência: "antes do defeito"
-        e "depois do defeito", cortadas em t_fault. A janela de antes começa em
-        T_SETTLE (config) para descartar o transitório de partida do PLL — não é
-        falta de desempenho, é o PLL ainda travando na rede. A de depois junta
-        falta + pós-falta numa curva só."""
+        """Três janelas: pré-falta, durante a falta e pós-falta, cortadas em
+        t_fault/t_clear (reais do cenário, via fault_info.json). A janela de
+        pré-falta começa em T_SETTLE (config) para descartar o transitório de
+        partida do PLL — não é falta de desempenho, é o PLL ainda travando na
+        rede. Sem t_clear (falta permanente ou ausente), "durante a falta" vai
+        até o fim da simulação e não há segmento pós-falta."""
         d = self._d
         t_end = float(d.t[-1])
         if d.t_fault is None:
             return [("Regime", min(T_SETTLE, t_end), t_end)]
-        return [
-            ("Antes do defeito",  min(T_SETTLE, d.t_fault), d.t_fault),
-            ("Depois do defeito", d.t_fault, t_end),
-        ]
+        segs = [("Pré-falta", min(T_SETTLE, d.t_fault), d.t_fault)]
+        if d.t_clear is not None and d.t_clear < t_end:
+            segs.append(("Durante a falta", d.t_fault, d.t_clear))
+            segs.append(("Pós-falta", d.t_clear, t_end))
+        else:
+            segs.append(("Durante a falta", d.t_fault, t_end))
+        return segs
 
     def _signals(self) -> list[tuple[str, np.ndarray, np.ndarray, str]]:
         """Só os sinais trifásicos da fase A (corrente i_a e tensão v_a). No abc

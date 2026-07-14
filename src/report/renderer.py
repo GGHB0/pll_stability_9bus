@@ -177,7 +177,7 @@ class HTMLRenderer:
   <div class="chart-section" id="sec-spec" style="display:none">
     <div class="section-header">
       <span class="section-title">Espectro de amplitude (FFT) — fase A, abc</span>
-      <span class="spec-hint">amplitude linear · antes × depois do defeito · duplo-clique expande até 2 kHz</span>
+      <span class="spec-hint">amplitude linear · pré × durante × pós-falta · duplo-clique expande até 2 kHz</span>
     </div>
     <div id="plot-spec"></div>
   </div>

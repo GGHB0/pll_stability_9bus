@@ -1,29 +1,32 @@
 ---
 name: espectro-fourier
-description: Painel de espectro de Fourier segmentado (pré-falta/falta/pós-falta) — SpectrumBuilder, FFT com Hann no referencial dq, marcadores 120 Hz e f_res LCL
+description: Painel de espectro de Fourier segmentado (pré-falta/durante a falta/pós-falta) — SpectrumBuilder, FFT com Hann no referencial abc (fase A), amplitude linear, marcadores harmônicos + f_res LCL
+metadata:
+  type: project
 ---
 
 # Espectro de Fourier segmentado (spectrum.py)
 
 Adicionado em 2026-07-12 a pedido do orientador ("espectro de Fourier para ver
-as frequências"). Nova seção "Espectro de Fourier — referencial dq" no HTML,
-abaixo de Sistema 9-Bus.
+as frequências"). Seção "Espectro de amplitude (FFT) — fase A, abc" no HTML,
+abaixo de Sistema 9-Bus. Reformulado em 2026-07-13/14 para o formato do
+gráfico de referência do AGP (coorientador): amplitude **linear** (não dB),
+só sinais **abc fase A** (não dq), e **3 segmentos temporais** em vez de 2.
 
-## Por que o referencial dq
+## Por que abc fase A (não dq)
 
-A transformada de Park desloca o espectro em −60 Hz. Consequências:
+A versão original usava θ_err/i_q/Q no referencial dq (fundamental → DC,
+seq. negativa → 120 Hz). O AGP pediu o formato clássico do artigo dele:
+espectro direto da fase A em abc. Trade-off aceito e comunicado ao usuário:
+o range de 1,5 MHz / amplitude ~1e-14 do gráfico de referência do AGP não é
+reproduzível com os dados do projeto (Nyquist ~10 kHz da simulação, correntes
+reais em pu — não ruído numérico). O espectro atual cobre até `SPEC_FMAX_HZ`
+(2 kHz) com harmônicas reais do inversor.
 
-| Fenômeno em abc | Aparece no dq em |
-|---|---|
-| Fundamental seq. positiva | DC (removida junto com a média) |
-| Sequência negativa (falta assimétrica) | **120 Hz** — assinatura central do TCC |
-| 5º harm. (seq−) e 7º harm. (seq+) | 360 Hz |
-| Ressonância LCL (ω_res = 9068,99 rad/s) | ~1443 Hz |
-
-Sequência zero não aparece (não existe no dq). O pico de 120 Hz durante a
-falta é a evidência direta da oscilação de 2ª harmônica no PLL sob sequência
-negativa — validado: falta 1φ na barra 6 dá 2,73e-2 rad @ 120 Hz no θ_err
-durante a falta, vs 2,20e-3 na 3φ equivalente (12×).
+No abc a fundamental fica em 60 Hz (não em DC); a seq. negativa da falta
+assimétrica cai **também** em 60 Hz (não aparece como pico separado — essa é
+a razão de a versão dq antiga isolar melhor a assinatura de 120 Hz; ver KB
+antiga no histórico do git se precisar recuperar esse ângulo de análise).
 
 ## Implementação — `src/pipeline/spectrum.py`
 
@@ -31,77 +34,66 @@ durante a falta, vs 2,20e-3 na 3φ equivalente (12×).
 `app.py` ao lado do `ChartBuilder`; `trace_map` no mesmo formato
 `(idx, light, dark)` consumido pelo re-tema do renderer.
 
-**Sinais (um painel por sinal, rows=n, cols=1):**
-1. θ_err — eixo rápido (`t_fast`) quando disponível
-2. i_q UFV medida
-3. Q UFV
-4. i_a UFV em abc (`t_abc`/`ia_ufv`) — só quando `sim_data_abc.csv` existe
-   (requer re-export). Em abc a fundamental fica em 60 Hz (~0 dB) e a
-   **sequência negativa cai também em 60 Hz** — invisível como pico separado
-   (medido: +0.1 dB na falta 1φ); o ripple dq de 120 Hz vira banda lateral
-   em 180 Hz. O painel abc complementa os dq (formato familiar, harmônicas
-   em 300/420 Hz), mas a assinatura do TCC vive nos painéis dq.
-5. v_a UFV em abc (`t_abc`/`va_ufv`, 2026-07-12) — só quando `has_vabc_ufv`.
-   Mesmo CSV/eixo do painel de corrente abc. Exigiu habilitar o signal
-   logging de `Vabc_inverter`/`Vabc_grid` no `.slx` (não estava logado antes;
-   `Iabc_inverter`/`_grid` já estavam) — ver [[export-workflow]].
+**Sinais (`_signals()`, um painel por sinal, rows=n, cols=1) — só fase A:**
+1. Corrente i_a UFV (abc) — `t_abc`/`ia_ufv`, só quando `has_iabc_ufv`.
+2. Tensão v_a UFV (abc) — `t_abc`/`va_ufv`, só quando `has_vabc_ufv`.
 
-**Segmentos (um traço por segmento, cores fixas em `SPEC_SEG_COLORS`):**
+Ambos exigem `sim_data_abc.csv` (re-export do modelo). Cenários sem esse CSV
+não mostram o painel de espectro (fig retorna `None`).
+
+**Segmentos (`_segments()`, um traço por segmento, cores em `SPEC_SEG_COLORS`):**
 
 | Segmento | Janela | Cor light/dark |
 |---|---|---|
 | Pré-falta | `[T_SETTLE, t_fault)` — corta a partida do PLL | cinza `#64748b`/`#94a3b8` |
-| Falta | `[t_fault, t_clear)` | vermelho `#dc2626`/`#f87171` |
-| Pós-falta | `[t_clear, fim]` | azul `#2563eb`/`#60a5fa` |
+| Durante a falta | `[t_fault, t_clear)` | vermelho `#dc2626`/`#f87171` |
+| Pós-falta | `[t_clear, fim]` — só se `t_clear` existir | azul `#2563eb`/`#60a5fa` |
 | Regime (cenário sem falta) | `[T_SETTLE, fim]` — traço único | azul |
 
-**`T_SETTLE = 0.1 s`** (settings.py, 2026-07-12): o PLL leva ~0.08 s para
-travar na partida da simulação — é inicialização, não falta de desempenho
-(medido: |V| Bus 2 acomoda em 0.078 s, o sinal mais lento). Antes a
-pré-falta começava em `T_FAULT = 0.2` por acidente da constante de fallback;
-com T_SETTLE a janela [0.1, 0.3] dobra de tamanho → resolução 10 Hz → 5 Hz.
-A mesma constante clampa as janelas de métricas do loader
-([[pipeline-dados]]).
+`t_fault`/`t_clear` vêm do `fault_info.json` real do cenário (via `SimData`),
+não de constantes fixas. Falta permanente (sem `t_clear`) colapsa em 2
+segmentos: pré-falta e durante a falta (vai até o fim).
+
+**`T_SETTLE = 0.1 s`** (settings.py): o PLL leva ~0.08 s para travar na
+partida da simulação — é inicialização, não falta de desempenho (medido:
+|V| Bus 2 acomoda em 0.078 s, o sinal mais lento). A mesma constante clampa
+as janelas de métricas do loader ([[pipeline-dados]]).
 
 **FFT (`_amplitude_spectrum`):** reamostra em grade uniforme (`dt` mediano +
-`np.interp` — não assume passo fixo do CSV), remove a média (fundamental → DC),
-janela de Hann, amplitude `2·|rfft|/Σw` convertida para **dB re 1 pu/rad**
-(`20·log10`, piso `_AMP_FLOOR = 1e-5` → −100 dB), formato acadêmico pedido
-pelo orientador (Amplitude dB × Hz). Guardas: segmento < 0,05 s ou < 64
-amostras é pulado (df > 20 Hz não resolve 120 Hz).
+`np.interp` — não assume passo fixo do CSV), remove só a média (offset DC;
+a fundamental de 60 Hz permanece), janela de Hann, amplitude **linear**
+`2·|rfft|/Σw` em pu — escala linear destaca os picos discretos sobre o piso
+de ruído (ao contrário de dB, que achata a diferença). Guardas: segmento
+< 0,05 s ou < 64 amostras é pulado (df > 20 Hz não resolve os harmônicos).
 
-**Constantes em `settings.py`:** `SPEC_FMAX_HZ = 2000` (corte do espectro),
-`SPEC_XRANGE_HZ = 1500` (range default do eixo x — cobre harmônicas e f_res
-LCL; duplo-clique expande até 2 kHz), `F_2H_HZ = 120`, `F_RES_LCL_HZ = 1443.4`.
+**Marcadores (`SPEC_MARKERS`, settings.py):** fundamental e harmônicas
+ímpares do inversor + ressonância do filtro LCL — `F_FUND_HZ=60`, `3×60=180`,
+`5×60=300`, `7×60=420`, `F_RES_LCL_HZ=1443.4`. `SPEC_FMAX_HZ=2000` (corte do
+espectro), `SPEC_XRANGE_HZ=1500` (range default do eixo x; duplo-clique
+expande até 2 kHz).
 
 ## Layout e integração
 
-- Eixo y **linear em dB** (título "Amplitude (dB)"); em dB o salto do pico
-  de 120 Hz na falta assimétrica fica em ~+22 dB vs pré-falta.
-- Vlines tracejadas em 120 Hz (vermelha, "2f = 120 Hz") e 1443 Hz (violeta,
-  "f_res LCL") em todos os painéis; anotação só na 1ª linha. f_res fica fora
-  do range default — aparece no duplo-clique (autorange).
+- Eixo y **amplitude linear (pu)**, `rangemode="tozero"`.
+- Vlines tracejadas cinza em cada frequência de `SPEC_MARKERS`, com rótulo
+  (f₁, 3f₁, 5f₁, 7f₁, f_res LCL) só na 1ª linha.
 - Legenda única horizontal no topo (`legendgroup` por segmento,
-  `showlegend` só na row 1) — diferente das legendas por eixo do ChartBuilder.
+  `showlegend` só na row 1).
 - Renderer: chaves `specData/specLight/specDark/specIdx/hasSpec` no
   `SCENARIOS`, div `#plot-spec` na seção `#sec-spec`, re-render em
   `switchScenario` e `toggleTheme`.
-- **Ghost/fantasma funciona no espectro**: `_ghostData("spec")` sobrepõe o
-  cenário PLL equivalente pontilhado — comparação direta do pico de 120 Hz
-  nominal × mal dimensionado.
 - Zoom na falta (eixo em segundos) **não** afeta o espectro — `_applyZoom`
   só toca `gdInv`/`gdSys`.
-- Custo: ~95 KB de JSON por cenário (~1,7 MB no HTML total).
 
 ## Gotcha de verificação no browser
 
-`SCENARIOS[k].specData.data[i].x` vem como binário base64 (`bdata`) do
-`plotly.to_json` — para inspecionar valores usar `gd._fullData` do gráfico
-renderizado, não o JSON cru.
+`SCENARIOS[k].specData.data[i].x`/`.y` vêm como binário base64 (`bdata`) do
+`plotly.to_json` — para inspecionar valores no console usar `gd._fullData`
+do gráfico renderizado (arrays decodificados), não o JSON cru.
 
-## Nota sobre taxas de amostragem (2026-07-12)
+## Nota sobre taxas de amostragem
 
-Nos CSVs atuais as taxas estão **invertidas** em relação ao CLAUDE.md:
-`sim_data.csv` está a 5 µs (200 kHz) e `sim_data_angles.csv` a 200 µs
-(5 kHz). A reamostragem por `dt` mediano torna o espectro imune a isso,
-mas vale conferir a origem no logging do modelo. Ver [[pipeline-dados]].
+Nos CSVs `sim_data_abc.csv` a taxa de amostragem do `iabc`/`vabc` pode
+diferir da do `sim_data.csv` principal — a reamostragem por `dt` mediano em
+`_amplitude_spectrum` torna o espectro imune a isso. Ver [[export-workflow]]
+para o alinhamento do export abc ao lado do inversor (2026-07-13).

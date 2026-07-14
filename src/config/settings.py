@@ -31,6 +31,7 @@ LVRT_THRESHOLD   = 0.88           # pu — linha de referência no gráfico
 SPEC_FMAX_HZ   = 2000.0   # Hz — limite superior do espectro calculado/exibido
 SPEC_XRANGE_HZ = 1500.0   # Hz — range default do eixo x: cobre harmônicas e f_res LCL
                           # (duplo-clique revela até FMAX)
+F_FUND_HZ      = 60.0     # Hz — fundamental no abc; seq. negativa da falta cai aqui
 F_2H_HZ        = 120.0    # Hz — 2ª harmônica no dq (sequência negativa da falta)
 F_RES_LCL_HZ   = 1443.4   # Hz — ressonância do filtro LCL (ω_res = 9068.99 rad/s)
 

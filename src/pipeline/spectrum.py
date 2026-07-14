@@ -3,10 +3,11 @@ spectrum.py — Espectro de Fourier por segmento temporal.
 
 SpectrumBuilder(data).build() → (fig | None, trace_map)
 
-Cada sinal (θ_err, i_q, Q) vira um painel; cada segmento (pré-falta / falta /
-pós-falta, ou janela única em regime) vira um traço de amplitude |FFT|.
-No referencial dq a fundamental vira DC (removida com a média) e a sequência
-negativa da falta assimétrica aparece como pico em 120 Hz (2ª harmônica).
+Cada sinal trifásico da fase A (corrente i_a, tensão v_a) vira um painel; cada
+segmento (pré-falta / falta / pós-falta, ou janela única em regime) vira um
+traço de amplitude |FFT|. No referencial abc a fundamental fica em 60 Hz (não
+vira DC como no dq) e a sequência negativa da falta assimétrica também cai em
+60 Hz — por isso a média removida aqui tira só o offset, não a fundamental.
 """
 from __future__ import annotations
 
@@ -15,7 +16,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from ..config import (
-    T_SETTLE, SPEC_FMAX_HZ, SPEC_XRANGE_HZ, F_2H_HZ, F_RES_LCL_HZ,
+    T_SETTLE, SPEC_FMAX_HZ, SPEC_XRANGE_HZ, F_FUND_HZ, F_RES_LCL_HZ,
     SPEC_SEG_COLORS,
 )
 from .loader import SimData
@@ -28,7 +29,8 @@ _AMP_FLOOR   = 1e-5   # piso de amplitude → −100 dB (evita log(0) e ruído n
 def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
                         fmax: float = SPEC_FMAX_HZ):
     """|FFT| de amplitude em dB: reamostra em grade uniforme, remove a média
-    (fundamental → DC no dq) e aplica janela de Hann. Retorna (f, amp_db) com
+    (offset DC; no abc a fundamental de 60 Hz permanece) e aplica janela de
+    Hann. Retorna (f, amp_db) com
     0 < f ≤ fmax e amp_db = 20·log10(amp) re 1 pu/rad (piso −100 dB), ou None
     se o segmento for curto demais."""
     if len(t) < _MIN_SAMPLES or (t[-1] - t[0]) < _MIN_DUR_S:
@@ -106,21 +108,12 @@ class SpectrumBuilder:
         return segs
 
     def _signals(self) -> list[tuple[str, np.ndarray, np.ndarray, str]]:
+        """Só os sinais trifásicos da fase A (corrente i_a e tensão v_a). No abc
+        a fundamental fica em 60 Hz e a seq. negativa da falta assimétrica cai
+        TAMBÉM em 60 Hz — daí o marcador em F_FUND_HZ."""
         d = self._d
         sigs: list[tuple[str, np.ndarray, np.ndarray, str]] = []
-        if d.theta_err is not None:
-            if d.theta_err_fast is not None:
-                sigs.append(("Erro de fase θ<sub>err</sub>",
-                             d.t_fast, d.theta_err_fast, "rad"))
-            else:
-                sigs.append(("Erro de fase θ<sub>err</sub>",
-                             d.t, d.theta_err, "rad"))
-        if d.has_dq_ufv:
-            sigs.append(("Corrente i<sub>q</sub> UFV", d.t, d.iq_ufv_meas, "pu"))
-        sigs.append(("Potência reativa Q UFV", d.t, d.Q_ufv, "pu"))
         if d.has_iabc_ufv:
-            # abc: fundamental fica em 60 Hz (não vira DC como no dq); a
-            # seq. negativa cai TAMBÉM em 60 Hz — usar junto com os painéis dq
             sigs.append(("Corrente i<sub>a</sub> UFV (abc)",
                          d.t_abc, d.ia_ufv, "pu"))
         if d.has_vabc_ufv:
@@ -142,8 +135,9 @@ class SpectrumBuilder:
 
     @staticmethod
     def _marker_lines(fig: go.Figure, n_rows: int) -> None:
-        """Linhas de referência: 120 Hz (2ª harm. no dq) e ressonância LCL."""
-        markers = ((F_2H_HZ, "rgba(220,50,50,0.55)", "2f = 120 Hz"),
+        """Linhas de referência: 60 Hz (fundamental/seq. negativa no abc) e
+        ressonância LCL."""
+        markers = ((F_FUND_HZ, "rgba(220,50,50,0.55)", "f = 60 Hz"),
                    (F_RES_LCL_HZ, "rgba(147,51,234,0.5)", "f<sub>res</sub> LCL"))
         for freq, color, text in markers:
             if freq > SPEC_FMAX_HZ:

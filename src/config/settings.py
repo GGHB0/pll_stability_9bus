@@ -45,6 +45,16 @@ SPEC_MARKERS = (
     (F_RES_LCL_HZ,   "f<sub>res</sub> LCL"),
 )
 
+# Frequências marcadas no espectro dq: a fundamental vira DC (removida com a
+# média); a seq. negativa da falta aparece em 2f₁ e as harmônicas 5ª/7ª do abc
+# caem juntas em 6f₁ (11ª/13ª em 12f₁).
+SPEC_MARKERS_DQ = (
+    (F_2H_HZ,        "2f<sub>1</sub>"),
+    (6 * F_FUND_HZ,  "6f<sub>1</sub>"),
+    (12 * F_FUND_HZ, "12f<sub>1</sub>"),
+    (F_RES_LCL_HZ,   "f<sub>res</sub> LCL"),
+)
+
 # Cores por segmento temporal: {segmento: (light, dark)}. No espectro abc há
 # três segmentos (pré-falta/durante a falta/pós-falta); cenários em regime
 # permanente (sem falta) usam só "Regime".

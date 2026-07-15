@@ -1,13 +1,15 @@
 """
 spectrum.py — Espectro de Fourier por segmento temporal.
 
-SpectrumBuilder(data).build() → (fig | None, trace_map)
+SpectrumBuilder(data).build() → (figs, tms, harm)
 
-Cada sinal trifásico da fase A (corrente i_a, tensão v_a) vira um painel; o
-tempo é partido em três segmentos — pré-falta, durante a falta e pós-falta —
-no formato do gráfico de referência (amplitude linear, cinza/vermelho/azul).
-No referencial abc a fundamental fica em 60 Hz (não vira DC como no dq); a
-média removida aqui tira só o offset, não a fundamental.
+figs/tms são dicts indexados por modo ("a", "b", "c", "d", "q"): cada modo é
+uma figura com um painel de corrente e um de tensão UFV, com o tempo partido
+em três segmentos — pré-falta, durante a falta e pós-falta. No referencial
+abc a fundamental fica em 60 Hz; no dq ela vira DC (removida com a média) e
+a sequência negativa da falta assimétrica aparece em 120 Hz. harm carrega a
+amplitude das harmônicas 1–7 (k·60 Hz) por segmento/modo para a tabela do
+relatório.
 """
 from __future__ import annotations
 
@@ -16,18 +18,21 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from ..config import (
-    T_SETTLE, SPEC_FMAX_HZ, SPEC_XRANGE_HZ, SPEC_MARKERS,
-    SPEC_SEG_COLORS,
+    T_SETTLE, SPEC_FMAX_HZ, SPEC_XRANGE_HZ, SPEC_MARKERS, SPEC_MARKERS_DQ,
+    SPEC_SEG_COLORS, F_FUND_HZ,
 )
 from .loader import SimData
 
 _MIN_DUR_S   = 0.05   # janela menor que isso → df > 20 Hz, não resolve 120 Hz
 _MIN_SAMPLES = 64
+_N_HARM      = 7      # harmônicas 1–7 extraídas para a tabela do relatório
 
 
 def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
                         fmax: float = SPEC_FMAX_HZ):
-    """|FFT| de amplitude LINEAR (pu): reamostra em grade uniforme, remove a
+    """|FFT| de amplitude LINEAR (pu): reamostra em grade uniforme, trunca a
+    janela para um número INTEIRO de ciclos da fundamental (60 Hz cai exato
+    num bin — sem vazamento por janela cortada no meio do ciclo), remove a
     média (offset DC; no abc a fundamental de 60 Hz permanece) e aplica janela
     de Hann. Retorna (f, amp) com 0 < f ≤ fmax e amp em pu — escala linear
     destaca os picos discretos (60 Hz + harmônicas) sobre o piso de ruído, ao
@@ -37,7 +42,13 @@ def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
     dt = float(np.median(np.diff(t)))
     if dt <= 0:
         return None
-    t_u = np.arange(t[0], t[-1], dt)
+    n_cyc = int(np.floor((t[-1] - t[0]) * F_FUND_HZ))
+    if n_cyc < 1:
+        return None
+    n = int(round(n_cyc / F_FUND_HZ / dt))
+    if n < _MIN_SAMPLES:
+        return None
+    t_u = t[0] + np.arange(n) * dt
     y_u = np.interp(t_u, t, y)
     y_u -= y_u.mean()
     w   = np.hanning(len(y_u))
@@ -47,45 +58,44 @@ def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
     return f[m], amp[m]
 
 
+def _harmonics(f: np.ndarray, amp: np.ndarray) -> list[float | None]:
+    """Amplitude nas harmônicas k·60 Hz (k = 1…_N_HARM): pico local em
+    ±1,5 bin em torno da frequência alvo — a janela de Hann espalha um tom
+    bin-centrado em 3 bins, com o pico verdadeiro no bin central."""
+    if len(f) < 2:
+        return [None] * _N_HARM
+    df  = float(f[1] - f[0])
+    out: list[float | None] = []
+    for k in range(1, _N_HARM + 1):
+        m = np.abs(f - k * F_FUND_HZ) <= 1.5 * df
+        out.append(float(amp[m].max()) if m.any() else None)
+    return out
+
+
 class SpectrumBuilder:
-    """Monta a figura de espectros segmentados a partir de um SimData."""
+    """Monta as figuras de espectro segmentado (uma por fase/eixo) e a
+    tabela de harmônicas a partir de um SimData."""
 
     def __init__(self, data: SimData) -> None:
         self._d = data
 
     # ── API pública ──────────────────────────────────────────────────────────
 
-    def build(self) -> tuple[go.Figure | None, list[tuple[int, str, str]]]:
-        sigs = self._signals()
-        segs = self._segments()
-        if not sigs or not segs:
-            return None, []
+    def build(self) -> tuple[dict[str, go.Figure],
+                             dict[str, list[tuple[int, str, str]]],
+                             dict]:
+        modes = self._modes()
+        segs  = self._segments()
+        if not modes or not segs:
+            return {}, {}, {}
 
-        n = len(sigs)
-        fig = make_subplots(rows=n, cols=1, shared_xaxes=True,
-                            vertical_spacing=0.09)
-        tm: list[tuple[int, str, str]] = []
-
-        for ri, (label, t, y, unit) in enumerate(sigs, 1):
-            for seg_name, t0, t1 in segs:
-                mask = (t >= t0) & (t <= t1)
-                res = _amplitude_spectrum(t[mask], y[mask])
-                if res is None:
-                    continue
-                f, amp = res
-                lc, dc = SPEC_SEG_COLORS[seg_name]
-                fig.add_trace(go.Scatter(
-                    x=f, y=amp, name=seg_name, mode="lines",
-                    line=dict(width=1.6, color=lc),
-                    legendgroup=seg_name, showlegend=(ri == 1),
-                    hovertemplate="%{x:.0f} Hz · %{y:.3g} " + unit + "<extra>" + seg_name + "</extra>",
-                ), row=ri, col=1)
-                tm.append((len(fig.data) - 1, lc, dc))
-            self._label(fig, f"{label} — amplitude ({unit})", ri)
-
-        self._marker_lines(fig, n)
-        self._apply_layout(fig, n)
-        return fig, tm
+        # harm["i"|"v"][segmento][modo] = [amp h1 … h7] (pu)
+        harm: dict = {"segs": [s[0] for s in segs], "i": {}, "v": {}}
+        figs: dict[str, go.Figure] = {}
+        tms:  dict[str, list[tuple[int, str, str]]] = {}
+        for mode, sigs in modes.items():
+            figs[mode], tms[mode] = self._mode_fig(mode, sigs, segs, harm)
+        return figs, tms, harm
 
     # ── Segmentos e sinais ───────────────────────────────────────────────────
 
@@ -108,19 +118,66 @@ class SpectrumBuilder:
             segs.append(("Durante a falta", d.t_fault, t_end))
         return segs
 
-    def _signals(self) -> list[tuple[str, np.ndarray, np.ndarray, str]]:
-        """Só os sinais trifásicos da fase A (corrente i_a e tensão v_a). No abc
-        a fundamental fica em 60 Hz e a seq. negativa da falta assimétrica cai
-        TAMBÉM em 60 Hz — daí o marcador em F_FUND_HZ."""
+    def _modes(self) -> dict[str, list[tuple[str, str, np.ndarray, np.ndarray]]]:
+        """{modo: [(kind, label, t, y), …]} com kind ∈ {"i", "v"} ligando o
+        sinal à tabela de harmônicas. Fases abc usam t_abc (Ts rápido); eixos
+        d/q usam t (Tsc). No dq a seq. negativa aparece isolada em 120 Hz —
+        assinatura da falta assimétrica que no abc cai junto com os 60 Hz."""
         d = self._d
-        sigs: list[tuple[str, np.ndarray, np.ndarray, str]] = []
-        if d.has_iabc_ufv:
-            sigs.append(("Corrente i<sub>a</sub> UFV (abc)",
-                         d.t_abc, d.ia_ufv, "pu"))
-        if d.has_vabc_ufv:
-            sigs.append(("Tensão v<sub>a</sub> UFV (abc)",
-                         d.t_abc, d.va_ufv, "pu"))
-        return sigs
+        modes: dict[str, list] = {}
+        for ph in ("a", "b", "c"):
+            rows = []
+            if d.has_iabc_ufv:
+                rows.append(("i", f"Corrente i<sub>{ph}</sub> UFV (abc)",
+                             d.t_abc, getattr(d, f"i{ph}_ufv")))
+            if d.has_vabc_ufv:
+                rows.append(("v", f"Tensão v<sub>{ph}</sub> UFV (abc)",
+                             d.t_abc, getattr(d, f"v{ph}_ufv")))
+            if rows:
+                modes[ph] = rows
+        for ax in ("d", "q"):
+            rows = []
+            if d.has_dq_ufv:
+                rows.append(("i", f"Corrente i<sub>{ax}</sub> UFV (dq)",
+                             d.t, getattr(d, f"i{ax}_ufv_meas")))
+            if d.has_vdq_ufv:
+                rows.append(("v", f"Tensão v<sub>{ax}</sub> UFV (dq)",
+                             d.t, getattr(d, f"v{ax}_ufv")))
+            if rows:
+                modes[ax] = rows
+        return modes
+
+    # ── Figura de um modo ────────────────────────────────────────────────────
+
+    def _mode_fig(self, mode: str, sigs: list, segs: list,
+                  harm: dict) -> tuple[go.Figure, list[tuple[int, str, str]]]:
+        n = len(sigs)
+        fig = make_subplots(rows=n, cols=1, shared_xaxes=True,
+                            vertical_spacing=0.09)
+        tm: list[tuple[int, str, str]] = []
+
+        for ri, (kind, label, t, y) in enumerate(sigs, 1):
+            for seg_name, t0, t1 in segs:
+                mask = (t >= t0) & (t <= t1)
+                res = _amplitude_spectrum(t[mask], y[mask])
+                if res is None:
+                    continue
+                f, amp = res
+                harm[kind].setdefault(seg_name, {})[mode] = _harmonics(f, amp)
+                lc, dc = SPEC_SEG_COLORS[seg_name]
+                fig.add_trace(go.Scatter(
+                    x=f, y=amp, name=seg_name, mode="lines",
+                    line=dict(width=1.6, color=lc),
+                    legendgroup=seg_name, showlegend=(ri == 1),
+                    hovertemplate="%{x:.0f} Hz · %{y:.3g} pu<extra>" + seg_name + "</extra>",
+                ), row=ri, col=1)
+                tm.append((len(fig.data) - 1, lc, dc))
+            self._label(fig, f"{label} — amplitude (pu)", ri)
+
+        markers = SPEC_MARKERS if mode in ("a", "b", "c") else SPEC_MARKERS_DQ
+        self._marker_lines(fig, n, markers)
+        self._apply_layout(fig, n)
+        return fig, tm
 
     # ── Helpers de figura ────────────────────────────────────────────────────
 
@@ -135,11 +192,12 @@ class SpectrumBuilder:
         )
 
     @staticmethod
-    def _marker_lines(fig: go.Figure, n_rows: int) -> None:
-        """Linhas tracejadas nas principais frequências (SPEC_MARKERS):
-        fundamental 60 Hz, harmônicas ímpares e ressonância LCL."""
+    def _marker_lines(fig: go.Figure, n_rows: int, markers) -> None:
+        """Linhas tracejadas nas frequências características: no abc,
+        fundamental + harmônicas ímpares (SPEC_MARKERS); no dq, 2f₁/6f₁/12f₁
+        (SPEC_MARKERS_DQ). Ressonância LCL nos dois."""
         color = "rgba(120,120,130,0.45)"
-        for freq, text in SPEC_MARKERS:
+        for freq, text in markers:
             if freq > SPEC_FMAX_HZ:
                 continue
             for ri in range(1, n_rows + 1):

@@ -5,6 +5,25 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-15 — Espectro FFT multi-modo (a/b/c/d/q) + tabela de harmônicas
+
+Arquivos: `src/pipeline/spectrum.py`, `src/config/settings.py`,
+`src/config/__init__.py`, `app.py`, `src/report/renderer.py`
+
+- **SpectrumBuilder multi-modo**: além da fase A, espectros das fases b/c
+  (de `sim_data_abc.csv`) e dos eixos d/q (sinais dq a Tsc=200 µs); `build()`
+  devolve dicts de figuras/trace_maps por modo + dados de harmônicas.
+- **Ciclos inteiros**: janela da FFT truncada a `floor(T·60)/60` s — a
+  fundamental (e 120 Hz da seq. negativa) cai exata num bin, sem vazamento
+  por janela cortada no meio do ciclo.
+- **Seletor de fase** na seção Espectro: botões a/b/c/d/q (sticky entre
+  cenários; botões sem dado somem); título/hint acompanham; marcadores
+  próprios para dq (`SPEC_MARKERS_DQ`: 2f₁, 6f₁, 12f₁, f_res).
+- **Tabela de harmônicas 1ª–7ª** (60–420 Hz) por segmento × fase/eixo, para
+  corrente e tensão UFV; célula ≥ 0,4 pu destacada (accent), < 0,02 pu
+  apagada — só amplitude na ordem da nominal chama atenção.
+- Detalhes em `.claude/kb/dashboard/graficos/espectro-fourier.md`.
+
 ## 2026-07-15 — Abas de gráficos + aba Resumo + cards clicáveis
 
 Arquivos: `src/pipeline/chart.py`, `app.py`, `src/report/renderer.py`

@@ -2,8 +2,11 @@
 renderer.py — Gera o HTML final com seletor de cenário, cards e Plotly embutido.
 
 HTMLRenderer(scenarios).render(out_path) → escreve o HTML e retorna o Path.
-scenarios: dict[key, {data, label, fig_inv, fig_sys, fig_res, fig_spec,
-                      tm_inv, tm_sys, tm_res, tm_spec}]
+scenarios: dict[key, {data, label, fig_inv, fig_sys, fig_res,
+                      figs_spec, tms_spec, spec_harm,
+                      tm_inv, tm_sys, tm_res}]
+figs_spec/tms_spec são dicts por fase/eixo ("a"…"q"); spec_harm alimenta a
+tabela de harmônicas da aba Espectro.
 """
 from __future__ import annotations
 
@@ -15,7 +18,7 @@ import plotly
 import plotly.graph_objects as go
 
 from ..config import (
-    T_SETTLE, TOL_RAD, LVRT_THRESHOLD,
+    T_SETTLE, TOL_RAD, LVRT_THRESHOLD, F_FUND_HZ,
     IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH, DP_THRESH, DQ_THRESH,
     PEAK_ERR_DEG_THRESH, SYNC_LOSS_DEG, VBUS_MIN_THRESH,
 )
@@ -25,8 +28,12 @@ from ..pipeline.loader import SimData
 class HTMLRenderer:
     """Renderiza relatório HTML multi-cenário com seletor e duas seções de gráficos."""
 
+    _SPEC_MODES = ("a", "b", "c", "d", "q")
+    _HARM_HI_PU = 0.4    # tabela de harmônicas: destaque se amp ≥ (pu)
+    _HARM_LO_PU = 0.02   # tabela de harmônicas: apagado se amp < (pu)
+
     def __init__(self, scenarios: dict[str, dict]) -> None:
-        # {key: {data, label, fig_inv, fig_sys, fig_res, fig_spec, tm_*}}
+        # {key: {data, label, fig_inv, fig_sys, fig_res, figs_spec, tm_*}}
         self._scenarios = scenarios
 
     # ── API pública ──────────────────────────────────────────────────────────
@@ -49,16 +56,17 @@ class HTMLRenderer:
             fi = sc["fig_inv"]
             fs = sc["fig_sys"]
             fr = sc.get("fig_res")
-            fp = sc.get("fig_spec")
+            fp = sc.get("figs_spec") or {}
             ti = sc["tm_inv"]
             ts = sc["tm_sys"]
             tr = sc.get("tm_res") or []
-            tp = sc.get("tm_spec") or []
+            tp = sc.get("tms_spec") or {}
             sc_js[key] = {
                 "invData":   json.loads(fi.to_json()),
                 "sysData":   json.loads(fs.to_json()) if fs else None,
                 "resData":   json.loads(fr.to_json()) if fr else None,
-                "specData":  json.loads(fp.to_json()) if fp else None,
+                "specData":  {m: json.loads(f.to_json()) for m, f in fp.items()},
+                "specModes": list(fp.keys()),
                 "invLight":  [x[1] for x in ti],
                 "invDark":   [x[2] for x in ti],
                 "invIdx":    [x[0] for x in ti],
@@ -68,17 +76,18 @@ class HTMLRenderer:
                 "resLight":  [x[1] for x in tr],
                 "resDark":   [x[2] for x in tr],
                 "resIdx":    [x[0] for x in tr],
-                "specLight": [x[1] for x in tp],
-                "specDark":  [x[2] for x in tp],
-                "specIdx":   [x[0] for x in tp],
+                "specLight": {m: [x[1] for x in tm] for m, tm in tp.items()},
+                "specDark":  {m: [x[2] for x in tm] for m, tm in tp.items()},
+                "specIdx":   {m: [x[0] for x in tm] for m, tm in tp.items()},
                 "label":     sc["label"],
                 "cardsHtml": self._cards_html(d),
                 "storyHtml": self._story_html(d),
+                "specTableHtml": self._spec_table_html(sc.get("spec_harm") or {}),
                 "metricsRow": self._table_row_data(d),
                 "hasInv":    True,
                 "hasSys":    fs is not None,
                 "hasRes":    fr is not None,
-                "hasSpec":   fp is not None,
+                "hasSpec":   bool(fp),
                 "badPll":    sc.get("bad_pll", False),
                 "tFault":    d.t_fault,
                 "tClear":    d.t_clear,
@@ -202,10 +211,22 @@ class HTMLRenderer:
 
   <div class="chart-section" id="sec-spec" style="display:none">
     <div class="section-header">
-      <span class="section-title">Espectro de amplitude (FFT) — fase A, abc</span>
+      <span class="section-title">Espectro de amplitude (FFT) — <span id="spec-mode-lbl">fase a (abc)</span></span>
       <span class="spec-hint">amplitude linear · pré × durante × pós-falta · duplo-clique expande até 2 kHz</span>
     </div>
+    <div class="spec-phase-bar">
+      <span class="filter-label">Fase / eixo</span>
+      <div class="pll-toggle">
+        <button class="pll-btn spec-ph-btn active" data-phase="a" onclick="setSpecPhase('a')">a</button>
+        <button class="pll-btn spec-ph-btn" data-phase="b" onclick="setSpecPhase('b')">b</button>
+        <button class="pll-btn spec-ph-btn" data-phase="c" onclick="setSpecPhase('c')">c</button>
+        <button class="pll-btn spec-ph-btn" data-phase="d" onclick="setSpecPhase('d')">d</button>
+        <button class="pll-btn spec-ph-btn" data-phase="q" onclick="setSpecPhase('q')">q</button>
+      </div>
+      <span class="spec-hint" id="spec-phase-hint"></span>
+    </div>
     <div id="plot-spec"></div>
+    <div id="spec-harm-area"></div>
   </div>
 
   <div class="footer">
@@ -321,15 +342,69 @@ function themedData(data, lightC, darkC, tIdx, isDarkMode) {{
 
 function _renderChart(which) {{
   var sc = SCENARIOS[currentKey];
-  var figData = sc[which + "Data"];
+  var figData, light, dark, idx;
+  if (which === "spec") {{
+    var s = _specFig(sc);
+    if (!s) return;
+    _syncSpecPhaseUI();
+    figData = s.fig; light = s.light; dark = s.dark; idx = s.idx;
+  }} else {{
+    figData = sc[which + "Data"];
+    light = sc[which + "Light"]; dark = sc[which + "Dark"];
+    idx   = sc[which + "Idx"];
+  }}
   if (!figData) return;
   PLOTLY_CFG.toImageButtonOptions.filename =
-    "pll_" + currentKey.split("/").join("_") + "_" + which;
-  var data = themedData(figData.data, sc[which + "Light"], sc[which + "Dark"],
-                        sc[which + "Idx"], isDark)
+    "pll_" + currentKey.split("/").join("_") + "_" + which
+    + (which === "spec" ? "_" + specPhase : "");
+  var data = themedData(figData.data, light, dark, idx, isDark)
     .concat(_ghostData(which));
   Plotly.react(gd[which], data, themedLayout(figData, isDark), PLOTLY_CFG);
   _dirty[which] = false;
+}}
+
+// ── Espectro: seletor de fase (abc) / eixo (dq) ────────────────────────────
+// Cada fase/eixo é uma figura própria em specData[modo]; o seletor só troca
+// qual delas o painel spec renderiza — mesmo lazy render das abas.
+
+var specPhase = "a";
+var SPEC_MODE_LBL = {{ a: "fase a (abc)", b: "fase b (abc)", c: "fase c (abc)",
+                       d: "eixo d (dq)",  q: "eixo q (dq)" }};
+
+function _specFig(sc) {{
+  var modes = sc.specModes || [];
+  if (!modes.length) return null;
+  if (modes.indexOf(specPhase) === -1) specPhase = modes[0];
+  return {{
+    fig:   sc.specData[specPhase],
+    light: sc.specLight[specPhase],
+    dark:  sc.specDark[specPhase],
+    idx:   sc.specIdx[specPhase],
+  }};
+}}
+
+function setSpecPhase(p) {{
+  specPhase = p;
+  _dirty.spec = true;
+  _syncSpecPhaseUI();
+  if (activeTab === "spec") _renderChart("spec");
+}}
+
+function _syncSpecPhaseUI() {{
+  var sc = SCENARIOS[currentKey];
+  var modes = sc.specModes || [];
+  if (modes.length && modes.indexOf(specPhase) === -1) specPhase = modes[0];
+  document.querySelectorAll(".spec-ph-btn").forEach(function(b) {{
+    var ph = b.dataset.phase;
+    b.style.display = (modes.indexOf(ph) === -1) ? "none" : "";
+    b.classList.toggle("active", ph === specPhase);
+  }});
+  var lbl = document.getElementById("spec-mode-lbl");
+  if (lbl) lbl.textContent = SPEC_MODE_LBL[specPhase] || specPhase;
+  var hint = document.getElementById("spec-phase-hint");
+  if (hint) hint.textContent = (specPhase === "d" || specPhase === "q")
+    ? "no dq a fundamental vira DC; seq. negativa aparece em 120 Hz"
+    : "no abc a fundamental fica em 60 Hz";
 }}
 
 // ── Abas: mostra/esconde painéis e renderiza sob demanda ──────────────────
@@ -408,10 +483,18 @@ function _ghostData(which) {{
   var other = _exactEquiv(currentKey);
   if (!other) return [];
   var o = SCENARIOS[other];
-  var fig = o[which + "Data"];
-  var idx = o[which + "Idx"];
+  var fig, idx, colors;
+  if (which === "spec") {{
+    if (!o.specModes || o.specModes.indexOf(specPhase) === -1) return [];
+    fig    = o.specData[specPhase];
+    idx    = o.specIdx[specPhase];
+    colors = isDark ? o.specDark[specPhase] : o.specLight[specPhase];
+  }} else {{
+    fig    = o[which + "Data"];
+    idx    = o[which + "Idx"];
+    colors = isDark ? o[which + "Dark"] : o[which + "Light"];
+  }}
   if (!fig) return [];
-  var colors = isDark ? o[which + "Dark"] : o[which + "Light"];
   var tag = o.badPll ? " (PLL ruim)" : " (nominal)";
   // mesma cor do traço principal; pontilhado + opacidade marcam o fantasma
   return idx.map(function(i, pos) {{
@@ -565,6 +648,8 @@ function switchScenario(key) {{
 
   document.getElementById("cards-area").innerHTML = sc.cardsHtml;
   document.getElementById("story-area").innerHTML = sc.storyHtml;
+  document.getElementById("spec-harm-area").innerHTML = sc.specTableHtml || "";
+  _syncSpecPhaseUI();
 
   highlightSVG(key);
   renderComparisonTable();
@@ -843,6 +928,60 @@ switchScenario(currentKey);
             'onclick="setPllMode(\'bad\')">Mal dimensionado</button>'
             '</div>'
         )
+
+    # ── Tabela de harmônicas (aba Espectro) ──────────────────────────────────
+
+    def _spec_table_html(self, harm: dict) -> str:
+        """Tabelas de amplitude das harmônicas 1–7 (k·60 Hz), colunas
+        agrupadas por segmento (pré/durante/pós-falta) × fase/eixo (a b c d q)
+        — uma tabela para corrente, outra para tensão UFV. Valores vêm do
+        SpectrumBuilder (pico local do espectro de Hann em cada k·60 Hz)."""
+        segs = harm.get("segs") or []
+        if not segs:
+            return ""
+        n_modes = len(self._SPEC_MODES)
+        blocks: list[str] = []
+        for kind, title in (("i", "Corrente UFV"), ("v", "Tensão UFV")):
+            per_seg = harm.get(kind) or {}
+            if not any(per_seg.get(s) for s in segs):
+                continue
+            head1 = "<tr><th rowspan='2'>h</th><th rowspan='2'>f (Hz)</th>"
+            head2 = "<tr>"
+            for s in segs:
+                head1 += f"<th colspan='{n_modes}' class='harm-first'>{s}</th>"
+                for j, mo in enumerate(self._SPEC_MODES):
+                    first = " harm-first" if j == 0 else ""
+                    head2 += f"<th class='harm-sub{first}'>{mo}</th>"
+            head1 += "</tr>"
+            head2 += "</tr>"
+            rows: list[str] = []
+            for k in range(1, 8):
+                cells = (f"<td class='harm-h'>{k}ª</td>"
+                         f"<td class='harm-h'>{k * F_FUND_HZ:.0f}</td>")
+                for s in segs:
+                    mode_amps = per_seg.get(s) or {}
+                    for j, mo in enumerate(self._SPEC_MODES):
+                        first = " harm-first" if j == 0 else ""
+                        amps = mode_amps.get(mo)
+                        v = amps[k - 1] if amps else None
+                        if v is None:
+                            cells += f"<td class='harm-na{first}'>—</td>"
+                            continue
+                        # limiares absolutos em pu: destaque só para amplitude
+                        # na ordem da nominal; quase-zero fica apagado
+                        tier = (" harm-top" if v >= self._HARM_HI_PU
+                                else " harm-lo" if v < self._HARM_LO_PU
+                                else "")
+                        cells += f"<td class='harm-val{first}{tier}'>{v:.3g}</td>"
+                rows.append(f"<tr>{cells}</tr>")
+            blocks.append(
+                f"<div class='harm-block'>"
+                f"<p class='harm-title'>Harmônicas — {title} (pu)</p>"
+                f"<div class='table-wrap'><table class='harm-table'>"
+                f"<thead>{head1}{head2}</thead>"
+                f"<tbody>{''.join(rows)}</tbody></table></div></div>"
+            )
+        return "".join(blocks)
 
     # ── Cards ────────────────────────────────────────────────────────────────
 
@@ -1517,6 +1656,43 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 [data-theme="dark"] .cmp-good { color: #4ade80 }
 [data-theme="dark"] .cmp-warn { color: #fbbf24 }
 [data-theme="dark"] .cmp-bad  { color: #f87171 }
+
+/* ── Espectro: seletor de fase e tabela de harmônicas ── */
+.spec-phase-bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.harm-block { padding: 4px 20px 14px }
+.harm-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .6px; color: var(--muted);
+  margin: 12px 0 6px;
+}
+.harm-table { width: 100%; border-collapse: collapse; font-size: 12px }
+.harm-table th, .harm-table td {
+  padding: 5px 9px; text-align: right; white-space: nowrap;
+}
+.harm-table thead th {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: var(--muted);
+  border-bottom: 1.5px solid var(--border); text-align: center;
+}
+.harm-table thead th.harm-sub {
+  text-transform: none; font-style: italic; font-size: 11px;
+  border-bottom: 1px solid var(--border);
+}
+.harm-table tbody tr { border-bottom: 1px solid var(--border) }
+.harm-table tbody tr:hover { background: var(--bg) }
+.harm-h   { font-weight: 600; color: var(--text); text-align: center !important }
+.harm-val { color: var(--text) }
+.harm-top {
+  font-weight: 700; color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.harm-lo  { color: var(--muted); opacity: .5 }
+.harm-na  { color: var(--muted) }
+.harm-first { border-left: 1.5px solid var(--border) }
 
 /* ── SVG tooltip ── */
 .svg-tip {

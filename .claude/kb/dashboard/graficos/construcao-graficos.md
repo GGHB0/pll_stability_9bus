@@ -8,6 +8,13 @@ description: ChartBuilder (chart.py) — subplots por seção, linhas single/pai
 `ChartBuilder(data).build_sections()` → `(fig_inv, fig_sys, tm_inv, tm_sys)`.
 `fig_sys = None` quando o cenário não tem sinais de sistema.
 
+`ChartBuilder(data).build_resume()` → `(fig_res, tm_res)` — figura da aba
+Resumo ([[tabs-navegacao]]): `_res_rows()` = erro de fase, frequência PLL,
+P/Q UFV e |V| Bus 2, reusando os mesmos kinds/overlays das seções completas.
+Como duplica traces já presentes em inv/sys, usa decimação mais agressiva
+(`_RES_MAX_POINTS = 2000` via `self._max_points`). Retorna `None` com menos
+de 2 painéis disponíveis.
+
 ## Linhas: single vs pair
 
 Cada figura é um `make_subplots(rows=n, cols=2, shared_xaxes=True)`. Uma linha
@@ -26,7 +33,8 @@ opcional (`"Barra N"`) vira subtítulo de grupo (`_group_title`, annotation com
 
 Todo trace de dados passa por `_add(trace, row, col)`:
 
-1. **Decimação**: se o trace tem > `_MAX_POINTS = 5000` pontos, faz slicing
+1. **Decimação**: se o trace tem > `self._max_points` pontos (padrão
+   `_MAX_POINTS = 5000`; `_RES_MAX_POINTS = 2000` no resumo), faz slicing
    `[::step]` — o HTML caiu de ~570 MB para ~24 MB.
 2. **Paleta**: cor light atribuída na construção; o par
    `(idx, light, dark)` entra no `trace_map`, que o renderer usa para

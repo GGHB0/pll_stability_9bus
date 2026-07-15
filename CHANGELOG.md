@@ -5,6 +5,28 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-15 — Abas de gráficos + aba Resumo + cards clicáveis
+
+Arquivos: `src/pipeline/chart.py`, `app.py`, `src/report/renderer.py`
+
+- **Abas**: as 3 seções de gráficos empilhadas viram painéis de aba
+  (📌 Resumo · ⚡ Inversor UFV · 🔌 Sistema 9-Bus · 📈 Espectro FFT); só a
+  aba ativa é renderizada (`Plotly.react` sob demanda via flags `_dirty`) —
+  troca de cenário/tema roda 1 react em vez de 3. Abas sem dado somem;
+  se a ativa não existe no cenário, cai para a 1ª disponível.
+- **Aba Resumo** (padrão): figura nova `build_resume()` no ChartBuilder com
+  os painéis essenciais — erro de fase (banda ±tol + tₛ), frequência PLL,
+  P/Q UFV e |V| Bus 2 (LVRT). Decimação própria `_RES_MAX_POINTS = 2000`
+  limita o custo de duplicar traces no HTML.
+- **Cards clicáveis**: métricas ganham `onclick=goToChart(rótulo)` — procura
+  o rótulo de painel nas figuras (ordem res → inv → sys), abre a aba e rola
+  até o painel usando o domínio do eixo Y (scroll via `setTimeout`, não rAF,
+  para funcionar com a aba do browser em segundo plano).
+- **Zoom**: `_applyZoom`/ponte manual generalizados para res/inv/sys (spec
+  fora — eixo em Hz); só tocam gráficos já plotados e limpos.
+- Trade-off registrado: sem visão inv+sys lado a lado rolando a página —
+  compensado pela aba Resumo, que junta o essencial das duas seções.
+
 ## 2026-07-14 — Regime permanente sem tₛ + revisão dos cards/diagnóstico
 
 Arquivos: `src/pipeline/loader.py`, `src/report/renderer.py`

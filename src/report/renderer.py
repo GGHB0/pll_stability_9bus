@@ -2,7 +2,8 @@
 renderer.py — Gera o HTML final com seletor de cenário, cards e Plotly embutido.
 
 HTMLRenderer(scenarios).render(out_path) → escreve o HTML e retorna o Path.
-scenarios: dict[key, {data, label, fig_inv, fig_sys, tm_inv, tm_sys}]
+scenarios: dict[key, {data, label, fig_inv, fig_sys, fig_res, fig_spec,
+                      tm_inv, tm_sys, tm_res, tm_spec}]
 """
 from __future__ import annotations
 
@@ -25,7 +26,7 @@ class HTMLRenderer:
     """Renderiza relatório HTML multi-cenário com seletor e duas seções de gráficos."""
 
     def __init__(self, scenarios: dict[str, dict]) -> None:
-        # {key: {data, label, fig_inv, fig_sys, tm_inv, tm_sys}}
+        # {key: {data, label, fig_inv, fig_sys, fig_res, fig_spec, tm_*}}
         self._scenarios = scenarios
 
     # ── API pública ──────────────────────────────────────────────────────────
@@ -47,13 +48,16 @@ class HTMLRenderer:
             d  = sc["data"]
             fi = sc["fig_inv"]
             fs = sc["fig_sys"]
+            fr = sc.get("fig_res")
             fp = sc.get("fig_spec")
             ti = sc["tm_inv"]
             ts = sc["tm_sys"]
+            tr = sc.get("tm_res") or []
             tp = sc.get("tm_spec") or []
             sc_js[key] = {
                 "invData":   json.loads(fi.to_json()),
                 "sysData":   json.loads(fs.to_json()) if fs else None,
+                "resData":   json.loads(fr.to_json()) if fr else None,
                 "specData":  json.loads(fp.to_json()) if fp else None,
                 "invLight":  [x[1] for x in ti],
                 "invDark":   [x[2] for x in ti],
@@ -61,6 +65,9 @@ class HTMLRenderer:
                 "sysLight":  [x[1] for x in ts],
                 "sysDark":   [x[2] for x in ts],
                 "sysIdx":    [x[0] for x in ts],
+                "resLight":  [x[1] for x in tr],
+                "resDark":   [x[2] for x in tr],
+                "resIdx":    [x[0] for x in tr],
                 "specLight": [x[1] for x in tp],
                 "specDark":  [x[2] for x in tp],
                 "specIdx":   [x[0] for x in tp],
@@ -68,7 +75,9 @@ class HTMLRenderer:
                 "cardsHtml": self._cards_html(d),
                 "storyHtml": self._story_html(d),
                 "metricsRow": self._table_row_data(d),
+                "hasInv":    True,
                 "hasSys":    fs is not None,
+                "hasRes":    fr is not None,
                 "hasSpec":   fp is not None,
                 "badPll":    sc.get("bad_pll", False),
                 "tFault":    d.t_fault,
@@ -160,7 +169,22 @@ class HTMLRenderer:
     </div>
   </div>
 
-  <div class="chart-section" id="sec-inv">
+  <div class="tab-bar" id="tab-bar">
+    <button class="tab-btn active" id="tab-res"  onclick="switchTab('res')">📌 Resumo</button>
+    <button class="tab-btn" id="tab-inv"  onclick="switchTab('inv')">⚡ Inversor UFV</button>
+    <button class="tab-btn" id="tab-sys"  onclick="switchTab('sys')">🔌 Sistema 9-Bus</button>
+    <button class="tab-btn" id="tab-spec" onclick="switchTab('spec')">📈 Espectro FFT</button>
+  </div>
+
+  <div class="chart-section" id="sec-res" style="display:none">
+    <div class="section-header">
+      <span class="section-title">Resumo — resposta essencial</span>
+      <span class="fault-badge" id="badge-res"></span>
+    </div>
+    <div id="plot-res"></div>
+  </div>
+
+  <div class="chart-section" id="sec-inv" style="display:none">
     <div class="section-header">
       <span class="section-title">Inversor UFV</span>
       <span class="fault-badge" id="badge-inv"></span>
@@ -200,14 +224,21 @@ var currentKey = {first_key_js};
 var isDark = false;
 var pllMode = "nominal";
 
-var gdInv   = document.getElementById("plot-inv");
-var gdSys   = document.getElementById("plot-sys");
-var gdSpec  = document.getElementById("plot-spec");
-var secSys  = document.getElementById("sec-sys");
-var secSpec = document.getElementById("sec-spec");
+// Abas: cada gráfico vive num painel; só o ativo é renderizado (lazy) e os
+// demais ficam "sujos" até serem abertos — _dirty[t] = precisa de Plotly.react.
+var TABS = ["res", "inv", "sys", "spec"];
+var HASKEY = {{ res: "hasRes", inv: "hasInv", sys: "hasSys", spec: "hasSpec" }};
+var activeTab = "res";
+var _dirty = {{ res: true, inv: true, sys: true, spec: true }};
+
+var gd = {{}}, secEl = {{}}, tabBtn = {{}}, badgeEl = {{}};
+TABS.forEach(function(t) {{
+  gd[t]     = document.getElementById("plot-" + t);
+  secEl[t]  = document.getElementById("sec-" + t);
+  tabBtn[t] = document.getElementById("tab-" + t);
+  badgeEl[t] = document.getElementById("badge-" + t);  // null no spec
+}});
 var headerSub = document.getElementById("header-sub");
-var badgeInv  = document.getElementById("badge-inv");
-var badgeSys  = document.getElementById("badge-sys");
 
 // Cores por tema, aplicadas ANINHADAS em themedLayout — chave dotted
 // ("font.color") é ignorada por Plotly.react (só relayout aceita).
@@ -288,12 +319,77 @@ function themedData(data, lightC, darkC, tIdx, isDarkMode) {{
   }});
 }}
 
-function reactThemedChart(gd, figData, lightC, darkC, tIdx, which) {{
+function _renderChart(which) {{
+  var sc = SCENARIOS[currentKey];
+  var figData = sc[which + "Data"];
+  if (!figData) return;
   PLOTLY_CFG.toImageButtonOptions.filename =
     "pll_" + currentKey.split("/").join("_") + "_" + which;
-  var data = themedData(figData.data, lightC, darkC, tIdx, isDark)
+  var data = themedData(figData.data, sc[which + "Light"], sc[which + "Dark"],
+                        sc[which + "Idx"], isDark)
     .concat(_ghostData(which));
-  Plotly.react(gd, data, themedLayout(figData, isDark), PLOTLY_CFG);
+  Plotly.react(gd[which], data, themedLayout(figData, isDark), PLOTLY_CFG);
+  _dirty[which] = false;
+}}
+
+// ── Abas: mostra/esconde painéis e renderiza sob demanda ──────────────────
+
+function switchTab(which) {{
+  var sc = SCENARIOS[currentKey];
+  if (!sc[HASKEY[which]]) {{
+    which = TABS.filter(function(t) {{ return sc[HASKEY[t]]; }})[0];
+  }}
+  activeTab = which;
+  TABS.forEach(function(t) {{
+    var avail = !!sc[HASKEY[t]];
+    tabBtn[t].style.display = avail ? "" : "none";
+    tabBtn[t].classList.toggle("active", t === which);
+    secEl[t].style.display = (t === which && avail) ? "" : "none";
+  }});
+  if (_dirty[which]) {{
+    _renderChart(which);
+    _ensureBridges();
+    _applyZoom();
+  }}
+}}
+
+// ── Cards clicáveis: pula para o painel da métrica ────────────────────────
+// Procura o rótulo do painel (annotation do chart.py) nas figuras na ordem
+// res → inv → sys; abre a aba e rola até o painel usando o domínio do eixo Y.
+
+function goToChart(labelFrag) {{
+  var sc = SCENARIOS[currentKey];
+  var order = ["res", "inv", "sys"];
+  for (var i = 0; i < order.length; i++) {{
+    var t = order[i];
+    if (!sc[HASKEY[t]]) continue;
+    var fig = sc[t + "Data"];
+    var anns = (fig.layout && fig.layout.annotations) || [];
+    for (var j = 0; j < anns.length; j++) {{
+      if (anns[j].xref !== "paper" && (anns[j].text || "").indexOf(labelFrag) !== -1) {{
+        _openTabAt(t, fig, anns[j].yref);
+        return;
+      }}
+    }}
+  }}
+}}
+
+function _openTabAt(t, fig, yref) {{
+  switchTab(t);
+  var m = (yref || "").match(/^y(\\d*)/);
+  var axName = "yaxis" + (m && m[1] ? m[1] : "");
+  var lay = fig.layout[axName];
+  var frac = (lay && lay.domain) ? lay.domain[1] : 1;   // topo do painel (0–1, base→topo)
+  // setTimeout (não rAF): dá tempo do layout assentar após switchTab e
+  // funciona mesmo com a aba do browser em segundo plano
+  setTimeout(function() {{
+    var sticky = document.querySelector(".header").offsetHeight
+               + document.querySelector(".filter-bar").offsetHeight;
+    var secTop = secEl[t].getBoundingClientRect().top + window.scrollY;
+    var headerH = secEl[t].querySelector(".section-header").offsetHeight;
+    var y = secTop + headerH + (1 - frac) * (fig.layout.height || 0) - sticky - 12;
+    document.scrollingElement.scrollTo({{ top: Math.max(0, y), behavior: "smooth" }});
+  }}, 60);
 }}
 
 // ── Fantasma: sobrepõe o cenário equivalente do outro modo PLL ────────────
@@ -312,12 +408,10 @@ function _ghostData(which) {{
   var other = _exactEquiv(currentKey);
   if (!other) return [];
   var o = SCENARIOS[other];
-  var fig = (which === "sys") ? o.sysData : (which === "spec") ? o.specData : o.invData;
-  var idx = (which === "sys") ? o.sysIdx  : (which === "spec") ? o.specIdx  : o.invIdx;
+  var fig = o[which + "Data"];
+  var idx = o[which + "Idx"];
   if (!fig) return [];
-  var colors = isDark
-    ? ((which === "sys") ? o.sysDark  : (which === "spec") ? o.specDark  : o.invDark)
-    : ((which === "sys") ? o.sysLight : (which === "spec") ? o.specLight : o.invLight);
+  var colors = isDark ? o[which + "Dark"] : o[which + "Light"];
   var tag = o.badPll ? " (PLL ruim)" : " (nominal)";
   // mesma cor do traço principal; pontilhado + opacidade marcam o fantasma
   return idx.map(function(i, pos) {{
@@ -348,8 +442,14 @@ function toggleZoomFault() {{
 }}
 
 // Todos os eixos X têm matches="x" (setado no chart.py) — basta atualizar o
-// eixo raiz de cada figura que os demais painéis seguem.
+// eixo raiz de cada figura que os demais painéis seguem. O spec fica de fora
+// (eixo x em Hz); gráficos sujos (nunca renderizados nesta aba) também.
+var TIME_TABS = ["res", "inv", "sys"];
 var _syncingZoom = false;
+
+function _plotted(t) {{
+  return gd[t] && gd[t].data && !_dirty[t];
+}}
 
 function _applyZoom() {{
   var sc = SCENARIOS[currentKey];
@@ -364,8 +464,10 @@ function _applyZoom() {{
       }}
     : {{ "xaxis.autorange": true }};
   _syncingZoom = true;
-  var ps = [Plotly.relayout(gdInv, upd)];
-  if (sc.hasSys) ps.push(Plotly.relayout(gdSys, upd));
+  var ps = [];
+  TIME_TABS.forEach(function(t) {{
+    if (_plotted(t)) ps.push(Plotly.relayout(gd[t], upd));
+  }});
   Promise.all(ps).then(function() {{ _syncingZoom = false; }});
 }}
 
@@ -388,30 +490,30 @@ function _extractXZoom(ev) {{
   return null;
 }}
 
-function _bridgeZoom(src, dstGetter) {{
-  src.on("plotly_relayout", function(ev) {{
+function _bridgeZoom(srcWhich) {{
+  gd[srcWhich].on("plotly_relayout", function(ev) {{
     if (_syncingZoom) return;
     var z = _extractXZoom(ev || {{}});
     if (!z) return;
-    var dst = dstGetter();
-    if (!dst || !dst.data) return;
     var upd = z.auto ? {{ "xaxis.autorange": true }}
                      : {{ "xaxis.range": z.range, "xaxis.autorange": false }};
     _syncingZoom = true;
-    Plotly.relayout(dst, upd).then(function() {{ _syncingZoom = false; }});
+    var ps = [];
+    TIME_TABS.forEach(function(t) {{
+      if (t !== srcWhich && _plotted(t)) ps.push(Plotly.relayout(gd[t], upd));
+    }});
+    Promise.all(ps).then(function() {{ _syncingZoom = false; }});
   }});
 }}
 
 // .on só existe depois do 1º plot de cada div — registra sob demanda
 function _ensureBridges() {{
-  if (gdInv.on && !gdInv._zoomBridged) {{
-    gdInv._zoomBridged = true;
-    _bridgeZoom(gdInv, function() {{ return SCENARIOS[currentKey].hasSys ? gdSys : null; }});
-  }}
-  if (gdSys.on && !gdSys._zoomBridged) {{
-    gdSys._zoomBridged = true;
-    _bridgeZoom(gdSys, function() {{ return gdInv; }});
-  }}
+  TIME_TABS.forEach(function(t) {{
+    if (gd[t].on && !gd[t]._zoomBridged) {{
+      gd[t]._zoomBridged = true;
+      _bridgeZoom(t);
+    }}
+  }});
 }}
 
 function _syncCtrlButtons() {{
@@ -431,21 +533,22 @@ function _syncCtrlButtons() {{
 }}
 
 function updateFaultUI(sc) {{
-  if (sc.tFault == null) {{
+  var isRegime = (sc.tFault == null);
+  var txt = "";
+  if (isRegime) {{
     headerSub.textContent = "Análise em regime permanente";
-    badgeInv.style.display = "none";
-    badgeSys.style.display = "none";
-    return;
+  }} else {{
+    headerSub.innerHTML = "Análise pós-falta &nbsp;·&nbsp; T<sub>fault</sub> = "
+      + sc.tFault.toFixed(2) + " s";
+    txt = (sc.tClear != null)
+      ? "Falta: t = " + sc.tFault.toFixed(2) + " – " + sc.tClear.toFixed(2) + " s"
+      : "Falta em t = " + sc.tFault.toFixed(2) + " s";
   }}
-  headerSub.innerHTML = "Análise pós-falta &nbsp;·&nbsp; T<sub>fault</sub> = "
-    + sc.tFault.toFixed(2) + " s";
-  var txt = (sc.tClear != null)
-    ? "Falta: t = " + sc.tFault.toFixed(2) + " – " + sc.tClear.toFixed(2) + " s"
-    : "Falta em t = " + sc.tFault.toFixed(2) + " s";
-  badgeInv.textContent = txt;
-  badgeInv.style.display = "";
-  badgeSys.textContent = txt;
-  badgeSys.style.display = "";
+  TABS.forEach(function(t) {{
+    if (!badgeEl[t]) return;
+    badgeEl[t].textContent = txt;
+    badgeEl[t].style.display = isRegime ? "none" : "";
+  }});
 }}
 
 function switchScenario(key) {{
@@ -454,22 +557,11 @@ function switchScenario(key) {{
 
   _syncCtrlButtons();
   updateFaultUI(sc);
-  reactThemedChart(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx, "inv");
 
-  if (sc.hasSys) {{
-    secSys.style.display = "";
-    reactThemedChart(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx, "sys");
-  }} else {{
-    secSys.style.display = "none";
-  }}
-  if (sc.hasSpec) {{
-    secSpec.style.display = "";
-    reactThemedChart(gdSpec, sc.specData, sc.specLight, sc.specDark, sc.specIdx, "spec");
-  }} else {{
-    secSpec.style.display = "none";
-  }}
-  _ensureBridges();
-  _applyZoom();
+  // todos os gráficos ficam sujos; só a aba ativa renderiza agora
+  // (switchTab cai para a 1ª aba disponível se a ativa não existir no cenário)
+  TABS.forEach(function(t) {{ _dirty[t] = true; }});
+  switchTab(activeTab);
 
   document.getElementById("cards-area").innerHTML = sc.cardsHtml;
   document.getElementById("story-area").innerHTML = sc.storyHtml;
@@ -674,14 +766,8 @@ function toggleDiagram() {{
 function toggleTheme() {{
   isDark = !isDark;
   document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
-  var sc = SCENARIOS[currentKey];
-  reactThemedChart(gdInv, sc.invData, sc.invLight, sc.invDark, sc.invIdx, "inv");
-  if (sc.hasSys) {{
-    reactThemedChart(gdSys, sc.sysData, sc.sysLight, sc.sysDark, sc.sysIdx, "sys");
-  }}
-  if (sc.hasSpec) {{
-    reactThemedChart(gdSpec, sc.specData, sc.specLight, sc.specDark, sc.specIdx, "spec");
-  }}
+  TABS.forEach(function(t) {{ _dirty[t] = true; }});
+  _renderChart(activeTab);
   _applyZoom();
   document.getElementById("ico").textContent = isDark ? "☀️" : "🌙";
   document.getElementById("lbl").textContent = isDark ? "Light mode" : "Dark mode";
@@ -810,9 +896,13 @@ switchScenario(currentKey);
         def _v(val, decimals):
             return f"{val:.{decimals}f}" if val is not None else "—"
 
-        def _card(name, val, unit, sub, tip, status):
+        def _card(name, val, unit, sub, tip, status, target=None):
+            # target = fragmento do rótulo de painel (annotation do chart.py);
+            # o clique abre a aba certa e rola até o painel (goToChart no JS)
+            click = f' onclick="goToChart(\'{target}\')"' if target else ""
+            cls   = f"card {status}" + (" clickable" if target else "")
             return (
-                f'\n    <div class="card {status}" title="{tip}">'
+                f'\n    <div class="{cls}" title="{tip}"{click}>'
                 f'\n      <p class="c-name">{name}</p>'
                 f'\n      <p class="c-val">{val}<span class="c-unit">{unit}</span></p>'
                 f'\n      <p class="c-sub">{sub}</p>'
@@ -838,12 +928,13 @@ switchScenario(currentKey);
         elif m.get("settled") is False:
             ts_card = _card("tₛ", f"&gt; {data.t[-1]:.2f}", "s", "não acomodou",
                             f"Erro de fase ainda fora de ±{np.degrees(TOL_RAD):.2f}° "
-                            "ao fim da janela simulada", "bad")
+                            "ao fim da janela simulada", "bad", target="Erro de fase")
         else:
             ts_card = _card("tₛ", _v(ts_val, 3), "s",
                             f"±{np.degrees(TOL_RAD):.2f}°",
                             "Tempo de acomodação do PLL",
-                            self._classify(m.get("ts_delta"), TS_DELTA_THRESH))
+                            self._classify(m.get("ts_delta"), TS_DELTA_THRESH),
+                            target="Erro de fase")
 
         peak_win  = "em regime" if is_regime else "pós-falta"
         sync_loss = peak_deg is not None and peak_deg >= SYNC_LOSS_DEG
@@ -851,15 +942,18 @@ switchScenario(currentKey);
                           "perda de sincronismo" if sync_loss else "máx |θ̂ − θ_rede|",
                           f"Pico do erro de fase {peak_win} (≥ {SYNC_LOSS_DEG:.0f}° "
                           "indica escorregamento do PLL)",
-                          self._classify(peak_deg, PEAK_ERR_DEG_THRESH))
+                          self._classify(peak_deg, PEAK_ERR_DEG_THRESH),
+                          target="Erro de fase")
 
         pll = "".join([
             _card("IAE", _v(m.get("IAE"), 3), "rad·s", "∫|e| dt",
                   "Erro de fase acumulado",
-                  self._classify(m.get("IAE"), IAE_THRESH)),
+                  self._classify(m.get("IAE"), IAE_THRESH),
+                  target="Erro de fase"),
             _card("ISE", _v(m.get("ISE"), 4), "rad²·s", "∫e² dt",
                   "Energia do erro de fase",
-                  self._classify(m.get("ISE"), ISE_THRESH)),
+                  self._classify(m.get("ISE"), ISE_THRESH),
+                  target="Erro de fase"),
             ts_card,
             peak_card,
         ])
@@ -870,10 +964,12 @@ switchScenario(currentKey);
         inv = "".join([
             _card("ΔP UFV", _v(m.get("dP_ufv"), 3), "pu", rec_sub,
                   f"Excursão de potência ativa {rec_ctx} (UFV)",
-                  self._classify(m.get("dP_ufv"), DP_THRESH)),
+                  self._classify(m.get("dP_ufv"), DP_THRESH),
+                  target="P / Q UFV"),
             _card("ΔQ UFV", _v(m.get("dQ_ufv"), 3), "pu", rec_sub,
                   f"Excursão de potência reativa {rec_ctx} (UFV)",
-                  self._classify(m.get("dQ_ufv"), DQ_THRESH)),
+                  self._classify(m.get("dQ_ufv"), DQ_THRESH),
+                  target="P / Q UFV"),
         ])
 
         # Severidade: contexto do distúrbio — cor indica profundidade do sag,
@@ -885,7 +981,8 @@ switchScenario(currentKey);
             _card(f"{vlab} B2", _v(m.get("vmin"), 3), "pu", "POC do inversor (UFV)",
                   f"Tensão mínima na Barra 2 (LVRT ≥ {LVRT_THRESHOLD} pu) — "
                   "severidade do distúrbio",
-                  self._classify(m.get("vmin"), VBUS_MIN_THRESH, lower_is_better=False)),
+                  self._classify(m.get("vmin"), VBUS_MIN_THRESH, lower_is_better=False),
+                  target="|V| Bus 2"),
         ]
         for key, bus, sub in (("vmin_bus1", "B1", "barra do G1 (slack)"),
                               ("vmin_bus3", "B3", "barra do G3")):
@@ -895,7 +992,8 @@ switchScenario(currentKey);
                           f"Tensão mínima na barra {bus[1]} durante o curto — "
                           "propagação do afundamento pela rede",
                           self._classify(m.get(key), VBUS_MIN_THRESH,
-                                         lower_is_better=False)))
+                                         lower_is_better=False),
+                          target=f"|V| Bus {bus[1]}"))
         if data.t_fault is not None and data.t_clear is not None:
             dur_ms = (data.t_clear - data.t_fault) * 1e3
             sev_cards.append(
@@ -1313,7 +1411,30 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 }
 [data-theme="dark"] .fault-badge { color: #fcd34d; background: #451a03 }
 .spec-hint { font-size: 10.5px; color: var(--muted); letter-spacing: .2px }
-#plot-inv, #plot-sys, #plot-spec { width: 100% }
+#plot-res, #plot-inv, #plot-sys, #plot-spec { width: 100% }
+
+/* ── Abas de gráficos ── */
+.tab-bar {
+  display: flex; gap: 4px;
+  border-bottom: 1.5px solid var(--border);
+  margin-bottom: 16px;
+}
+.tab-btn {
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  padding: 9px 16px 8px;
+  background: transparent; border: none;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1.5px;
+  color: var(--muted); cursor: pointer;
+  transition: color .18s, border-color .18s;
+  white-space: nowrap;
+}
+.tab-btn:hover  { color: var(--text) }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent) }
+
+/* ── Cards clicáveis ── */
+.card.clickable { cursor: pointer }
+.card.clickable:hover { border-color: var(--accent) }
 
 /* ── Footer ── */
 .footer {

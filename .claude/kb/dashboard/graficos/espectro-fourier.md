@@ -80,10 +80,10 @@ expande até 2 kHz).
 - Legenda única horizontal no topo (`legendgroup` por segmento,
   `showlegend` só na row 1).
 - Renderer: chaves `specData/specLight/specDark/specIdx/hasSpec` no
-  `SCENARIOS`, div `#plot-spec` na seção `#sec-spec`, re-render em
-  `switchScenario` e `toggleTheme`.
+  `SCENARIOS`, div `#plot-spec` no painel de aba `#sec-spec` — renderizado
+  sob demanda ao abrir a aba ([[tabs-navegacao]]).
 - Zoom na falta (eixo em segundos) **não** afeta o espectro — `_applyZoom`
-  só toca `gdInv`/`gdSys`.
+  só toca `TIME_TABS` (res/inv/sys).
 
 ## Gotcha de verificação no browser
 

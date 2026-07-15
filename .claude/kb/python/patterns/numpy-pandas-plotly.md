@@ -119,7 +119,7 @@ function applyTheme(gd, figData, lightC, darkC, tIdx, isDark) {
     Plotly.restyle(gd, {"line.color": [(isDark ? darkC : lightC)[i]]}, [ti]);
   });
 }
-// toggleTheme() chama applyTheme para gdInv e gdSys
+// toggleTheme() re-tema a figura da aba ativa (as demais ficam "sujas")
 ```
 
 ## trace_map — rastreamento de cores por traço

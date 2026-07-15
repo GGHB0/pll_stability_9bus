@@ -19,30 +19,34 @@ pré-computado em Python e embutido no objeto `SCENARIOS`.
    🗺 Mapa IEEE 9-bus, 📊 Comparativo, 🔍 Zoom na falta, 👻 Comparar PLL
    ([[dashboard-zoom-ghost]]).
 3. `#diagram-section` — SVG unifilar clicável.
-4. `#cards-area` / `#story-area` — HTML pré-gerado ([[cards-metricas]]).
+4. `#cards-area` / `#story-area` — HTML pré-gerado ([[cards-metricas]]);
+   cards de métrica são clicáveis → `goToChart` ([[tabs-navegacao]]).
 5. `#table-section` — comparativo, oculto por padrão ([[comparison-table]]).
-6. `#sec-inv` (`#plot-inv`), `#sec-sys` (`#plot-sys`) e `#sec-spec`
-   (`#plot-spec`, espectro de Fourier — [[espectro-fourier]]) — as figuras
-   Plotly; `#sec-sys`/`#sec-spec` somem quando `hasSys`/`hasSpec` é falso.
+6. `.tab-bar` + painéis de aba `#sec-res`/`#sec-inv`/`#sec-sys`/`#sec-spec`
+   (figuras Plotly; espectro — [[espectro-fourier]]). Só a aba ativa fica
+   visível e renderizada; detalhes em [[tabs-navegacao]].
 7. `.footer`.
 
 ## Objeto SCENARIOS
 
-`{key: {invData, sysData, specData, invLight/invDark/invIdx (trace_map),
-sysLight/…, specLight/…, label, cardsHtml, storyHtml, metricsRow, hasSys,
-hasSpec, badPll, tFault, tClear}}`.
+`{key: {resData, invData, sysData, specData, resLight/resDark/resIdx
+(trace_map), invLight/…, sysLight/…, specLight/…, label, cardsHtml,
+storyHtml, metricsRow, hasRes, hasInv, hasSys, hasSpec, badPll, tFault,
+tClear, tEnd}}`. As chaves por figura seguem o padrão `{t}Data/{t}Light/…`
+com `t ∈ {res, inv, sys, spec}` — o JS acessa genericamente
+(`sc[which + "Data"]`).
 `key` = pasta do cenário, ex. `"bus7/3phase"`, `"line7_8/3phase_bad_pll"`.
 
 ## Fluxo `switchScenario(key)`
 
 1. `_syncCtrlButtons()` — habilita/desabilita zoom (sem `tFault`) e ghost
    (sem par exato nominal↔bad_pll).
-2. `updateFaultUI(sc)` — subtítulo do header + badges "Falta: t = …" das
-   seções (ocultos em regime).
-3. `reactThemedChart` para inv, sys e spec (re-colore por tema + concatena
-   ghost; o zoom na falta NÃO se aplica ao spec, cujo eixo x é em Hz).
-4. `_ensureBridges()` + `_applyZoom()` — sincronização de zoom.
-5. Injeta `cardsHtml`/`storyHtml`, `highlightSVG(key)`,
+2. `updateFaultUI(sc)` — subtítulo do header + badges "Falta: t = …" dos
+   painéis de aba (ocultos em regime).
+3. Marca todos os gráficos como sujos e chama `switchTab(activeTab)` — só a
+   aba ativa sofre `Plotly.react` (render preguiçoso, [[tabs-navegacao]]);
+   o zoom na falta NÃO se aplica ao spec, cujo eixo x é em Hz.
+4. Injeta `cardsHtml`/`storyHtml`, `highlightSVG(key)`,
    `renderComparisonTable()`.
 
 Toggles de UI (`toggleDiagram`, `toggleTable`, tema): o label do botão sempre

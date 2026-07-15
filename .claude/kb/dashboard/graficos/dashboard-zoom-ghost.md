@@ -17,9 +17,14 @@ dotted-path (**válido em relayout**, ao contrário de `Plotly.react` — ver
 var upd = (zoomFault && sc.tFault != null)
   ? { "xaxis.range": [...], "xaxis.autorange": false }
   : { "xaxis.autorange": true };
-Plotly.relayout(gdInv, upd);
-if (sc.hasSys) Plotly.relayout(gdSys, upd);
+TIME_TABS.forEach(function(t) {          // ["res","inv","sys"] — spec fora (Hz)
+  if (_plotted(t)) Plotly.relayout(gd[t], upd);
+});
 ```
+
+Desde as abas ([[tabs-navegacao]]), só gráficos `_plotted(t)` (div com
+`.data` e flag `_dirty` limpa) recebem relayout — um gráfico sujo é
+renderizado do zero ao abrir a aba e ganha o zoom vigente na sequência.
 
 ### Gotcha ⚠️ `shared_xaxes` não cobre a coluna 2
 
@@ -37,11 +42,11 @@ for ax_name in self._fig.layout:
 Com isso basta atualizar `"xaxis.range"` que a figura inteira segue — e o
 zoom **manual** (arrasto) em qualquer painel também move os demais.
 
-### Sincronização entre as duas figuras (`_bridgeZoom`)
+### Sincronização entre figuras (`_bridgeZoom`)
 
-Inversor ↔ Sistema são gráficos Plotly separados; `matches` não cruza
-figuras. `_bridgeZoom` escuta `plotly_relayout` de cada gd e replica o range
-na outra figura. Detalhes:
+Resumo/Inversor/Sistema são gráficos Plotly separados; `matches` não cruza
+figuras. `_bridgeZoom(srcWhich)` escuta `plotly_relayout` de cada gd de
+`TIME_TABS` e replica o range nas demais figuras plotadas. Detalhes:
 
 - `_extractXZoom(ev)` aceita os três formatos de payload: `"xaxisN.range"`
   (array), `"xaxisN.range[0]"/"[1]"` (arrasto real do usuário) e
@@ -49,7 +54,7 @@ na outra figura. Detalhes:
 - Trava `_syncingZoom` evita loop infinito (o relayout replicado dispararia a
   ponte de volta); `_applyZoom` também usa a trava.
 - `.on` só existe após o 1º plot do div — `_ensureBridges()` registra sob
-  demanda em `switchScenario` (a seção Sistema pode não existir no 1º cenário).
+  demanda em `switchTab` (com lazy render, um gd pode nunca ter sido plotado).
 - Handlers `.on` sobrevivem a `Plotly.react` (ficam no elemento DOM).
 
 Como `Plotly.react` reseta o range, `_applyZoom()` é chamado **depois** dos
@@ -68,8 +73,9 @@ do cenário equivalente do outro modo PLL no mesmo gráfico:
   do trace principal + `dash:"dot"`, `width:1.2`, `opacity:0.5`,
   `showlegend:false`, `hoverinfo:"skip"` (o hover unificado ficaria ilegível
   em dobro).
-- Injetado em `reactThemedChart` via `.concat(_ghostData(which))` — o
-  parâmetro `which` ("inv"/"sys"/"spec") seleciona a figura. No espectro
+- Injetado em `_renderChart` via `.concat(_ghostData(which))` — o
+  parâmetro `which` ("res"/"inv"/"sys"/"spec") seleciona a figura pelo
+  acesso genérico `o[which + "Data"]`. No espectro
   ([[espectro-fourier]]) o ghost compara direto o pico de 120 Hz
   nominal × PLL mal dimensionado.
 
@@ -90,7 +96,7 @@ Chamado no início de `switchScenario` e nos toggles. Regras:
 ## 📸 Export PNG hi-res
 
 `PLOTLY_CFG.toImageButtonOptions = { format: "png", scale: 3 }` (era svg).
-`reactThemedChart` seta o filename dinâmico por cenário/seção:
+`_renderChart` seta o filename dinâmico por cenário/seção:
 
 ```javascript
 PLOTLY_CFG.toImageButtonOptions.filename =

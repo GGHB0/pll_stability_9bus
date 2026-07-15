@@ -281,18 +281,21 @@ class SimData:
                 metrics["IAE"]      = float(np.trapezoid(np.abs(e_pf), t_pf))
                 metrics["ISE"]      = float(np.trapezoid(e_pf ** 2,    t_pf))
                 metrics["peak_err"] = float(np.abs(e_pf).max())
-                fora = t_pf[np.abs(e_pf) > TOL_RAD]
-                # "Acomodou" exige |e| dentro da tolerância até o fim da janela
-                # (margem de 2 ms); sem isso o último sample fora vira ts falso
-                # em cenários que nunca reacomodam dentro da simulação.
-                if len(fora) == 0:
-                    metrics["ts"], metrics["settled"] = float(t_pf[0]), True
-                elif float(fora[-1]) >= float(t_pf[-1]) - 2e-3:
-                    metrics["ts"], metrics["settled"] = None, False
-                else:
-                    metrics["ts"], metrics["settled"] = float(fora[-1]), True
-                if metrics["ts"] is not None:
-                    metrics["ts_delta"] = metrics["ts"] - t_start
+                # tₛ só faz sentido como resposta a um distúrbio; em regime
+                # permanente fica None (card/story/tabela mostram "—" ou omitem).
+                if not is_regime:
+                    fora = t_pf[np.abs(e_pf) > TOL_RAD]
+                    # "Acomodou" exige |e| dentro da tolerância até o fim da
+                    # janela (margem de 2 ms); sem isso o último sample fora
+                    # vira ts falso em cenários que nunca reacomodam.
+                    if len(fora) == 0:
+                        metrics["ts"], metrics["settled"] = float(t_pf[0]), True
+                    elif float(fora[-1]) >= float(t_pf[-1]) - 2e-3:
+                        metrics["ts"], metrics["settled"] = None, False
+                    else:
+                        metrics["ts"], metrics["settled"] = float(fora[-1]), True
+                    if metrics["ts"] is not None:
+                        metrics["ts_delta"] = metrics["ts"] - t_start
 
         p_rec = self.P_ufv[mask_rec]
         q_rec = self.Q_ufv[mask_rec]

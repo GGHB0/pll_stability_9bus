@@ -70,7 +70,7 @@ em `export_sim_data.m`) ainda inclui a partida → viés de ~1.1% em
 | `IAE` | ∫\|e\|dt (rad·s), pós-falta |
 | `ISE` | ∫e²dt (rad²·s) |
 | `peak_err` | max \|e\| pós-falta (rad) — cards mostram em °, ≥90° = perda de sincronismo |
-| `ts` / `settled` | última amostra com \|e\| > `TOL_RAD` (±0.02 rad ≈ ±1.15°). Se \|e\| ainda está fora nos últimos 2 ms da janela → `ts = None`, `settled = False` ("não acomodou" — evita tₛ falso no fim da simulação) |
+| `ts` / `settled` | última amostra com \|e\| > `TOL_RAD` (±0.02 rad ≈ ±1.15°). Se \|e\| ainda está fora nos últimos 2 ms da janela → `ts = None`, `settled = False` ("não acomodou" — evita tₛ falso no fim da simulação). **Regime → sempre `None`/`None`**: sem distúrbio não há o que acomodar (card omitido, "—" na tabela) |
 | `ts_delta` | `ts − t_fault` (base da classificação good/warn/bad) |
 | `dP_ufv`, `dQ_ufv` | max − min de P/Q **pós-clear** (pu) |
 | `vmin` | mínimo de `vbus2` pós-falta (pu) — severidade do sag vs LVRT |

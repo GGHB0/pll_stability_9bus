@@ -18,8 +18,16 @@ só injeta o HTML em `#cards-area`/`#story-area`, sem recomputar nada no browser
 | Recuperação do inversor | ΔP UFV, ΔQ UFV (pu, **pós-clear**) | Julga a recuperação após eliminar a falta |
 
 Fonte: `metrics` do [[pipeline-dados]] (duas janelas: pós-falta e pós-clear).
-Em regime permanente: grupo de severidade vira "Sistema 9-Bus" (sem card de
-duração), subtítulo de ΔP/ΔQ vira "regime", story tem narrativa própria.
+
+**Regime permanente** (2026-07-14): sem distúrbio, tₛ não mede nada — o loader
+deixa `ts`/`ts_delta`/`settled` como `None` e o **card tₛ é omitido** (antes
+mostrava "não acomodou" bad falso, que ainda contaminava o veredito). Grupos
+renomeados: severidade vira "Sistema 9-Bus" (cards "V min", sem duração) e
+recuperação vira **"Estabilidade de potência"** (subtítulo "regime", tooltip
+"oscilação sustentada"). Tooltip do pico diz "em regime" no lugar de
+"pós-falta". Story: sem item "Acomodação", texto do "Cenário" cita `T_SETTLE`
+(0.10 s — antes citava `T_FAULT` desatualizado), pico warn diz "em regime".
+Linha de regime na tabela comparativa mostra "—" na coluna tₛ.
 
 **"V residual"** (2026-07-14): tensão remanescente do afundamento — termo do
 PRODIST Módulo 8 / IEC 61000, escolhido pelo usuário no lugar de "V min" para

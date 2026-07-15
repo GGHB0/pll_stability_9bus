@@ -14,7 +14,7 @@ import plotly
 import plotly.graph_objects as go
 
 from ..config import (
-    T_FAULT, TOL_RAD, LVRT_THRESHOLD,
+    T_SETTLE, TOL_RAD, LVRT_THRESHOLD,
     IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH, DP_THRESH, DQ_THRESH,
     PEAK_ERR_DEG_THRESH, SYNC_LOSS_DEG, VBUS_MIN_THRESH,
 )
@@ -831,8 +831,11 @@ switchScenario(currentKey);
         ts_val    = m.get("ts")
         peak_deg  = float(np.degrees(m["peak_err"])) if m.get("peak_err") is not None else None
 
-        # tₛ: três estados — acomodou, não acomodou na janela, sem dado
-        if m.get("settled") is False:
+        # tₛ: três estados — acomodou, não acomodou na janela, sem dado.
+        # Em regime não há distúrbio para acomodar → card omitido.
+        if is_regime:
+            ts_card = ""
+        elif m.get("settled") is False:
             ts_card = _card("tₛ", f"&gt; {data.t[-1]:.2f}", "s", "não acomodou",
                             f"Erro de fase ainda fora de ±{np.degrees(TOL_RAD):.2f}° "
                             "ao fim da janela simulada", "bad")
@@ -842,10 +845,11 @@ switchScenario(currentKey);
                             "Tempo de acomodação do PLL",
                             self._classify(m.get("ts_delta"), TS_DELTA_THRESH))
 
+        peak_win  = "em regime" if is_regime else "pós-falta"
         sync_loss = peak_deg is not None and peak_deg >= SYNC_LOSS_DEG
         peak_card = _card("|θ_err| pico", _v(peak_deg, 1), "°",
                           "perda de sincronismo" if sync_loss else "máx |θ̂ − θ_rede|",
-                          f"Pico do erro de fase pós-falta (≥ {SYNC_LOSS_DEG:.0f}° "
+                          f"Pico do erro de fase {peak_win} (≥ {SYNC_LOSS_DEG:.0f}° "
                           "indica escorregamento do PLL)",
                           self._classify(peak_deg, PEAK_ERR_DEG_THRESH))
 
@@ -861,12 +865,14 @@ switchScenario(currentKey);
         ])
 
         rec_sub = "regime" if is_regime else "pós-clear"
+        rec_ctx = ("em regime (oscilação sustentada)" if is_regime
+                   else "na recuperação")
         inv = "".join([
             _card("ΔP UFV", _v(m.get("dP_ufv"), 3), "pu", rec_sub,
-                  "Excursão de potência ativa na recuperação (UFV)",
+                  f"Excursão de potência ativa {rec_ctx} (UFV)",
                   self._classify(m.get("dP_ufv"), DP_THRESH)),
             _card("ΔQ UFV", _v(m.get("dQ_ufv"), 3), "pu", rec_sub,
-                  "Excursão de potência reativa na recuperação (UFV)",
+                  f"Excursão de potência reativa {rec_ctx} (UFV)",
                   self._classify(m.get("dQ_ufv"), DQ_THRESH)),
         ])
 
@@ -897,11 +903,13 @@ switchScenario(currentKey);
                       f"t = {data.t_fault:.2f} – {data.t_clear:.2f} s",
                       "Duração da falta aplicada", "neutral"))
         sev_label = "Sistema 9-Bus" if is_regime else "Severidade do distúrbio"
+        inv_label = ("Estabilidade de potência" if is_regime
+                     else "Recuperação do inversor")
 
         return (
             _group(sev_label, "".join(sev_cards)) + "\n"
             + _group("Desempenho do PLL", pll) + "\n"
-            + _group("Recuperação do inversor", inv)
+            + _group(inv_label, inv)
         )
 
     # ── Narrativa ────────────────────────────────────────────────────────────
@@ -927,7 +935,7 @@ switchScenario(currentKey);
             parts.append(("neutral", "Cenário",
                           "Operação em regime permanente, sem contingência aplicada — "
                           "métricas calculadas descartando o transitório de partida "
-                          f"(t ≥ {T_FAULT:.2f} s)."))
+                          f"(t ≥ {T_SETTLE:.2f} s)."))
         elif vmin is not None:
             sev = self._classify(vmin, VBUS_MIN_THRESH, lower_is_better=False)
             dur = (f" de {(data.t_clear - data.t_fault) * 1e3:.0f} ms"
@@ -956,8 +964,9 @@ switchScenario(currentKey);
                 parts.append(("bad", "Pico de fase",
                               f"Excursão elevada, de até {peak_deg:.0f}°."))
             elif peak_cls == "warn":
+                ctx = "em regime" if is_regime else "durante o distúrbio"
                 parts.append(("warn", "Pico de fase",
-                              f"Excursão de até {peak_deg:.0f}° durante o distúrbio."))
+                              f"Excursão de até {peak_deg:.0f}° {ctx}."))
 
         ts_cls = "bad" if settled is False else self._classify(ts_delta, TS_DELTA_THRESH)
         if settled is False:

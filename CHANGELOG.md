@@ -5,6 +5,22 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-14 — Regime permanente sem tₛ + revisão dos cards/diagnóstico
+
+Arquivos: `src/pipeline/loader.py`, `src/report/renderer.py`
+
+- **Loader**: em regime (`t_fault` None), `ts`/`ts_delta`/`settled` ficam
+  `None` — sem distúrbio não há acomodação a medir. Antes o drift do θ_err
+  estourava a tolerância e o card mostrava "> 0.60 s / não acomodou" (bad
+  falso), puxando o veredito do regime para "Desempenho crítico".
+- **Cards**: card tₛ omitido em regime; grupo "Recuperação do inversor" vira
+  "Estabilidade de potência"; tooltips de ΔP/ΔQ ("oscilação sustentada") e do
+  pico ("em regime") ajustados ao contexto.
+- **Story**: item "Acomodação" some em regime (e sai do veredito); texto do
+  "Cenário" corrigido de `T_FAULT` (0.20 s) para `T_SETTLE` (0.10 s), que é a
+  janela real das métricas desde 2026-07-12; pico warn diz "em regime".
+- **Tabela comparativa**: linha de regime mostra "—" na coluna tₛ.
+
 ## 2026-07-14 — Cards de severidade renomeados para "V residual"
 
 Arquivos: `src/report/renderer.py`

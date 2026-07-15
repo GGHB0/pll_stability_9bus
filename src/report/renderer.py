@@ -16,7 +16,7 @@ import plotly.graph_objects as go
 from ..config import (
     T_FAULT, TOL_RAD, LVRT_THRESHOLD,
     IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH, DP_THRESH, DQ_THRESH,
-    PEAK_ERR_DEG_THRESH, SYNC_LOSS_DEG, VBUS2_MIN_THRESH,
+    PEAK_ERR_DEG_THRESH, SYNC_LOSS_DEG, VBUS_MIN_THRESH,
 )
 from ..pipeline.loader import SimData
 
@@ -150,7 +150,9 @@ class HTMLRenderer:
             <th data-key="peak">|θ_err| pico (°)</th>
             <th data-key="dp">ΔP (pu)</th>
             <th data-key="dq">ΔQ (pu)</th>
-            <th data-key="vmin">Vmin (pu)</th>
+            <th data-key="vmin">Vmin B2 (pu)</th>
+            <th data-key="vmin_b1">Vmin B1 (pu)</th>
+            <th data-key="vmin_b3">Vmin B3 (pu)</th>
           </tr>
         </thead>
         <tbody id="cmp-tbody"></tbody>
@@ -515,7 +517,7 @@ function renderComparisonTable() {{
     var active = (k === currentKey) ? " cmp-active" : "";
     return "<tr class=\\"cmp-row" + active + "\\" onclick=\\"_pickTableRow('" + k + "')\\">"
       + "<td class=\\"cmp-label\\">" + sc.label + "</td>"
-      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.dp) + _cmpCell(r.dq) + _cmpCell(r.vmin)
+      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.dp) + _cmpCell(r.dq) + _cmpCell(r.vmin) + _cmpCell(r.vmin_b1) + _cmpCell(r.vmin_b3)
       + "</tr>";
   }}).join("");
 }}
@@ -797,7 +799,9 @@ switchScenario(currentKey);
             "peak": cell(peak_deg, 1, PEAK_ERR_DEG_THRESH),
             "dp":   cell(m.get("dP_ufv"), 3, DP_THRESH),
             "dq":   cell(m.get("dQ_ufv"), 3, DQ_THRESH),
-            "vmin": cell(m.get("vmin"), 3, VBUS2_MIN_THRESH, lower_is_better=False),
+            "vmin":    cell(m.get("vmin"),      3, VBUS_MIN_THRESH, lower_is_better=False),
+            "vmin_b1": cell(m.get("vmin_bus1"), 3, VBUS_MIN_THRESH, lower_is_better=False),
+            "vmin_b3": cell(m.get("vmin_bus3"), 3, VBUS_MIN_THRESH, lower_is_better=False),
         }
 
     def _cards_html(self, data: SimData) -> str:
@@ -872,8 +876,16 @@ switchScenario(currentKey);
             _card("V min", _v(m.get("vmin"), 3), "pu", "Barra 2",
                   f"Tensão mínima na Barra 2 (LVRT ≥ {LVRT_THRESHOLD} pu) — "
                   "severidade do distúrbio",
-                  self._classify(m.get("vmin"), VBUS2_MIN_THRESH, lower_is_better=False)),
+                  self._classify(m.get("vmin"), VBUS_MIN_THRESH, lower_is_better=False)),
         ]
+        for key, bus in (("vmin_bus1", "Barra 1"), ("vmin_bus3", "Barra 3")):
+            if m.get(key) is not None:
+                sev_cards.append(
+                    _card("V min", _v(m.get(key), 3), "pu", bus,
+                          f"Tensão mínima na {bus} durante o curto — "
+                          "propagação do afundamento pela rede",
+                          self._classify(m.get(key), VBUS_MIN_THRESH,
+                                         lower_is_better=False)))
         if data.t_fault is not None and data.t_clear is not None:
             dur_ms = (data.t_clear - data.t_fault) * 1e3
             sev_cards.append(
@@ -913,7 +925,7 @@ switchScenario(currentKey);
                           "métricas calculadas descartando o transitório de partida "
                           f"(t ≥ {T_FAULT:.2f} s)."))
         elif vmin is not None:
-            sev = self._classify(vmin, VBUS2_MIN_THRESH, lower_is_better=False)
+            sev = self._classify(vmin, VBUS_MIN_THRESH, lower_is_better=False)
             dur = (f" de {(data.t_clear - data.t_fault) * 1e3:.0f} ms"
                    if data.t_clear is not None else "")
             if sev == "good":

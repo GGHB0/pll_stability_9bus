@@ -38,7 +38,9 @@ def _table_row_data(self, data: SimData) -> dict:
         "peak": cell(peak_deg, 1, PEAK_ERR_DEG_THRESH),
         "dp":  cell(m.get("dP_ufv"), 3, DP_THRESH),   # janela pós-clear
         "dq":  cell(m.get("dQ_ufv"), 3, DQ_THRESH),   # janela pós-clear
-        "vmin": cell(m.get("vmin"), 3, VBUS2_MIN_THRESH, lower_is_better=False),
+        "vmin":    cell(m.get("vmin"),      3, VBUS_MIN_THRESH, lower_is_better=False),
+        "vmin_b1": cell(m.get("vmin_bus1"), 3, VBUS_MIN_THRESH, lower_is_better=False),
+        "vmin_b3": cell(m.get("vmin_bus3"), 3, VBUS_MIN_THRESH, lower_is_better=False),
     }
 ```
 
@@ -58,7 +60,11 @@ Em `_build_html`, cada `sc_js[key]` ganha `"metricsRow": self._table_row_data(d)
 Botão `#table-toggle` ao lado do `#diagram-toggle` no `filter-bar`; seção
 `#table-section` (`display:none` por padrão) com `<table id="cmp-table">` —
 cabeçalho com `data-key` por coluna (`iae`, `ise`, `ts`, `peak`, `dp`, `dq`,
-`vmin`, mais `label` não-ordenável) e `<tbody id="cmp-tbody">` vazio, populado por JS.
+`vmin`, `vmin_b1`, `vmin_b3`, mais `label` não-ordenável) e
+`<tbody id="cmp-tbody">` vazio, populado por JS. As três colunas de tensão
+são "Vmin B2/B1/B3 (pu)" — B2 primeiro por ser o POC do inversor; B1/B3
+mostram a propagação do afundamento pela rede ("—" em CSVs antigos sem
+`vbus1_pu`/`vbus3_pu`).
 
 ### JS — render e ordenação
 
@@ -84,7 +90,7 @@ function renderComparisonTable() {
     var active = (k === currentKey) ? " cmp-active" : "";
     return "<tr class=\"cmp-row" + active + "\" onclick=\"_pickTableRow('" + k + "')\">"
       + "<td class=\"cmp-label\">" + sc.label + "</td>"
-      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.dp) + _cmpCell(r.dq) + _cmpCell(r.vmin)
+      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.dp) + _cmpCell(r.dq) + _cmpCell(r.vmin) + _cmpCell(r.vmin_b1) + _cmpCell(r.vmin_b3)
       + "</tr>";
   }).join("");
 }

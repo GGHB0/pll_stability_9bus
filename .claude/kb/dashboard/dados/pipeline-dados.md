@@ -74,6 +74,7 @@ em `export_sim_data.m`) ainda inclui a partida → viés de ~1.1% em
 | `ts_delta` | `ts − t_fault` (base da classificação good/warn/bad) |
 | `dP_ufv`, `dQ_ufv` | max − min de P/Q **pós-clear** (pu) |
 | `vmin` | mínimo de `vbus2` pós-falta (pu) — severidade do sag vs LVRT |
+| `vmin_bus1`, `vmin_bus3` | idem para `vbus1`/`vbus3` — propagação do sag pela rede (cards de severidade + colunas Vmin B1/B3 na tabela; veredito LVRT continua só na B2) |
 
 Sinal ausente → métrica `None` → "—" nos cards/tabela.
 

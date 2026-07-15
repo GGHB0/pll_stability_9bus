@@ -5,6 +5,25 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-14 — Vmin das Barras 1 e 3 (cards + tabela comparativa)
+
+Arquivos: `src/config/settings.py`, `src/config/__init__.py`,
+`src/pipeline/loader.py`, `src/report/renderer.py`
+
+- **Loader**: métricas novas `vmin_bus1`/`vmin_bus3` — mínimo de
+  `vbus1_pu`/`vbus3_pu` na mesma janela pós-falta do `vmin` (Barra 2);
+  `None` quando o CSV não tem as colunas (só o legado `output/sim_data.csv`).
+- **Cards**: grupo "Severidade do distúrbio" ganha "V min — Barra 1" e
+  "V min — Barra 3" quando há dado (propagação do sag pela rede).
+- **Tabela comparativa**: colunas "Vmin B1 (pu)" e "Vmin B3 (pu)" após a
+  "Vmin B2 (pu)" (renomeada), ordenáveis como as demais.
+- **Settings**: `VBUS2_MIN_THRESH` → `VBUS_MIN_THRESH` (mesma escala
+  0.90/0.50 para as 3 barras); veredito LVRT segue só na Barra 2 (POC).
+- ⚠️ Achado nos dados: com falta bifásica na própria B1, `vbus1` afunda
+  menos (0.788) que B2/B3 (~0.235) — medição da B1 parece estar do lado
+  da máquina do G1 (atrás do T1), sustentada pelo gerador. Conferir o
+  ponto de medição no modelo com o Bruno.
+
 ## 2026-07-12 — Export de tensões abc + painel v_a no espectro
 
 Arquivos: `pll_stability_9bus.slx`, `scripts/export_sim_data.m`,

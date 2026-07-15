@@ -6,7 +6,7 @@ Classe principal: SimData
     .t_fast, .theta_pll_fast,   → ângulos na taxa nativa Ts (alta resolução)
     .theta_ref_fast, .theta_err_fast
     .metrics                     → dict com IAE, ISE, ts, ts_delta, settled,
-                                   peak_err, dP/dQ (pós-clear), vmin
+                                   peak_err, dP/dQ (pós-clear), vmin, vmin_bus1/3
     .has_ang, .has_dq_ufv, .has_ref_ufv → flags de disponibilidade de colunas
 
 Três CSVs exportados pelo MATLAB:
@@ -298,11 +298,13 @@ class SimData:
         q_rec = self.Q_ufv[mask_rec]
         metrics["dP_ufv"] = float(p_rec.max() - p_rec.min()) if len(p_rec) else None
         metrics["dQ_ufv"] = float(q_rec.max() - q_rec.min()) if len(q_rec) else None
-        if self.vbus2 is not None:
-            v_pf = self.vbus2[mask]
-            metrics["vmin"] = float(v_pf.min()) if len(v_pf) else None
-        else:
-            metrics["vmin"] = None
+        for key, vbus in (("vmin", self.vbus2), ("vmin_bus1", self.vbus1),
+                          ("vmin_bus3", self.vbus3)):
+            if vbus is not None:
+                v_pf = vbus[mask]
+                metrics[key] = float(v_pf.min()) if len(v_pf) else None
+            else:
+                metrics[key] = None
         return metrics
 
     # ── __repr__ ─────────────────────────────────────────────────────────────

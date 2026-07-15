@@ -135,6 +135,7 @@ Este valor real (não a constante global `T_FAULT`) é o que alimenta:
 | `dP_ufv` | max(P_ufv) − min(P_ufv) | t ≥ max(t_clear, T_SETTLE) |
 | `dQ_ufv` | max(Q_ufv) − min(Q_ufv) | t ≥ max(t_clear, T_SETTLE) |
 | `vmin` | min(vbus2_pu) | t ≥ max(t_fault, T_SETTLE) |
+| `vmin_bus1`, `vmin_bus3` | min(vbus1_pu), min(vbus3_pu) | idem (`None` sem a coluna) |
 
 `t_fault` acima é `self.t_fault` (real do cenário, fallback `T_FAULT` global).
 `T_SETTLE = 0.1 s` (2026-07-12) clampa toda janela de cálculo: a partida do

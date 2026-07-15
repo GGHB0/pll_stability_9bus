@@ -13,7 +13,7 @@ só injeta o HTML em `#cards-area`/`#story-area`, sem recomputar nada no browser
 
 | Grupo | Cards | Papel |
 |---|---|---|
-| Severidade do distúrbio | V min (pu, Barra 2, vs LVRT), Duração da falta (ms, t_fault–t_clear) | **Contexto** — quão dura foi a falta; fora do veredito |
+| Severidade do distúrbio | V min (pu, Barra 2, vs LVRT), V min Barras 1 e 3 (quando `vbus1_pu`/`vbus3_pu` existem no CSV — propagação do sag), Duração da falta (ms, t_fault–t_clear) | **Contexto** — quão dura foi a falta; fora do veredito |
 | Desempenho do PLL | IAE (rad·s), ISE (rad²·s), tₛ (s, ±1.15°), \|θ_err\| pico (°) | Julga o PLL |
 | Recuperação do inversor | ΔP UFV, ΔQ UFV (pu, **pós-clear**) | Julga a recuperação após eliminar a falta |
 
@@ -33,7 +33,8 @@ Cada card: nome, valor (ou "—" se `None`), unidade, subtítulo e tooltip via `
 
 Thresholds em `config/settings.py`: `IAE_THRESH`, `ISE_THRESH`,
 `TS_DELTA_THRESH`, `DP_THRESH`, `DQ_THRESH` (pós-clear),
-`PEAK_ERR_DEG_THRESH`, `VBUS2_MIN_THRESH` (`lower_is_better=False`).
+`PEAK_ERR_DEG_THRESH`, `VBUS_MIN_THRESH` (`lower_is_better=False`; mesma
+escala para V min das barras 1, 2 e 3 — mas o veredito LVRT usa só a B2).
 Para tₛ o classificado é `ts_delta = tₛ − t_fault` (vem pronto do loader).
 Calibrados sobre a distribuição real dos 12 cenários (2026-07): recuperação
 limpa ΔP ≈ 0.02–0.06, problemática ≈ 1.7–3.4; pico saudável 1°, faltas

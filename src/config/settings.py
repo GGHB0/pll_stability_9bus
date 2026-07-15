@@ -24,7 +24,7 @@ DP_THRESH       = (0.10,  0.50)   # pu — excursão de P na janela pós-clear
 DQ_THRESH       = (0.15,  0.60)   # pu — excursão de Q na janela pós-clear
 PEAK_ERR_DEG_THRESH = (20.0, 60.0)  # ° — pico de |erro de fase| pós-falta
 SYNC_LOSS_DEG    = 90.0           # ° — acima disso: perda de sincronismo do PLL
-VBUS2_MIN_THRESH = (0.90,  0.50)  # pu — severidade do afundamento (LVRT IEEE 1547)
+VBUS_MIN_THRESH  = (0.90,  0.50)  # pu — severidade do afundamento (LVRT IEEE 1547)
 LVRT_THRESHOLD   = 0.88           # pu — linha de referência no gráfico
 
 # ── Espectro de Fourier ─────────────────────────────────────────────────────

@@ -13,13 +13,20 @@ só injeta o HTML em `#cards-area`/`#story-area`, sem recomputar nada no browser
 
 | Grupo | Cards | Papel |
 |---|---|---|
-| Severidade do distúrbio | V min (pu, Barra 2, vs LVRT), V min Barras 1 e 3 (quando `vbus1_pu`/`vbus3_pu` existem no CSV — propagação do sag), Duração da falta (ms, t_fault–t_clear) | **Contexto** — quão dura foi a falta; fora do veredito |
+| Severidade do distúrbio | V residual B2 (pu, POC do inversor, vs LVRT), V residual B1/B3 (quando `vbus1_pu`/`vbus3_pu` existem no CSV — propagação do sag; subtítulos "barra do G1 (slack)"/"barra do G3"), Duração da falta (ms, t_fault–t_clear) | **Contexto** — quão dura foi a falta; fora do veredito |
 | Desempenho do PLL | IAE (rad·s), ISE (rad²·s), tₛ (s, ±1.15°), \|θ_err\| pico (°) | Julga o PLL |
 | Recuperação do inversor | ΔP UFV, ΔQ UFV (pu, **pós-clear**) | Julga a recuperação após eliminar a falta |
 
 Fonte: `metrics` do [[pipeline-dados]] (duas janelas: pós-falta e pós-clear).
 Em regime permanente: grupo de severidade vira "Sistema 9-Bus" (sem card de
 duração), subtítulo de ΔP/ΔQ vira "regime", story tem narrativa própria.
+
+**"V residual"** (2026-07-14): tensão remanescente do afundamento — termo do
+PRODIST Módulo 8 / IEC 61000, escolhido pelo usuário no lugar de "V min" para
+comunicar "quanto caiu durante o curto". Em **regime** (sem curto) o nome
+volta a "V min B1/B2/B3" (variável `vlab` em `_cards_html`). O texto do item
+"Distúrbio" no story também usa "V residual = X pu". A tabela comparativa
+mantém "Vmin B1/B2/B3 (pu)" — genérico, vale também para a linha de regime.
 
 Estados especiais:
 - **tₛ "não acomodou"** (`settled = False`): valor "> t_end s", classe `bad` —

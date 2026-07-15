@@ -872,17 +872,21 @@ switchScenario(currentKey);
 
         # Severidade: contexto do distúrbio — cor indica profundidade do sag,
         # mas não entra no veredito de desempenho
+        # "V residual" = tensão remanescente do afundamento (PRODIST/IEC);
+        # em regime não há curto, então o card volta a "V min"
+        vlab = "V min" if is_regime else "V residual"
         sev_cards = [
-            _card("V min", _v(m.get("vmin"), 3), "pu", "Barra 2",
+            _card(f"{vlab} B2", _v(m.get("vmin"), 3), "pu", "POC do inversor (UFV)",
                   f"Tensão mínima na Barra 2 (LVRT ≥ {LVRT_THRESHOLD} pu) — "
                   "severidade do distúrbio",
                   self._classify(m.get("vmin"), VBUS_MIN_THRESH, lower_is_better=False)),
         ]
-        for key, bus in (("vmin_bus1", "Barra 1"), ("vmin_bus3", "Barra 3")):
+        for key, bus, sub in (("vmin_bus1", "B1", "barra do G1 (slack)"),
+                              ("vmin_bus3", "B3", "barra do G3")):
             if m.get(key) is not None:
                 sev_cards.append(
-                    _card("V min", _v(m.get(key), 3), "pu", bus,
-                          f"Tensão mínima na {bus} durante o curto — "
+                    _card(f"{vlab} {bus}", _v(m.get(key), 3), "pu", sub,
+                          f"Tensão mínima na barra {bus[1]} durante o curto — "
                           "propagação do afundamento pela rede",
                           self._classify(m.get(key), VBUS_MIN_THRESH,
                                          lower_is_better=False)))
@@ -931,15 +935,15 @@ switchScenario(currentKey);
             if sev == "good":
                 parts.append(("good", "Distúrbio",
                               f"Falta{dur} com afundamento leve na Barra 2 "
-                              f"(V_min = {vmin:.3f} pu)."))
+                              f"(V residual = {vmin:.3f} pu)."))
             elif sev == "warn":
                 parts.append(("warn", "Distúrbio",
                               f"Falta{dur} com afundamento moderado na Barra 2 "
-                              f"(V_min = {vmin:.3f} pu, abaixo do limiar LVRT)."))
+                              f"(V residual = {vmin:.3f} pu, abaixo do limiar LVRT)."))
             else:
                 parts.append(("bad", "Distúrbio",
                               f"Falta{dur} com afundamento severo na Barra 2 "
-                              f"(V_min = {vmin:.3f} pu) — condição crítica de LVRT."))
+                              f"(V residual = {vmin:.3f} pu) — condição crítica de LVRT."))
 
         # ── resposta do PLL ──────────────────────────────────────────────────
         peak_cls = self._classify(peak_deg, PEAK_ERR_DEG_THRESH)

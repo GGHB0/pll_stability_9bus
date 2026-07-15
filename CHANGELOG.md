@@ -5,6 +5,20 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-14 — Cards de severidade renomeados para "V residual"
+
+Arquivos: `src/report/renderer.py`
+
+- **Cards**: "V min / Barra N" → "V residual B1/B2/B3" — tensão remanescente
+  do afundamento (termo PRODIST Módulo 8 / IEC 61000), escolhido para
+  comunicar "quanto caiu durante o curto". Subtítulos ganham o papel da
+  barra: "POC do inversor (UFV)", "barra do G1 (slack)", "barra do G3".
+- **Regime**: sem curto, o nome volta a "V min" (variável `vlab`).
+- **Story**: item "Distúrbio" passa de "V_min = X pu" para
+  "V residual = X pu".
+- **Tabela comparativa** mantém "Vmin B1/B2/B3 (pu)" — cabeçalho genérico
+  vale também para a linha de regime.
+
 ## 2026-07-14 — Vmin das Barras 1 e 3 (cards + tabela comparativa)
 
 Arquivos: `src/config/settings.py`, `src/config/__init__.py`,

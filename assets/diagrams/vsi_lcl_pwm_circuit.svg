@@ -72,8 +72,8 @@
   <use href="#sw" x="185" y="95"/><use href="#sw" x="285" y="95"/><use href="#sw" x="385" y="95"/>
   <use href="#sw" x="185" y="215"/><use href="#sw" x="285" y="215"/><use href="#sw" x="385" y="215"/>
   <g font-size="10" fill="#0B132B">
-    <text x="163" y="124">S₁</text><text x="263" y="124">S₃</text><text x="363" y="124">S₅</text>
-    <text x="163" y="244">S₄</text><text x="263" y="244">S₆</text><text x="363" y="244">S₂</text>
+    <text x="150" y="124">S₁</text><text x="250" y="124">S₃</text><text x="350" y="124">S₅</text>
+    <text x="150" y="244">S₄</text><text x="250" y="244">S₆</text><text x="350" y="244">S₂</text>
   </g>
   <g fill="#0B132B">
     <circle cx="200" cy="70" r="2.5"/><circle cx="300" cy="70" r="2.5"/>
@@ -239,8 +239,21 @@
   <line x1="265" y1="545" x2="265" y2="527" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arrN)"/>
   <rect x="230" y="480" width="70" height="45" fill="white" stroke="#0B132B" stroke-width="1.5"/>
   <text x="265" y="507" text-anchor="middle" font-size="11" font-weight="700" fill="#0B132B">PWM</text>
-  <line x1="265" y1="480" x2="265" y2="292" stroke="#F97316" stroke-width="2" marker-end="url(#arrCtrl)"/>
-  <text x="258" y="360" text-anchor="end" font-size="10" fill="#F97316">pulsos de gatilho S₁–S₆</text>
+  <!-- rede de gate-drive: tronco do PWM, barra de distribuicao e stubs nos gates (arcos = cruzamento sem conexao) -->
+  <g stroke="#F97316" stroke-width="1.8" fill="none">
+    <path d="M 268 480 L 268 296 A 6 6 0 0 1 268 284 L 268 156 A 6 6 0 0 1 268 144 L 268 120 L 281 120" marker-end="url(#arrCtrl)"/>
+    <line x1="168" y1="345" x2="368" y2="345"/>
+    <path d="M 168 345 L 168 296 A 6 6 0 0 1 168 284 L 168 120 L 181 120" marker-end="url(#arrCtrl)"/>
+    <path d="M 368 345 L 368 296 A 6 6 0 0 1 368 284 L 368 176 A 6 6 0 0 1 368 164 L 368 156 A 6 6 0 0 1 368 144 L 368 120 L 381 120" marker-end="url(#arrCtrl)"/>
+    <line x1="168" y1="240" x2="181" y2="240" marker-end="url(#arrCtrl)"/>
+    <line x1="268" y1="240" x2="281" y2="240" marker-end="url(#arrCtrl)"/>
+    <line x1="368" y1="240" x2="381" y2="240" marker-end="url(#arrCtrl)"/>
+  </g>
+  <g fill="#F97316">
+    <circle cx="268" cy="345" r="2.2"/>
+    <circle cx="168" cy="240" r="2.2"/><circle cx="268" cy="240" r="2.2"/><circle cx="368" cy="240" r="2.2"/>
+  </g>
+  <text x="258" y="368" text-anchor="end" font-size="10" fill="#F97316">pulsos de gatilho S₁–S₆</text>
 
   <!-- referencia de corrente: Submodulo 2.10 (ONS) -->
   <rect x="640" y="530" width="160" height="150" fill="white" stroke="#0B132B" stroke-width="1.5"/>

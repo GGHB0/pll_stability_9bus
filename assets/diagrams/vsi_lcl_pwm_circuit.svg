@@ -6,19 +6,30 @@
     <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#1971c2"/>
     </marker>
-    <!-- chave: interruptor ideal + diodo antiparalelo -->
+    <!-- IGBT (gate isolado + seta no emissor) + diodo antiparalelo em roda-livre -->
     <g id="sw" stroke="#0B132B" stroke-width="1.8" fill="none">
-      <line x1="15" y1="0" x2="15" y2="10"/>
-      <line x1="15" y1="40" x2="15" y2="50"/>
-      <line x1="15" y1="40" x2="27" y2="13"/>
-      <circle cx="15" cy="10" r="1.8" fill="#0B132B"/>
-      <circle cx="15" cy="40" r="1.8" fill="#0B132B"/>
-      <line x1="15" y1="10" x2="34" y2="10"/>
-      <line x1="34" y1="10" x2="34" y2="18"/>
-      <line x1="28" y1="18" x2="40" y2="18"/>
-      <path d="M 28 32 L 40 32 L 34 18 z" fill="#0B132B" stroke="none"/>
-      <line x1="34" y1="32" x2="34" y2="40"/>
-      <line x1="34" y1="40" x2="15" y2="40"/>
+      <!-- terminais: coletor (topo) / emissor (base) -->
+      <line x1="15" y1="0" x2="15" y2="9"/>
+      <line x1="15" y1="41" x2="15" y2="50"/>
+      <!-- leads coletor/emissor ate a linha ativa -->
+      <line x1="15" y1="9" x2="10" y2="17"/>
+      <line x1="10" y1="33" x2="15" y2="41"/>
+      <!-- linha ativa (canal) -->
+      <line x1="10" y1="16" x2="10" y2="34" stroke-width="2.4"/>
+      <!-- porta isolada (gate) -->
+      <line x1="5" y1="19" x2="5" y2="31" stroke-width="2.4"/>
+      <line x1="5" y1="25" x2="-3" y2="25"/>
+      <!-- seta do emissor (canal-n) -->
+      <path d="M 15 41 L 10.2 37.5 L 14 35.2 z" fill="#0B132B" stroke="none"/>
+      <!-- diodo antiparalelo (conduz emissor -> coletor) -->
+      <line x1="15" y1="6" x2="30" y2="6"/>
+      <line x1="30" y1="6" x2="30" y2="20"/>
+      <path d="M 24 32 L 36 32 L 30 20 z" fill="#0B132B" stroke="none"/>
+      <line x1="24" y1="20" x2="36" y2="20"/>
+      <line x1="30" y1="32" x2="30" y2="44"/>
+      <line x1="30" y1="44" x2="15" y2="44"/>
+      <circle cx="15" cy="6" r="1.6" fill="#0B132B"/>
+      <circle cx="15" cy="44" r="1.6" fill="#0B132B"/>
     </g>
     <!-- indutor horizontal 60px -->
     <g id="indH" stroke="#0B132B" stroke-width="2" fill="none">
@@ -39,8 +50,8 @@
     <line x1="87" y1="184" x2="103" y2="184"/>
     <line x1="95" y1="160" x2="95" y2="70"/>
     <line x1="95" y1="184" x2="95" y2="290"/>
-    <line x1="95" y1="70" x2="430" y2="70"/>
-    <line x1="95" y1="290" x2="430" y2="290"/>
+    <line x1="95" y1="70" x2="400" y2="70"/>
+    <line x1="95" y1="290" x2="400" y2="290"/>
   </g>
   <text x="62" y="178" text-anchor="middle" font-size="12" font-style="italic" fill="#0B132B">V<tspan baseline-shift="sub" font-size="75%">cc</tspan></text>
   <text x="120" y="62" font-size="10" fill="#0B132B">+</text>
@@ -59,8 +70,8 @@
     <text x="163" y="244">S₄</text><text x="263" y="244">S₆</text><text x="363" y="244">S₂</text>
   </g>
   <g fill="#0B132B">
-    <circle cx="200" cy="70" r="2.5"/><circle cx="300" cy="70" r="2.5"/><circle cx="400" cy="70" r="2.5"/>
-    <circle cx="200" cy="290" r="2.5"/><circle cx="300" cy="290" r="2.5"/><circle cx="400" cy="290" r="2.5"/>
+    <circle cx="200" cy="70" r="2.5"/><circle cx="300" cy="70" r="2.5"/>
+    <circle cx="200" cy="290" r="2.5"/><circle cx="300" cy="290" r="2.5"/>
     <circle cx="200" cy="180" r="2.5"/><circle cx="300" cy="180" r="2.5"/><circle cx="400" cy="180" r="2.5"/>
   </g>
 

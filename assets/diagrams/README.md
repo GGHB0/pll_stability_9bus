@@ -10,7 +10,7 @@ Diagramas usados na secao "Arquitetura do SRF-PLL" do README principal.
 | `gains_tradeoff.mmd` | Mermaid | Trade-off Kp/Ki (Secao 4.3 - Analise de Sensibilidade) | `.claude/kb/pll/pll_contingencies.md` |
 | `vsi_grid_schematic.svg` / `.png` | SVG (blocos) | Figura 2.1 do TCC — esquematico generico VSI conectado a rede (fonte CC -> VSI -> filtro LCL -> PAC -> rede), com bloco de controle digital abstrato | `.claude/kb/tcc-word/content_map.md` |
 | `voltage_sag_profile.svg` / `.png` | SVG (curva) | Figura 2.6 do TCC — perfil caracteristico de afundamento de tensao V(t): profundidade, duracao, tensao residual, limiar 0,9 pu | `.claude/kb/pll/pll_contingencies.md`, Bollen 2000 |
-| `vsi_lcl_pwm_circuit.svg` / `.png` | SVG (circuito + controle) | Figura 3.1 do TCC — sistema GFL completo: circuito VSI trifasico 2 niveis (IGBTs S1-S6 + diodos antiparalelos), filtro LCL (L1/Cf/L2), sensores i_abc e u_abc, PAC Barra 2, e controle digital detalhado (abc->dq, SRF-PLL, bloco "Submodulo 2.10" / ONS_2_11 gerando i_d,ref e i_q,ref, PIs de corrente dq, dq->abc, PWM) | `.claude/kb/inverter/lcl_filter.md`, `.claude/kb/inverter/simulink_model.md`, `.claude/kb/standards/ons_2_11.md` |
+| `vsi_lcl_pwm_circuit.svg` / `.png` | SVG (circuito + controle) | Figura 3.1 do TCC — sistema GFL completo: circuito VSI trifasico 2 niveis (IGBTs S1-S6 + diodos antiparalelos), filtro LCL (L1/Cf/L2), TCs tipo janela (i_abc) e TP no PAC (u_abc), PAC Barra 2, e controle digital detalhado (abc->dq, SRF-PLL, bloco "Submodulo 2.10" / ONS_2_11 gerando i_d,ref e i_q,ref, PIs de corrente dq, dq->abc, PWM) | `.claude/kb/inverter/lcl_filter.md`, `.claude/kb/inverter/simulink_model.md`, `.claude/kb/standards/ons_2_11.md` |
 
 ## Convencoes visuais
 

@@ -121,15 +121,28 @@
     <line x1="680" y1="150" x2="745" y2="150"/><line x1="680" y1="170" x2="745" y2="170"/><line x1="680" y1="190" x2="745" y2="190"/>
   </g>
 
-  <!-- sensores de corrente i_abc -->
-  <g fill="white" stroke="#1971c2" stroke-width="1.5">
-    <circle cx="706" cy="150" r="7"/><circle cx="706" cy="170" r="7"/><circle cx="706" cy="190" r="7"/>
+  <!-- TCs tipo janela em cada fase + secundarios reunidos num coletor -->
+  <g fill="none" stroke="#1971c2" stroke-width="1.8">
+    <circle cx="696" cy="150" r="8"/><circle cx="706" cy="170" r="8"/><circle cx="716" cy="190" r="8"/>
   </g>
-  <text x="694" y="226" text-anchor="end" font-size="10" font-style="italic" fill="#1971c2">i<tspan baseline-shift="sub" font-size="75%">abc</tspan></text>
+  <g stroke="#1971c2" stroke-width="1" fill="none">
+    <line x1="696" y1="158" x2="696" y2="215"/>
+    <line x1="706" y1="178" x2="706" y2="215"/>
+    <line x1="716" y1="198" x2="716" y2="215"/>
+    <line x1="696" y1="215" x2="716" y2="215"/>
+  </g>
+  <text x="706" y="133" text-anchor="middle" font-size="9" font-weight="600" fill="#1971c2">TC</text>
+  <text x="688" y="230" text-anchor="end" font-size="10" font-style="italic" fill="#1971c2">i<tspan baseline-shift="sub" font-size="75%">abc</tspan></text>
 
   <!-- ============= PAC (Barra 2) ============= -->
   <line x1="745" y1="125" x2="745" y2="205" stroke="#b45309" stroke-width="5"/>
   <text x="745" y="114" text-anchor="middle" font-size="12" font-weight="700" fill="#F97316">PAC (Barra 2)</text>
+
+  <!-- TP no PAC: primario (navy) acoplado ao secundario de medicao (azul) -->
+  <line x1="745" y1="205" x2="745" y2="218" stroke="#0B132B" stroke-width="1.5"/>
+  <circle cx="745" cy="226" r="9" fill="none" stroke="#0B132B" stroke-width="1.8"/>
+  <circle cx="745" cy="240" r="9" fill="none" stroke="#1971c2" stroke-width="1.8"/>
+  <text x="760" y="237" font-size="9" font-weight="600" fill="#1971c2">TP</text>
 
   <!-- rede -->
   <line x1="745" y1="165" x2="792" y2="165" stroke="#0B132B" stroke-width="2"/>
@@ -150,8 +163,8 @@
   <text x="695" y="707" text-anchor="middle" font-size="9" font-style="italic" fill="#b45309">referência de corrente — código de rede (ONS)</text>
 
   <!-- medicoes (tracejado azul) -->
-  <path d="M 706 197 L 706 372 L 460 372 L 460 398" fill="none" stroke="#1971c2" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrB)"/>
-  <path d="M 745 205 L 745 398" fill="none" stroke="#1971c2" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrB)"/>
+  <path d="M 706 215 L 706 372 L 460 372 L 460 398" fill="none" stroke="#1971c2" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrB)"/>
+  <path d="M 745 249 L 745 398" fill="none" stroke="#1971c2" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrB)"/>
   <text x="752" y="310" font-size="10" font-style="italic" fill="#1971c2">u<tspan baseline-shift="sub" font-size="75%">abc</tspan>(PAC)</text>
 
   <!-- blocos de medicao: abc->dq correntes, SRF-PLL, abc->dq tensoes -->

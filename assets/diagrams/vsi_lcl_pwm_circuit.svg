@@ -229,28 +229,9 @@
   <line x1="265" y1="480" x2="265" y2="292" stroke="#F97316" stroke-width="2" marker-end="url(#arrCtrl)"/>
   <text x="258" y="360" text-anchor="end" font-size="10" fill="#F97316">pulsos de gatilho S₁–S₆</text>
 
-  <!-- referencia de corrente: logica ONS Subm. 2.10 (ONS_2_11) -->
-  <rect x="620" y="530" width="200" height="150" fill="white" stroke="#0B132B" stroke-width="1.5"/>
-  <text x="720" y="550" text-anchor="middle" font-size="10" font-weight="700" fill="#0B132B">Lógica ONS — Subm. 2.10</text>
-  <text x="720" y="563" text-anchor="middle" font-size="8" fill="#0B132B">injeção de corrente reativa sob defeito</text>
-
-  <!-- glifo da curva iq_ref x V (3 zonas) -->
-  <g stroke="#0B132B" stroke-width="1" fill="none">
-    <line x1="660" y1="600" x2="782" y2="600"/>
-    <line x1="665" y1="588" x2="665" y2="648"/>
-    <polyline points="665,640 720,600 759,600 775,640" stroke-width="1.8"/>
-  </g>
-  <g font-size="6.5" fill="#0B132B" text-anchor="middle">
-    <text x="720" y="654">0,85</text>
-    <text x="759" y="654">1,1</text>
-    <text x="790" y="609">V<tspan baseline-shift="sub" font-size="75%">PAC</tspan></text>
-  </g>
-  <g stroke="#0B132B" stroke-width="1">
-    <line x1="720" y1="597" x2="720" y2="603"/>
-    <line x1="759" y1="597" x2="759" y2="603"/>
-  </g>
-  <text x="656" y="592" text-anchor="end" font-size="6.5" font-style="italic" fill="#0B132B">i<tspan baseline-shift="sub" font-size="75%">q,ref</tspan></text>
-  <text x="720" y="671" text-anchor="middle" font-size="7.5" font-family="ui-monospace, monospace" fill="#0B132B">ONS_2_11</text>
+  <!-- referencia de corrente: Submodulo 2.10 (ONS) -->
+  <rect x="640" y="530" width="160" height="150" fill="white" stroke="#0B132B" stroke-width="1.5"/>
+  <text x="720" y="610" text-anchor="middle" font-size="12" font-weight="700" fill="#0B132B">Submódulo 2.10</text>
 
   <!-- entrada V_PAC (do bloco abc/dq de tensao) -->
   <line x1="730" y1="450" x2="730" y2="528" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arrN)"/>
@@ -258,8 +239,8 @@
 
   <!-- parametros -->
   <g stroke="#0B132B" stroke-width="1.5">
-    <line x1="852" y1="590" x2="822" y2="590" marker-end="url(#arrN)"/>
-    <line x1="852" y1="630" x2="822" y2="630" marker-end="url(#arrN)"/>
+    <line x1="852" y1="590" x2="802" y2="590" marker-end="url(#arrN)"/>
+    <line x1="852" y1="630" x2="802" y2="630" marker-end="url(#arrN)"/>
   </g>
   <g font-size="9" font-style="italic" fill="#0B132B" text-anchor="end">
     <text x="854" y="584">i<tspan baseline-shift="sub" font-size="75%">d,nom</tspan></text>
@@ -267,8 +248,8 @@
   </g>
 
   <!-- saidas i_d,ref / i_q,ref -->
-  <line x1="620" y1="555" x2="456" y2="555" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arrN)"/>
+  <line x1="640" y1="555" x2="456" y2="555" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arrN)"/>
   <text x="530" y="548" text-anchor="middle" font-size="9" font-style="italic" fill="#0B132B">i<tspan baseline-shift="sub" font-size="75%">d,ref</tspan></text>
-  <line x1="620" y1="665" x2="486" y2="665" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arrN)"/>
+  <line x1="640" y1="665" x2="486" y2="665" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arrN)"/>
   <text x="530" y="658" text-anchor="middle" font-size="9" font-style="italic" fill="#0B132B">i<tspan baseline-shift="sub" font-size="75%">q,ref</tspan></text>
 </svg>

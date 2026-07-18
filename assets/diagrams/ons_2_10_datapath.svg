@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1075 648" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0B132B"/>
+    </marker>
+    <marker id="arrCtrl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F97316"/>
+    </marker>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1971c2"/>
+    </marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#c92a2a"/>
+    </marker>
+  </defs>
+
+  <rect width="1075" height="648" fill="#ffffff"/>
+
+  <text x="525" y="28" text-anchor="middle" font-size="16" font-weight="700" fill="#0B132B">Submódulo 2.10 — função ONS_2_11 · datapath do Stateflow</text>
+  <text x="525" y="47" text-anchor="middle" font-size="10.5" fill="#0B132B">Referência de corrente sob defeito · ONS Submódulo 2.10 §5.8 · fonte: simulink/stateflow/chart_14.xml</text>
+
+  <!-- ================= ENTRADAS ================= -->
+  <text x="16" y="128" font-size="12" font-style="italic" fill="#1971c2">V<tspan baseline-shift="sub" font-size="75%">PCC</tspan> (pu)</text>
+  <line x1="82" y1="124" x2="150" y2="124" stroke="#1971c2" stroke-width="1.6" stroke-dasharray="4,3" marker-end="url(#arrB)"/>
+  <circle cx="108" cy="124" r="2.4" fill="#1971c2"/>
+
+  <text x="16" y="454" font-size="12" font-style="italic" fill="#0B132B">I<tspan baseline-shift="sub" font-size="75%">max</tspan></text>
+  <line x1="52" y1="450" x2="628" y2="450" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+  <circle cx="560" cy="450" r="2.4" fill="#0B132B"/>
+
+  <text x="16" y="560" font-size="12" font-style="italic" fill="#0B132B">i<tspan baseline-shift="sub" font-size="75%">d,nom</tspan> (pu)</text>
+  <line x1="86" y1="556" x2="838" y2="556" stroke="#0B132B" stroke-width="1.5"/>
+  <path d="M 838 556 L 838 486" fill="none" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ================= DETECTOR DE ZONA ================= -->
+  <rect x="150" y="82" width="170" height="96" fill="#ffffff" stroke="#0B132B" stroke-width="1.8" rx="6"/>
+  <text x="235" y="102" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0B132B">Detector de zona</text>
+  <text x="235" y="122" text-anchor="middle" font-size="9.5" fill="#c92a2a">V &lt; 0,85 → subtensão</text>
+  <text x="235" y="138" text-anchor="middle" font-size="9.5" fill="#166534">0,85 ≤ V ≤ 1,1 → normal</text>
+  <text x="235" y="154" text-anchor="middle" font-size="9.5" fill="#e8590c">V &gt; 1,1 → sobretensão</text>
+  <text x="235" y="170" text-anchor="middle" font-size="8.5" fill="#0B132B">V<tspan baseline-shift="sub" font-size="75%">mag</tspan> = V<tspan baseline-shift="sub" font-size="75%">PCC</tspan> (sem clamp em ±1 pu)</text>
+
+  <!-- V-bus alimentando as tres rampas -->
+  <path d="M 108 124 L 108 60 L 400 60" fill="none" stroke="#1971c2" stroke-width="1.4" stroke-dasharray="4,3"/>
+  <circle cx="108" cy="124" r="0"/>
+  <path d="M 400 60 L 400 214" fill="none" stroke="#1971c2" stroke-width="1.4" stroke-dasharray="4,3"/>
+  <path d="M 400 92 L 428 92"  fill="none" stroke="#1971c2" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arrB)"/>
+  <path d="M 400 152 L 428 152" fill="none" stroke="#1971c2" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arrB)"/>
+  <path d="M 400 212 L 428 212" fill="none" stroke="#1971c2" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#arrB)"/>
+  <circle cx="400" cy="92" r="2.2" fill="#1971c2"/>
+  <circle cx="400" cy="152" r="2.2" fill="#1971c2"/>
+
+  <!-- ================= TRES RAMPAS ================= -->
+  <rect x="430" y="72" width="180" height="40" fill="#fdecec" stroke="#c92a2a" stroke-width="1.6" rx="5"/>
+  <text x="520" y="90" text-anchor="middle" font-size="9.5" font-weight="700" fill="#c92a2a">Subtensão (V &lt; 0,85)</text>
+  <text x="520" y="105" text-anchor="middle" font-size="9.5" fill="#c92a2a">i<tspan baseline-shift="sub" font-size="75%">q</tspan> = 2,857·V − 2,429</text>
+
+  <rect x="430" y="132" width="180" height="40" fill="#f0fdf4" stroke="#166534" stroke-width="1.6" rx="5"/>
+  <text x="520" y="150" text-anchor="middle" font-size="9.5" font-weight="700" fill="#166534">Normal (0,85 ≤ V ≤ 1,1)</text>
+  <text x="520" y="165" text-anchor="middle" font-size="9.5" fill="#166534">i<tspan baseline-shift="sub" font-size="75%">q</tspan> = 0 · fault_flag = 0</text>
+
+  <rect x="430" y="192" width="180" height="40" fill="#fff4e6" stroke="#e8590c" stroke-width="1.6" rx="5"/>
+  <text x="520" y="210" text-anchor="middle" font-size="9.5" font-weight="700" fill="#e8590c">Sobretensão (V &gt; 1,1)</text>
+  <text x="520" y="225" text-anchor="middle" font-size="9.5" fill="#e8590c">i<tspan baseline-shift="sub" font-size="75%">q</tspan> = −10·V + 11</text>
+
+  <!-- ================= MUX / SELETOR DE ZONA ================= -->
+  <path d="M 660 78 L 690 96 L 690 208 L 660 226 Z" fill="#ffffff" stroke="#0B132B" stroke-width="1.8"/>
+  <text x="675" y="156" text-anchor="middle" font-size="11" font-weight="700" fill="#0B132B" transform="rotate(-90 675 156)">seletor</text>
+  <line x1="610" y1="92"  x2="660" y2="98"  stroke="#c92a2a" stroke-width="1.6" marker-end="url(#arrR)"/>
+  <line x1="610" y1="152" x2="660" y2="152" stroke="#166534" stroke-width="1.6" marker-end="url(#arr)"/>
+  <line x1="610" y1="212" x2="660" y2="206" stroke="#e8590c" stroke-width="1.6" marker-end="url(#arr)"/>
+
+  <!-- zona (select) do detector para o seletor -->
+  <path d="M 235 178 L 235 270 L 676 270 L 676 226" fill="none" stroke="#0B132B" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <text x="368" y="262" font-size="9" fill="#0B132B">zona (if / elseif / else)</text>
+
+  <!-- iq_raw -> saturacao -->
+  <line x1="690" y1="152" x2="742" y2="152" stroke="#0B132B" stroke-width="1.6" marker-end="url(#arr)"/>
+  <text x="716" y="145" text-anchor="middle" font-size="8.5" font-style="italic" fill="#0B132B">i<tspan baseline-shift="sub" font-size="75%">q,raw</tspan></text>
+
+  <!-- Saturacao +-Imax -->
+  <rect x="742" y="122" width="86" height="60" fill="#ffffff" stroke="#0B132B" stroke-width="1.8" rx="6"/>
+  <path d="M 752 172 L 768 172 L 802 132 L 818 132" fill="none" stroke="#0B132B" stroke-width="2"/>
+  <text x="772" y="199" text-anchor="middle" font-size="9" fill="#0B132B">sat. ±I<tspan baseline-shift="sub" font-size="75%">max</tspan></text>
+  <!-- Imax para saturacao -->
+  <path d="M 560 450 L 560 250 L 815 250 L 815 182" fill="none" stroke="#0B132B" stroke-width="1.3" stroke-dasharray="3,3" marker-end="url(#arr)"/>
+
+  <!-- ================= NO iq_ref ================= -->
+  <line x1="828" y1="152" x2="1000" y2="152" stroke="#F97316" stroke-width="1.9" marker-end="url(#arrCtrl)"/>
+  <circle cx="880" cy="152" r="2.6" fill="#F97316"/>
+  <text x="1008" y="156" font-size="12" font-style="italic" fill="#F97316">i<tspan baseline-shift="sub" font-size="75%">q,ref</tspan></text>
+  <!-- ramal iq_ref para o bloco sqrt -->
+  <path d="M 880 152 L 880 400 L 700 400 L 700 424" fill="none" stroke="#F97316" stroke-width="1.6" marker-end="url(#arrCtrl)"/>
+  <text x="888" y="360" font-size="9" font-style="italic" fill="#F97316">i<tspan baseline-shift="sub" font-size="75%">q,ref</tspan> (prioridade §5.8.4)</text>
+
+  <!-- ================= BLOCO sqrt (id disponivel) ================= -->
+  <rect x="628" y="424" width="150" height="62" fill="#ffffff" stroke="#0B132B" stroke-width="1.8" rx="6"/>
+  <text x="703" y="450" text-anchor="middle" font-size="10" font-weight="700" fill="#0B132B">i<tspan baseline-shift="sub" font-size="75%">d,disp</tspan></text>
+  <text x="703" y="470" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">√(I<tspan baseline-shift="sub" font-size="75%">max</tspan>² − i<tspan baseline-shift="sub" font-size="75%">q,ref</tspan>²)</text>
+
+  <!-- ================= BLOCO min ================= -->
+  <line x1="778" y1="455" x2="808" y2="455" stroke="#0B132B" stroke-width="1.6" marker-end="url(#arr)"/>
+  <rect x="808" y="426" width="70" height="60" fill="#ffffff" stroke="#0B132B" stroke-width="1.8" rx="6"/>
+  <text x="843" y="461" text-anchor="middle" font-size="12" font-weight="700" fill="#0B132B">min</text>
+  <line x1="878" y1="455" x2="1000" y2="455" stroke="#F97316" stroke-width="1.9" marker-end="url(#arrCtrl)"/>
+  <text x="1008" y="459" font-size="12" font-style="italic" fill="#F97316">i<tspan baseline-shift="sub" font-size="75%">d,ref</tspan></text>
+
+  <!-- ================= fault_flag ================= -->
+  <path d="M 320 130 L 348 130 L 348 320 L 1000 320" fill="none" stroke="#c92a2a" stroke-width="1.5" marker-end="url(#arrR)"/>
+  <circle cx="348" cy="130" r="2.2" fill="#c92a2a"/>
+  <text x="1008" y="324" font-size="11" font-style="italic" fill="#c92a2a">fault_flag</text>
+  <text x="590" y="312" font-size="9" fill="#c92a2a">1 = defeito · 0 = normal</text>
+
+  <!-- ================= NOTA DE FIDELIDADE ================= -->
+  <rect x="150" y="592" width="840" height="42" fill="#fff9f0" stroke="#e8590c" stroke-width="1" rx="6"/>
+  <text x="162" y="609" font-size="9.5" fill="#0B132B">Nota: figura fiel ao código atual. As duas rampas terminam em i<tspan baseline-shift="sub" font-size="75%">q</tspan> = −1 pu nos extremos (V=0,5 e V=1,2) — mesmo sinal.</text>
+  <text x="162" y="625" font-size="9.5" fill="#0B132B">A zona de sobretensão injeta reativo em vez de absorver (diverge do ONS §5.8.1-b). Sem histerese nem atraso de 30 ms (§5.8.2).</text>
+</svg>

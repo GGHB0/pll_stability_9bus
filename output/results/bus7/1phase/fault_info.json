@@ -1,0 +1,11 @@
+{
+  "fault_bus": 7,
+  "fault_line": [],
+  "fault_type": "1phase",
+  "t_fault": 0.3,
+  "t_clear": 0.4,
+  "duration_s": 0.10000000000000003,
+  "bad_pll": false,
+  "timestamp": "2026-07-15T18:31:15",
+  "model": "pll_stability_9bus"
+}

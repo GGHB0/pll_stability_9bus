@@ -2,10 +2,10 @@
   "fault_bus": 0,
   "fault_line": [],
   "fault_type": "regime",
-  "t_fault": 0.6,
-  "t_clear": 0.7,
-  "duration_s": 0.099999999999999978,
+  "t_fault": 0.3,
+  "t_clear": 0.4,
+  "duration_s": 0.10000000000000003,
   "bad_pll": false,
-  "timestamp": "2026-07-13T12:49:04",
+  "timestamp": "2026-07-14T01:01:25",
   "model": "pll_stability_9bus"
 }

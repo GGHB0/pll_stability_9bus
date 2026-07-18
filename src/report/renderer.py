@@ -495,7 +495,7 @@ function _ghostData(which) {{
     colors = isDark ? o[which + "Dark"] : o[which + "Light"];
   }}
   if (!fig) return [];
-  var tag = o.badPll ? " (PLL ruim)" : " (nominal)";
+  var tag = o.badPll ? " (sintonia inadequada)" : " (nominal)";
   // mesma cor do traço principal; pontilhado + opacidade marcam o fantasma
   return idx.map(function(i, pos) {{
     var tr = fig.data[i];
@@ -925,7 +925,7 @@ switchScenario(currentKey);
             '<button class="pll-btn active" data-mode="nominal" '
             'onclick="setPllMode(\'nominal\')">Nominal</button>'
             '<button class="pll-btn" data-mode="bad" '
-            'onclick="setPllMode(\'bad\')">Mal dimensionado</button>'
+            'onclick="setPllMode(\'bad\')">Sintonia inadequada</button>'
             '</div>'
         )
 

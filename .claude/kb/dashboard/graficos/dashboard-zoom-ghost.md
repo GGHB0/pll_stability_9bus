@@ -77,7 +77,7 @@ do cenário equivalente do outro modo PLL no mesmo gráfico:
   parâmetro `which` ("res"/"inv"/"sys"/"spec") seleciona a figura pelo
   acesso genérico `o[which + "Data"]`. No espectro
   ([[espectro-fourier]]) o ghost compara direto o pico de 120 Hz
-  nominal × PLL mal dimensionado.
+  nominal × PLL com sintonia inadequada.
 
 Mesma cor + pontilhado/esmaecido = "mesmo sinal, outro PLL" — a degradação
 aparece lado a lado sem alternar o toggle de memória.

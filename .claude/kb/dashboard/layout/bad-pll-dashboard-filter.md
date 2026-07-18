@@ -13,7 +13,7 @@ os nominais → chaves coexistem no dict `SCENARIOS` do JS.
 
 O dashboard precisa de um **toggle PLL** para:
 - exibir label limpa (sem `_bad_pll` no texto)
-- filtrar o `<select>` por modo ativo (nominal / mal dimensionado)
+- filtrar o `<select>` por modo ativo (nominal / sintonia inadequada)
 - trocar automaticamente para o cenário equivalente ao mudar o modo
 - filtrar o tooltip do SVG pelo modo ativo
 
@@ -82,7 +82,7 @@ Toggle só é renderizado se `has_bad_pll == True`:
   PLL Nominal
 </button>
 <button class="pll-btn" data-mode="bad" onclick="setPllMode('bad')">
-  PLL Mal dimensionado
+  Sintonia inadequada
 </button>
 ```
 

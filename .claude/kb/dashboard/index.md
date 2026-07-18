@@ -19,7 +19,7 @@ Histórico de mudanças por commit: `CHANGELOG.md` na raiz do repo.
 | `layout/` | [tabs-navegacao.md](layout/tabs-navegacao.md) | Abas de gráficos (Resumo/Inversor/Sistema/Espectro), lazy render, cards clicáveis |
 | `layout/` | [dark-mode-theming.md](layout/dark-mode-theming.md) | Temas light/dark: themedLayout e os 4 fixes de re-tema (gotcha dotted-key) |
 | `layout/` | [header-branding.md](layout/header-branding.md) | Logo UERJ base64, regra de label de toggle |
-| `layout/` | [bad-pll-dashboard-filter.md](layout/bad-pll-dashboard-filter.md) | Toggle PLL nominal/mal dimensionado |
+| `layout/` | [bad-pll-dashboard-filter.md](layout/bad-pll-dashboard-filter.md) | Toggle PLL nominal/sintonia inadequada |
 
 ## Visão geral do fluxo
 

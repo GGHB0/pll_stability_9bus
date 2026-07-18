@@ -5,6 +5,18 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-18 — Terminologia "sintonia inadequada" (pedido do professor)
+
+Arquivos: `src/report/renderer.py`
+
+- Rótulos visíveis do modo PLL detuned trocados de "Mal dimensionado"/"PLL
+  ruim" para **"Sintonia inadequada"** (poorly tuned PLL): botão do toggle
+  PLL e legenda do overlay de comparação.
+- Identificadores internos (`BAD_PLL`, sufixo `_bad_pll`) e `params.m`
+  inalterados — a mudança é só de texto exibido.
+- KB atualizado: `dashboard/index.md`, `layout/bad-pll-dashboard-filter.md`,
+  `graficos/dashboard-zoom-ghost.md`, `simulation/export_workflow.md`.
+
 ## 2026-07-15 — Espectro FFT multi-modo (a/b/c/d/q) + tabela de harmônicas
 
 Arquivos: `src/pipeline/spectrum.py`, `src/config/settings.py`,

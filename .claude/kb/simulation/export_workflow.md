@@ -144,7 +144,7 @@ e o formato legado (sem essas colunas) continua carregando sem erro.
 
 ## Flag BAD_PLL
 
-Simula PLL mal dimensionado: `kp_pll` reduzido a 20% do nominal.
+Simula PLL com sintonia inadequada (poorly tuned PLL): `kp_pll` reduzido a 20% do nominal.
 
 ```matlab
 % params.m

@@ -1,12 +1,31 @@
 ---
 name: pdf-kb-updater
 description: Extrai conteúdo de qualquer PDF (livro ou artigo) e atualiza os arquivos KB em .claude/kb/. Ativar quando o usuário pedir para "buscar referência", "checar no [autor/título]", "atualizar KB com PDF", mencionar um artigo ou livro pelo nome.
-version: 2.1.0
+version: 2.2.0
 ---
 
 # PDF → KB Updater
 
 Workflow para extrair conhecimento de qualquer PDF e atualizar `.claude/kb/`.
+
+## Divisão de Trabalho por Modelo
+
+A extração é mecânica; a síntese exige julgamento. Separar:
+
+| Etapa | Quem executa |
+|---|---|
+| Passos 0–2 (localizar PDF, TOC, extrair seções, triagem) | Subagente **`pdf-extractor`** (Haiku) — `.claude/agents/pdf-extractor.md` |
+| Passos 3–4 (estrutura da KB, síntese, escrita dos `.md`, MEMORY.md) | Modelo principal |
+
+Delegar via Agent tool com `subagent_type: "pdf-extractor"`, passando o
+caminho do PDF e os intervalos de páginas (ou o tópico a localizar). O
+subagente devolve os caminhos dos `.txt` em `~/pdfext/` + índice do conteúdo;
+o modelo principal então lê **direto dos `.txt`** as seções que vai usar —
+não confiar em paráfrase do subagente para conteúdo técnico da KB.
+
+**Quando NÃO delegar:** pedido pontual em PDF já mapeado em
+[section-maps.md](section-maps.md) (1–2 extrações pequenas) — o overhead do
+subagente não compensa; rodar os scripts inline.
 
 ## Ambiente
 

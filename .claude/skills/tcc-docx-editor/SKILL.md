@@ -1,6 +1,7 @@
 # Skill: tcc-docx-editor
 
-Edita o TCC DOCX (`TCCs Victor e Bruno_V8_revisado.docx`) com tracked changes rastreáveis
+Edita o TCC DOCX (arquivo atual definido em `config.py` — hoje
+`TCC_Victor_Bruno_V9_novo_indice.docx`) com tracked changes rastreáveis
 no Word. Usa bash para copiar de/para o OneDrive (que tem lock), e `python.exe` para
 manipular o XML (python não enxerga o VFS do Claude Desktop, só o Windows path real).
 
@@ -30,11 +31,19 @@ manipular o XML (python não enxerga o VFS do Claude Desktop, só o Windows path
 - **--validate false**: o `pack.py` usa `print()` com caracteres `→` que falham em
   cp1252. Sempre passar `--validate false` para evitar o crash do validador.
 - **OneDrive lock**: não editar diretamente no path do OneDrive. Copiar para C:\Temp primeiro.
+  A cópia de VOLTA também falha se o documento estiver aberto no Word do usuário
+  ("Device or resource busy") — pedir para fechar antes do passo 7.
 - **paraId**: máximo `0x7FFFFFFF`. Nunca usar prefixos A/B/C/D (overflow).
+- **Word renumera IDs ao salvar**: se o usuário abriu e salvou o DOCX no Word,
+  o registro de IDs do KB fica obsoleto — sempre grepar o XML atual antes de inserir.
+- **PowerShell 5.1 + `python -c` inline quebra** com regex contendo `[...]`
+  (parser do PS interpreta como tipo). Escrever scripts em `C:\Temp\*.py` e rodar o arquivo.
 
-## Referência de IDs
+## Referência de IDs e armadilhas XML
 
-Ver `.claude/kb/tcc-word/docx_structure.md` — tabela de IDs usados e próximos disponíveis.
+Ver `.claude/kb/tcc-word/docx_structure.md` — tabela de IDs usados/próximos
+disponíveis e seção "Armadilhas de edição XML" (sectPr final via `rindex`,
+falso positivo `<w:p` vs `<w:pgSz`, cor azul de tracked change etc.).
 
 ## Comandos de exemplo
 

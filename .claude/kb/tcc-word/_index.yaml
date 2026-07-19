@@ -1,9 +1,15 @@
 folder: tcc-word
-description: Estrutura OOXML, mapa de conteúdo e texto completo de todas as seções do TCCs Victor e Bruno_V8_revisado.docx
+description: Estrutura OOXML, mapa de conteúdo e texto completo de todas as seções do TCC DOCX (arquivo atual em config.py da skill tcc-docx-editor)
 files:
   - file: docx_structure.md
     name: tcc-docx-structure
-    description: Estrutura OOXML do documento, padrões XML, IDs usados (bm 57, ins 21, pid 8) e pendências priorizadas P1/P2/P3
+    description: Estrutura OOXML, padrões XML tracked-change, registro de IDs (pós-save Word 19/07 — bm 103, ins 104) e armadilhas de edição XML
+  - file: pendencias.md
+    name: tcc-docx-pendencias
+    description: Pendências priorizadas P1/P2/P3 do documento — figuras, seções vazias, typo MOHAN, lista de siglas, limpezas
+  - file: siglas_inventory.md
+    name: tcc-siglas-inventory
+    description: 33 siglas usadas no texto (varredura 2026-07-19) + exclusões + inconsistência IBR/RBI/ICR; inserção na lista pré-textual pendente de aprovação
   - file: content_map.md
     name: tcc-docx-content-map
     description: Mapa seção a seção — estado atual, problemas estruturais e inventário de figuras; revisão completa jun/2026 (307 parágrafos)

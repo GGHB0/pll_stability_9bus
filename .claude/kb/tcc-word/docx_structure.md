@@ -130,20 +130,45 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
 
 ## Registro de IDs usados até agora
 
-> Registro válido para `TCC_Victor_Bruno_V9.docx` (jul/2026). Números de versões
-> anteriores (V8_oscar_fixes) não se aplicam mais — o V9 chegou com tracked
-> changes já aceitas (zero `w:ins`/`w:del` residual antes da reestruturação).
+> Registro válido para `TCC_Victor_Bruno_V9_novo_indice.docx` **após salvamento
+> no Word em 19/07/2026 11:36**. O Word recalculou o Sumário (flag `w:dirty`
+> consumida, bookmarks `_Toc` regenerados) e **renumerou os IDs de revisão** —
+> os valores da reestruturação (ins 1–32, bookmarks até 44) não valem mais.
 
-| Recurso | IDs usados | Próximo disponível |
+| Recurso | Estado observado (19/07 pós-Word) | Próximo disponível |
 |---|---|---|
-| Bookmark IDs | 0–28 (V9 original) + 29–44 (reestruturação novo índice) | **45** |
-| `w:ins` IDs | 1–32 (reestruturação novo índice) | **33** |
-| `paraId` novos (prefixo `1FB0000X`) | 0x1FB00000–0x1FB0000F | **0x1FB00010** |
+| Bookmark IDs | máximo em uso = 103 (68 bookmarks) | **104** |
+| `w:ins` IDs | máximo em uso = 104 (sem `w:del`) | **105** |
+| `paraId` novos (prefixo `1FB.....`) | 0x1FB00000–0x1FB0000F nossos + `1FB3A4B3` gerado pelo Word (colisão de prefixo possível — sempre grepar antes) | **0x1FB00010** |
 
 > Antes de inserir novos elementos, sempre buscar o maior ID existente no XML
 > com grep para garantir que não há colisão com IDs do documento original.
 
+## Armadilhas de edição XML (aprendidas na prática)
+
+- **Inserir parágrafo no fim do corpo**: localizar o sectPr final com
+  `xml.rindex('<w:sectPr', 0, xml.rindex('</w:body>'))`. **Nunca** usar regex
+  `<w:sectPr.*?</w:sectPr>\s*</w:body>` com `re.S` — o `.*?` faz o match começar
+  no PRIMEIRO sectPr do documento (quebras de seção pré-textuais) e a inserção
+  vai parar no começo do arquivo.
+- **Sanity check de parágrafos num trecho**: usar `re.search(r'<w:p[ >]', trecho)`.
+  O teste `'<w:p' in trecho` dá falso positivo com `<w:pgSz`/`<w:pgMar` do sectPr.
+- **Sempre regenerar a saída antes de verificar** — verificar `doc_tcc_modified.xml`
+  de um run anterior bugado valida o bug, não o fix.
+- **Títulos inseridos com `<w:ins>` aparecem azuis/sublinhados no Word** — é a
+  cor de revisão do autor "Claude", não formatação; ficam pretos ao aceitar as
+  alterações (Revisão → Aceitar). Já causou pergunta do usuário ("por que azul?").
+- **Arquivo aberto no Word bloqueia a cópia de volta ao OneDrive** ("Device or
+  resource busy") — pedir para fechar; se o usuário salvou mudanças, refazer a
+  edição sobre a versão salva (o Word também renumera IDs ao salvar).
+
 ## Estado atual — Implementado por Claude
+
+- **Move do ANEXOS** (2026-07-19): título ANEXOS (Ttulo1) movido do meio do
+  documento para o fim absoluto, após REFERÊNCIAS (ordem ABNT: Conclusões →
+  Trabalhos Futuros → REFERÊNCIAS → ANEXOS). TOC marcado dirty. Arquivo pronto em
+  `C:\Temp\tcc_v9_anexos_move.docx`; **pendente cópia ao OneDrive** (documento
+  estava aberto no Word do usuário).
 
 - **Seção 3.3** — "PROTOCOLOS DE CONTINGÊNCIA E ANÁLISE DE CENÁRIOS" (tracked changes)
   - 3.3.1 Afundamento Simétrico (2 parágrafos + [TABELA 3.1])
@@ -159,40 +184,6 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
   - #17/#21/#24/#29: Ttulo4 → Ttulo3 com pPrChange (Clarke, Park, Arq.Controle, PWM)
   - Arquivo: `C:\Temp\tcc_oscar_fixes.docx` → copiado para OneDrive como `V8_oscar_fixes.docx`
 
-> Mapa completo do documento seção a seção: `.claude/kb/tcc-word/content_map.md`
-
-## Pendências Priorizadas
-
-### P1 — Correções estruturais (rápidas, alto impacto)
-
-1. **[FIGURA 3.1] sem placeholder** — referenciada 2× em 3.2.2 (§215 e §220)
-   mas o placeholder não existe no texto. Inserir placeholder italic-centralizado:
-   `[FIGURA 3.1 – Circuito do VSI trifásico de dois níveis com filtro LCL e blocos de controle PWM.]`
-   após o parágrafo §220 (após "...é ilustrado na Figura 3.1").
-2. **~~Estilo errado em 2.4.1/2.4.2/2.4.3~~** — ✅ FEITO (gen_oscar_fixes.py): Clarke, Park,
-   Arquitetura de Controle e PWM agora são Ttulo3 (tracked change).
-3. **Seção sem número** — "A Necessidade das Transformadas de Referência" é `Ttulo2`
-   antes de 2.1, sem numeração. Renumerar como "2.0" ou rebaixar a corpo.
-   **NÃO alterar sem confirmação do Oscar/Victor.**
-
-### P2 — Conteúdo pendente
-
-4. **Cap. 4 quase vazio** — só títulos; 4.1.1 contém apenas ".". Prioridade do TCC.
-   A redigir: 4.1.1, 4.1.2, 4.2.1, 4.3.1, 4.3.2.
-   **4.2.2 (salto de fase) NÃO implementar** — instrução do Oscar.
-5. **Referências MATLAB/PSIM** — Oscar comentário #9, Seção 3.1. Citar MathWorks
-   (MATLAB) e Powersim Inc. ou artigo (PSIM).
-6. **Acentuação da Seção 3.3** — corrigir em futura edição.
-
-### P3 — Limpeza
-
-7. **Figuras Cap. 2** — [FIGURA 2.1], [FIGURA 2.6] e 2 figuras ONS já têm placeholder
-   de texto; substituir por imagens quando disponíveis.
-8. **Lista de referências final** — mistura template UERJ + refs reais [1]–[9].
-   Remover entradas do template.
-
-### Fora de escopo (instrução do Oscar)
-
-- Salto de fase (phase-angle jump) — não implementar
-- Alto RoCoF — não implementar
-- Métricas de desempenho (passo iv do Cap. 3) — pendente decisão do Oscar
+> Mapa completo do documento seção a seção: `content_map.md`
+> Pendências priorizadas P1/P2/P3: `pendencias.md`
+> Inventário de siglas para a lista pré-textual: `siglas_inventory.md`

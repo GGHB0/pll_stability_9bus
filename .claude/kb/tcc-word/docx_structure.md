@@ -135,11 +135,12 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
 > Claude das siglas). O aceite eliminou quase todos os `w:ins` e o Word renumerou
 > tudo de novo — registros anteriores não valem.
 
-| Recurso | Estado observado (19/07 12:04 + siglas) | Próximo disponível |
+| Recurso | Estado observado (19/07, pós-reestruturação Cap.4) | Próximo disponível |
 |---|---|---|
-| Bookmark IDs | máximo em uso = 75 (68 bookmarks) | **76** |
+| Bookmark IDs | máximo em uso = 76 (69 bookmarks; 76 = título "4.1. Foco do Estudo", `_Toc235351739`) | **77** |
 | `w:ins` IDs | só restam ids 23–26 (título 2.6 não aceito); sem `w:del` | **27** |
-| `paraId` novos (prefixo `1FB.....`) | 0x1FB00000–0x1FB00056 nossos (0x10–0x2E siglas; 0x30–0x56 tabelas de equação) + `1FB3A4B3` do Word (sempre grepar antes) | **0x1FB00057** |
+| `paraId` novos (prefixo `1FB.....`) | 0x1FB00000–0x1FB00059 nossos (0x10–0x2E siglas; 0x30–0x56 tabelas de equação; 0x57–0x59 seção 4.1 Foco) + `1FB3A4B3` do Word (sempre grepar antes) | **0x1FB0005A** |
+| `paraId` prefixo `16xxxxxx` | 16000001–16000003, 16100001–16100008, 16200001–16200009 (bloco 4.3.3; 1620000A–C liberados na reescrita do monitoramento — não reusar) | — |
 
 > Antes de inserir novos elementos, sempre buscar o maior ID existente no XML
 > com grep para garantir que não há colisão com IDs do documento original.
@@ -162,38 +163,16 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
   resource busy") — pedir para fechar; se o usuário salvou mudanças, refazer a
   edição sobre a versão salva (o Word também renumera IDs ao salvar).
 
-## Estado atual — Implementado por Claude
+## Estado atual
 
-- **Move do ANEXOS** (2026-07-19): ✅ ENTREGUE — título ANEXOS (Ttulo1) movido
-  para o fim absoluto, após REFERÊNCIAS (ordem ABNT). A primeira versão ficou
-  obsoleta (usuário salvou no Word às 12:04 aceitando as tracked changes);
-  refeito sobre a versão nova e copiado ao OneDrive às 12:20.
-- **Siglas + padronização IBR + fix MOHAN** (2026-07-19): ✅ ENTREGUE no mesmo
-  DOCX — lista pré-textual com 31 siglas (ver `siglas_inventory.md`), RBI/ICR →
-  IBR (4 ocorrências), MOW → MOHAN (2 ocorrências). **Edições diretas, sem
-  `<w:ins>`** (aprovadas explicitamente pelo Victor; mesmo trade-off da
-  renumeração). Pipeline: `gen_move_anexos.py` → `gen_siglas_fixes.py` →
-  `repack_final.py` (todos em C:\Temp).
+Última entrega: **reestruturação interna do Cap.4** (2026-07-19, 19:49) —
+Cap.4 segue 100% o índice do professor (4.1 Foco do Estudo novo; 4.2
+Plataformas; 4.3 Modelagem com 4.3.1–4.3.4; 4.4 Resumo). Estado do XML de
+trabalho: `C:\Temp\doc_tcc_cap4.xml`; template ZIP para repack:
+`C:\Temp\tcc_v9_cap4.docx`.
 
-- **Reformatação das equações** (2026-07-19): ✅ ENTREGUE — 17 equações em
-  tabela invisível (equação centralizada + "EQUAÇÃO N.M" à direita),
-  numeradas 3.1–3.17; eqs 4.1/4.2 do LCL inseridas; refs cruzadas
-  atualizadas. Detalhes e padrão XML: `equacoes.md`.
-
-- **Seção 3.3** — "PROTOCOLOS DE CONTINGÊNCIA E ANÁLISE DE CENÁRIOS" (tracked changes)
-  - 3.3.1 Afundamento Simétrico (2 parágrafos + [TABELA 3.1])
-  - 3.3.2 Afundamento Assimétrico (2 parágrafos + [TABELA 3.2])
-  - ⚠️ Texto adicionado **sem acentuação** — corrigir em edição futura
-
-- **Correções dos comentários do Oscar** (jun/2026, script gen_oscar_fixes.py):
-  - #1 Resumo: "do algoritmo de sincronismo" → "da técnica de sincronismo de fase"
-  - #3 Resumo: sentença IAE/ISE removida (tracked delete)
-  - #6 Intro: "os inversores...insubstituível" → texto GFL com serviços ancilares
-  - #13 Cap.2 intro: "O objetivo é apresentar" → "Apresentar", "a operação" → "à operação"
-  - #14 Cap.2: "sistema de sincronismo " removido (SRF-PLL agora é a sigla direta)
-  - #17/#21/#24/#29: Ttulo4 → Ttulo3 com pPrChange (Clarke, Park, Arq.Controle, PWM)
-  - Arquivo: `C:\Temp\tcc_oscar_fixes.docx` → copiado para OneDrive como `V8_oscar_fixes.docx`
-
+> Histórico completo de entregas (ANEXOS, siglas, equações, Cap.4, Oscar):
+> `historico_entregas.md`
 > Mapa completo do documento seção a seção: `content_map.md`
 > Pendências priorizadas P1/P2/P3: `pendencias.md`
 > Inventário de siglas para a lista pré-textual: `siglas_inventory.md`

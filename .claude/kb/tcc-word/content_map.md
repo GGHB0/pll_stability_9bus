@@ -1,98 +1,108 @@
 ---
 name: tcc-docx-content-map
-description: Mapa de conteúdo seção a seção do TCCs Victor e Bruno_V8_revisado.docx — estado atual, problemas estruturais e inventário de figuras
+description: Mapa de conteúdo seção a seção do TCC_Victor_Bruno_V9_novo_indice.docx — estado atual, problemas estruturais e inventário de figuras
 metadata:
   type: project
 ---
 
 # TCC Word — Mapa de Conteúdo do Documento
 
-> Estado de cada seção do `TCCs Victor e Bruno_V8_revisado.docx` (307 parágrafos — junho/2026).
+> Estado de cada seção do `TCC_Victor_Bruno_V9_novo_indice.docx` (numeração
+> do índice do professor, atualizado 2026-07-19 após reestruturação do Cap.4).
 > Padrões de edição OOXML e IDs: ver `docx_structure.md`.
 
 ## Legenda
 
 - ✅ Redigido · ✏️ Parcial/problema · ⬜ Vazio · ⚠️ Problema estrutural
 
-## Introdução (sem número)
+## Cap. 1 — Introdução
 
-- ✅ Contextualização: transição energética, desafios de integração de renováveis
-- ✅ Motivação: apagão 15/08/2023 no SIN — 23.368 MW = 34,5% da carga do SIN; ONS concluiu que inversores tiveram desempenho "aquém dos modelos matemáticos"
-- ✅ Vulnerabilidade do SRF-PLL: dependência de sinal de tensão de boa qualidade
-- ✅ Objetivos específicos (5 itens)
-- ✅ Referências [1]–[9] (Mohan, Xiong, Yazdani, Teodorescu, Enhanced PLL, Wu-Wang, RAP-ONS)
+- ✅ Contextualização, motivação (apagão 15/08/2023 — 23.368 MW = 34,5% do SIN),
+  vulnerabilidade do SRF-PLL, objetivos específicos (5 itens)
 
-## Cap. 2 — Fundamentação Teórica
+## Cap. 2 — Desafios à Estabilidade em Redes Dominadas por Inversores (NOVO)
 
-- ⚠️ **"A Necessidade das Transformadas de Referência"** — Ttulo2 SEM número, aparece antes de 2.1
-  - ✅ Clarke (abc→αβ): sistema estacionário, ainda senoidal
-  - ✅ Park (αβ→dq): referencial girante a ω; grandezas viram CC em regime permanente
-  - ✅ Controle P/Q desacoplado: P ∝ id, Q ∝ iq quando Vq=0
-  - ✅ Arquitetura de controle por corrente em cascata (malha interna)
-- ✅ **2.1** Geração Distribuída e Inversores Conectados à Rede
-  - VSI como interface CC→CA; IBRs; redução de inércia do sistema; [FIGURA 2.1]
-- ✅ **2.2** Controle de Inversores e Transformadas de Referência
-  - PWM tratado funcionalmente (escopo delimitado — não detalha estratégias)
-- ✅ **2.3** O Sistema de Sincronismo SRF-PLL
-  - PD = Transformada de Park (vq como erro de fase)
-  - PI: velocidade vs. imunidade a ruído (trade-off Kp/Ki)
-  - VCO = integrador digital → θ estimado
-  - Linearização; Equações 2.5–2.12 (placeholder de equações no texto)
-  - Referências: Teodorescu, Yazdani, Rodriguez, AGP/Alves 2022, Escobar 2021
-- ✅ **2.4** Desafios à Estabilidade do Sincronismo
-  - ⚠️ **2.4.1** Natureza das contingências (voltage sag, phase-angle jump, assimetria) — **estilo Ttulo4, deveria ser Ttulo3**
-  - ⚠️ **2.4.2** Requisitos LVRT/FRT (permanência conectada, injeção reativa) — **estilo Ttulo4**
-  - ⚠️ **2.4.3** Código de Rede ONS Submódulo 2.10 (curvas LVRT, injeção reativo) — **estilo Ttulo4**
-    - [FIGURA ONS curva LVRT] placeholder presente (§190)
-    - [FIGURA ONS injeção reativo] placeholder presente (§193)
+- ⬜ **2.1** Redes elétricas em transição — vazio
+- ⬜ **2.2** Classificação Clássica da Estabilidade — vazio
+- ⬜ **2.3** Classificação Estendida da Estabilidade — vazio
+- ⬜ **2.4** Principais blecautes (2.4.1 Ibéria 2025 · 2.4.2 Chile 2025 ·
+  2.4.3 Brasil 2023) — vazios; KB `events/` cobre os três
+- ✅ **2.5** Contingências e Requisitos Normativos (migrado do antigo Cap.2):
+  2.5.1 LVRT/FRT · 2.5.2 ONS Submódulo 2.10 · 2.5.3 natureza das contingências
+- ⬜ **2.6** Resumo do capítulo — vazio (título com tracked change não aceito)
 
-## Cap. 3 — Metodologia de Projeto e Simulação
+## Cap. 3 — Fundamentação Teórica
 
-- ✅ **3.1** Plataforma Multiplataforma
-  - Python/NumPy: dimensionamento LCL, Ybarra→Zbarra, Thevenin
-  - PSIM: validação circuito, PWM/alta frequência, semicondutores
-  - MATLAB/Simulink: rede IEEE 9 barras, máquinas síncronas (modelo completo dq), EMT sistêmico
+- ✅ **3.1** Transformadas de referência (3.1.1 Clarke · 3.1.2 Park ·
+  3.1.3 controle P/Q desacoplado · 3.1.4 arquitetura em cascata)
+- ✅ **3.2** Geração Distribuída e Inversores Conectados à Rede ([FIGURA 2.1])
+- ✅ **3.3** Controle de Inversores (3.3.1 PWM — funcional, escopo delimitado)
+- ✅ **3.4** O Sistema de Sincronismo SRF-PLL — PD/PI/VCO, linearização,
+  equações 3.1–3.17 em tabela invisível (ver `equacoes.md`)
+- ⬜ **3.5** Resumo ou Conclusões do Capítulo
+
+## Cap. 4 — Metodologia de Análise (reestruturado 2026-07-19)
+
+- ✅ Intro do capítulo (abordagem quantitativa + 4 etapas)
+- ✅ **4.1** Foco do Estudo — NOVO (2 §§: SRF-PLL grid-following sob
+  contingência; IEEE 9 barras modificado; CC/MPPT fora do escopo)
+- ✅ **4.2** Plataformas de Simulação – Características Individuais
+  (Python/NumPy/Pandas, PSIM, MATLAB/Simulink)
   - ⚠️ Refs MATLAB/PSIM pendentes (Oscar comentário #9)
-- ✅ **3.2** Modelagem e Dimensionamento
-  - ✅ **3.2.1** IEEE 9 barras modificado: G2 → VSI; Thevenin Z22 da Zbarra para PSIM
-  - ⚠️ **3.2.2** Projeto do Conversor (VSI 2 níveis, SPWM, filtro LCL, PI corrente, SRF-PLL)
-    - Referencia [FIGURA 3.1] em §215 e §220 mas **placeholder não existe** → P1 em docx_structure.md
-    - Dimensionamento LCL: L1 (ripple), C (5% Q reativo), ressonância, amortecimento
-    - Sintonia PI: cancelamento polo-zero no referencial síncrono
-- ✏️ **3.3** Protocolos de Contingência (adicionado por Claude com tracked changes)
-  - ✏️ **3.3.1** Afundamento Simétrico (3LG; sem seq. negativa; mais favorável ao PLL; [TABELA 3.1])
-  - ✏️ **3.3.2** Afundamento Assimétrico (LG/LLG; seq. negativa → 2ω₀ ≈ 753 rad/s em vq; [TABELA 3.2])
-  - ⚠️ **Todo o texto sem acentuação** — redigido sem UTF-8 correto, corrigir em futura edição
+- ✅ **4.3** Modelagem e Dimensionamento do Sistema de Estudo
+  - ✅ **4.3.1** IEEE 9 barras modificado (G2→VSI; Thevenin Z22 p/ PSIM)
+  - ✅ **4.3.2** Projeto do Conversor Fonte de Tensão e dos Controladores
+    - 4.3.2.1 Filtro LCL (eqs 4.1/4.2) · 4.3.2.2 PI de corrente ·
+      4.3.2.3 SRF-PLL (bloco Sinusoidal Measurement, notch 120 Hz, Kp/Ki)
+    - ⚠️ Referencia [FIGURA 3.1] mas **placeholder não existe** → P1
+  - ✅ **4.3.3** Configuração da Simulação e Modelagem Dinâmica dos Geradores
+    - Intro: ode23t (trapezoidal implícito, passo variável), RelTol 10⁻³,
+      Ts=5 µs, Tsc=200 µs (5 kHz), janela 0,6 s, R2025a (confirmar versão)
+    - 4.3.3.1 Geradores G1/G3 (H₁=9,478 s, H₃=2,351 s, AVR AC1C, PSS1A)
+    - 4.3.3.2 Falta: bloco Fault Three-Phase + chaves SPST, 0,3→0,4 s
+      (6 ciclos), 4 tipos, FAULT_TYPE/BUS/LINE via params.m, **sem local fixo**
+    - 4.3.3.3 Monitoramento: logsout em 5 grupos de sinais, 2 taxas +
+      interpolação, export automático (CSV+metadados por cenário),
+      pipeline Python (IAE/ISE/ts/pico/ΔP/ΔQ, FFT segmentada, LVRT 1547,
+      tabela comparativa)
+  - ✏️ **4.3.4** Protocolos de Contingência (rebaixado de Ttulo2; era 3.3 no V8)
+    - 4.3.4.1 Afundamento Simétrico ([TABELA 3.1]) ·
+      4.3.4.2 Assimétrico ([TABELA 3.2]) — Ttulo4, fora do Sumário
+    - ⚠️ Texto original sem acentuação — corrigir em edição futura
+- ⬜ **4.4** Resumo do Capítulo
 
-## Cap. 4 — Análise e Discussão de Resultados (PRIORIDADE)
+## Cap. 5 — Análise e Discussão de Resultados (PRIORIDADE)
 
-- ✅ Introdução do capítulo (2 parágrafos sobre EMT em PSIM + Simulink)
-- ⬜ **4.1** Desempenho sob Afundamentos Simétricos
-  - ✏️ **4.1.1** Resposta Dinâmica e Tempo de Acomodação — contém apenas "."
-  - ⬜ **4.1.2** Impacto na Injeção de P e Q — vazio
-- ⬜ **4.2** Limites de Robustez sob Contingências Assimétricas e Saltos de Fase
-  - ⬜ **4.2.1** Instabilidade sob Faltas Assimétricas — vazio
-  - ⬜ **4.2.2** Impacto do Salto de Fase — vazio · **NÃO implementar (Oscar)**
-- ⬜ **4.3** Análise de Sensibilidade e Diretrizes de Projeto
-  - ✅ Parágrafo introdutório (menciona ganhos PI e robustez)
-  - ⬜ **4.3.1** Influência dos Ganhos do PI — vazio
-  - ⬜ **4.3.2** Conformidade com LVRT — vazio
+- ⬜ **5.1** Desempenho sob Afundamentos Simétricos
+  - ✏️ **5.1.1** Resposta Dinâmica e Tempo de Acomodação — contém apenas "."
+  - ⬜ **5.1.2** Impacto na Injeção de P e Q — vazio
+- ✏️ **5.2** Limites de Robustez sob Contingências Assimétricas e Saltos de Fase
+  - ✏️ **5.2.1** Instabilidade sob Faltas Assimétricas — cycle slipping descrito
+  - **Salto de fase NÃO implementar** (instrução do Oscar)
+- ✏️ **5.3** Impacto dos Ganhos do Controlador do SRF-PLL
+  - ✏️ **5.3.1** Influência dos Ganhos do PI — texto + [RESULTADOS A INSERIR]
+  - ✏️ **5.3.2** Conformidade com LVRT — texto + [A COMPLEMENTAR: curva ONS]
+- ⬜ **5.4** (Resumo/fechamento)
 
-## Conclusão
+## Cap. 6 — Conclusões · Cap. 7 — Trabalhos Futuros
 
-- ⬜ Placeholder (não redigida)
+- ✏️ Conclusão redigida (cycle slipping, LVRT formal vs. efetivo);
+  Trabalhos Futuros separado como capítulo próprio (índice novo)
 
 ## Referências (seção final)
 
-- ⚠️ Mistura do template UERJ (referências fictícias de exemplo) com as refs reais [1]–[9] do TCC
-- Limpar: remover entradas do template, manter apenas as refs citadas no texto
+- ⚠️ Mistura template UERJ (refs fictícias) com refs reais — limpar
+- ⚠️ Parágrafo "REFERÊNCIAS" sem estilo de título (fora do Sumário)
 
 ## Inventário de Figuras
 
-| Figura | Descrição | Parágrafo (~) | Estado |
-|---|---|---|---|
-| 2.1 | Diagrama esquemático de VSI conectado à rede | §139 | placeholder texto OK |
-| 2.6 | Perfil característico de afundamento de tensão | §184 | placeholder texto OK |
-| 2.X (ONS) | Curva de suportabilidade LVRT — ONS Sub. 2.10 | §190 | placeholder texto OK |
-| 2.X (ONS) | Requisito de injeção de reativo — ONS Sub. 2.10 | §193 | placeholder texto OK |
-| **3.1** | **Circuito VSI trifásico com filtro LCL e blocos PWM** | **§215, §220** | **SEM placeholder ⚠️** |
+| Figura | Descrição | Estado |
+|---|---|---|
+| 2.1 | Diagrama esquemático de VSI conectado à rede | placeholder texto OK |
+| 2.6 | Perfil característico de afundamento de tensão | placeholder texto OK |
+| 2.X (ONS) | Curva de suportabilidade LVRT — ONS Sub. 2.10 | placeholder texto OK |
+| 2.X (ONS) | Requisito de injeção de reativo — ONS Sub. 2.10 | placeholder texto OK |
+| **3.1** | **Circuito VSI trifásico com filtro LCL e blocos PWM** | **SEM placeholder ⚠️** (citada em 4.3.2) |
+
+> Numeração das figuras ainda é a herdada do V8 (2.1, 2.6, 3.1...) — não foi
+> renumerada junto com os capítulos; revisar quando as imagens forem inseridas.

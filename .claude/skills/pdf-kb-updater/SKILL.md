@@ -1,12 +1,22 @@
 ---
 name: pdf-kb-updater
 description: Extrai conteúdo de qualquer PDF (livro ou artigo) e atualiza os arquivos KB em .claude/kb/. Ativar quando o usuário pedir para "buscar referência", "checar no [autor/título]", "atualizar KB com PDF", mencionar um artigo ou livro pelo nome.
-version: 2.0.0
+version: 2.1.0
 ---
 
 # PDF → KB Updater
 
 Workflow para extrair conhecimento de qualquer PDF e atualizar `.claude/kb/`.
+
+## Ambiente
+
+Rodar os scripts sempre com o Python do venv do projeto:
+```powershell
+.venv\Scripts\python.exe script.py
+```
+`pypdf` **não** está no `requirements.txt` — se der `ModuleNotFoundError`,
+instalar com `.venv\Scripts\pip install pypdf` (não adicionar ao requirements;
+é dependência só desta skill).
 
 ## Passo 0 — Localizar o PDF
 
@@ -78,6 +88,8 @@ depois as páginas relevantes ao tópico buscado.
 
 ## Passo 2 — Extrair Páginas para Arquivo Temporário
 
+Extraia **todas as seções de interesse de uma vez** (um arquivo por seção):
+
 ```python
 import os
 from pypdf import PdfReader
@@ -86,18 +98,25 @@ r = PdfReader(r'CAMINHO_COMPLETO.pdf')
 out_dir = os.path.expanduser('~/pdfext')
 os.makedirs(out_dir, exist_ok=True)
 
-# Defina START e END (1-indexed, END inclusivo)
-START, END = 1, 10
+# nome_do_arquivo: (START, END)  — 1-indexed, END inclusivo
+sections = {
+    'secao_a.txt': (6, 28),
+    'secao_b.txt': (331, 336),
+}
 
-with open(os.path.join(out_dir, 'secao.txt'), 'w', encoding='utf-8', errors='replace') as f:
-    for page_num in range(START - 1, END):   # range é 0-indexed
-        text = r.pages[page_num].extract_text() or ''
-        f.write(f'=== PAGE {page_num + 1} ===\n{text}\n\n')
-print('done ->', out_dir)
+for fname, (start, end) in sections.items():
+    with open(os.path.join(out_dir, fname), 'w', encoding='utf-8', errors='replace') as f:
+        for page_num in range(start - 1, end):
+            text = r.pages[page_num].extract_text() or ''
+            f.write(f'=== PAGE {page_num + 1} ===\n{text}\n\n')
+print('done')
 ```
 
-Leia com `Read: C:\Users\victo\pdfext\secao.txt`.
-Para múltiplos trechos, use nomes diferentes (`secao_a.txt`, `secao_b.txt`).
+Leia com `Read: C:\Users\victo\pdfext\secao_a.txt`.
+
+**Limite do Read:** ~25k tokens por chamada. Trechos com mais de ~15 páginas
+densas serão truncados — leia o restante com `offset`, ou divida a seção em
+arquivos menores no dict `sections`.
 
 ## Passo 3 — Identificar o que Atualizar
 
@@ -110,8 +129,15 @@ Verifique os KBs existentes antes de criar arquivos novos:
 ├── inverter/     — lcl_filter, simulink_model, vsc_reference
 ├── power-system/ — ieee9bus_topology, ieee9bus_thevenin, machine_inertia,
 │                   inertia_estimation, virtual_inertia
-└── standards/    — lvrt (IEEE 1547-2018)
+├── standards/    — lvrt (IEEE 1547-2018), ONS
+├── events/       — apagões e distúrbios (BR ago/2023, Ibéria abr/2025)
+├── simulation/   — workflow de export, Vcc override, runtime
+├── dashboard/    — relatório HTML (dados/, graficos/, cards/, layout/)
+└── tcc-word/     — estrutura OOXML e mapa de conteúdo do DOCX
 ```
+
+Relatórios de eventos/incidentes vão em `kb/events/`, com prefixo do evento
+no nome do arquivo (ex.: `iberia_2025_*.md`).
 
 Regras:
 - **Máx 200 linhas** por arquivo de KB
@@ -134,19 +160,13 @@ source: Sobrenome Autor, Título Abreviado, ano, §seção ou p.páginas
 
 ---
 
-## Livros com Mapa de Seções Conhecido
+## PDFs com Mapa de Seções Conhecido
 
-### Yazdani & Iravani — *Voltage-Sourced Converters* (473 p.)
-
-| Seção | Páginas | Conteúdo |
-|-------|---------|---------|
-| §8.3.4–8.3.5 | 233–238 | SRF-PLL: modelo, H(s) com zeros ±j2ω₀, Exemplo 8.1 |
-| §8.4.1 | 241–244 | PI de corrente: kp=L/τi, ki=(R+ron)/τi |
-| §8.4.2 | 246–248 | Critério de VDC: ≥ 2V̂t ou 1,74V̂t (3°H) |
-| §8.6 | 256–265 | DC-bus voltage controller |
-| §12.4.1 | 364–367 | PLL no sistema HVDC |
-| §12.5.2–12.5.4 | 379–387 | PLL + controle de corrente sob falta assimétrica |
-| Apêndice B | 448–452 | Base pu para VSC (Tabelas B.1, B.2) |
+Antes de rodar o Passo 1 num PDF já mapeado, consulte
+[section-maps.md](section-maps.md) (mesma pasta desta skill) — evita re-extrair
+o sumário. Ao mapear um PDF novo que provavelmente será reutilizado
+(livro-texto, relatório grande), **adicione o mapa lá** com as páginas das
+seções relevantes ao TCC.
 
 ---
 

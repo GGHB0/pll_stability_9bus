@@ -3,13 +3,16 @@ description: Estrutura OOXML, mapa de conteúdo e texto completo de todas as se�
 files:
   - file: docx_structure.md
     name: tcc-docx-structure
-    description: Estrutura OOXML, padrões XML tracked-change, registro de IDs (pós-save Word 19/07 — bm 103, ins 104) e armadilhas de edição XML
+    description: Estrutura OOXML, padrões XML tracked-change, registro de IDs (pós-aceite 19/07 — próx bm 76, ins 27, paraId 0x1FB00057) e armadilhas de edição XML
   - file: pendencias.md
     name: tcc-docx-pendencias
-    description: Pendências priorizadas P1/P2/P3 do documento — figuras, seções vazias, typo MOHAN, lista de siglas, limpezas
+    description: Pendências priorizadas P1/P2/P3 do documento — figuras, seções vazias, REFERÊNCIAS sem estilo, limpezas
   - file: siglas_inventory.md
     name: tcc-siglas-inventory
-    description: 33 siglas usadas no texto (varredura 2026-07-19) + exclusões + inconsistência IBR/RBI/ICR; inserção na lista pré-textual pendente de aprovação
+    description: 31 siglas inseridas na lista pré-textual (2026-07-19) + exclusões deliberadas + padronização IBR e fix MOHAN
+  - file: equacoes.md
+    name: tcc-equacoes
+    description: Formato das equações (tabela invisível, número à direita), numeração 3.1–3.17 e 4.1–4.2, refs cruzadas atualizadas (2026-07-19)
   - file: content_map.md
     name: tcc-docx-content-map
     description: Mapa seção a seção — estado atual, problemas estruturais e inventário de figuras; revisão completa jun/2026 (307 parágrafos)

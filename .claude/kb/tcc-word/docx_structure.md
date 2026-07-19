@@ -139,7 +139,7 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
 |---|---|---|
 | Bookmark IDs | máximo em uso = 75 (68 bookmarks) | **76** |
 | `w:ins` IDs | só restam ids 23–26 (título 2.6 não aceito); sem `w:del` | **27** |
-| `paraId` novos (prefixo `1FB.....`) | 0x1FB00000–0x1FB0002E nossos (0x10–0x2E = lista de siglas) + `1FB3A4B3` do Word (sempre grepar antes) | **0x1FB0002F** |
+| `paraId` novos (prefixo `1FB.....`) | 0x1FB00000–0x1FB00056 nossos (0x10–0x2E siglas; 0x30–0x56 tabelas de equação) + `1FB3A4B3` do Word (sempre grepar antes) | **0x1FB00057** |
 
 > Antes de inserir novos elementos, sempre buscar o maior ID existente no XML
 > com grep para garantir que não há colisão com IDs do documento original.
@@ -174,6 +174,11 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
   `<w:ins>`** (aprovadas explicitamente pelo Victor; mesmo trade-off da
   renumeração). Pipeline: `gen_move_anexos.py` → `gen_siglas_fixes.py` →
   `repack_final.py` (todos em C:\Temp).
+
+- **Reformatação das equações** (2026-07-19): ✅ ENTREGUE — 17 equações em
+  tabela invisível (equação centralizada + "EQUAÇÃO N.M" à direita),
+  numeradas 3.1–3.17; eqs 4.1/4.2 do LCL inseridas; refs cruzadas
+  atualizadas. Detalhes e padrão XML: `equacoes.md`.
 
 - **Seção 3.3** — "PROTOCOLOS DE CONTINGÊNCIA E ANÁLISE DE CENÁRIOS" (tracked changes)
   - 3.3.1 Afundamento Simétrico (2 parágrafos + [TABELA 3.1])

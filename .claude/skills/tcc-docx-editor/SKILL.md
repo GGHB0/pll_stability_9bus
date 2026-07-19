@@ -5,17 +5,31 @@ Edita o TCC DOCX (arquivo atual definido em `config.py` — hoje
 Modo aceito pelo Victor: **edições diretas no XML, sem tracked changes**
 (`helpers.py` mantém os geradores com `w:ins` caso volte a ser necessário).
 
-## Divisão de trabalho por modelo
+## Divisão de trabalho por modelo (3 níveis)
 
-| Quem | Faz |
-|---|---|
-| **Modelo principal (Sonnet/Opus)** | Interpretar o pedido; ler os dumps e mapear blocos; redigir o conteúdo; escrever os scripts `gen_*.py` (XML, IDs e counts — a parte que dá errado); revisar a saída de verificação; decidir a entrega; atualizar KB |
-| **Agente `docx-runner` (Haiku)** | Staging (copiar/desempacotar), rodar dumps de inspeção, executar os `gen_*.py`, repack e entrega ao OneDrive — tudo mecânico, com regras de aborto |
+| Nível | Quem | Faz |
+|---|---|---|
+| **Síntese** | Opus — *só quando necessário* | Redigir conteúdo acadêmico novo (seções/parágrafos do zero), decisões estruturais com trade-offs (ex.: reestruturar capítulo) |
+| **Planejamento + scripting** | Sonnet — o default | Mapear blocos a partir dos dumps, redigir edições rotineiras (renumeração, refs cruzadas, typos, formatação), escrever os `gen_*.py`, revisar checks, atualizar KB |
+| **Execução** | Haiku (agente `docx-runner`) | Staging, dumps, rodar scripts, repack, entrega ao OneDrive |
 
-Delegar via Agent tool (`subagent_type: "docx-runner"`), com prompt
-autocontido: paths exatos, scripts a rodar com argumentos, e o que é
-"saída esperada" (para o agente saber quando abortar). Para edições
-triviais (1 comando), rodar direto sem agente — o overhead não compensa.
+### Regras de escalonamento
+
+- **Sessão rodando em Sonnet**: fazer planejamento, conteúdo e scripting
+  direto; delegar só o mecânico ao `docx-runner`. **Nunca** escalar para
+  Opus por conta própria — se a tarefa parecer exigir síntese pesada,
+  dizer isso ao usuário e deixar a troca de modelo com ele.
+- **Sessão rodando em Opus**: usar Opus apenas para interpretar o pedido,
+  redigir conteúdo novo e revisar/aprovar. O scripting desce para o agente
+  `docx-scripter` (Sonnet) com uma **spec precisa** (blocos-alvo, strings
+  old→new com counts esperados, conteúdo já redigido, IDs); o mecânico
+  desce para o `docx-runner` (Haiku).
+- **Edição trivial** (1–2 replaces óbvios): qualquer modelo faz direto,
+  sem agente — o overhead de delegar não compensa.
+
+Delegar via Agent tool (`subagent_type: "docx-scripter"` / `"docx-runner"`),
+com prompt autocontido: paths exatos, o que rodar, e qual é a "saída
+esperada" (para o agente saber quando abortar/perguntar).
 
 ## Dependências
 
@@ -37,8 +51,10 @@ triviais (1 comando), rodar direto sem agente — o overhead não compensa.
 2. INSPEÇÃO (docx-runner): dump_headings / dump_blocks / find_text / check_ids
 3. PLANO (principal): mapear blocos, redigir conteúdo, apresentar ao usuário
    e AGUARDAR APROVAÇÃO antes de editar
-4. SCRIPT (principal): escrever C:\Temp\gen_<tema>.py — ler doc_tcc_edit.xml,
-   aplicar edits com counts verificados, sanity checks, gravar doc_tcc_<tema>.xml
+4. SCRIPT: escrever C:\Temp\gen_<tema>.py — ler doc_tcc_edit.xml, aplicar
+   edits com counts verificados, sanity checks, gravar doc_tcc_<tema>.xml.
+   Sessão em Sonnet → o próprio principal; sessão em Opus → docx-scripter
+   via spec (o scripter também roda o script e a verificação, cobrindo o 5)
 5. EXECUÇÃO (docx-runner): rodar o gen + dumps de verificação sobre a saída
 6. REVISÃO (principal): conferir a saída dos checks
 7. ENTREGA (docx-runner): pré-check timestamp OneDrive → repack.py →

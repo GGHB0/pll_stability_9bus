@@ -6,8 +6,10 @@
 config.py da skill tcc-docx-editor, atualizado 2026-07-19).
 Workflow: copiar para `C:\Temp\` → editar XML → reempacotar → devolver ao OneDrive.
 Utilitários fixos de inspeção/repack (dump_headings, dump_blocks, find_text,
-check_ids, repack): `.claude/skills/tcc-docx-editor/scripts/`. Execução
-mecânica delegável ao agente **docx-runner** (Haiku) — ver SKILL.md da skill.
+check_ids, repack): `.claude/skills/tcc-docx-editor/scripts/`. Divisão por
+modelo em 3 níveis — Opus só para síntese; scripting no Sonnet (agente
+**docx-scripter** quando a sessão roda em Opus); execução mecânica no
+**docx-runner** (Haiku). Ver SKILL.md da skill.
 
 > `TCC_Victor_Bruno_V9_novo_indice.docx` (2026-07-19) — esqueleto de títulos do novo
 > índice do professor (`Indice.pdf`), gerado a partir do V9. Renumera Cap.2→3→4→5,

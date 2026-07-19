@@ -2,8 +2,42 @@
 
 ## Arquivo alvo
 
-`TCCs Victor e Bruno_V8_revisado.docx` — na pasta OneDrive do TCC (path em config.py).
+`TCC_Victor_Bruno_V9.docx` — na pasta OneDrive do TCC (path em config.py, atualizado 2026-07-19).
 Workflow: copiar para `C:\Temp\` → editar XML → reempacotar → devolver ao OneDrive.
+
+> `TCC_Victor_Bruno_V9_novo_indice.docx` (2026-07-19) — esqueleto de títulos do novo
+> índice do professor (`Indice.pdf`), gerado a partir do V9. Renumera Cap.2→3→4→5,
+> insere Cap.2 novo (blecautes Ibéria/Chile/Brasil) e separa Trabalhos Futuros como
+> Cap.7. Só títulos, sem parágrafo de corpo novo. Ver `project_new_toc_restructure.md`
+> (memória) para o mapeamento completo antigo→novo. Numeração pura (renomeação de
+> `<w:t>`) não foi marcada como tracked change — só os títulos 100% novos usam
+> `<w:ins>`. Pendente: revisar em Word e decidir se vira o V9 oficial.
+
+> **Passe de formatação (2026-07-19, mesmo arquivo)** — títulos de capítulo
+> unificados para "Capítulo N – Título" (Cap.1 era "INTRODUÇÃO" sz=24, Cap.4
+> era "4 CAPÍTULO – ..." sz=48; ambos agora sz=48 e mesmo padrão); subtítulos
+> 4.1/4.2/4.3 de CAIXA ALTA para título normal; 2.5.1–2.5.3 e o bloco
+> 3.1.1–3.1.4 (Clarke/Park/Controle Independente/Arquitetura, que estava sem
+> numeração e com Ttulo3/Ttulo4 misturados, um deles com `w:numPr` de lista
+> automática) corrigidos para Ttulo3 uniforme, sz=28, numeração manual e sem
+> a cor legada `1B1C1D`. Mesmo tratamento aplicado a "Modulação por Largura
+> de Pulso" → "3.3.1." (era o único filho sem número de 3.3). Edições diretas
+> de texto/atributo, sem `<w:ins>` (mesmo trade-off da renumeração).
+
+## Sumário (campo TOC)
+
+O documento tem **um único índice**: o Sumário, um campo `TOC \o "1-3" \h \z \u`
+(3 níveis — subseções de 4º nível como 4.2.2.1 ficam de fora, por decisão do
+usuário em 2026-07-19). Não há Lista de Figuras nem Lista de Tabelas.
+
+O texto das entradas e os números de página ficam **em cache no XML** — por isso
+edições em títulos aparecem 2× num `replace` (o título real + a cópia no cache).
+O cache não se atualiza sozinho e não dá para recalcular números de página sem
+renderizar o documento.
+
+**Solução:** marcar o campo como sujo — `<w:fldChar w:fldCharType="begin" w:dirty="true"/>`
+— que faz o Word reconstruir o Sumário inteiro (entradas + páginas) ao abrir o
+arquivo. Aplicado em 2026-07-19. Alternativa manual no Word: `Ctrl+A` → `F9`.
 
 ## Padrões XML (OOXML / Open XML)
 
@@ -96,12 +130,15 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
 
 ## Registro de IDs usados até agora
 
+> Registro válido para `TCC_Victor_Bruno_V9.docx` (jul/2026). Números de versões
+> anteriores (V8_oscar_fixes) não se aplicam mais — o V9 chegou com tracked
+> changes já aceitas (zero `w:ins`/`w:del` residual antes da reestruturação).
+
 | Recurso | IDs usados | Próximo disponível |
 |---|---|---|
-| Bookmark IDs | 0–53 (originais) + 54, 55, 56 (Seção 3.3) | **57** |
-| `w:ins` IDs | 1–20 (Seção 3.3) + 21–32 (correções Oscar) | **33** |
-| `w:del` IDs | 21–32 (compartilhados com ins — ver acima) | **33** |
-| `pid` internos (paraId body) | 1–7 | **8** |
+| Bookmark IDs | 0–28 (V9 original) + 29–44 (reestruturação novo índice) | **45** |
+| `w:ins` IDs | 1–32 (reestruturação novo índice) | **33** |
+| `paraId` novos (prefixo `1FB0000X`) | 0x1FB00000–0x1FB0000F | **0x1FB00010** |
 
 > Antes de inserir novos elementos, sempre buscar o maior ID existente no XML
 > com grep para garantir que não há colisão com IDs do documento original.

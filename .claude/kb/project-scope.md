@@ -20,15 +20,22 @@ ONS concluiu que inversores eólicos/fotovoltaicos tiveram desempenho "aquém do
 
 ## Estrutura dos Capítulos
 
+> Reestruturada em 2026-07-19 conforme `Indice.pdf` do professor — ver
+> `project_new_toc_restructure.md` (memória). Esqueleto de títulos aplicado em
+> `TCC_Victor_Bruno_V9_novo_indice.docx` (pendente revisão/merge no V9 oficial).
+
 | Cap. | Título | Status |
 |------|--------|--------|
 | 1 | Introdução + Motivação + Objetivos | **Redigido** |
-| 2 | Fundamentação Teórica | **Redigido** |
-| 3 | Metodologia de Projeto e Simulação | **Redigido** |
-| 4 | Análise e Discussão de Resultados | **Vazio** (só placeholders) |
-| — | Conclusão | Placeholder |
+| 2 | Desafios à Estabilidade em Redes Dominadas por Inversores | **Novo, quase vazio** (2.5 reaproveita texto já escrito de LVRT/ONS/natureza das contingências; 2.1–2.4/2.6 vazios) |
+| 3 | Geração Conectada à Rede por Inversores: Fundamentação Teórica | **Redigido** (era Cap.2) |
+| 4 | Metodologia de Análise | **Redigido** (era Cap.3) |
+| 5 | Análise e Discussão de Resultados | **Vazio** (só placeholders; era Cap.4) |
+| ANEXOS | — | vazio |
+| 6 | Conclusões | Placeholder |
+| 7 | Trabalhos Futuros | **Novo**, vazio |
 
-**O capítulo 4 é a prioridade pendente do trabalho.**
+**O capítulo 5 (antigo Cap.4) é a prioridade pendente do trabalho.**
 
 > Estado granular Cap. 4 (2026-06): apenas títulos existem. 4.1.1 contém só ".".
 > Subseções a redigir: 4.1.1, 4.1.2, 4.2.1, 4.3.1, 4.3.2.

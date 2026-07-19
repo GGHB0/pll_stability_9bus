@@ -1,11 +1,12 @@
 # TCC Word — Inventário de Siglas e Abreviaturas
 
 > Levantamento por varredura do XML (Cap.1 em diante) em 2026-07-19, sobre
-> `TCC_Victor_Bruno_V9_novo_indice.docx`. A LISTA DE ABREVIATURAS E SIGLAS
-> pré-textual do documento contém apenas sobras do template (CTC/B, UERJ) —
-> precisa ser substituída por esta lista. **Inserção pendente de aprovação.**
+> `TCC_Victor_Bruno_V9_novo_indice.docx`. ✅ **INSERIDO em 2026-07-19**: as 31
+> siglas abaixo substituíram as sobras do template (CTC/B, UERJ) na lista
+> pré-textual, como edição direta (sem tracked change), formato
+> `SIGLA<tab><tab>Significado` clonando o parágrafo do template.
 
-## Siglas usadas no texto (33)
+## Siglas usadas no texto (31, após padronização IBR)
 
 | Sigla | Significado |
 |---|---|
@@ -18,8 +19,7 @@
 | GD | Geração Distribuída |
 | GFL | Grid-Following (seguidor de rede) |
 | IAE | Integral of Absolute Error |
-| IBR | Inverter-Based Resources (Recursos Energéticos Baseados em Inversores) |
-| ICR | Inversor Conectado à Rede |
+| IBR | Inverter-Based Resources (Recursos Baseados em Inversores) |
 | IEEE | Institute of Electrical and Electronics Engineers |
 | ISE | Integral of Squared Error |
 | ITAE | Integral of Time-weighted Absolute Error |
@@ -36,7 +36,6 @@
 | PSS | Power System Stabilizer (Estabilizador de Potência) |
 | PWM | Pulse Width Modulation (Modulação por Largura de Pulso) |
 | RAP | Relatório de Análise de Perturbação |
-| RBI | Recurso Baseado em Inversor |
 | SIN | Sistema Interligado Nacional |
 | SPWM | Sinusoidal Pulse Width Modulation |
 | SRF-PLL | Synchronous Reference Frame Phase-Locked Loop |
@@ -52,13 +51,14 @@
 - **SRF-EPLL** — só aparece no título de uma referência (Escobar 2021)
 - Nomes de autores em citações (KUNDUR, LISERRE, RODRIGUEZ etc.)
 
-## Achados de revisão
+## Achados de revisão (resolvidos em 2026-07-19)
 
-1. **Inconsistência IBR / RBI / ICR** — três siglas para conceitos praticamente
-   iguais: IBR no Resumo/Abstract e Cap.2, RBI no Cap.4 (metodologia), ICR na
-   Introdução e Cap.3. Padronizar ou listar as três com remissão — decisão do Victor.
-2. **Typo de referência**: "MOW, N." → autor correto é **MOHAN, N.**
-   (Power Electronics: Converters, Applications, and Design). Ver `pendencias.md` P2.
+1. ✅ **IBR / RBI / ICR padronizados em IBR** (decisão do Victor): 2 ocorrências
+   de RBI (Cap.4) e 2 de ICR (Introdução) reescritas como "Recurso(s) Baseado(s)
+   em Inversor(es) (IBR/IBRs)". O título "3.2. Geração Distribuída e Inversores
+   Conectados à Rede" ficou como está (prosa, sem sigla).
+2. ✅ **Typo de referência corrigido**: "MOW, N." → **MOHAN, N.** nos 2 lugares
+   (citação "(MOW, 2003)" na Introdução + entrada nas REFERÊNCIAS).
 3. Ferramenta: o script de varredura vive em `C:\Temp\scan_siglas.py`
    (regex `\b[A-Z][A-Z0-9]{1,}(?:[-/][A-Z0-9]+)*\b` sobre o texto dos `<w:t>`,
    a partir do Ttulo1 "Capítulo 1" para pular pré-textual e cache do Sumário).

@@ -130,16 +130,16 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
 
 ## Registro de IDs usados até agora
 
-> Registro válido para `TCC_Victor_Bruno_V9_novo_indice.docx` **após salvamento
-> no Word em 19/07/2026 11:36**. O Word recalculou o Sumário (flag `w:dirty`
-> consumida, bookmarks `_Toc` regenerados) e **renumerou os IDs de revisão** —
-> os valores da reestruturação (ins 1–32, bookmarks até 44) não valem mais.
+> Registro válido para `TCC_Victor_Bruno_V9_novo_indice.docx` **após o usuário
+> aceitar as tracked changes e salvar no Word em 19/07/2026 12:04** (+ edições
+> Claude das siglas). O aceite eliminou quase todos os `w:ins` e o Word renumerou
+> tudo de novo — registros anteriores não valem.
 
-| Recurso | Estado observado (19/07 pós-Word) | Próximo disponível |
+| Recurso | Estado observado (19/07 12:04 + siglas) | Próximo disponível |
 |---|---|---|
-| Bookmark IDs | máximo em uso = 103 (68 bookmarks) | **104** |
-| `w:ins` IDs | máximo em uso = 104 (sem `w:del`) | **105** |
-| `paraId` novos (prefixo `1FB.....`) | 0x1FB00000–0x1FB0000F nossos + `1FB3A4B3` gerado pelo Word (colisão de prefixo possível — sempre grepar antes) | **0x1FB00010** |
+| Bookmark IDs | máximo em uso = 75 (68 bookmarks) | **76** |
+| `w:ins` IDs | só restam ids 23–26 (título 2.6 não aceito); sem `w:del` | **27** |
+| `paraId` novos (prefixo `1FB.....`) | 0x1FB00000–0x1FB0002E nossos (0x10–0x2E = lista de siglas) + `1FB3A4B3` do Word (sempre grepar antes) | **0x1FB0002F** |
 
 > Antes de inserir novos elementos, sempre buscar o maior ID existente no XML
 > com grep para garantir que não há colisão com IDs do documento original.
@@ -164,11 +164,16 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
 
 ## Estado atual — Implementado por Claude
 
-- **Move do ANEXOS** (2026-07-19): título ANEXOS (Ttulo1) movido do meio do
-  documento para o fim absoluto, após REFERÊNCIAS (ordem ABNT: Conclusões →
-  Trabalhos Futuros → REFERÊNCIAS → ANEXOS). TOC marcado dirty. Arquivo pronto em
-  `C:\Temp\tcc_v9_anexos_move.docx`; **pendente cópia ao OneDrive** (documento
-  estava aberto no Word do usuário).
+- **Move do ANEXOS** (2026-07-19): ✅ ENTREGUE — título ANEXOS (Ttulo1) movido
+  para o fim absoluto, após REFERÊNCIAS (ordem ABNT). A primeira versão ficou
+  obsoleta (usuário salvou no Word às 12:04 aceitando as tracked changes);
+  refeito sobre a versão nova e copiado ao OneDrive às 12:20.
+- **Siglas + padronização IBR + fix MOHAN** (2026-07-19): ✅ ENTREGUE no mesmo
+  DOCX — lista pré-textual com 31 siglas (ver `siglas_inventory.md`), RBI/ICR →
+  IBR (4 ocorrências), MOW → MOHAN (2 ocorrências). **Edições diretas, sem
+  `<w:ins>`** (aprovadas explicitamente pelo Victor; mesmo trade-off da
+  renumeração). Pipeline: `gen_move_anexos.py` → `gen_siglas_fixes.py` →
+  `repack_final.py` (todos em C:\Temp).
 
 - **Seção 3.3** — "PROTOCOLOS DE CONTINGÊNCIA E ANÁLISE DE CENÁRIOS" (tracked changes)
   - 3.3.1 Afundamento Simétrico (2 parágrafos + [TABELA 3.1])

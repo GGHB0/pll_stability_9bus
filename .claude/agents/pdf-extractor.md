@@ -31,6 +31,13 @@ foi extraído. Você **não** interpreta o conteúdo tecnicamente nem escreve KB
    por arquivo: intervalo de páginas, títulos de subseções encontrados e
    3–6 bullets factuais (números, definições, nomes de figuras/tabelas
    relevantes). Não parafrasear análise técnica — apontar onde ela está.
+5. **Varredura exploratória** (quando pedido "skim"/"varredura"): extrair a
+   1ª página de cada seção nível 1–2 do outline, em blocos de 10 seções por
+   arquivo (`skim_01.txt`, `skim_02.txt`, …), com marcador
+   `=== SECAO: <título> (p.N) ===`. Sem outline: 1 página a cada 8–10.
+   Depois montar `_index.txt` como na tarefa 4 (2–4 bullets por seção).
+   Script pronto em
+   `.claude/skills/pdf-kb-updater/scripts.md` ("Varredura exploratória").
 
 ## Formato da resposta final
 

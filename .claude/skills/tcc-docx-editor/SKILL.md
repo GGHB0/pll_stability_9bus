@@ -1,72 +1,77 @@
 # Skill: tcc-docx-editor
 
 Edita o TCC DOCX (arquivo atual definido em `config.py` — hoje
-`TCC_Victor_Bruno_V9_novo_indice.docx`) com tracked changes rastreáveis
-no Word. Usa bash para copiar de/para o OneDrive (que tem lock), e `python.exe` para
-manipular o XML (python não enxerga o VFS do Claude Desktop, só o Windows path real).
+`TCC_Victor_Bruno_V9_novo_indice.docx`) manipulando o OOXML diretamente.
+Modo aceito pelo Victor: **edições diretas no XML, sem tracked changes**
+(`helpers.py` mantém os geradores com `w:ins` caso volte a ser necessário).
+
+## Divisão de trabalho por modelo
+
+| Quem | Faz |
+|---|---|
+| **Modelo principal (Sonnet/Opus)** | Interpretar o pedido; ler os dumps e mapear blocos; redigir o conteúdo; escrever os scripts `gen_*.py` (XML, IDs e counts — a parte que dá errado); revisar a saída de verificação; decidir a entrega; atualizar KB |
+| **Agente `docx-runner` (Haiku)** | Staging (copiar/desempacotar), rodar dumps de inspeção, executar os `gen_*.py`, repack e entrega ao OneDrive — tudo mecânico, com regras de aborto |
+
+Delegar via Agent tool (`subagent_type: "docx-runner"`), com prompt
+autocontido: paths exatos, scripts a rodar com argumentos, e o que é
+"saída esperada" (para o agente saber quando abortar). Para edições
+triviais (1 comando), rodar direto sem agente — o overhead não compensa.
 
 ## Dependências
 
-- `C:\projetos\pll_stability_9bus\.claude\skills\tcc-docx-editor\config.py` — paths pessoais (gitignored)
-- `C:\projetos\pll_stability_9bus\.claude\skills\tcc-docx-editor\helpers.py` — funções XML
-- A skill `slx-explorer` (ou equivalente) que provê `scripts/office/pack.py` e `scripts/office/unpack.py`
+- `config.py` (nesta pasta) — paths pessoais (gitignored)
+- `helpers.py` (nesta pasta) — geradores de parágrafo OOXML com `w:ins`
+- `scripts/` (nesta pasta) — utilitários fixos, todos `python.exe <script> <args>`:
+  - `dump_headings.py <xml>` — mapa de títulos com índice de bloco
+  - `dump_blocks.py <xml> <ini> <fim> [--raw]` — texto/XML de intervalo de blocos
+  - `find_text.py <xml> <padrão> [--regex]` — ocorrências com bloco + contexto
+  - `check_ids.py <xml>` — máximos de bookmark/ins/paraId + flag dirty do TOC
+  - `repack.py <template.docx> <xml> <saida.docx>` — injeta document.xml no ZIP
 
 ## Workflow padrão
 
 ```
-1. Copiar DOCX para C:\Temp\          (bash — evita lock do OneDrive)
-2. Desempacotar o ZIP/OOXML           (bash via python scripts/office/unpack.py)
-3. Copiar document.xml para C:\Temp\  (bash — python.exe não acessa VFS)
-4. Editar XML via Python              (python.exe C:\Temp\gen_*.py)
-5. Copiar XML modificado de volta     (bash)
-6. Reempacotar                        (bash via scripts/office/pack.py --validate false)
-7. Copiar DOCX final ao OneDrive      (bash cp)
+1. STAGING (docx-runner): OneDrive → C:\Temp\tcc_edit.docx →
+   extrair word/document.xml → C:\Temp\doc_tcc_edit.xml
+   (guardar timestamp/bytes do DOCX no OneDrive p/ pré-check da entrega)
+2. INSPEÇÃO (docx-runner): dump_headings / dump_blocks / find_text / check_ids
+3. PLANO (principal): mapear blocos, redigir conteúdo, apresentar ao usuário
+   e AGUARDAR APROVAÇÃO antes de editar
+4. SCRIPT (principal): escrever C:\Temp\gen_<tema>.py — ler doc_tcc_edit.xml,
+   aplicar edits com counts verificados, sanity checks, gravar doc_tcc_<tema>.xml
+5. EXECUÇÃO (docx-runner): rodar o gen + dumps de verificação sobre a saída
+6. REVISÃO (principal): conferir a saída dos checks
+7. ENTREGA (docx-runner): pré-check timestamp OneDrive → repack.py →
+   cp ao OneDrive → ls -la de confirmação
+8. KB (principal): atualizar docx_structure.md / historico_entregas.md /
+   content_map.md / pendencias.md conforme o caso
 ```
 
 ## Notas críticas
 
-- **VFS isolation**: o `python.exe` do Windows NÃO consegue acessar o path
-  `/c/Users/victo/AppData/Roaming/Claude/...` onde o bash desempacota o DOCX.
-  Sempre copiar o XML para `C:\Temp\` antes de processar com python, e copiar de volta.
-- **--validate false**: o `pack.py` usa `print()` com caracteres `→` que falham em
-  cp1252. Sempre passar `--validate false` para evitar o crash do validador.
-- **OneDrive lock**: não editar diretamente no path do OneDrive. Copiar para C:\Temp primeiro.
-  A cópia de VOLTA também falha se o documento estiver aberto no Word do usuário
-  ("Device or resource busy") — pedir para fechar antes do passo 7.
-- **paraId**: máximo `0x7FFFFFFF`. Nunca usar prefixos A/B/C/D (overflow).
-- **Word renumera IDs ao salvar**: se o usuário abriu e salvou o DOCX no Word,
-  o registro de IDs do KB fica obsoleto — sempre grepar o XML atual antes de inserir.
-- **PowerShell 5.1 + `python -c` inline quebra** com regex contendo `[...]`
-  (parser do PS interpreta como tipo). Escrever scripts em `C:\Temp\*.py` e rodar o arquivo.
+- **VFS isolation**: o `python.exe` do Windows NÃO acessa
+  `/c/Users/victo/AppData/Roaming/Claude/...` (VFS do Claude Desktop).
+  Trabalhar sempre com arquivos em `C:\Temp\` ou no repositório.
+- **OneDrive lock**: nunca editar no path do OneDrive; copiar para C:\Temp.
+  A cópia de VOLTA falha se o documento estiver aberto no Word
+  ("Device or resource busy") — pedir para fechar antes da entrega.
+- **Word renumera IDs ao salvar**: se o usuário salvou o DOCX no Word, o
+  registro de IDs do KB fica obsoleto — rodar `check_ids.py` no XML recém-
+  extraído antes de inserir qualquer elemento novo.
+- **paraId**: máximo `0x7FFFFFFF`; prefixos A–F estouram. Usar `1FB0xxxx`
+  (sequência registrada no KB) e conferir colisão com grep antes.
+- **PowerShell + `python -c` inline quebra** com regex `[...]` — sempre
+  escrever script em arquivo e rodar o arquivo.
+- **Sumário (TOC)**: texto das entradas fica em cache no XML — um replace de
+  título deve esperar 2 ocorrências (título real + cache), e o campo deve
+  estar com `w:dirty="true"` para o Word reconstruir ao abrir.
+- **gen_*.py**: todo replace com count esperado explícito (falhar se
+  divergir); `ET.fromstring` no resultado antes de gravar; wrapper UTF-8 no
+  stdout (`io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8',
+  errors='replace')`) ou o print quebra em cp1252.
 
 ## Referência de IDs e armadilhas XML
 
-Ver `.claude/kb/tcc-word/docx_structure.md` — tabela de IDs usados/próximos
-disponíveis e seção "Armadilhas de edição XML" (sectPr final via `rindex`,
-falso positivo `<w:p` vs `<w:pgSz`, cor azul de tracked change etc.).
-
-## Comandos de exemplo
-
-```bash
-# 1. Copiar DOCX para temp
-cp "/c/Users/victo/OneDrive/.../TCCs Victor e Bruno_V8_revisado.docx" /c/Temp/tcc_edit.docx
-
-# 2. Desempacotar (dentro de uma sessão de skill com os scripts disponíveis)
-python scripts/office/unpack.py /c/Temp/tcc_edit.docx /c/Temp/unpacked_tcc/
-
-# 3. Copiar XML para edição
-cp /c/Temp/unpacked_tcc/word/document.xml /c/Temp/doc_tcc_edit.xml
-
-# 4. Rodar script de edição
-python.exe C:\Temp\gen_minha_secao.py
-
-# 5. Copiar XML modificado de volta
-cp /c/Temp/doc_tcc_modified.xml /c/Temp/unpacked_tcc/word/document.xml
-
-# 6. Reempacotar
-python scripts/office/pack.py /c/Temp/unpacked_tcc/ /c/Temp/tcc_revisado.docx \
-  --original /c/Temp/tcc_edit.docx --validate false
-
-# 7. Devolver ao OneDrive
-cp /c/Temp/tcc_revisado.docx "/c/Users/victo/OneDrive/.../TCCs Victor e Bruno_V8_revisado.docx"
-```
+Ver `.claude/kb/tcc-word/docx_structure.md` — registro de IDs usados/próximos
+e "Armadilhas de edição XML" (sectPr final via `rindex`, falso positivo
+`<w:p` vs `<w:pgSz`, etc.). Histórico de entregas: `historico_entregas.md`.

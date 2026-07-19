@@ -34,7 +34,10 @@ foi extraído. Você **não** interpreta o conteúdo tecnicamente nem escreve KB
 5. **Varredura exploratória** (quando pedido "skim"/"varredura"): extrair a
    1ª página de cada seção nível 1–2 do outline, em blocos de 10 seções por
    arquivo (`skim_01.txt`, `skim_02.txt`, …), com marcador
-   `=== SECAO: <título> (p.N) ===`. Sem outline: 1 página a cada 8–10.
+   `=== SECAO: <título> (p.N) ===`. Sem outline **ou outline sem os níveis
+   internos da seção pedida** (ex.: só "4.1" aparece, sem "4.1.2"–"4.1.5"):
+   usar fallback de amostragem por página fixa (1 a cada 2 páginas dentro do
+   intervalo) e identificar os cabeçalhos de subseção lendo o texto extraído.
    Depois montar `_index.txt` como na tarefa 4 (2–4 bullets por seção).
    Script pronto em
    `.claude/skills/pdf-kb-updater/scripts.md` ("Varredura exploratória").

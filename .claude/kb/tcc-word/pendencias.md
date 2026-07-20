@@ -34,6 +34,12 @@
 9. **~~Typo em referência MOW→MOHAN~~** — ✅ FEITO (2026-07-19), corrigido nos 2 lugares.
 10. **Versão do MATLAB no 4.3.3** — escrito "R2025a" (inferido do ConfigSet
     25.0 do .slx); confirmar com Bruno a versão real usada nas simulações.
+15. **Referências novas de 2.1-2.4.3 faltando na lista final** — texto
+    redigido 2026-07-19 cita IEA (2026), KUNDUR et al. (2004), GU; GREEN
+    (2023), STRAUSS-MINCU et al. (2026), ENTSO-E (2026), COORDINADOR
+    ELÉCTRICO NACIONAL (2025) e ONS (2023); nenhuma está na seção de
+    Referências ainda. Ver `content_map.md` (Cap.2) para o detalhe de cada
+    citação e o KB-fonte correspondente.
 
 ## P3 — Limpeza
 

@@ -22,14 +22,30 @@ metadata:
 
 ## Cap. 2 — Desafios à Estabilidade em Redes Dominadas por Inversores (NOVO)
 
-- ⬜ **2.1** Redes elétricas em transição — vazio
-- ⬜ **2.2** Classificação Clássica da Estabilidade — vazio
-- ⬜ **2.3** Classificação Estendida da Estabilidade — vazio
-- ⬜ **2.4** Principais blecautes (2.4.1 Ibéria 2025 · 2.4.2 Chile 2025 ·
-  2.4.3 Brasil 2023) — vazios; KB `events/` cobre os três
+- ✅ **2.1** Redes elétricas em transição — redigido 2026-07-19 (IEA GER2026:
+  demanda elétrica +3%, solar PV +600 TWh, IBR 5%→17% da matriz em 1 década)
+- ✅ **2.2** Classificação Clássica da Estabilidade — redigido 2026-07-19
+  (Gu & Green/JPROC: definição IEEE/CIGRE 2004, 3 dimensões, GFL vs. GFM)
+- ✅ **2.3** Classificação Estendida da Estabilidade — redigido 2026-07-19
+  (Strauss-Mincu et al./Roadmap alemão: IEEE TR77, converter-driven stability
+  ~10 Hz, mitigação = sintonia Kp/Ki do PLL)
+- ✅ **2.4** Principais blecautes — redigido 2026-07-19: intro + 2.4.1 Ibéria
+  2025 (ENTSO-E) · 2.4.2 Chile 2025 (Coordinador Eléctrico Nacional) ·
+  2.4.3 Brasil 2023 (ONS RAP-ONS 00012/2023 — inércia/SCC descartados como
+  causa, suporte de reativo dos IBR é o fator determinante)
 - ✅ **2.5** Contingências e Requisitos Normativos (migrado do antigo Cap.2):
   2.5.1 LVRT/FRT · 2.5.2 ONS Submódulo 2.10 · 2.5.3 natureza das contingências
 - ⬜ **2.6** Resumo do capítulo — vazio (título com tracked change não aceito)
+
+> 2.1-2.4.3 redigidos em sessão Opus (2026-07-19), fontes preparadas em sessão
+> Sonnet anterior — ver `kb/power-system/energy_transition_iea2026.md`,
+> `stability_classification_classic.md`, `stability_classification_extended.md`,
+> `kb/events/brasil_2023_overview.md` + `brasil_2023_root_causes.md`. Novas
+> referências que passam a ser citadas no texto e ainda **não estão** na lista
+> de Referências do documento: IEA (2026), KUNDUR et al. (2004) [distinta de
+> KUNDUR (1994) já citada em 2.5.3], GU; GREEN (2023), STRAUSS-MINCU et al.
+> (2026), ENTSO-E (2026), COORDINADOR ELÉCTRICO NACIONAL (2025), ONS (2023)
+> [distinta de ONS (2022), já citada]. Ver `pendencias.md` item 15.
 
 ## Cap. 3 — Fundamentação Teórica
 

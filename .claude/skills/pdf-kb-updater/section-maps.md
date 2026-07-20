@@ -7,6 +7,10 @@ Páginas relevantes ao TCC em PDFs já explorados. Página = física do PDF
 
 | Seção | Páginas | Conteúdo |
 |-------|---------|---------|
+| §2 DC/AC Half-Bridge | 23–46 | Conversor half-bridge, PWM (2.3.1), modelo comutado e médio |
+| §4.2–4.6 Space Phasors & Frames | 69–113 | Space phasor, Clarke αβ (§4.5, p. 91–99), Park dq (§4.6, p. 101–113), potência e controle |
+| §5 Two-Level VSC | 115–125 | Topologia VSC 2-níveis, estrutura, operação, modelos em αβ e dq |
+| §8.1–8.6 dq-Frame Control | 204–242 | Controle em referencial dq: PLL (§8.3.4, p. 211–215), PI de corrente (§8.4.1, p. 217–225), DC-bus |
 | §8.3.4–8.3.5 | 233–238 | SRF-PLL: modelo, H(s) com zeros ±j2ω₀, Exemplo 8.1 |
 | §8.4.1 | 241–244 | PI de corrente: kp=L/τi, ki=(R+ron)/τi |
 | §8.4.2 | 246–248 | Critério de VDC: ≥ 2V̂t ou 1,74V̂t (3°H) |
@@ -14,6 +18,12 @@ Páginas relevantes ao TCC em PDFs já explorados. Página = física do PDF
 | §12.4.1 | 364–367 | PLL no sistema HVDC |
 | §12.5.2–12.5.4 | 379–387 | PLL + controle de corrente sob falta assimétrica |
 | Apêndice B | 448–452 | Base pu para VSC (Tabelas B.1, B.2) |
+
+**Arquivos .txt gerados em ~/pdfext/ durante mapeamento (2026-07-19):**
+- `yazdani_half_bridge_pwm.txt` — Cap. 2, p. 23–46
+- `yazdani_clarke_park.txt` — Cap. 4, p. 69–113
+- `yazdani_two_level_vsc.txt` — Cap. 5, p. 115–125
+- `yazdani_dq_frame_control.txt` — Cap. 8, p. 204–242
 
 ## ENTSO-E — *Grid Incident in Spain and Portugal on 28 April 2025* — Final Report (472 p.)
 

@@ -19,3 +19,12 @@ files:
   - file: virtual_inertia.md
     name: virtual-inertia
     description: Inércia virtual/sintética em IBRs — VSG/VSM, parâmetros J_virt e D, grid-forming vs grid-following e posição como trabalho futuro do TCC
+  - file: stability_classification_classic.md
+    name: stability-classification-classic
+    description: Classificação clássica de estabilidade (IEEE/CIGRE 2004) e limites diante de IBR/GFL — Gu & Green, JPROC 2023
+  - file: stability_classification_extended.md
+    name: stability-classification-extended
+    description: Classificação estendida de estabilidade (IEEE TR77 / German Roadmap) — converter-driven/resonance stability, interação PLL-rede fraca ~10 Hz
+  - file: energy_transition_iea2026.md
+    name: energy-transition-iea2026
+    description: Panorama da transição energética global 2025 — crescimento de renováveis variáveis e participação na matriz (IEA Global Energy Review 2026)

@@ -10,3 +10,9 @@ files:
   - file: vsc_reference.md
     name: vsc-reference
     description: Modelo e controle do VSC grid-imposed em dq-frame — referência Yazdani-Iravani Cap. 8 e Apêndice B
+  - file: vsc_topology_and_transforms.md
+    name: vsc-topology-and-transforms
+    description: Topologia VSC (half-bridge→dois níveis) e formalismo de fasor espacial para Clarke/Park — Yazdani-Iravani Cap. 1-4, base cap.3.1-3.3 do TCC
+  - file: agp_current_control_theory.md
+    name: agp-current-control-theory
+    description: Fundamentação teórica de controle de corrente (planta RL/LCL, cancelamento polo-zero, amortecimento ativo) — TeseAGP Cap.3, segunda fonte do cap.3 do TCC

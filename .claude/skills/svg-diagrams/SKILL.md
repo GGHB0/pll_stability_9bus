@@ -1,7 +1,7 @@
 ---
 name: svg-diagrams
 description: Cria qualquer SVG do projeto (diagramas, esquemáticos, curvas de norma, banners, ilustrações para README/KB/TCC) e exporta para PNG. Ativar sempre que o usuário pedir para criar/desenhar/gerar/ajustar um SVG, PNG, diagrama, esquemático, figura, banner ou ilustração — mesmo sem mencionar o formato (ex.: "precisa de uma figura do circuito do filtro LCL", "desenha o esquemático do VSI", "cria a curva do ONS", "atualiza o banner"). Também usar para converter um SVG existente do repositório em PNG.
-version: 1.2.0
+version: 1.3.0
 ---
 
 # SVG Diagrams — Skill de Criação de Figuras e Exportação PNG
@@ -36,6 +36,38 @@ Regras fixas:
 - Fundo branco explícito: `<rect width="..." height="..." fill="#ffffff"/>` como primeiro filho.
 - Fonte: `font-family="ui-sans-serif, system-ui, -apple-system, sans-serif"`.
 - Texto em português com acentos é permitido no SVG (diferente dos `.mmd`, que devem ficar sem acento).
+
+## Legibilidade em Figuras do TCC/DOCX
+
+Quando o usuário reclamar que "a fonte fica pequena no relatório", a causa quase
+sempre não é o export e sim o **tamanho da fonte relativo ao `viewBox`**. Uma figura
+inserida ocupando a largura útil da página (~16 cm) é reduzida por um fator ~0,49
+(para um `viewBox` de ~920 px de largura). Regra prática:
+
+```
+pt_no_docx ≈ 0,49 × font_px         (viewBox ~920 px, figura na largura da página)
+```
+
+Generalizando p/ qualquer largura de `viewBox` W e largura no papel L_cm:
+`pt_no_docx ≈ font_px × (L_cm / W) × 28,35 / 12` ≈ `font_px × L_cm / W × 2,36`.
+
+| Fonte no SVG (W≈920) | ~pt no DOCX | Veredito |
+|---|---|---|
+| 9 px | ~4,4 pt | ilegível |
+| 13 px | ~6,4 pt | mínimo aceitável p/ rótulos secundários |
+| 15 px | ~7,4 pt | ok |
+| ≥18 px | ≥8,9 pt | confortável (use p/ títulos) |
+
+**Piso de fonte**: em figura destinada ao DOCX, nenhum texto abaixo de ~13 px
+(para W≈920). Se o piso não couber sem colisão, o problema é densidade — reduza
+conteúdo, divida em duas figuras, ou oriente o usuário a inserir a imagem maior
+(paisagem / página inteira). Não compense com export em escala maior: escala só
+melhora **nitidez**, não o tamanho aparente do texto na página.
+
+Ao **aumentar fontes de um SVG existente**, lembre que os grupos de texto empilhados
+(ex.: R/X/B de linha, kV de trafo, MW/MVAr de carga) têm espaçamento de linha fixo —
+aumente o `font-size` **e** reposicione os `y` (espaçamento ≈ 1,15× a fonte) senão as
+linhas colidem. Confira sempre no PNG rasterizado antes de dar por pronto.
 
 ## Armadilha 1 — Subscritos
 
@@ -98,7 +130,7 @@ cairosvg ou imagemagick). O caminho que funciona é renderizar no Chrome via
   await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
   // document.createElement falha aqui: o documento de um SVG standalone não é HTML.
   const canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
-  const scale = 2; // retina
+  const scale = 3; // 3× p/ nitidez em impressão/DOCX (2× ainda serve p/ tela)
   canvas.width = <VIEWBOX_W> * scale; canvas.height = <VIEWBOX_H> * scale;
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);

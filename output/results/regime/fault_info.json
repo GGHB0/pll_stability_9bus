@@ -6,6 +6,6 @@
   "t_clear": 0.4,
   "duration_s": 0.10000000000000003,
   "bad_pll": false,
-  "timestamp": "2026-07-14T01:01:25",
+  "timestamp": "2026-07-18T21:27:16",
   "model": "pll_stability_9bus"
 }

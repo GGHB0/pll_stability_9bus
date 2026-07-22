@@ -7,6 +7,8 @@ fig_sys/fig_res é None se não houver dados disponíveis.
 """
 from __future__ import annotations
 
+import re
+
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -122,6 +124,7 @@ class ChartBuilder:
 
     def _make_figure(self, rows: list) -> tuple[go.Figure, list]:
         n = len(rows)
+        self._n_rows_fig = n
         specs = [
             [{"type": "scatter", "colspan": 2}, None] if r[0] == _S
             else [{"type": "scatter"}, {"type": "scatter"}]
@@ -130,7 +133,7 @@ class ChartBuilder:
         self._fig = make_subplots(
             rows=n, cols=2,
             shared_xaxes=True,
-            vertical_spacing=0.07,
+            vertical_spacing=0.11,
             specs=specs,
         )
         self._ci = 0
@@ -178,14 +181,46 @@ class ChartBuilder:
 
     # ── Helpers de figura ────────────────────────────────────────────────────
 
+    @staticmethod
+    def _split_label(text: str) -> tuple[str, str]:
+        """"Nome (unid)" → ("Nome", "unid"). Sem parêntese final → (text, "")."""
+        m = re.match(r"^(.*?)\s*\(([^()]*)\)\s*$", text)
+        if m:
+            return m.group(1).strip(), m.group(2).strip()
+        return text, ""
+
+    _BAR_COLOR = "#185FA5"   # barra de título (estilo header Power BI)
+
     def _label(self, text: str, ax_idx: int) -> None:
-        xref = "x domain" if ax_idx == 1 else f"x{ax_idx} domain"
-        yref = "y domain" if ax_idx == 1 else f"y{ax_idx} domain"
-        self._fig.add_annotation(
-            text=f"<b>{text}</b>", xref=xref, yref=yref,
-            x=0.01, y=0.97, xanchor="left", yanchor="top",
-            font=dict(size=10, color="#6b7280"), showarrow=False,
+        """Barra de título no topo do painel + unidade no eixo Y (vertical).
+        Responde ao Ponto 2 do professor: o rótulo deixa de ser annotation
+        horizontal no canto — o nome vira uma barra de título preenchida
+        (texto branco centralizado) encostada no topo do painel, e a unidade
+        vira o título do eixo Y, rotacionada e encostada no eixo."""
+        title, unit = self._split_label(text)
+        n = self._n_rows_fig
+        xname = "xaxis" if ax_idx == 1 else f"xaxis{ax_idx}"
+        yname = "yaxis" if ax_idx == 1 else f"yaxis{ax_idx}"
+        ax_dom = self._fig.layout[xname].domain
+        y_top  = float(self._fig.layout[yname].domain[1])
+        xc     = float((ax_dom[0] + ax_dom[1]) / 2)
+        bar_h  = 22.0 / (240 * n)   # altura da barra (fração de paper)
+        # barra preenchida encostada no topo do painel
+        self._fig.add_shape(
+            type="rect", xref="paper", yref="paper",
+            x0=ax_dom[0], x1=ax_dom[1], y0=y_top, y1=y_top + bar_h,
+            fillcolor=self._BAR_COLOR, line_width=0, layer="above",
         )
+        # nome centralizado, branco, dentro da barra
+        self._fig.add_annotation(
+            text=f"<b>{title}</b>", xref="paper", yref="paper",
+            x=xc, y=y_top + bar_h / 2, xanchor="center", yanchor="middle",
+            font=dict(size=11, color="#ffffff"), showarrow=False,
+        )
+        # unidade no eixo Y, na vertical
+        self._fig.layout[yname].title.text = unit
+        self._fig.layout[yname].title.font = dict(size=10, color="#6b7280")
+        self._fig.layout[yname].title.standoff = 4
 
     def _group_title(self, text: str, ax_idx: int) -> None:
         """Subtítulo de divisão por barra, ancorado acima da 1ª linha do grupo."""
@@ -280,10 +315,10 @@ class ChartBuilder:
                 self._fig.layout[ax_name].matches = "x"
         # pu é adimensional — sem prefixo SI (µ/k/M) nos ticks do eixo Y
         self._fig.update_yaxes(exponentformat="none")
-        # espaço extra no topo para o subtítulo "Barra N" da 1ª linha do grupo
-        top_margin = 34 if extra_top else 16
+        # espaço extra no topo: título de cada painel (+ subtítulo "Barra N" no grupo)
+        top_margin = 54 if extra_top else 34
         self._fig.update_layout(
-            margin=dict(t=top_margin, b=16, l=60, r=100),
+            margin=dict(t=top_margin, b=16, l=64, r=100),
             paper_bgcolor="#ffffff", plot_bgcolor="#ffffff",
             font=dict(family="Inter, Segoe UI, system-ui, sans-serif", size=12, color="#111827"),
             hovermode="x unified",

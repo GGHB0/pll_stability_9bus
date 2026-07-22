@@ -98,8 +98,16 @@ ambos em settings.py.
 
 ## Layout e integração
 
-- Eixo y amplitude linear (pu), `rangemode="tozero"`; `SPEC_XRANGE_HZ=1500`
-  default, duplo-clique expande até 2 kHz.
+- Eixo y amplitude linear (pu), `rangemode="tozero"`, título `"Amplitude (pu)"`
+  na **vertical** (encostado no eixo); `SPEC_XRANGE_HZ=1500` default,
+  duplo-clique expande até 2 kHz.
+- **Barra de título no topo** (`_label`, 2026-07-21, Ponto 2 do professor):
+  retângulo preenchido `#185FA5` com o nome do sinal ("Corrente iₐ UFV (abc)")
+  em branco/negrito, posicionado **acima** das marcações de frequência
+  (`y0 = y_top + 16/(240·n)`, altura 22 px). Antes era annotation horizontal no
+  canto com "— amplitude (pu)" no texto (redundante com o eixo Y).
+  `vertical_spacing` subiu p/ 0.13, margem `l=64`/`t=64`, legenda subiu p/
+  `y=1.22` para não colidir com a barra. Ver [[construcao-graficos]].
 - Legenda única horizontal no topo (`legendgroup` por segmento).
 - Renderizado sob demanda ao abrir a aba ([[tabs-navegacao]]); zoom na falta
   não afeta o espectro (`_applyZoom` só toca res/inv/sys).

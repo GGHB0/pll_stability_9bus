@@ -29,6 +29,29 @@ entra se a flag `has_*` do [[pipeline-dados]] estiver ligada. O 4º elemento
 opcional (`"Barra N"`) vira subtítulo de grupo (`_group_title`, annotation com
 `xref="paper"` + shape divisória).
 
+## Rótulo do painel: título no topo + unidade no eixo Y (`_label`)
+
+Resposta ao **Ponto 2 do professor** (2026-07-21): antes o rótulo (ex.:
+`"P / Q UFV (pu)"`) era uma **annotation horizontal** no canto superior-esquerdo,
+dentro da área de plot — feio e às vezes sobrepondo a curva. Agora `_label`:
+
+1. **Separa nome e unidade** com `_split_label` (regex do parêntese final):
+   `"P / Q UFV (pu)"` → título `"P / Q UFV"` + unidade `"pu"`.
+2. **Barra de título no topo**: retângulo preenchido (`add_shape` type `rect`,
+   `fillcolor = _BAR_COLOR = "#185FA5"`, `line_width=0`) encostado no topo do
+   painel, largura = domínio do eixo X, altura `22 px` (fração de paper via
+   `self._n_rows_fig`: `22/(240·n)`). Nome centralizado em **branco/negrito** por
+   cima (annotation em `xref/yref="paper"`, `yanchor="middle"`). Estilo "header
+   Power BI" — Opção A, escolhida pelo usuário (a imagem de referência que mandou).
+3. **Unidade no eixo Y, na vertical**: `yaxis.title = "pu"/"°"/"Hz"`
+   (`standoff=4`), rotação padrão do Plotly (−90°), encostada no eixo.
+
+Para caber as barras empilhadas: `vertical_spacing = 0.11` (era 0.07), margem
+esquerda `l=64` (era 60) e topo `34`/`54` (sem/com grupo — o subtítulo "BARRA N"
+do `_group_title` fica logo acima da barra). Mesma barra no espectro
+([[espectro-fourier]]), onde o eixo Y mantém `"Amplitude (pu)"` e a barra leva o
+nome do sinal (posicionada acima das marcações de frequência).
+
 ## `_add`: decimação, paleta e trace_map
 
 Todo trace de dados passa por `_add(trace, row, col)`:

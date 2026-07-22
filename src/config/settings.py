@@ -23,6 +23,9 @@ TS_DELTA_THRESH = (0.10,  0.30)   # s após t_fault
 DP_THRESH       = (0.10,  0.50)   # pu — excursão de P na janela pós-clear
 DQ_THRESH       = (0.15,  0.60)   # pu — excursão de Q na janela pós-clear
 PEAK_ERR_DEG_THRESH = (20.0, 60.0)  # ° — pico de |erro de fase| pós-falta
+ERR_SS_DEG_THRESH   = (0.5,  1.0)   # ° — erro de fase SUSTENTADO em regime permanente
+                                    # (média de |e| após a acomodação; PLL bem
+                                    # sintonizado tende a ~0°)
 SYNC_LOSS_DEG    = 90.0           # ° — acima disso: perda de sincronismo do PLL
 VBUS_MIN_THRESH  = (0.90,  0.50)  # pu — severidade do afundamento (LVRT IEEE 1547)
 LVRT_THRESHOLD   = 0.88           # pu — linha de referência no gráfico

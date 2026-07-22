@@ -6,7 +6,10 @@ Classe principal: SimData
     .t_fast, .theta_pll_fast,   → ângulos na taxa nativa Ts (alta resolução)
     .theta_ref_fast, .theta_err_fast
     .metrics                     → dict com IAE, ISE, ts, ts_delta, settled,
-                                   peak_err, dP/dQ (pós-clear), vmin, vmin_bus1/3
+                                   peak_err (pico transitório), t_ss/err_ss_mean/
+                                   err_ss_rms (erro de fase em regime permanente,
+                                   após a acomodação), dP/dQ (pós-clear), vmin,
+                                   vmin_bus1/3
     .has_ang, .has_dq_ufv, .has_ref_ufv → flags de disponibilidade de colunas
 
 Três CSVs exportados pelo MATLAB:
@@ -272,6 +275,7 @@ class SimData:
         metrics: dict = {
             "IAE": None, "ISE": None, "ts": None, "ts_delta": None,
             "peak_err": None, "settled": None,
+            "t_ss": None, "err_ss_mean": None, "err_ss_rms": None,
         }
 
         if self.theta_err is not None:
@@ -296,6 +300,25 @@ class SimData:
                         metrics["ts"], metrics["settled"] = float(fora[-1]), True
                     if metrics["ts"] is not None:
                         metrics["ts_delta"] = metrics["ts"] - t_start
+
+                # ── erro de regime permanente (janela após a acomodação) ─────
+                # t_ss = instante em que o regime começa: tₛ quando a falta
+                # reacomodou; T_SETTLE em regime permanente (PLL já travado).
+                # Falta que não reacomodou não tem regime → métrica fica None.
+                # O pico (peak_err) é transitório e mede a pior excursão; aqui
+                # medimos o erro SUSTENTADO — média/RMS de |e| até o fim.
+                if is_regime:
+                    t_ss = t_start
+                elif metrics.get("settled") and metrics.get("ts") is not None:
+                    t_ss = metrics["ts"]
+                else:
+                    t_ss = None
+                if t_ss is not None:
+                    e_ss = self.theta_err[self.t >= t_ss]
+                    if len(e_ss):
+                        metrics["t_ss"]        = float(t_ss)
+                        metrics["err_ss_mean"] = float(np.mean(np.abs(e_ss)))
+                        metrics["err_ss_rms"]  = float(np.sqrt(np.mean(e_ss ** 2)))
 
         p_rec = self.P_ufv[mask_rec]
         q_rec = self.Q_ufv[mask_rec]

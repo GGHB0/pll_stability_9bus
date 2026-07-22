@@ -72,6 +72,8 @@ em `export_sim_data.m`) ainda inclui a partida → viés de ~1.1% em
 | `peak_err` | max \|e\| pós-falta (rad) — cards mostram em °, ≥90° = perda de sincronismo |
 | `ts` / `settled` | última amostra com \|e\| > `TOL_RAD` (±0.02 rad ≈ ±1.15°). Se \|e\| ainda está fora nos últimos 2 ms da janela → `ts = None`, `settled = False` ("não acomodou" — evita tₛ falso no fim da simulação). **Regime → sempre `None`/`None`**: sem distúrbio não há o que acomodar (card omitido, "—" na tabela) |
 | `ts_delta` | `ts − t_fault` (base da classificação good/warn/bad) |
+| `t_ss` | início do regime: `ts` se `settled`, `T_SETTLE` em regime, senão `None` |
+| `err_ss_mean`, `err_ss_rms` | erro de fase **sustentado** em R.P. — média/RMS de \|e\| para `t ≥ t_ss` (rad; cards em °). `None` se a falta não reacomodou. Separa o erro de regime do `peak_err` transitório (Ponto 1 do professor, 2026-07-21) |
 | `dP_ufv`, `dQ_ufv` | max − min de P/Q **pós-clear** (pu) |
 | `vmin` | mínimo de `vbus2` pós-falta (pu) — severidade do sag vs LVRT |
 | `vmin_bus1`, `vmin_bus3` | idem para `vbus1`/`vbus3` — propagação do sag pela rede (cards de severidade + colunas Vmin B1/B3 na tabela; veredito LVRT continua só na B2) |

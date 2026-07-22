@@ -1,150 +1,167 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 715" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
-<rect width="1100" height="715" fill="#ffffff"/>
-<rect x="18" y="46" width="1064" height="619" rx="10" fill="#f2fafb" stroke="#bfe0e4" stroke-width="1.5"/>
-<text x="550.0" y="34" text-anchor="middle" font-size="17" font-weight="700" fill="#0B132B">Marcos centrais do roadmap de estabilidade do sistema</text>
-<line x1="102.5" y1="335" x2="102.5" y2="350" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="227.5" y1="335" x2="227.5" y2="350" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="352.5" y1="335" x2="352.5" y2="350" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="477.5" y1="335" x2="477.5" y2="350" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="602.5" y1="335" x2="602.5" y2="350" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="852.5" y1="335" x2="852.5" y2="350" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="102.5" y1="400" x2="102.5" y2="415" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="227.5" y1="400" x2="227.5" y2="415" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="352.5" y1="400" x2="352.5" y2="415" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="477.5" y1="400" x2="477.5" y2="415" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="602.5" y1="400" x2="602.5" y2="415" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="852.5" y1="400" x2="852.5" y2="415" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="227.5" y1="265" x2="227.5" y2="253" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="352.5" y1="276" x2="352.5" y2="264" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="227.5" y1="507" x2="227.5" y2="519" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="227.5" y1="578" x2="227.5" y2="590" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="352.5" y1="463" x2="352.5" y2="475" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="602.5" y1="485" x2="602.5" y2="497" stroke="#5aa9b2" stroke-width="1.5"/>
-<line x1="852.5" y1="485" x2="852.5" y2="497" stroke="#5aa9b2" stroke-width="1.5"/>
-<polygon points="40,350 165,350 183,375 165,400 40,400" fill="#178a99"/>
-<text x="102" y="381" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">2024</text>
-<polygon points="165,350 290,350 308,375 290,400 165,400 183,375" fill="#1f9aa8"/>
-<text x="232" y="381" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">2025</text>
-<polygon points="290,350 415,350 433,375 415,400 290,400 308,375" fill="#2ba7b4"/>
-<text x="356" y="381" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">2026</text>
-<polygon points="415,350 540,350 558,375 540,400 415,400 433,375" fill="#46b4bf"/>
-<text x="482" y="381" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">2027</text>
-<polygon points="540,350 665,350 683,375 665,400 540,400 558,375" fill="#74c4cc"/>
-<text x="606" y="381" text-anchor="middle" font-size="18" font-weight="700" fill="#ffffff">2028</text>
-<polygon points="665,350 790,350 808,375 790,400 665,400 683,375" fill="#9fd4da"/>
-<text x="732" y="381" text-anchor="middle" font-size="18" font-weight="700" fill="#0f6b75">2029</text>
-<polygon points="790,350 915,350 933,375 915,400 790,400 808,375" fill="#c0e2e6"/>
-<text x="856" y="381" text-anchor="middle" font-size="18" font-weight="700" fill="#0f6b75">2030</text>
-<polygon points="915,350 1040,350 1072,375 1040,400 915,400 933,375" fill="#d8ebed"/>
-<text x="982" y="381" text-anchor="middle" font-size="18" font-weight="700" fill="#0f6b75">2030+</text>
-<rect x="42" y="276" width="120" height="59" rx="4" fill="#2f9aa7"/>
-<text x="102" y="291" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS1</text>
-<text x="102" y="306" text-anchor="middle" font-size="9" fill="#ffffff">Aquisição de potência</text>
-<text x="102" y="317" text-anchor="middle" font-size="9" fill="#ffffff">reativa por mercado</text>
-<text x="102" y="328" text-anchor="middle" font-size="9" fill="#ffffff">introduzida</text>
-<rect x="168" y="265" width="120" height="70" rx="4" fill="#2f9aa7"/>
-<text x="228" y="280" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS4</text>
-<text x="228" y="295" text-anchor="middle" font-size="9" fill="#ffffff">Requisitos incluídos</text>
-<text x="228" y="306" text-anchor="middle" font-size="9" fill="#ffffff">no Relatório de</text>
-<text x="228" y="317" text-anchor="middle" font-size="9" fill="#ffffff">Estabilidade do</text>
-<text x="228" y="328" text-anchor="middle" font-size="9" fill="#ffffff">Sistema regular</text>
-<rect x="168" y="194" width="120" height="59" rx="4" fill="#2f9aa7"/>
-<text x="228" y="209" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS3</text>
-<text x="228" y="224" text-anchor="middle" font-size="9" fill="#ffffff">Aquisição de resposta</text>
-<text x="228" y="235" text-anchor="middle" font-size="9" fill="#ffffff">instantânea por</text>
-<text x="228" y="246" text-anchor="middle" font-size="9" fill="#ffffff">mercado introduzida</text>
-<rect x="292" y="276" width="120" height="59" rx="4" fill="#2f9aa7"/>
-<text x="352" y="291" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS9</text>
-<text x="352" y="306" text-anchor="middle" font-size="9" fill="#ffffff">Casos relevantes à</text>
-<text x="352" y="317" text-anchor="middle" font-size="9" fill="#ffffff">interpretação</text>
-<text x="352" y="328" text-anchor="middle" font-size="9" fill="#ffffff">definidos</text>
-<rect x="292" y="205" width="120" height="59" rx="4" fill="#2f9aa7"/>
-<text x="352" y="220" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS8</text>
-<text x="352" y="235" text-anchor="middle" font-size="9" fill="#ffffff">Capacidades das usinas</text>
-<text x="352" y="246" text-anchor="middle" font-size="9" fill="#ffffff">conhecidas e</text>
-<text x="352" y="257" text-anchor="middle" font-size="9" fill="#ffffff">disponíveis</text>
-<rect x="418" y="265" width="120" height="70" rx="4" fill="#2f9aa7"/>
-<text x="478" y="280" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS12a</text>
-<text x="478" y="295" text-anchor="middle" font-size="9" fill="#ffffff">Métodos de avaliação</text>
-<text x="478" y="306" text-anchor="middle" font-size="9" fill="#ffffff">de corrente de</text>
-<text x="478" y="317" text-anchor="middle" font-size="9" fill="#ffffff">curto-circuito</text>
-<text x="478" y="328" text-anchor="middle" font-size="9" fill="#ffffff">disponíveis</text>
-<rect x="542" y="254" width="120" height="81" rx="4" fill="#2f9aa7"/>
-<text x="602" y="269" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS14</text>
-<text x="602" y="284" text-anchor="middle" font-size="9" fill="#ffffff">Intercâmbio entre</text>
-<text x="602" y="295" text-anchor="middle" font-size="9" fill="#ffffff">operadores reforçado e</text>
-<text x="602" y="306" text-anchor="middle" font-size="9" fill="#ffffff">troca vertical de</text>
-<text x="602" y="317" text-anchor="middle" font-size="9" fill="#ffffff">reativo direcionada</text>
-<text x="602" y="328" text-anchor="middle" font-size="9" fill="#ffffff">viável</text>
-<rect x="792" y="265" width="120" height="70" rx="4" fill="#2f9aa7"/>
-<text x="852" y="280" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS17</text>
-<text x="852" y="295" text-anchor="middle" font-size="9" fill="#ffffff">Processos</text>
-<text x="852" y="306" text-anchor="middle" font-size="9" fill="#ffffff">digitalizados; espaços</text>
-<text x="852" y="317" text-anchor="middle" font-size="9" fill="#ffffff">de dados definidos de</text>
-<text x="852" y="328" text-anchor="middle" font-size="9" fill="#ffffff">forma uniforme</text>
-<rect x="42" y="415" width="120" height="70" rx="4" fill="#2f9aa7"/>
-<text x="102" y="430" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS2</text>
-<text x="102" y="445" text-anchor="middle" font-size="9" fill="#ffffff">Princípios de ensaio</text>
-<text x="102" y="456" text-anchor="middle" font-size="9" fill="#ffffff">para certificação de</text>
-<text x="102" y="467" text-anchor="middle" font-size="9" fill="#ffffff">conversores formadores</text>
-<text x="102" y="478" text-anchor="middle" font-size="9" fill="#ffffff">de rede</text>
-<rect x="168" y="415" width="120" height="92" rx="4" fill="#2f9aa7"/>
-<text x="228" y="430" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS5</text>
-<text x="228" y="445" text-anchor="middle" font-size="9" fill="#ffffff">Reconhecimento de</text>
-<text x="228" y="456" text-anchor="middle" font-size="9" fill="#ffffff">custos e</text>
-<text x="228" y="467" text-anchor="middle" font-size="9" fill="#ffffff">responsabilidades por</text>
-<text x="228" y="478" text-anchor="middle" font-size="9" fill="#ffffff">medidas</text>
-<text x="228" y="489" text-anchor="middle" font-size="9" fill="#ffffff">estabilizadoras</text>
-<text x="228" y="500" text-anchor="middle" font-size="9" fill="#ffffff">esclarecidos</text>
-<rect x="168" y="519" width="120" height="59" rx="4" fill="#2f9aa7"/>
-<text x="228" y="534" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS6</text>
-<text x="228" y="549" text-anchor="middle" font-size="9" fill="#ffffff">Sistemas de black</text>
-<text x="228" y="560" text-anchor="middle" font-size="9" fill="#ffffff">start e sistemas</text>
-<text x="228" y="571" text-anchor="middle" font-size="9" fill="#ffffff">parceiros demonstrados</text>
-<rect x="168" y="590" width="120" height="70" rx="4" fill="#2f9aa7"/>
-<text x="228" y="605" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS7</text>
-<text x="228" y="620" text-anchor="middle" font-size="9" fill="#ffffff">Regras técnicas para</text>
-<text x="228" y="631" text-anchor="middle" font-size="9" fill="#ffffff">controle primário</text>
-<text x="228" y="642" text-anchor="middle" font-size="9" fill="#ffffff">baseado em segurança</text>
-<text x="228" y="653" text-anchor="middle" font-size="9" fill="#ffffff">da rede</text>
-<rect x="292" y="415" width="120" height="48" rx="4" fill="#2f9aa7"/>
-<text x="352" y="430" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS10</text>
-<text x="352" y="445" text-anchor="middle" font-size="9" fill="#ffffff">Nível de segurança</text>
-<text x="352" y="456" text-anchor="middle" font-size="9" fill="#ffffff">almejado definido</text>
-<rect x="292" y="475" width="120" height="59" rx="4" fill="#2f9aa7"/>
-<text x="352" y="490" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS11</text>
-<text x="352" y="505" text-anchor="middle" font-size="9" fill="#ffffff">Papéis e tarefas para</text>
-<text x="352" y="516" text-anchor="middle" font-size="9" fill="#ffffff">a recomposição futura</text>
-<text x="352" y="527" text-anchor="middle" font-size="9" fill="#ffffff">da rede definidos</text>
-<rect x="418" y="415" width="120" height="70" rx="4" fill="#2f9aa7"/>
-<text x="478" y="430" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS13</text>
-<text x="478" y="445" text-anchor="middle" font-size="9" fill="#ffffff">Experiência de campo</text>
-<text x="478" y="456" text-anchor="middle" font-size="9" fill="#ffffff">com conversores</text>
-<text x="478" y="467" text-anchor="middle" font-size="9" fill="#ffffff">formadores de rede</text>
-<text x="478" y="478" text-anchor="middle" font-size="9" fill="#ffffff">disponível</text>
-<rect x="542" y="415" width="120" height="70" rx="4" fill="#2f9aa7"/>
-<text x="602" y="430" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS15</text>
-<text x="602" y="445" text-anchor="middle" font-size="9" fill="#ffffff">Regras técnicas de</text>
-<text x="602" y="456" text-anchor="middle" font-size="9" fill="#ffffff">conexão para</text>
-<text x="602" y="467" text-anchor="middle" font-size="9" fill="#ffffff">conversores formadores</text>
-<text x="602" y="478" text-anchor="middle" font-size="9" fill="#ffffff">de rede em vigor</text>
-<rect x="542" y="497" width="120" height="70" rx="4" fill="#2f9aa7"/>
-<text x="602" y="512" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS16</text>
-<text x="602" y="527" text-anchor="middle" font-size="9" fill="#ffffff">Avaliação dinâmica de</text>
-<text x="602" y="538" text-anchor="middle" font-size="9" fill="#ffffff">segurança (DSA)</text>
-<text x="602" y="549" text-anchor="middle" font-size="9" fill="#ffffff">aprimorada</text>
-<text x="602" y="560" text-anchor="middle" font-size="9" fill="#ffffff">estabelecida</text>
-<rect x="792" y="415" width="120" height="70" rx="4" fill="#2f9aa7"/>
-<text x="852" y="430" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS18</text>
-<text x="852" y="445" text-anchor="middle" font-size="9" fill="#ffffff">Conversores formadores</text>
-<text x="852" y="456" text-anchor="middle" font-size="9" fill="#ffffff">de rede contribuem</text>
-<text x="852" y="467" text-anchor="middle" font-size="9" fill="#ffffff">significativamente à</text>
-<text x="852" y="478" text-anchor="middle" font-size="9" fill="#ffffff">estabilidade</text>
-<rect x="792" y="497" width="120" height="70" rx="4" fill="#2f9aa7"/>
-<text x="852" y="512" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">MS12b</text>
-<text x="852" y="527" text-anchor="middle" font-size="9" fill="#ffffff">Métodos de avaliação</text>
-<text x="852" y="538" text-anchor="middle" font-size="9" fill="#ffffff">de estabilidade de</text>
-<text x="852" y="549" text-anchor="middle" font-size="9" fill="#ffffff">ressonância</text>
-<text x="852" y="560" text-anchor="middle" font-size="9" fill="#ffffff">disponíveis</text>
-<text x="30" y="695" font-size="12" fill="#0B132B"><tspan font-weight="700" fill="#178a99">Figura 2. </tspan>Marcos centrais do roadmap de estabilidade do sistema (adaptado de Strauss-Mincu et al.).</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1650 1100" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+<rect width="1650" height="1100" fill="#ffffff"/>
+<rect x="20" y="58" width="1610" height="920" rx="10" fill="#f4f5f8" stroke="#d7dee8" stroke-width="1.5"/>
+<text x="825.0" y="42" text-anchor="middle" font-size="29" font-weight="700" fill="#0B132B">Marcos centrais do roadmap de estabilidade do sistema</text>
+<line x1="159.0" y1="476" x2="159.0" y2="494" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="159.0" y1="621" x2="159.0" y2="639" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="377.0" y1="398" x2="377.0" y2="416" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="377.0" y1="250" x2="377.0" y2="232" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="377.0" y1="476" x2="377.0" y2="494" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="377.0" y1="663" x2="377.0" y2="681" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="377.0" y1="808" x2="377.0" y2="826" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="595.0" y1="398" x2="595.0" y2="416" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="595.0" y1="292" x2="595.0" y2="274" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="595.0" y1="476" x2="595.0" y2="494" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="595.0" y1="579" x2="595.0" y2="597" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="813.0" y1="398" x2="813.0" y2="416" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="813.0" y1="476" x2="813.0" y2="494" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="1031.0" y1="398" x2="1031.0" y2="416" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="1031.0" y1="476" x2="1031.0" y2="494" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="1031.0" y1="642" x2="1031.0" y2="660" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="1359.0" y1="398" x2="1359.0" y2="416" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="1359.0" y1="476" x2="1359.0" y2="494" stroke="#8a94ab" stroke-width="1.6"/>
+<line x1="1359.0" y1="642" x2="1359.0" y2="660" stroke="#8a94ab" stroke-width="1.6"/>
+<polygon points="50,416 268,416 290,446 268,476 50,476" fill="#0b132b"/>
+<text x="170.0" y="455.0" text-anchor="middle" font-size="25" font-weight="700" fill="#ffffff">2024</text>
+<polygon points="268,416 486,416 508,446 486,476 268,476 290,446" fill="#283046"/>
+<text x="388.0" y="455.0" text-anchor="middle" font-size="25" font-weight="700" fill="#ffffff">2025</text>
+<polygon points="486,416 704,416 726,446 704,476 486,476 508,446" fill="#454d61"/>
+<text x="606.0" y="455.0" text-anchor="middle" font-size="25" font-weight="700" fill="#ffffff">2026</text>
+<polygon points="704,416 922,416 944,446 922,476 704,476 726,446" fill="#626a7c"/>
+<text x="824.0" y="455.0" text-anchor="middle" font-size="25" font-weight="700" fill="#ffffff">2027</text>
+<polygon points="922,416 1140,416 1162,446 1140,476 922,476 944,446" fill="#808797"/>
+<text x="1042.0" y="455.0" text-anchor="middle" font-size="25" font-weight="700" fill="#ffffff">2028</text>
+<polygon points="1140,416 1250,416 1272,446 1250,476 1140,476 1162,446" fill="#9da4b2"/>
+<text x="1206.0" y="455.0" text-anchor="middle" font-size="25" font-weight="700" fill="#0B132B">2029</text>
+<polygon points="1250,416 1468,416 1490,446 1468,476 1250,476 1272,446" fill="#bac1cd"/>
+<text x="1370.0" y="455.0" text-anchor="middle" font-size="25" font-weight="700" fill="#0B132B">2030</text>
+<polygon points="1468,416 1578,416 1600,446 1578,476 1468,476 1490,446" fill="#d7dee8"/>
+<text x="1534.0" y="455.0" text-anchor="middle" font-size="25" font-weight="700" fill="#0B132B">2030+</text>
+<rect x="64.0" y="494" width="190" height="127" rx="6" fill="#0B132B"/>
+<text x="159.0" y="518" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS1</text>
+<text x="159.0" y="544" text-anchor="middle" font-size="17" fill="#ffffff">Aquisição de</text>
+<text x="159.0" y="565" text-anchor="middle" font-size="17" fill="#ffffff">potência reativa</text>
+<text x="159.0" y="586" text-anchor="middle" font-size="17" fill="#ffffff">por mercado</text>
+<text x="159.0" y="607" text-anchor="middle" font-size="17" fill="#ffffff">introduzida</text>
+<rect x="64.0" y="639" width="190" height="148" rx="6" fill="#0B132B"/>
+<text x="159.0" y="663" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS2</text>
+<text x="159.0" y="689" text-anchor="middle" font-size="17" fill="#ffffff">Princípios de</text>
+<text x="159.0" y="710" text-anchor="middle" font-size="17" fill="#ffffff">ensaio para</text>
+<text x="159.0" y="731" text-anchor="middle" font-size="17" fill="#ffffff">certificação de</text>
+<text x="159.0" y="752" text-anchor="middle" font-size="17" fill="#ffffff">conversores</text>
+<text x="159.0" y="773" text-anchor="middle" font-size="17" fill="#ffffff">formadores de rede</text>
+<rect x="282.0" y="250" width="190" height="148" rx="6" fill="#0B132B"/>
+<text x="377.0" y="274" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS4</text>
+<text x="377.0" y="300" text-anchor="middle" font-size="17" fill="#ffffff">Requisitos</text>
+<text x="377.0" y="321" text-anchor="middle" font-size="17" fill="#ffffff">incluídos no</text>
+<text x="377.0" y="342" text-anchor="middle" font-size="17" fill="#ffffff">Relatório de</text>
+<text x="377.0" y="363" text-anchor="middle" font-size="17" fill="#ffffff">Estabilidade do</text>
+<text x="377.0" y="384" text-anchor="middle" font-size="17" fill="#ffffff">Sistema regular</text>
+<rect x="282.0" y="84" width="190" height="148" rx="6" fill="#0B132B"/>
+<text x="377.0" y="108" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS3</text>
+<text x="377.0" y="134" text-anchor="middle" font-size="17" fill="#ffffff">Aquisição de</text>
+<text x="377.0" y="155" text-anchor="middle" font-size="17" fill="#ffffff">resposta</text>
+<text x="377.0" y="176" text-anchor="middle" font-size="17" fill="#ffffff">instantânea por</text>
+<text x="377.0" y="197" text-anchor="middle" font-size="17" fill="#ffffff">mercado</text>
+<text x="377.0" y="218" text-anchor="middle" font-size="17" fill="#ffffff">introduzida</text>
+<rect x="282.0" y="494" width="190" height="169" rx="6" fill="#0B132B"/>
+<text x="377.0" y="518" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS5</text>
+<text x="377.0" y="544" text-anchor="middle" font-size="17" fill="#ffffff">Reconhecimento</text>
+<text x="377.0" y="565" text-anchor="middle" font-size="17" fill="#ffffff">de custos e</text>
+<text x="377.0" y="586" text-anchor="middle" font-size="17" fill="#ffffff">responsabilidades</text>
+<text x="377.0" y="607" text-anchor="middle" font-size="17" fill="#ffffff">por medidas</text>
+<text x="377.0" y="628" text-anchor="middle" font-size="17" fill="#ffffff">estabilizadoras</text>
+<text x="377.0" y="649" text-anchor="middle" font-size="17" fill="#ffffff">esclarecidos</text>
+<rect x="282.0" y="681" width="190" height="127" rx="6" fill="#0B132B"/>
+<text x="377.0" y="705" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS6</text>
+<text x="377.0" y="731" text-anchor="middle" font-size="17" fill="#ffffff">Sistemas de black</text>
+<text x="377.0" y="752" text-anchor="middle" font-size="17" fill="#ffffff">start e sistemas</text>
+<text x="377.0" y="773" text-anchor="middle" font-size="17" fill="#ffffff">parceiros</text>
+<text x="377.0" y="794" text-anchor="middle" font-size="17" fill="#ffffff">demonstrados</text>
+<rect x="282.0" y="826" width="190" height="148" rx="6" fill="#0B132B"/>
+<text x="377.0" y="850" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS7</text>
+<text x="377.0" y="876" text-anchor="middle" font-size="17" fill="#ffffff">Regras técnicas</text>
+<text x="377.0" y="897" text-anchor="middle" font-size="17" fill="#ffffff">para controle</text>
+<text x="377.0" y="918" text-anchor="middle" font-size="17" fill="#ffffff">primário baseado</text>
+<text x="377.0" y="939" text-anchor="middle" font-size="17" fill="#ffffff">em segurança da</text>
+<text x="377.0" y="960" text-anchor="middle" font-size="17" fill="#ffffff">rede</text>
+<rect x="500.0" y="292" width="190" height="106" rx="6" fill="#0B132B"/>
+<text x="595.0" y="316" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS9</text>
+<text x="595.0" y="342" text-anchor="middle" font-size="17" fill="#ffffff">Casos relevantes</text>
+<text x="595.0" y="363" text-anchor="middle" font-size="17" fill="#ffffff">à interpretação</text>
+<text x="595.0" y="384" text-anchor="middle" font-size="17" fill="#ffffff">definidos</text>
+<rect x="500.0" y="168" width="190" height="106" rx="6" fill="#0B132B"/>
+<text x="595.0" y="192" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS8</text>
+<text x="595.0" y="218" text-anchor="middle" font-size="17" fill="#ffffff">Capacidades das</text>
+<text x="595.0" y="239" text-anchor="middle" font-size="17" fill="#ffffff">usinas conhecidas</text>
+<text x="595.0" y="260" text-anchor="middle" font-size="17" fill="#ffffff">e disponíveis</text>
+<rect x="500.0" y="494" width="190" height="85" rx="6" fill="#0B132B"/>
+<text x="595.0" y="518" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS10</text>
+<text x="595.0" y="544" text-anchor="middle" font-size="17" fill="#ffffff">Nível de segurança</text>
+<text x="595.0" y="565" text-anchor="middle" font-size="17" fill="#ffffff">almejado definido</text>
+<rect x="500.0" y="597" width="190" height="148" rx="6" fill="#0B132B"/>
+<text x="595.0" y="621" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS11</text>
+<text x="595.0" y="647" text-anchor="middle" font-size="17" fill="#ffffff">Papéis e tarefas</text>
+<text x="595.0" y="668" text-anchor="middle" font-size="17" fill="#ffffff">para a</text>
+<text x="595.0" y="689" text-anchor="middle" font-size="17" fill="#ffffff">recomposição</text>
+<text x="595.0" y="710" text-anchor="middle" font-size="17" fill="#ffffff">futura da rede</text>
+<text x="595.0" y="731" text-anchor="middle" font-size="17" fill="#ffffff">definidos</text>
+<rect x="718.0" y="250" width="190" height="148" rx="6" fill="#0B132B"/>
+<text x="813.0" y="274" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS12a</text>
+<text x="813.0" y="300" text-anchor="middle" font-size="17" fill="#ffffff">Métodos de</text>
+<text x="813.0" y="321" text-anchor="middle" font-size="17" fill="#ffffff">avaliação de</text>
+<text x="813.0" y="342" text-anchor="middle" font-size="17" fill="#ffffff">corrente de</text>
+<text x="813.0" y="363" text-anchor="middle" font-size="17" fill="#ffffff">curto-circuito</text>
+<text x="813.0" y="384" text-anchor="middle" font-size="17" fill="#ffffff">disponíveis</text>
+<rect x="718.0" y="494" width="190" height="148" rx="6" fill="#0B132B"/>
+<text x="813.0" y="518" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS13</text>
+<text x="813.0" y="544" text-anchor="middle" font-size="17" fill="#ffffff">Experiência de</text>
+<text x="813.0" y="565" text-anchor="middle" font-size="17" fill="#ffffff">campo com</text>
+<text x="813.0" y="586" text-anchor="middle" font-size="17" fill="#ffffff">conversores</text>
+<text x="813.0" y="607" text-anchor="middle" font-size="17" fill="#ffffff">formadores de</text>
+<text x="813.0" y="628" text-anchor="middle" font-size="17" fill="#ffffff">rede disponível</text>
+<rect x="936.0" y="229" width="190" height="169" rx="6" fill="#0B132B"/>
+<text x="1031.0" y="253" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS14</text>
+<text x="1031.0" y="279" text-anchor="middle" font-size="17" fill="#ffffff">Intercâmbio entre</text>
+<text x="1031.0" y="300" text-anchor="middle" font-size="17" fill="#ffffff">operadores</text>
+<text x="1031.0" y="321" text-anchor="middle" font-size="17" fill="#ffffff">reforçado e</text>
+<text x="1031.0" y="342" text-anchor="middle" font-size="17" fill="#ffffff">troca vertical de</text>
+<text x="1031.0" y="363" text-anchor="middle" font-size="17" fill="#ffffff">reativo</text>
+<text x="1031.0" y="384" text-anchor="middle" font-size="17" fill="#ffffff">direcionada viável</text>
+<rect x="936.0" y="494" width="190" height="148" rx="6" fill="#0B132B"/>
+<text x="1031.0" y="518" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS15</text>
+<text x="1031.0" y="544" text-anchor="middle" font-size="17" fill="#ffffff">Regras técnicas</text>
+<text x="1031.0" y="565" text-anchor="middle" font-size="17" fill="#ffffff">de conexão para</text>
+<text x="1031.0" y="586" text-anchor="middle" font-size="17" fill="#ffffff">conversores</text>
+<text x="1031.0" y="607" text-anchor="middle" font-size="17" fill="#ffffff">formadores de</text>
+<text x="1031.0" y="628" text-anchor="middle" font-size="17" fill="#ffffff">rede em vigor</text>
+<rect x="936.0" y="660" width="190" height="148" rx="6" fill="#0B132B"/>
+<text x="1031.0" y="684" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS16</text>
+<text x="1031.0" y="710" text-anchor="middle" font-size="17" fill="#ffffff">Avaliação</text>
+<text x="1031.0" y="731" text-anchor="middle" font-size="17" fill="#ffffff">dinâmica de</text>
+<text x="1031.0" y="752" text-anchor="middle" font-size="17" fill="#ffffff">segurança (DSA)</text>
+<text x="1031.0" y="773" text-anchor="middle" font-size="17" fill="#ffffff">aprimorada</text>
+<text x="1031.0" y="794" text-anchor="middle" font-size="17" fill="#ffffff">estabelecida</text>
+<rect x="1264.0" y="250" width="190" height="148" rx="6" fill="#0B132B"/>
+<text x="1359.0" y="274" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS17</text>
+<text x="1359.0" y="300" text-anchor="middle" font-size="17" fill="#ffffff">Processos</text>
+<text x="1359.0" y="321" text-anchor="middle" font-size="17" fill="#ffffff">digitalizados;</text>
+<text x="1359.0" y="342" text-anchor="middle" font-size="17" fill="#ffffff">espaços de dados</text>
+<text x="1359.0" y="363" text-anchor="middle" font-size="17" fill="#ffffff">definidos de</text>
+<text x="1359.0" y="384" text-anchor="middle" font-size="17" fill="#ffffff">forma uniforme</text>
+<rect x="1264.0" y="494" width="190" height="148" rx="6" fill="#0B132B"/>
+<text x="1359.0" y="518" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS18</text>
+<text x="1359.0" y="544" text-anchor="middle" font-size="17" fill="#ffffff">Conversores</text>
+<text x="1359.0" y="565" text-anchor="middle" font-size="17" fill="#ffffff">formadores de</text>
+<text x="1359.0" y="586" text-anchor="middle" font-size="17" fill="#ffffff">rede contribuem</text>
+<text x="1359.0" y="607" text-anchor="middle" font-size="17" fill="#ffffff">significativamente</text>
+<text x="1359.0" y="628" text-anchor="middle" font-size="17" fill="#ffffff">à estabilidade</text>
+<rect x="1264.0" y="660" width="190" height="148" rx="6" fill="#0B132B"/>
+<text x="1359.0" y="684" text-anchor="middle" font-size="19" font-weight="700" fill="#F97316">MS12b</text>
+<text x="1359.0" y="710" text-anchor="middle" font-size="17" fill="#ffffff">Métodos de</text>
+<text x="1359.0" y="731" text-anchor="middle" font-size="17" fill="#ffffff">avaliação de</text>
+<text x="1359.0" y="752" text-anchor="middle" font-size="17" fill="#ffffff">estabilidade de</text>
+<text x="1359.0" y="773" text-anchor="middle" font-size="17" fill="#ffffff">ressonância</text>
+<text x="1359.0" y="794" text-anchor="middle" font-size="17" fill="#ffffff">disponíveis</text>
+<text x="50" y="1030" font-size="19" fill="#0B132B">Figura 2. Marcos centrais do roadmap de estabilidade do sistema (adaptado de Strauss-Mincu et al.).</text>
 </svg>

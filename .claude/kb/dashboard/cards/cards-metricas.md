@@ -14,7 +14,7 @@ só injeta o HTML em `#cards-area`/`#story-area`, sem recomputar nada no browser
 | Grupo | Cards | Papel |
 |---|---|---|
 | Severidade do distúrbio | V residual B2 (pu, POC do inversor, vs LVRT), V residual B1/B3 (quando `vbus1_pu`/`vbus3_pu` existem no CSV — propagação do sag; subtítulos "barra do G1 (slack)"/"barra do G3"), Duração da falta (ms, t_fault–t_clear) | **Contexto** — quão dura foi a falta; fora do veredito |
-| Desempenho do PLL | IAE (rad·s), ISE (rad²·s), tₛ (s, ±1.15°), \|θ_err\| pico (°) | Julga o PLL |
+| Desempenho do PLL | IAE (rad·s), ISE (rad²·s), tₛ (s, ±1.15°), \|θ_err\| pico (°), **Erro R.P. (°)** | Julga o PLL |
 | Recuperação do inversor | ΔP UFV, ΔQ UFV (pu, **pós-clear**) | Julga a recuperação após eliminar a falta |
 
 Fonte: `metrics` do [[pipeline-dados]] (duas janelas: pós-falta e pós-clear).
@@ -42,6 +42,27 @@ Estados especiais:
 - **\|θ_err\| pico ≥ `SYNC_LOSS_DEG` (90°)**: subtítulo vira
   "perda de sincronismo" (escorregamento do PLL, ex. BAD_PLL com 178°).
 
+## Erro R.P. — erro de fase em regime permanente (2026-07-21)
+
+Resposta ao **Ponto 1 do professor**: o card `|θ_err| pico` (ex.: regime = 1,4°)
+foi lido como "erro em regime permanente", mas é o **pico transitório** (máx
+instantâneo) sobre toda a janela `t ≥ T_SETTLE`. Card novo separa os conceitos:
+
+- **`Erro R.P.` (°)** = erro de fase **sustentado**, `err_ss_mean` = média de
+  `|θ̂ − θ_rede|` na janela **após a acomodação** (`t ≥ t_ss`). Loader também
+  expõe `err_ss_rms`. Subtítulo mostra a janela ("média |e|, t ≥ 0.100 s").
+- **`t_ss`** (início do regime): `tₛ` quando a falta reacomodou
+  (`settled=True`); `T_SETTLE` em regime permanente (PLL já travado). Falta que
+  **não** reacomodou (`settled=False`) não tem regime → `t_ss/err_ss_* = None` e
+  o **card é omitido** (ver `_compute_metrics` no [[pipeline-dados]]).
+- Threshold `ERR_SS_DEG_THRESH = (0.5, 1.0)` em graus (PLL bem sintonizado
+  tende a ~0°). Valores reais: regime 0,48° (good), regime_bad_pll 0,74° (warn),
+  bus7/3phase 0,73° (t_ss=0,55 s).
+- O card `|θ_err| pico` teve o subtítulo trocado de "máx |θ̂ − θ_rede|" para
+  **"pico transitório"** e o tooltip reforça que é distinto do erro de R.P.
+- **Não** entra no veredito do story (evita reclassificar cenários em massa);
+  aparece só como card + item narrativo informativo.
+
 Cada card: nome, valor (ou "—" se `None`), unidade, subtítulo e tooltip via `title=`.
 
 ## Semáforo (`_classify`)
@@ -67,7 +88,8 @@ métrica (mesmas cores dos cards; `neutral` usa `var(--muted)`).
 
 Ordem fixa dos itens: **Distúrbio** (falta de X ms, profundidade do sag vs
 LVRT — vira "Cenário" neutro em regime) → **Pico de fase** →
-**Acomodação** (ou "não reacomodou") → **Erro acumulado** (IAE) →
+**Acomodação** (ou "não reacomodou") → **Erro de regime** (erro sustentado
+`err_ss_mean` em °, só quando há `t_ss`) → **Erro acumulado** (IAE) →
 **Recuperação** (ΔP pós-clear, rótulo em falta) ou **Oscilação de potência**
 (ΔP em regime, para refletir instabilidade induzida pelo PLL sem
 contingência). Redação específica por classe, encurtada porque o rótulo já

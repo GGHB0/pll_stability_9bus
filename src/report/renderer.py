@@ -20,7 +20,7 @@ import plotly.graph_objects as go
 from ..config import (
     T_SETTLE, TOL_RAD, LVRT_THRESHOLD, F_FUND_HZ,
     IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH, DP_THRESH, DQ_THRESH,
-    PEAK_ERR_DEG_THRESH, SYNC_LOSS_DEG, VBUS_MIN_THRESH,
+    PEAK_ERR_DEG_THRESH, ERR_SS_DEG_THRESH, SYNC_LOSS_DEG, VBUS_MIN_THRESH,
 )
 from ..pipeline.loader import SimData
 
@@ -1078,11 +1078,29 @@ switchScenario(currentKey);
         peak_win  = "em regime" if is_regime else "pós-falta"
         sync_loss = peak_deg is not None and peak_deg >= SYNC_LOSS_DEG
         peak_card = _card("|θ_err| pico", _v(peak_deg, 1), "°",
-                          "perda de sincronismo" if sync_loss else "máx |θ̂ − θ_rede|",
-                          f"Pico do erro de fase {peak_win} (≥ {SYNC_LOSS_DEG:.0f}° "
-                          "indica escorregamento do PLL)",
+                          "perda de sincronismo" if sync_loss else "pico transitório",
+                          f"Pico (máx instantâneo) do erro de fase {peak_win} — pior "
+                          f"excursão, distinto do erro sustentado de R.P. "
+                          f"(≥ {SYNC_LOSS_DEG:.0f}° indica escorregamento do PLL)",
                           self._classify(peak_deg, PEAK_ERR_DEG_THRESH),
                           target="Erro de fase")
+
+        # Erro de regime permanente: erro de fase SUSTENTADO (média de |e|) na
+        # janela após a acomodação (t ≥ t_ss). Só existe quando há regime a
+        # medir — falta que não reacomodou fica sem este card.
+        err_ss_deg = float(np.degrees(m["err_ss_mean"])) if m.get("err_ss_mean") is not None else None
+        t_ss       = m.get("t_ss")
+        if err_ss_deg is not None and t_ss is not None:
+            ss_card = _card("Erro R.P.", _v(err_ss_deg, 2), "°",
+                            f"média |e|, t ≥ {t_ss:.3f} s",
+                            f"Erro de fase sustentado em regime permanente — média de "
+                            f"|θ̂ − θ_rede| a partir de t = {t_ss:.3f} s "
+                            f"({'PLL travado' if is_regime else 'após a acomodação tₛ'}). "
+                            f"Não confundir com o pico transitório.",
+                            self._classify(err_ss_deg, ERR_SS_DEG_THRESH),
+                            target="Erro de fase")
+        else:
+            ss_card = ""
 
         pll = "".join([
             _card("IAE", _v(m.get("IAE"), 3), "rad·s", "∫|e| dt",
@@ -1095,6 +1113,7 @@ switchScenario(currentKey);
                   target="Erro de fase"),
             ts_card,
             peak_card,
+            ss_card,
         ])
 
         rec_sub = "regime" if is_regime else "pós-clear"
@@ -1223,6 +1242,25 @@ switchScenario(currentKey);
                 parts.append(("bad", "Acomodação",
                               f"Δt = {ts_delta:.2f} s (tₛ = {ts:.3f} s) — "
                               "resposta lenta."))
+
+        # ── erro sustentado em regime permanente (após a acomodação) ─────────
+        err_ss_deg = float(np.degrees(m["err_ss_mean"])) if m.get("err_ss_mean") is not None else None
+        t_ss       = m.get("t_ss")
+        if err_ss_deg is not None and t_ss is not None:
+            ss_cls = self._classify(err_ss_deg, ERR_SS_DEG_THRESH)
+            win = "regime permanente" if is_regime else "regime pós-falta"
+            if ss_cls == "good":
+                parts.append(("good", "Erro de regime",
+                              f"Erro de fase sustentado de {err_ss_deg:.2f}° "
+                              f"(média para t ≥ {t_ss:.3f} s) — desprezível."))
+            elif ss_cls == "warn":
+                parts.append(("warn", "Erro de regime",
+                              f"Erro de fase sustentado de {err_ss_deg:.2f}° em {win} "
+                              f"(t ≥ {t_ss:.3f} s) — moderado."))
+            else:
+                parts.append(("bad", "Erro de regime",
+                              f"Erro de fase sustentado de {err_ss_deg:.2f}° em {win} "
+                              f"(t ≥ {t_ss:.3f} s) — elevado para regime permanente."))
 
         iae_cls = self._classify(iae, IAE_THRESH)
         if iae is not None:

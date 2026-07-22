@@ -64,6 +64,16 @@ A pasta de saída é montada sozinha pelo export a partir dessas variáveis —
 não precisa criar pasta nem mover arquivo. Cenários `_bad_pll` usam o
 `kp_pll × 0.2` automático do `params.m` (ver [[bad-pll-scenario]]).
 
+> ⚠️ **Bug de tempo de falta nos CSVs `_bad_pll` atuais (2026-07-21).** Os
+> cenários `_bad_pll` foram exportados com a falta em `t_fault = 0.6 s` /
+> `t_clear = 0.7 s` (janela até 1.0 s), enquanto os nominais usam
+> `t_fault = 0.3 s` / `t_clear = 0.4 s`. Com esse timing errado o PLL parece
+> "nunca acomodar" (erro de fase fora de ±1,15° até o fim) — **é artefato do
+> dado, não comportamento físico**. Re-simular os `_bad_pll` com a **mesma
+> falta dos nominais (0.3/0.4 s)**; corrigido, o PLL estabiliza em ~0,51 s. Aí
+> o card **Erro R.P.** nasce sozinho com `t_ss = tₛ ≈ 0,51 s` (ver
+> [[cards-metricas]]) — o pipeline Python já trata; só depende do CSV certo.
+
 Prioridade se não der tempo de rodar tudo: **#5 (bus6/1phase)** — é a falta
 assimétrica com a assinatura de sequência negativa mais clara.
 

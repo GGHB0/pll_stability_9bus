@@ -1,10 +1,15 @@
 ---
 name: pll-notch-implementation
-description: Aplicacao pratica de notch em SRF-PLL, ponto de insercao em uq, implementacao MATLAB/Simulink e relacao com o bloco de biblioteca do projeto
+description: Notch de 120 Hz no laco do SRF-PLL - testado em 2026-05, removido do modelo final (2026-07) por ser desnecessario. Registro historico da tentativa, nao o estado atual.
 source: Conversa tecnica do projeto (2026-05) + arquitetura extraida de pll_stability_9bus.slx
 ---
 
-# Notch no SRF-PLL - Implementacao Pratica
+# Notch no SRF-PLL - Implementacao Pratica (HISTORICO - removido do modelo)
+
+> **Status atual (2026-07):** este notch foi retirado do `pll_stability_9bus.slx`
+> pelo usuario - era de um teste e foi considerado desnecessario. Este arquivo
+> documenta a tentativa e o raciocinio de projeto, nao o estado atual do PLL.
+> Nao usar como referencia do modelo em vigor. Ver [[pll-gains-methodology]].
 
 ## Ponto conceitualmente correto
 
@@ -183,9 +188,7 @@ severos de baixa inércia. O notch ajuda a explicar e atacar o ripple de `120 Hz
 mas não resolve a perda de referência quando a dinâmica eletromecânica pós-falta
 leva o PLL para fora da sua região de captura.
 
-Leitura correta para o projeto: o notch continua válido para curtos assimétricos
-moderados; para baixa inércia + contingência severa, a limitação dominante passa a
-ser o lock-loss do PLL e não apenas a filtragem da segunda harmônica.
+Decisão final (2026-07): removido do modelo — ver status no topo do arquivo.
 
 ## Resumo
 

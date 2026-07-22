@@ -4,6 +4,50 @@
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-07-22 — TCC_Victor_Bruno_V9_novo_indice.docx
+
+- **Correção 4.2.2.3 (SRF-PLL): Simulink → PSIM**: ✅ ENTREGUE — a seção
+  descrevia a implementação do SRF-PLL no Simscape Electrical (bloco
+  Sinusoidal Measurement, params.m, notch discreto 120 Hz via Tustin). Na
+  verdade essa fase (4.2.2 — conversor/filtro/PI de corrente/PLL) foi
+  inteiramente modelada no **PSIM**, não no Simulink; 4.2.3 (geradores/rede/
+  falta) permanece Simulink, sem alteração. 3 blocos reescritos: [527] troca
+  "Simscape Electrical do MATLAB/Simulink" → "PSIM (Altair Engineering)";
+  [528] reescrito descrevendo os subcircuitos `Clarke`/`Park` (detector de
+  fase), Loop Filter PI, VCO via bloco `RESETI_I` com reset em 2π, ganhos
+  carregados de `parameters100MVA.txt` — **sem menção a notch 120 Hz**
+  (confirmado por rastreio do netlist `PSim\01_Sistema PLL_vfinal_100MVA
+  (backup)1.txt`: o único notch do PSIM é o de ressonância LCL na malha de
+  corrente, TFCN1/TFCN2, não relacionado ao PLL); [529] "modelo Simulink" →
+  "PSIM" e "bloco de controle" → "blocos de ganho do compensador PI
+  implementado no circuito". Fonte técnica: `kb/psim/psim_modeling.md` +
+  `kb/psim/psim_netlists.md`. Pipeline: `gen_psim_422.py` (regex por
+  paraId, evita erro de transcrição Unicode) → TOC marcado dirty (49
+  fldChar) → `repack.py`. Estado do XML: `C:\Temp\doc_tcc_psim422.xml`;
+  DOCX final: `C:\Temp\tcc_final.docx` (500979 bytes de document.xml),
+  entregue ao OneDrive às 01:03 (569972 bytes).
+
+- **Descoberta de renumeração do Cap.4 desde 19/07**: durante a inspeção
+  para a correção acima, `dump_headings.py` revelou que a numeração do
+  Cap.4 registrada em `content_map.md` (4.1 Foco do Estudo / 4.2
+  Plataformas de Simulação / 4.3 Modelagem, filhos 4.3.1–4.3.4) estava
+  desatualizada — o usuário reestruturou no Word depois da sessão de
+  19/07: 4.1+4.2 antigos fundidos em **4.1** único, antigo 4.3 → **4.2**
+  (filhos um nível acima: 4.2.1–4.2.3), Protocolos de Contingência voltou
+  a Ttulo2 como **4.3** (era Ttulo4 em 4.3.4.x). `content_map.md`
+  atualizado para refletir a numeração real e verificada.
+
+- **Limpeza do notch 120 Hz do PLL na KB** (texto/documentação apenas — o
+  bloco já havia sido removido do `.slx` anteriormente, foi um teste
+  descartado): `kb/pll/pll_notch_implementation.md` marcado como histórico
+  (status no topo, título "(HISTORICO - removido do modelo)"),
+  `kb/pll/_index.yaml` e `kb/simulation/params_workflow.md` ajustados para
+  não descrever o notch como recurso atual. Não tocado: o notch de
+  ressonância LCL na malha de corrente (`simulink_model.md`,
+  `lcl_filter.md`, `agp_current_control_theory.md`, `psim_netlists.md`,
+  `psim_modeling.md`) — é outro filtro, ainda válido, não relacionado ao
+  PLL.
+
 ## 2026-07-19 — TCC_Victor_Bruno_V9_novo_indice.docx
 
 - **Reestruturação interna do Cap.4** (19:49): ✅ ENTREGUE —

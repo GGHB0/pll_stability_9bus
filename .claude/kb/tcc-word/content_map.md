@@ -8,7 +8,8 @@ metadata:
 # TCC Word — Mapa de Conteúdo do Documento
 
 > Estado de cada seção do `TCC_Victor_Bruno_V9_novo_indice.docx` (numeração
-> do índice do professor, atualizado 2026-07-19 após reestruturação do Cap.4).
+> do índice do professor, atualizado 2026-07-22 — Cap.4 renumerado desde a
+> versão de 2026-07-19, ver nota na seção do Cap.4).
 > Padrões de edição OOXML e IDs: ver `docx_structure.md`.
 
 ## Legenda
@@ -57,34 +58,47 @@ metadata:
   equações 3.1–3.17 em tabela invisível (ver `equacoes.md`)
 - ⬜ **3.5** Resumo ou Conclusões do Capítulo
 
-## Cap. 4 — Metodologia de Análise (reestruturado 2026-07-19)
+## Cap. 4 — Metodologia de Análise (renumerado 2026-07-22)
 
-- ✅ Intro do capítulo (abordagem quantitativa + 4 etapas)
-- ✅ **4.1** Foco do Estudo — NOVO (2 §§: SRF-PLL grid-following sob
-  contingência; IEEE 9 barras modificado; CC/MPPT fora do escopo)
-- ✅ **4.2** Plataformas de Simulação – Características Individuais
-  (Python/NumPy/Pandas, PSIM, MATLAB/Simulink)
+> A reestruturação de 2026-07-19 (registrada em `historico_entregas.md`) tinha
+> produzido 4.1 Foco do Estudo / 4.2 Plataformas de Simulação / 4.3 Modelagem
+> e Dimensionamento (filhos 4.3.1–4.3.4). O usuário editou o documento no Word
+> depois disso — 4.1 e 4.2 antigos foram fundidos em um único **4.1**, o antigo
+> 4.3 desceu para **4.2** (mantendo os filhos, um nível acima: 4.2.1–4.2.3), e
+> os Protocolos de Contingência voltaram a Ttulo2 como **4.3** (não mais
+> Ttulo4 dentro de 4.x.4). Descoberto e confirmado via `dump_headings.py` em
+> 2026-07-22, durante a correção da seção do SRF-PLL (ver entrega 2026-07-22
+> em `historico_entregas.md`). Numeração abaixo é a atual, verificada.
+
+- ✅ **4.1** Plataforma de Simulação e Justificativa Técnica (fusão do antigo
+  Foco do Estudo + Plataformas de Simulação individuais)
   - ⚠️ Refs MATLAB/PSIM pendentes (Oscar comentário #9)
-- ✅ **4.3** Modelagem e Dimensionamento do Sistema de Estudo
-  - ✅ **4.3.1** IEEE 9 barras modificado (G2→VSI; Thevenin Z22 p/ PSIM)
-  - ✅ **4.3.2** Projeto do Conversor Fonte de Tensão e dos Controladores
-    - 4.3.2.1 Filtro LCL (eqs 4.1/4.2) · 4.3.2.2 PI de corrente ·
-      4.3.2.3 SRF-PLL (bloco Sinusoidal Measurement, notch 120 Hz, Kp/Ki)
+- ✅ **4.2** Modelagem e Dimensionamento do Sistema de Estudo
+  - ✅ **4.2.1** Modelo da Rede Elétrica: Sistema IEEE 9 Barras Modificado
+    (G2→VSI; Thevenin Z22 p/ PSIM)
+  - ✅ **4.2.2** Projeto do Conversor e dos Controladores
+    - 4.2.2.1 Filtro LCL (eqs 4.1/4.2) · 4.2.2.2 Sintonia do controle de
+      corrente · **4.2.2.3 Modelagem do Sistema de Sincronismo (SRF-PLL)** —
+      corrigido 2026-07-22: descreve implementação no **PSIM** (subcircuitos
+      Clarke/Park, Loop Filter PI, VCO via bloco `RESETI_I`,
+      `parameters100MVA.txt`), não mais Simulink/Sinusoidal Measurement; sem
+      menção ao notch 120 Hz (nunca existiu no PSIM, ver [[psim-modeling]])
     - ⚠️ Referencia [FIGURA 3.1] mas **placeholder não existe** → P1
-  - ✅ **4.3.3** Configuração da Simulação e Modelagem Dinâmica dos Geradores
+  - ✅ **4.2.3** Configuração da Simulação e Modelagem Dinâmica dos Geradores
     - Intro: ode23t (trapezoidal implícito, passo variável), RelTol 10⁻³,
       Ts=5 µs, Tsc=200 µs (5 kHz), janela 0,6 s, R2025a (confirmar versão)
-    - 4.3.3.1 Geradores G1/G3 (H₁=9,478 s, H₃=2,351 s, AVR AC1C, PSS1A)
-    - 4.3.3.2 Falta: bloco Fault Three-Phase + chaves SPST, 0,3→0,4 s
+    - 4.2.3.1 Geradores G1/G3 (H₁=9,478 s, H₃=2,351 s, AVR AC1C, PSS1A)
+    - 4.2.3.2 Falta: bloco Fault Three-Phase + chaves SPST, 0,3→0,4 s
       (6 ciclos), 4 tipos, FAULT_TYPE/BUS/LINE via params.m, **sem local fixo**
-    - 4.3.3.3 Monitoramento: logsout em 5 grupos de sinais, 2 taxas +
+    - 4.2.3.3 Monitoramento: logsout em 5 grupos de sinais, 2 taxas +
       interpolação, export automático (CSV+metadados por cenário),
       pipeline Python (IAE/ISE/ts/pico/ΔP/ΔQ, FFT segmentada, LVRT 1547,
       tabela comparativa)
-  - ✏️ **4.3.4** Protocolos de Contingência (rebaixado de Ttulo2; era 3.3 no V8)
-    - 4.3.4.1 Afundamento Simétrico ([TABELA 3.1]) ·
-      4.3.4.2 Assimétrico ([TABELA 3.2]) — Ttulo4, fora do Sumário
-    - ⚠️ Texto original sem acentuação — corrigir em edição futura
+- ✏️ **4.3** Protocolos de Contingência e Análise de Cenários (voltou a
+  Ttulo2 — antes era 4.3.4/Ttulo4)
+  - 4.3.1 Afundamento de Tensão Simétrico ([TABELA 3.1]) ·
+    4.3.2 Afundamento de Tensão Assimétrico ([TABELA 3.2])
+  - ⚠️ Texto original sem acentuação — corrigir em edição futura
 - ⬜ **4.4** Resumo do Capítulo
 
 ## Cap. 5 — Análise e Discussão de Resultados (PRIORIDADE)
@@ -118,7 +132,7 @@ metadata:
 | 2.6 | Perfil característico de afundamento de tensão | placeholder texto OK |
 | 2.X (ONS) | Curva de suportabilidade LVRT — ONS Sub. 2.10 | placeholder texto OK |
 | 2.X (ONS) | Requisito de injeção de reativo — ONS Sub. 2.10 | placeholder texto OK |
-| **3.1** | **Circuito VSI trifásico com filtro LCL e blocos PWM** | **SEM placeholder ⚠️** (citada em 4.3.2) |
+| **3.1** | **Circuito VSI trifásico com filtro LCL e blocos PWM** | **SEM placeholder ⚠️** (citada em 4.2.2) |
 
 > Numeração das figuras ainda é a herdada do V8 (2.1, 2.6, 3.1...) — não foi
 > renumerada junto com os capítulos; revisar quando as imagens forem inseridas.

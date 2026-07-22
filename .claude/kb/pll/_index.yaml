@@ -1,5 +1,5 @@
 folder: pll
-description: Teoria SRF-PLL, projeto de ganhos, cenários de contingência e implementação do filtro notch
+description: Teoria SRF-PLL, projeto de ganhos, cenários de contingência e tentativa (descartada) de filtro notch
 files:
   - file: srf_pll_theory.md
     name: srf-pll-theory
@@ -12,4 +12,4 @@ files:
     description: Os 4 cenários de contingência simulados, efeitos no SRF-PLL e métricas de avaliação
   - file: pll_notch_implementation.md
     name: pll-notch-implementation
-    description: Aplicação prática de notch em SRF-PLL, ponto de inserção em uq, implementação MATLAB/Simulink e relação com o bloco de biblioteca do projeto
+    description: Notch de 120 Hz no SRF-PLL testado em 2026-05 e removido do modelo final (2026-07) — registro histórico, não estado atual

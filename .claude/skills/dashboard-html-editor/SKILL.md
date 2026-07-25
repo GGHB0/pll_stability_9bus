@@ -1,7 +1,7 @@
 ---
 name: dashboard-html-editor
 description: Edita o pipeline Python que gera o relatório HTML interativo (output/pll_metrics.html) — SimData/ChartBuilder/HTMLRenderer em src/. Ativar sempre que o usuário pedir para mudar/adicionar/remover algo no dashboard: cards, métricas, gráficos, abas, tabela comparativa, tema light/dark, toggle PLL, diagrama unifilar, ou qualquer elemento visual/funcional do relatório. Também usar para regenerar e verificar o HTML após qualquer mudança em src/pipeline ou src/report.
-version: 1.1.0
+version: 1.3.0
 ---
 
 # Dashboard HTML Editor — Skill de Edição do Relatório Interativo
@@ -59,7 +59,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 | Card novo/removido | `renderer.py` (`_cards_html`) | `cards/cards-metricas.md` |
 | Coluna da tabela comparativa | `renderer.py` (`_table_row_data` + template JS + header) | `cards/comparison-table.md` |
 | Painel de gráfico / subplot | `chart.py` | `graficos/construcao-graficos.md` |
-| Overlay (zoom falta, LVRT, marcador tₛ, fantasma) | `chart.py`, `renderer.py` (JS) | `graficos/chart-analysis-overlays.md`, `graficos/dashboard-zoom-ghost.md` |
+| Overlay (zoom falta, LVRT, marcador tₛ) | `chart.py`, `renderer.py` (JS) | `graficos/chart-analysis-overlays.md`, `graficos/dashboard-zoom-export.md` |
 | Espectro FFT | `spectrum.py` | `graficos/espectro-fourier.md` |
 | Aba de navegação | `renderer.py` (tab-bar + `switchTab`) | `layout/tabs-navegacao.md` |
 | Tema light/dark | `renderer.py` (`_css`, `toggleTheme`) | `layout/dark-mode-theming.md` |
@@ -115,6 +115,20 @@ numa janela por regra de cenário), que tocou `loader.py`, `settings.py`
 (cards, tabela comparativa, JS de ordenação, story) simultaneamente — grepar
 o nome da chave/threshold no `src/` inteiro antes de considerar a renomeação
 completa, não só nos arquivos "óbvios".
+
+v1.3.0 (2026-07-25): removido o overlay "Comparar PLL" (`ghost-toggle`,
+`ghostMode`/`_exactEquiv`/`_ghostData`/`toggleGhost` em `renderer.py`) por
+não estar sendo usado — não confundir com o toggle nominal/sintonia
+inadequada (`pllMode`), que é feature separada e não foi tocado; doc
+`graficos/dashboard-zoom-ghost.md` virou `graficos/dashboard-zoom-export.md`
+(nome não fazia mais sentido sem o fantasma). Também corrigido um bug real
+achado ao investigar "título dos gráficos deveria ser branco": a barra de
+título do painel (`_label`) já era branca no Python, mas o JS
+`themedLayout` a confundia com `_group_title` (ambos usam `xref="paper"`
+desde o redesign de títulos) e sobrescrevia para cinza — fix por `yref`,
+detalhes em `layout/dark-mode-legend-title-fixes.md` (Fix 5). Terceira
+mudança da sessão: eixo Y dos gráficos passou a mostrar nome+unidade
+completo (`"Ângulo (°)"`) em vez de só a unidade.
 
 Atualizar a tabela e as convenções conforme novas edições no dashboard
 revelarem passos, armadilhas ou arquivos que valha registrar — esta skill

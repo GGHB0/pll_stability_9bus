@@ -5,6 +5,40 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-25 — Eixo Y com nome+unidade, título branco fix e remoção do "Comparar PLL"
+
+Arquivos: `src/pipeline/chart.py`, `src/report/renderer.py`
+
+- **Eixo Y dos gráficos** (pedido do usuário): mostrava só a unidade
+  (`"°"`, `"pu"`); agora mostra o nome completo da grandeza + unidade entre
+  parênteses (ex. `"Ângulo (°)"`, `"P / Q UFV (pu)"`), como já é o texto de
+  origem em `_inv_rows`/`_sys_rows`. A barra de título do painel continua
+  mostrando só o nome.
+- **Bug real corrigido — título do painel não ficava branco**: já era
+  branco no Python (`_label` em `chart.py`/`spectrum.py`), mas o JS
+  `themedLayout` (`renderer.py`) confundia a barra de título com o
+  subtítulo de grupo (`_group_title`) — ambos usam `xref="paper"` desde o
+  redesign de títulos (`b2bbb2a`, 2026-07-21) — e sobrescrevia a cor para
+  cinza/slate em ambos os temas. Fix: distinguir por `yref` (`"paper"` =
+  barra de título, intocada; `"y... domain"` = subtítulo de grupo,
+  re-temado). Detalhes em `dashboard/layout/dark-mode-legend-title-fixes.md`
+  (Fix 5).
+- **Removido o overlay "Comparar PLL"** (pedido do usuário — não estava
+  sendo usado): botão `ghost-toggle`, `ghostMode`, `_exactEquiv`,
+  `_ghostData`, `toggleGhost`, a injeção `.concat(_ghostData(which))` em
+  `_renderChart` e o bloco `gbtn` de `_syncCtrlButtons`. **Não afeta** o
+  toggle nominal/sintonia inadequada (`pllMode`) — feature separada,
+  mantida.
+- KB: `dashboard/graficos/construcao-graficos.md` (eixo Y),
+  `dashboard/layout/dark-mode-theming.md` +
+  `dashboard/layout/dark-mode-legend-title-fixes.md` (novo doc, fragmentado
+  do anterior pelo limite de 200 linhas — Fix 5), `dashboard/graficos/
+  dashboard-zoom-ghost.md` renomeado para `dashboard-zoom-export.md` (nome
+  não fazia mais sentido sem o fantasma), `dashboard/index.md`,
+  `dashboard/layout/{estrutura-html,tabs-navegacao}.md`,
+  `dashboard/graficos/espectro-fourier.md`; skill `dashboard-html-editor`
+  em v1.3.0.
+
 ## 2026-07-25 — Cards de tensão: mínimo → média (V médio / V residual médio)
 
 Arquivos: `src/pipeline/loader.py`, `src/config/settings.py`,
@@ -118,49 +152,11 @@ Arquivos: `src/report/renderer.py`
 - KB atualizado: `dashboard/index.md`, `layout/bad-pll-dashboard-filter.md`,
   `graficos/dashboard-zoom-ghost.md`, `simulation/export_workflow.md`.
 
-## 2026-07-15 — Espectro FFT multi-modo (a/b/c/d/q) + tabela de harmônicas
-
-Arquivos: `src/pipeline/spectrum.py`, `src/config/settings.py`,
-`src/config/__init__.py`, `app.py`, `src/report/renderer.py`
-
-- **SpectrumBuilder multi-modo**: além da fase A, espectros das fases b/c
-  (de `sim_data_abc.csv`) e dos eixos d/q (sinais dq a Tsc=200 µs); `build()`
-  devolve dicts de figuras/trace_maps por modo + dados de harmônicas.
-- **Ciclos inteiros**: janela da FFT truncada a `floor(T·60)/60` s — a
-  fundamental (e 120 Hz da seq. negativa) cai exata num bin, sem vazamento
-  por janela cortada no meio do ciclo.
-- **Seletor de fase** na seção Espectro: botões a/b/c/d/q (sticky entre
-  cenários; botões sem dado somem); título/hint acompanham; marcadores
-  próprios para dq (`SPEC_MARKERS_DQ`: 2f₁, 6f₁, 12f₁, f_res).
-- **Tabela de harmônicas 1ª–7ª** (60–420 Hz) por segmento × fase/eixo, para
-  corrente e tensão UFV; célula ≥ 0,4 pu destacada (accent), < 0,02 pu
-  apagada — só amplitude na ordem da nominal chama atenção.
-- Detalhes em `.claude/kb/dashboard/graficos/espectro-fourier.md`.
-
-## 2026-07-15 — Abas de gráficos + aba Resumo + cards clicáveis
-
-Arquivos: `src/pipeline/chart.py`, `app.py`, `src/report/renderer.py`
-
-- **Abas**: as 3 seções de gráficos empilhadas viram painéis de aba
-  (📌 Resumo · ⚡ Inversor UFV · 🔌 Sistema 9-Bus · 📈 Espectro FFT); só a
-  aba ativa é renderizada (`Plotly.react` sob demanda via flags `_dirty`) —
-  troca de cenário/tema roda 1 react em vez de 3. Abas sem dado somem;
-  se a ativa não existe no cenário, cai para a 1ª disponível.
-- **Aba Resumo** (padrão): figura nova `build_resume()` no ChartBuilder com
-  os painéis essenciais — erro de fase (banda ±tol + tₛ), frequência PLL,
-  P/Q UFV e |V| Bus 2 (LVRT). Decimação própria `_RES_MAX_POINTS = 2000`
-  limita o custo de duplicar traces no HTML.
-- **Cards clicáveis**: métricas ganham `onclick=goToChart(rótulo)` — procura
-  o rótulo de painel nas figuras (ordem res → inv → sys), abre a aba e rola
-  até o painel usando o domínio do eixo Y (scroll via `setTimeout`, não rAF,
-  para funcionar com a aba do browser em segundo plano).
-- **Zoom**: `_applyZoom`/ponte manual generalizados para res/inv/sys (spec
-  fora — eixo em Hz); só tocam gráficos já plotados e limpos.
-- Trade-off registrado: sem visão inv+sys lado a lado rolando a página —
-  compensado pela aba Resumo, que junta o essencial das duas seções.
-
 ## Entradas anteriores
 
+- [2026-07-15](docs/changelog/2026-07-15.md) — espectro FFT multi-modo
+  (a/b/c/d/q) + tabela de harmônicas, abas de gráficos + aba Resumo + cards
+  clicáveis.
 - [2026-07-14](docs/changelog/2026-07-14.md) — regime sem tₛ, cards de
   severidade renomeados para "V residual", Vmin das Barras 1 e 3.
 - [2026-07-12](docs/changelog/2026-07-12.md) — export de correntes/tensões

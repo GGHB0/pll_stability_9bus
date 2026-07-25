@@ -16,8 +16,8 @@ pré-computado em Python e embutido no objeto `SCENARIOS`.
    de tema.
 2. `.filter-bar` — `<select>` de cenário, toggle PLL
    ([[bad-pll-dashboard-filter]], só se houver cenário BAD_PLL), botões:
-   Mapa IEEE 9-bus, Comparativo, Zoom na falta, Comparar PLL
-   ([[dashboard-zoom-ghost]]).
+   Mapa IEEE 9-bus, Comparativo, Zoom na falta ([[dashboard-zoom-export]]).
+   Botão "Comparar PLL" (overlay fantasma) removido em 2026-07-25.
 3. `#diagram-section` — SVG unifilar clicável.
 4. `#table-section` — comparativo, oculto por padrão ([[comparison-table]]).
 5. `.tab-bar` + painéis de aba `#sec-res`/`#sec-inv`/`#sec-sys`/`#sec-spec`.
@@ -46,8 +46,7 @@ acessa genericamente (`sc[which + "Data"]`).
 
 ## Fluxo `switchScenario(key)`
 
-1. `_syncCtrlButtons()` — habilita/desabilita zoom (sem `tFault`) e ghost
-   (sem par exato nominal↔bad_pll).
+1. `_syncCtrlButtons()` — habilita/desabilita zoom (sem `tFault`).
 2. `updateFaultUI(sc)` — subtítulo do header + badges "Falta: t = …" dos
    painéis de aba (ocultos em regime).
 3. Marca todos os gráficos como sujos e chama `switchTab(activeTab)` — só a

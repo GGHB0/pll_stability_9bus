@@ -32,7 +32,7 @@ para `t ∈ {inv, sys, spec}` — `res` não tem essas chaves (sem figura).
 
 - `_dirty[t] = true` marca que o gráfico precisa de `Plotly.react`.
 - `switchScenario` e `toggleTheme` sujam TODOS e renderizam só a aba ativa
-  (`_renderChart(activeTab)`); `toggleGhost` reusa `switchScenario`.
+  (`_renderChart(activeTab)`).
 - `switchTab(which)` renderiza sob demanda se a aba estiver suja e então
   reaplica pontes (`_ensureBridges`) e zoom (`_applyZoom`).
 - Se a aba pedida não existe no cenário, `switchTab` cai para a 1ª

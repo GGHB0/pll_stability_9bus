@@ -164,12 +164,13 @@ class ChartBuilder:
     _BAR_COLOR = "#185FA5"   # barra de título (estilo header Power BI)
 
     def _label(self, text: str, ax_idx: int) -> None:
-        """Barra de título no topo do painel + unidade no eixo Y (vertical).
-        Responde ao Ponto 2 do professor: o rótulo deixa de ser annotation
-        horizontal no canto — o nome vira uma barra de título preenchida
-        (texto branco centralizado) encostada no topo do painel, e a unidade
-        vira o título do eixo Y, rotacionada e encostada no eixo."""
-        title, unit = self._split_label(text)
+        """Barra de título no topo do painel + nome completo (com unidade) no
+        eixo Y (vertical). Responde ao Ponto 2 do professor: o rótulo deixa de
+        ser annotation horizontal no canto — o nome vira uma barra de título
+        preenchida (texto branco centralizado) encostada no topo do painel, e
+        o texto completo "Nome (unidade)" vira o título do eixo Y, rotacionado
+        e encostado no eixo."""
+        title, _unit = self._split_label(text)
         n = self._n_rows_fig
         xname = "xaxis" if ax_idx == 1 else f"xaxis{ax_idx}"
         yname = "yaxis" if ax_idx == 1 else f"yaxis{ax_idx}"
@@ -189,8 +190,8 @@ class ChartBuilder:
             x=xc, y=y_top + bar_h / 2, xanchor="center", yanchor="middle",
             font=dict(size=11, color="#ffffff"), showarrow=False,
         )
-        # unidade no eixo Y, na vertical
-        self._fig.layout[yname].title.text = unit
+        # nome completo (com unidade) no eixo Y, na vertical
+        self._fig.layout[yname].title.text = text
         self._fig.layout[yname].title.font = dict(size=10, color="#6b7280")
         self._fig.layout[yname].title.standoff = 4
 

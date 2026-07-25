@@ -80,8 +80,7 @@ ambos em settings.py.
   hint (`#spec-phase-hint`). `specPhase` é **sticky** entre cenários — se o
   modo não existir no cenário novo, cai para o primeiro disponível.
 - `_renderChart("spec")` resolve a figura via `_specFig(sc)`; filename do
-  PNG ganha sufixo do modo (`pll_<cenário>_spec_<modo>`). `_ghostData`
-  compara o mesmo modo do cenário PLL equivalente.
+  PNG ganha sufixo do modo (`pll_<cenário>_spec_<modo>`).
 - **Tabela de harmônicas** (`_spec_table_html`, por cenário, injetada em
   `#spec-harm-area` no `switchScenario`): duas tabelas (Corrente UFV /
   Tensão UFV), linhas h=1ª…7ª (60–420 Hz), colunas agrupadas por segmento ×

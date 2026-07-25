@@ -91,10 +91,6 @@ class HTMLRenderer:
         scenarios_js  = json.dumps(sc_js)
         select_html   = self._select_html()
         pll_toggle_html = self._pll_toggle_html() if has_bad_pll else ""
-        ghost_btn_html = (
-            '<button class="toggle-btn diag-btn" id="ghost-toggle" '
-            'onclick="toggleGhost()">Comparar PLL</button>'
-        ) if has_bad_pll else ""
         uerj_logo_html = self._uerj_logo_html()
 
         return f"""<!DOCTYPE html>
@@ -133,7 +129,6 @@ class HTMLRenderer:
   <button class="toggle-btn diag-btn" id="diagram-toggle" onclick="toggleDiagram()">Mapa IEEE 9-bus</button>
   <button class="toggle-btn diag-btn" id="table-toggle" onclick="toggleTable()">Comparativo</button>
   <button class="toggle-btn diag-btn" id="zoom-fault" onclick="toggleZoomFault()">Zoom na falta</button>
-  {ghost_btn_html}
 </div>
 
 <main class="main">
@@ -292,14 +287,15 @@ function themedLayout(figData, isDarkMode) {{
       axUpd[k] = Object.assign({{}}, lg, upd);
     }}
   }});
-  // _label (rótulo de painel) usa xref "x.../x{{n}} domain"; _group_title (subtítulo
-  // de barra) usa xref "paper" — só essas duas cores vêm fixas do chart.py (não
-  // herdam layout.font, então precisam de override manual por tema aqui.
+  // _group_title (subtítulo de barra) usa xref "paper" + yref "y.../y{{n}} domain" e
+  // precisa de override manual de cor por tema (não herda layout.font). _label
+  // (barra de título do painel) usa xref "paper" + yref "paper" também, mas sua
+  // fonte branca é fixa (texto sobre a barra azul) e deve ficar intocada nos dois
+  // temas — senão perde contraste contra o fundo escuro da barra.
   var annotations = (figData.layout.annotations || []).map(function(a) {{
-    var isGroupTitle = a.xref === "paper";
-    var color = isDarkMode
-      ? (isGroupTitle ? "#cbd5e1" : "#9ca3af")
-      : (isGroupTitle ? "#334155" : "#6b7280");
+    var isGroupTitle = a.xref === "paper" && a.yref !== "paper";
+    if (!isGroupTitle) return a;
+    var color = isDarkMode ? "#cbd5e1" : "#334155";
     return Object.assign({{}}, a, {{ font: Object.assign({{}}, a.font, {{ color: color }}) }});
   }});
   // Só a divisória do _group_title (xref "paper") é re-temada. Os demais shapes
@@ -342,8 +338,7 @@ function _renderChart(which) {{
   PLOTLY_CFG.toImageButtonOptions.filename =
     "pll_" + currentKey.split("/").join("_") + "_" + which
     + (which === "spec" ? "_" + specPhase : "");
-  var data = themedData(figData.data, light, dark, idx, isDark)
-    .concat(_ghostData(which));
+  var data = themedData(figData.data, light, dark, idx, isDark);
   Plotly.react(gd[which], data, themedLayout(figData, isDark), PLOTLY_CFG);
   _dirty[which] = false;
 }}
@@ -452,53 +447,6 @@ function _openTabAt(t, fig, yref) {{
   }}, 60);
 }}
 
-// ── Fantasma: sobrepõe o cenário equivalente do outro modo PLL ────────────
-
-var ghostMode = false;
-
-function _exactEquiv(key) {{
-  var sc = SCENARIOS[key];
-  if (!sc) return null;
-  var other = sc.badPll ? key.replace("_bad_pll", "") : key + "_bad_pll";
-  return SCENARIOS[other] ? other : null;
-}}
-
-function _ghostData(which) {{
-  if (!ghostMode) return [];
-  var other = _exactEquiv(currentKey);
-  if (!other) return [];
-  var o = SCENARIOS[other];
-  var fig, idx, colors;
-  if (which === "spec") {{
-    if (!o.specModes || o.specModes.indexOf(specPhase) === -1) return [];
-    fig    = o.specData[specPhase];
-    idx    = o.specIdx[specPhase];
-    colors = isDark ? o.specDark[specPhase] : o.specLight[specPhase];
-  }} else {{
-    fig    = o[which + "Data"];
-    idx    = o[which + "Idx"];
-    colors = isDark ? o[which + "Dark"] : o[which + "Light"];
-  }}
-  if (!fig) return [];
-  var tag = o.badPll ? " (sintonia inadequada)" : " (nominal)";
-  // mesma cor do traço principal; pontilhado + opacidade marcam o fantasma
-  return idx.map(function(i, pos) {{
-    var tr = fig.data[i];
-    return Object.assign({{}}, tr, {{
-      opacity: 0.5,
-      line: Object.assign({{}}, tr.line, {{ color: colors[pos], dash: "dot", width: 1.2 }}),
-      name: (tr.name || "") + tag,
-      showlegend: false,
-      hoverinfo: "skip",
-    }});
-  }});
-}}
-
-function toggleGhost() {{
-  ghostMode = !ghostMode;
-  switchScenario(currentKey);
-}}
-
 // ── Zoom na janela de falta ───────────────────────────────────────────────
 
 var zoomFault = false;
@@ -591,13 +539,6 @@ function _syncCtrlButtons() {{
   zbtn.disabled = (sc.tFault == null);
   zbtn.classList.toggle("active", zoomFault);
   zbtn.innerHTML = zoomFault ? "Visão completa" : "Zoom na falta";
-  var gbtn = document.getElementById("ghost-toggle");
-  if (gbtn) {{
-    if (_exactEquiv(currentKey) == null) ghostMode = false;
-    gbtn.disabled = (_exactEquiv(currentKey) == null);
-    gbtn.classList.toggle("active", ghostMode);
-    gbtn.innerHTML = ghostMode ? "Ocultar comparação" : "Comparar PLL";
-  }}
 }}
 
 function updateFaultUI(sc) {{

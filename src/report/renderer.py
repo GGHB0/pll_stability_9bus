@@ -99,7 +99,7 @@ class HTMLRenderer:
         pll_toggle_html = self._pll_toggle_html() if has_bad_pll else ""
         ghost_btn_html = (
             '<button class="toggle-btn diag-btn" id="ghost-toggle" '
-            'onclick="toggleGhost()">👻&nbsp;Comparar PLL</button>'
+            'onclick="toggleGhost()">Comparar PLL</button>'
         ) if has_bad_pll else ""
         uerj_logo_html = self._uerj_logo_html()
 
@@ -127,7 +127,6 @@ class HTMLRenderer:
   </div>
   <div class="h-right">
     <button class="toggle-btn" onclick="toggleTheme()">
-      <span id="ico">🌙</span>
       <span id="lbl">Dark mode</span>
     </button>
   </div>
@@ -137,9 +136,9 @@ class HTMLRenderer:
   <span class="filter-label">Cenário</span>
   {select_html}
   {pll_toggle_html}
-  <button class="toggle-btn diag-btn" id="diagram-toggle" onclick="toggleDiagram()">🗺 Mapa IEEE 9-bus</button>
-  <button class="toggle-btn diag-btn" id="table-toggle" onclick="toggleTable()">📊 Comparativo</button>
-  <button class="toggle-btn diag-btn" id="zoom-fault" onclick="toggleZoomFault()">🔍&nbsp;Zoom na falta</button>
+  <button class="toggle-btn diag-btn" id="diagram-toggle" onclick="toggleDiagram()">Mapa IEEE 9-bus</button>
+  <button class="toggle-btn diag-btn" id="table-toggle" onclick="toggleTable()">Comparativo</button>
+  <button class="toggle-btn diag-btn" id="zoom-fault" onclick="toggleZoomFault()">Zoom na falta</button>
   {ghost_btn_html}
 </div>
 
@@ -177,10 +176,10 @@ class HTMLRenderer:
   </div>
 
   <div class="tab-bar" id="tab-bar">
-    <button class="tab-btn active" id="tab-res"  onclick="switchTab('res')">📌 Resumo</button>
-    <button class="tab-btn" id="tab-inv"  onclick="switchTab('inv')">⚡ Inversor UFV</button>
-    <button class="tab-btn" id="tab-sys"  onclick="switchTab('sys')">🔌 Sistema 9-Bus</button>
-    <button class="tab-btn" id="tab-spec" onclick="switchTab('spec')">📈 Espectro FFT</button>
+    <button class="tab-btn active" id="tab-res"  onclick="switchTab('res')">Resumo</button>
+    <button class="tab-btn" id="tab-inv"  onclick="switchTab('inv')">Inversor UFV</button>
+    <button class="tab-btn" id="tab-sys"  onclick="switchTab('sys')">Sistema 9-Bus</button>
+    <button class="tab-btn" id="tab-spec" onclick="switchTab('spec')">Espectro FFT</button>
   </div>
 
   <div class="chart-section" id="sec-res" style="display:none">
@@ -603,13 +602,13 @@ function _syncCtrlButtons() {{
   if (sc.tFault == null) zoomFault = false;
   zbtn.disabled = (sc.tFault == null);
   zbtn.classList.toggle("active", zoomFault);
-  zbtn.innerHTML = zoomFault ? "🔍&nbsp;Visão completa" : "🔍&nbsp;Zoom na falta";
+  zbtn.innerHTML = zoomFault ? "Visão completa" : "Zoom na falta";
   var gbtn = document.getElementById("ghost-toggle");
   if (gbtn) {{
     if (_exactEquiv(currentKey) == null) ghostMode = false;
     gbtn.disabled = (_exactEquiv(currentKey) == null);
     gbtn.classList.toggle("active", ghostMode);
-    gbtn.innerHTML = ghostMode ? "👻&nbsp;Ocultar comparação" : "👻&nbsp;Comparar PLL";
+    gbtn.innerHTML = ghostMode ? "Ocultar comparação" : "Comparar PLL";
   }}
 }}
 
@@ -842,7 +841,7 @@ function toggleDiagram() {{
   var btn = document.getElementById("diagram-toggle");
   var hidden = sec.style.display === "none";
   sec.style.display = hidden ? "" : "none";
-  btn.innerHTML = hidden ? "🗺&nbsp;Ocultar mapa" : "🗺&nbsp;Mapa IEEE 9-bus";
+  btn.innerHTML = hidden ? "Ocultar mapa" : "Mapa IEEE 9-bus";
   btn.style.opacity = hidden ? "1" : "0.85";
 }}
 
@@ -852,7 +851,6 @@ function toggleTheme() {{
   TABS.forEach(function(t) {{ _dirty[t] = true; }});
   _renderChart(activeTab);
   _applyZoom();
-  document.getElementById("ico").textContent = isDark ? "☀️" : "🌙";
   document.getElementById("lbl").textContent = isDark ? "Light mode" : "Dark mode";
 }}
 

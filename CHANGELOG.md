@@ -5,6 +5,22 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-24 — Remoção dos ícones emoji dos botões/abas
+
+Arquivos: `src/report/renderer.py`
+
+- **Motivação (pedido do usuário)**: os emoji decorativos nos botões da
+  filter-bar, nas abas de gráficos e no toggle de tema não ficavam bem
+  visualmente.
+- Removidos: 🗺 (Mapa IEEE 9-bus), 📊 (Comparativo), 🔍 (Zoom na falta),
+  👻 (Comparar PLL), 📌/⚡/🔌/📈 (abas Resumo/Inversor/Sistema/Espectro) e
+  🌙/☀️ (ícone do toggle de tema — o rótulo de texto "Dark mode"/"Light
+  mode" já bastava, o `<span id="ico">` foi removido).
+- Todos os labels viram texto puro; nenhuma função/id JS mudou.
+- KB atualizado: `dashboard/layout/{estrutura-html,tabs-navegacao,
+  header-branding}.md`, `dashboard/graficos/dashboard-zoom-ghost.md`,
+  `dashboard/cards/comparison-table.md`.
+
 ## 2026-07-24 — Remoção das métricas ΔP/ΔQ UFV
 
 Arquivos: `src/config/settings.py`, `src/config/__init__.py`,

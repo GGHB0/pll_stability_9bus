@@ -7,7 +7,7 @@ description: Controles novos do dashboard — botão de zoom na janela de falta,
 
 Adicionados em 2026-07 junto com [[chart-analysis-overlays]].
 
-## 🔍 Zoom na falta
+## Zoom na falta
 
 Botão `#zoom-fault` na filter-bar. `_applyZoom()` usa `Plotly.relayout` com
 dotted-path (**válido em relayout**, ao contrário de `Plotly.react` — ver
@@ -61,7 +61,7 @@ Como `Plotly.react` reseta o range, `_applyZoom()` é chamado **depois** dos
 reacts em `switchScenario` e `toggleTheme` — o zoom do botão persiste entre
 cenários e temas (o zoom manual não persiste: react restaura autorange).
 
-## 👻 Fantasma nominal × BAD_PLL
+## Fantasma nominal × BAD_PLL
 
 Botão `#ghost-toggle` (renderizado só se `has_bad_pll`). Sobrepõe os traces
 do cenário equivalente do outro modo PLL no mesmo gráfico:

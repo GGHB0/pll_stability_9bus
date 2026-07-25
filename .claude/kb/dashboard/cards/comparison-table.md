@@ -118,4 +118,4 @@ var(--badge-bg)`.
 | Clique em linha da tabela | `switchScenario` — sincroniza dropdown, mapa SVG e gráficos |
 | Clique em header ordenável | Ordena asc; clique de novo no mesmo header inverte para desc |
 | Toggle PLL (nominal/bad) | Filtra linhas visíveis, mesma regra do `<select>` |
-| Toggle "📊 Comparativo" | Só mostra/oculta a seção — não precisa re-renderizar |
+| Toggle "Comparativo" | Só mostra/oculta a seção — não precisa re-renderizar |

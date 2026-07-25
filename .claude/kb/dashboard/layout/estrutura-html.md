@@ -16,7 +16,7 @@ pré-computado em Python e embutido no objeto `SCENARIOS`.
    de tema.
 2. `.filter-bar` — `<select>` de cenário, toggle PLL
    ([[bad-pll-dashboard-filter]], só se houver cenário BAD_PLL), botões:
-   🗺 Mapa IEEE 9-bus, 📊 Comparativo, 🔍 Zoom na falta, 👻 Comparar PLL
+   Mapa IEEE 9-bus, Comparativo, Zoom na falta, Comparar PLL
    ([[dashboard-zoom-ghost]]).
 3. `#diagram-section` — SVG unifilar clicável.
 4. `#cards-area` / `#story-area` — HTML pré-gerado ([[cards-metricas]]);

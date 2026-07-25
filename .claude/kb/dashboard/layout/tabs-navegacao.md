@@ -10,10 +10,10 @@ Desde 2026-07-15 as seções de gráficos não são mais empilhadas: uma
 
 | Aba | id | Conteúdo | Disponibilidade |
 |---|---|---|---|
-| 📌 Resumo | `sec-res` | `fig_res` — painéis essenciais ([[construcao-graficos]]) | `hasRes` |
-| ⚡ Inversor UFV | `sec-inv` | `fig_inv` | `hasInv` (sempre true) |
-| 🔌 Sistema 9-Bus | `sec-sys` | `fig_sys` | `hasSys` |
-| 📈 Espectro FFT | `sec-spec` | `fig_spec` ([[espectro-fourier]]) | `hasSpec` |
+| Resumo | `sec-res` | `fig_res` — painéis essenciais ([[construcao-graficos]]) | `hasRes` |
+| Inversor UFV | `sec-inv` | `fig_inv` | `hasInv` (sempre true) |
+| Sistema 9-Bus | `sec-sys` | `fig_sys` | `hasSys` |
+| Espectro FFT | `sec-spec` | `fig_spec` ([[espectro-fourier]]) | `hasSpec` |
 
 Estado JS: `TABS = ["res","inv","sys","spec"]`, mapas `gd/secEl/tabBtn/badgeEl`
 indexados pelo nome curto, `HASKEY` traduz aba → flag do `SCENARIOS`.
@@ -35,7 +35,7 @@ o que permite acesso genérico `sc[which + "Data"]` (também usado pelo ghost).
 ## Zoom entre abas
 
 `TIME_TABS = ["res","inv","sys"]` (spec fora — eixo x em Hz). Tanto o
-`_applyZoom` (🔍 Zoom na falta) quanto a ponte de zoom manual
+`_applyZoom` (botão "Zoom na falta") quanto a ponte de zoom manual
 (`_bridgeZoom`, genérica por aba) só tocam gráficos `_plotted(t)` =
 div com `.data` e não-sujo. Gráfico sujo renderiza do zero ao abrir a
 aba e recebe o zoom vigente logo em seguida via `_applyZoom` — zoom

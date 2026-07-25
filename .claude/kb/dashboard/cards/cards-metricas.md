@@ -45,9 +45,25 @@ comparativa mostra "—" na coluna tₛ.
 **"V residual"** (2026-07-14): tensão remanescente do afundamento — termo do
 PRODIST Módulo 8 / IEC 61000, escolhido pelo usuário no lugar de "V min" para
 comunicar "quanto caiu durante o curto". Em **regime** (sem curto) o nome
-volta a "V min B1/B2/B3" (variável `vlab` em `_cards_html`). O texto do item
-"Distúrbio" no story também usa "V residual = X pu". A tabela comparativa
-mantém "Vmin B1/B2/B3 (pu)" — genérico, vale também para a linha de regime.
+volta a "V min B1/B2/B3" (variável `vlab` em `_cards_html`).
+
+**Mínimo → média (2026-07-25)**: os cards de severidade não mostram mais o
+pior instante (`vmin` = `.min()`), e sim a **média** de |V| na barra
+(`vavg` = `.mean()`, loader `_compute_metrics`), com janela por regra:
+sempre `t ≥ T_SETTLE` (nunca conta o transitório de partida do PLL); em
+**regime** a janela é o período inteiro `[T_SETTLE, fim]`; numa **falta** é
+só o período do curto `[t_start, t_clear]` (antes ia até o fim da simulação,
+incluindo a recuperação pós-clear — isso mudou). Motivo: o mínimo
+instantâneo é sensível a um único ponto do transitório; a média durante o
+curto é mais fiel ao conceito de "tensão residual" da norma (PRODIST/IEC),
+que é definido sobre o período do afundamento, não sobre a pior amostra.
+Rótulos: `vlab = "V médio"` (regime) / `"V residual médio"` (falta). O texto
+do item "Distúrbio" no story usa "V residual médio = X pu". A tabela
+comparativa usa "V méd. B1/B2/B3 (pu)" — genérico, vale para as duas
+janelas. Threshold `VBUS_AVG_THRESH` (ex-`VBUS_MIN_THRESH`) manteve os
+mesmos valores (0.90/0.50 pu) por ora — como a média tende a ficar mais alta
+que o mínimo que ela substitui, pode exigir recalibração se o veredito de
+muitos cenários mudar de classe (a validar contra a distribuição real).
 
 Estados especiais:
 - **tₛ "não acomodou"** (`settled = False`): valor "> t_end s", classe `bad` —
@@ -81,9 +97,9 @@ Cada card: nome, valor (ou "—" se `None`), unidade, subtítulo e tooltip via `
 ## Semáforo (`_classify`)
 
 Thresholds em `config/settings.py`: `IAE_THRESH`, `ISE_THRESH`,
-`TS_DELTA_THRESH`, `PEAK_ERR_DEG_THRESH`, `VBUS_MIN_THRESH`
-(`lower_is_better=False`; mesma escala para V min das barras 1, 2 e 3 — mas o
-veredito LVRT usa só a B2). Para tₛ o classificado é
+`TS_DELTA_THRESH`, `PEAK_ERR_DEG_THRESH`, `VBUS_AVG_THRESH`
+(`lower_is_better=False`; mesma escala para V médio das barras 1, 2 e 3 — mas
+o veredito LVRT usa só a B2). Para tₛ o classificado é
 `ts_delta = tₛ − t_fault` (vem pronto do loader). Calibrados sobre a
 distribuição real dos 12 cenários (2026-07): pico saudável 1°, faltas
 trifásicas remotas ~26–35° (warn), BAD_PLL 178° (bad).

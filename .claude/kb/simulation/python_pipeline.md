@@ -132,8 +132,8 @@ Este valor real (não a constante global `T_FAULT`) é o que alimenta:
 | `IAE` | ∫\|θ_err\| dt | t ≥ max(t_fault, T_SETTLE) |
 | `ISE` | ∫θ_err² dt | t ≥ max(t_fault, T_SETTLE) |
 | `ts` | último t com \|θ_err\| > TOL_RAD | t ≥ max(t_fault, T_SETTLE) |
-| `vmin` | min(vbus2_pu) | t ≥ max(t_fault, T_SETTLE) |
-| `vmin_bus1`, `vmin_bus3` | min(vbus1_pu), min(vbus3_pu) | idem (`None` sem a coluna) |
+| `vavg` | mean(vbus2_pu) — não mínimo, desde 2026-07-25 | regime: t ≥ T_SETTLE até o fim; falta: t_start → t_clear |
+| `vavg_bus1`, `vavg_bus3` | idem para vbus1/vbus3 | idem (`None` sem a coluna) |
 
 `dP_ufv`/`dQ_ufv` (excursão de P/Q na janela pós-clear) foram removidos em
 2026-07-24 — ver [[pipeline-dados]] em `kb/dashboard/dados/`.

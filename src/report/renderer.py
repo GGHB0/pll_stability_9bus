@@ -20,7 +20,7 @@ import plotly.graph_objects as go
 from ..config import (
     T_SETTLE, TOL_RAD, LVRT_THRESHOLD, F_FUND_HZ,
     IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH,
-    PEAK_ERR_DEG_THRESH, ERR_SS_DEG_THRESH, SYNC_LOSS_DEG, VBUS_MIN_THRESH,
+    PEAK_ERR_DEG_THRESH, ERR_SS_DEG_THRESH, SYNC_LOSS_DEG, VBUS_AVG_THRESH,
 )
 from ..pipeline.loader import SimData
 
@@ -156,9 +156,9 @@ class HTMLRenderer:
             <th data-key="ise">ISE (rad²·s)</th>
             <th data-key="ts">tₛ (s)</th>
             <th data-key="peak">|θ_err| pico (°)</th>
-            <th data-key="vmin">Vmin B2 (pu)</th>
-            <th data-key="vmin_b1">Vmin B1 (pu)</th>
-            <th data-key="vmin_b3">Vmin B3 (pu)</th>
+            <th data-key="vavg">V méd. B2 (pu)</th>
+            <th data-key="vavg_b1">V méd. B1 (pu)</th>
+            <th data-key="vavg_b3">V méd. B3 (pu)</th>
           </tr>
         </thead>
         <tbody id="cmp-tbody"></tbody>
@@ -679,7 +679,7 @@ function renderComparisonTable() {{
     var active = (k === currentKey) ? " cmp-active" : "";
     return "<tr class=\\"cmp-row" + active + "\\" onclick=\\"_pickTableRow('" + k + "')\\">"
       + "<td class=\\"cmp-label\\">" + sc.label + "</td>"
-      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.vmin) + _cmpCell(r.vmin_b1) + _cmpCell(r.vmin_b3)
+      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.vavg) + _cmpCell(r.vavg_b1) + _cmpCell(r.vavg_b3)
       + "</tr>";
   }}).join("");
 }}
@@ -1006,9 +1006,9 @@ switchScenario(currentKey);
             "ise":  cell(m.get("ISE"), 4, ISE_THRESH),
             "ts":   ts_cell,
             "peak": cell(peak_deg, 1, PEAK_ERR_DEG_THRESH),
-            "vmin":    cell(m.get("vmin"),      3, VBUS_MIN_THRESH, lower_is_better=False),
-            "vmin_b1": cell(m.get("vmin_bus1"), 3, VBUS_MIN_THRESH, lower_is_better=False),
-            "vmin_b3": cell(m.get("vmin_bus3"), 3, VBUS_MIN_THRESH, lower_is_better=False),
+            "vavg":    cell(m.get("vavg"),      3, VBUS_AVG_THRESH, lower_is_better=False),
+            "vavg_b1": cell(m.get("vavg_bus1"), 3, VBUS_AVG_THRESH, lower_is_better=False),
+            "vavg_b3": cell(m.get("vavg_bus3"), 3, VBUS_AVG_THRESH, lower_is_better=False),
         }
 
     def _cards_html(self, data: SimData) -> str:
@@ -1100,24 +1100,30 @@ switchScenario(currentKey);
 
         # Severidade: contexto do distúrbio — cor indica profundidade do sag,
         # mas não entra no veredito de desempenho
-        # "V residual" = tensão remanescente do afundamento (PRODIST/IEC);
-        # em regime não há curto, então o card volta a "V min"
-        vlab = "V min" if is_regime else "V residual"
+        # "V residual" = tensão remanescente do afundamento (PRODIST/IEC),
+        # aqui a MÉDIA (não o pior instante): em regime cobre o período
+        # inteiro pós-T_SETTLE; numa falta, só a janela t_fault–t_clear.
+        # Sem curto, o card volta a "V médio".
+        vlab = "V médio" if is_regime else "V residual médio"
+        janela_b2 = (f"t ≥ {T_SETTLE:.2f} s" if is_regime else
+                     f"t = {data.t_fault:.2f}–{data.t_clear:.2f} s"
+                     if data.t_clear is not None else f"t ≥ {data.t_fault:.2f} s")
         sev_cards = [
-            _card(f"{vlab} B2", _v(m.get("vmin"), 3), "pu", "POC do inversor (UFV)",
-                  f"Tensão mínima na Barra 2 (LVRT ≥ {LVRT_THRESHOLD} pu) — "
+            _card(f"{vlab} B2", _v(m.get("vavg"), 3), "pu", "POC do inversor (UFV)",
+                  f"Tensão média na Barra 2 ({janela_b2}, LVRT ≥ {LVRT_THRESHOLD} pu) — "
                   "severidade do distúrbio",
-                  self._classify(m.get("vmin"), VBUS_MIN_THRESH, lower_is_better=False),
+                  self._classify(m.get("vavg"), VBUS_AVG_THRESH, lower_is_better=False),
                   target="|V| Bus 2"),
         ]
-        for key, bus, sub in (("vmin_bus1", "B1", "barra do G1 (slack)"),
-                              ("vmin_bus3", "B3", "barra do G3")):
+        for key, bus, sub in (("vavg_bus1", "B1", "barra do G1 (slack)"),
+                              ("vavg_bus3", "B3", "barra do G3")):
             if m.get(key) is not None:
+                janela_txt = "todo o período" if is_regime else "durante o curto"
                 sev_cards.append(
                     _card(f"{vlab} {bus}", _v(m.get(key), 3), "pu", sub,
-                          f"Tensão mínima na barra {bus[1]} durante o curto — "
+                          f"Tensão média na barra {bus[1]} ({janela_txt}) — "
                           "propagação do afundamento pela rede",
-                          self._classify(m.get(key), VBUS_MIN_THRESH,
+                          self._classify(m.get(key), VBUS_AVG_THRESH,
                                          lower_is_better=False),
                           target=f"|V| Bus {bus[1]}"))
         if data.t_fault is not None and data.t_clear is not None:
@@ -1142,7 +1148,7 @@ switchScenario(currentKey);
         ts       = m.get("ts")
         ts_delta = m.get("ts_delta")
         settled  = m.get("settled")
-        vmin     = m.get("vmin")
+        vavg     = m.get("vavg")
         peak_deg = float(np.degrees(m["peak_err"])) if m.get("peak_err") is not None else None
         tol      = round(float(np.degrees(TOL_RAD)), 2)
 
@@ -1155,22 +1161,22 @@ switchScenario(currentKey);
                           "Operação em regime permanente, sem contingência aplicada — "
                           "métricas calculadas descartando o transitório de partida "
                           f"(t ≥ {T_SETTLE:.2f} s)."))
-        elif vmin is not None:
-            sev = self._classify(vmin, VBUS_MIN_THRESH, lower_is_better=False)
+        elif vavg is not None:
+            sev = self._classify(vavg, VBUS_AVG_THRESH, lower_is_better=False)
             dur = (f" de {(data.t_clear - data.t_fault) * 1e3:.0f} ms"
                    if data.t_clear is not None else "")
             if sev == "good":
                 parts.append(("good", "Distúrbio",
                               f"Falta{dur} com afundamento leve na Barra 2 "
-                              f"(V residual = {vmin:.3f} pu)."))
+                              f"(V residual médio = {vavg:.3f} pu)."))
             elif sev == "warn":
                 parts.append(("warn", "Distúrbio",
                               f"Falta{dur} com afundamento moderado na Barra 2 "
-                              f"(V residual = {vmin:.3f} pu, abaixo do limiar LVRT)."))
+                              f"(V residual médio = {vavg:.3f} pu, abaixo do limiar LVRT)."))
             else:
                 parts.append(("bad", "Distúrbio",
                               f"Falta{dur} com afundamento severo na Barra 2 "
-                              f"(V residual = {vmin:.3f} pu) — condição crítica de LVRT."))
+                              f"(V residual médio = {vavg:.3f} pu) — condição crítica de LVRT."))
 
         # ── resposta do PLL ──────────────────────────────────────────────────
         peak_cls = self._classify(peak_deg, PEAK_ERR_DEG_THRESH)

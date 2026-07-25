@@ -48,9 +48,12 @@ correção — as métricas são calculadas no eixo lento.
 
 ## Métricas (`_compute_metrics`) — janela pós-falta
 
-- **Pós-falta** (`t ≥ max(t_fault, T_SETTLE)`): erro de fase (IAE/ISE/tₛ/pico)
-  e `vmin`.
+- **Pós-falta** (`t ≥ max(t_fault, T_SETTLE)`): erro de fase (IAE/ISE/tₛ/pico).
 - **Regime** (`t_fault` None): `t ≥ T_SETTLE`.
+- **`vavg`/`vavg_bus1`/`vavg_bus3`** usam uma janela própria, diferente da
+  acima (2026-07-25): sempre começam em `t_start` (mesmo piso `T_SETTLE`),
+  mas em falta **terminam em `t_clear`** — não vão até o fim da simulação
+  como IAE/ISE. Ver linha da tabela abaixo.
 
 `dP_ufv`/`dQ_ufv` (excursão máx-mín de P/Q na janela pós-clear) foram
 removidos em 2026-07-24 — não faziam sentido como métrica de desempenho do
@@ -77,8 +80,8 @@ em `export_sim_data.m`) ainda inclui a partida → viés de ~1.1% em
 | `ts_delta` | `ts − t_fault` (base da classificação good/warn/bad) |
 | `t_ss` | início do regime: `ts` se `settled`, `T_SETTLE` em regime, senão `None` |
 | `err_ss_mean`, `err_ss_rms` | erro de fase **sustentado** em R.P. — média/RMS de \|e\| para `t ≥ t_ss` (rad; cards em °). `None` se a falta não reacomodou. Separa o erro de regime do `peak_err` transitório (Ponto 1 do professor, 2026-07-21) |
-| `vmin` | mínimo de `vbus2` pós-falta (pu) — severidade do sag vs LVRT |
-| `vmin_bus1`, `vmin_bus3` | idem para `vbus1`/`vbus3` — propagação do sag pela rede (cards de severidade + colunas Vmin B1/B3 na tabela; veredito LVRT continua só na B2) |
+| `vavg` | **média** (não mínimo, desde 2026-07-25) de `vbus2` — regime: janela inteira `[T_SETTLE, fim]`; falta: só o período do curto `[t_start, t_clear]` (ou fim, se `t_clear` for `None`) — severidade vs LVRT |
+| `vavg_bus1`, `vavg_bus3` | idem para `vbus1`/`vbus3` — propagação do sag pela rede (cards de severidade + colunas V méd. B1/B3 na tabela; veredito LVRT continua só na B2) |
 
 Sinal ausente → métrica `None` → "—" nos cards/tabela.
 

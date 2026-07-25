@@ -55,6 +55,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 | Mudança pedida | Arquivo(s) fonte | Doc de KB |
 |---|---|---|
 | Métrica nova/removida (IAE, ISE, tₛ, ΔX...) | `loader.py` (`_compute_metrics`), `settings.py` (thresholds) | `dados/pipeline-dados.md` |
+| Redefinir cálculo de métrica existente (ex.: min→média, mudar janela) | `loader.py` (`_compute_metrics`) + toda ocorrência da chave em `renderer.py` (cards, `_table_row_data`, header `data-key`, JS `_cmpCell`, story) e `settings.py` (renomear threshold se o nome antigo não descrever mais o cálculo) | doc(s) do(s) card(s)/coluna(s) afetados |
 | Card novo/removido | `renderer.py` (`_cards_html`) | `cards/cards-metricas.md` |
 | Coluna da tabela comparativa | `renderer.py` (`_table_row_data` + template JS + header) | `cards/comparison-table.md` |
 | Painel de gráfico / subplot | `chart.py` | `graficos/construcao-graficos.md` |
@@ -106,6 +107,14 @@ conhecidas" com o bug do `goToChart`/`xref` achado durante a verificação
 desta mesma mudança; passo de verificação reforçado para interações
 clicáveis, com a regra de não expandir escopo ao achar bugs não
 relacionados (usar `spawn_task`).
+
+v1.2.0 (2026-07-25): nova linha "redefinir cálculo de métrica existente" na
+tabela — padrão da troca de V min→V médio (mínimo instantâneo virou média
+numa janela por regra de cenário), que tocou `loader.py`, `settings.py`
+(threshold renomeado) e toda referência à chave antiga em `renderer.py`
+(cards, tabela comparativa, JS de ordenação, story) simultaneamente — grepar
+o nome da chave/threshold no `src/` inteiro antes de considerar a renomeação
+completa, não só nos arquivos "óbvios".
 
 Atualizar a tabela e as convenções conforme novas edições no dashboard
 revelarem passos, armadilhas ou arquivos que valha registrar — esta skill

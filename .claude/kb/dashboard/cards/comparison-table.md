@@ -38,11 +38,16 @@ def _table_row_data(self, data: SimData) -> dict:
         "ise": cell(m.get("ISE"), 4, ISE_THRESH),
         "ts":   ts_cell,   # ver casos especiais abaixo
         "peak": cell(peak_deg, 1, PEAK_ERR_DEG_THRESH),
-        "vmin":    cell(m.get("vmin"),      3, VBUS_MIN_THRESH, lower_is_better=False),
-        "vmin_b1": cell(m.get("vmin_bus1"), 3, VBUS_MIN_THRESH, lower_is_better=False),
-        "vmin_b3": cell(m.get("vmin_bus3"), 3, VBUS_MIN_THRESH, lower_is_better=False),
+        "vavg":    cell(m.get("vavg"),      3, VBUS_AVG_THRESH, lower_is_better=False),
+        "vavg_b1": cell(m.get("vavg_bus1"), 3, VBUS_AVG_THRESH, lower_is_better=False),
+        "vavg_b3": cell(m.get("vavg_bus3"), 3, VBUS_AVG_THRESH, lower_is_better=False),
     }
 ```
+
+`vavg*` (2026-07-25, ex-`vmin*`) é média de |V|, não mínimo — ver
+[[cards-metricas]] pela regra de janela (regime = período inteiro, falta =
+só o período do curto). Threshold renomeado de `VBUS_MIN_THRESH` para
+`VBUS_AVG_THRESH` (mesmos valores 0.90/0.50 pu).
 
 Casos especiais (mesma lógica de `_cards_html`, ver [[cards-metricas]]):
 
@@ -60,9 +65,9 @@ Em `_build_html`, cada `sc_js[key]` ganha `"metricsRow": self._table_row_data(d)
 Botão `#table-toggle` ao lado do `#diagram-toggle` no `filter-bar`; seção
 `#table-section` (`display:none` por padrão) com `<table id="cmp-table">` —
 cabeçalho com `data-key` por coluna (`iae`, `ise`, `ts`, `peak`,
-`vmin`, `vmin_b1`, `vmin_b3`, mais `label` não-ordenável) e
+`vavg`, `vavg_b1`, `vavg_b3`, mais `label` não-ordenável) e
 `<tbody id="cmp-tbody">` vazio, populado por JS. As três colunas de tensão
-são "Vmin B2/B1/B3 (pu)" — B2 primeiro por ser o POC do inversor; B1/B3
+são "V méd. B2/B1/B3 (pu)" — B2 primeiro por ser o POC do inversor; B1/B3
 mostram a propagação do afundamento pela rede ("—" em CSVs antigos sem
 `vbus1_pu`/`vbus3_pu`).
 
@@ -90,7 +95,7 @@ function renderComparisonTable() {
     var active = (k === currentKey) ? " cmp-active" : "";
     return "<tr class=\"cmp-row" + active + "\" onclick=\"_pickTableRow('" + k + "')\">"
       + "<td class=\"cmp-label\">" + sc.label + "</td>"
-      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.vmin) + _cmpCell(r.vmin_b1) + _cmpCell(r.vmin_b3)
+      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.vavg) + _cmpCell(r.vavg_b1) + _cmpCell(r.vavg_b3)
       + "</tr>";
   }).join("");
 }

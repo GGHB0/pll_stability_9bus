@@ -8,8 +8,9 @@ Classe principal: SimData
     .metrics                     → dict com IAE, ISE, ts, ts_delta, settled,
                                    peak_err (pico transitório), t_ss/err_ss_mean/
                                    err_ss_rms (erro de fase em regime permanente,
-                                   após a acomodação), dP/dQ (pós-clear), vmin,
-                                   vmin_bus1/3
+                                   após a acomodação), vavg (média de |V| —
+                                   período inteiro em regime, só a janela da
+                                   falta em contingência), vavg_bus1/3
     .has_ang, .has_dq_ufv, .has_ref_ufv → flags de disponibilidade de colunas
 
 Três CSVs exportados pelo MATLAB:
@@ -316,11 +317,24 @@ class SimData:
                         metrics["err_ss_mean"] = float(np.mean(np.abs(e_ss)))
                         metrics["err_ss_rms"]  = float(np.sqrt(np.mean(e_ss ** 2)))
 
-        for key, vbus in (("vmin", self.vbus2), ("vmin_bus1", self.vbus1),
-                          ("vmin_bus3", self.vbus3)):
+        # Média de |V|, não o mínimo: em regime cobre o período inteiro pós-
+        # T_SETTLE (mesma janela de t_start acima); numa falta, fica restrita
+        # à janela da falta em si (t_start → t_clear) — sem t_clear (falta
+        # permanente) vai até o fim, mesmo padrão de "durante a falta" usado
+        # em SpectrumBuilder._segments.
+        t_end = float(self.t[-1])
+        if is_regime:
+            v_hi = t_end
+        elif self.t_clear is not None and self.t_clear < t_end:
+            v_hi = self.t_clear
+        else:
+            v_hi = t_end
+        vmask = (self.t >= t_start) & (self.t <= v_hi)
+        for key, vbus in (("vavg", self.vbus2), ("vavg_bus1", self.vbus1),
+                          ("vavg_bus3", self.vbus3)):
             if vbus is not None:
-                v_pf = vbus[mask]
-                metrics[key] = float(v_pf.min()) if len(v_pf) else None
+                v_win = vbus[vmask]
+                metrics[key] = float(v_win.mean()) if len(v_win) else None
             else:
                 metrics[key] = None
         return metrics

@@ -25,7 +25,9 @@ ERR_SS_DEG_THRESH   = (0.5,  1.0)   # ° — erro de fase SUSTENTADO em regime p
                                     # (média de |e| após a acomodação; PLL bem
                                     # sintonizado tende a ~0°)
 SYNC_LOSS_DEG    = 90.0           # ° — acima disso: perda de sincronismo do PLL
-VBUS_MIN_THRESH  = (0.90,  0.50)  # pu — severidade do afundamento (LVRT IEEE 1547)
+VBUS_AVG_THRESH  = (0.90,  0.50)  # pu — severidade do afundamento (LVRT IEEE 1547);
+                                  # aplicado à tensão MÉDIA (regime: período
+                                  # inteiro; falta: só a janela t_fault–t_clear)
 LVRT_THRESHOLD   = 0.88           # pu — linha de referência no gráfico
 
 # ── Espectro de Fourier ─────────────────────────────────────────────────────

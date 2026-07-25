@@ -1,7 +1,7 @@
 ---
 name: dashboard-html-editor
 description: Edita o pipeline Python que gera o relatório HTML interativo (output/pll_metrics.html) — SimData/ChartBuilder/HTMLRenderer em src/. Ativar sempre que o usuário pedir para mudar/adicionar/remover algo no dashboard: cards, métricas, gráficos, abas, tabela comparativa, tema light/dark, toggle PLL, diagrama unifilar, ou qualquer elemento visual/funcional do relatório. Também usar para regenerar e verificar o HTML após qualquer mudança em src/pipeline ou src/report.
-version: 1.3.0
+version: 1.4.0
 ---
 
 # Dashboard HTML Editor — Skill de Edição do Relatório Interativo
@@ -126,9 +126,19 @@ achado ao investigar "título dos gráficos deveria ser branco": a barra de
 título do painel (`_label`) já era branca no Python, mas o JS
 `themedLayout` a confundia com `_group_title` (ambos usam `xref="paper"`
 desde o redesign de títulos) e sobrescrevia para cinza — fix por `yref`,
-detalhes em `layout/dark-mode-legend-title-fixes.md` (Fix 5). Terceira
-mudança da sessão: eixo Y dos gráficos passou a mostrar nome+unidade
-completo (`"Ângulo (°)"`) em vez de só a unidade.
+detalhes em `layout/dark-mode-legend-title-fixes.md` (Fix 5).
+
+v1.4.0 (2026-07-25): correção da 3ª mudança do v1.3.0 — a 1ª tentativa do
+eixo Y (copiar o texto completo do painel, ex. `"P / Q UFV (pu)"`) foi
+rejeitada pelo usuário: o pedido real era identificar a **grandeza física
+genérica** (`"Tensão (pu)"`, `"Potência (pu)"`, `"Frequência (Hz)"`), o
+mesmo critério já usado no `"Tempo (s)"` do eixo X — não o título
+específico daquele painel. Fix: `_AXIS_LABELS` (dicionário `kind →
+grandeza`) em `chart.py`, ver `graficos/construcao-graficos.md`. **Lição
+para novos painéis/labels**: quando o pedido é "identificar o que é" um
+eixo/valor, checar se existe uma convenção já usada em outro eixo do
+mesmo gráfico antes de assumir que copiar o texto mais específico
+disponível resolve — geralmente não resolve.
 
 Atualizar a tabela e as convenções conforme novas edições no dashboard
 revelarem passos, armadilhas ou arquivos que valha registrar — esta skill

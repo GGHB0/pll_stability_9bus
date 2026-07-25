@@ -123,7 +123,7 @@ class ChartBuilder:
                     self._group_title(group, ax)
                 self._legend_key = "legend" if ax == 1 else f"legend{ax}"
                 self._add_panel(kind, ri, 1)
-                self._label(label, ax)
+                self._label(label, ax, kind)
                 self._vline(ri, 1)
                 self._fig.update_yaxes(gridcolor="#f0f2f5", zerolinecolor="#e5e7eb",
                                        tickfont_size=10, row=ri, col=1)
@@ -135,14 +135,14 @@ class ChartBuilder:
                     self._group_title(group, ax1)
                 self._legend_key = "legend" if ax1 == 1 else f"legend{ax1}"
                 self._add_panel(k1, ri, 1)
-                self._label(l1, ax1)
+                self._label(l1, ax1, k1)
                 self._vline(ri, 1)
                 self._fig.update_yaxes(gridcolor="#f0f2f5", zerolinecolor="#e5e7eb",
                                        tickfont_size=10, row=ri, col=1)
 
                 self._legend_key = f"legend{ax2}"
                 self._add_panel(k2, ri, 2)
-                self._label(l2, ax2)
+                self._label(l2, ax2, k2)
                 self._vline(ri, 2)
                 self._fig.update_yaxes(gridcolor="#f0f2f5", zerolinecolor="#e5e7eb",
                                        tickfont_size=10, row=ri, col=2)
@@ -163,13 +163,34 @@ class ChartBuilder:
 
     _BAR_COLOR = "#185FA5"   # barra de título (estilo header Power BI)
 
-    def _label(self, text: str, ax_idx: int) -> None:
-        """Barra de título no topo do painel + nome completo (com unidade) no
-        eixo Y (vertical). Responde ao Ponto 2 do professor: o rótulo deixa de
-        ser annotation horizontal no canto — o nome vira uma barra de título
+    # Grandeza física genérica por painel — o eixo Y identifica o que está
+    # sendo medido (ex. "Tensão (pu)"), não repete o título específico do
+    # painel (que pode combinar contexto: "P / Q UFV", "|V| Bus 2"...).
+    # Mesmo critério já usado no eixo X ("Tempo (s)", igual em todo painel).
+    _AXIS_LABELS = {
+        "ang": "Ângulo (°)",
+        "err": "Erro de fase (°)",
+        "freq": "Frequência (Hz)",
+        "dq_combined": "Corrente (pu)",
+        "vdq_combined": "Tensão (pu)",
+        "pq_combined": "Potência (pu)",
+        "vbus2": "Tensão (pu)",
+        "vbus1": "Tensão (pu)",
+        "vbus3": "Tensão (pu)",
+        "p_bus1": "Potência (pu)",
+        "q_bus1": "Potência (pu)",
+        "p_bus3": "Potência (pu)",
+        "q_bus3": "Potência (pu)",
+    }
+
+    def _label(self, text: str, ax_idx: int, kind: str) -> None:
+        """Barra de título no topo do painel + grandeza genérica no eixo Y
+        (vertical). Responde ao Ponto 2 do professor: o rótulo deixa de ser
+        annotation horizontal no canto — o nome vira uma barra de título
         preenchida (texto branco centralizado) encostada no topo do painel, e
-        o texto completo "Nome (unidade)" vira o título do eixo Y, rotacionado
-        e encostado no eixo."""
+        a grandeza física ("Tensão (pu)", "Frequência (Hz)"...) vira o título
+        do eixo Y, rotacionada e encostada no eixo — mesmo critério do "Tempo
+        (s)" no eixo X, não o título específico do painel."""
         title, _unit = self._split_label(text)
         n = self._n_rows_fig
         xname = "xaxis" if ax_idx == 1 else f"xaxis{ax_idx}"
@@ -190,8 +211,8 @@ class ChartBuilder:
             x=xc, y=y_top + bar_h / 2, xanchor="center", yanchor="middle",
             font=dict(size=11, color="#ffffff"), showarrow=False,
         )
-        # nome completo (com unidade) no eixo Y, na vertical
-        self._fig.layout[yname].title.text = text
+        # grandeza física genérica no eixo Y, na vertical
+        self._fig.layout[yname].title.text = self._AXIS_LABELS.get(kind, text)
         self._fig.layout[yname].title.font = dict(size=10, color="#6b7280")
         self._fig.layout[yname].title.standoff = 4
 

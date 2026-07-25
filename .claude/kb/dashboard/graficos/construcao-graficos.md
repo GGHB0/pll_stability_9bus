@@ -28,15 +28,14 @@ entra se a flag `has_*` do [[pipeline-dados]] estiver ligada. O 4º elemento
 opcional (`"Barra N"`) vira subtítulo de grupo (`_group_title`, annotation com
 `xref="paper"` + shape divisória).
 
-## Rótulo do painel: título no topo + nome+unidade no eixo Y (`_label`)
+## Rótulo do painel: título no topo + grandeza física no eixo Y (`_label`)
 
 Resposta ao **Ponto 2 do professor** (2026-07-21): antes o rótulo (ex.:
 `"P / Q UFV (pu)"`) era uma **annotation horizontal** no canto superior-esquerdo,
 dentro da área de plot — feio e às vezes sobrepondo a curva. Agora `_label`:
 
 1. **Separa nome e unidade** com `_split_label` (regex do parêntese final):
-   `"P / Q UFV (pu)"` → título `"P / Q UFV"` (só vai na barra) + `"pu"`
-   (não usado isoladamente — ver ponto 3).
+   `"P / Q UFV (pu)"` → título `"P / Q UFV"` (vai só na barra).
 2. **Barra de título no topo**: retângulo preenchido (`add_shape` type `rect`,
    `fillcolor = _BAR_COLOR = "#185FA5"`, `line_width=0`) encostado no topo do
    painel, largura = domínio do eixo X, altura `22 px` (fração de paper via
@@ -45,11 +44,22 @@ dentro da área de plot — feio e às vezes sobrepondo a curva. Agora `_label`:
    `yanchor="middle"`). Estilo "header Power BI" — Opção A, escolhida pelo
    usuário (a imagem de referência que mandou). Cor branca é fixa e **não**
    deve ser re-temada — ver [[dark-mode-theming]] Fix 5.
-3. **Nome completo (com unidade) no eixo Y, na vertical** (2026-07-25, pedido
-   do usuário): `yaxis.title = text` (o `"Nome (unidade)"` inteiro, ex.
-   `"Ângulo (°)"`, `"P / Q UFV (pu)"`), `standoff=4`, rotação padrão do
-   Plotly (−90°), encostada no eixo. Antes só a unidade isolada ia pro eixo Y
-   (`"°"`); o usuário achou pouco informativo sem o nome da grandeza junto.
+3. **Grandeza física no eixo Y, na vertical** (2026-07-25, pedido do
+   usuário): `yaxis.title = _AXIS_LABELS[kind]` — dicionário fixo
+   `kind → "Grandeza (unidade)"` (ex. `"ang"/"err"` → `"Ângulo (°)"`/`"Erro
+   de fase (°)"`, `"freq"` → `"Frequência (Hz)"`, `"dq_combined"` →
+   `"Corrente (pu)"`, `"vdq_combined"`/`"vbus1"`/`"vbus2"`/`"vbus3"` →
+   `"Tensão (pu)"`, `"pq_combined"`/`"p_bus1"`/`"q_bus1"`/`"p_bus3"`/
+   `"q_bus3"` → `"Potência (pu)"`). **Não** é o texto do título do painel
+   (`text`) — o usuário rejeitou essa 1ª tentativa (copiar o título
+   específico, ex. `"P / Q UFV (pu)"`, pro eixo) e pediu que o eixo
+   identifique a **grandeza genérica** medida, mesmo critério já usado no
+   eixo X (`"Tempo (s)"`, igual em todo painel independente do conteúdo).
+   `kind` é a chave da linha (`"ang"`, `"p_bus1"`, …) — os 3 call-sites de
+   `_label` em `_make_figure` passam `kind`/`k1`/`k2`, e a função repassa
+   pro `_AXIS_LABELS.get(kind, text)` (fallback pro texto completo só se
+   um `kind` novo for esquecido do dicionário — sinal de que a tabela
+   precisa de uma entrada nova, não de um comportamento definitivo).
 
 Para caber as barras empilhadas: `vertical_spacing = 0.11` (era 0.07), margem
 esquerda `l=64` (era 60) e topo `34`/`54` (sem/com grupo — o subtítulo "BARRA N"

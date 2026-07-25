@@ -10,10 +10,13 @@ Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 Arquivos: `src/pipeline/chart.py`, `src/report/renderer.py`
 
 - **Eixo Y dos gráficos** (pedido do usuário): mostrava só a unidade
-  (`"°"`, `"pu"`); agora mostra o nome completo da grandeza + unidade entre
-  parênteses (ex. `"Ângulo (°)"`, `"P / Q UFV (pu)"`), como já é o texto de
-  origem em `_inv_rows`/`_sys_rows`. A barra de título do painel continua
-  mostrando só o nome.
+  (`"°"`, `"pu"`); agora mostra a **grandeza física genérica** medida +
+  unidade (ex. `"Tensão (pu)"`, `"Frequência (Hz)"`, `"Potência (pu)"`),
+  via dicionário `_AXIS_LABELS[kind]` em `chart.py` — não o título
+  específico do painel (`"P / Q UFV (pu)"`, `"|V| Bus 2 (pu)"`), que o
+  usuário rejeitou numa 1ª tentativa por não identificar a grandeza de
+  forma consistente entre painéis (mesmo critério do `"Tempo (s)"` no eixo
+  X). A barra de título do painel continua mostrando o nome específico.
 - **Bug real corrigido — título do painel não ficava branco**: já era
   branco no Python (`_label` em `chart.py`/`spectrum.py`), mas o JS
   `themedLayout` (`renderer.py`) confundia a barra de título com o

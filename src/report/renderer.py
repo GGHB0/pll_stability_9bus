@@ -2,9 +2,9 @@
 renderer.py — Gera o HTML final com seletor de cenário, cards e Plotly embutido.
 
 HTMLRenderer(scenarios).render(out_path) → escreve o HTML e retorna o Path.
-scenarios: dict[key, {data, label, fig_inv, fig_sys, fig_res,
+scenarios: dict[key, {data, label, fig_inv, fig_sys,
                       figs_spec, tms_spec, spec_harm,
-                      tm_inv, tm_sys, tm_res}]
+                      tm_inv, tm_sys}]
 figs_spec/tms_spec são dicts por fase/eixo ("a"…"q"); spec_harm alimenta a
 tabela de harmônicas da aba Espectro.
 """
@@ -33,7 +33,7 @@ class HTMLRenderer:
     _HARM_LO_PU = 0.02   # tabela de harmônicas: apagado se amp < (pu)
 
     def __init__(self, scenarios: dict[str, dict]) -> None:
-        # {key: {data, label, fig_inv, fig_sys, fig_res, figs_spec, tm_*}}
+        # {key: {data, label, fig_inv, fig_sys, figs_spec, tm_*}}
         self._scenarios = scenarios
 
     # ── API pública ──────────────────────────────────────────────────────────
@@ -55,16 +55,13 @@ class HTMLRenderer:
             d  = sc["data"]
             fi = sc["fig_inv"]
             fs = sc["fig_sys"]
-            fr = sc.get("fig_res")
             fp = sc.get("figs_spec") or {}
             ti = sc["tm_inv"]
             ts = sc["tm_sys"]
-            tr = sc.get("tm_res") or []
             tp = sc.get("tms_spec") or {}
             sc_js[key] = {
                 "invData":   json.loads(fi.to_json()),
                 "sysData":   json.loads(fs.to_json()) if fs else None,
-                "resData":   json.loads(fr.to_json()) if fr else None,
                 "specData":  {m: json.loads(f.to_json()) for m, f in fp.items()},
                 "specModes": list(fp.keys()),
                 "invLight":  [x[1] for x in ti],
@@ -73,9 +70,6 @@ class HTMLRenderer:
                 "sysLight":  [x[1] for x in ts],
                 "sysDark":   [x[2] for x in ts],
                 "sysIdx":    [x[0] for x in ts],
-                "resLight":  [x[1] for x in tr],
-                "resDark":   [x[2] for x in tr],
-                "resIdx":    [x[0] for x in tr],
                 "specLight": {m: [x[1] for x in tm] for m, tm in tp.items()},
                 "specDark":  {m: [x[2] for x in tm] for m, tm in tp.items()},
                 "specIdx":   {m: [x[0] for x in tm] for m, tm in tp.items()},
@@ -86,7 +80,7 @@ class HTMLRenderer:
                 "metricsRow": self._table_row_data(d),
                 "hasInv":    True,
                 "hasSys":    fs is not None,
-                "hasRes":    fr is not None,
+                "hasRes":    True,
                 "hasSpec":   bool(fp),
                 "badPll":    sc.get("bad_pll", False),
                 "tFault":    d.t_fault,
@@ -149,9 +143,6 @@ class HTMLRenderer:
     <p class="diag-hint">Clique em uma barra ou linha para selecionar o cenário de falta</p>
   </div>
 
-  <div id="cards-area"></div>
-  <div id="story-area"></div>
-
   <div class="table-section" id="table-section" style="display:none">
     <div class="section-header">
       <span class="section-title">Comparativo de cenários</span>
@@ -183,11 +174,8 @@ class HTMLRenderer:
   </div>
 
   <div class="chart-section" id="sec-res" style="display:none">
-    <div class="section-header">
-      <span class="section-title">Resumo — resposta essencial</span>
-      <span class="fault-badge" id="badge-res"></span>
-    </div>
-    <div id="plot-res"></div>
+    <div id="cards-area"></div>
+    <div id="story-area"></div>
   </div>
 
   <div class="chart-section" id="sec-inv" style="display:none">
@@ -418,7 +406,7 @@ function switchTab(which) {{
     tabBtn[t].classList.toggle("active", t === which);
     secEl[t].style.display = (t === which && avail) ? "" : "none";
   }});
-  if (_dirty[which]) {{
+  if (which !== "res" && _dirty[which]) {{
     _renderChart(which);
     _ensureBridges();
     _applyZoom();
@@ -431,7 +419,7 @@ function switchTab(which) {{
 
 function goToChart(labelFrag) {{
   var sc = SCENARIOS[currentKey];
-  var order = ["res", "inv", "sys"];
+  var order = ["inv", "sys"];
   for (var i = 0; i < order.length; i++) {{
     var t = order[i];
     if (!sc[HASKEY[t]]) continue;
@@ -524,7 +512,7 @@ function toggleZoomFault() {{
 // Todos os eixos X têm matches="x" (setado no chart.py) — basta atualizar o
 // eixo raiz de cada figura que os demais painéis seguem. O spec fica de fora
 // (eixo x em Hz); gráficos sujos (nunca renderizados nesta aba) também.
-var TIME_TABS = ["res", "inv", "sys"];
+var TIME_TABS = ["inv", "sys"];
 var _syncingZoom = false;
 
 function _plotted(t) {{
@@ -1536,7 +1524,10 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 }
 [data-theme="dark"] .fault-badge { color: #fcd34d; background: #451a03 }
 .spec-hint { font-size: 10.5px; color: var(--muted); letter-spacing: .2px }
-#plot-res, #plot-inv, #plot-sys, #plot-spec { width: 100% }
+#plot-inv, #plot-sys, #plot-spec { width: 100% }
+/* Resumo não tem section-header/plot próprios — cards + diagnóstico levam
+   o padding que antes vinha de .main diretamente */
+#sec-res { padding: 20px 20px 4px; }
 
 /* ── Abas de gráficos ── */
 .tab-bar {

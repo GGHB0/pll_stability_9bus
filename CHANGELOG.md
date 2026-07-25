@@ -5,6 +5,36 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-24 — Cards e diagnóstico movidos para dentro da aba Resumo
+
+Arquivos: `src/pipeline/chart.py`, `app.py`, `src/report/renderer.py`
+
+- **Motivação (pedido do usuário)**: cards e diagnóstico ficavam soltos
+  acima da tab-bar, visíveis em qualquer aba; a aba Resumo tinha um
+  gráfico próprio (`build_resume`, de 2026-07-15) que duplicava painéis já
+  mostrados em Inversor UFV/Sistema 9-Bus — achado repetitivo.
+- **Removido**: `ChartBuilder.build_resume()`/`_res_rows()`/
+  `_RES_MAX_POINTS` (`chart.py`); chamada em `app.py` e as chaves
+  `fig_res`/`tm_res` do dict de cenário; `resData`/`resLight`/`resDark`/
+  `resIdx` do objeto `SCENARIOS` (`renderer.py`); `#plot-res`/`#badge-res`
+  do HTML.
+- **Movido**: `#cards-area`/`#story-area` para dentro de `#sec-res` — a
+  aba Resumo passa a ser só cards + diagnóstico, sem gráfico, e só
+  aparece quando essa aba está ativa (antes eram visíveis o tempo todo).
+- **JS**: `TIME_TABS` e a ordem de busca do `goToChart` perdem "res" (não
+  há mais figura pra buscar); `switchTab` ganhou guard explícito para
+  nunca chamar `_renderChart`/`_ensureBridges`/`_applyZoom` na aba Resumo.
+  `hasRes` no `SCENARIOS` passa a ser sempre `true` (cards/diagnóstico
+  sempre existem, independente de haver gráfico).
+- ⚠️ **Achado durante a verificação (não corrigido aqui)**: clique em card
+  não navega mais para o painel do gráfico — regressão do commit anterior
+  (`b2bbb2a`, redesign dos títulos de painel), não relacionada a esta
+  mudança. Detalhes e fix sugerido em
+  `dashboard/layout/tabs-navegacao.md`.
+- KB atualizado: `dashboard/layout/{estrutura-html,tabs-navegacao}.md`,
+  `dashboard/graficos/{construcao-graficos,dashboard-zoom-ghost}.md`,
+  `dashboard/cards/cards-metricas.md`, `dashboard/index.md`.
+
 ## 2026-07-24 — Remoção dos ícones emoji dos botões/abas
 
 Arquivos: `src/report/renderer.py`

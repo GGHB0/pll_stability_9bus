@@ -8,12 +8,11 @@ description: ChartBuilder (chart.py) — subplots por seção, linhas single/pai
 `ChartBuilder(data).build_sections()` → `(fig_inv, fig_sys, tm_inv, tm_sys)`.
 `fig_sys = None` quando o cenário não tem sinais de sistema.
 
-`ChartBuilder(data).build_resume()` → `(fig_res, tm_res)` — figura da aba
-Resumo ([[tabs-navegacao]]): `_res_rows()` = erro de fase, frequência PLL,
-P/Q UFV e |V| Bus 2, reusando os mesmos kinds/overlays das seções completas.
-Como duplica traces já presentes em inv/sys, usa decimação mais agressiva
-(`_RES_MAX_POINTS = 2000` via `self._max_points`). Retorna `None` com menos
-de 2 painéis disponíveis.
+> **`build_resume` removido (2026-07-24)**: a aba Resumo tinha uma 3ª figura
+> (`_res_rows()` = erro de fase, frequência PLL, P/Q UFV, |V| Bus 2) que
+> duplicava painéis já presentes em Inversor/Sistema — o usuário achou
+> repetitivo. A aba Resumo agora só tem cards+diagnóstico (sem gráfico),
+> ver [[tabs-navegacao]].
 
 ## Linhas: single vs pair
 
@@ -56,9 +55,8 @@ nome do sinal (posicionada acima das marcações de frequência).
 
 Todo trace de dados passa por `_add(trace, row, col)`:
 
-1. **Decimação**: se o trace tem > `self._max_points` pontos (padrão
-   `_MAX_POINTS = 5000`; `_RES_MAX_POINTS = 2000` no resumo), faz slicing
-   `[::step]` — o HTML caiu de ~570 MB para ~24 MB.
+1. **Decimação**: se o trace tem > `self._max_points` pontos (`_MAX_POINTS =
+   5000`), faz slicing `[::step]` — o HTML caiu de ~570 MB para ~24 MB.
 2. **Paleta**: cor light atribuída na construção; o par
    `(idx, light, dark)` entra no `trace_map`, que o renderer usa para
    re-colorir por tema no JS (`themedData`). `LIGHT_COLORS`/`DARK_COLORS`

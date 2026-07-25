@@ -2,8 +2,7 @@
 chart.py — Constrói figuras Plotly por seção (Resumo / Inversor / Sistema 9-Bus).
 
 ChartBuilder.build_sections() → (fig_inv, fig_sys, trace_map_inv, trace_map_sys)
-ChartBuilder.build_resume()   → (fig_res, trace_map_res) — painéis essenciais
-fig_sys/fig_res é None se não houver dados disponíveis.
+fig_sys é None se não houver dados disponíveis.
 """
 from __future__ import annotations
 
@@ -20,9 +19,6 @@ _S = "single"   # linha inteira (colspan 2)
 _P = "pair"     # dois painéis lado a lado
 
 _MAX_POINTS = 5000  # cap de pontos/trace no HTML — ver kb/simulation/python_pipeline.md
-# A figura Resumo duplica traces já presentes nas seções completas; decimação
-# mais agressiva limita o custo extra no tamanho do HTML.
-_RES_MAX_POINTS = 2000
 
 
 class ChartBuilder:
@@ -53,31 +49,7 @@ class ChartBuilder:
             fig_sys, tm_sys = None, []
         return fig_inv, fig_sys, tm_inv, tm_sys
 
-    def build_resume(self) -> tuple[go.Figure | None, list[tuple[int, str, str]]]:
-        """Figura Resumo: painéis essenciais do cenário, decimação reduzida."""
-        rows = self._res_rows()
-        if len(rows) < 2:
-            return None, []
-        self._max_points = _RES_MAX_POINTS
-        try:
-            return self._make_figure(rows)
-        finally:
-            self._max_points = _MAX_POINTS
-
     # ── Definição de linhas ──────────────────────────────────────────────────
-
-    def _res_rows(self) -> list:
-        """A história essencial em uma tela: erro do PLL, frequência, P/Q e V no POC."""
-        d = self._d
-        rows: list = []
-        if d.theta_err is not None:
-            rows.append((_S, "err", "Erro de fase (°)"))
-        if d.has_freq:
-            rows.append((_S, "freq", "Frequência PLL (Hz)"))
-        rows.append((_S, "pq_combined", "P / Q UFV (pu)"))
-        if d.has_vbus2:
-            rows.append((_S, "vbus2", "|V| Bus 2 (pu)"))
-        return rows
 
     def _inv_rows(self) -> list:
         d = self._d

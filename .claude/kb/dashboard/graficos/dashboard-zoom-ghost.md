@@ -17,7 +17,7 @@ dotted-path (**válido em relayout**, ao contrário de `Plotly.react` — ver
 var upd = (zoomFault && sc.tFault != null)
   ? { "xaxis.range": [...], "xaxis.autorange": false }
   : { "xaxis.autorange": true };
-TIME_TABS.forEach(function(t) {          // ["res","inv","sys"] — spec fora (Hz)
+TIME_TABS.forEach(function(t) {          // ["inv","sys"] — res sem gráfico, spec fora (Hz)
   if (_plotted(t)) Plotly.relayout(gd[t], upd);
 });
 ```
@@ -44,8 +44,9 @@ zoom **manual** (arrasto) em qualquer painel também move os demais.
 
 ### Sincronização entre figuras (`_bridgeZoom`)
 
-Resumo/Inversor/Sistema são gráficos Plotly separados; `matches` não cruza
-figuras. `_bridgeZoom(srcWhich)` escuta `plotly_relayout` de cada gd de
+Inversor/Sistema são gráficos Plotly separados (Resumo não tem gráfico
+desde 2026-07-24); `matches` não cruza figuras. `_bridgeZoom(srcWhich)`
+escuta `plotly_relayout` de cada gd de
 `TIME_TABS` e replica o range nas demais figuras plotadas. Detalhes:
 
 - `_extractXZoom(ev)` aceita os três formatos de payload: `"xaxisN.range"`
@@ -74,8 +75,8 @@ do cenário equivalente do outro modo PLL no mesmo gráfico:
   `showlegend:false`, `hoverinfo:"skip"` (o hover unificado ficaria ilegível
   em dobro).
 - Injetado em `_renderChart` via `.concat(_ghostData(which))` — o
-  parâmetro `which` ("res"/"inv"/"sys"/"spec") seleciona a figura pelo
-  acesso genérico `o[which + "Data"]`. No espectro
+  parâmetro `which` ("inv"/"sys"/"spec", nunca "res") seleciona a figura
+  pelo acesso genérico `o[which + "Data"]`. No espectro
   ([[espectro-fourier]]) o ghost compara direto o pico de 120 Hz
   nominal × PLL com sintonia inadequada.
 

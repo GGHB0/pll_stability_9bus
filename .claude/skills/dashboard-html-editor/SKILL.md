@@ -1,7 +1,7 @@
 ---
 name: dashboard-html-editor
 description: Edita o pipeline Python que gera o relatório HTML interativo (output/pll_metrics.html) — SimData/ChartBuilder/HTMLRenderer em src/. Ativar sempre que o usuário pedir para mudar/adicionar/remover algo no dashboard: cards, métricas, gráficos, abas, tabela comparativa, tema light/dark, toggle PLL, diagrama unifilar, ou qualquer elemento visual/funcional do relatório. Também usar para regenerar e verificar o HTML após qualquer mudança em src/pipeline ou src/report.
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Dashboard HTML Editor — Skill de Edição do Relatório Interativo
@@ -33,6 +33,12 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
    - screenshot da área afetada; `resize_window` para tema/responsivo
    - `read_page`/`javascript_tool` para conferir headers/valores da tabela
    - `form_input` no `<select>` de cenário se a mudança depender dos dados
+   - Se a mudança envolve interação clicável (card, botão, toggle), clicar de
+     fato e confirmar o efeito — não basta a tela renderizar sem erro no
+     console. Se a verificação revelar um bug **não relacionado** à mudança
+     atual, não expandir o escopo: registrar via `spawn_task` (chip de
+     background) e seguir com a tarefa pedida — foi assim que o bug do
+     `goToChart` (xref) foi achado em 2026-07-24, ver `tabs-navegacao.md`.
 6. **Atualizar o KB**: editar o doc correspondente em
    `.claude/kb/dashboard/` (fragmentar se passar 200 linhas — ver
    `.claude/rules/limits.md`).
@@ -59,8 +65,20 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 | Header/branding/botões da filter-bar | `renderer.py` | `layout/header-branding.md`, `layout/estrutura-html.md` |
 | Toggle PLL nominal/sintonia inadequada | `renderer.py`, `app.py` | `layout/bad-pll-dashboard-filter.md` |
 | Narrativa/veredito (story) | `renderer.py` (`_story_html`) | `cards/cards-metricas.md` |
+| Remover aba/gráfico inteiro (feature) | `chart.py` (método build), `app.py` (chamada + chaves do dict), `renderer.py` (chaves `SCENARIOS`, HTML da seção, `TIME_TABS`/guards de `switchTab`, ordem do `goToChart`) | doc do gráfico removido + `layout/{estrutura-html,tabs-navegacao}.md` |
 
 (Caminhos de KB relativos a `.claude/kb/dashboard/`.)
+
+## Armadilhas conhecidas
+
+- **`goToChart`/`_label` (chart.py) desde o redesign dos títulos de painel
+  (`b2bbb2a`, 2026-07-21)**: os rótulos de painel agora usam
+  `xref="paper"`, igual aos subtítulos de grupo (`_group_title`) — o filtro
+  antigo em `goToChart` (`xref !== "paper"`) ficou obsoleto e clique em card
+  não navega mais até o gráfico. Fix disparado numa sessão de background
+  separada em 2026-07-24; se ainda não tiver sido aplicado, qualquer edição
+  futura em `_label`/`goToChart`/`_openTabAt` deve resolver isso junto, não
+  ignorar. Detalhes em `tabs-navegacao.md`.
 
 ## Convenções fixas do projeto
 
@@ -73,11 +91,22 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
   linhas — fragmentar proativamente.
 - Mudança aprovada sempre ganha entrada no `CHANGELOG.md` **e** atualização
   do doc de KB correspondente — nunca só uma das duas.
+- **Aba Resumo é cards + diagnóstico, sem gráfico** (desde 2026-07-24) —
+  não reintroduzir uma figura ali sem que o usuário peça; era repetitivo
+  com Inversor/Sistema e foi removido por esse motivo.
 
 ## Evolução desta skill
 
 v1.0.0 (2026-07-24): criada a partir do padrão observado na remoção das
-métricas ΔP/ΔQ e dos emoji dos botões/abas. Atualizar a tabela e as
-convenções conforme novas edições no dashboard revelarem passos, armadilhas
-ou arquivos que valha registrar — esta skill deve crescer com o uso, não ser
-escrita de uma vez.
+métricas ΔP/ΔQ e dos emoji dos botões/abas.
+
+v1.1.0 (2026-07-24): adicionada a linha "remover aba/gráfico inteiro" na
+tabela (padrão da remoção do `build_resume`); nova seção "Armadilhas
+conhecidas" com o bug do `goToChart`/`xref` achado durante a verificação
+desta mesma mudança; passo de verificação reforçado para interações
+clicáveis, com a regra de não expandir escopo ao achar bugs não
+relacionados (usar `spawn_task`).
+
+Atualizar a tabela e as convenções conforme novas edições no dashboard
+revelarem passos, armadilhas ou arquivos que valha registrar — esta skill
+deve crescer com o uso, não ser escrita de uma vez.

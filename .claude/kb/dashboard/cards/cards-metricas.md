@@ -9,6 +9,13 @@ Gerados **em Python** por cenário (`_cards_html`, `_story_html`) e embutidos
 prontos no JS (`SCENARIOS[key].cardsHtml` / `.storyHtml`) — `switchScenario`
 só injeta o HTML em `#cards-area`/`#story-area`, sem recomputar nada no browser.
 
+**Localização (2026-07-24)**: `#cards-area`/`#story-area` moraram para dentro
+da aba Resumo (`#sec-res`, [[tabs-navegacao]]) — antes ficavam soltos, visíveis
+em qualquer aba; agora só aparecem quando a aba Resumo está ativa. Motivo: o
+gráfico próprio da aba Resumo (`build_resume`) foi removido por duplicar
+painéis já mostrados em Inversor/Sistema, e cards+diagnóstico passaram a ser
+o conteúdo integral dessa aba.
+
 ## 2 grupos de cards (`_cards_html`)
 
 | Grupo | Cards | Papel |

@@ -1,6 +1,6 @@
 ---
 name: cards-metricas
-description: Cards em 3 grupos (severidade / desempenho PLL / recuperação) com semáforo good/warn/bad, estado "não acomodou", pico de erro de fase e diagnóstico em lista de tópicos com veredito só de desempenho
+description: Cards em 2 grupos (severidade / desempenho PLL) com semáforo good/warn/bad, estado "não acomodou", pico de erro de fase e diagnóstico em lista de tópicos com veredito só de desempenho
 ---
 
 # Cards de Métricas e Diagnóstico Narrativo (renderer.py)
@@ -9,25 +9,31 @@ Gerados **em Python** por cenário (`_cards_html`, `_story_html`) e embutidos
 prontos no JS (`SCENARIOS[key].cardsHtml` / `.storyHtml`) — `switchScenario`
 só injeta o HTML em `#cards-area`/`#story-area`, sem recomputar nada no browser.
 
-## 3 grupos de cards (`_cards_html`)
+## 2 grupos de cards (`_cards_html`)
 
 | Grupo | Cards | Papel |
 |---|---|---|
 | Severidade do distúrbio | V residual B2 (pu, POC do inversor, vs LVRT), V residual B1/B3 (quando `vbus1_pu`/`vbus3_pu` existem no CSV — propagação do sag; subtítulos "barra do G1 (slack)"/"barra do G3"), Duração da falta (ms, t_fault–t_clear) | **Contexto** — quão dura foi a falta; fora do veredito |
 | Desempenho do PLL | IAE (rad·s), ISE (rad²·s), tₛ (s, ±1.15°), \|θ_err\| pico (°), **Erro R.P. (°)** | Julga o PLL |
-| Recuperação do inversor | ΔP UFV, ΔQ UFV (pu, **pós-clear**) | Julga a recuperação após eliminar a falta |
 
-Fonte: `metrics` do [[pipeline-dados]] (duas janelas: pós-falta e pós-clear).
+Fonte: `metrics` do [[pipeline-dados]] (janela pós-falta).
+
+**ΔP/ΔQ UFV removidos (2026-07-24)**: card group "Recuperação do
+inversor"/"Estabilidade de potência" (excursão máx-mín de P/Q na janela
+pós-clear) não fazia sentido como métrica de desempenho do PLL e foi
+descartado — junto com `DP_THRESH`/`DQ_THRESH`, as colunas ΔP/ΔQ da tabela
+comparativa e o item narrativo "Recuperação"/"Oscilação de potência". O
+painel de série temporal "P / Q UFV" (chart.py) não foi afetado — só a
+métrica derivada saiu.
 
 **Regime permanente** (2026-07-14): sem distúrbio, tₛ não mede nada — o loader
 deixa `ts`/`ts_delta`/`settled` como `None` e o **card tₛ é omitido** (antes
-mostrava "não acomodou" bad falso, que ainda contaminava o veredito). Grupos
-renomeados: severidade vira "Sistema 9-Bus" (cards "V min", sem duração) e
-recuperação vira **"Estabilidade de potência"** (subtítulo "regime", tooltip
-"oscilação sustentada"). Tooltip do pico diz "em regime" no lugar de
-"pós-falta". Story: sem item "Acomodação", texto do "Cenário" cita `T_SETTLE`
-(0.10 s — antes citava `T_FAULT` desatualizado), pico warn diz "em regime".
-Linha de regime na tabela comparativa mostra "—" na coluna tₛ.
+mostrava "não acomodou" bad falso, que ainda contaminava o veredito). Grupo de
+severidade renomeado: "Sistema 9-Bus" (cards "V min", sem duração). Tooltip do
+pico diz "em regime" no lugar de "pós-falta". Story: sem item "Acomodação",
+texto do "Cenário" cita `T_SETTLE` (0.10 s — antes citava `T_FAULT`
+desatualizado), pico warn diz "em regime". Linha de regime na tabela
+comparativa mostra "—" na coluna tₛ.
 
 **"V residual"** (2026-07-14): tensão remanescente do afundamento — termo do
 PRODIST Módulo 8 / IEC 61000, escolhido pelo usuário no lugar de "V min" para
@@ -68,12 +74,11 @@ Cada card: nome, valor (ou "—" se `None`), unidade, subtítulo e tooltip via `
 ## Semáforo (`_classify`)
 
 Thresholds em `config/settings.py`: `IAE_THRESH`, `ISE_THRESH`,
-`TS_DELTA_THRESH`, `DP_THRESH`, `DQ_THRESH` (pós-clear),
-`PEAK_ERR_DEG_THRESH`, `VBUS_MIN_THRESH` (`lower_is_better=False`; mesma
-escala para V min das barras 1, 2 e 3 — mas o veredito LVRT usa só a B2).
-Para tₛ o classificado é `ts_delta = tₛ − t_fault` (vem pronto do loader).
-Calibrados sobre a distribuição real dos 12 cenários (2026-07): recuperação
-limpa ΔP ≈ 0.02–0.06, problemática ≈ 1.7–3.4; pico saudável 1°, faltas
+`TS_DELTA_THRESH`, `PEAK_ERR_DEG_THRESH`, `VBUS_MIN_THRESH`
+(`lower_is_better=False`; mesma escala para V min das barras 1, 2 e 3 — mas o
+veredito LVRT usa só a B2). Para tₛ o classificado é
+`ts_delta = tₛ − t_fault` (vem pronto do loader). Calibrados sobre a
+distribuição real dos 12 cenários (2026-07): pico saudável 1°, faltas
 trifásicas remotas ~26–35° (warn), BAD_PLL 178° (bad).
 
 Os mesmos thresholds/classes alimentam a tabela comparativa
@@ -89,16 +94,14 @@ métrica (mesmas cores dos cards; `neutral` usa `var(--muted)`).
 Ordem fixa dos itens: **Distúrbio** (falta de X ms, profundidade do sag vs
 LVRT — vira "Cenário" neutro em regime) → **Pico de fase** →
 **Acomodação** (ou "não reacomodou") → **Erro de regime** (erro sustentado
-`err_ss_mean` em °, só quando há `t_ss`) → **Erro acumulado** (IAE) →
-**Recuperação** (ΔP pós-clear, rótulo em falta) ou **Oscilação de potência**
-(ΔP em regime, para refletir instabilidade induzida pelo PLL sem
-contingência). Redação específica por classe, encurtada porque o rótulo já
+`err_ss_mean` em °, só quando há `t_ss`) → **Erro acumulado** (IAE).
+Redação específica por classe, encurtada porque o rótulo já
 carrega o assunto. Item só aparece nas mesmas condições das frases antigas
 (ex.: pico `good` continua omitido). Sem `parts`, fallback
 `<p class="story-text">Dados insuficientes…</p>`.
 
 **Veredito** (chip à direita): pior classe entre as métricas de
-**desempenho/recuperação** (IAE, ISE, tₛ/settled, pico, ΔP, ΔQ) — `V min NÃO
+**desempenho** (IAE, ISE, tₛ/settled, pico) — `V min NÃO
 entra`: falta severa com PLL exemplar não vira "crítico" (ex. Barra 8
 trifásica: V_min 0.107 mas veredito "em atenção"). Labels: `bad` →
 "Desempenho crítico", `warn` → "Desempenho em atenção", `good` →

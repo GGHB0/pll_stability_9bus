@@ -112,7 +112,6 @@ A 0,02 pu o colapso de P_elétrica domina → aceleração, critério das áreas
 IAE  = ∫|θ_erro(t)| dt        — Integral do Erro Absoluto (ângulo de fase)
 ISE  = ∫ θ_erro²(t) dt        — Integral do Erro Quadrático
 ts                             — Tempo de acomodação do erro de fase
-ΔP, ΔQ                        — Amplitude das oscilações de potência ativa e reativa
 LVRT                           — Conformidade com IEEE 1547-2018 (curva V×t)
 ```
 

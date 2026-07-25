@@ -1,6 +1,6 @@
 ---
 name: pipeline-dados
-description: SimData (loader.py) — leitura dos CSVs do MATLAB, correção do erro de fase, métricas em duas janelas (IAE/ISE/tₛ/pico pós-falta; ΔP/ΔQ pós-clear) e frequência estimada do PLL
+description: SimData (loader.py) — leitura dos CSVs do MATLAB, correção do erro de fase, métricas na janela pós-falta (IAE/ISE/tₛ/pico) e frequência estimada do PLL
 ---
 
 # Pipeline de Dados (src/pipeline/loader.py)
@@ -46,14 +46,17 @@ Descoberta de cenários e roteamento BAD_PLL: ver `kb/simulation/export_workflow
 O erro do eixo rápido é interpolado para o eixo lento (`np.interp`) antes da
 correção — as métricas são calculadas no eixo lento.
 
-## Métricas (`_compute_metrics`) — duas janelas
+## Métricas (`_compute_metrics`) — janela pós-falta
 
 - **Pós-falta** (`t ≥ max(t_fault, T_SETTLE)`): erro de fase (IAE/ISE/tₛ/pico)
   e `vmin`.
-- **Pós-clear** (`t ≥ max(t_clear, T_SETTLE)`): `dP_ufv`/`dQ_ufv` — mede a
-  *recuperação*, não o colapso durante o afundamento (senão toda falta daria
-  ΔP ≈ 1 pu).
-- **Regime** (`t_fault` None): ambas viram `t ≥ T_SETTLE`.
+- **Regime** (`t_fault` None): `t ≥ T_SETTLE`.
+
+`dP_ufv`/`dQ_ufv` (excursão máx-mín de P/Q na janela pós-clear) foram
+removidos em 2026-07-24 — não faziam sentido como métrica de desempenho do
+PLL. `t_clear` continua sendo lido de `fault_info.json` (usado pelo card de
+duração da falta e pelas linhas de falta no gráfico), só a métrica derivada
+saiu.
 
 **`T_SETTLE = 0.1 s`** (settings.py, 2026-07-12): nenhuma janela de cálculo
 começa antes disso — a partida do PLL (trava em ~0.08 s; pior sinal é |V|
@@ -74,7 +77,6 @@ em `export_sim_data.m`) ainda inclui a partida → viés de ~1.1% em
 | `ts_delta` | `ts − t_fault` (base da classificação good/warn/bad) |
 | `t_ss` | início do regime: `ts` se `settled`, `T_SETTLE` em regime, senão `None` |
 | `err_ss_mean`, `err_ss_rms` | erro de fase **sustentado** em R.P. — média/RMS de \|e\| para `t ≥ t_ss` (rad; cards em °). `None` se a falta não reacomodou. Separa o erro de regime do `peak_err` transitório (Ponto 1 do professor, 2026-07-21) |
-| `dP_ufv`, `dQ_ufv` | max − min de P/Q **pós-clear** (pu) |
 | `vmin` | mínimo de `vbus2` pós-falta (pu) — severidade do sag vs LVRT |
 | `vmin_bus1`, `vmin_bus3` | idem para `vbus1`/`vbus3` — propagação do sag pela rede (cards de severidade + colunas Vmin B1/B3 na tabela; veredito LVRT continua só na B2) |
 

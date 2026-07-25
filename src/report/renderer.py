@@ -19,7 +19,7 @@ import plotly.graph_objects as go
 
 from ..config import (
     T_SETTLE, TOL_RAD, LVRT_THRESHOLD, F_FUND_HZ,
-    IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH, DP_THRESH, DQ_THRESH,
+    IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH,
     PEAK_ERR_DEG_THRESH, ERR_SS_DEG_THRESH, SYNC_LOSS_DEG, VBUS_MIN_THRESH,
 )
 from ..pipeline.loader import SimData
@@ -166,8 +166,6 @@ class HTMLRenderer:
             <th data-key="ise">ISE (rad²·s)</th>
             <th data-key="ts">tₛ (s)</th>
             <th data-key="peak">|θ_err| pico (°)</th>
-            <th data-key="dp">ΔP (pu)</th>
-            <th data-key="dq">ΔQ (pu)</th>
             <th data-key="vmin">Vmin B2 (pu)</th>
             <th data-key="vmin_b1">Vmin B1 (pu)</th>
             <th data-key="vmin_b3">Vmin B3 (pu)</th>
@@ -694,7 +692,7 @@ function renderComparisonTable() {{
     var active = (k === currentKey) ? " cmp-active" : "";
     return "<tr class=\\"cmp-row" + active + "\\" onclick=\\"_pickTableRow('" + k + "')\\">"
       + "<td class=\\"cmp-label\\">" + sc.label + "</td>"
-      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.dp) + _cmpCell(r.dq) + _cmpCell(r.vmin) + _cmpCell(r.vmin_b1) + _cmpCell(r.vmin_b3)
+      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.vmin) + _cmpCell(r.vmin_b1) + _cmpCell(r.vmin_b3)
       + "</tr>";
   }}).join("");
 }}
@@ -1022,8 +1020,6 @@ switchScenario(currentKey);
             "ise":  cell(m.get("ISE"), 4, ISE_THRESH),
             "ts":   ts_cell,
             "peak": cell(peak_deg, 1, PEAK_ERR_DEG_THRESH),
-            "dp":   cell(m.get("dP_ufv"), 3, DP_THRESH),
-            "dq":   cell(m.get("dQ_ufv"), 3, DQ_THRESH),
             "vmin":    cell(m.get("vmin"),      3, VBUS_MIN_THRESH, lower_is_better=False),
             "vmin_b1": cell(m.get("vmin_bus1"), 3, VBUS_MIN_THRESH, lower_is_better=False),
             "vmin_b3": cell(m.get("vmin_bus3"), 3, VBUS_MIN_THRESH, lower_is_better=False),
@@ -1116,20 +1112,6 @@ switchScenario(currentKey);
             ss_card,
         ])
 
-        rec_sub = "regime" if is_regime else "pós-clear"
-        rec_ctx = ("em regime (oscilação sustentada)" if is_regime
-                   else "na recuperação")
-        inv = "".join([
-            _card("ΔP UFV", _v(m.get("dP_ufv"), 3), "pu", rec_sub,
-                  f"Excursão de potência ativa {rec_ctx} (UFV)",
-                  self._classify(m.get("dP_ufv"), DP_THRESH),
-                  target="P / Q UFV"),
-            _card("ΔQ UFV", _v(m.get("dQ_ufv"), 3), "pu", rec_sub,
-                  f"Excursão de potência reativa {rec_ctx} (UFV)",
-                  self._classify(m.get("dQ_ufv"), DQ_THRESH),
-                  target="P / Q UFV"),
-        ])
-
         # Severidade: contexto do distúrbio — cor indica profundidade do sag,
         # mas não entra no veredito de desempenho
         # "V residual" = tensão remanescente do afundamento (PRODIST/IEC);
@@ -1159,13 +1141,10 @@ switchScenario(currentKey);
                       f"t = {data.t_fault:.2f} – {data.t_clear:.2f} s",
                       "Duração da falta aplicada", "neutral"))
         sev_label = "Sistema 9-Bus" if is_regime else "Severidade do distúrbio"
-        inv_label = ("Estabilidade de potência" if is_regime
-                     else "Recuperação do inversor")
 
         return (
             _group(sev_label, "".join(sev_cards)) + "\n"
-            + _group("Desempenho do PLL", pll) + "\n"
-            + _group(inv_label, inv)
+            + _group("Desempenho do PLL", pll)
         )
 
     # ── Narrativa ────────────────────────────────────────────────────────────
@@ -1177,8 +1156,6 @@ switchScenario(currentKey);
         ts       = m.get("ts")
         ts_delta = m.get("ts_delta")
         settled  = m.get("settled")
-        dp       = m.get("dP_ufv")
-        dq       = m.get("dQ_ufv")
         vmin     = m.get("vmin")
         peak_deg = float(np.degrees(m["peak_err"])) if m.get("peak_err") is not None else None
         tol      = round(float(np.degrees(TOL_RAD)), 2)
@@ -1274,31 +1251,6 @@ switchScenario(currentKey);
                 parts.append(("bad", "Erro acumulado",
                               f"IAE = {iae:.3f} rad·s — acumulação significativa."))
 
-        # ── recuperação (pós-clear) ou estabilidade de P/Q (regime) ──────────
-        dp_cls = self._classify(dp, DP_THRESH)
-        if dp is not None:
-            label = "Oscilação de potência" if is_regime else "Recuperação"
-            if dp_cls == "good":
-                if is_regime:
-                    parts.append(("good", label,
-                                  f"ΔP = {dp:.3f} pu — estável em operação normal."))
-                else:
-                    parts.append(("good", label,
-                                  f"ΔP = {dp:.3f} pu, sem oscilação residual após a falta."))
-            elif dp_cls == "warn":
-                parts.append(("warn", label,
-                              f"Oscilação moderada de potência ativa "
-                              f"(ΔP = {dp:.3f} pu)."))
-            else:
-                if is_regime:
-                    parts.append(("bad", label,
-                                  f"Oscilação sustentada em regime "
-                                  f"(ΔP = {dp:.3f} pu) — risco de atuação de proteção."))
-                else:
-                    parts.append(("bad", label,
-                                  f"Oscilação severa após a falta "
-                                  f"(ΔP = {dp:.3f} pu) — risco de atuação de proteção."))
-
         # Veredito: só métricas de desempenho/recuperação — a severidade do
         # afundamento (V min) é contexto e fica de fora
         statuses = [
@@ -1306,8 +1258,6 @@ switchScenario(currentKey);
             self._classify(m.get("ISE"), ISE_THRESH),
             ts_cls,
             peak_cls,
-            dp_cls,
-            self._classify(dq, DQ_THRESH),
         ]
         if "bad" in statuses:
             verdict_cls, verdict_txt = "bad",     "Desempenho crítico"

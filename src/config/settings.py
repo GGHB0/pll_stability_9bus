@@ -12,7 +12,7 @@ HTML_OUT   = PROJ_ROOT / "output" / "pll_metrics.html"
 # ── Parâmetros de simulação ─────────────────────────────────────────────────
 T_FAULT  = 0.2        # fallback (s) se fault_info.json não existir
 T_SETTLE = 0.1        # s — transitório de partida do PLL, excluído de TODO cálculo
-                      # (FFT, IAE/ISE/ts, ΔP/ΔQ). Medido nos dados (bus6/1phase):
+                      # (FFT, IAE/ISE/ts). Medido nos dados (bus6/1phase):
                       # pior sinal é |V| Bus 2, que acomoda em 0.078 s
 TOL_RAD  = 0.02       # ±1.15° — critério de acomodação do PLL (rad)
 
@@ -20,8 +20,6 @@ TOL_RAD  = 0.02       # ±1.15° — critério de acomodação do PLL (rad)
 IAE_THRESH      = (0.05,  0.15)   # rad·s — erro de fase pós-falta
 ISE_THRESH      = (0.005, 0.020)  # rad²·s
 TS_DELTA_THRESH = (0.10,  0.30)   # s após t_fault
-DP_THRESH       = (0.10,  0.50)   # pu — excursão de P na janela pós-clear
-DQ_THRESH       = (0.15,  0.60)   # pu — excursão de Q na janela pós-clear
 PEAK_ERR_DEG_THRESH = (20.0, 60.0)  # ° — pico de |erro de fase| pós-falta
 ERR_SS_DEG_THRESH   = (0.5,  1.0)   # ° — erro de fase SUSTENTADO em regime permanente
                                     # (média de |e| após a acomodação; PLL bem

@@ -260,18 +260,14 @@ class SimData:
         self.has_freq = True
 
     def _compute_metrics(self) -> dict:
-        """Métricas em duas janelas: pós-falta (t ≥ t_fault → erro de fase, V_min)
-        e pós-clear (t ≥ t_clear → ΔP/ΔQ de recuperação, sem o afundamento em si).
-        Nenhuma janela começa antes de T_SETTLE: o transitório de partida do PLL
+        """Métricas na janela pós-falta (t ≥ t_fault → erro de fase, V_min).
+        A janela não começa antes de T_SETTLE: o transitório de partida do PLL
         (trava em ~0.08 s) não é falta de desempenho e fica fora das integrais.
-        Regime permanente (t_fault None) usa t ≥ T_SETTLE nas duas janelas."""
+        Regime permanente (t_fault None) usa t ≥ T_SETTLE."""
         is_regime = self.t_fault is None
         t_start = min(T_SETTLE, float(self.t[-1])) if is_regime \
             else max(self.t_fault, T_SETTLE)
-        t_rec   = self.t_clear if (not is_regime and self.t_clear is not None) else t_start
-        t_rec   = max(t_rec, T_SETTLE)
-        mask     = self.t >= t_start
-        mask_rec = self.t >= t_rec
+        mask = self.t >= t_start
         metrics: dict = {
             "IAE": None, "ISE": None, "ts": None, "ts_delta": None,
             "peak_err": None, "settled": None,
@@ -320,10 +316,6 @@ class SimData:
                         metrics["err_ss_mean"] = float(np.mean(np.abs(e_ss)))
                         metrics["err_ss_rms"]  = float(np.sqrt(np.mean(e_ss ** 2)))
 
-        p_rec = self.P_ufv[mask_rec]
-        q_rec = self.Q_ufv[mask_rec]
-        metrics["dP_ufv"] = float(p_rec.max() - p_rec.min()) if len(p_rec) else None
-        metrics["dQ_ufv"] = float(q_rec.max() - q_rec.min()) if len(q_rec) else None
         for key, vbus in (("vmin", self.vbus2), ("vmin_bus1", self.vbus1),
                           ("vmin_bus3", self.vbus3)):
             if vbus is not None:
@@ -341,5 +333,5 @@ class SimData:
         return (
             f"SimData(n={n}, "
             f"IAE={m.get('IAE')}, ISE={m.get('ISE')}, "
-            f"ts={m.get('ts')}, dP_ufv={m.get('dP_ufv'):.4f}, dQ_ufv={m.get('dQ_ufv'):.4f})"
+            f"ts={m.get('ts')})"
         )

@@ -48,7 +48,6 @@ manual (arrasto) não persiste para abas sujas, só o de botão.
 annotation de painel gerada pelo `_label` do chart.py:
 
 - IAE / ISE / tₛ / pico → `"Erro de fase"`
-- ΔP / ΔQ UFV → `"P / Q UFV"`
 - V residual B1/B2/B3 → `"|V| Bus 1/2/3"`
 - Duração → sem target (não clicável)
 

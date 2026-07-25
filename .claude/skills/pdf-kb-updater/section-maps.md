@@ -44,3 +44,28 @@ Pontos de interesse para o TCC: oscilação 0,63 Hz classificada como
 *converter-driven forced oscillation*; RES com fator de potência fixo sem
 suporte de tensão; trips de sobretensão de inversores (< 1 MW e utility-scale)
 com ajustes fora dos requisitos; paralelo com o apagão BR de ago/2023.
+
+## IEEE Std 1547.2-2023 — Application Guide for IEEE Std 1547-2018 (291 p.)
+
+Arquivo na bibliografia: `805035543-Ieee-Standard-1547-2018.pdf` — **atenção**,
+o nome do arquivo é enganoso: o conteúdo real é o *Application Guide*
+1547.2-2023 (comentado, com racional/tabelas/figuras), não o standard
+normativo 1547-2018 puro. Confirmado pelo metadata `/Title` extraído via
+pypdf — sempre checar `toc.txt` antes de assumir o conteúdo pelo nome do
+arquivo.
+
+| Seção | Páginas | Conteúdo |
+|-------|---------|---------|
+| §5.2–5.4 Reactive power capability / volt-var / volt-watt | 75–83 | Modos de controle reativo em regime permanente (contraste com DVS) |
+| §6.2 Area EPS faults / região de operação contínua | 92–108 | Faltas, reclosing, região contínua 0,88–1,10 pu |
+| §6.4 Voltage (mandatory trip + ride-through) | 113–127 | Table 8 (trip UV1/UV2/OV1/OV2 por categoria), regiões de operação, Dynamic Voltage Support (§6.4.2.6), Tabela 9 |
+| Annex C — Illustration of ride-through/trip requirements | 231–234 | Figuras C.1–C.4 (só legendas/fonte extraível — curvas são imagens, valores numéricos completos estão nas Table 14/15/16 do 1547-2018 normativo, não neste guia) |
+| Annex I — Case studies on DVS performance | 263–277 | Estudos de caso CAISO e Entergy: impacto de categoria/DVS na recuperação de tensão do sistema em alta penetração de DER |
+
+**Arquivos .txt gerados em ~/pdfext/ (2026-07-25):**
+- `ieee1547_53_54_voltvar.txt`, `ieee1547_62_faults.txt`,
+  `ieee1547_64_voltage.txt`, `ieee1547_annexC_ridethrough.txt`,
+  `ieee1547_annexI_casestudies.txt`
+
+Sintetizado em `.claude/kb/standards/ieee1547_ride_through.md` e
+`.claude/kb/standards/ieee1547_case_studies.md`.

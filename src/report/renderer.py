@@ -426,8 +426,11 @@ function switchTab(which) {{
 }}
 
 // ── Cards clicáveis: pula para o painel da métrica ────────────────────────
-// Procura o rótulo do painel (annotation do chart.py) nas figuras na ordem
-// res → inv → sys; abre a aba e rola até o painel usando o domínio do eixo Y.
+// Procura o rótulo do painel (annotation da barra de título em chart.py) nas
+// figuras na ordem res → inv → sys; abre a aba e rola até o painel usando a
+// posição y (fração de paper) já gravada na própria annotation do rótulo.
+// yref="paper" identifica o rótulo do painel; títulos de grupo usam
+// yref="y domain"/"y3 domain" (contém "domain") e ficam de fora do filtro.
 
 function goToChart(labelFrag) {{
   var sc = SCENARIOS[currentKey];
@@ -438,20 +441,17 @@ function goToChart(labelFrag) {{
     var fig = sc[t + "Data"];
     var anns = (fig.layout && fig.layout.annotations) || [];
     for (var j = 0; j < anns.length; j++) {{
-      if (anns[j].xref !== "paper" && (anns[j].text || "").indexOf(labelFrag) !== -1) {{
-        _openTabAt(t, fig, anns[j].yref);
+      if (anns[j].yref === "paper" && (anns[j].text || "").indexOf(labelFrag) !== -1) {{
+        _openTabAt(t, fig, anns[j].y);
         return;
       }}
     }}
   }}
 }}
 
-function _openTabAt(t, fig, yref) {{
+function _openTabAt(t, fig, frac) {{
   switchTab(t);
-  var m = (yref || "").match(/^y(\\d*)/);
-  var axName = "yaxis" + (m && m[1] ? m[1] : "");
-  var lay = fig.layout[axName];
-  var frac = (lay && lay.domain) ? lay.domain[1] : 1;   // topo do painel (0–1, base→topo)
+  frac = (typeof frac === "number") ? frac : 1;   // topo do painel (0–1, base→topo)
   // setTimeout (não rAF): dá tempo do layout assentar após switchTab e
   // funciona mesmo com a aba do browser em segundo plano
   setTimeout(function() {{

@@ -52,10 +52,25 @@ annotation de painel gerada pelo `_label` do chart.py:
 - Duração → sem target (não clicável)
 
 `goToChart` varre as figuras na ordem **res → inv → sys**, acha a primeira
-annotation (não-`paper`) contendo o fragmento, abre a aba e rola até o
-painel: `_openTabAt` converte o `yref` da annotation em `yaxisN`, lê o
-`domain` do layout (estático, pré-computado no Python) e calcula o y do
-scroll descontando header + filter-bar sticky.
+annotation com `yref === "paper"` (rótulo de painel, gerado por `_label` em
+chart.py) contendo o fragmento, abre a aba e rola até o painel: `_openTabAt`
+usa diretamente o `y` (fração de paper) já gravado nessa annotation como
+alvo do scroll, descontando header + filter-bar sticky.
+
+Títulos de grupo (`_group_title`) usam `yref` tipo `"y domain"`/`"y3 domain"`
+(contém `"domain"`) e ficam fora do filtro — só rótulos de painel têm
+`yref === "paper"`.
+
+⚠️ Bug histórico (commit `b2bbb2a`, corrigido em 2026-07-24): antes do
+redesign dos títulos como barra preenchida, rótulos de painel usavam
+`xref`/`yref` por eixo (`"x domain"`/`"y3 domain"`) e só os títulos de grupo
+usavam `xref="paper"` — daí o filtro original ser `xref !== "paper"`. O
+redesign passou os rótulos de painel também para `xref="paper", yref="paper"`,
+então o filtro antigo excluía *toda* annotation e `goToChart` não fazia nada
+ao clicar num card. Um segundo problema: mesmo corrigindo o filtro, o
+`_openTabAt` antigo tentava extrair `yaxisN` do `yref` via regex `/^y(\d*)/`,
+que não bate com `"paper"` — sempre caía em `yaxis` (linha 1). A correção usa
+o `y` da própria annotation em vez de redescobrir o domínio do eixo.
 
 ⚠️ Gotchas do `_openTabAt`:
 - `setTimeout(…, 60)` em vez de `requestAnimationFrame` — rAF não dispara

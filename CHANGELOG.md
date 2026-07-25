@@ -5,6 +5,31 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-24 — Correção do clique nos cards (`goToChart` não fazia nada)
+
+Arquivos: `src/report/renderer.py`
+
+- **Motivação (bug reportado)**: clicar num card clicável (ex.: "tₛ",
+  "|θ_err| pico") não fazia nada desde o commit `b2bbb2a` (redesign dos
+  títulos de painel como barra preenchida).
+- **Causa raiz**: `_label` em `chart.py` passou a gerar a annotation do
+  rótulo de painel com `xref="paper", yref="paper"` (estilo barra
+  preenchida). O filtro antigo em `goToChart` (`anns[j].xref !== "paper"`)
+  foi escrito para o estilo anterior, em que só os títulos de grupo usavam
+  `xref="paper"` — com o redesign, toda annotation passou a ter
+  `xref="paper"`, então o filtro excluía tudo e o loop nunca encontrava a
+  annotation do card clicado.
+- **Segundo problema (mesmo corrigindo o filtro)**: `_openTabAt` extraía o
+  eixo Y via regex `/^y(\d*)/` sobre o `yref` da annotation encontrada; com
+  `yref="paper"` a regex não bate, então sempre caía em `yaxis` (linha 1) —
+  o scroll sempre iria para o primeiro painel, independente do card clicado.
+- **Correção**: filtro trocado para `anns[j].yref === "paper"` (identifica
+  rótulo de painel; títulos de grupo usam `yref` tipo `"y domain"`/`"y3
+  domain"`, com `"domain"` no meio, e ficam de fora). `_openTabAt` passou a
+  usar diretamente o `y` (fração de paper) já gravado na annotation
+  encontrada, em vez de redescobrir o domínio do eixo.
+- KB atualizado: `dashboard/layout/tabs-navegacao.md`.
+
 ## 2026-07-24 — Remoção dos ícones emoji dos botões/abas
 
 Arquivos: `src/report/renderer.py`

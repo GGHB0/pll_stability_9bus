@@ -69,3 +69,12 @@ arquivo.
 
 Sintetizado em `.claude/kb/standards/ieee1547_ride_through.md` e
 `.claude/kb/standards/ieee1547_case_studies.md`.
+
+## Hu, Meng, Bu, Ren — *Test and Analysis of LVRT Characteristic of Wind Farm* (6 p.)
+
+Artigo curto (IJAPE Vol.2 Issue 4, 2013), sem outline — extraído por inteiro em
+`~/pdfext/lvrt_windfarm_full.txt` (2026-07-25). Teste de campo real em turbina
+PMSG 850 kW, norma chinesa Q/GDW392-2009. Conteúdo: fórmula de corrente reativa
+dinâmica, dados de teste simétrico vs. assimétrico (desequilíbrio de corrente
+entre fases). Sintetizado em
+`.claude/kb/standards/china_lvrt_windfarm_test.md`.

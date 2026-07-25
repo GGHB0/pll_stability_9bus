@@ -179,6 +179,10 @@ zeros em s = ±j2ω₀   →   |H(j2ω₀)| ≪ 1
 PI simples (H = Kp + Ki/s) não possui esses zeros → ripple de 120 Hz não é atenuado.
 Soluções alternativas: notch externo em 2ω₀, DSOGI-PLL, DDSRF-PLL (ver [[srf-pll-theory]]).
 
+Dado de campo real (turbina eólica PMSG) mostrando desequilíbrio de corrente entre
+fases sob falta assimétrica — manifestação física deste mesmo efeito — em
+[china_lvrt_windfarm_test.md](../standards/china_lvrt_windfarm_test.md).
+
 ### Feed-forward de Tensão no Controle de Corrente (§12.5.3)
 
 Mesmo com ripple em ω/ρ, o controle de corrente pode mitigar a propagação do distúrbio via

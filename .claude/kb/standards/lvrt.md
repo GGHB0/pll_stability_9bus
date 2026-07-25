@@ -48,3 +48,5 @@ Para cada cenário simulado, verificar se:
 - [ieee1547_case_studies.md](ieee1547_case_studies.md) — estudos de caso reais
   (CAISO, Entergy) sobre o efeito da categoria/DVS na recuperação de tensão
 - [ons_2_11.md](ons_2_11.md) — implementação real no modelo Simulink do TCC
+- [china_lvrt_windfarm_test.md](china_lvrt_windfarm_test.md) — norma chinesa Q/GDW392-2009
+  e dado de campo real (turbina PMSG) mostrando falta simétrica vs. assimétrica

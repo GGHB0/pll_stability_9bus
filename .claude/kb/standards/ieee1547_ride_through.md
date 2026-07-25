@@ -111,3 +111,5 @@ coincidir com o momento em que o PLL ainda está instável pós-falta.
 - [lvrt.md](lvrt.md) — definição geral de LVRT e ligação com o evento 15/08/2023
 - [ons_2_11.md](ons_2_11.md) — implementação real no modelo Simulink
 - [ieee1547_case_studies.md](ieee1547_case_studies.md) — estudos de caso reais (CAISO, Entergy) mostrando o impacto de DVS/categoria na recuperação de tensão do sistema
+- [china_lvrt_windfarm_test.md](china_lvrt_windfarm_test.md) — terceira norma de comparação
+  (Q/GDW392-2009) e teste de campo em turbina eólica PMSG real

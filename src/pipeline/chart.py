@@ -285,16 +285,20 @@ class ChartBuilder:
         d = self._d
         t0, t_end = d.t_fault, float(d.t[-1])
         xs, ys = [t0], [self._LVRT_STEPS[0][1]]
+        v_cur = self._LVRT_STEPS[0][1]
         for i, (dt_step, _v) in enumerate(self._LVRT_STEPS):
-            next_v = self._LVRT_STEPS[i + 1][1] if i + 1 < len(self._LVRT_STEPS) else 0.88
-            xs.append(min(t0 + dt_step, t_end))
-            ys.append(next_v)
+            t_step = t0 + dt_step
+            if t_step >= t_end:
+                break
+            v_cur = self._LVRT_STEPS[i + 1][1] if i + 1 < len(self._LVRT_STEPS) else 0.88
+            xs.append(t_step)
+            ys.append(v_cur)
         xs.append(t_end)
-        ys.append(0.88)
+        ys.append(v_cur)
         env = go.Scatter(
             x=xs, y=ys, mode="lines", line_shape="hv",
             line=dict(color="rgba(220,50,50,0.7)", width=1.6, dash="dash"),
-            name="V mín. trip 1547 Cat II", hoverinfo="skip",
+            name="IEEE 1547", hoverinfo="skip",
         )
         env.legend = self._legend_key
         self._fig.add_trace(env, row=row, col=col)

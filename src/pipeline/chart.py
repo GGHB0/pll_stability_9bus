@@ -273,10 +273,12 @@ class ChartBuilder:
         marker.legend = self._legend_key
         self._fig.add_trace(marker, row=row, col=col)
 
-    # Envelope LVRT IEEE 1547-2018 Categoria II: (Δt após a falta, V mínimo de
-    # ride-through obrigatório) — 0.30 pu/0.16 s, 0.45 pu/0.32 s, 0.65 pu/3 s,
-    # 0.88 pu operação contínua.
-    _LVRT_STEPS = ((0.16, 0.30), (0.32, 0.45), (3.0, 0.65))
+    # Table 8 (trip mandatório) do IEEE Std 1547.2-2023, Categoria II: (Δt após
+    # a falta, V mínimo antes do trip obrigatório) — UV2 0.45 pu/0.16 s,
+    # UV1 0.70 pu/10 s, 0.88 pu operação contínua. Não é a curva de
+    # ride-through contínuo (Table 14/15/16 do 1547-2018 normativo, não
+    # disponível na bibliografia) — ver chart-analysis-overlays.md.
+    _LVRT_STEPS = ((0.16, 0.45), (10.0, 0.70))
 
     def _lvrt_envelope(self, row: int, col: int) -> None:
         """Curva degrau V×t de ride-through, ancorada em t_fault (só no |V| Bus 2)."""
@@ -292,7 +294,7 @@ class ChartBuilder:
         env = go.Scatter(
             x=xs, y=ys, mode="lines", line_shape="hv",
             line=dict(color="rgba(220,50,50,0.7)", width=1.6, dash="dash"),
-            name="LVRT 1547 Cat II", hoverinfo="skip",
+            name="V mín. trip 1547 Cat II", hoverinfo="skip",
         )
         env.legend = self._legend_key
         self._fig.add_trace(env, row=row, col=col)

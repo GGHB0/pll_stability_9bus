@@ -54,20 +54,36 @@ Atributos novos: `t_freq`, `f_pll`, flag `has_freq`. Painel com hline de
 
 ## Envelope LVRT (`_lvrt_envelope`, só no |V| Bus 2)
 
-Curva degrau V×t do ride-through obrigatório IEEE 1547-2018 **Categoria II**,
-ancorada em `t_fault` (constante de classe `_LVRT_STEPS`):
+Curva degrau V×t de **trip mandatório** (Table 8, IEEE Std 1547.2-2023)
+Categoria II, ancorada em `t_fault` (constante de classe `_LVRT_STEPS`):
 
-| Δt após a falta | V mínimo |
+| Δt após a falta | V mínimo antes do trip |
 |---|---|
-| até 0.16 s | 0.30 pu |
-| até 0.32 s | 0.45 pu |
-| até 3.0 s  | 0.65 pu |
+| até 0.16 s | 0.45 pu (UV2) |
+| até 10 s   | 0.70 pu (UV1) |
 | depois     | 0.88 pu (operação contínua) |
 
 Scatter com `line_shape="hv"`, tracejado vermelho, `hoverinfo="skip"`,
-`legend = self._legend_key`. Substitui a hline fixa de `LVRT_THRESHOLD`
-apenas em `vbus2` com falta; `vbus1`/`vbus3` (e `vbus2` em regime) mantêm a
-hline antiga.
+`legend = self._legend_key`, nome "V mín. trip 1547 Cat II". Substitui a
+hline fixa de `LVRT_THRESHOLD` apenas em `vbus2` com falta; `vbus1`/`vbus3`
+(e `vbus2` em regime) mantêm a hline antiga.
+
+### Correção 2026-07-26 — valores alinhados à Table 8 real
+
+Os degraus originais (0,30/0,45/0,65 pu) foram escritos (commit `bc428d7`,
+05/07/2026) com atribuição genérica ao IEEE 1547-2018 Cat II, sem citar
+tabela/página, antes de qualquer PDF da norma ter sido processado pela
+skill `pdf-kb-updater`. Corrigido para os 2 degraus reais de Table 8 (ver
+[ieee1547_ride_through.md](../../standards/ieee1547_ride_through.md)):
+UV2 = 0,45 pu/0,16 s e UV1 = 0,70 pu/10 s.
+
+**Ressalva semântica que permanece:** Table 8 é a curva de **trip
+mandatório** (proteção — abaixo disso o inversor *deve* desconectar), não a
+curva de **ride-through contínuo** (Table 14/15/16 do 1547-2018 normativo
+puro, que não está disponível no Application Guide extraído). O nome do
+trace foi ajustado para "V mín. trip 1547 Cat II" para não sugerir que é o
+limite de ride-through obrigatório. Se a Table 14/15/16 for obtida no
+futuro, essa curva pode ser substituída pela de ride-through de verdade.
 
 ## Gotcha ⚠️ traces adicionados fora de `_add`
 

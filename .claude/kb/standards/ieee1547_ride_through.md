@@ -113,3 +113,7 @@ coincidir com o momento em que o PLL ainda está instável pós-falta.
 - [ieee1547_case_studies.md](ieee1547_case_studies.md) — estudos de caso reais (CAISO, Entergy) mostrando o impacto de DVS/categoria na recuperação de tensão do sistema
 - [china_lvrt_windfarm_test.md](china_lvrt_windfarm_test.md) — terceira norma de comparação
   (Q/GDW392-2009) e teste de campo em turbina eólica PMSG real
+- [chart-analysis-overlays.md](../dashboard/graficos/chart-analysis-overlays.md) —
+  o envelope de trip desenhado no dashboard (`_LVRT_STEPS` em chart.py) usa
+  os valores desta Table 8 desde 2026-07-26 (corrigido; antes usava valores
+  sem fonte)

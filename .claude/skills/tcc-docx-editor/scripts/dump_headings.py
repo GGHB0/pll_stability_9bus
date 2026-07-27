@@ -23,7 +23,7 @@ def style_of(b):
 
 for i, b in enumerate(blocks):
     tag = style_of(b)
-    if tag.startswith('Ttulo'):
+    if tag.startswith('Ttulo') or tag.startswith('Heading'):
         t = text_of(b).strip()
         if t:
             print(f'[{i:3d}] ({tag}) {t[:110]}')

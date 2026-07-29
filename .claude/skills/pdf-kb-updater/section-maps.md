@@ -95,13 +95,17 @@ arquivo.
 | Annex C — Illustration of ride-through/trip requirements | 231–234 | Figuras C.1–C.4 (só legendas/fonte extraível — curvas são imagens, valores numéricos completos estão nas Table 14/15/16 do 1547-2018 normativo, não neste guia) |
 | Annex I — Case studies on DVS performance | 263–277 | Estudos de caso CAISO e Entergy: impacto de categoria/DVS na recuperação de tensão do sistema em alta penetração de DER |
 
+| §7.3 Limitation of current distortion | 144–147 | Table 17/18 (limites % de harmônico ímpar/par por ordem), TRD 5%, background TDD→TRD, exclui distorção pré-existente da Area EPS (§7.3.1) |
+
 **Arquivos .txt gerados em ~/pdfext/ (2026-07-25):**
 - `ieee1547_53_54_voltvar.txt`, `ieee1547_62_faults.txt`,
   `ieee1547_64_voltage.txt`, `ieee1547_annexC_ridethrough.txt`,
   `ieee1547_annexI_casestudies.txt`
+- `ieee1547_73_power_quality.txt` (p.138–149, gerado 2026-07-29)
 
-Sintetizado em `.claude/kb/standards/ieee1547_ride_through.md` e
-`.claude/kb/standards/ieee1547_case_studies.md`.
+Sintetizado em `.claude/kb/standards/ieee1547_ride_through.md`,
+`.claude/kb/standards/ieee1547_case_studies.md` e (§7.3) em
+`.claude/kb/standards/harmonic_significance_criteria.md`.
 
 ## Hu, Meng, Bu, Ren — *Test and Analysis of LVRT Characteristic of Wind Farm* (6 p.)
 

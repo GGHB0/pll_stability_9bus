@@ -1,7 +1,7 @@
 ---
 name: harmonic-significance-criteria
 description: Critérios da literatura para o que conta como harmônico de tensão/corrente "significativo" em pu — normas de conformidade (IEEE 519/1547) vs. rejeição a distúrbio (TeseAGP) vs. criério funcional de PLL (Yazdani)
-source: TeseAGP p.31-39,58-60,135-138,189-193; Yazdani & Iravani §4.2.4,4.3.3,12.5.1-12.5.7 (p.103-113,376-393)
+source: TeseAGP p.31-39,58-60,135-138,189-193; Yazdani & Iravani §4.2.4,4.3.3,12.5.1-12.5.7 (p.103-113,376-393); IEEE 1547.2-2023 §7.3 (p.144-147)
 ---
 
 # Critérios de Harmônico Significativo — Normas vs. Literatura
@@ -20,9 +20,21 @@ Correção registrada em 2026-07-28 (usuário).
 
 IEEE 519-2014 (contexto — não extraído do PDF deste projeto, ver resposta em
 chat): limites individuais de 1-5% e THD de 1,5-8% dependendo da classe de
-tensão. IEEE 1547-2018 tem cláusula própria de distorção harmônica (diferente
-da cláusula de ride-through já documentada em [ieee1547_ride_through.md](ieee1547_ride_through.md))
-— ainda não extraída para este projeto.
+tensão.
+
+**IEEE 1547-2018 §7.3 "Limitation of current distortion"** (extraído de
+IEEE 1547.2-2023, Application Guide, p.144-147 — arquivo
+`805035543-Ieee-Standard-1547-2018.pdf`; cláusula distinta da de ride-through
+já documentada em [ieee1547_ride_through.md](ieee1547_ride_through.md)): com
+a DER servindo carga linear balanceada, a injeção de corrente harmônica no
+PCC não pode exceder **4%** em harmônicos ímpares individuais, **1% / 2% /
+3% / 4%** nos harmônicos pares de 2ª / 4ª / 6ª / 8ª ordem, e **5% TRD**
+(Total Rated Distortion — em % da corrente nominal `Irated`, e não da
+demanda máxima como no índice TDD clássico do IEEE 519; mudança de índice
+registrada na Tabela 15 do guia). Aplica-se a tensões de 120 V a 69 kV,
+adaptado do IEEE 519-2014, e **exclui** explicitamente qualquer harmônico já
+presente na tensão da Area EPS antes da conexão da DER (§7.3.1) — ou seja, é
+um limite de contribuição da DER, não de distorção total do sistema.
 
 ## 2. Rejeição a distúrbio (significância funcional/empírica)
 

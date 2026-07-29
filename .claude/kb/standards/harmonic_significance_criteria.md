@@ -116,3 +116,41 @@ estéticas do relatório, não limites normativos. O piso de 2% coincide,
 por coincidência, com a ordem de grandeza do que a literatura de rejeição a
 distúrbio (item 2 acima) já trata como "pequeno o suficiente" — mas não foi
 derivado de nenhuma norma.
+
+### abc × dq — qual norma vale em qual domínio
+
+Os limites por ordem harmônica `h` (Tabela 2 do IEEE 519-2014, §7.3 do IEEE
+1547-2018) só são bem definidos no domínio **abc** — a transformada de Park
+desloca cada componente por `±f₁` conforme a sequência (positiva: ordem `n` →
+`(n-1)·f₁` no dq; negativa: ordem `n` → `(n+1)·f₁`), então dois harmônicos de
+ordens diferentes podem cair no **mesmo bin** do espectro dq (5ª
+negativa + 7ª positiva → ambas em 6f₁ = 360 Hz; 11ª + 13ª → ambas em
+12f₁ = 720 Hz). Um pico dq nesses bins não é atribuível a uma ordem `h`
+específica, então não dá pra comparar direto com a linha correspondente da
+Tabela 2.
+
+Consequência prática: checagem de conformidade com IEEE 519/1547 deve usar o
+espectro em modo **abc** (fases a/b/c), casando os marcadores `SPEC_MARKERS`
+(f₁, 3f₁, 5f₁, 7f₁) com a tabela de harmônicas 1–7. O espectro em modo **dq**
+não serve para essa checagem — ele é um proxy da **fração de sequência
+negativa** (pico isolado em 2f₁ = 120 Hz), que é o critério de desequilíbrio
+dos itens 2/3 acima (limiar empírico da TeseAGP, análise da fração `b` do
+Yazdani), não um limite de distorção harmônica por ordem. Hoje só
+`bus1/2phase` tem `sim_data_abc.csv` — é o único cenário onde a checagem de
+conformidade por ordem é possível; os demais só têm dq, útil para severidade
+de desequilíbrio, não para conformidade normativa.
+
+### TDD × TRD — qual índice é computável aqui
+
+TDD (IEEE 519-2014, coluna da Tabela 2) usa no denominador `I_L`, a corrente
+de demanda máxima medida em janela móvel de 12 meses de operação real — não
+existe em uma simulação EMT de poucos segundos, então **não é computável
+neste projeto**. O índice que o IEEE 1547-2018 efetivamente define para
+unidades geradoras é **TRD** (Total Rated Distortion, Tabela 15 do guia
+1547.2-2023): mesma fórmula, mas com `I_rated` (corrente nominal do
+inversor, dado de projeto conhecido a priori) no denominador em vez de
+`I_L`. Como o dashboard já normaliza tudo em pu na base do inversor
+(`I_rated ≈ 1,0 pu`), TRD é diretamente calculável a partir de
+`id_ufv_pu`/`iq_ufv_pu`/`iabc_inverter` — comparar `√(Σ Iₕ²)` (h=2…50, em pu)
+com o limite de 5% da Tabela 15/§7.3. TDD permanece citado apenas como
+terminologia original da Tabela 2 do IEEE 519 (item 1 acima).

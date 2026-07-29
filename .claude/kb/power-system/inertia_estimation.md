@@ -2,6 +2,8 @@
 name: inertia-estimation
 description: Centro de Inércia (CoI), tendência de queda sistêmica, e 5 técnicas de estimação de H — revisão MDPI Energies 15/20/7767 com avaliação Monte Carlo no IEEE 9-bus
 source: MDPI Energies 15(20) 7767 (2022) — Inertia Estimation of Synchronous Devices
+references:
+  - "DIMOULIAS, Stelios C.; KONTIS, Eleftherios O.; PAPAGIANNIS, Grigoris K. Inertia Estimation of Synchronous Devices: Review of Available Techniques and Comparative Assessment of Conventional Measurement-Based Approaches. Energies, v. 15, n. 20, art. 7767, 2022. DOI: 10.3390/en15207767."
 ---
 
 # Estimação de Inércia em Sistemas de Potência

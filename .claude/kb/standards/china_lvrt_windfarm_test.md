@@ -2,6 +2,8 @@
 name: china-lvrt-windfarm-test
 description: Norma chinesa Q/GDW392-2009 de LVRT e teste de campo em turbina eólica PMSG (Mongólia Interior) — dados empíricos de falta simétrica vs. assimétrica
 source: Hu, Meng, Bu, Ren, "Test and Analysis of Low Voltage Ride-through Characteristic of Wind Farm", IJAPE Vol.2 Issue 4, 2013, pp.186-191
+references:
+  - "HU; MENG; BU; REN. Test and Analysis of Low Voltage Ride-through Characteristic of Wind Farm. International Journal of Advancements in Power and Energy (IJAPE), v. 2, n. 4, p. 186-191, 2013. (prenomes completos não confirmados na extração)"
 ---
 
 # LVRT — Norma Chinesa e Teste de Campo em Turbina Eólica

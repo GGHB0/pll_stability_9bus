@@ -2,6 +2,8 @@
 name: iberia-2025-oscillations
 description: Análise modal das oscilações do apagão ibérico (§4.2) — classificação da 0,63 Hz como forçada converter-driven, ressonância com o modo inter-área 0,2 Hz e sensibilidades de amortecimento
 source: ENTSO-E, Grid Incident in Spain and Portugal on 28 April 2025 — Final Report, mar/2026, §4.2 (p.231–277)
+references:
+  - "ENTSO-E. Grid Incident in Spain and Portugal on 28 April 2025 — Final Report (ICS Investigation Expert Panel). Bruxelas: ENTSO-E, mar. 2026."
 ---
 
 # Apagão Ibérico 2025 — Análise das Oscilações (§4.2)

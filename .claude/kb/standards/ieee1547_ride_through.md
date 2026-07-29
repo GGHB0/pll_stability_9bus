@@ -2,6 +2,8 @@
 name: ieee1547-ride-through
 description: Requisitos detalhados de LVRT/HVRT do IEEE Std 1547-2018 (categorias I/II/III, trip mandatório, Dynamic Voltage Support) extraídos do IEEE Std 1547.2-2023
 source: IEEE Std 1547.2-2023 (Application Guide for IEEE Std 1547-2018), §5.2-5.4, §6.4, Annex C, pp.75-127,231-233
+references:
+  - "IEEE. IEEE Application Guide for IEEE Std 1547-2018, IEEE Standard for Interconnection and Interoperability of Distributed Energy Resources with Associated Electric Power Systems Interfaces. IEEE Std 1547.2-2023, 2023."
 ---
 
 # IEEE 1547-2018 — Requisitos Detalhados de Ride-Through

@@ -2,6 +2,8 @@
 name: pll-asymmetric-fault-formal-analysis
 description: Análise formal do SRF-PLL sob falta assimétrica (Yazdani-Iravani §12.5.2) — equações da sequência negativa, ripple de 2ω₀ e mitigação por feed-forward
 source: Yazdani & Iravani, "Voltage-Sourced Converters in Power Systems", §12.5.2-12.5.3
+references:
+  - "YAZDANI, Amirnaser; IRAVANI, Reza. Voltage-Sourced Converters in Power Systems: Modeling, Control, and Applications. Hoboken: John Wiley & Sons / IEEE Press, 2010. ISBN 978-0-470-52156-4."
 ---
 
 # Análise Formal — PLL sob Falta Assimétrica (Yazdani-Iravani §12.5.2)

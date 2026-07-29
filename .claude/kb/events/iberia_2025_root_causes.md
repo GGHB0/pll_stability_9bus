@@ -2,6 +2,8 @@
 name: iberia-2025-root-causes
 description: Árvore de causa raiz do apagão ibérico de 28/abr/2025 — falha de controle de tensão, oscilações 0,63 Hz (converter-driven) e 0,2 Hz (inter-área)
 source: ENTSO-E, Grid Incident in Spain and Portugal on 28 April 2025 — Final Report, mar/2026, §1.4, §4.6 (p.331–334)
+references:
+  - "ENTSO-E. Grid Incident in Spain and Portugal on 28 April 2025 — Final Report (ICS Investigation Expert Panel). Bruxelas: ENTSO-E, mar. 2026."
 ---
 
 # Apagão Ibérico 2025 — Causas Raiz

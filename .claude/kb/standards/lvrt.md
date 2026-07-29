@@ -2,6 +2,8 @@
 name: lvrt-standards
 description: Requisitos LVRT e IEEE 1547-2018 relevantes para avaliação do SRF-PLL
 source: TCCs V8 cap.2.4.2; IEEE Std 1547-2018 (requisitos detalhados extraídos via IEEE Std 1547.2-2023, ver ieee1547_ride_through.md)
+references:
+  - "IEEE. IEEE Application Guide for IEEE Std 1547-2018, IEEE Standard for Interconnection and Interoperability of Distributed Energy Resources with Associated Electric Power Systems Interfaces. IEEE Std 1547.2-2023, 2023."
 ---
 
 # LVRT — Low Voltage Ride-Through

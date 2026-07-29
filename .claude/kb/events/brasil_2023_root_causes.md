@@ -2,6 +2,8 @@
 name: brasil-2023-root-causes
 description: Conclusões oficiais do ONS sobre o blecaute de 15/08/2023 — cadeia de causa raiz e descarte de inércia/potência de curto-circuito como fator determinante
 source: ONS, RAP-ONS 00012/2023, §7 Conclusões (p.370–379)
+references:
+  - "OPERADOR NACIONAL DO SISTEMA ELÉTRICO (ONS). RAP-ONS 00012/2023 — Análise da Perturbação do dia 15/08/2023 às 08h30min: Relatório de Análise de Perturbação. Rio de Janeiro: ONS, 2023."
 ---
 
 # Blecaute Brasil 2023 — Causas Raiz e Conclusões do ONS

@@ -2,6 +2,8 @@
 name: pll-reactive-inertia
 description: PLL como "inércia reativa" e dualidade Q-δi (GFL) vs P-δv (síncronos/GFM) — framework estendido de estabilidade de sistemas com alta penetração de IBR
 source: Gu, Y. e Green, T. C., "Power System Stability With a High Penetration of Inverter-Based Resources", Proceedings of the IEEE, vol. 111, n.7, p.836-854, jul/2023
+references:
+  - "GU, Yunjie; GREEN, Timothy C. Power System Stability With a High Penetration of Inverter-Based Resources. Proceedings of the IEEE, v. 111, n. 7, p. 832-853, jul. 2023. DOI: 10.1109/JPROC.2022.3179826."
 ---
 
 # PLL como Inércia Reativa — Dinâmica de Ângulo Generalizada

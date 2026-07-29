@@ -2,6 +2,8 @@
 name: vsc-reference
 description: Modelo e controle do VSC grid-imposed em dq-frame — referência Yazdani-Iravani Cap. 8 e Apêndice B
 source: Yazdani & Iravani, Voltage-Sourced Converters in Power Systems, 2010, Cap. 8 e Apêndice B
+references:
+  - "YAZDANI, Amirnaser; IRAVANI, Reza. Voltage-Sourced Converters in Power Systems: Modeling, Control, and Applications. Hoboken: John Wiley & Sons / IEEE Press, 2010. ISBN 978-0-470-52156-4."
 ---
 
 # VSC Grid-Imposed — Modelo e Controle em dq-Frame

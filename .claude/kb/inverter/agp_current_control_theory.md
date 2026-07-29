@@ -2,6 +2,8 @@
 name: agp-current-control-theory
 description: Fundamentação teórica de controle de corrente do VSC (plantas RL/LCL, cancelamento polo-zero, amortecimento ativo) — Cap.3 da tese do coorientador AGP, segunda fonte para o Cap.3 do TCC ao lado de Yazdani
 source: TeseAGP.pdf (Alves, A.G.P., COPPE/UFRJ, 2022), Cap.3 "Fundamentação Teórica", p.61-101
+references:
+  - "ALVES, André Gustavo Pereira. Metodologia para Auto-Ajuste de Controladores de Corrente em Conversores Fonte de Tensão Conectados a Redes Sujeitas a Distúrbios Harmônicos. Tese (Doutorado em Engenharia Elétrica) — COPPE/UFRJ, Rio de Janeiro, 2022."
 ---
 
 # Fundamentação Teórica de Controle de Corrente — TeseAGP Cap. 3

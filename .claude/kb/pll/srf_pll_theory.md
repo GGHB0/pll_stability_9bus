@@ -2,6 +2,9 @@
 name: srf-pll-theory
 description: Teoria do SRF-PLL — estrutura, modelo linear, projeto de ganhos (Karimi-Ghartemani cap.6)
 source: Enhanced Phase-Locked Loop Structures for Power and Energy Applications, Karimi-Ghartemani, 2014, p.133-139
+references:
+  - "KARIMI-GHARTEMANI, Masoud. Enhanced Phase-Locked Loop Structures for Power and Energy Applications. Hoboken: John Wiley & Sons / IEEE Press, 2014. ISBN 978-1-118-79502-6."
+  - "YAZDANI, Amirnaser; IRAVANI, Reza. Voltage-Sourced Converters in Power Systems: Modeling, Control, and Applications. Hoboken: John Wiley & Sons / IEEE Press, 2010. ISBN 978-0-470-52156-4."
 ---
 
 # SRF-PLL — Synchronous Reference Frame PLL

@@ -2,6 +2,8 @@
 name: chile-2025-ibr-protections
 description: Comportamento real de proteção de PFV/eólicas/hídricas no apagão chileno de 25/fev/2025 — baixa frequência, salto de vetor, sobretensão por efeito Ferranti, conformidade com NTSyCS Art. 3-10
 source: Coordinador Eléctrico Nacional (Chile), EAF 089/2025 — Estudio para análisis de falla (18/mar/2025, 399 p.), §7 e §9 (análise de atuação de proteções)
+references:
+  - "COORDINADOR ELÉCTRICO NACIONAL (Chile). Estudio para Análisis de Falla del 25 de febrero de 2025 — Desconexión forzada de la línea 2x500 kV Nueva Maitencillo – Nueva Pan de Azúcar (EAF 089/2025). 18 mar. 2025. 399 p."
 ---
 
 # Apagão Chile 2025 — Proteções em Recursos Inversorizados

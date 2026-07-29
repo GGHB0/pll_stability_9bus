@@ -2,6 +2,8 @@
 name: stability-classification-extended
 description: Classificação ESTENDIDA de estabilidade para redes dominadas por IBR (IEEE TR77 + German System Stability Roadmap) — nova categoria converter-driven/resonance stability com interação PLL-rede
 source: Strauss-Mincu et al., "Inverter-Dominated Future Power Systems: A Roadmap for System Stability", IEEE Power & Energy Magazine, jan/2026, DOI 10.1109/MPE.2025.3617895, p.1–11
+references:
+  - "STRAUSS-MINCU, Diana; DEGNER, Thomas; HACHMANN, Christian; BECKER, Holger; MENDE, Denis; BRAUN, Martin; HENNIG, Tobias; STRAUSS, Philipp. Inverter-Dominated Future Power Systems: A Roadmap for System Stability. IEEE Power and Energy Magazine, v. 24, p. 93-107, 2026. DOI: 10.1109/MPE.2025.3617895."
 ---
 
 # Classificação Estendida de Estabilidade — IEEE TR77 / Roadmap Alemão

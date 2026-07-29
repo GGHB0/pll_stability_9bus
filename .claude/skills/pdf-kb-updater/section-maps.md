@@ -107,6 +107,22 @@ Sintetizado em `.claude/kb/standards/ieee1547_ride_through.md`,
 `.claude/kb/standards/ieee1547_case_studies.md` e (§7.3) em
 `.claude/kb/standards/harmonic_significance_criteria.md`.
 
+## IEEE Std 519-2014 — Harmonic Control in Electric Power Systems (29 p. — preview)
+
+Arquivo: `553147549-IEE-Std-519-2014.pdf`. Preview de 29 páginas (não o
+standard completo), mas cobre a Cláusula 5 inteira (o que importa: limites
+recomendados).
+
+| Seção | Páginas | Conteúdo |
+|-------|---------|---------|
+| §5.1 | 18 | Table 1 — limites de distorção de TENSÃO por classe de tensão do PCC |
+| §5.2 | 18-19 | Table 2 — limites de distorção de CORRENTE p/ sistemas 120V-69kV, por Isc/IL; nota "c": geração sempre na linha <20 |
+| §5.3-5.4 | 19-21 | Table 3/4 — mesmo formato p/ 69-161kV e >161kV |
+| §5.5 | 21-22 | Table 5 — multiplicadores para relaxar limites ao mitigar harmônicos de baixa ordem |
+
+**Arquivo .txt em ~/pdfext/ (2026-07-29):** `ieee519_5_limits.txt` (p.13-22).
+Sintetizado em `.claude/kb/standards/harmonic_significance_criteria.md`.
+
 ## Hu, Meng, Bu, Ren — *Test and Analysis of LVRT Characteristic of Wind Farm* (6 p.)
 
 Artigo curto (IJAPE Vol.2 Issue 4, 2013), sem outline — extraído por inteiro em

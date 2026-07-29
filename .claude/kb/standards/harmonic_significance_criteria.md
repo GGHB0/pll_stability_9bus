@@ -1,7 +1,7 @@
 ---
 name: harmonic-significance-criteria
 description: Critérios da literatura para o que conta como harmônico de tensão/corrente "significativo" em pu — normas de conformidade (IEEE 519/1547) vs. rejeição a distúrbio (TeseAGP) vs. criério funcional de PLL (Yazdani)
-source: TeseAGP p.31-39,58-60,135-138,189-193; Yazdani & Iravani §4.2.4,4.3.3,12.5.1-12.5.7 (p.103-113,376-393); IEEE 1547.2-2023 §7.3 (p.144-147)
+source: TeseAGP p.31-39,58-60,135-138,189-193; Yazdani & Iravani §4.2.4,4.3.3,12.5.1-12.5.7 (p.103-113,376-393); IEEE 1547.2-2023 §7.3 (p.144-147); IEEE 519-2014 §5 (p.17-21)
 ---
 
 # Critérios de Harmônico Significativo — Normas vs. Literatura
@@ -18,9 +18,40 @@ geradora conectada ao SIN (Barra 2), essas duas normas são as aplicáveis — *
 o PRODIST Módulo 8** (ANEEL), que rege apenas conexões de distribuição (BT/MT).
 Correção registrada em 2026-07-28 (usuário).
 
-IEEE 519-2014 (contexto — não extraído do PDF deste projeto, ver resposta em
-chat): limites individuais de 1-5% e THD de 1,5-8% dependendo da classe de
-tensão.
+**IEEE 519-2014 §5** (extraído de `553147549-IEE-Std-519-2014.pdf`, p.17-21):
+
+*Tabela 1 — distorção de TENSÃO por classe do barramento no PCC:*
+
+| Tensão do PCC | Individual | THD |
+|---|---|---|
+| V ≤ 1 kV | 5,0% | 8,0% |
+| **1 kV < V ≤ 69 kV** | **3,0%** | **5,0%** |
+| 69 kV < V ≤ 161 kV | 1,5% | 2,5% |
+| V > 161 kV | 1,0% | 1,5% |
+
+*Tabela 2 — distorção de CORRENTE (sistemas 120V-69kV), por Isc/IL, em % de IL:*
+
+| Isc/IL | 3≤h<11 | 11≤h<17 | 17≤h<23 | 23≤h<35 | 35≤h≤50 | TDD |
+|---|---|---|---|---|---|---|
+| **< 20** | **4,0%** | **2,0%** | **1,5%** | **0,6%** | **0,3%** | **5,0%** |
+| 20-50 | 7,0% | 3,5% | 2,5% | 1,0% | 0,5% | 8,0% |
+| 50-100 | 10,0% | 4,5% | 4,0% | 1,5% | 0,7% | 12,0% |
+| 100-1000 | 12,0% | 5,5% | 5,0% | 2,0% | 1,0% | 15,0% |
+| > 1000 | 15,0% | 7,0% | 6,0% | 2,5% | 1,4% | 20,0% |
+
+Harmônicos pares limitados a 25% do limite ímpar correspondente. **Nota "c" da
+Tabela 2 (crítica para este TCC):** *"All power generation equipment is
+limited to these values of current distortion, regardless of actual
+Isc/IL"* — todo equipamento de geração fica obrigado à linha **<20** (a mais
+restritiva), independente da relação Isc/IL real na Barra 2.
+
+**Aplicação à Barra 2 (20 kV, base 100 MVA):** cai na faixa "1 kV < V ≤
+69 kV" → tensão: **3,0% individual / 5,0% THD**. Corrente (unidade
+geradora, linha <20 obrigatória): **4,0%** em h<11, TDD **5,0%**, pares
+≤25% do ímpar correspondente. Com `Irated ≈ 1,0 pu` na base do inversor,
+isso traduz direto para pu de corrente do dashboard: **0,04 pu** (h<11
+ímpar), **0,01 pu** (h<11 par), **0,05 pu** (TDD/TRD) — comparável com
+`id_ufv_pu`/`iq_ufv_pu`/`iabc_inverter`.
 
 **IEEE 1547-2018 §7.3 "Limitation of current distortion"** (extraído de
 IEEE 1547.2-2023, Application Guide, p.144-147 — arquivo
@@ -35,6 +66,13 @@ registrada na Tabela 15 do guia). Aplica-se a tensões de 120 V a 69 kV,
 adaptado do IEEE 519-2014, e **exclui** explicitamente qualquer harmônico já
 presente na tensão da Area EPS antes da conexão da DER (§7.3.1) — ou seja, é
 um limite de contribuição da DER, não de distorção total do sistema.
+
+**Nota de consistência:** os 4,0%/TDD 5,0% batem entre as duas normas (o
+1547-2018 herda a linha <20 do 519-2014 justamente porque geração cai
+sempre nela). Mas os **pares divergem**: 519-2014 usa regra fixa de 25% do
+ímpar (1,0% para todo h par <11); 1547-2018 usa escala progressiva
+1/2/3/4% para 2ª/4ª/6ª/8ª — o próprio guia rotula isso de "Relaxed Evens"
+(Tabela 15), uma flexibilização proposital para unidades geradoras.
 
 ## 2. Rejeição a distúrbio (significância funcional/empírica)
 

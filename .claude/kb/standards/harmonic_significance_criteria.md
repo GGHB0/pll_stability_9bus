@@ -110,12 +110,13 @@ de falta), não de uma tabela de limites.
 
 ## Como isso se conecta ao dashboard deste projeto
 
-`_HARM_LO_PU = 0,02` (2%) e `_HARM_HI_PU = 0,4` (40%) em
-[espectro-fourier.md](../dashboard/graficos/espectro-fourier.md) são escolhas
-estéticas do relatório, não limites normativos. O piso de 2% coincide,
-por coincidência, com a ordem de grandeza do que a literatura de rejeição a
-distúrbio (item 2 acima) já trata como "pequeno o suficiente" — mas não foi
-derivado de nenhuma norma.
+**Implementado em 2026-07-29** (antes era só descritivo): a tabela de
+harmônicas do dashboard agora compara célula a célula com os limites reais
+descritos abaixo, em vez do destaque puramente estético que existia antes
+(`_HARM_HI_PU`/`_HARM_LO_PU` só sobrevive como fallback de "valor quase-zero
+apagado", sem mais o `harm-top` genérico). Detalhes de implementação
+(constantes, classes CSS, JS) em
+[espectro-fourier.md](../dashboard/graficos/espectro-fourier.md).
 
 ### abc × dq — qual norma vale em qual domínio
 
@@ -135,10 +136,22 @@ espectro em modo **abc** (fases a/b/c), casando os marcadores `SPEC_MARKERS`
 não serve para essa checagem — ele é um proxy da **fração de sequência
 negativa** (pico isolado em 2f₁ = 120 Hz), que é o critério de desequilíbrio
 dos itens 2/3 acima (limiar empírico da TeseAGP, análise da fração `b` do
-Yazdani), não um limite de distorção harmônica por ordem. Hoje só
-`bus1/2phase` tem `sim_data_abc.csv` — é o único cenário onde a checagem de
-conformidade por ordem é possível; os demais só têm dq, útil para severidade
-de desequilíbrio, não para conformidade normativa.
+Yazdani), não um limite de distorção harmônica por ordem. A maioria dos
+cenários já tem `sim_data_abc.csv` (re-exportado pelo Bruno desde
+[[resimulacao-abc|kb/simulation/resimulacao-abc]]), então a checagem por
+ordem em abc está disponível na maior parte do dashboard — os poucos
+cenários sem esse CSV mostram só dq, útil para severidade de desequilíbrio,
+não para conformidade normativa.
+
+Achado da verificação (2026-07-29): o critério de desequilíbrio dq **não
+pode** herdar a mesma isenção do segmento "Durante a falta" que a checagem
+abc/IEEE usa — a sequência negativa só é grande justamente durante a falta;
+isentar os dois critérios juntos faz o alerta de desequilíbrio nunca disparar
+na prática (confirmado em `bus4/1phase`: 30%+ em h=2ª durante a falta, zero
+alerta até a correção). Os dois critérios têm naturezas diferentes: IEEE
+519/1547 são normas de **regime permanente** (não fazem sentido durante o
+curto-circuito em si); o patamar da TeseAGP é sobre **severidade do
+distúrbio**, que é maior exatamente durante a falta.
 
 ### TDD × TRD — qual índice é computável aqui
 

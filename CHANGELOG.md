@@ -5,6 +5,35 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-29 — Destaque normativo (IEEE 519/1547) na tabela de harmônicas do FFT
+
+Arquivos: `src/config/settings.py`, `src/report/renderer.py`
+
+- **Tabela de harmônicas (aba Espectro) passa a comparar contra limites
+  normativos reais**, em vez do destaque estético anterior (`harm-top`
+  ≥0,4 pu / `harm-lo` <0,02 pu uniforme). Novo helper
+  `HTMLRenderer._harm_cell_tier`: linha h=1ª sempre isenta (fundamental,
+  classe `harm-fund`); colunas abc (a/b/c) comparadas ao IEEE 519-2014
+  Tab.1/Tab.2 e IEEE 1547-2018 §7.3 (ímpares h<11: 4,0%; pares h=2/4/6:
+  1%/2%/3%; tensão: 3,0% flat) — classe `harm-viol`; coluna dq (d/q), só a
+  2ª harmônica (120 Hz, sequência negativa) usa o patamar empírico da
+  TeseAGP (2%/3%) — classes `harm-warn`/`harm-unb`.
+- **Segmento "Durante a falta" isento só da checagem abc/IEEE** (limites de
+  regime permanente não valem durante o curto-circuito em si); o critério
+  de desequilíbrio dq continua valendo em todos os segmentos, inclusive
+  durante a falta — é onde a sequência negativa é mais relevante. Erro
+  descoberto e corrigido durante a verificação: a 1ª versão isentava os
+  dois critérios no mesmo segmento, o que fazia o alerta de desequilíbrio
+  nunca disparar na prática.
+- Novas constantes em `settings.py`: `CURR_ODD_LIMIT_PU`,
+  `CURR_EVEN_LIMITS_PU`, `VOLT_INDIVIDUAL_LIMIT_PU`,
+  `DQ_UNBALANCE_WARN_PU`/`_HIGH_PU`, `SPEC_SEG_NO_NORM`. Tooltip HTML
+  (`title=`) em cada célula violada citando o limite/norma. Legenda de
+  cores abaixo das tabelas. Tokens de tema `--danger`/`--warn` novos no CSS
+  (light/dark).
+- KB: `standards/harmonic_significance_criteria.md`,
+  `dashboard/graficos/espectro-fourier.md`.
+
 ## 2026-07-28 — Faixa de frequência ONS §5.2.1 no painel "Frequência PLL"
 
 Arquivos: `src/config/settings.py`, `src/pipeline/chart.py`
@@ -116,22 +145,6 @@ Arquivos: `src/pipeline/chart.py`, `app.py`, `src/report/renderer.py`
   `dashboard/graficos/{construcao-graficos,dashboard-zoom-ghost}.md`,
   `dashboard/cards/cards-metricas.md`, `dashboard/index.md`.
 
-## 2026-07-24 — Remoção dos ícones emoji dos botões/abas
-
-Arquivos: `src/report/renderer.py`
-
-- **Motivação (pedido do usuário)**: os emoji decorativos nos botões da
-  filter-bar, nas abas de gráficos e no toggle de tema não ficavam bem
-  visualmente.
-- Removidos: 🗺 (Mapa IEEE 9-bus), 📊 (Comparativo), 🔍 (Zoom na falta),
-  👻 (Comparar PLL), 📌/⚡/🔌/📈 (abas Resumo/Inversor/Sistema/Espectro) e
-  🌙/☀️ (ícone do toggle de tema — o rótulo de texto "Dark mode"/"Light
-  mode" já bastava, o `<span id="ico">` foi removido).
-- Todos os labels viram texto puro; nenhuma função/id JS mudou.
-- KB atualizado: `dashboard/layout/{estrutura-html,tabs-navegacao,
-  header-branding}.md`, `dashboard/graficos/dashboard-zoom-ghost.md`,
-  `dashboard/cards/comparison-table.md`.
-
 ## 2026-07-24 — Remoção das métricas ΔP/ΔQ UFV
 
 Arquivos: `src/config/settings.py`, `src/config/__init__.py`,
@@ -159,20 +172,10 @@ Arquivos: `src/config/settings.py`, `src/config/__init__.py`,
   `dashboard/layout/tabs-navegacao.md`, `simulation/python_pipeline.md`,
   `pll/pll_contingencies.md`.
 
-## 2026-07-18 — Terminologia "sintonia inadequada" (pedido do professor)
-
-Arquivos: `src/report/renderer.py`
-
-- Rótulos visíveis do modo PLL detuned trocados de "Mal dimensionado"/"PLL
-  ruim" para **"Sintonia inadequada"** (poorly tuned PLL): botão do toggle
-  PLL e legenda do overlay de comparação.
-- Identificadores internos (`BAD_PLL`, sufixo `_bad_pll`) e `params.m`
-  inalterados — a mudança é só de texto exibido.
-- KB atualizado: `dashboard/index.md`, `layout/bad-pll-dashboard-filter.md`,
-  `graficos/dashboard-zoom-ghost.md`, `simulation/export_workflow.md`.
-
 ## Entradas anteriores
 
+- [2026-07-18 a 2026-07-24](docs/changelog/2026-07-18_24.md) — terminologia
+  "sintonia inadequada", remoção dos ícones emoji dos botões/abas.
 - [2026-07-15](docs/changelog/2026-07-15.md) — espectro FFT multi-modo
   (a/b/c/d/q) + tabela de harmônicas, abas de gráficos + aba Resumo + cards
   clicáveis.

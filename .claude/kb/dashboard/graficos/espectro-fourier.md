@@ -87,13 +87,26 @@ ambos em settings.py.
   fase/eixo (a b c d q). Célula sem dado = "—" (ex.: a/b/c em cenário sem
   `sim_data_abc.csv`). Valores `%.3g` pu. CSS: `.harm-table`, separador
   vertical `.harm-first` entre segmentos.
-- **Limiares absolutos em pu** (`_HARM_HI_PU=0.4`, `_HARM_LO_PU=0.02`, attrs
-  de classe do renderer; aplicados em `_spec_table_html`): amp ≥ 0,4 pu →
-  `.harm-top` (negrito + accent + fundo `color-mix` 12%, acompanha o tema);
-  amp < 0,02 pu → `.harm-lo` (muted, opacity .5); meio-termo normal. Pedido
-  do usuário (2026-07-15): destaque só para amplitude na ordem da nominal —
-  na prática só as fundamentais abc destacam (0,49–1,01 pu); os valores dq
-  (0,03–0,2 pu) ficam normais/apagados, sem negrito em valor pequeno.
+- **Destaque normativo** (2026-07-29, `HTMLRenderer._harm_cell_tier`,
+  substitui o esquema puramente estético anterior): linha h=1ª sempre
+  `.harm-fund` (fundamental, nunca julgada); colunas abc comparadas por
+  ordem `k` aos limites de `settings.py` (`CURR_ODD_LIMIT_PU`=4%,
+  `CURR_EVEN_LIMITS_PU`={2:1%,4:2%,6:3%}, `VOLT_INDIVIDUAL_LIMIT_PU`=3% —
+  IEEE 519-2014/1547-2018) → `.harm-viol` com `title=` citando o limite;
+  coluna dq, só h=2ª (120 Hz) comparada a `DQ_UNBALANCE_WARN_PU`/`_HIGH_PU`
+  (2%/3%, TeseAGP) → `.harm-warn`/`.harm-unb`. `_HARM_LO_PU=0.02` continua
+  como fallback de "apagado" (`.harm-lo`) quando nenhum critério normativo
+  se aplica. Ver `kb/standards/harmonic_significance_criteria.md` para a
+  origem de cada limite e por que abc/dq usam critérios diferentes.
+- **Segmento "Durante a falta" isento só da checagem abc/IEEE**
+  (`SPEC_SEG_NO_NORM`): limites de regime permanente não valem durante o
+  curto-circuito em si. O critério de desequilíbrio dq (h=2ª) continua
+  valendo em todos os segmentos, inclusive durante a falta — é ali que a
+  sequência negativa é mais severa. Isso foi corrigido durante a
+  verificação: a 1ª implementação isentava os dois critérios juntos, o que
+  fazia o alerta de desequilíbrio nunca disparar em cenário nenhum.
+- Legenda de cores (`.harm-legend`) abaixo de cada par de tabelas explica
+  as classes; tokens de tema `--danger`/`--warn` novos no CSS (`_css()`).
 
 ## Layout e integração
 

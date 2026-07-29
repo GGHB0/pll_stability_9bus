@@ -21,6 +21,8 @@ from ..config import (
     T_SETTLE, TOL_RAD, LVRT_THRESHOLD, F_FUND_HZ,
     IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH,
     PEAK_ERR_DEG_THRESH, ERR_SS_DEG_THRESH, SYNC_LOSS_DEG, VBUS_AVG_THRESH,
+    SPEC_SEG_NO_NORM, CURR_ODD_LIMIT_PU, CURR_EVEN_LIMITS_PU,
+    VOLT_INDIVIDUAL_LIMIT_PU, DQ_UNBALANCE_WARN_PU, DQ_UNBALANCE_HIGH_PU,
 )
 from ..pipeline.loader import SimData
 
@@ -29,7 +31,6 @@ class HTMLRenderer:
     """Renderiza relatório HTML multi-cenário com seletor e duas seções de gráficos."""
 
     _SPEC_MODES = ("a", "b", "c", "d", "q")
-    _HARM_HI_PU = 0.4    # tabela de harmônicas: destaque se amp ≥ (pu)
     _HARM_LO_PU = 0.02   # tabela de harmônicas: apagado se amp < (pu)
 
     def __init__(self, scenarios: dict[str, dict]) -> None:
@@ -856,15 +857,55 @@ switchScenario(currentKey);
 
     # ── Tabela de harmônicas (aba Espectro) ──────────────────────────────────
 
+    def _harm_cell_tier(self, kind: str, mode: str, k: int, seg_name: str,
+                         v: float) -> tuple[str, str]:
+        """Classe CSS + atributo title (tooltip) de uma célula da tabela de
+        harmônicas. Prioridade: fundamental (k=1) > violação normativa em abc
+        / desequilíbrio em dq (h=2ª) > valor quase-zero apagado > normal.
+        Limites por ordem harmônica (IEEE 519-2014/1547-2018) só valem no
+        domínio abc; em dq só a 2ª harmônica (120 Hz, sequência negativa) tem
+        critério (patamar empírico da TeseAGP) — ver
+        kb/standards/harmonic_significance_criteria.md. O segmento "Durante a
+        falta" fica isento SÓ da checagem abc (SPEC_SEG_NO_NORM): os limites
+        IEEE 519/1547 são critérios de regime permanente, não se aplicam ao
+        curto-circuito em si. O critério de desequilíbrio dq, ao contrário, é
+        sobre severidade do distúrbio — continua valendo durante a falta
+        (é justamente onde a sequência negativa é mais relevante)."""
+        if k == 1:
+            return "harm-fund", ""
+        if mode in ("a", "b", "c") and seg_name not in SPEC_SEG_NO_NORM:
+            if kind == "i":
+                limit = CURR_ODD_LIMIT_PU if k % 2 else CURR_EVEN_LIMITS_PU.get(k)
+                norm = ("IEEE 519-2014 Tab.2 / IEEE 1547-2018 §7.3" if k % 2
+                         else "IEEE 1547-2018 §7.3 (Relaxed Evens)")
+            else:
+                limit = VOLT_INDIVIDUAL_LIMIT_PU
+                norm = "IEEE 519-2014 Tab.1"
+            if limit is not None and v >= limit:
+                return "harm-viol", f" title=\"excede {limit * 100:.1f}% ({norm})\""
+        elif mode in ("d", "q") and k == 2:
+            if v >= DQ_UNBALANCE_HIGH_PU:
+                return ("harm-unb", " title=\"desequilíbrio de sequência "
+                        f"negativa ≥{DQ_UNBALANCE_HIGH_PU * 100:.0f}% (TeseAGP)\"")
+            if v >= DQ_UNBALANCE_WARN_PU:
+                return ("harm-warn", " title=\"desequilíbrio de sequência "
+                        f"negativa ≥{DQ_UNBALANCE_WARN_PU * 100:.0f}% (TeseAGP)\"")
+        if v < self._HARM_LO_PU:
+            return "harm-lo", ""
+        return "", ""
+
     def _spec_table_html(self, harm: dict) -> str:
         """Tabelas de amplitude das harmônicas 1–7 (k·60 Hz), colunas
         agrupadas por segmento (pré/durante/pós-falta) × fase/eixo (a b c d q)
         — uma tabela para corrente, outra para tensão UFV. Valores vêm do
-        SpectrumBuilder (pico local do espectro de Hann em cada k·60 Hz)."""
+        SpectrumBuilder (pico local do espectro de Hann em cada k·60 Hz).
+        Células são comparadas a limites normativos reais via
+        `_harm_cell_tier` (ver docstring lá)."""
         segs = harm.get("segs") or []
         if not segs:
             return ""
         n_modes = len(self._SPEC_MODES)
+        has_no_norm_seg = any(s in SPEC_SEG_NO_NORM for s in segs)
         blocks: list[str] = []
         for kind, title in (("i", "Corrente UFV"), ("v", "Tensão UFV")):
             per_seg = harm.get(kind) or {}
@@ -873,7 +914,8 @@ switchScenario(currentKey);
             head1 = "<tr><th rowspan='2'>h</th><th rowspan='2'>f (Hz)</th>"
             head2 = "<tr>"
             for s in segs:
-                head1 += f"<th colspan='{n_modes}' class='harm-first'>{s}</th>"
+                star = " *" if s in SPEC_SEG_NO_NORM else ""
+                head1 += f"<th colspan='{n_modes}' class='harm-first'>{s}{star}</th>"
                 for j, mo in enumerate(self._SPEC_MODES):
                     first = " harm-first" if j == 0 else ""
                     head2 += f"<th class='harm-sub{first}'>{mo}</th>"
@@ -892,12 +934,10 @@ switchScenario(currentKey);
                         if v is None:
                             cells += f"<td class='harm-na{first}'>—</td>"
                             continue
-                        # limiares absolutos em pu: destaque só para amplitude
-                        # na ordem da nominal; quase-zero fica apagado
-                        tier = (" harm-top" if v >= self._HARM_HI_PU
-                                else " harm-lo" if v < self._HARM_LO_PU
-                                else "")
-                        cells += f"<td class='harm-val{first}{tier}'>{v:.3g}</td>"
+                        tier, title_attr = self._harm_cell_tier(kind, mo, k, s, v)
+                        tier_cls = f" {tier}" if tier else ""
+                        cells += (f"<td class='harm-val{first}{tier_cls}'"
+                                  f"{title_attr}>{v:.3g}</td>")
                 rows.append(f"<tr>{cells}</tr>")
             blocks.append(
                 f"<div class='harm-block'>"
@@ -906,6 +946,22 @@ switchScenario(currentKey);
                 f"<thead>{head1}{head2}</thead>"
                 f"<tbody>{''.join(rows)}</tbody></table></div></div>"
             )
+        if blocks:
+            legend = (
+                "<p class='harm-legend'>"
+                "<span class='harm-leg-viol'>vermelho</span> (a/b/c): excede "
+                "limite normativo IEEE 519-2014/1547-2018 por ordem harmônica. "
+                "<span class='harm-leg-unb'>âmbar/vermelho</span> (d/q, 2ª "
+                "harmônica): desequilíbrio de sequência negativa acima do "
+                "patamar empírico da TeseAGP (2%/3%) — este último vale em "
+                "todos os segmentos, inclusive durante a falta."
+                + (" * segmento isento só da checagem IEEE 519/1547 em a/b/c "
+                   "(limites de regime permanente não se aplicam ao "
+                   "curto-circuito em si)."
+                   if has_no_norm_seg else "")
+                + "</p>"
+            )
+            blocks.append(legend)
         return "".join(blocks)
 
     # ── Cards ────────────────────────────────────────────────────────────────
@@ -1244,6 +1300,8 @@ switchScenario(currentKey);
   --btn-bg:    #ffffff;
   --btn-fg:    #374151;
   --btn-bdr:   #d1d5db;
+  --danger:    #dc2626;
+  --warn:      #ca8a04;
 }
 [data-theme="dark"] {
   --bg:        #0a0f1e;
@@ -1260,6 +1318,8 @@ switchScenario(currentKey);
   --btn-bg:    #1f2937;
   --btn-fg:    #d1d5db;
   --btn-bdr:   #374151;
+  --danger:    #f87171;
+  --warn:      #fbbf24;
 }
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0 }
 body {
@@ -1610,13 +1670,28 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 .harm-table tbody tr:hover { background: var(--bg) }
 .harm-h   { font-weight: 600; color: var(--text); text-align: center !important }
 .harm-val { color: var(--text) }
-.harm-top {
+.harm-fund {
   font-weight: 700; color: var(--accent);
   background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.harm-viol, .harm-unb {
+  font-weight: 700; color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+  cursor: help;
+}
+.harm-warn {
+  font-weight: 700; color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 14%, transparent);
+  cursor: help;
 }
 .harm-lo  { color: var(--muted); opacity: .5 }
 .harm-na  { color: var(--muted) }
 .harm-first { border-left: 1.5px solid var(--border) }
+.harm-legend {
+  font-size: 11px; color: var(--muted); padding: 6px 20px 2px;
+  line-height: 1.5;
+}
+.harm-leg-viol, .harm-leg-unb { font-weight: 700; color: var(--danger) }
 
 /* ── SVG tooltip ── */
 .svg-tip {

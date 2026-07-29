@@ -1,6 +1,6 @@
 # Diagramas — SRF-PLL
 
-Diagramas usados na secao "Arquitetura do SRF-PLL" do README principal.
+Diagramas usados no README principal (secoes "Motivacao", "Arquitetura do SRF-PLL", "Sistema de 9 Barras", "Cenarios de Contingencia" e "Requisitos Normativos").
 
 | Arquivo | Tipo | Tema | Fonte de conteudo |
 |---|---|---|---|
@@ -13,6 +13,9 @@ Diagramas usados na secao "Arquitetura do SRF-PLL" do README principal.
 | `vsi_lcl_pwm_circuit.svg` / `.png` | SVG (circuito + controle) | Figura 3.1 do TCC — sistema GFL completo: circuito VSI trifasico 2 niveis (IGBTs S1-S6 + diodos antiparalelos), filtro LCL (L1/Cf/L2), TCs tipo janela (i_abc) e TP no PCC (u_abc), PCC Barra 2, e controle digital detalhado (abc->dq, SRF-PLL, bloco "Submodulo 2.10" / ONS_2_11 gerando i_d,ref e i_q,ref, PIs de corrente dq, dq->abc, PWM) | `.claude/kb/inverter/lcl_filter.md`, `.claude/kb/inverter/simulink_model.md`, `.claude/kb/standards/ons_2_11.md` |
 | `ons_2_10_datapath.svg` / `.png` | SVG (diagrama de blocos) | Datapath interno da funcao ONS_2_11 (Submodulo 2.10) fiel ao codigo Stateflow: detector de 3 zonas, rampas i_q(V) (k_low/k_high), seletor if/elseif/else, saturacao ±I_max, prioridade de reativo `id_disp=sqrt(Imax^2-iq^2)` + min(id_nom, id_disp), saida fault_flag, entrada morta V_nom marcada como nao utilizada. Regenerado em 2026-07-21 apos correcao do bug de sinal na zona de sobretensao (k_high negativo → positivo) vs ONS §5.8.1-b, aplicada em chart_14.xml | `.claude/kb/standards/ons_2_11.md`, `simulink/stateflow/chart_14.xml` |
 | `roadmap_estabilidade_sistema.svg` / `.png` | SVG (linha do tempo / chevron) | Recriacao traduzida (PT) da "Figure 2 — Central milestones of the system stability roadmap" do roadmap alemao: seta cronologica 2024→2030+ com gradiente navy, 19 marcos MS1-MS18 (12a/12b) em caixas navy/laranja acima/abaixo por ano. Fonte da secao 2.3 do TCC (classificacao estendida de estabilidade). Revisado em 21/07/2026: viewBox ampliado (1650x1100), fontes elevadas ao piso legivel de TCC (corpo 17px, titulo 29px) e paleta trocada de teal para navy `#0B132B` + laranja `#F97316` (padrao visual do projeto) — figura densa, recomenda-se inserir em pagina inteira/paisagem no Word | `.claude/kb/power-system/stability_classification_extended.md` (Strauss-Mincu et al. / Roadmap alemao) |
+| `ieee9bus_unifilar.svg` / `.png` | SVG (unifilar) | Diagrama unifilar autoral do sistema IEEE 9 barras completo (G1/G2→inversor/G3, transformadores, 6 linhas), usado como filtro interativo de cenarios no dashboard e ilustracao da rede no README | `.claude/kb/power-system/ieee9bus_topology.md` |
+| `ons_voltage_ridethrough_envelope.svg` / `.png` | SVG (curva V×t) | Envelope de trip mandatorio e regioes de operacao continua/mandatoria/permissiva por tensao no PCC — valores reais da Table 8 do IEEE 1547.2-2023 (UV1/UV2/OV1/OV2 por categoria) | `.claude/kb/standards/ieee1547_ride_through.md` |
+| `ons_reactive_current_curve.svg` / `.png` | SVG (curva V×iq) | Curva de 3 zonas (subtensao/normal/sobretensao) da funcao `ONS_2_11` (Submodulo 2.10 §5.8): rampas k_low/k_high, saturacao ±I_max | `.claude/kb/standards/ons_2_11.md` |
 
 ## Convencoes visuais
 

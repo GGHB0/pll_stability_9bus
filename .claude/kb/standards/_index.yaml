@@ -7,3 +7,6 @@ files:
   - file: ons_2_11.md
     name: ons-2-11
     description: Função MATLAB ONS_2_11 — injeção de corrente reativa sob defeito (ONS Submódulo 2.10 §5.8); código completo extraído do pll_stability_9bus.slx
+  - file: ons_frequency_ride_through.md
+    name: ons-frequency-ride-through
+    description: Faixas de operação em frequência não nominal (Submódulo 2.10 §5.2.1) para eólica/fotovoltaica — trip/ride-through, droop de frequência, limites de redução de potência

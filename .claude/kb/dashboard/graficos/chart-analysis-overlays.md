@@ -1,6 +1,6 @@
 ---
 name: chart-analysis-overlays
-description: Overlays de análise nos gráficos — janela de falta sombreada, hierarquia θ̂ PLL vs θ Rede, marcador tₛ, envelope LVRT 1547 Cat II e painel de frequência estimada
+description: Overlays de análise nos gráficos — janela de falta sombreada, hierarquia θ̂ PLL vs θ Rede, marcador tₛ, envelope LVRT 1547 Cat II e faixa de frequência ONS §5.2.1
 ---
 
 # Overlays de Análise (chart.py / loader.py)
@@ -51,6 +51,26 @@ self.t_freq = t[k:-k]
 
 Atributos novos: `t_freq`, `f_pll`, flag `has_freq`. Painel com hline de
 60 Hz. É o sinal clássico de excursão de frequência/RoCoF do PLL.
+
+### Faixa ONS §5.2.1 (2026-07-28)
+
+`add_hrect` verde (58,5–62,5 Hz, operação contínua) + duas `add_hline`
+tracejadas vermelhas (56 Hz / 63 Hz, trip instantâneo) sobrepostas à curva
+`f̂ PLL` — mesmo padrão visual da banda de tolerância do painel `err` e do
+envelope LVRT. Constantes em `config/settings.py`: `FREQ_CONTINUOUS = (58.5,
+62.5)`, `FREQ_TRIP_MIN = 56.0`, `FREQ_TRIP_MAX = 63.0`. Fonte: ONS Submódulo
+2.10 §5.2.1 (eólica/UFV) — ver
+[ons_frequency_ride_through.md](../../standards/ons_frequency_ride_through.md).
+Zona intermediária (56–58,5 / 62,5–63 Hz, trip temporizado ≥20 s/10 s) não
+entrou como faixa separada — teria critério de tempo mínimo, não um limiar
+estático como as demais, e poluiria a leitura sem ganho.
+
+**Tentativa revertida (2026-07-28):** um painel extra "Deslizamento de Fase
+PLL" (Δθ vs. relógio nominal de 60 Hz, integrado do ângulo unwrapped) foi
+implementado e depois **removido a pedido do usuário** — não era o que tinha
+sido pedido. Não reintroduzir essa interpretação sem confirmação explícita;
+se o usuário pedir "delta ângulo" de novo, esclarecer o que exatamente ele
+quer antes de implementar.
 
 ## Envelope LVRT (`_lvrt_envelope`, só no |V| Bus 2)
 

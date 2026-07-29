@@ -1,7 +1,7 @@
 ---
 name: dashboard-html-editor
 description: Edita o pipeline Python que gera o relatório HTML interativo (output/pll_metrics.html) — SimData/ChartBuilder/HTMLRenderer em src/. Ativar sempre que o usuário pedir para mudar/adicionar/remover algo no dashboard: cards, métricas, gráficos, abas, tabela comparativa, tema light/dark, toggle PLL, diagrama unifilar, ou qualquer elemento visual/funcional do relatório. Também usar para regenerar e verificar o HTML após qualquer mudança em src/pipeline ou src/report.
-version: 1.4.0
+version: 1.5.0
 ---
 
 # Dashboard HTML Editor — Skill de Edição do Relatório Interativo
@@ -29,7 +29,10 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 4. **Regenerar**: `.venv\Scripts\python.exe app.py` — deve rodar limpo, sem
    exceptions, para todos os cenários.
 5. **Verificar no browser pane** (`mcp__Claude_Browser__*`):
-   - `preview_start` com `{url: "file:///<repo>/output/pll_metrics.html"}`
+   - `preview_start` com `{url: "file:///<repo>/output/pll_metrics.html"}` —
+     se `Plotly` não carregar (ver Armadilhas conhecidas), servir
+     `output/` via `python -m http.server <porta>` (Bash `run_in_background`)
+     e navegar para `http://localhost:<porta>/pll_metrics.html`.
    - screenshot da área afetada; `resize_window` para tema/responsivo
    - `read_page`/`javascript_tool` para conferir headers/valores da tabela
    - `form_input` no `<select>` de cenário se a mudança depender dos dados
@@ -80,6 +83,16 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
   separada em 2026-07-24; se ainda não tiver sido aplicado, qualquer edição
   futura em `_label`/`goToChart`/`_openTabAt` deve resolver isso junto, não
   ignorar. Detalhes em `tabs-navegacao.md`.
+
+- **Plotly não renderiza em preview `file://` no browser pane**: o script
+  `<script src="https://cdn.plot.ly/...">` é bloqueado (CORS/sandbox) quando
+  a página é aberta como `file://` no `mcp__Claude_Browser__*` — a página
+  carrega, abas/selects funcionam, mas os gráficos ficam em branco e
+  `typeof Plotly === "undefined"`, sem erro no console. Não é bug do código:
+  confirmado servindo a mesma pasta via `python -m http.server` e abrindo
+  `http://localhost:<porta>/...` — Plotly carrega normal. Sempre que a
+  verificação envolver ler o gráfico renderizado (não só `layout.shapes` via
+  JS), usar o servidor HTTP local, não `file://` direto.
 
 ## Convenções fixas do projeto
 
@@ -139,6 +152,25 @@ para novos painéis/labels**: quando o pedido é "identificar o que é" um
 eixo/valor, checar se existe uma convenção já usada em outro eixo do
 mesmo gráfico antes de assumir que copiar o texto mais específico
 disponível resolve — geralmente não resolve.
+
+v1.5.0 (2026-07-28): faixa ONS §5.2.1 no painel de frequência (`add_hrect`/
+`add_hline`) — mantida. Verificação no browser pane revelou uma armadilha
+nova (não relacionada ao código): Plotly não carrega em preview `file://`
+(script CDN bloqueado, sem erro de console) — resolvido servindo `output/`
+via `python -m http.server` local. Registrado em "Armadilhas conhecidas" e
+no passo 5 do workflow.
+
+Também nesta sessão: um painel extra "Deslizamento de Fase PLL" (Δθ vs.
+relógio nominal de 60 Hz, a partir da pergunta "dá pra fazer um delta ângulo
+comparando essas frequências com 60Hz?") foi implementado com plano
+apresentado e aprovado — mas o usuário rejeitou o resultado ("Não era esse
+deslizamento de Fase PLL que eu pedi") e pediu para reverter. Reverted em
+`chart.py`/`loader.py`, doc e CHANGELOG. **Lição**: aprovação de um plano
+escrito não é garantia de que a interpretação bateu com o pedido — pedidos
+formulados como pergunta aberta ("dá pra fazer X comparando Y?") merecem
+uma repetição mais explícita do que vai ser mostrado (ex.: confirmar se é
+um valor acumulado/integrado ou outra coisa) antes de implementar, mesmo
+com plano aprovado.
 
 Atualizar a tabela e as convenções conforme novas edições no dashboard
 revelarem passos, armadilhas ou arquivos que valha registrar — esta skill

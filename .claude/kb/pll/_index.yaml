@@ -10,6 +10,9 @@ files:
   - file: pll_contingencies.md
     name: pll-contingencies
     description: Os 4 cenários de contingência simulados, efeitos no SRF-PLL e métricas de avaliação
+  - file: pll_asymmetric_fault_formal_analysis.md
+    name: pll-asymmetric-fault-formal-analysis
+    description: Análise formal do SRF-PLL sob falta assimétrica (Yazdani-Iravani §12.5.2) — dedução do ripple de 2ω₀, fragmentado de pll_contingencies.md
   - file: pll_notch_implementation.md
     name: pll-notch-implementation
     description: Notch de 120 Hz no SRF-PLL testado em 2026-05 e removido do modelo final (2026-07) — registro histórico, não estado atual

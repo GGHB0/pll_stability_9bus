@@ -5,6 +5,22 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-28 — Faixa de frequência ONS §5.2.1 no painel "Frequência PLL"
+
+Arquivos: `src/config/settings.py`, `src/pipeline/chart.py`
+
+- **Faixa de frequência no painel "Frequência PLL"** (pedido do usuário):
+  `add_hrect` verde (58,5–62,5 Hz, operação contínua) + duas `add_hline`
+  vermelhas tracejadas (56 Hz / 63 Hz, trip instantâneo), conforme ONS
+  Submódulo 2.10 §5.2.1 (eólica/UFV). Novas constantes `FREQ_CONTINUOUS`,
+  `FREQ_TRIP_MIN`, `FREQ_TRIP_MAX` em `config/settings.py`.
+- Tentativa de painel adicional "Deslizamento de Fase PLL" (Δθ vs. relógio
+  nominal de 60 Hz) foi implementada e **revertida a pedido do usuário** —
+  não era o que tinha sido pedido; `loader.py` não foi alterado nesta entrada.
+- KB: `dashboard/graficos/chart-analysis-overlays.md`,
+  `standards/ons_frequency_ride_through.md` (já existia, criado em sessão
+  anterior).
+
 ## 2026-07-25 — Eixo Y com nome+unidade, título branco fix e remoção do "Comparar PLL"
 
 Arquivos: `src/pipeline/chart.py`, `src/report/renderer.py`

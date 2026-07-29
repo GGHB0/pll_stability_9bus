@@ -122,3 +122,16 @@ print('done')
 **Limite do Read:** ~25k tokens por chamada. Trechos com mais de ~15 páginas
 densas serão truncados — leia o restante com `offset`, ou divida a seção em
 arquivos menores no dict `sections`.
+
+## GOTCHA CRÍTICO — nunca usar o ID do outline como número de página
+
+O outline do pypdf (`r.outline`) contém itens cujo `/Page` é um
+`IndirectObject(N, ...)` — **N é o ID interno do objeto no PDF, não o número
+da página**. Só o número de página real é obtido via
+`r.get_destination_page_number(item)` (como faz `collect_outline` no script
+"Metadados + sumário" acima). Um subagente já cometeu esse erro em
+2026-07-28 (usou o `N` do IndirectObject como se fosse página, extraindo
+capítulos inteiramente errados sem perceber — o texto saía "válido" mas era
+de outra seção). **Sempre rode o script "Metadados + sumário" tal como está
+aqui** para gerar o TOC resolvido antes de decidir páginas de extração; nunca
+escreva um script alternativo que leia `/Page` diretamente.

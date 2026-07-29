@@ -3,12 +3,21 @@
 Páginas relevantes ao TCC em PDFs já explorados. Página = física do PDF
 (1-indexed), não a impressa no rodapé.
 
-## Yazdani & Iravani — *Voltage-Sourced Converters* (473 p.)
+## Yazdani & Iravani — *Voltage-Sourced Converters* (473 p. — livro completo)
+
+**ATENÇÃO (2026-07-28):** as linhas §2 e §4.2–4.6 abaixo (mapeadas em
+2026-07-19) **não foram reverificadas** contra `toc_fixed_yazdani.txt` e podem
+estar deslocadas — ver gotcha de paginação em [scripts.md](scripts.md). As
+linhas §8.3.4/§8.4.1/§12.4.1/§12.5.2–12.5.4 batem exatamente com o TOC
+resolvido e são confiáveis. As linhas novas (4.2.4/4.3.3/12.5.1–12.5.7) foram
+extraídas e **lidas na íntegra** em 2026-07-28, confirmadas corretas.
 
 | Seção | Páginas | Conteúdo |
 |-------|---------|---------|
-| §2 DC/AC Half-Bridge | 23–46 | Conversor half-bridge, PWM (2.3.1), modelo comutado e médio |
-| §4.2–4.6 Space Phasors & Frames | 69–113 | Space phasor, Clarke αβ (§4.5, p. 91–99), Park dq (§4.6, p. 101–113), potência e controle |
+| §2 DC/AC Half-Bridge | 23–46 (não reverificado) | Conversor half-bridge, PWM (2.3.1), modelo comutado e médio |
+| §4.2–4.6 Space Phasors & Frames | 69–113 (não reverificado) | Space phasor, Clarke αβ, Park dq, potência e controle |
+| §4.2.4 Harmonics (space-phasor) | 103–104 | Harmônico como space-phasor; seq. pos/neg/zero por ordem n (Tabela 4.1) |
+| §4.3.3 Asymmetrical 3-Phase Systems | 110 | Seção curta: sistema assimétrico não tem função de transferência space-phasor única; modelagem deve ir para αβ ou dq |
 | §5 Two-Level VSC | 115–125 | Topologia VSC 2-níveis, estrutura, operação, modelos em αβ e dq |
 | §8.1–8.6 dq-Frame Control | 204–242 | Controle em referencial dq: PLL (§8.3.4, p. 211–215), PI de corrente (§8.4.1, p. 217–225), DC-bus |
 | §8.3.4–8.3.5 | 233–238 | SRF-PLL: modelo, H(s) com zeros ±j2ω₀, Exemplo 8.1 |
@@ -16,14 +25,38 @@ Páginas relevantes ao TCC em PDFs já explorados. Página = física do PDF
 | §8.4.2 | 246–248 | Critério de VDC: ≥ 2V̂t ou 1,74V̂t (3°H) |
 | §8.6 | 256–265 | DC-bus voltage controller |
 | §12.4.1 | 364–367 | PLL no sistema HVDC |
-| §12.5.2–12.5.4 | 379–387 | PLL + controle de corrente sob falta assimétrica |
+| §12.5.1–12.5.4 | 376–382 | Tensão PCC sob falta (seq. simétricas), performance do PLL, controle de corrente dq, dinâmica do barramento CC — tudo sob falta assimétrica |
+| §12.5.5 | 387–391 | Geração de 3º harmônico via ripple 2ω₀ do barramento CC; mitigação por feed-forward de VDC real |
+| §12.5.6–12.5.7 | 391–393 | Fluxo de potência e controle de VDC sob falta assimétrica |
 | Apêndice B | 448–452 | Base pu para VSC (Tabelas B.1, B.2) |
 
-**Arquivos .txt gerados em ~/pdfext/ durante mapeamento (2026-07-19):**
-- `yazdani_half_bridge_pwm.txt` — Cap. 2, p. 23–46
-- `yazdani_clarke_park.txt` — Cap. 4, p. 69–113
-- `yazdani_two_level_vsc.txt` — Cap. 5, p. 115–125
-- `yazdani_dq_frame_control.txt` — Cap. 8, p. 204–242
+**Arquivos .txt gerados em ~/pdfext/:**
+- `yazdani_half_bridge_pwm.txt`, `yazdani_clarke_park.txt`,
+  `yazdani_two_level_vsc.txt`, `yazdani_dq_frame_control.txt` (2026-07-19,
+  páginas não reverificadas)
+- `FIX_yazdani_4.2.4_4.3.3_Harmonics_Asymmetrical.txt` (p.103–113),
+  `FIX_yazdani_12.5.1_12.5.4_PLL_Asymmetrical_Fault.txt` (p.375–382),
+  `FIX_yazdani_12.5.4_12.5.7_LowOrderHarmonics_Fault.txt` (p.382–393)
+  (2026-07-28, páginas confirmadas via `get_destination_page_number`)
+
+## TeseAGP — André G. P. Alves, COPPE/UFRJ (194 p.)
+
+Título real: "Metodologia para Auto-Ajuste de Controladores de Corrente em
+Conversores Fonte de Tensão Conectados a Redes Sujeitas a Distúrbios
+Harmônicos". Coorientador do TCC.
+
+| Seção | Páginas | Conteúdo |
+|-------|---------|---------|
+| §2.1.1 Ressonância/instabilidade | 31–39 | Impedância de rede, critério de Nyquist (Jessen&Fuchs, Harnefors), rede real medida na Alemanha |
+| §2.5 Controladores Ressonantes | 58–60 | Cita IEEE 519-2014 + IEEE 1547-2018 como normas de limite de harmônico de corrente p/ unidades geradoras; exemplo publicado: 3ª/5ª/7ª de 8,53/3,44/1,65% → 0,613/0,474/0,388% |
+| §5.2.2 Susceptibilidade a harm. ordem elevada | 135–138 | Distúrbio de tensão 3% → harmônico de corrente 7,02% sem compensação, 2,92% com ressonante |
+| Apêndice D — Injeção Interharmônica | 189–193 | 90 Hz interharmônico → potência oscilante em 30 Hz → ripple no VCC e em id/iq |
+
+**Arquivos .txt em ~/pdfext/ (2026-07-28):**
+`FIX_teseagp_Revisao_Ressonancia_Problema.txt`,
+`FIX_teseagp_Revisao_Ressonantes_Mitigacao.txt`,
+`FIX_teseagp_Harm_Susceptibility_LCL.txt`,
+`FIX_teseagp_Interharmonic_Consequences.txt`
 
 ## ENTSO-E — *Grid Incident in Spain and Portugal on 28 April 2025* — Final Report (472 p.)
 

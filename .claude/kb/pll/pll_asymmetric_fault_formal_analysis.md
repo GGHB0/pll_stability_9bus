@@ -61,3 +61,22 @@ fases sob falta assimétrica — manifestação física deste mesmo efeito — e
 Mesmo com ripple em ω/ρ, o controle de corrente pode mitigar a propagação do distúrbio via
 feed-forward filtrado de Vsd/Vsq nos geradores de md/mq (banda de Gff >> 2ω₀).
 No Simulink do projeto: `PWM Control` inclui feed-forward de Vsd/Vsq — ver [[simulink-model]].
+
+## Geração de Harmônico de 3ª Ordem via Ripple do Barramento CC (§12.5.5)
+
+Se o PWM não usa feed-forward da tensão CC (ou a atenua mal), o ripple de 2ω₀
+em V²_DC (causado pelo mesmo `b` da seção acima) se propaga para o sinal de
+modulação e gera, no lado AC, dois componentes indesejados: uma componente
+fundamental de **sequência negativa** e um **harmônico de 3ª ordem de sequência
+positiva** — ambos com amplitude proporcional à razão `Vov/VDCref` (eq. 12.106),
+onde `Vov` é a amplitude da sobretensão CC de 2ω₀ (eq. 12.101). Mitigação:
+feed-forward de `VDC(t)` real (não `VDCref` constante) no cálculo de `md`/`mq`,
+com banda de medição e frequência de chaveamento adequadamente maiores que 2ω₀.
+
+**Exemplo numérico (Yazdani Example 12.2, HVDC, `Ceq=500µF`, `Psref1=24MW`):**
+falta linha-terra em um PCC (`a=2/3, b=1/3`) → sobretensão CC `Vov≈0,6-0,9 kV`
+(**1,7-2,6%** de `VDCref=35kV`) e ripple de potência ativa de **até ±50% do
+valor médio** (±8MW em torno de 16MW). Mostra que a severidade do harmônico
+gerado escala com `b` (fração de sequência negativa vista nos terminais), não
+com um limiar fixo — ver [harmonic_significance_criteria.md](../standards/harmonic_significance_criteria.md)
+para como isso se compara a critérios normativos de conformidade.

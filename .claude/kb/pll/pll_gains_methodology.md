@@ -1,6 +1,6 @@
 ---
 name: pll-gains-methodology
-description: Metodologia de cálculo dos ganhos Kp/Ki do SRF-PLL usada no projeto (TeseAGP eqs 3.21-3.22 + notebook)
+description: Metodologia TeseAGP (Kp=8·fg·Lest) dos ganhos do CONTROLADOR DE CORRENTE — não é o ganho do PLL, ver pll_loop_filter_gains.md
 source: TeseAGP p.107-109 (Figs. 4.4, 4.5); notebooks/pll_stability_9bus_analysis.ipynb células 30/39
 references:
   - "ALVES, André Gustavo Pereira. Metodologia para Auto-Ajuste de Controladores de Corrente em Conversores Fonte de Tensão Conectados a Redes Sujeitas a Distúrbios Harmônicos. Tese (Doutorado em Engenharia Elétrica) — COPPE/UFRJ, Rio de Janeiro, 2022."

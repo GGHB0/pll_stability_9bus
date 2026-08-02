@@ -145,7 +145,8 @@ Kp/Ki baixos → imunidade a distúrbios → PLL lento (agrava cenários 3 e 4)
 ```
 
 Esse trade-off é o foco da **Seção 4.3 (Análise de Sensibilidade)** — ainda vazia no documento.
-Ver [[pll-gains-methodology]] para as equações de dimensionamento.
+Ver [[pll-loop-filter-gains]] para os ganhos do PLL (`kp_pll`/`ki_pll`) e sua
+leitura em ωn/ξ — inclusive o efeito do BAD_PLL sobre ambos.
 
 Ver [[pll-asymmetric-fault-formal-analysis]] para a dedução formal (Yazdani-Iravani
 §12.5.2) do ripple de 2ª harmônica citado no Cenário 2.

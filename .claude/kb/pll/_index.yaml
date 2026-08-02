@@ -4,9 +4,12 @@ files:
   - file: srf_pll_theory.md
     name: srf-pll-theory
     description: Teoria do SRF-PLL — estrutura, modelo linear, projeto de ganhos (Karimi-Ghartemani cap.6)
+  - file: pll_loop_filter_gains.md
+    name: pll-loop-filter-gains
+    description: Ganhos do PI do laço do SRF-PLL (kp_pll=460, ki_pll=105820) — projeto de 2ª ordem por tempo de acomodação (Alves 2020 eqs. 9-11 / Teodorescu eq. 4.38), ωn=325,3 e ξ=0,707
   - file: pll_gains_methodology.md
     name: pll-gains-methodology
-    description: Metodologia de cálculo dos ganhos Kp/Ki do SRF-PLL usada no projeto (TeseAGP eqs 3.21-3.22 + notebook)
+    description: Metodologia TeseAGP (Kp=8·fg·Lest) do controlador de CORRENTE — não é o ganho do PLL, ver pll_loop_filter_gains.md
   - file: pll_contingencies.md
     name: pll-contingencies
     description: Os 4 cenários de contingência simulados, efeitos no SRF-PLL e métricas de avaliação

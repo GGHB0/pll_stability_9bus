@@ -1,9 +1,10 @@
 ---
 name: srf-pll-theory
 description: Teoria do SRF-PLL — estrutura, modelo linear, projeto de ganhos (Karimi-Ghartemani cap.6)
-source: Enhanced Phase-Locked Loop Structures for Power and Energy Applications, Karimi-Ghartemani, 2014, p.133-139
+source: Karimi-Ghartemani 2014, cap.6 p.133-139 (eq. 6.4 na p.135) e §1.4 p.9; Teodorescu-Liserre-Rodríguez 2011, §4.2.2.3 p.56 (eqs. 4.35-4.38); Yazdani & Iravani 2010, §8.3.4-8.3.5 p.210-217 (eq. 8.38 na p.215)
 references:
   - "KARIMI-GHARTEMANI, Masoud. Enhanced Phase-Locked Loop Structures for Power and Energy Applications. Hoboken: John Wiley & Sons / IEEE Press, 2014. ISBN 978-1-118-79502-6."
+  - "TEODORESCU, Remus; LISERRE, Marco; RODRÍGUEZ, Pedro. Grid Converters for Photovoltaic and Wind Power Systems. Chichester: John Wiley & Sons, Ltd, 2011. ISBN 978-0-470-05751-3."
   - "YAZDANI, Amirnaser; IRAVANI, Reza. Voltage-Sourced Converters in Power Systems: Modeling, Control, and Applications. Hoboken: John Wiley & Sons / IEEE Press, 2010. ISBN 978-0-470-52156-4."
 ---
 
@@ -59,13 +60,41 @@ onde `H(s) = h0 + h1/s` é a FT do PI. Correspondência com notação do projeto
 
 ## Projeto dos Ganhos
 
-Escolhendo polos complexos conjugados com frequência natural `ωn` e amortecimento `ξ`:
+Karimi **não fecha uma fórmula em ξ/ωn**. Ele para na eq. (6.4) acima e diz que
+`h0`/`h1` saem de "a desired location of closed-loop poles" (p.135). O exemplo
+trabalhado do próprio livro (§1.4, p.9) usa **lugar das raízes com polos reais
+duplos** — `h0 = 400/Ui`, `h1 = 20.000/Ui`, ambos os polos em −100.
+
+Casando a eq. (6.4) com a forma canônica de 2ª ordem `s² + 2ξωn·s + ωn² = 0`:
 
 ```
-s² + 2ξωn·s + ωn² = 0  →  h0 = 2ξωn/U,  h1 = ωn²/U
+h0 = 2ξωn / U        h1 = ωn² / U
 ```
 
-Trade-off: ganhos maiores → resposta rápida mas sensível a ruído/distorção.
+E com o laço normalizado em pu (`U = 1`):
+
+```
+Kp = 2ξωn            Ki = ωn²
+```
+
+> ⚠️ **Atribuição.** O casamento acima **não** está escrito no Karimi, que para
+> na eq. (6.4). A forma fechada `Ki = ωn²`, `Kp = 2ξωn` e a ligação com o tempo
+> de acomodação (`ωn = 4/(ts·ξ)`) estão em **Alves, Dias & Rolim (2020), §4.1,
+> eqs. (9)-(11)** — artigo do coorientador — e, na forma `Kp = 9,2/ts`, em
+> **Teodorescu, Liserre & Rodríguez (2011), §4.2.2.3, p.56**. Não atribuir ao
+> Karimi nem ao Yazdani (que usa H(s) estruturado, ver seção final deste
+> arquivo).
+
+É por esse método que os ganhos do PLL do projeto (`kp_pll = 460`,
+`ki_pll = 105820`, com `ωn = 325,3 rad/s` e `ξ = 0,707`) são justificados —
+ver [[pll-loop-filter-gains]].
+
+Base para fixar `h0`/`h1` pela magnitude nominal: Karimi p.135 — "Values of the
+controlling parameters h0 and h1 may be obtained based on the nominal value of
+the input signal magnitude." É o que autoriza tratar `U = 1 pu`.
+
+Trade-off: ganhos maiores → resposta rápida mas sensível a ruído/distorção
+(Karimi p.136).
 
 ## Frame αβ (Representação Estacionária)
 
@@ -127,5 +156,5 @@ Transitório de partida: ~70 ms saturado em ωmin → acomodação em ~150 ms.
 | Complexidade | baixa | alta (4ª ordem) |
 
 O PLL do projeto usa bloco Simscape (`Sinusoidal Measurement (PLL, Three-Phase)`) com ganhos
-equivalentes a PI simples — ver [[pll-gains-methodology]]. Sem zeros em ±j2ω₀, o
+equivalentes a PI simples — ver [[pll-loop-filter-gains]]. Sem zeros em ±j2ω₀, o
 cenário de falta assimétrica é o mais crítico — ver [[pll-contingencies]].

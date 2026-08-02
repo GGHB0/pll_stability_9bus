@@ -99,7 +99,7 @@ framework clássico particionado.
 ## Uso no TCC
 
 - Fundamenta teoricamente **por que** a sintonia de Kp/Ki do SRF-PLL
-  (ver [[pll-gains-methodology]]) não é só sobre velocidade de rastreamento:
+  (ver [[pll-loop-filter-gains]]) não é só sobre velocidade de rastreamento:
   ela define a "inércia reativa" do inversor e, portanto, a dinâmica do swing
   Q–δᵢ que governa sua estabilidade de sincronização sob contingência.
 - O cenário BAD_PLL (kp_pll×0,2, [[iberia-2025-oscillations]]) pode ser

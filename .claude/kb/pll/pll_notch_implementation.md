@@ -9,7 +9,7 @@ source: Conversa tecnica do projeto (2026-05) + arquitetura extraida de pll_stab
 > **Status atual (2026-07):** este notch foi retirado do `pll_stability_9bus.slx`
 > pelo usuario - era de um teste e foi considerado desnecessario. Este arquivo
 > documenta a tentativa e o raciocinio de projeto, nao o estado atual do PLL.
-> Nao usar como referencia do modelo em vigor. Ver [[pll-gains-methodology]].
+> Nao usar como referencia do modelo em vigor. Ver [[pll-loop-filter-gains]].
 
 ## Ponto conceitualmente correto
 

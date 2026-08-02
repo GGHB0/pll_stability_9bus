@@ -85,17 +85,6 @@ em `export_sim_data.m`) ainda inclui a partida → viés de ~1.1% em
 
 Sinal ausente → métrica `None` → "—" nos cards/tabela.
 
-## Frequência estimada do PLL (`_estimate_freq`)
-
-`f̂ = dθ̂/dt / 2π` sobre o ângulo **unwrapped**, por diferença central com
-passo largo (k amostras ≈ 0,5 ms para cada lado, ~1 ms de janela):
-
-- O passo largo já atua como filtro passa-baixa — suprime ripple de
-  chaveamento sem convolução sobre milhões de pontos de 5 µs (O(n)).
-- Usa `theta_pll_fast` (fallback `theta_pll`); expõe `f_pll`, `t_freq`
-  (encurtado em k de cada lado) e a flag `has_freq`.
-- Alimenta o painel "Frequência PLL (Hz)" — ver [[chart-analysis-overlays]].
-
 ## Consumidores do SimData
 
 - `ChartBuilder` (séries temporais) — [[construcao-graficos]].

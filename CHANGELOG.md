@@ -5,6 +5,26 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-07-30 — Remoção do painel "Frequência PLL"
+
+Arquivos: `src/pipeline/loader.py`, `src/pipeline/chart.py`,
+`src/config/settings.py`, `src/config/__init__.py`
+
+- Removido o painel "Frequência PLL (Hz)" da aba Inversor UFV — a pedido do
+  usuário, não fazia sentido para a análise do TCC.
+- `loader.py`: deletados `_estimate_freq()`, a chamada em `__init__` e os
+  atributos `t_freq`/`f_pll`/`has_freq`.
+- `chart.py`: removida a linha do painel em `_inv_rows` (`has_freq` →
+  `rows.append`), o bloco `elif kind == "freq"` em `_add_panel` (curva
+  `f̂ PLL` + faixa ONS §5.2.1) e a entrada `"freq"` de `_AXIS_LABELS`.
+- `settings.py`/`config/__init__.py`: removidas as constantes
+  `FREQ_CONTINUOUS`, `FREQ_TRIP_MIN`, `FREQ_TRIP_MAX` (só usadas nesse
+  painel). Painel não tinha consumidores em cards/tabela/story — remoção
+  isolada, sem impacto em outras seções.
+- Regenerado `output/pll_metrics.html` (24 cenários) e verificado no browser
+  pane (regime + `bus7/3phase`): aba Inversor fica com Ângulo, Erro de fase,
+  Corrente dq, Tensão dq e P/Q — sem o painel de frequência.
+
 ## 2026-07-29 — Destaque normativo (IEEE 519/1547) na tabela de harmônicas do FFT
 
 Arquivos: `src/config/settings.py`, `src/report/renderer.py`
@@ -115,67 +135,11 @@ Arquivos: `src/pipeline/loader.py`, `src/config/settings.py`,
   `dashboard-html-editor` ganhou linha nova na tabela de mudanças
   ("redefinir cálculo de métrica existente").
 
-## 2026-07-24 — Cards e diagnóstico movidos para dentro da aba Resumo
-
-Arquivos: `src/pipeline/chart.py`, `app.py`, `src/report/renderer.py`
-
-- **Motivação (pedido do usuário)**: cards e diagnóstico ficavam soltos
-  acima da tab-bar, visíveis em qualquer aba; a aba Resumo tinha um
-  gráfico próprio (`build_resume`, de 2026-07-15) que duplicava painéis já
-  mostrados em Inversor UFV/Sistema 9-Bus — achado repetitivo.
-- **Removido**: `ChartBuilder.build_resume()`/`_res_rows()`/
-  `_RES_MAX_POINTS` (`chart.py`); chamada em `app.py` e as chaves
-  `fig_res`/`tm_res` do dict de cenário; `resData`/`resLight`/`resDark`/
-  `resIdx` do objeto `SCENARIOS` (`renderer.py`); `#plot-res`/`#badge-res`
-  do HTML.
-- **Movido**: `#cards-area`/`#story-area` para dentro de `#sec-res` — a
-  aba Resumo passa a ser só cards + diagnóstico, sem gráfico, e só
-  aparece quando essa aba está ativa (antes eram visíveis o tempo todo).
-- **JS**: `TIME_TABS` e a ordem de busca do `goToChart` perdem "res" (não
-  há mais figura pra buscar); `switchTab` ganhou guard explícito para
-  nunca chamar `_renderChart`/`_ensureBridges`/`_applyZoom` na aba Resumo.
-  `hasRes` no `SCENARIOS` passa a ser sempre `true` (cards/diagnóstico
-  sempre existem, independente de haver gráfico).
-- ⚠️ **Achado durante a verificação (não corrigido aqui)**: clique em card
-  não navega mais para o painel do gráfico — regressão do commit anterior
-  (`b2bbb2a`, redesign dos títulos de painel), não relacionada a esta
-  mudança. Detalhes e fix sugerido em
-  `dashboard/layout/tabs-navegacao.md`.
-- KB atualizado: `dashboard/layout/{estrutura-html,tabs-navegacao}.md`,
-  `dashboard/graficos/{construcao-graficos,dashboard-zoom-ghost}.md`,
-  `dashboard/cards/cards-metricas.md`, `dashboard/index.md`.
-
-## 2026-07-24 — Remoção das métricas ΔP/ΔQ UFV
-
-Arquivos: `src/config/settings.py`, `src/config/__init__.py`,
-`src/pipeline/loader.py`, `src/report/renderer.py`
-
-- **Motivação (pedido do usuário)**: ΔP/ΔQ (excursão máx-mín de P/Q na
-  janela pós-clear) não fazia sentido como métrica de desempenho do PLL.
-- **Loader**: `_compute_metrics` não calcula mais `dP_ufv`/`dQ_ufv`; a
-  janela auxiliar pós-clear (`t_rec`/`mask_rec`, usada só por essas duas
-  métricas) foi removida — `_compute_metrics` agora tem só a janela
-  pós-falta.
-- **Cards**: grupo "Recuperação do inversor"/"Estabilidade de potência"
-  (só continha os cards ΔP UFV/ΔQ UFV) removido inteiro.
-- **Tabela comparativa**: colunas "ΔP (pu)"/"ΔQ (pu)" removidas do cabeçalho,
-  de `_table_row_data` e do template JS de linha.
-- **Story/veredito**: item narrativo "Recuperação"/"Oscilação de potência"
-  removido; `dp_cls`/`dq` saem da lista de classes que definem o veredito
-  geral (`statuses`).
-- **Settings**: `DP_THRESH`/`DQ_THRESH` removidos de `settings.py` e do
-  `config/__init__.py`.
-- O painel de série temporal "P / Q UFV" (`chart.py`) não foi afetado — só
-  a métrica derivada (excursão) saiu.
-- KB atualizado: `dashboard/cards/cards-metricas.md`,
-  `dashboard/cards/comparison-table.md`, `dashboard/dados/pipeline-dados.md`,
-  `dashboard/layout/tabs-navegacao.md`, `simulation/python_pipeline.md`,
-  `pll/pll_contingencies.md`.
-
 ## Entradas anteriores
 
 - [2026-07-18 a 2026-07-24](docs/changelog/2026-07-18_24.md) — terminologia
-  "sintonia inadequada", remoção dos ícones emoji dos botões/abas.
+  "sintonia inadequada", remoção dos ícones emoji dos botões/abas, remoção
+  das métricas ΔP/ΔQ UFV, cards/diagnóstico movidos para a aba Resumo.
 - [2026-07-15](docs/changelog/2026-07-15.md) — espectro FFT multi-modo
   (a/b/c/d/q) + tabela de harmônicas, abas de gráficos + aba Resumo + cards
   clicáveis.

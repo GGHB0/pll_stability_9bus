@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from ..config import (
-    TOL_RAD, LVRT_THRESHOLD, FREQ_CONTINUOUS, FREQ_TRIP_MIN, FREQ_TRIP_MAX,
+    TOL_RAD, LVRT_THRESHOLD,
     LIGHT_COLORS, DARK_COLORS,
 )
 from .loader import SimData
@@ -61,8 +61,6 @@ class ChartBuilder:
             rows.append((_S, "ang", "Ângulo (°)"))
         if d.theta_err is not None:
             rows.append((_S, "err", "Erro de fase (°)"))
-        if d.has_freq:
-            rows.append((_S, "freq", "Frequência PLL (Hz)"))
         if d.has_dq_ufv:
             rows.append((_S, "dq_combined", "Corrente dq UFV (pu)"))
         if d.has_vdq_ufv or d.has_vdq_rede:
@@ -173,7 +171,6 @@ class ChartBuilder:
     _AXIS_LABELS = {
         "ang": "Ângulo (°)",
         "err": "Erro de fase (°)",
-        "freq": "Frequência (Hz)",
         "dq_combined": "Corrente (pu)",
         "vdq_combined": "Tensão (pu)",
         "pq_combined": "Potência (pu)",
@@ -410,20 +407,6 @@ class ChartBuilder:
                                     line=dict(color="rgba(22,163,74,0.4)", width=1.0, dash="dot"),
                                     row=row, col=col)
             self._ts_marker(t_err, err, row, col)
-
-        elif kind == "freq":
-            self._add(go.Scatter(x=d.t_freq, y=d.f_pll,
-                                 name="f̂ PLL", mode="lines", line=dict(width=1.8)), row, col)
-            self._fig.add_hrect(y0=FREQ_CONTINUOUS[0], y1=FREQ_CONTINUOUS[1],
-                                fillcolor="rgba(22,163,74,0.08)", line_width=0, layer="below",
-                                row=row, col=col)
-            self._fig.add_hline(y=60.0,
-                                line=dict(color="rgba(100,100,100,0.35)", width=1.0, dash="dot"),
-                                row=row, col=col)
-            for y_trip in (FREQ_TRIP_MIN, FREQ_TRIP_MAX):
-                self._fig.add_hline(y=y_trip,
-                                    line=dict(color="rgba(220,50,50,0.55)", width=1.1, dash="dash"),
-                                    row=row, col=col)
 
         elif kind in ("vbus1", "vbus2", "vbus3"):
             vbus_map = {"vbus1": (d.vbus1, "|V| Bus 1"), "vbus2": (d.vbus2, "|V| Bus 2"),

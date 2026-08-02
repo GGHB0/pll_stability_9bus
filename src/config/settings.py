@@ -30,12 +30,6 @@ VBUS_AVG_THRESH  = (0.90,  0.50)  # pu — severidade do afundamento (LVRT IEEE 
                                   # inteiro; falta: só a janela t_fault–t_clear)
 LVRT_THRESHOLD   = 0.88           # pu — linha de referência no gráfico
 
-# ONS Submódulo 2.10 §5.2.1 — faixa de frequência não nominal (eólica/UFV);
-# ver kb/standards/ons_frequency_ride_through.md
-FREQ_CONTINUOUS  = (58.5, 62.5)   # Hz — operação contínua permitida
-FREQ_TRIP_MIN    = 56.0           # Hz — abaixo disso, trip instantâneo
-FREQ_TRIP_MAX    = 63.0           # Hz — acima disso, trip instantâneo
-
 # ── Espectro de Fourier ─────────────────────────────────────────────────────
 SPEC_FMAX_HZ   = 2000.0   # Hz — limite superior do espectro calculado/exibido
 SPEC_XRANGE_HZ = 1500.0   # Hz — range default do eixo x: cobre harmônicas e f_res LCL

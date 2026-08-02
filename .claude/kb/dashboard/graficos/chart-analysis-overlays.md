@@ -1,6 +1,6 @@
 ---
 name: chart-analysis-overlays
-description: Overlays de análise nos gráficos — janela de falta sombreada, hierarquia θ̂ PLL vs θ Rede, marcador tₛ, envelope LVRT 1547 Cat II e faixa de frequência ONS §5.2.1
+description: Overlays de análise nos gráficos — janela de falta sombreada, hierarquia θ̂ PLL vs θ Rede, marcador tₛ e envelope LVRT 1547 Cat II
 ---
 
 # Overlays de Análise (chart.py / loader.py)
@@ -35,35 +35,15 @@ sinal sob análise.
   `showlegend=False` e `marker.legend = self._legend_key` — não passa por
   `_add`, logo fica fora do `trace_map` e mantém cor fixa nos dois temas.
 
-## Painel de frequência (`kind == "freq"`)
+## Painel de frequência (removido 2026-07-30)
 
-`SimData._estimate_freq()` em `loader.py`: `f̂ = dθ̂/dt / 2π` sobre
-`theta_pll_fast` (fallback: eixo lento). Diferença central com passo largo
-(`k ≈ 0,5 ms` para cada lado) — o passo largo já é o filtro passa-baixa,
-sem convolução sobre milhões de pontos:
-
-```python
-th_u = np.unwrap(th)
-k = max(1, int(round(5e-4 / dt)))
-self.f_pll  = (th_u[2*k:] - th_u[:-2*k]) / (t[2*k:] - t[:-2*k]) / (2*np.pi)
-self.t_freq = t[k:-k]
-```
-
-Atributos novos: `t_freq`, `f_pll`, flag `has_freq`. Painel com hline de
-60 Hz. É o sinal clássico de excursão de frequência/RoCoF do PLL.
-
-### Faixa ONS §5.2.1 (2026-07-28)
-
-`add_hrect` verde (58,5–62,5 Hz, operação contínua) + duas `add_hline`
-tracejadas vermelhas (56 Hz / 63 Hz, trip instantâneo) sobrepostas à curva
-`f̂ PLL` — mesmo padrão visual da banda de tolerância do painel `err` e do
-envelope LVRT. Constantes em `config/settings.py`: `FREQ_CONTINUOUS = (58.5,
-62.5)`, `FREQ_TRIP_MIN = 56.0`, `FREQ_TRIP_MAX = 63.0`. Fonte: ONS Submódulo
-2.10 §5.2.1 (eólica/UFV) — ver
-[ons_frequency_ride_through.md](../../standards/ons_frequency_ride_through.md).
-Zona intermediária (56–58,5 / 62,5–63 Hz, trip temporizado ≥20 s/10 s) não
-entrou como faixa separada — teria critério de tempo mínimo, não um limiar
-estático como as demais, e poluiria a leitura sem ganho.
+Existiu um painel "Frequência PLL (Hz)" (`kind == "freq"`), com
+`SimData._estimate_freq()` em `loader.py` (`f̂ = dθ̂/dt / 2π`, diferença
+central sobre `theta_pll_fast`) e faixa ONS §5.2.1 (`FREQ_CONTINUOUS`,
+`FREQ_TRIP_MIN`, `FREQ_TRIP_MAX` em `config/settings.py`). Removido a
+pedido do usuário — não fazia sentido para a análise do TCC. `_estimate_freq`,
+os atributos `t_freq`/`f_pll`/`has_freq` e as 3 constantes foram deletados;
+não reintroduzir sem pedido explícito.
 
 **Tentativa revertida (2026-07-28):** um painel extra "Deslizamento de Fase
 PLL" (Δθ vs. relógio nominal de 60 Hz, integrado do ângulo unwrapped) foi

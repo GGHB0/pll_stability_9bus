@@ -97,6 +97,9 @@ O `9,2` de `Kp = 9,2/ts` é `2 × 4,6`, porque `Kp = 2ξωn`.
 > controle despreza o `1/√(1−ξ²)` — os numeradores 3, 4 e 4,6 são aproximações
 > padronizadas, não valores exatos.
 
+Por que 1% e não 2%, o que essa escolha custa em rejeição de `2ω₀` e como
+defender isso na banca: [[pll-ts-criterion-rationale]].
+
 ### Aplicação aos ganhos do projeto
 
 Com `ξ = 0,707` (= `qsi` do `params.m`), invertendo (9) e (10):

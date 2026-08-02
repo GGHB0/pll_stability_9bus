@@ -77,6 +77,26 @@ A fonte efetiva de todo limite de corrente aplicado no dashboard é o **IEEE
 de onde os valores vieram originalmente (linha `<20` da Tab.2 — ver item 1
 de `harmonic_significance_criteria.md`).
 
+## O que vai na tela vs. o que fica no KB
+
+Separação decidida em 2026-08-02, ao reformular a legenda da tabela de
+harmônicas do dashboard: **a tela carrega a regra aplicada; o KB carrega o
+percurso até ela.**
+
+| Vai na legenda do dashboard | Fica só aqui no KB |
+|---|---|
+| o limite numérico (4% ímpar; 1/2/3% na 2ª/4ª/6ª; 3% de tensão) | a razão `Isc/IL` e por que a linha `<20` é a obrigatória (nota "c") |
+| a base do percentual, em linguagem direta ("corrente nominal do inversor", "tensão nominal da Barra 2") | a notação `Isc`/`IL`/`I_rated` e o mapeamento entre normas (tabela acima) |
+| a norma citada de forma curta (IEEE 1547-2018 §7.3; IEEE 519-2014 Tab.1) | por que `IL` foi descartado (não computável em simulação EMT) e a genealogia 519 → 1547 dos valores |
+| o que a cor significa e em quais segmentos vale | os achados de verificação (isenção por segmento, resíduo dq em 60 Hz) |
+| referências em forma curta, para o leitor achar a fonte | a citação bibliográfica completa (`references:` no frontmatter) |
+
+**Why:** a legenda existe para o leitor do dashboard (banca, orientador)
+decidir *se aquela célula vermelha é problema*, não para reconstituir a
+derivação do limite. Despejar a justificativa na tela deixa a legenda longa
+demais para ser lida e, pior, faz o critério aplicado competir por atenção
+com a discussão que levou até ele.
+
 **TDD não é usado neste projeto** — nem no código, nem em explicação. A
 tabela de harmônicas do dashboard só compara **limites individuais por
 ordem**, nunca um índice agregado. O índice agregado da norma efetivamente

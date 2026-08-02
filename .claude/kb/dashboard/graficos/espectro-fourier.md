@@ -88,8 +88,10 @@ ambos em settings.py.
   `sim_data_abc.csv`). Valores `%.3g` pu. CSS: `.harm-table`, separador
   vertical `.harm-first` entre segmentos.
 - **Destaque normativo** (2026-07-29, `HTMLRenderer._harm_cell_tier`,
-  substitui o esquema puramente estético anterior): linha h=1ª sempre
-  `.harm-fund` (fundamental, nunca julgada); colunas abc comparadas por
+  substitui o esquema puramente estético anterior): linha h=1ª recebe
+  `.harm-fund` **só nas colunas a/b/c** — em d/q ela não é a fundamental
+  (que é DC e sai do espectro com a média), é o resíduo em 60 Hz, então cai
+  na escala comum desde 2026-08-02; colunas abc comparadas por
   ordem `k` aos limites de `settings.py` (`CURR_ODD_LIMIT_PU`=4%,
   `CURR_EVEN_LIMITS_PU`={2:1%,4:2%,6:3%}, `VOLT_INDIVIDUAL_LIMIT_PU`=3% —
   IEEE 519-2014/1547-2018) → `.harm-viol` com `title=` citando o limite;
@@ -107,8 +109,19 @@ ambos em settings.py.
   sequência negativa é mais severa. Isso foi corrigido durante a
   verificação: a 1ª implementação isentava os dois critérios juntos, o que
   fazia o alerta de desequilíbrio nunca disparar em cenário nenhum.
-- Legenda de cores (`.harm-legend`) abaixo de cada par de tabelas explica
-  as classes; tokens de tema `--danger`/`--warn` novos no CSS (`_css()`).
+- **Legenda em duas camadas** (`.harm-legend`, reformulada 2026-08-02):
+  linha compacta sempre visível com os swatches (`.harm-leg-sw` +
+  `.harm-leg-viol`/`-warn`/`-unb`/`-lo`) e um `<details class='harm-help'>`
+  "Como ler esta tabela" com um bloco por critério — conformidade a/b/c,
+  desequilíbrio dq, por que dq não é checado por ordem, o `*` de "Durante a
+  falta", e o aviso de que a 1ª linha em d/q não é a fundamental. Fecha com
+  as referências em forma curta (`.harm-refs`). Tokens de tema
+  `--danger`/`--warn` no CSS (`_css()`).
+- **Regra editorial da legenda**: a tela carrega só **a regra aplicada**
+  (qual limite, de qual norma). A *genealogia* do número — razão Isc/IL,
+  nota "c" da Tab.2 do IEEE 519-2014, por que `IL` foi descartado — fica no
+  KB (`kb/standards/harmonic_norm_application.md`), não no HTML. Ver a seção
+  "O que vai na tela vs. o que fica no KB" lá.
 
 ## Layout e integração
 

@@ -59,11 +59,15 @@ problemas de encoding no Windows.
 3. **Ler os PNGs gerados** — sempre. Erros de layout (glifo faltando, tabela
    estourando a coluna, vão grande antes de quebra de página) só aparecem
    visualmente.
-4. Iterar até o layout fechar; entregar o PDF com `SendUserFile`.
+4. Iterar até o layout fechar.
+5. Antes de entregar, rodar o agente `note-validator` (Sonnet) sobre o PDF, os
+   PNGs e a KB do tema. Corrigir o que ele marcar como `BLOQUEIA`.
+6. Entregar o PDF com `SendUserFile`.
 
-Passos 2 e 3 são mecânicos: delegar ao agente `pdf-note-runner` (Haiku) quando
-a sessão principal estiver em Opus. A redação do conteúdo e as decisões de
-layout ficam no modelo principal.
+Divisão de modelo: o passo 2 é mecânico e vai para o agente `pdf-note-runner`
+(Haiku); o passo 5 exige julgamento e vai para o `note-validator` (Sonnet); a
+redação do conteúdo e as decisões de layout ficam no modelo principal.
+Agente novo só aparece na lista na sessão seguinte à criação.
 
 ## Armadilhas já pagas
 

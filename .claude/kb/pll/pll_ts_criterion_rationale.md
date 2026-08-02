@@ -31,7 +31,11 @@ Mas a escolha não é gratuita. Com `ts = 20 ms` fixo:
 | Critério | `Kp = 2·ln(1/δ)/ts` | `ωn` | `Ki = ωn²` |
 |---|---|---|---|
 | 1% — numerador 4,6 | **460** | 325,3 rad/s | **105 820** |
-| 2% — numerador 4 | 400 | 282,8 rad/s | 80 000 |
+| 2% — numerador 4 | 400 | 282,9 rad/s | 80 000 |
+
+`Ki` arredondado à centena mais próxima do valor gravado no projeto;
+`(ξωn)²` exato dá 105 832 e 80 024 respectivamente — diferenças de
+0,01–0,03% que não afetam nenhuma conclusão deste arquivo.
 
 15% de diferença no ganho proporcional. Muda o sistema que vai para a simulação.
 
@@ -66,9 +70,12 @@ Avaliada em `2ω₀ = 754,0 rad/s` (120 Hz):
 | Kp = 460, Ki = 105 820 | 1% | **0,627** |
 | Kp = 400, Ki = 80 000 | 2% | 0,543 |
 
-**Cerca de 15% mais ripple atravessa com o critério de 1%.** Como o eixo do
-trabalho é justamente a vulnerabilidade do SRF-PLL sob falta assimétrica, o
-critério mais apertado piorou marginalmente o fenômeno investigado.
+**Cerca de 15% mais ripple atravessa com o critério de 1%** — cálculo
+independente do 15% da tabela anterior; os dois coincidem em ordem de
+grandeza por acaso, não porque uma razão se propague 1:1 pela malha. Como o
+eixo do trabalho é justamente a vulnerabilidade do SRF-PLL sob falta
+assimétrica, o critério mais apertado piorou marginalmente o fenômeno
+investigado.
 
 Não invalida nada — mas é melhor apresentar do que ser perguntado. Ver
 [[pll-asymmetric-fault-formal-analysis]].

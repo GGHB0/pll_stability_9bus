@@ -32,9 +32,13 @@ n.p("Fixado t<sub>s</sub> = 20 ms, trocar o crit&#233;rio muda os ganhos:")
 n.table(["Crit&#233;rio", "K<sub>p</sub> = 2&#183;ln(1/" + DL + ")/t<sub>s</sub>",
          WN, "K<sub>i</sub> = " + WN + "<super>2</super>"],
         [["1% &#8212; numerador 4,6", "<b>460</b>", "325,3 rad/s", "<b>105&#160;820</b>"],
-         ["2% &#8212; numerador 4", "400", "282,8 rad/s", "80&#160;000"]],
+         ["2% &#8212; numerador 4", "400", "282,9 rad/s", "80&#160;000"]],
         [4.3, 4.6, 2.8, 3.0])
 n.gap(6)
+n.note(f"K<sub>i</sub> arredondado &#224; centena mais pr&#243;xima do valor gravado no "
+       f"projeto; ({XI}{WN})<super>2</super> exato d&#225; 105&#160;832 e 80&#160;024 "
+       f"respectivamente &#8212; diferen&#231;as de 0,01&#8211;0,03% que n&#227;o afetam "
+       f"nenhuma conclus&#227;o desta nota.")
 n.p("S&#227;o 15% de diferen&#231;a no ganho proporcional. A escolha do crit&#233;rio n&#227;o &#233; "
     "cosm&#233;tica: ela muda o sistema que vai para a simula&#231;&#227;o.")
 
@@ -62,7 +66,9 @@ n.table(["Ganhos", "Crit&#233;rio", "|G(j2" + W0 + ")|"],
          ["K<sub>p</sub> = 400, K<sub>i</sub> = 80&#160;000", "2%", "0,543"]],
         [6.2, 3.0, 5.5])
 n.gap(6)
-n.p(f"Cerca de <b>15% mais ripple</b> atravessa com o crit&#233;rio de 1%. Se o eixo do "
+n.p(f"Cerca de <b>15% mais ripple</b> atravessa com o crit&#233;rio de 1% &#8212; um c&#225;lculo "
+    f"independente do 15% da tabela anterior, que coincide em ordem de grandeza mas n&#227;o "
+    f"&#233; a mesma raz&#227;o se propagando pela malha. Se o eixo do "
     f"trabalho &#233; mostrar que o SRF-PLL &#233; vulner&#225;vel sob falta assim&#233;trica, "
     f"convém levantar isso por conta pr&#243;pria: o crit&#233;rio mais apertado piorou "
     f"marginalmente o pr&#243;prio fen&#244;meno investigado. N&#227;o invalida o projeto, mas "

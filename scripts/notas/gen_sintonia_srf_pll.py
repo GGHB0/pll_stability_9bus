@@ -33,7 +33,7 @@ n.table(["Vari&#225;vel", "Valor", "Malha", "Metodologia"],
           "PI do la&#231;o do SRF-PLL", "esta nota"],
          ["K<sub>p</sub> / K<sub>i</sub>",
           f"29,4815/4 {AP} 7,370<br/>7075,56/4 {AP} 1768,9", "controlador de corrente",
-          "K<sub>p</sub> = 8&#183;f<sub>g</sub>&#183;L<sub>est</sub><br/>(Tese AGP)"]],
+          "K<sub>p</sub> = 8&#183;f<sub>g</sub>&#183;L<sub>est</sub> (Tese AGP)"]],
         [3.1, 3.3, 3.9, 4.4])
 n.gap(4)
 n.note("S&#243; k<sub>p,pll</sub> e k<sub>i,pll</sub> alimentam o bloco de sincronismo.")
@@ -132,11 +132,16 @@ n.p(f"Combinando (3) com o crit&#233;rio de 1% resulta a forma direta "
     f"K<sub>p</sub> = 2{XI}{WN} = 9,2/t<sub>s</sub>:")
 n.eq(f"{XI}{WN} = 4,6 / t<sub>s</sub> = 4,6 / 0,020 = 230 rad/s<br/>"
      f"<b>K<sub>p</sub> = 2{XI}{WN} = 9,2 / 0,020 = 460</b><br/>"
-     f"{WN} = 230 / 0,707 = 325,30 rad/s&#160;&#160;(51,8 Hz)<br/>"
-     f"<b>K<sub>i</sub> = {WN}<super>2</super> = 105&#160;820</b>", "5")
+     f"{WN} = 230 / 0,707 {AP} 325,3 rad/s&#160;&#160;(51,8 Hz)<br/>"
+     f"<b>K<sub>i</sub> = {WN}<super>2</super> {AP} 105&#160;820</b>", "5")
 n.gap(8)
-n.p("Os dois ganhos fecham nos valores gravados, sem arredondamento for&#231;ado. Na "
-    "dire&#231;&#227;o inversa, partindo do que est&#225; no <i>params.m</i>:")
+n.note(f"<b>Arredondamento.</b> {XI} = 0,707 tem tr&#234;s casas decimais. Levando a "
+       f"divis&#227;o adiante sem arredondar d&#225; {WN} = 325,32 rad/s e K<sub>i</sub> = "
+       f"105&#160;832, cerca de 0,01% acima do valor gravado. O {XI} exato que fecha em "
+       f"K<sub>p</sub> = 460 e K<sub>i</sub> = 105&#160;820 &#233; 0,70704 &#8212; a diferen&#231;a "
+       f"&#233; do arredondamento de entrada, n&#227;o do m&#233;todo.")
+n.p(f"Os dois ganhos fecham nos valores gravados dentro dessa precis&#227;o. Na "
+    f"dire&#231;&#227;o inversa, partindo do que est&#225; no <i>params.m</i>:")
 n.eq(f"{WN} = {SQ}(105&#160;820) = 325,30 rad/s<br/>"
      f"{XI} = 460 / (2&#183;325,30) = 0,7070", "6")
 
@@ -185,9 +190,6 @@ n.refs([
     "KARIMI-GHARTEMANI, Masoud. <i>Enhanced Phase-Locked Loop Structures for Power and "
     "Energy Applications</i>. Hoboken: John Wiley &amp; Sons / IEEE Press, 2014. "
     "ISBN 978-1-118-79502-6.",
-    "YAZDANI, Amirnaser; IRAVANI, Reza. <i>Voltage-Sourced Converters in Power Systems: "
-    "Modeling, Control, and Applications</i>. Hoboken: John Wiley &amp; Sons / IEEE Press, "
-    "2010. ISBN 978-0-470-52156-4.",
 ])
 n.gap(6)
 n.note("As equa&#231;&#245;es (1) a (3) est&#227;o em Alves, Dias &amp; Rolim (2020), se&#231;&#227;o "

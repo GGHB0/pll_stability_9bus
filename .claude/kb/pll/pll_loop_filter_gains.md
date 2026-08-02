@@ -116,11 +116,14 @@ Na direção direta — que é a ordem real do projeto — partindo de `ts = 20 
 ```
 ξωn = 4,6 / ts = 4,6 / 0,020 = 230
 Kp  = 2ξωn = 9,2 / ts = 460                      → kp_pll   ✓
-ωn  = 230 / 0,707 = 325,30 rad/s   (51,8 Hz)
-Ki  = ωn² = 105 820,09                           → ki_pll   ✓
+ωn  = 230 / 0,707 ≈ 325,3 rad/s   (51,8 Hz)
+Ki  = ωn² ≈ 105 820                              → ki_pll   ✓
 ```
 
-Os dois ganhos fecham nos valores gravados sem arredondamento forçado.
+> **Arredondamento.** `ξ = 0,707` tem três casas decimais. Sem arredondar,
+> `230/0,707` dá `ωn = 325,32 rad/s` e `Ki = 105 832`, ~0,01% acima do valor
+> gravado — o `ξ` exato que fecha em `Kp = 460`/`Ki = 105 820` é `0,70704`.
+> Os dois ganhos fecham nos valores gravados dentro dessa precisão.
 
 ## Escolha do `ts`
 
@@ -144,9 +147,8 @@ ciclo pós-falta sem descer ao regime onde a linearização se quebra. E é núm
 redondo — `9,2/0,020` dá 460 exato, o que é consistente com escolher o `ts` e
 deixar o ganho cair como consequência.
 
-> **Nota.** Pelo critério de 2% da eq. (11) do Alves, os mesmos ganhos
-> corresponderiam a `ts = 4/230 = 17,4 ms` (1,04 T). Não é o caminho usado aqui,
-> mas explica por que os dois critérios aparecem na literatura consultada.
+Por que este critério e não o de 2% (`ts = 17,4 ms` pela mesma eq. 11 do
+Alves): [[pll-ts-criterion-rationale]].
 
 Aferição do método no próprio artigo do Alves (Tabela 2, protótipo 15 V/60 Hz):
 `PI2 = PI4 = 400 + 40 000/s` → `ωn = 200`, `ξ = 1,0`, `ts = 20 ms` por (11).

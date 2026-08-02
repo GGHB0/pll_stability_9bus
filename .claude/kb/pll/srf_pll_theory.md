@@ -85,8 +85,9 @@ Kp = 2ξωn            Ki = ωn²
 > Karimi nem ao Yazdani (que usa H(s) estruturado, ver seção final deste
 > arquivo).
 
-É por esse método que os ganhos do PLL do projeto (`kp_pll = 460`,
-`ki_pll = 105820`, com `ωn = 325,3 rad/s` e `ξ = 0,707`) são justificados —
+É por esse método que os ganhos do PLL do projeto são justificados: partindo de
+`ξ = 0,707` e `ts = 20 ms` pelo **critério de 1%** (`Kp = 9,2/ts`, forma do
+Teodorescu), saem `kp_pll = 460` e `ki_pll = 105820`, com `ωn = 325,3 rad/s` —
 ver [[pll-loop-filter-gains]].
 
 Base para fixar `h0`/`h1` pela magnitude nominal: Karimi p.135 — "Values of the

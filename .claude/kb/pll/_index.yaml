@@ -6,7 +6,10 @@ files:
     description: Teoria do SRF-PLL — estrutura, modelo linear, projeto de ganhos (Karimi-Ghartemani cap.6)
   - file: pll_loop_filter_gains.md
     name: pll-loop-filter-gains
-    description: Ganhos do PI do laço do SRF-PLL (kp_pll=460, ki_pll=105820) — projeto de 2ª ordem por tempo de acomodação (Alves 2020 eqs. 9-11 / Teodorescu eq. 4.38), ωn=325,3 e ξ=0,707
+    description: Ganhos do PI do laço do SRF-PLL (kp_pll=460, ki_pll=105820) — projeto de 2ª ordem, ts=20 ms pelo critério de 1% (Teodorescu eq. 4.38 / Alves 2020 eqs. 9-11), ωn=325,3 e ξ=0,707
+  - file: pll_gains_provenance.md
+    name: pll-gains-provenance
+    description: Procedência dos ganhos do SRF-PLL — literais no netlist PSIM, cadeia PSIM→Simulink→params.m e dedução de que o laço está normalizado (U = 1 pu)
   - file: pll_gains_methodology.md
     name: pll-gains-methodology
     description: Metodologia TeseAGP (Kp=8·fg·Lest) do controlador de CORRENTE — não é o ganho do PLL, ver pll_loop_filter_gains.md

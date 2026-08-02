@@ -97,7 +97,9 @@ ambos em settings.py.
   (2%/3%, TeseAGP) → `.harm-warn`/`.harm-unb`. `_HARM_LO_PU=0.02` continua
   como fallback de "apagado" (`.harm-lo`) quando nenhum critério normativo
   se aplica. Ver `kb/standards/harmonic_significance_criteria.md` para a
-  origem de cada limite e por que abc/dq usam critérios diferentes.
+  origem de cada limite, e `kb/standards/harmonic_norm_application.md` para
+  por que abc/dq usam critérios diferentes e a notação normalizada das
+  variáveis de corrente (Isc/IL/I_rated — TDD não é usado).
 - **Segmento "Durante a falta" isento só da checagem abc/IEEE**
   (`SPEC_SEG_NO_NORM`): limites de regime permanente não valem durante o
   curto-circuito em si. O critério de desequilíbrio dq (h=2ª) continua

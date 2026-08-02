@@ -112,58 +112,12 @@ de falta), não de uma tabela de limites.
 
 **Implementado em 2026-07-29** (antes era só descritivo): a tabela de
 harmônicas do dashboard agora compara célula a célula com os limites reais
-descritos abaixo, em vez do destaque puramente estético que existia antes
+descritos acima, em vez do destaque puramente estético que existia antes
 (`_HARM_HI_PU`/`_HARM_LO_PU` só sobrevive como fallback de "valor quase-zero
 apagado", sem mais o `harm-top` genérico). Detalhes de implementação
 (constantes, classes CSS, JS) em
-[espectro-fourier.md](../dashboard/graficos/espectro-fourier.md).
-
-### abc × dq — qual norma vale em qual domínio
-
-Os limites por ordem harmônica `h` (Tabela 2 do IEEE 519-2014, §7.3 do IEEE
-1547-2018) só são bem definidos no domínio **abc** — a transformada de Park
-desloca cada componente por `±f₁` conforme a sequência (positiva: ordem `n` →
-`(n-1)·f₁` no dq; negativa: ordem `n` → `(n+1)·f₁`), então dois harmônicos de
-ordens diferentes podem cair no **mesmo bin** do espectro dq (5ª
-negativa + 7ª positiva → ambas em 6f₁ = 360 Hz; 11ª + 13ª → ambas em
-12f₁ = 720 Hz). Um pico dq nesses bins não é atribuível a uma ordem `h`
-específica, então não dá pra comparar direto com a linha correspondente da
-Tabela 2.
-
-Consequência prática: checagem de conformidade com IEEE 519/1547 deve usar o
-espectro em modo **abc** (fases a/b/c), casando os marcadores `SPEC_MARKERS`
-(f₁, 3f₁, 5f₁, 7f₁) com a tabela de harmônicas 1–7. O espectro em modo **dq**
-não serve para essa checagem — ele é um proxy da **fração de sequência
-negativa** (pico isolado em 2f₁ = 120 Hz), que é o critério de desequilíbrio
-dos itens 2/3 acima (limiar empírico da TeseAGP, análise da fração `b` do
-Yazdani), não um limite de distorção harmônica por ordem. A maioria dos
-cenários já tem `sim_data_abc.csv` (re-exportado pelo Bruno desde
-[[resimulacao-abc|kb/simulation/resimulacao-abc]]), então a checagem por
-ordem em abc está disponível na maior parte do dashboard — os poucos
-cenários sem esse CSV mostram só dq, útil para severidade de desequilíbrio,
-não para conformidade normativa.
-
-Achado da verificação (2026-07-29): o critério de desequilíbrio dq **não
-pode** herdar a mesma isenção do segmento "Durante a falta" que a checagem
-abc/IEEE usa — a sequência negativa só é grande justamente durante a falta;
-isentar os dois critérios juntos faz o alerta de desequilíbrio nunca disparar
-na prática (confirmado em `bus4/1phase`: 30%+ em h=2ª durante a falta, zero
-alerta até a correção). Os dois critérios têm naturezas diferentes: IEEE
-519/1547 são normas de **regime permanente** (não fazem sentido durante o
-curto-circuito em si); o patamar da TeseAGP é sobre **severidade do
-distúrbio**, que é maior exatamente durante a falta.
-
-### TDD × TRD — qual índice é computável aqui
-
-TDD (IEEE 519-2014, coluna da Tabela 2) usa no denominador `I_L`, a corrente
-de demanda máxima medida em janela móvel de 12 meses de operação real — não
-existe em uma simulação EMT de poucos segundos, então **não é computável
-neste projeto**. O índice que o IEEE 1547-2018 efetivamente define para
-unidades geradoras é **TRD** (Total Rated Distortion, Tabela 15 do guia
-1547.2-2023): mesma fórmula, mas com `I_rated` (corrente nominal do
-inversor, dado de projeto conhecido a priori) no denominador em vez de
-`I_L`. Como o dashboard já normaliza tudo em pu na base do inversor
-(`I_rated ≈ 1,0 pu`), TRD é diretamente calculável a partir de
-`id_ufv_pu`/`iq_ufv_pu`/`iabc_inverter` — comparar `√(Σ Iₕ²)` (h=2…50, em pu)
-com o limite de 5% da Tabela 15/§7.3. TDD permanece citado apenas como
-terminologia original da Tabela 2 do IEEE 519 (item 1 acima).
+[espectro-fourier.md](../dashboard/graficos/espectro-fourier.md); domínio
+abc vs dq, achado sobre a isenção por segmento e a notação normalizada das
+variáveis de corrente (Isc/IL/I_rated — por que TDD não é usado neste
+projeto) em
+[harmonic_norm_application.md](harmonic_norm_application.md).

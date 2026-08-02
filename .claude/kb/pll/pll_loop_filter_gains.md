@@ -67,6 +67,36 @@ Teodorescu observa explicitamente que (4.38) supõe **entrada unitária (V = 1)*
 senão os ganhos devem ser divididos pela amplitude: confirmação independente da
 normalização rastreada em [[pll-gains-provenance]].
 
+### De onde vem o 4,6
+
+Não tem nada a ver com a malha do PLL — é o critério de acomodação. A resposta
+ao degrau de um sistema de 2ª ordem subamortecido decai dentro de um envelope
+exponencial `e^(−ξωn·t)`. O `ts` é o instante em que esse envelope entra na
+faixa de tolerância `δ`:
+
+```
+e^(−ξωn·ts) = δ      →      ts = ln(1/δ) / (ξωn)
+```
+
+O numerador é simplesmente `ln(1/δ)`, arredondado por convenção:
+
+| Tolerância `δ` | `ln(1/δ)` | Numerador usado | Onde aparece |
+|---|---|---|---|
+| 5% | 2,996 | 3 | Ogata |
+| 2% | 3,912 | 4 | Ogata; Alves eq. (11) |
+| 1% | 4,605 | **4,6** | Franklin; Teodorescu eq. (4.38) |
+
+Leitura equivalente: `1/(ξωn)` é a **constante de tempo `τ` do envelope**, e
+acomodar dentro de 1% custa **4,6 constantes de tempo**. No projeto,
+`τ = 1/230 = 4,35 ms` e `4,6·τ = 20 ms`.
+
+O `9,2` de `Kp = 9,2/ts` é `2 × 4,6`, porque `Kp = 2ξωn`.
+
+> **Precisão.** O envelope exato da resposta ao degrau é `e^(−ξωn·t)/√(1−ξ²)`;
+> incluir esse fator daria 4,95 em vez de 4,6 para `ξ = 0,707`. A convenção de
+> controle despreza o `1/√(1−ξ²)` — os numeradores 3, 4 e 4,6 são aproximações
+> padronizadas, não valores exatos.
+
 ### Aplicação aos ganhos do projeto
 
 Com `ξ = 0,707` (= `qsi` do `params.m`), invertendo (9) e (10):

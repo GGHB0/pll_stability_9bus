@@ -860,8 +860,11 @@ switchScenario(currentKey);
     def _harm_cell_tier(self, kind: str, mode: str, k: int, seg_name: str,
                          v: float) -> tuple[str, str]:
         """Classe CSS + atributo title (tooltip) de uma célula da tabela de
-        harmônicas. Prioridade: fundamental (k=1) > violação normativa em abc
-        / desequilíbrio em dq (h=2ª) > valor quase-zero apagado > normal.
+        harmônicas. Prioridade: fundamental (k=1, só em abc) > violação
+        normativa em abc / desequilíbrio em dq (h=2ª) > valor quase-zero
+        apagado > normal. Em d/q a linha k=1 NÃO é a fundamental (essa é DC
+        e sai do espectro junto com a média em `_amplitude_spectrum`) — é o
+        resíduo em 60 Hz, então fica na escala comum, sem destaque.
         Limites por ordem harmônica (IEEE 519-2014/1547-2018) só valem no
         domínio abc; em dq só a 2ª harmônica (120 Hz, sequência negativa) tem
         critério (patamar empírico da TeseAGP) — ver
@@ -871,9 +874,9 @@ switchScenario(currentKey);
         curto-circuito em si. O critério de desequilíbrio dq, ao contrário, é
         sobre severidade do distúrbio — continua valendo durante a falta
         (é justamente onde a sequência negativa é mais relevante)."""
-        if k == 1:
+        if k == 1 and mode in ("a", "b", "c"):
             return "harm-fund", ""
-        if mode in ("a", "b", "c") and seg_name not in SPEC_SEG_NO_NORM:
+        if k > 1 and mode in ("a", "b", "c") and seg_name not in SPEC_SEG_NO_NORM:
             if kind == "i":
                 limit = CURR_ODD_LIMIT_PU if k % 2 else CURR_EVEN_LIMITS_PU.get(k)
                 norm = ("IEEE 519-2014 Tab.2 / IEEE 1547-2018 §7.3" if k % 2
@@ -893,6 +896,65 @@ switchScenario(currentKey);
         if v < self._HARM_LO_PU:
             return "harm-lo", ""
         return "", ""
+
+    def _harm_legend_html(self, has_no_norm_seg: bool) -> str:
+        """Legenda da tabela de harmônicas, em duas camadas: linha de swatches
+        sempre visível + `<details>` "Como ler esta tabela" com um bloco por
+        critério e as referências em forma curta.
+
+        Regra editorial (kb/standards/harmonic_norm_application.md, seção "O
+        que vai na tela vs. o que fica no KB"): aqui entra só a REGRA aplicada
+        — o limite, a base do percentual e a norma citada. A genealogia do
+        número (razão Isc/IL, nota "c" da Tab.2 do IEEE 519-2014, por que IL
+        foi descartado como base) fica no KB, não na tela."""
+        evens = sorted(CURR_EVEN_LIMITS_PU.items())
+        ev_lim = " / ".join(f"{v * 100:g}%" for _, v in evens)
+        ev_ord = " / ".join(f"{k}ª" for k, _ in evens)
+        items = [
+            ("a/b/c — conformidade normativa",
+             "Vermelho: a amplitude daquela ordem passa do limite individual. "
+             f"Corrente: {CURR_ODD_LIMIT_PU * 100:g}% nos ímpares, {ev_lim} na "
+             f"{ev_ord} — percentuais da corrente nominal do inversor. "
+             f"Tensão: {VOLT_INDIVIDUAL_LIMIT_PU * 100:g}%, sobre a nominal da "
+             "Barra 2 (20 kV). Fontes: IEEE 1547-2018 §7.3 (corrente), "
+             "IEEE 519-2014 Tabela 1 (tensão)."),
+            ("d/q, 2ª harmônica (120 Hz) — desequilíbrio, não conformidade",
+             f"Âmbar ≥{DQ_UNBALANCE_WARN_PU * 100:g}%, vermelho "
+             f"≥{DQ_UNBALANCE_HIGH_PU * 100:g}%: mede a fração de sequência "
+             "negativa. Patamar empírico (TeseAGP §5.2.2), sem base normativa."),
+            ("Por que d/q não é checado por ordem",
+             "A transformada de Park junta ordens diferentes no mesmo bin "
+             "(5ª e 7ª caem ambas em 360 Hz). Conformidade por ordem só é "
+             "verificável em a/b/c."),
+        ]
+        if has_no_norm_seg:
+            items.append((
+                "O * em “Durante a falta”",
+                "IEEE 519/1547 são limites de regime permanente, não se "
+                "aplicam ao curto-circuito em si. O critério de desequilíbrio "
+                "dq continua valendo — é ali que a sequência negativa é maior."))
+        items.append((
+            "A 1ª linha em d/q não é a fundamental",
+            "No dq a fundamental é DC e sai do espectro junto com o offset; "
+            "o valor mostrado é o resíduo em 60 Hz."))
+        rows = "".join(f"<dt>{t}</dt><dd>{d}</dd>" for t, d in items)
+        return (
+            "<div class='harm-legend'>"
+            "<p class='harm-leg-row'>"
+            "<span class='harm-leg-sw harm-leg-viol'></span>excede limite "
+            "normativo<span class='harm-leg-dot'>·</span>"
+            "<span class='harm-leg-sw harm-leg-warn'></span>"
+            "<span class='harm-leg-sw harm-leg-unb'></span>desequilíbrio dq"
+            "<span class='harm-leg-dot'>·</span>"
+            "<span class='harm-leg-sw harm-leg-lo'></span>abaixo de "
+            f"{self._HARM_LO_PU * 100:g}%"
+            "</p>"
+            "<details class='harm-help'><summary>Como ler esta tabela</summary>"
+            f"<dl>{rows}</dl>"
+            "<p class='harm-refs'>IEEE Std 519-2014 · IEEE Std 1547.2-2023 · "
+            "ALVES, A. G. P. Tese (Doutorado), COPPE/UFRJ, 2022.</p>"
+            "</details></div>"
+        )
 
     def _spec_table_html(self, harm: dict) -> str:
         """Tabelas de amplitude das harmônicas 1–7 (k·60 Hz), colunas
@@ -947,21 +1009,7 @@ switchScenario(currentKey);
                 f"<tbody>{''.join(rows)}</tbody></table></div></div>"
             )
         if blocks:
-            legend = (
-                "<p class='harm-legend'>"
-                "<span class='harm-leg-viol'>vermelho</span> (a/b/c): excede "
-                "limite normativo IEEE 519-2014/1547-2018 por ordem harmônica. "
-                "<span class='harm-leg-unb'>âmbar/vermelho</span> (d/q, 2ª "
-                "harmônica): desequilíbrio de sequência negativa acima do "
-                "patamar empírico da TeseAGP (2%/3%) — este último vale em "
-                "todos os segmentos, inclusive durante a falta."
-                + (" * segmento isento só da checagem IEEE 519/1547 em a/b/c "
-                   "(limites de regime permanente não se aplicam ao "
-                   "curto-circuito em si)."
-                   if has_no_norm_seg else "")
-                + "</p>"
-            )
-            blocks.append(legend)
+            blocks.append(self._harm_legend_html(has_no_norm_seg))
         return "".join(blocks)
 
     # ── Cards ────────────────────────────────────────────────────────────────
@@ -1688,10 +1736,35 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 .harm-na  { color: var(--muted) }
 .harm-first { border-left: 1.5px solid var(--border) }
 .harm-legend {
-  font-size: 11px; color: var(--muted); padding: 6px 20px 2px;
-  line-height: 1.5;
+  font-size: 11px; color: var(--muted); padding: 6px 20px 12px;
+  line-height: 1.55;
 }
-.harm-leg-viol, .harm-leg-unb { font-weight: 700; color: var(--danger) }
+.harm-leg-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 5px;
+  margin: 0 0 6px;
+}
+.harm-leg-dot { opacity: .45; margin: 0 3px }
+.harm-leg-sw {
+  display: inline-block; width: 11px; height: 11px; border-radius: 3px;
+}
+.harm-leg-viol, .harm-leg-unb { background: var(--danger) }
+.harm-leg-warn { background: var(--warn) }
+.harm-leg-lo   { background: var(--muted); opacity: .45 }
+.harm-help > summary {
+  cursor: pointer; font-weight: 700; color: var(--text);
+  list-style: none; display: inline-flex; align-items: center; gap: 5px;
+  padding: 2px 0;
+}
+.harm-help > summary::-webkit-details-marker { display: none }
+.harm-help > summary::before {
+  content: "\\25B8"; display: inline-block; font-size: 10px;
+  transition: transform .18s;
+}
+.harm-help[open] > summary::before { transform: rotate(90deg) }
+.harm-help dl { margin: 6px 0 0; max-width: 78ch }
+.harm-help dt { font-weight: 700; color: var(--text); margin-top: 9px }
+.harm-help dd { margin: 2px 0 0 }
+.harm-refs { margin: 11px 0 0; font-size: 10px; opacity: .75 }
 
 /* ── SVG tooltip ── */
 .svg-tip {

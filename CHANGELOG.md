@@ -5,6 +5,32 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-08-02 — Legenda explicada da tabela de harmônicas
+
+Arquivos: `src/report/renderer.py`
+
+- **Legenda reformulada em duas camadas** (novo `_harm_legend_html`): linha
+  compacta de swatches sempre visível (excede limite normativo /
+  desequilíbrio dq / abaixo de 2%) e um `<details>` "Como ler esta tabela"
+  com um bloco por critério — conformidade a/b/c (limite, base do percentual
+  e norma), desequilíbrio dq, por que dq não é checado por ordem, o `*` de
+  "Durante a falta" e o aviso sobre a 1ª linha em d/q. Fecha com as
+  referências em forma curta. Substitui o parágrafo único anterior.
+- **Regra editorial**: a tela leva só a regra aplicada; a genealogia do
+  número (razão Isc/IL, nota "c" da Tab.2 do IEEE 519-2014, descarte de `IL`
+  como base) fica no KB — `kb/standards/harmonic_norm_application.md`.
+  Limites vêm interpolados de `settings.py`, não hard-coded no texto.
+- **`harm-fund` só em a/b/c**: a linha h=1ª das colunas d/q deixa de ser
+  marcada como fundamental — no dq a fundamental é DC e sai do espectro com
+  a média; o valor é o resíduo em 60 Hz. Passa a cair na escala comum
+  (`harm-lo` quando <2%).
+- CSS: `.harm-leg-row`/`.harm-leg-sw`/`.harm-help`/`.harm-refs` novos;
+  `.harm-leg-viol`/`-unb` viram swatch (fundo) em vez de texto colorido.
+- Regenerado `output/pll_metrics.html` (24 cenários) e verificado no browser
+  pane (`bus4/1phase`): legenda abre/fecha, swatches nas cores corretas, e a
+  classificação segue intacta (h=2ª abc `harm-viol` fora da falta, dq
+  `harm-unb` em 0,303/0,309 durante a falta).
+
 ## 2026-07-30 — Remoção do painel "Frequência PLL"
 
 Arquivos: `src/pipeline/loader.py`, `src/pipeline/chart.py`,

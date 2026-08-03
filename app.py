@@ -92,10 +92,8 @@ def main() -> None:
         data    = SimData(csv_path)
         builder = ChartBuilder(data)
         fig_inv, fig_sys, tm_inv, tm_sys = builder.build_sections()
-        fig_res, tm_res = builder.build_resume()
         figs_spec, tms_spec, spec_harm = SpectrumBuilder(data).build()
         n = (len(fig_inv.data) + (len(fig_sys.data) if fig_sys else 0)
-             + (len(fig_res.data) if fig_res else 0)
              + sum(len(f.data) for f in figs_spec.values()))
         scenarios[key] = {
             "data":      data,
@@ -103,11 +101,9 @@ def main() -> None:
             "bad_pll":   _is_bad_pll(key),
             "fig_inv":   fig_inv,
             "fig_sys":   fig_sys,
-            "fig_res":   fig_res,
             "figs_spec": figs_spec,
             "tm_inv":    tm_inv,
             "tm_sys":    tm_sys,
-            "tm_res":    tm_res,
             "tms_spec":  tms_spec,
             "spec_harm": spec_harm,
         }

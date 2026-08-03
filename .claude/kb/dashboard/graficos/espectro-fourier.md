@@ -80,26 +80,61 @@ ambos em settings.py.
   hint (`#spec-phase-hint`). `specPhase` é **sticky** entre cenários — se o
   modo não existir no cenário novo, cai para o primeiro disponível.
 - `_renderChart("spec")` resolve a figura via `_specFig(sc)`; filename do
-  PNG ganha sufixo do modo (`pll_<cenário>_spec_<modo>`). `_ghostData`
-  compara o mesmo modo do cenário PLL equivalente.
+  PNG ganha sufixo do modo (`pll_<cenário>_spec_<modo>`).
 - **Tabela de harmônicas** (`_spec_table_html`, por cenário, injetada em
   `#spec-harm-area` no `switchScenario`): duas tabelas (Corrente UFV /
   Tensão UFV), linhas h=1ª…7ª (60–420 Hz), colunas agrupadas por segmento ×
   fase/eixo (a b c d q). Célula sem dado = "—" (ex.: a/b/c em cenário sem
   `sim_data_abc.csv`). Valores `%.3g` pu. CSS: `.harm-table`, separador
   vertical `.harm-first` entre segmentos.
-- **Limiares absolutos em pu** (`_HARM_HI_PU=0.4`, `_HARM_LO_PU=0.02`, attrs
-  de classe do renderer; aplicados em `_spec_table_html`): amp ≥ 0,4 pu →
-  `.harm-top` (negrito + accent + fundo `color-mix` 12%, acompanha o tema);
-  amp < 0,02 pu → `.harm-lo` (muted, opacity .5); meio-termo normal. Pedido
-  do usuário (2026-07-15): destaque só para amplitude na ordem da nominal —
-  na prática só as fundamentais abc destacam (0,49–1,01 pu); os valores dq
-  (0,03–0,2 pu) ficam normais/apagados, sem negrito em valor pequeno.
+- **Destaque normativo** (2026-07-29, `HTMLRenderer._harm_cell_tier`,
+  substitui o esquema puramente estético anterior): linha h=1ª recebe
+  `.harm-fund` **só nas colunas a/b/c** — em d/q ela não é a fundamental
+  (que é DC e sai do espectro com a média), é o resíduo em 60 Hz, então cai
+  na escala comum desde 2026-08-02; colunas abc comparadas por
+  ordem `k` aos limites de `settings.py` (`CURR_ODD_LIMIT_PU`=4%,
+  `CURR_EVEN_LIMITS_PU`={2:1%,4:2%,6:3%}, `VOLT_INDIVIDUAL_LIMIT_PU`=3% —
+  IEEE 519-2014/1547-2018) → `.harm-viol` com `title=` citando o limite;
+  coluna dq, só h=2ª (120 Hz) comparada a `DQ_UNBALANCE_WARN_PU`/`_HIGH_PU`
+  (2%/3%, TeseAGP) → `.harm-warn`/`.harm-unb`. `_HARM_LO_PU=0.02` continua
+  como fallback de "apagado" (`.harm-lo`) quando nenhum critério normativo
+  se aplica. Ver `kb/standards/harmonic_significance_criteria.md` para a
+  origem de cada limite, e `kb/standards/harmonic_norm_application.md` para
+  por que abc/dq usam critérios diferentes e a notação normalizada das
+  variáveis de corrente (Isc/IL/I_rated — TDD não é usado).
+- **Segmento "Durante a falta" isento só da checagem abc/IEEE**
+  (`SPEC_SEG_NO_NORM`): limites de regime permanente não valem durante o
+  curto-circuito em si. O critério de desequilíbrio dq (h=2ª) continua
+  valendo em todos os segmentos, inclusive durante a falta — é ali que a
+  sequência negativa é mais severa. Isso foi corrigido durante a
+  verificação: a 1ª implementação isentava os dois critérios juntos, o que
+  fazia o alerta de desequilíbrio nunca disparar em cenário nenhum.
+- **Legenda em duas camadas** (`.harm-legend`, reformulada 2026-08-02):
+  linha compacta sempre visível com os swatches (`.harm-leg-sw` +
+  `.harm-leg-viol`/`-warn`/`-unb`/`-lo`) e um `<details class='harm-help'>`
+  "Como ler esta tabela" com um bloco por critério — conformidade a/b/c,
+  desequilíbrio dq, por que dq não é checado por ordem, o `*` de "Durante a
+  falta", e o aviso de que a 1ª linha em d/q não é a fundamental. Fecha com
+  as referências em forma curta (`.harm-refs`). Tokens de tema
+  `--danger`/`--warn` no CSS (`_css()`).
+- **Regra editorial da legenda**: a tela carrega só **a regra aplicada**
+  (qual limite, de qual norma). A *genealogia* do número — razão Isc/IL,
+  nota "c" da Tab.2 do IEEE 519-2014, por que `IL` foi descartado — fica no
+  KB (`kb/standards/harmonic_norm_application.md`), não no HTML. Ver a seção
+  "O que vai na tela vs. o que fica no KB" lá.
 
 ## Layout e integração
 
-- Eixo y amplitude linear (pu), `rangemode="tozero"`; `SPEC_XRANGE_HZ=1500`
-  default, duplo-clique expande até 2 kHz.
+- Eixo y amplitude linear (pu), `rangemode="tozero"`, título `"Amplitude (pu)"`
+  na **vertical** (encostado no eixo); `SPEC_XRANGE_HZ=1500` default,
+  duplo-clique expande até 2 kHz.
+- **Barra de título no topo** (`_label`, 2026-07-21, Ponto 2 do professor):
+  retângulo preenchido `#185FA5` com o nome do sinal ("Corrente iₐ UFV (abc)")
+  em branco/negrito, posicionado **acima** das marcações de frequência
+  (`y0 = y_top + 16/(240·n)`, altura 22 px). Antes era annotation horizontal no
+  canto com "— amplitude (pu)" no texto (redundante com o eixo Y).
+  `vertical_spacing` subiu p/ 0.13, margem `l=64`/`t=64`, legenda subiu p/
+  `y=1.22` para não colidir com a barra. Ver [[construcao-graficos]].
 - Legenda única horizontal no topo (`legendgroup` por segmento).
 - Renderizado sob demanda ao abrir a aba ([[tabs-navegacao]]); zoom na falta
   não afeta o espectro (`_applyZoom` só toca res/inv/sys).

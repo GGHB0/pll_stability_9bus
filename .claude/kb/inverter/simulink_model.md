@@ -156,7 +156,7 @@ Ver `.claude/skills/slx-runner/SKILL.md` para uso completo.
 
 - **Kp e Ki são divididos por 4** tanto no notebook quanto no modelo — consistente.
 - **Notch implementado em ambos os eixos** (d e q) para amortecimento ativo da ressonância LCL.
-- **PLL usa bloco de biblioteca** (`Sinusoidal Measurement (PLL, Three-Phase)`) — não é implementação manual. Os ganhos internos correspondem ao Kp/Ki da metodologia [[pll-gains-methodology]].
+- **PLL usa bloco de biblioteca** (`Sinusoidal Measurement (PLL, Three-Phase)`) — não é implementação manual. Os ganhos internos são `Kp_LF = 460` / `Ki_LF = 105820` (= `kp_pll`/`ki_pll` do `params.m`), ver [[pll-loop-filter-gains]] — **não** são o `Kp`/`Ki` de [[pll-gains-methodology]], que é o controlador de corrente.
 - **PWM é SPWM** (comparador com portadora triangular), não SVPWM.
 - **Ts = 5 µs** (EMT), **Tsc = 200 µs** (controle) — razão de 40× entre passos.
 - `wres = 9068.99 rad/s` → `fres ≈ 1443 Hz` (não confundir rad/s com Hz).

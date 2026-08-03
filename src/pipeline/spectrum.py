@@ -153,7 +153,7 @@ class SpectrumBuilder:
                   harm: dict) -> tuple[go.Figure, list[tuple[int, str, str]]]:
         n = len(sigs)
         fig = make_subplots(rows=n, cols=1, shared_xaxes=True,
-                            vertical_spacing=0.09)
+                            vertical_spacing=0.13)
         tm: list[tuple[int, str, str]] = []
 
         for ri, (kind, label, t, y) in enumerate(sigs, 1):
@@ -172,7 +172,7 @@ class SpectrumBuilder:
                     hovertemplate="%{x:.0f} Hz · %{y:.3g} pu<extra>" + seg_name + "</extra>",
                 ), row=ri, col=1)
                 tm.append((len(fig.data) - 1, lc, dc))
-            self._label(fig, f"{label} — amplitude (pu)", ri)
+            self._label(fig, label, ri, n)
 
         markers = SPEC_MARKERS if mode in ("a", "b", "c") else SPEC_MARKERS_DQ
         self._marker_lines(fig, n, markers)
@@ -182,13 +182,26 @@ class SpectrumBuilder:
     # ── Helpers de figura ────────────────────────────────────────────────────
 
     @staticmethod
-    def _label(fig: go.Figure, text: str, ax_idx: int) -> None:
-        xref = "x domain" if ax_idx == 1 else f"x{ax_idx} domain"
-        yref = "y domain" if ax_idx == 1 else f"y{ax_idx} domain"
+    def _label(fig: go.Figure, text: str, ax_idx: int, n_rows: int) -> None:
+        """Barra de título (nome do sinal) no topo do painel, acima das
+        marcações de frequência. A unidade "Amplitude (pu)" fica no eixo Y, na
+        vertical (setada em _apply_layout) — Ponto 2 do professor."""
+        xname = "xaxis" if ax_idx == 1 else f"xaxis{ax_idx}"
+        yname = "yaxis" if ax_idx == 1 else f"yaxis{ax_idx}"
+        ax_dom = fig.layout[xname].domain
+        y_top  = float(fig.layout[yname].domain[1])
+        xc     = float((ax_dom[0] + ax_dom[1]) / 2)
+        y0 = y_top + 16.0 / (240 * n_rows)   # acima dos marcadores (y=1.05)
+        y1 = y0 + 22.0 / (240 * n_rows)
+        fig.add_shape(
+            type="rect", xref="paper", yref="paper",
+            x0=ax_dom[0], x1=ax_dom[1], y0=y0, y1=y1,
+            fillcolor="#185FA5", line_width=0, layer="above",
+        )
         fig.add_annotation(
-            text=f"<b>{text}</b>", xref=xref, yref=yref,
-            x=0.01, y=0.97, xanchor="left", yanchor="top",
-            font=dict(size=10, color="#6b7280"), showarrow=False,
+            text=f"<b>{text}</b>", xref="paper", yref="paper",
+            x=xc, y=(y0 + y1) / 2, xanchor="center", yanchor="middle",
+            font=dict(size=11, color="#ffffff"), showarrow=False,
         )
 
     @staticmethod
@@ -226,7 +239,7 @@ class SpectrumBuilder:
             tickfont_size=10,
         )
         fig.update_layout(
-            margin=dict(t=34, b=16, l=60, r=100),
+            margin=dict(t=64, b=16, l=64, r=100),
             paper_bgcolor="#ffffff", plot_bgcolor="#ffffff",
             font=dict(family="Inter, Segoe UI, system-ui, sans-serif",
                       size=12, color="#111827"),
@@ -237,6 +250,6 @@ class SpectrumBuilder:
             height=240 * n_rows,
             showlegend=True,
             legend=dict(orientation="h", x=1.0, xanchor="right",
-                        y=1.12, yanchor="bottom", font_size=10,
+                        y=1.22, yanchor="bottom", font_size=10,
                         bgcolor="rgba(0,0,0,0)", borderwidth=0),
         )

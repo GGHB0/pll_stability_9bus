@@ -45,8 +45,9 @@ See [[pll-gains-methodology]] for the gain derivation.
 ## Derived parameters for discrete blocks
 
 When `params.m` feeds blocks like `Discrete Transfer Fcn`, use coefficients that
-are already discretized in the format expected by Simulink. For the 120 Hz notch
-used in the PLL of this project:
+are already discretized in the format expected by Simulink. The 120 Hz PLL notch
+below was tested in 2026-05 and later removed from the final model (unnecessary,
+see [[pll-notch-implementation]]) — kept here only as a discretization reference:
 
 ```matlab
 f_notch = 2 * F0;

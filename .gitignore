@@ -37,6 +37,8 @@ output/*
 # Resultados de simulação do Bruno — versionados
 !output/results/
 !output/results/**
+# Notas técnicas em PDF — documentos, não saída de runtime
+!output/*.pdf
 
 # OS / editor
 .DS_Store

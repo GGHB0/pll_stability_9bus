@@ -31,5 +31,11 @@ Subpastas criadas sob demanda, quando o primeiro conteúdo chegar:
 | `kb/standards/` | IEEE 1547-2018, ONS, LVRT |
 | `kb/events/` | Apagão BR agosto 2023 |
 | `kb/dashboard/` | Relatório HTML, com subpastas `dados/`, `graficos/`, `cards/`, `layout/` |
+| `kb/psim/` | Fase inicial de modelagem no PSIM (Altair), anterior ao Simulink — registro histórico |
 
 MATLAB/Simulink é ferramenta — conhecimento sobre implementação vai na pasta do tema, não em pasta separada.
+
+Exceção — `kb/psim/`: o PSIM foi o **ambiente legado** onde a modelagem começou,
+não a implementação atual. Por ser uma fase histórica distinta (não a ferramenta
+corrente), tem pasta própria. Isso **não** autoriza uma pasta `kb/simulink/`: o
+Simulink é a ferramenta atual e seu conhecimento continua por tema.

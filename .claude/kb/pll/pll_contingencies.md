@@ -29,12 +29,26 @@ source: TCCs V8 cap.2.4, cap.4 (estrutura); pll_stability_9bus.slx
   a capacidade de rastreamento → perda de lock
 - **Resultado extremo:** Inversor perde sincronismo e precisa ser desconectado
 
+**Nota sobre norma (busca não confirmada, 2026-07-26):** procurou-se um requisito de
+"phase jump ride-through" em grau, atribuído a RfG (UE), VDE-AR-N4110 e ONS
+Submódulo 2.8/3.6, que especificaria o salto de ângulo que o inversor deve suportar
+sem desconectar. **Não há confirmação dessa alegação.** Checado o artigo Andresen
+et al. (IEC 61400-21, 2015) — norma de *medição/ensaio*, não de requisito — e não
+há menção a "phase jump" em nenhum lugar do texto; o único ângulo tabelado ali é o
+"short-circuit angle" da rede (ψk = 30°/50°/70°/85°), usado no cálculo de flicker,
+sem relação com salto de fase de tensão. Tratar como **gap de norma em aberto** para
+o cenário 3, não como dado já levantado.
+
 ### 4. Alto RoCoF (Rate of Change of Frequency)
 - **Causa:** Perda súbita de geração inercial; alta penetração de IBRs
 - **Efeito na tensão:** Frequência varia rapidamente (dω/dt elevado)
 - **Efeito no PLL:** Malha tipo 2 rastreia rampas de frequência com erro nulo em regime permanente,
   mas a resposta transitória depende dos ganhos Kp/Ki → trade-off velocidade vs. ruído
 - **Contexto:** Problema sistêmico ligado à redução de inércia por IBRs (motivação do evento 15/08/2023)
+- **Norma:** ONS Submódulo 2.10 §5.2.1 define até onde a frequência pode variar
+  antes do trip ser permitido para eólica/UFV (operação contínua 58,5–62,5 Hz;
+  trip instantâneo <56 Hz ou >63 Hz) — não define limite explícito de RoCoF
+  (taxa de variação). Ver [[ons-frequency-ride-through]].
 
 #### Observação Experimental — Teste com H Reduzido (Simulink, 2026-05)
 - **Setup:** H das máquinas G1/G3 reduzido artificialmente + curto-circuito trifásico aplicado e eliminado
@@ -112,7 +126,6 @@ A 0,02 pu o colapso de P_elétrica domina → aceleração, critério das áreas
 IAE  = ∫|θ_erro(t)| dt        — Integral do Erro Absoluto (ângulo de fase)
 ISE  = ∫ θ_erro²(t) dt        — Integral do Erro Quadrático
 ts                             — Tempo de acomodação do erro de fase
-ΔP, ΔQ                        — Amplitude das oscilações de potência ativa e reativa
 LVRT                           — Conformidade com IEEE 1547-2018 (curva V×t)
 ```
 
@@ -132,56 +145,8 @@ Kp/Ki baixos → imunidade a distúrbios → PLL lento (agrava cenários 3 e 4)
 ```
 
 Esse trade-off é o foco da **Seção 4.3 (Análise de Sensibilidade)** — ainda vazia no documento.
-Ver [[pll-gains-methodology]] para as equações de dimensionamento.
+Ver [[pll-loop-filter-gains]] para os ganhos do PLL (`kp_pll`/`ki_pll`) e sua
+leitura em ωn/ξ — inclusive o efeito do BAD_PLL sobre ambos.
 
----
-
-## Análise Formal — PLL sob Falta Assimétrica (Yazdani-Iravani §12.5.2)
-
-### Tensão no PCC sob falta (eq. 12.50)
-
-```
-→Vs = a·V̂s·e^{j(ω₀t+θ₀)} + b·V̂s·e^{-j(ω₀t+θ₀+ψ)}
-      ╙─ seq. positiva ─╜   ╙─── seq. negativa ─────╜
-```
-
-**Para falta linha-terra:** a = 2/3, b = 1/3, ψ = −π/3.
-**Para operação normal:** a = 1, b = 0.
-
-### Efeito no PLL (ρ ≈ ω₀t + θ₀)
-
-Com o PLL em quasi-lock, Vsq fica (eq. 12.64):
-```
-Vsq ≈ a·V̂s·[ω₀t + θ₀ − ρ] − b·V̂s·sin[2(ω₀t + θ₀) + ψ]
-          ╙──── erro útil ───╜   ╙──── distúrbio 2ω₀ ────╜
-```
-
-Equação diferencial do PLL com distúrbio (eq. 12.65):
-```
-dρ/dt = a·V̂s·H(p)·[ω₀t+θ₀−ρ] − b·V̂s·H(p)·sin[2(ω₀t+θ₀)+ψ]
-```
-
-### Consequências Quantitativas
-
-| Efeito | Expressão | Falta L-T (a=2/3, b=1/3) |
-|--------|-----------|--------------------------|
-| Queda no ganho da malha | 100·(1−a) % | −33% |
-| Frequência do distúrbio | 2ω₀ | 120 Hz |
-| Oscilação em ω e ρ | amplitude ∝ b·\|H(j2ω₀)\| | depende de H(s) |
-| Ripple em P e Q | amplitude ≈ b·Ps | ≈ Ps/3 |
-
-### Solução Formal
-
-Para atenuar o distúrbio: incluir zeros complexos em H(s):
-```
-zeros em s = ±j2ω₀   →   |H(j2ω₀)| ≪ 1
-```
-
-PI simples (H = Kp + Ki/s) não possui esses zeros → ripple de 120 Hz não é atenuado.
-Soluções alternativas: notch externo em 2ω₀, DSOGI-PLL, DDSRF-PLL (ver [[srf-pll-theory]]).
-
-### Feed-forward de Tensão no Controle de Corrente (§12.5.3)
-
-Mesmo com ripple em ω/ρ, o controle de corrente pode mitigar a propagação do distúrbio via
-feed-forward filtrado de Vsd/Vsq nos geradores de md/mq (banda de Gff >> 2ω₀).
-No Simulink do projeto: `PWM Control` inclui feed-forward de Vsd/Vsq — ver [[simulink-model]].
+Ver [[pll-asymmetric-fault-formal-analysis]] para a dedução formal (Yazdani-Iravani
+§12.5.2) do ripple de 2ª harmônica citado no Cenário 2.

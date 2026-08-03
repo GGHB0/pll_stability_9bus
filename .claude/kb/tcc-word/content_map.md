@@ -1,14 +1,21 @@
 ---
 name: tcc-docx-content-map
-description: Mapa de conteúdo seção a seção do TCC_Victor_Bruno_V9_novo_indice.docx — estado atual, problemas estruturais e inventário de figuras
+description: Mapa de conteúdo seção a seção do TCC_Victor_Bruno_V9_novo_indice_2.docx — estado atual, problemas estruturais e inventário de figuras
 metadata:
   type: project
 ---
 
 # TCC Word — Mapa de Conteúdo do Documento
 
-> Estado de cada seção do `TCC_Victor_Bruno_V9_novo_indice.docx` (numeração
-> do índice do professor, atualizado 2026-07-19 após reestruturação do Cap.4).
+> Estado de cada seção do `TCC_Victor_Bruno_V9_novo_indice_2.docx` (arquivo
+> canônico desde 2026-07-22, ver `tcc-docx-canonical-file` na memória e
+> `historico_entregas.md`). Numeração confirmada via `dump_headings.py`
+> em 2026-07-22 (tarde): retém a estrutura da reestruturação de 2026-07-19
+> (4.1/4.2/4.3.1–4.3.4/4.4) — **diferente** da numeração do arquivo sem
+> sufixo (obsoleto), que o usuário reestruturou mais uma vez por conta
+> própria. Sempre rodar `dump_headings.py` antes de confiar em números de
+> seção — o Word renumera e o usuário edita os dois arquivos de formas
+> diferentes entre sessões.
 > Padrões de edição OOXML e IDs: ver `docx_structure.md`.
 
 ## Legenda
@@ -57,33 +64,39 @@ metadata:
   equações 3.1–3.17 em tabela invisível (ver `equacoes.md`)
 - ⬜ **3.5** Resumo ou Conclusões do Capítulo
 
-## Cap. 4 — Metodologia de Análise (reestruturado 2026-07-19)
+## Cap. 4 — Metodologia de Análise (numeração confirmada 2026-07-22, tarde)
 
-- ✅ Intro do capítulo (abordagem quantitativa + 4 etapas)
-- ✅ **4.1** Foco do Estudo — NOVO (2 §§: SRF-PLL grid-following sob
-  contingência; IEEE 9 barras modificado; CC/MPPT fora do escopo)
+- ✅ **4.1** Foco do Estudo
 - ✅ **4.2** Plataformas de Simulação – Características Individuais
-  (Python/NumPy/Pandas, PSIM, MATLAB/Simulink)
   - ⚠️ Refs MATLAB/PSIM pendentes (Oscar comentário #9)
 - ✅ **4.3** Modelagem e Dimensionamento do Sistema de Estudo
-  - ✅ **4.3.1** IEEE 9 barras modificado (G2→VSI; Thevenin Z22 p/ PSIM)
+  - ✅ **4.3.1** Modelo da Rede Elétrica: Sistema IEEE 9 Barras Modificado
+    (G2→VSI; Thevenin Z22 p/ PSIM)
   - ✅ **4.3.2** Projeto do Conversor Fonte de Tensão e dos Controladores
-    - 4.3.2.1 Filtro LCL (eqs 4.1/4.2) · 4.3.2.2 PI de corrente ·
-      4.3.2.3 SRF-PLL (bloco Sinusoidal Measurement, notch 120 Hz, Kp/Ki)
+    - **4.3.2.1** Dimensionamento do Filtro de Acoplamento (LCL) — eqs 4.1/4.2;
+      inclui validação no bloco PSIM `PlantaLCL1` (ω_res = 9068,9968 rad/s) e
+      amortecimento com valores de R_d1/R_d2/R_d3 (adicionado 2026-07-22)
+    - **4.3.2.2** Sintonia da Estratégia de Controle de Corrente — inclui
+      parágrafo sobre a malha PSIM (I_d,ref/I_q,ref → m_a, portadora VTRI2,
+      5 kHz) adicionado 2026-07-22
+    - **4.3.2.3 Modelagem do Sistema de Sincronismo (SRF-PLL)** — descreve
+      implementação no **PSIM** (subcircuitos `.SUB Clarke`/`.SUB Park`, Loop
+      Filter PI, VCO via bloco `RESETI_I1`); sem menção a arquivo/script de
+      parâmetros nem ao notch 120 Hz (nunca existiu no PSIM, ver
+      [[psim-modeling]]) — linguagem de código removida 2026-07-22
+      (ver `feedback_docx_no_code_artifacts` na memória)
     - ⚠️ Referencia [FIGURA 3.1] mas **placeholder não existe** → P1
   - ✅ **4.3.3** Configuração da Simulação e Modelagem Dinâmica dos Geradores
-    - Intro: ode23t (trapezoidal implícito, passo variável), RelTol 10⁻³,
-      Ts=5 µs, Tsc=200 µs (5 kHz), janela 0,6 s, R2025a (confirmar versão)
-    - 4.3.3.1 Geradores G1/G3 (H₁=9,478 s, H₃=2,351 s, AVR AC1C, PSS1A)
-    - 4.3.3.2 Falta: bloco Fault Three-Phase + chaves SPST, 0,3→0,4 s
-      (6 ciclos), 4 tipos, FAULT_TYPE/BUS/LINE via params.m, **sem local fixo**
-    - 4.3.3.3 Monitoramento: logsout em 5 grupos de sinais, 2 taxas +
-      interpolação, export automático (CSV+metadados por cenário),
-      pipeline Python (IAE/ISE/ts/pico/ΔP/ΔQ, FFT segmentada, LVRT 1547,
-      tabela comparativa)
-  - ✏️ **4.3.4** Protocolos de Contingência (rebaixado de Ttulo2; era 3.3 no V8)
-    - 4.3.4.1 Afundamento Simétrico ([TABELA 3.1]) ·
-      4.3.4.2 Assimétrico ([TABELA 3.2]) — Ttulo4, fora do Sumário
+    - 4.3.3.1 Modelagem Dinâmica dos Geradores Síncronos (G1/G3)
+    - **4.3.3.2** Topologia da Falta e Configuração do Bloco de Contingência —
+      Simulink (bloco `Fault Three-Phase` + chaves SPST), 0,3→0,4 s (6 ciclos),
+      4 tipos; "parâmetros configuráveis do modelo de simulação" (sem citar
+      variáveis/script — corrigido 2026-07-22)
+    - 4.3.3.3 Configuração do Sistema de Monitoramento, Variáveis Relevantes e
+      Tratamento de Dados
+  - ✏️ **4.3.4** Protocolos de Contingência e Análise de Cenários
+    - 4.3.4.1 Afundamento de Tensão Simétrico · 4.3.4.2 Afundamento de Tensão
+      Assimétrico
     - ⚠️ Texto original sem acentuação — corrigir em edição futura
 - ⬜ **4.4** Resumo do Capítulo
 
@@ -96,7 +109,10 @@ metadata:
   - ✏️ **5.2.1** Instabilidade sob Faltas Assimétricas — cycle slipping descrito
   - **Salto de fase NÃO implementar** (instrução do Oscar)
 - ✏️ **5.3** Impacto dos Ganhos do Controlador do SRF-PLL
-  - ✏️ **5.3.1** Influência dos Ganhos do PI — texto + [RESULTADOS A INSERIR]
+  - ✏️ **5.3.1** Influência dos Ganhos do PI — texto + [RESULTADOS A INSERIR];
+    referência à divisão adicional por 4 no Simulink limpa de "params.m"/
+    "bloco de controle" 2026-07-22 (mantém atribuição a Simulink, que é
+    correta aqui — ver `feedback_docx_no_code_artifacts`)
   - ✏️ **5.3.2** Conformidade com LVRT — texto + [A COMPLEMENTAR: curva ONS]
 - ⬜ **5.4** (Resumo/fechamento)
 
@@ -118,7 +134,7 @@ metadata:
 | 2.6 | Perfil característico de afundamento de tensão | placeholder texto OK |
 | 2.X (ONS) | Curva de suportabilidade LVRT — ONS Sub. 2.10 | placeholder texto OK |
 | 2.X (ONS) | Requisito de injeção de reativo — ONS Sub. 2.10 | placeholder texto OK |
-| **3.1** | **Circuito VSI trifásico com filtro LCL e blocos PWM** | **SEM placeholder ⚠️** (citada em 4.3.2) |
+| **3.1** | **Circuito VSI trifásico com filtro LCL e blocos PWM** | **SEM placeholder ⚠️** (citada em 4.3.2.1) |
 
 > Numeração das figuras ainda é a herdada do V8 (2.1, 2.6, 3.1...) — não foi
 > renumerada junto com os capítulos; revisar quando as imagens forem inseridas.

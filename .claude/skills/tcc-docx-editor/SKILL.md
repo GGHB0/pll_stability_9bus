@@ -1,9 +1,22 @@
 # Skill: tcc-docx-editor
 
 Edita o TCC DOCX (arquivo atual definido em `config.py` — hoje
-`TCC_Victor_Bruno_V9_novo_indice.docx`) manipulando o OOXML diretamente.
+`TCC_Victor_Bruno_V9_novo_indice_2.docx`) manipulando o OOXML diretamente.
 Modo aceito pelo Victor: **edições diretas no XML, sem tracked changes**
 (`helpers.py` mantém os geradores com `w:ins` caso volte a ser necessário).
+
+## Convenções de escrita
+
+- **Nunca usar travessão/em-dash ("—") no texto do TCC.** Reescrever a
+  frase com vírgula, ponto-e-vírgula, parênteses ou período em vez de
+  intercalar com "—". Vale para texto novo e para revisão de texto
+  existente — se um parágrafo editado tiver "—", removê-lo como parte da
+  mesma edição.
+- Não citar arquivo/script/variável de código no texto (`params.m`,
+  `nome.txt`, `VARIAVEL_MAIUSCULA`) — usar termos de engenharia/modelagem.
+  Nomes de bloco/subcircuito de esquemático (`RESETI_I1`, `.SUB Clarke`,
+  `Sinusoidal Measurement`) são exceção e podem ficar. Ver
+  `feedback_docx_no_code_artifacts` na memória.
 
 ## Divisão de trabalho por modelo (3 níveis)
 

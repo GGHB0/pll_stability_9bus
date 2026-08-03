@@ -1,0 +1,9 @@
+folder: psim
+description: Fase inicial de modelagem no PSIM (Altair), anterior à migração para Simulink — registro histórico para o TCC
+files:
+  - file: psim_modeling.md
+    name: psim-modeling
+    description: Visão geral da fase PSIM — inventário PSim/ (binários + netlists .txt), tabela de parâmetros 100 MVA, achado do override de Vcc (90,9 vs 136,4 kV), lacunas
+  - file: psim_netlists.md
+    name: psim-netlists
+    description: Topologia lida das netlists — circuito 01 (sistema EMT completo VSC+LCL+SRF-PLL+SPWM, degrau em 0,035 s) e circuito 04 (bancada de projeto do PI de corrente, planta RL × LCL)

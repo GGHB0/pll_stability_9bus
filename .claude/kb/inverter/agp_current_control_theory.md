@@ -2,6 +2,8 @@
 name: agp-current-control-theory
 description: Fundamentação teórica de controle de corrente do VSC (plantas RL/LCL, cancelamento polo-zero, amortecimento ativo) — Cap.3 da tese do coorientador AGP, segunda fonte para o Cap.3 do TCC ao lado de Yazdani
 source: TeseAGP.pdf (Alves, A.G.P., COPPE/UFRJ, 2022), Cap.3 "Fundamentação Teórica", p.61-101
+references:
+  - "ALVES, André Gustavo Pereira. Metodologia para Auto-Ajuste de Controladores de Corrente em Conversores Fonte de Tensão Conectados a Redes Sujeitas a Distúrbios Harmônicos. Tese (Doutorado em Engenharia Elétrica) — COPPE/UFRJ, Rio de Janeiro, 2022."
 ---
 
 # Fundamentação Teórica de Controle de Corrente — TeseAGP Cap. 3
@@ -69,14 +71,18 @@ Ki = 4·fg·(R1+R2)
 ωB = 4·fg   (banda passante de malha fechada)
 ```
 
-Esta é **a mesma estrutura funcional** (`Kp = k·fg·L`) usada no projeto para
-os ganhos do bloco de sincronismo — ver [[pll-gains-methodology]], que
-aplica a mesma lógica de cancelamento polo-zero (ali com fator 8 em vez de
-4, e usando `Lest` em vez de `L1+L2` isolado) para dimensionar o PI do PLL,
-não apenas o do controlador de corrente. Útil para o TCC explicitar, na
-seção 3.1/3.3, que a técnica de cancelamento polo-zero é comum a ambas as
-malhas (corrente e sincronismo) por compartilharem a mesma planta
-equivalente (indutância série).
+Esta é **a mesma estrutura funcional** (`Kp = k·fg·L`) usada no projeto em
+[[pll-gains-methodology]], que aplica a mesma lógica de cancelamento
+polo-zero (ali com fator 8 em vez de 4, e usando `Lest` em vez de `L1+L2`
+isolado).
+
+> ⚠️ **Correção (2026-08-02).** Este bloco afirmava que a fórmula também
+> dimensionava o PI do **PLL**. É falso: o PI do laço do SRF-PLL usa
+> `kp_pll = 460` / `ki_pll = 105820`, que vêm de projeto de 2ª ordem
+> (`ωn`/`ξ`) e não desta fórmula — ver [[pll-loop-filter-gains]]. O
+> cancelamento polo-zero da TeseAGP vale para a **malha de corrente**
+> apenas; no TCC (seção 3.1/3.3) as duas sintonias devem ser apresentadas
+> como métodos distintos.
 
 ## Planta LCL (§3.2) — modelo em espaço de estados
 

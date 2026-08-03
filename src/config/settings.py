@@ -12,7 +12,7 @@ HTML_OUT   = PROJ_ROOT / "output" / "pll_metrics.html"
 # ── Parâmetros de simulação ─────────────────────────────────────────────────
 T_FAULT  = 0.2        # fallback (s) se fault_info.json não existir
 T_SETTLE = 0.1        # s — transitório de partida do PLL, excluído de TODO cálculo
-                      # (FFT, IAE/ISE/ts, ΔP/ΔQ). Medido nos dados (bus6/1phase):
+                      # (FFT, IAE/ISE/ts). Medido nos dados (bus6/1phase):
                       # pior sinal é |V| Bus 2, que acomoda em 0.078 s
 TOL_RAD  = 0.02       # ±1.15° — critério de acomodação do PLL (rad)
 
@@ -20,11 +20,14 @@ TOL_RAD  = 0.02       # ±1.15° — critério de acomodação do PLL (rad)
 IAE_THRESH      = (0.05,  0.15)   # rad·s — erro de fase pós-falta
 ISE_THRESH      = (0.005, 0.020)  # rad²·s
 TS_DELTA_THRESH = (0.10,  0.30)   # s após t_fault
-DP_THRESH       = (0.10,  0.50)   # pu — excursão de P na janela pós-clear
-DQ_THRESH       = (0.15,  0.60)   # pu — excursão de Q na janela pós-clear
 PEAK_ERR_DEG_THRESH = (20.0, 60.0)  # ° — pico de |erro de fase| pós-falta
+ERR_SS_DEG_THRESH   = (0.5,  1.0)   # ° — erro de fase SUSTENTADO em regime permanente
+                                    # (média de |e| após a acomodação; PLL bem
+                                    # sintonizado tende a ~0°)
 SYNC_LOSS_DEG    = 90.0           # ° — acima disso: perda de sincronismo do PLL
-VBUS_MIN_THRESH  = (0.90,  0.50)  # pu — severidade do afundamento (LVRT IEEE 1547)
+VBUS_AVG_THRESH  = (0.90,  0.50)  # pu — severidade do afundamento (LVRT IEEE 1547);
+                                  # aplicado à tensão MÉDIA (regime: período
+                                  # inteiro; falta: só a janela t_fault–t_clear)
 LVRT_THRESHOLD   = 0.88           # pu — linha de referência no gráfico
 
 # ── Espectro de Fourier ─────────────────────────────────────────────────────
@@ -64,6 +67,29 @@ SPEC_SEG_COLORS = {
     "Pós-falta":       ("#2563eb", "#60a5fa"),  # azul
     "Regime":          ("#2563eb", "#60a5fa"),
 }
+
+# Segmentos isentos de checagem normativa na tabela de harmônicas: os limites
+# do IEEE 519/1547 são critérios de regime permanente — aplicá-los durante o
+# curto-circuito em si geraria falsos positivos triviais (distorção alta
+# durante falta é esperada, não é o que a norma mede).
+SPEC_SEG_NO_NORM = ("Durante a falta",)
+
+# ── Limites normativos de harmônico — IEEE 519-2014 / IEEE 1547-2018 ────────
+# Unidade geradora conectada à Barra 2 (20 kV, classe 1 kV<V≤69 kV), linha
+# Isc/IL<20 obrigatória para geração (IEEE 519-2014 Tab.2, nota "c"); ver
+# kb/standards/harmonic_significance_criteria.md.
+# Corrente, harmônicos ímpares h<11 (mesmo valor no IEEE 1547-2018 §7.3):
+CURR_ODD_LIMIT_PU   = 0.04
+# Corrente, pares h<11 — escala progressiva "Relaxed Evens" do IEEE 1547-2018
+# (Tabela 15; o 519-2014 usa 25% flat do ímpar em vez disso, ver KB):
+CURR_EVEN_LIMITS_PU = {2: 0.01, 4: 0.02, 6: 0.03}
+# Tensão, IEEE 519-2014 Tabela 1, classe 1 kV<V≤69 kV — limite individual
+# flat (a norma não varia o limite de TENSÃO por ordem, só o de corrente):
+VOLT_INDIVIDUAL_LIMIT_PU = 0.03
+# Desequilíbrio dq (h=2ª/120 Hz = sequência negativa) — patamar empírico da
+# TeseAGP §5.2.2 (~2-3% já tratado como "distúrbio"; sem base normativa):
+DQ_UNBALANCE_WARN_PU = 0.02
+DQ_UNBALANCE_HIGH_PU = 0.03
 
 # ── Paletas de traços ────────────────────────────────────────────────────────
 # Light mode

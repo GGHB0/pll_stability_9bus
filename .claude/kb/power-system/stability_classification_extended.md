@@ -2,6 +2,8 @@
 name: stability-classification-extended
 description: Classificação ESTENDIDA de estabilidade para redes dominadas por IBR (IEEE TR77 + German System Stability Roadmap) — nova categoria converter-driven/resonance stability com interação PLL-rede
 source: Strauss-Mincu et al., "Inverter-Dominated Future Power Systems: A Roadmap for System Stability", IEEE Power & Energy Magazine, jan/2026, DOI 10.1109/MPE.2025.3617895, p.1–11
+references:
+  - "STRAUSS-MINCU, Diana; DEGNER, Thomas; HACHMANN, Christian; BECKER, Holger; MENDE, Denis; BRAUN, Martin; HENNIG, Tobias; STRAUSS, Philipp. Inverter-Dominated Future Power Systems: A Roadmap for System Stability. IEEE Power and Energy Magazine, v. 24, p. 93-107, 2026. DOI: 10.1109/MPE.2025.3617895."
 ---
 
 # Classificação Estendida de Estabilidade — IEEE TR77 / Roadmap Alemão
@@ -64,7 +66,7 @@ A categoria central para o TCC. Combina:
   direto de "inverter driven oscillations" na faixa de ~10 Hz.
 - **Mitigação recomendada**: sintonia adequada dos controles do PLL (ajuste
   de Kp/Ki) — mesmo mecanismo de projeto de ganhos discutido em
-  [[pll-gains-methodology]] deste TCC.
+  [[pll-loop-filter-gains]] deste TCC.
 - Ações do roadmap: critérios/métodos de avaliação padronizados para
   estabilidade de ressonância, requisitos sistêmicos e específicos por
   usuário, procedimentos de certificação/teste, revisão de procurement,
@@ -98,7 +100,7 @@ interação PLL–impedância de rede, mitigável por sintonia de ganhos do PLL.
 Isso dá enquadramento teórico para a seção 2.3 e conecta diretamente com:
 - [[srf-pll-theory]] — mecanismo do PLL cuja interação com Zth da rede
   fraca é discutida aqui como fonte formal de instabilidade;
-- [[pll-gains-methodology]] — sintonia de Kp/Ki como mitigação citada
+- [[pll-loop-filter-gains]] — sintonia de Kp/Ki como mitigação citada
   explicitamente pelo roadmap;
 - Ver também [[stability-classification-classic]] (JPROC) para a taxonomia
   clássica que esta classificação estende.

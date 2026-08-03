@@ -5,198 +5,174 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
-## 2026-07-18 — Terminologia "sintonia inadequada" (pedido do professor)
+## 2026-08-02 — Legenda explicada da tabela de harmônicas
 
 Arquivos: `src/report/renderer.py`
 
-- Rótulos visíveis do modo PLL detuned trocados de "Mal dimensionado"/"PLL
-  ruim" para **"Sintonia inadequada"** (poorly tuned PLL): botão do toggle
-  PLL e legenda do overlay de comparação.
-- Identificadores internos (`BAD_PLL`, sufixo `_bad_pll`) e `params.m`
-  inalterados — a mudança é só de texto exibido.
-- KB atualizado: `dashboard/index.md`, `layout/bad-pll-dashboard-filter.md`,
-  `graficos/dashboard-zoom-ghost.md`, `simulation/export_workflow.md`.
+- **Legenda reformulada em duas camadas** (novo `_harm_legend_html`): linha
+  compacta de swatches sempre visível (excede limite normativo /
+  desequilíbrio dq / abaixo de 2%) e um `<details>` "Como ler esta tabela"
+  com um bloco por critério — conformidade a/b/c (limite, base do percentual
+  e norma), desequilíbrio dq, por que dq não é checado por ordem, o `*` de
+  "Durante a falta" e o aviso sobre a 1ª linha em d/q. Fecha com as
+  referências em forma curta. Substitui o parágrafo único anterior.
+- **Regra editorial**: a tela leva só a regra aplicada; a genealogia do
+  número (razão Isc/IL, nota "c" da Tab.2 do IEEE 519-2014, descarte de `IL`
+  como base) fica no KB — `kb/standards/harmonic_norm_application.md`.
+  Limites vêm interpolados de `settings.py`, não hard-coded no texto.
+- **`harm-fund` só em a/b/c**: a linha h=1ª das colunas d/q deixa de ser
+  marcada como fundamental — no dq a fundamental é DC e sai do espectro com
+  a média; o valor é o resíduo em 60 Hz. Passa a cair na escala comum
+  (`harm-lo` quando <2%).
+- CSS: `.harm-leg-row`/`.harm-leg-sw`/`.harm-help`/`.harm-refs` novos;
+  `.harm-leg-viol`/`-unb` viram swatch (fundo) em vez de texto colorido.
+- Regenerado `output/pll_metrics.html` (24 cenários) e verificado no browser
+  pane (`bus4/1phase`): legenda abre/fecha, swatches nas cores corretas, e a
+  classificação segue intacta (h=2ª abc `harm-viol` fora da falta, dq
+  `harm-unb` em 0,303/0,309 durante a falta).
 
-## 2026-07-15 — Espectro FFT multi-modo (a/b/c/d/q) + tabela de harmônicas
+## 2026-07-30 — Remoção do painel "Frequência PLL"
 
-Arquivos: `src/pipeline/spectrum.py`, `src/config/settings.py`,
-`src/config/__init__.py`, `app.py`, `src/report/renderer.py`
+Arquivos: `src/pipeline/loader.py`, `src/pipeline/chart.py`,
+`src/config/settings.py`, `src/config/__init__.py`
 
-- **SpectrumBuilder multi-modo**: além da fase A, espectros das fases b/c
-  (de `sim_data_abc.csv`) e dos eixos d/q (sinais dq a Tsc=200 µs); `build()`
-  devolve dicts de figuras/trace_maps por modo + dados de harmônicas.
-- **Ciclos inteiros**: janela da FFT truncada a `floor(T·60)/60` s — a
-  fundamental (e 120 Hz da seq. negativa) cai exata num bin, sem vazamento
-  por janela cortada no meio do ciclo.
-- **Seletor de fase** na seção Espectro: botões a/b/c/d/q (sticky entre
-  cenários; botões sem dado somem); título/hint acompanham; marcadores
-  próprios para dq (`SPEC_MARKERS_DQ`: 2f₁, 6f₁, 12f₁, f_res).
-- **Tabela de harmônicas 1ª–7ª** (60–420 Hz) por segmento × fase/eixo, para
-  corrente e tensão UFV; célula ≥ 0,4 pu destacada (accent), < 0,02 pu
-  apagada — só amplitude na ordem da nominal chama atenção.
-- Detalhes em `.claude/kb/dashboard/graficos/espectro-fourier.md`.
+- Removido o painel "Frequência PLL (Hz)" da aba Inversor UFV — a pedido do
+  usuário, não fazia sentido para a análise do TCC.
+- `loader.py`: deletados `_estimate_freq()`, a chamada em `__init__` e os
+  atributos `t_freq`/`f_pll`/`has_freq`.
+- `chart.py`: removida a linha do painel em `_inv_rows` (`has_freq` →
+  `rows.append`), o bloco `elif kind == "freq"` em `_add_panel` (curva
+  `f̂ PLL` + faixa ONS §5.2.1) e a entrada `"freq"` de `_AXIS_LABELS`.
+- `settings.py`/`config/__init__.py`: removidas as constantes
+  `FREQ_CONTINUOUS`, `FREQ_TRIP_MIN`, `FREQ_TRIP_MAX` (só usadas nesse
+  painel). Painel não tinha consumidores em cards/tabela/story — remoção
+  isolada, sem impacto em outras seções.
+- Regenerado `output/pll_metrics.html` (24 cenários) e verificado no browser
+  pane (regime + `bus7/3phase`): aba Inversor fica com Ângulo, Erro de fase,
+  Corrente dq, Tensão dq e P/Q — sem o painel de frequência.
 
-## 2026-07-15 — Abas de gráficos + aba Resumo + cards clicáveis
+## 2026-07-29 — Destaque normativo (IEEE 519/1547) na tabela de harmônicas do FFT
 
-Arquivos: `src/pipeline/chart.py`, `app.py`, `src/report/renderer.py`
+Arquivos: `src/config/settings.py`, `src/report/renderer.py`
 
-- **Abas**: as 3 seções de gráficos empilhadas viram painéis de aba
-  (📌 Resumo · ⚡ Inversor UFV · 🔌 Sistema 9-Bus · 📈 Espectro FFT); só a
-  aba ativa é renderizada (`Plotly.react` sob demanda via flags `_dirty`) —
-  troca de cenário/tema roda 1 react em vez de 3. Abas sem dado somem;
-  se a ativa não existe no cenário, cai para a 1ª disponível.
-- **Aba Resumo** (padrão): figura nova `build_resume()` no ChartBuilder com
-  os painéis essenciais — erro de fase (banda ±tol + tₛ), frequência PLL,
-  P/Q UFV e |V| Bus 2 (LVRT). Decimação própria `_RES_MAX_POINTS = 2000`
-  limita o custo de duplicar traces no HTML.
-- **Cards clicáveis**: métricas ganham `onclick=goToChart(rótulo)` — procura
-  o rótulo de painel nas figuras (ordem res → inv → sys), abre a aba e rola
-  até o painel usando o domínio do eixo Y (scroll via `setTimeout`, não rAF,
-  para funcionar com a aba do browser em segundo plano).
-- **Zoom**: `_applyZoom`/ponte manual generalizados para res/inv/sys (spec
-  fora — eixo em Hz); só tocam gráficos já plotados e limpos.
-- Trade-off registrado: sem visão inv+sys lado a lado rolando a página —
-  compensado pela aba Resumo, que junta o essencial das duas seções.
+- **Tabela de harmônicas (aba Espectro) passa a comparar contra limites
+  normativos reais**, em vez do destaque estético anterior (`harm-top`
+  ≥0,4 pu / `harm-lo` <0,02 pu uniforme). Novo helper
+  `HTMLRenderer._harm_cell_tier`: linha h=1ª sempre isenta (fundamental,
+  classe `harm-fund`); colunas abc (a/b/c) comparadas ao IEEE 519-2014
+  Tab.1/Tab.2 e IEEE 1547-2018 §7.3 (ímpares h<11: 4,0%; pares h=2/4/6:
+  1%/2%/3%; tensão: 3,0% flat) — classe `harm-viol`; coluna dq (d/q), só a
+  2ª harmônica (120 Hz, sequência negativa) usa o patamar empírico da
+  TeseAGP (2%/3%) — classes `harm-warn`/`harm-unb`.
+- **Segmento "Durante a falta" isento só da checagem abc/IEEE** (limites de
+  regime permanente não valem durante o curto-circuito em si); o critério
+  de desequilíbrio dq continua valendo em todos os segmentos, inclusive
+  durante a falta — é onde a sequência negativa é mais relevante. Erro
+  descoberto e corrigido durante a verificação: a 1ª versão isentava os
+  dois critérios no mesmo segmento, o que fazia o alerta de desequilíbrio
+  nunca disparar na prática.
+- Novas constantes em `settings.py`: `CURR_ODD_LIMIT_PU`,
+  `CURR_EVEN_LIMITS_PU`, `VOLT_INDIVIDUAL_LIMIT_PU`,
+  `DQ_UNBALANCE_WARN_PU`/`_HIGH_PU`, `SPEC_SEG_NO_NORM`. Tooltip HTML
+  (`title=`) em cada célula violada citando o limite/norma. Legenda de
+  cores abaixo das tabelas. Tokens de tema `--danger`/`--warn` novos no CSS
+  (light/dark).
+- KB: `standards/harmonic_significance_criteria.md`,
+  `dashboard/graficos/espectro-fourier.md`.
 
-## 2026-07-14 — Regime permanente sem tₛ + revisão dos cards/diagnóstico
+## 2026-07-28 — Faixa de frequência ONS §5.2.1 no painel "Frequência PLL"
 
-Arquivos: `src/pipeline/loader.py`, `src/report/renderer.py`
+Arquivos: `src/config/settings.py`, `src/pipeline/chart.py`
 
-- **Loader**: em regime (`t_fault` None), `ts`/`ts_delta`/`settled` ficam
-  `None` — sem distúrbio não há acomodação a medir. Antes o drift do θ_err
-  estourava a tolerância e o card mostrava "> 0.60 s / não acomodou" (bad
-  falso), puxando o veredito do regime para "Desempenho crítico".
-- **Cards**: card tₛ omitido em regime; grupo "Recuperação do inversor" vira
-  "Estabilidade de potência"; tooltips de ΔP/ΔQ ("oscilação sustentada") e do
-  pico ("em regime") ajustados ao contexto.
-- **Story**: item "Acomodação" some em regime (e sai do veredito); texto do
-  "Cenário" corrigido de `T_FAULT` (0.20 s) para `T_SETTLE` (0.10 s), que é a
-  janela real das métricas desde 2026-07-12; pico warn diz "em regime".
-- **Tabela comparativa**: linha de regime mostra "—" na coluna tₛ.
+- **Faixa de frequência no painel "Frequência PLL"** (pedido do usuário):
+  `add_hrect` verde (58,5–62,5 Hz, operação contínua) + duas `add_hline`
+  vermelhas tracejadas (56 Hz / 63 Hz, trip instantâneo), conforme ONS
+  Submódulo 2.10 §5.2.1 (eólica/UFV). Novas constantes `FREQ_CONTINUOUS`,
+  `FREQ_TRIP_MIN`, `FREQ_TRIP_MAX` em `config/settings.py`.
+- Tentativa de painel adicional "Deslizamento de Fase PLL" (Δθ vs. relógio
+  nominal de 60 Hz) foi implementada e **revertida a pedido do usuário** —
+  não era o que tinha sido pedido; `loader.py` não foi alterado nesta entrada.
+- KB: `dashboard/graficos/chart-analysis-overlays.md`,
+  `standards/ons_frequency_ride_through.md` (já existia, criado em sessão
+  anterior).
 
-## 2026-07-14 — Cards de severidade renomeados para "V residual"
+## 2026-07-25 — Eixo Y com nome+unidade, título branco fix e remoção do "Comparar PLL"
 
-Arquivos: `src/report/renderer.py`
+Arquivos: `src/pipeline/chart.py`, `src/report/renderer.py`
 
-- **Cards**: "V min / Barra N" → "V residual B1/B2/B3" — tensão remanescente
-  do afundamento (termo PRODIST Módulo 8 / IEC 61000), escolhido para
-  comunicar "quanto caiu durante o curto". Subtítulos ganham o papel da
-  barra: "POC do inversor (UFV)", "barra do G1 (slack)", "barra do G3".
-- **Regime**: sem curto, o nome volta a "V min" (variável `vlab`).
-- **Story**: item "Distúrbio" passa de "V_min = X pu" para
-  "V residual = X pu".
-- **Tabela comparativa** mantém "Vmin B1/B2/B3 (pu)" — cabeçalho genérico
-  vale também para a linha de regime.
+- **Eixo Y dos gráficos** (pedido do usuário): mostrava só a unidade
+  (`"°"`, `"pu"`); agora mostra a **grandeza física genérica** medida +
+  unidade (ex. `"Tensão (pu)"`, `"Frequência (Hz)"`, `"Potência (pu)"`),
+  via dicionário `_AXIS_LABELS[kind]` em `chart.py` — não o título
+  específico do painel (`"P / Q UFV (pu)"`, `"|V| Bus 2 (pu)"`), que o
+  usuário rejeitou numa 1ª tentativa por não identificar a grandeza de
+  forma consistente entre painéis (mesmo critério do `"Tempo (s)"` no eixo
+  X). A barra de título do painel continua mostrando o nome específico.
+- **Bug real corrigido — título do painel não ficava branco**: já era
+  branco no Python (`_label` em `chart.py`/`spectrum.py`), mas o JS
+  `themedLayout` (`renderer.py`) confundia a barra de título com o
+  subtítulo de grupo (`_group_title`) — ambos usam `xref="paper"` desde o
+  redesign de títulos (`b2bbb2a`, 2026-07-21) — e sobrescrevia a cor para
+  cinza/slate em ambos os temas. Fix: distinguir por `yref` (`"paper"` =
+  barra de título, intocada; `"y... domain"` = subtítulo de grupo,
+  re-temado). Detalhes em `dashboard/layout/dark-mode-legend-title-fixes.md`
+  (Fix 5).
+- **Removido o overlay "Comparar PLL"** (pedido do usuário — não estava
+  sendo usado): botão `ghost-toggle`, `ghostMode`, `_exactEquiv`,
+  `_ghostData`, `toggleGhost`, a injeção `.concat(_ghostData(which))` em
+  `_renderChart` e o bloco `gbtn` de `_syncCtrlButtons`. **Não afeta** o
+  toggle nominal/sintonia inadequada (`pllMode`) — feature separada,
+  mantida.
+- KB: `dashboard/graficos/construcao-graficos.md` (eixo Y),
+  `dashboard/layout/dark-mode-theming.md` +
+  `dashboard/layout/dark-mode-legend-title-fixes.md` (novo doc, fragmentado
+  do anterior pelo limite de 200 linhas — Fix 5), `dashboard/graficos/
+  dashboard-zoom-ghost.md` renomeado para `dashboard-zoom-export.md` (nome
+  não fazia mais sentido sem o fantasma), `dashboard/index.md`,
+  `dashboard/layout/{estrutura-html,tabs-navegacao}.md`,
+  `dashboard/graficos/espectro-fourier.md`; skill `dashboard-html-editor`
+  em v1.3.0.
 
-## 2026-07-14 — Vmin das Barras 1 e 3 (cards + tabela comparativa)
+## 2026-07-25 — Cards de tensão: mínimo → média (V médio / V residual médio)
 
-Arquivos: `src/config/settings.py`, `src/config/__init__.py`,
-`src/pipeline/loader.py`, `src/report/renderer.py`
+Arquivos: `src/pipeline/loader.py`, `src/config/settings.py`,
+`src/config/__init__.py`, `src/report/renderer.py`
 
-- **Loader**: métricas novas `vmin_bus1`/`vmin_bus3` — mínimo de
-  `vbus1_pu`/`vbus3_pu` na mesma janela pós-falta do `vmin` (Barra 2);
-  `None` quando o CSV não tem as colunas (só o legado `output/sim_data.csv`).
-- **Cards**: grupo "Severidade do distúrbio" ganha "V min — Barra 1" e
-  "V min — Barra 3" quando há dado (propagação do sag pela rede).
-- **Tabela comparativa**: colunas "Vmin B1 (pu)" e "Vmin B3 (pu)" após a
-  "Vmin B2 (pu)" (renomeada), ordenáveis como as demais.
-- **Settings**: `VBUS2_MIN_THRESH` → `VBUS_MIN_THRESH` (mesma escala
-  0.90/0.50 para as 3 barras); veredito LVRT segue só na Barra 2 (POC).
-- ⚠️ Achado nos dados: com falta bifásica na própria B1, `vbus1` afunda
-  menos (0.788) que B2/B3 (~0.235) — medição da B1 parece estar do lado
-  da máquina do G1 (atrás do T1), sustentada pelo gerador. Conferir o
-  ponto de medição no modelo com o Bruno.
-
-## 2026-07-12 — Export de tensões abc + painel v_a no espectro
-
-Arquivos: `pll_stability_9bus.slx`, `scripts/export_sim_data.m`,
-`src/pipeline/loader.py`, `src/pipeline/spectrum.py`
-
-- **Modelo**: signal logging habilitado (via `matlab -batch`) nas saídas
-  `Vabc_inverter`/`Vabc_grid` do subsistema `UFV Model/Scopes` (mesma
-  configuração já usada em `iabc_inverter`/`iabc_grid`) — nomes de log
-  `vabc_inverter`/`vabc_grid`. Confirmado no XML do `.slx`: 21 → 23 sinais
-  logados.
-- **`export_abc`** ganha `va/vb/vc_ufv_pu` e `va/vb/vc_grid_pu` no mesmo
-  `sim_data_abc.csv` (já em pu na medição, sem normalização adicional) —
-  pula em silêncio se o sinal não estiver logado, como as correntes.
-- **Loader**: flags `has_vabc_ufv`/`has_vabc_grid`, arrays `va/vb/vc_ufv`
-  e `va/vb/vc_grid`.
-- **Espectro**: 5º painel "Tensão v_a UFV (abc)".
-- ⚠️ Exige **re-exportar** os cenários (`.slx` atualizado + `git pull`
-  antes de simular) — ver `.claude/kb/simulation/resimulacao-abc.md`.
-
-## 2026-07-12 — Export de correntes abc + painel fase A no espectro
-
-Arquivos: `scripts/export_sim_data.m`, `src/pipeline/loader.py`,
-`src/pipeline/spectrum.py`
-
-- **CSV 3 `sim_data_abc.csv`** (novo, taxa nativa): `export_abc` exporta
-  `iabc_inverter` (colunas `ia/ib/ic_ufv_pu`) e, se logado, `iabc_grid`
-  (`ia/ib/ic_grid_pu` interpoladas no mesmo eixo). Motivação: espectro em
-  abc verdadeiro — a Park inversa perde a sequência zero das faltas à terra.
-- **Loader**: carrega o CSV abc quando existe (`t_abc`, `ia/ib/ic_ufv`,
-  `ia/ib/ic_grid`, flags `has_iabc_ufv`/`has_iabc_grid`); CSVs antigos
-  seguem funcionando sem ele.
-- **Espectro**: 4º painel "Corrente i_a UFV (abc)" quando há dados abc.
-  Contexto (validado com fase A reconstruída): em abc a fundamental fica em
-  60 Hz (~0 dB) e a **sequência negativa cai também em 60 Hz** — invisível
-  (+0.1 dB na falta 1φ); o ripple dq de 120 Hz vira banda lateral em 180 Hz
-  (−14.7 dB). Por isso o painel abc **complementa** os painéis dq (onde a
-  seq. negativa aparece isolada em 120 Hz), não os substitui.
-- ⚠️ O painel só aparece após **re-exportar** os cenários no MATLAB
-  (os CSVs atuais não têm abc).
-
-## 2026-07-12 — T_SETTLE: partida do PLL fora de todos os cálculos
-
-Arquivos: `src/config/settings.py`, `src/config/__init__.py`,
-`src/pipeline/loader.py`, `src/pipeline/spectrum.py`
-
-Motivação (pedido do usuário): o PLL leva ~0.08 s para travar na rede no
-início da simulação — esse transitório é partida, não falta de desempenho,
-e não deve contaminar métrica nenhuma, principalmente o Fourier.
-
-- **Nova constante `T_SETTLE = 0.1 s`**: medida nos dados (bus6/1phase) —
-  o sinal mais lento é |V| Bus 2, que acomoda em 0.078 s (θ_err em 0.039 s,
-  P em 0.034 s, Q em 0.062 s). 0.1 s dá margem e ainda deixa 0.2 s de
-  pré-falta limpo antes de t_fault = 0.3 s.
-- **Espectro de Fourier**: janela pré-falta passa de `[T_FAULT=0.2, t_fault]`
-  para `[T_SETTLE=0.1, t_fault]` — exclui a partida por critério documentado
-  (antes era acidente da constante de fallback) e **dobra a janela**:
-  resolução de 10 Hz → 5 Hz. Regime usa `[T_SETTLE, t_end]`.
-- **Integrais IAE/ISE e demais métricas** (`_compute_metrics`): janelas
-  clampadas em `max(t_fault, T_SETTLE)`; regime usa `T_SETTLE` no lugar de
-  `T_FAULT`. Com t_fault = 0.3 s nos cenários atuais, os valores de falta
-  não mudam — o clamp protege cenários futuros com falta precoce.
-- **Fora do escopo (decisão do usuário: só Python)**: a normalização pu no
-  MATLAB (`export_sim_data.m`, `Vnom = mean(vmag(t < T_FAULT))`) ainda
-  inclui a partida → viés de ~1.1% nas colunas `vbus*_pu`/`vd/vq`
-  (regime fica em 0.9887 pu em vez de 1.0). Corrigir exige editar o .m e
-  re-exportar os cenários.
-
-## 2026-07-12 — Espectro de Fourier segmentado (pedido do orientador)
-
-Arquivos: `src/pipeline/spectrum.py` (novo), `src/config/settings.py`,
-`src/__init__.py`, `src/pipeline/__init__.py`, `app.py`,
-`src/report/renderer.py`, `.claude/kb/dashboard/graficos/espectro-fourier.md`
-
-- **Nova seção "Espectro de Fourier — referencial dq"**: FFT de amplitude
-  (Hann, média removida, grade uniforme por reamostragem) de θ_err, i_q e
-  Q UFV, com um traço por segmento temporal — **pré-falta** (cinza),
-  **falta** (vermelho), **pós-falta** (azul); cenário de regime vira traço
-  único. Eixo y em **dB re 1 pu/rad** (20·log10, piso −100 dB), formato
-  Amplitude (dB) × Hz da literatura, pedido do orientador; x default
-  0–1500 Hz (duplo-clique expande até 2 kHz).
-- **Marcadores físicos**: vlines em 120 Hz (2ª harmônica no dq = sequência
-  negativa da falta assimétrica) e 1443 Hz (ressonância do filtro LCL).
-- **Validação**: falta 1φ bus6 → pico de 120 Hz no θ_err durante a falta
-  12× maior que na 3φ equivalente (2,73e-2 vs 2,20e-3 rad).
-- Integrado ao tema dark/light, ao seletor de cenário e ao fantasma
-  nominal×BAD_PLL; zoom na falta (domínio do tempo) não afeta o espectro.
-- Custo no HTML: ~95 KB/cenário (~1,7 MB total).
+- **Motivação (pedido do usuário)**: os cards de severidade (B1/B2/B3)
+  mostravam o **mínimo instantâneo** de |V| na janela pós-falta inteira
+  (até o fim da simulação). O usuário pediu regras de janela mais precisas
+  e a troca do mínimo pela **média**.
+- **Regras da nova janela** (`SimData._compute_metrics`): sempre começa em
+  `T_SETTLE` (nunca conta o transitório de partida do PLL); em **regime
+  permanente** cobre o período inteiro `[T_SETTLE, fim]`; numa **falta**
+  fica restrita ao **período do curto** `[t_start, t_clear]` (antes ia até
+  o fim da simulação, incluindo a recuperação pós-clear) — mesmo padrão de
+  "durante a falta" já usado no espectro FFT (`SpectrumBuilder._segments`).
+- **Renomeado** (chave antiga não descrevia mais o cálculo):
+  `vmin`/`vmin_bus1`/`vmin_bus3` → `vavg`/`vavg_bus1`/`vavg_bus3`;
+  `VBUS_MIN_THRESH` → `VBUS_AVG_THRESH` (mesmos valores 0.90/0.50 pu, a
+  revisitar se a distribuição real de médias reclassificar muitos
+  cenários). Rótulos: "V min"/"V residual" → **"V médio"**/**"V residual
+  médio"**; tabela comparativa: "Vmin B1/B2/B3" → **"V méd. B1/B2/B3"**.
+- Tooltip do B1/B3 parou de dizer "durante o curto" fixo em cenários de
+  regime (era impreciso — agora reflete a janela real por tipo de cenário).
+- KB atualizado: `dashboard/dados/pipeline-dados.md`,
+  `dashboard/cards/{cards-metricas,comparison-table}.md`; skill
+  `dashboard-html-editor` ganhou linha nova na tabela de mudanças
+  ("redefinir cálculo de métrica existente").
 
 ## Entradas anteriores
 
+- [2026-07-18 a 2026-07-24](docs/changelog/2026-07-18_24.md) — terminologia
+  "sintonia inadequada", remoção dos ícones emoji dos botões/abas, remoção
+  das métricas ΔP/ΔQ UFV, cards/diagnóstico movidos para a aba Resumo.
+- [2026-07-15](docs/changelog/2026-07-15.md) — espectro FFT multi-modo
+  (a/b/c/d/q) + tabela de harmônicas, abas de gráficos + aba Resumo + cards
+  clicáveis.
+- [2026-07-14](docs/changelog/2026-07-14.md) — regime sem tₛ, cards de
+  severidade renomeados para "V residual", Vmin das Barras 1 e 3.
+- [2026-07-12](docs/changelog/2026-07-12.md) — export de correntes/tensões
+  abc, T_SETTLE fora de todos os cálculos, espectro de Fourier segmentado.
 - [2026-07-01 a 2026-07-05](docs/changelog/2026-07-early.md) — reestruturação
   do pacote `src/`, decimação (570 MB → 23,7 MB), tabela comparativa, fixes de
   dark mode, overlays de análise (LVRT, tₛ, frequência PLL), zoom sincronizado,

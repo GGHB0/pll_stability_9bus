@@ -2,6 +2,8 @@
 name: energy-transition-iea2026
 description: Panorama da transição energética global 2025 — crescimento de renováveis variáveis (solar+eólica), participação na matriz e destaques regionais (IEA Global Energy Review 2026)
 source: IEA, Global Energy Review 2026, key findings (p.5-6) e Electricity Supply/Technology Solar PV and Wind (p.28-33)
+references:
+  - "INTERNATIONAL ENERGY AGENCY (IEA). Global Energy Review 2026. Paris: IEA, 2026. Licença CC BY 4.0."
 ---
 
 # Transição Energética Global — Panorama 2025 (IEA)

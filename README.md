@@ -26,6 +26,18 @@ A perturbacao de **15 de agosto de 2023** no Sistema Interligado Nacional (SIN) 
 
 Este trabalho investiga o algoritmo **SRF-PLL** (Synchronous Reference Frame Phase-Locked Loop) como possivel causa central dessa falha, analisando seu comportamento dinamico frente a contingencias severas na rede eletrica.
 
+### Contexto: transicao para redes dominadas por inversores
+
+O apagao de 2023 nao e um caso isolado — Iberia (abr/2025) e Chile (fev/2025) tiveram
+eventos de origem semelhante, ligados a redes com alta penetracao de recursos baseados
+em inversor (IBR). O roadmap alemao de estabilidade (Strauss-Mincu et al.) situa esse
+tipo de falha dinamica na transicao 2024-2030+ rumo a sistemas dominados por eletronica
+de potencia.
+
+<p align="center">
+  <img src="assets/diagrams/roadmap_estabilidade_sistema.svg" alt="Linha do tempo com os marcos do roadmap de estabilidade para sistemas dominados por inversores, 2024-2030+" width="100%">
+</p>
+
 ---
 
 ## Objetivo
@@ -79,7 +91,15 @@ VSI alimenta o filtro **LCL** (L1-Cf+Rd-L2), que se conecta a rede pela impedanc
   <img src="assets/diagrams/pll_system_circuit.svg" alt="Circuito unifilar do inversor grid-tied com filtro LCL e amostragem do PCC pelo SRF-PLL" width="100%">
 </p>
 
-### 2. Diagrama de blocos do laco SRF-PLL
+### 2. Sistema completo: potencia + controle digital (Figura 3.1 do TCC)
+
+Versao detalhada do mesmo sistema: VSI trifasico de dois niveis (IGBTs + diodos), filtro LCL com TCs/TP de medicao, e a cadeia de controle digital completa — SRF-PLL, bloco Submodulo 2.10 (`ONS_2_11`) gerando `id_ref`/`iq_ref`, PIs de corrente em dq e PWM.
+
+<p align="center">
+  <img src="assets/diagrams/vsi_lcl_pwm_circuit.svg" alt="Sistema GFL completo: VSI trifasico, filtro LCL, medicao e controle digital com SRF-PLL, ONS_2_11 e PWM" width="100%">
+</p>
+
+### 3. Diagrama de blocos do laco SRF-PLL
 
 Detector de fase = transformada de Park; quando `u_q -> 0`, entao `phi_chapeu -> phi_real` e `u_d -> U`. Malha de **tipo 2** (integrador no PI + integrador do VCO) → rastreia degraus de frequencia com erro nulo em regime.
 
@@ -87,7 +107,7 @@ Detector de fase = transformada de Park; quando `u_q -> 0`, entao `phi_chapeu ->
   <img src="assets/diagrams/pll_control_loop.svg" alt="Diagrama de blocos do laco SRF-PLL: Park, PI, somador, integrador, realimentacao de fase" width="100%">
 </p>
 
-### 3. Onde cada contingencia ataca o laco
+### 4. Onde cada contingencia ataca o laco
 
 Marcadores no circuito de referencia indicam o ponto de injecao de cada falta; os paineis abaixo mostram o efeito qualitativo em `u_q` e o impacto no controle.
 
@@ -95,7 +115,7 @@ Marcadores no circuito de referencia indicam o ponto de injecao de cada falta; o
   <img src="assets/diagrams/contingencies_attack.svg" alt="Circuito de referencia com marcadores de contingencia e paineis de impacto em u_q" width="100%">
 </p>
 
-### 4. Trade-off central de Kp / Ki (Secao 4.3)
+### 5. Trade-off central de Kp / Ki (Secao 4.3)
 
 ```mermaid
 flowchart TB
@@ -106,10 +126,10 @@ flowchart TB
     Centro --> Alto
     Centro --> Baixo
 
-    Alto -- "bom em" --> R1["1. Sag simetrico<br/>(recuperacao rapida)"]:::good
+    Alto -- "bom em" --> R1["1. Sag simetrico<br/>3. RoCoF alto<br/>(resposta rapida)"]:::good
     Alto -- "ruim em" --> R2["2. Sag assimetrico<br/>(amplifica 120 Hz)"]:::bad
     Baixo -- "bom em" --> R3["2. Sag assimetrico<br/>(filtra seq-)"]:::good
-    Baixo -- "ruim em" --> R4["1. Sag simetrico<br/>(resposta lenta)"]:::bad
+    Baixo -- "ruim em" --> R4["1. Sag simetrico<br/>3. RoCoF alto<br/>(resposta lenta/perde lock)"]:::bad
 
     classDef a fill:#d3f9d8,stroke:#2f9e44,color:#000
     classDef b fill:#dbe4ff,stroke:#364fc7,color:#000
@@ -121,7 +141,11 @@ flowchart TB
 
 ## Sistema de 9 Barras
 
-A rede eletrica e representada pelo classico **sistema IEEE de 9 barras**, com 3 geradores sincronos, 3 transformadores e 6 linhas de transmissao.
+A rede eletrica e representada pelo classico **sistema IEEE de 9 barras**, com 3 geradores sincronos, 3 transformadores e 6 linhas de transmissao. G2 (Barra 2) e substituido pelo inversor grid-following modelado neste trabalho.
+
+<p align="center">
+  <img src="assets/diagrams/ieee9bus_unifilar.svg" alt="Diagrama unifilar do sistema IEEE 9 barras com G2 substituido pelo inversor na Barra 2" width="85%">
+</p>
 
 ### Geradores
 
@@ -150,6 +174,36 @@ Esse valor e usado como parametro de rede no dimensionamento do filtro e no proj
 |---|---|
 | Afundamento simetrico | Falta trifasica — reducao de amplitude sem sequencia negativa |
 | Afundamento assimetrico | Introduz sequencia negativa — gera oscilacoes de 2a harmonica no PLL |
+| Alto RoCoF | Baixa inercia sistemica (G1/G3) eleva dw/dt pos-falta — desafia a largura de banda do PI do PLL |
+
+> Salto de fase (phase-angle jump) foi avaliado na literatura mas **descartado por
+> instrucao do orientador** — nao sera implementado no modelo.
+
+<p align="center">
+  <img src="assets/diagrams/voltage_sag_profile.svg" alt="Perfil caracteristico de afundamento de tensao V(t): profundidade, duracao e tensao residual" width="70%">
+</p>
+
+---
+
+## Requisitos Normativos de Suporte a Rede (ONS / IEEE 1547)
+
+Durante a contingencia, o inversor deve permanecer conectado (LVRT) e injetar corrente
+reativa de suporte — a norma brasileira (ONS Submodulo 2.10, funcao `ONS_2_11` no
+modelo) e a norte-americana (IEEE 1547-2018) definem curvas equivalentes de tensao×tempo
+e tensao×corrente reativa.
+
+<p align="center">
+  <img src="assets/diagrams/ons_voltage_ridethrough_envelope.svg" alt="Envelope de trip mandatorio e regioes de ride-through por tensao no PCC (IEEE 1547-2018 Table 8)" width="100%">
+</p>
+
+<p align="center">
+  <img src="assets/diagrams/ons_reactive_current_curve.svg" alt="Curva de injecao de corrente reativa iq versus tensao no PCC (ONS Submodulo 2.10, funcao ONS_2_11)" width="70%">
+</p>
+
+A conformidade normativa, porem, **depende do PLL manter o angulo estimado correto**:
+se o referencial dq esta corrompido por perda de lock, a corrente reativa e injetada na
+direcao errada mesmo que a logica de suporte esteja ativa — ver
+[`ons_2_11.md`](.claude/kb/standards/ons_2_11.md).
 
 ---
 
@@ -241,8 +295,17 @@ export_sim_data.m  →  output/sim_data.csv  →  app.py  →  output/pll_metric
 
 ## Referencias
 
-- YAZDANI, A.; IRAVANI, R. *Voltage-Sourced Converters in Power Systems*. Wiley, 2010.
-- TEODORESCU, R.; LISERRE, M.; RODRIGUEZ, P. *Grid Converters for Photovoltaic and Wind Power Systems*. Wiley, 2011.
-- BOLLEN, M. H. J. *Understanding Power Quality Problems*. IEEE Press, 2000.
-- IEEE Std 1547-2018 — *Interconnection and Interoperability of Distributed Energy Resources*
-- ONS — *Relatorio de Analise de Perturbacao (RAP) — 15/08/2023*
+- YAZDANI, A.; IRAVANI, R. *Voltage-Sourced Converters in Power Systems: Modeling, Control, and Applications*. Wiley-IEEE Press, 2010.
+- KARIMI-GHARTEMANI, M. *Enhanced Phase-Locked Loop Structures for Power and Energy Applications*. Wiley-IEEE Press, 2014.
+- ANDERSON, P. M.; FOUAD, A. A. *Power System Control and Stability*. 2. ed. IEEE Press / Wiley-Interscience, 2003.
+- GU, Y.; GREEN, T. C. Power System Stability With a High Penetration of Inverter-Based Resources. *Proceedings of the IEEE*, v. 111, n. 7, p. 832-853, jul. 2023.
+- ALVES, A. G. P. *Metodologia para Auto-Ajuste de Controladores de Corrente em Conversores Fonte de Tensão Conectados a Redes Sujeitas a Distúrbios Harmônicos*. Tese (Doutorado) — COPPE/UFRJ, 2022.
+- IEEE Std 1547.2-2023 — *Application Guide for IEEE Std 1547-2018, Interconnection and Interoperability of Distributed Energy Resources*
+- IEEE Std 519-2014 — *Recommended Practice and Requirements for Harmonic Control in Electric Power Systems*
+- ONS — *Procedimentos de Rede, Submódulo 2.10 — Requisitos técnicos mínimos para a conexão às instalações de transmissão*, rev. 2025.02
+- ONS — *RAP-ONS 00012/2023 — Relatório de Análise da Perturbação do dia 15/08/2023 às 08h30min*
+- ENTSO-E — *Grid Incident in Spain and Portugal on 28 April 2025 — Final Report*, mar. 2026
+- COORDINADOR ELÉCTRICO NACIONAL (Chile) — *Estudio para Análisis de Falla del 25 de febrero de 2025 (EAF 089/2025)*, 2025
+- IEA — *Global Energy Review 2026*
+
+Lista completa e citações por seção: [`.claude/kb/`](.claude/kb/) (cada arquivo carrega `source:`/`references:` no frontmatter).

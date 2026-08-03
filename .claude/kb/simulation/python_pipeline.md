@@ -132,10 +132,11 @@ Este valor real (não a constante global `T_FAULT`) é o que alimenta:
 | `IAE` | ∫\|θ_err\| dt | t ≥ max(t_fault, T_SETTLE) |
 | `ISE` | ∫θ_err² dt | t ≥ max(t_fault, T_SETTLE) |
 | `ts` | último t com \|θ_err\| > TOL_RAD | t ≥ max(t_fault, T_SETTLE) |
-| `dP_ufv` | max(P_ufv) − min(P_ufv) | t ≥ max(t_clear, T_SETTLE) |
-| `dQ_ufv` | max(Q_ufv) − min(Q_ufv) | t ≥ max(t_clear, T_SETTLE) |
-| `vmin` | min(vbus2_pu) | t ≥ max(t_fault, T_SETTLE) |
-| `vmin_bus1`, `vmin_bus3` | min(vbus1_pu), min(vbus3_pu) | idem (`None` sem a coluna) |
+| `vavg` | mean(vbus2_pu) — não mínimo, desde 2026-07-25 | regime: t ≥ T_SETTLE até o fim; falta: t_start → t_clear |
+| `vavg_bus1`, `vavg_bus3` | idem para vbus1/vbus3 | idem (`None` sem a coluna) |
+
+`dP_ufv`/`dQ_ufv` (excursão de P/Q na janela pós-clear) foram removidos em
+2026-07-24 — ver [[pipeline-dados]] em `kb/dashboard/dados/`.
 
 `t_fault` acima é `self.t_fault` (real do cenário, fallback `T_FAULT` global).
 `T_SETTLE = 0.1 s` (2026-07-12) clampa toda janela de cálculo: a partida do
@@ -169,7 +170,7 @@ decimação por passo uniforme, cap `_MAX_POINTS = 5000` por trace —
 de aplicação: todo `go.Scatter` passa por `_add` antes de `fig.add_trace`,
 então nenhuma chamada em `_add_panel` precisou mudar.
 
-**Por que não decimar em `loader.py`**: `_compute_metrics` (IAE/ISE/ts/ΔP/ΔQ)
+**Por que não decimar em `loader.py`**: `_compute_metrics` (IAE/ISE/ts)
 usa os arrays brutos de `SimData` (`theta_err`, `P_ufv`, etc.) — decimar ali
 enviesaria as métricas. A decimação fica isolada em `chart.py`, que só cuida
 de visualização; `loader.py` continua entregando resolução total.

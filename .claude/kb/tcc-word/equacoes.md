@@ -26,8 +26,8 @@ Armadilha: **duas tabelas adjacentes se fundem no Word** — sempre deixar um
 | 3.4–3.7 | Park: rotação αβ→dq, abc→dq, vd, vq | 3.1.2 |
 | 3.8–3.9 | P e Q em dq; caso vq=0 | 3.1.3 |
 | 3.10–3.17 | Modelo linearizado SRF-PLL: Kpd, PD, PI, integrador, L(s), G_PLL(s), E(s), vq(s) | 3.4 |
-| 4.1 | L₁ = V_dc / (24·f_sw·ΔI_max) — ripple (notebook, Alves 2021) | 4.2.2 |
-| 4.2 | ω_res = √((L₁+L₂)/(L₁·L₂·C_f)) — ressonância LCL | 4.2.2 |
+| 4.1 | L₁ = V_dc / (24·f_sw·ΔI_max) — ripple (notebook, Alves 2021) | 4.3.2.1 |
+| 4.2 | ω_res = √((L₁+L₂)/(L₁·L₂·C_f)) — ressonância LCL | 4.3.2.1 |
 
 - Os rótulos antigos "EQUAÇÃO 2.N — descrição" (2.5–2.12) viraram texto
   explicativo "Descrição:" acima da tabela; renumerados 2.N → 3.(N+5).

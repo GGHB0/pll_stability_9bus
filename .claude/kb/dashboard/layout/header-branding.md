@@ -52,10 +52,13 @@ Reportado em 2026-07: "Ocultar mapa aparece quando o mapa já está oculto".
 mapa" quando `hidden === true` (mapa já oculto) e vice-versa.
 
 ```javascript
-// antes (bug): hidden ? "🗺 Mapa IEEE 9-bus" : "🗺 Ocultar mapa"
+// antes (bug): hidden ? "Mapa IEEE 9-bus" : "Ocultar mapa"
 // depois (correto):
-btn.innerHTML = hidden ? "🗺&nbsp;Ocultar mapa" : "🗺&nbsp;Mapa IEEE 9-bus";
+btn.innerHTML = hidden ? "Ocultar mapa" : "Mapa IEEE 9-bus";
 ```
+
+Labels dos botões perderam os ícones emoji em 2026-07-24 (pedido do usuário,
+visual "não ficou muito legal") — ver `CHANGELOG.md`.
 
 `hidden` reflete o estado **antes** do clique atual ser processado — ou seja,
 quando `hidden === true` o clique acabou de reexibir o mapa, então o botão

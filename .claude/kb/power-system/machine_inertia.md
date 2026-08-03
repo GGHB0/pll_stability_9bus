@@ -2,6 +2,8 @@
 name: machine-inertia
 description: Constante H, swing equation, critério das áreas iguais e impacto direto na SRF-PLL — cadeia H↓ → RoCoF↑ → lock-loss observada no Simulink
 source: Anderson-Fouad cap.2; teste Simulink TCC 2026-05
+references:
+  - "ANDERSON, Paul M.; FOUAD, A. A. Power System Control and Stability. 2. ed. Piscataway: IEEE Press / Wiley-Interscience, 2003. ISBN 978-0-471-23862-1."
 ---
 
 # Inércia das Máquinas e Impacto na SRF-PLL

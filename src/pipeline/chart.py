@@ -2,25 +2,26 @@
 chart.py — Constrói figuras Plotly por seção (Resumo / Inversor / Sistema 9-Bus).
 
 ChartBuilder.build_sections() → (fig_inv, fig_sys, trace_map_inv, trace_map_sys)
-ChartBuilder.build_resume()   → (fig_res, trace_map_res) — painéis essenciais
-fig_sys/fig_res é None se não houver dados disponíveis.
+fig_sys é None se não houver dados disponíveis.
 """
 from __future__ import annotations
+
+import re
 
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from ..config import TOL_RAD, LVRT_THRESHOLD, LIGHT_COLORS, DARK_COLORS
+from ..config import (
+    TOL_RAD, LVRT_THRESHOLD,
+    LIGHT_COLORS, DARK_COLORS,
+)
 from .loader import SimData
 
 _S = "single"   # linha inteira (colspan 2)
 _P = "pair"     # dois painéis lado a lado
 
 _MAX_POINTS = 5000  # cap de pontos/trace no HTML — ver kb/simulation/python_pipeline.md
-# A figura Resumo duplica traces já presentes nas seções completas; decimação
-# mais agressiva limita o custo extra no tamanho do HTML.
-_RES_MAX_POINTS = 2000
 
 
 class ChartBuilder:
@@ -51,31 +52,7 @@ class ChartBuilder:
             fig_sys, tm_sys = None, []
         return fig_inv, fig_sys, tm_inv, tm_sys
 
-    def build_resume(self) -> tuple[go.Figure | None, list[tuple[int, str, str]]]:
-        """Figura Resumo: painéis essenciais do cenário, decimação reduzida."""
-        rows = self._res_rows()
-        if len(rows) < 2:
-            return None, []
-        self._max_points = _RES_MAX_POINTS
-        try:
-            return self._make_figure(rows)
-        finally:
-            self._max_points = _MAX_POINTS
-
     # ── Definição de linhas ──────────────────────────────────────────────────
-
-    def _res_rows(self) -> list:
-        """A história essencial em uma tela: erro do PLL, frequência, P/Q e V no POC."""
-        d = self._d
-        rows: list = []
-        if d.theta_err is not None:
-            rows.append((_S, "err", "Erro de fase (°)"))
-        if d.has_freq:
-            rows.append((_S, "freq", "Frequência PLL (Hz)"))
-        rows.append((_S, "pq_combined", "P / Q UFV (pu)"))
-        if d.has_vbus2:
-            rows.append((_S, "vbus2", "|V| Bus 2 (pu)"))
-        return rows
 
     def _inv_rows(self) -> list:
         d = self._d
@@ -84,8 +61,6 @@ class ChartBuilder:
             rows.append((_S, "ang", "Ângulo (°)"))
         if d.theta_err is not None:
             rows.append((_S, "err", "Erro de fase (°)"))
-        if d.has_freq:
-            rows.append((_S, "freq", "Frequência PLL (Hz)"))
         if d.has_dq_ufv:
             rows.append((_S, "dq_combined", "Corrente dq UFV (pu)"))
         if d.has_vdq_ufv or d.has_vdq_rede:
@@ -122,6 +97,7 @@ class ChartBuilder:
 
     def _make_figure(self, rows: list) -> tuple[go.Figure, list]:
         n = len(rows)
+        self._n_rows_fig = n
         specs = [
             [{"type": "scatter", "colspan": 2}, None] if r[0] == _S
             else [{"type": "scatter"}, {"type": "scatter"}]
@@ -130,7 +106,7 @@ class ChartBuilder:
         self._fig = make_subplots(
             rows=n, cols=2,
             shared_xaxes=True,
-            vertical_spacing=0.07,
+            vertical_spacing=0.11,
             specs=specs,
         )
         self._ci = 0
@@ -148,7 +124,7 @@ class ChartBuilder:
                     self._group_title(group, ax)
                 self._legend_key = "legend" if ax == 1 else f"legend{ax}"
                 self._add_panel(kind, ri, 1)
-                self._label(label, ax)
+                self._label(label, ax, kind)
                 self._vline(ri, 1)
                 self._fig.update_yaxes(gridcolor="#f0f2f5", zerolinecolor="#e5e7eb",
                                        tickfont_size=10, row=ri, col=1)
@@ -160,14 +136,14 @@ class ChartBuilder:
                     self._group_title(group, ax1)
                 self._legend_key = "legend" if ax1 == 1 else f"legend{ax1}"
                 self._add_panel(k1, ri, 1)
-                self._label(l1, ax1)
+                self._label(l1, ax1, k1)
                 self._vline(ri, 1)
                 self._fig.update_yaxes(gridcolor="#f0f2f5", zerolinecolor="#e5e7eb",
                                        tickfont_size=10, row=ri, col=1)
 
                 self._legend_key = f"legend{ax2}"
                 self._add_panel(k2, ri, 2)
-                self._label(l2, ax2)
+                self._label(l2, ax2, k2)
                 self._vline(ri, 2)
                 self._fig.update_yaxes(gridcolor="#f0f2f5", zerolinecolor="#e5e7eb",
                                        tickfont_size=10, row=ri, col=2)
@@ -178,14 +154,67 @@ class ChartBuilder:
 
     # ── Helpers de figura ────────────────────────────────────────────────────
 
-    def _label(self, text: str, ax_idx: int) -> None:
-        xref = "x domain" if ax_idx == 1 else f"x{ax_idx} domain"
-        yref = "y domain" if ax_idx == 1 else f"y{ax_idx} domain"
-        self._fig.add_annotation(
-            text=f"<b>{text}</b>", xref=xref, yref=yref,
-            x=0.01, y=0.97, xanchor="left", yanchor="top",
-            font=dict(size=10, color="#6b7280"), showarrow=False,
+    @staticmethod
+    def _split_label(text: str) -> tuple[str, str]:
+        """"Nome (unid)" → ("Nome", "unid"). Sem parêntese final → (text, "")."""
+        m = re.match(r"^(.*?)\s*\(([^()]*)\)\s*$", text)
+        if m:
+            return m.group(1).strip(), m.group(2).strip()
+        return text, ""
+
+    _BAR_COLOR = "#185FA5"   # barra de título (estilo header Power BI)
+
+    # Grandeza física genérica por painel — o eixo Y identifica o que está
+    # sendo medido (ex. "Tensão (pu)"), não repete o título específico do
+    # painel (que pode combinar contexto: "P / Q UFV", "|V| Bus 2"...).
+    # Mesmo critério já usado no eixo X ("Tempo (s)", igual em todo painel).
+    _AXIS_LABELS = {
+        "ang": "Ângulo (°)",
+        "err": "Erro de fase (°)",
+        "dq_combined": "Corrente (pu)",
+        "vdq_combined": "Tensão (pu)",
+        "pq_combined": "Potência (pu)",
+        "vbus2": "Tensão (pu)",
+        "vbus1": "Tensão (pu)",
+        "vbus3": "Tensão (pu)",
+        "p_bus1": "Potência (pu)",
+        "q_bus1": "Potência (pu)",
+        "p_bus3": "Potência (pu)",
+        "q_bus3": "Potência (pu)",
+    }
+
+    def _label(self, text: str, ax_idx: int, kind: str) -> None:
+        """Barra de título no topo do painel + grandeza genérica no eixo Y
+        (vertical). Responde ao Ponto 2 do professor: o rótulo deixa de ser
+        annotation horizontal no canto — o nome vira uma barra de título
+        preenchida (texto branco centralizado) encostada no topo do painel, e
+        a grandeza física ("Tensão (pu)", "Frequência (Hz)"...) vira o título
+        do eixo Y, rotacionada e encostada no eixo — mesmo critério do "Tempo
+        (s)" no eixo X, não o título específico do painel."""
+        title, _unit = self._split_label(text)
+        n = self._n_rows_fig
+        xname = "xaxis" if ax_idx == 1 else f"xaxis{ax_idx}"
+        yname = "yaxis" if ax_idx == 1 else f"yaxis{ax_idx}"
+        ax_dom = self._fig.layout[xname].domain
+        y_top  = float(self._fig.layout[yname].domain[1])
+        xc     = float((ax_dom[0] + ax_dom[1]) / 2)
+        bar_h  = 22.0 / (240 * n)   # altura da barra (fração de paper)
+        # barra preenchida encostada no topo do painel
+        self._fig.add_shape(
+            type="rect", xref="paper", yref="paper",
+            x0=ax_dom[0], x1=ax_dom[1], y0=y_top, y1=y_top + bar_h,
+            fillcolor=self._BAR_COLOR, line_width=0, layer="above",
         )
+        # nome centralizado, branco, dentro da barra
+        self._fig.add_annotation(
+            text=f"<b>{title}</b>", xref="paper", yref="paper",
+            x=xc, y=y_top + bar_h / 2, xanchor="center", yanchor="middle",
+            font=dict(size=11, color="#ffffff"), showarrow=False,
+        )
+        # grandeza física genérica no eixo Y, na vertical
+        self._fig.layout[yname].title.text = self._AXIS_LABELS.get(kind, text)
+        self._fig.layout[yname].title.font = dict(size=10, color="#6b7280")
+        self._fig.layout[yname].title.standoff = 4
 
     def _group_title(self, text: str, ax_idx: int) -> None:
         """Subtítulo de divisão por barra, ancorado acima da 1ª linha do grupo."""
@@ -244,26 +273,32 @@ class ChartBuilder:
         marker.legend = self._legend_key
         self._fig.add_trace(marker, row=row, col=col)
 
-    # Envelope LVRT IEEE 1547-2018 Categoria II: (Δt após a falta, V mínimo de
-    # ride-through obrigatório) — 0.30 pu/0.16 s, 0.45 pu/0.32 s, 0.65 pu/3 s,
-    # 0.88 pu operação contínua.
-    _LVRT_STEPS = ((0.16, 0.30), (0.32, 0.45), (3.0, 0.65))
+    # Table 8 (trip mandatório) do IEEE Std 1547.2-2023, Categoria II: (Δt após
+    # a falta, V mínimo antes do trip obrigatório) — UV2 0.45 pu/0.16 s,
+    # UV1 0.70 pu/10 s, 0.88 pu operação contínua. Não é a curva de
+    # ride-through contínuo (Table 14/15/16 do 1547-2018 normativo, não
+    # disponível na bibliografia) — ver chart-analysis-overlays.md.
+    _LVRT_STEPS = ((0.16, 0.45), (10.0, 0.70))
 
     def _lvrt_envelope(self, row: int, col: int) -> None:
         """Curva degrau V×t de ride-through, ancorada em t_fault (só no |V| Bus 2)."""
         d = self._d
         t0, t_end = d.t_fault, float(d.t[-1])
         xs, ys = [t0], [self._LVRT_STEPS[0][1]]
+        v_cur = self._LVRT_STEPS[0][1]
         for i, (dt_step, _v) in enumerate(self._LVRT_STEPS):
-            next_v = self._LVRT_STEPS[i + 1][1] if i + 1 < len(self._LVRT_STEPS) else 0.88
-            xs.append(min(t0 + dt_step, t_end))
-            ys.append(next_v)
+            t_step = t0 + dt_step
+            if t_step >= t_end:
+                break
+            v_cur = self._LVRT_STEPS[i + 1][1] if i + 1 < len(self._LVRT_STEPS) else 0.88
+            xs.append(t_step)
+            ys.append(v_cur)
         xs.append(t_end)
-        ys.append(0.88)
+        ys.append(v_cur)
         env = go.Scatter(
             x=xs, y=ys, mode="lines", line_shape="hv",
             line=dict(color="rgba(220,50,50,0.7)", width=1.6, dash="dash"),
-            name="LVRT 1547 Cat II", hoverinfo="skip",
+            name="IEEE 1547", hoverinfo="skip",
         )
         env.legend = self._legend_key
         self._fig.add_trace(env, row=row, col=col)
@@ -280,10 +315,10 @@ class ChartBuilder:
                 self._fig.layout[ax_name].matches = "x"
         # pu é adimensional — sem prefixo SI (µ/k/M) nos ticks do eixo Y
         self._fig.update_yaxes(exponentformat="none")
-        # espaço extra no topo para o subtítulo "Barra N" da 1ª linha do grupo
-        top_margin = 34 if extra_top else 16
+        # espaço extra no topo: título de cada painel (+ subtítulo "Barra N" no grupo)
+        top_margin = 54 if extra_top else 34
         self._fig.update_layout(
-            margin=dict(t=top_margin, b=16, l=60, r=100),
+            margin=dict(t=top_margin, b=16, l=64, r=100),
             paper_bgcolor="#ffffff", plot_bgcolor="#ffffff",
             font=dict(family="Inter, Segoe UI, system-ui, sans-serif", size=12, color="#111827"),
             hovermode="x unified",
@@ -372,13 +407,6 @@ class ChartBuilder:
                                     line=dict(color="rgba(22,163,74,0.4)", width=1.0, dash="dot"),
                                     row=row, col=col)
             self._ts_marker(t_err, err, row, col)
-
-        elif kind == "freq":
-            self._add(go.Scatter(x=d.t_freq, y=d.f_pll,
-                                 name="f̂ PLL", mode="lines", line=dict(width=1.8)), row, col)
-            self._fig.add_hline(y=60.0,
-                                line=dict(color="rgba(100,100,100,0.35)", width=1.0, dash="dot"),
-                                row=row, col=col)
 
         elif kind in ("vbus1", "vbus2", "vbus3"):
             vbus_map = {"vbus1": (d.vbus1, "|V| Bus 1"), "vbus2": (d.vbus2, "|V| Bus 2"),

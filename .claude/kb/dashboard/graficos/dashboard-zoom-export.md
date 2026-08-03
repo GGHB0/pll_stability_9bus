@@ -1,13 +1,20 @@
 ---
-name: dashboard-zoom-ghost
-description: Controles novos do dashboard — botão de zoom na janela de falta, overlay fantasma nominal×BAD_PLL e export PNG hi-res do modebar
+name: dashboard-zoom-export
+description: Controles do dashboard — botão de zoom na janela de falta (sincronizado entre figuras) e export PNG hi-res do modebar
 ---
 
-# Zoom na Falta, Fantasma PLL e Export PNG (renderer.py)
+# Zoom na Falta e Export PNG (renderer.py)
 
 Adicionados em 2026-07 junto com [[chart-analysis-overlays]].
 
-## 🔍 Zoom na falta
+> **Overlay fantasma removido (2026-07-25)**: o botão "Comparar PLL"
+> (`#ghost-toggle`) sobrepunha os traces do cenário equivalente do outro modo
+> PLL — removido a pedido do usuário por não estar sendo usado. Saíram
+> `ghostMode`, `_exactEquiv`, `_ghostData`, `toggleGhost` e o bloco `gbtn` em
+> `_syncCtrlButtons`; o toggle nominal/sintonia inadequada
+> ([[bad-pll-dashboard-filter]]) é uma feature separada e não foi afetado.
+
+## Zoom na falta
 
 Botão `#zoom-fault` na filter-bar. `_applyZoom()` usa `Plotly.relayout` com
 dotted-path (**válido em relayout**, ao contrário de `Plotly.react` — ver
@@ -17,7 +24,7 @@ dotted-path (**válido em relayout**, ao contrário de `Plotly.react` — ver
 var upd = (zoomFault && sc.tFault != null)
   ? { "xaxis.range": [...], "xaxis.autorange": false }
   : { "xaxis.autorange": true };
-TIME_TABS.forEach(function(t) {          // ["res","inv","sys"] — spec fora (Hz)
+TIME_TABS.forEach(function(t) {          // ["inv","sys"] — res sem gráfico, spec fora (Hz)
   if (_plotted(t)) Plotly.relayout(gd[t], upd);
 });
 ```
@@ -44,8 +51,9 @@ zoom **manual** (arrasto) em qualquer painel também move os demais.
 
 ### Sincronização entre figuras (`_bridgeZoom`)
 
-Resumo/Inversor/Sistema são gráficos Plotly separados; `matches` não cruza
-figuras. `_bridgeZoom(srcWhich)` escuta `plotly_relayout` de cada gd de
+Inversor/Sistema são gráficos Plotly separados (Resumo não tem gráfico
+desde 2026-07-24); `matches` não cruza figuras. `_bridgeZoom(srcWhich)`
+escuta `plotly_relayout` de cada gd de
 `TIME_TABS` e replica o range nas demais figuras plotadas. Detalhes:
 
 - `_extractXZoom(ev)` aceita os três formatos de payload: `"xaxisN.range"`
@@ -61,37 +69,14 @@ Como `Plotly.react` reseta o range, `_applyZoom()` é chamado **depois** dos
 reacts em `switchScenario` e `toggleTheme` — o zoom do botão persiste entre
 cenários e temas (o zoom manual não persiste: react restaura autorange).
 
-## 👻 Fantasma nominal × BAD_PLL
-
-Botão `#ghost-toggle` (renderizado só se `has_bad_pll`). Sobrepõe os traces
-do cenário equivalente do outro modo PLL no mesmo gráfico:
-
-- `_exactEquiv(key)`: par exato `key ↔ key + "_bad_pll"` — **sem** fallback
-  para `_firstOfMode` (diferente de `_findEquiv`); sem par → botão disabled.
-- `_ghostData(which)`: mapeia só os índices de `invIdx`/`sysIdx`/`specIdx`
-  (traces de dados — exclui marcador tₛ e envelope LVRT) com **a mesma cor**
-  do trace principal + `dash:"dot"`, `width:1.2`, `opacity:0.5`,
-  `showlegend:false`, `hoverinfo:"skip"` (o hover unificado ficaria ilegível
-  em dobro).
-- Injetado em `_renderChart` via `.concat(_ghostData(which))` — o
-  parâmetro `which` ("res"/"inv"/"sys"/"spec") seleciona a figura pelo
-  acesso genérico `o[which + "Data"]`. No espectro
-  ([[espectro-fourier]]) o ghost compara direto o pico de 120 Hz
-  nominal × PLL com sintonia inadequada.
-
-Mesma cor + pontilhado/esmaecido = "mesmo sinal, outro PLL" — a degradação
-aparece lado a lado sem alternar o toggle de memória.
-
 ## Sincronização de estado (`_syncCtrlButtons`)
 
-Chamado no início de `switchScenario` e nos toggles. Regras:
+Chamado no início de `switchScenario` e no toggle de zoom. Regras:
 
 - Cenário sem falta (`tFault == null`): zoom desliga e desabilita.
-- Sem par exato: fantasma desliga e desabilita.
-- Labels seguem a regra de [[header-branding]]: o texto descreve a **próxima
-  ação** ("Zoom na falta" ↔ "Visão completa"; "Comparar PLL" ↔ "Ocultar
-  comparação"), com classe `.active` para o estado ligado
-  (CSS `.diag-btn.active` / `:disabled`).
+- Label segue a regra de [[header-branding]]: o texto descreve a **próxima
+  ação** ("Zoom na falta" ↔ "Visão completa"), com classe `.active` para o
+  estado ligado (CSS `.diag-btn.active` / `:disabled`).
 
 ## 📸 Export PNG hi-res
 

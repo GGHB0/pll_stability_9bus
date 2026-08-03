@@ -2,6 +2,8 @@
 name: pll-reactive-inertia
 description: PLL como "inércia reativa" e dualidade Q-δi (GFL) vs P-δv (síncronos/GFM) — framework estendido de estabilidade de sistemas com alta penetração de IBR
 source: Gu, Y. e Green, T. C., "Power System Stability With a High Penetration of Inverter-Based Resources", Proceedings of the IEEE, vol. 111, n.7, p.836-854, jul/2023
+references:
+  - "GU, Yunjie; GREEN, Timothy C. Power System Stability With a High Penetration of Inverter-Based Resources. Proceedings of the IEEE, v. 111, n. 7, p. 832-853, jul. 2023. DOI: 10.1109/JPROC.2022.3179826."
 ---
 
 # PLL como Inércia Reativa — Dinâmica de Ângulo Generalizada
@@ -97,7 +99,7 @@ framework clássico particionado.
 ## Uso no TCC
 
 - Fundamenta teoricamente **por que** a sintonia de Kp/Ki do SRF-PLL
-  (ver [[pll-gains-methodology]]) não é só sobre velocidade de rastreamento:
+  (ver [[pll-loop-filter-gains]]) não é só sobre velocidade de rastreamento:
   ela define a "inércia reativa" do inversor e, portanto, a dinâmica do swing
   Q–δᵢ que governa sua estabilidade de sincronização sob contingência.
 - O cenário BAD_PLL (kp_pll×0,2, [[iberia-2025-oscillations]]) pode ser

@@ -1,6 +1,6 @@
 ---
 name: pipeline-dados
-description: SimData (loader.py) — leitura dos CSVs do MATLAB, correção do erro de fase, métricas em duas janelas (IAE/ISE/tₛ/pico pós-falta; ΔP/ΔQ pós-clear) e frequência estimada do PLL
+description: SimData (loader.py) — leitura dos CSVs do MATLAB, correção do erro de fase, métricas na janela pós-falta (IAE/ISE/tₛ/pico) e frequência estimada do PLL
 ---
 
 # Pipeline de Dados (src/pipeline/loader.py)
@@ -46,14 +46,20 @@ Descoberta de cenários e roteamento BAD_PLL: ver `kb/simulation/export_workflow
 O erro do eixo rápido é interpolado para o eixo lento (`np.interp`) antes da
 correção — as métricas são calculadas no eixo lento.
 
-## Métricas (`_compute_metrics`) — duas janelas
+## Métricas (`_compute_metrics`) — janela pós-falta
 
-- **Pós-falta** (`t ≥ max(t_fault, T_SETTLE)`): erro de fase (IAE/ISE/tₛ/pico)
-  e `vmin`.
-- **Pós-clear** (`t ≥ max(t_clear, T_SETTLE)`): `dP_ufv`/`dQ_ufv` — mede a
-  *recuperação*, não o colapso durante o afundamento (senão toda falta daria
-  ΔP ≈ 1 pu).
-- **Regime** (`t_fault` None): ambas viram `t ≥ T_SETTLE`.
+- **Pós-falta** (`t ≥ max(t_fault, T_SETTLE)`): erro de fase (IAE/ISE/tₛ/pico).
+- **Regime** (`t_fault` None): `t ≥ T_SETTLE`.
+- **`vavg`/`vavg_bus1`/`vavg_bus3`** usam uma janela própria, diferente da
+  acima (2026-07-25): sempre começam em `t_start` (mesmo piso `T_SETTLE`),
+  mas em falta **terminam em `t_clear`** — não vão até o fim da simulação
+  como IAE/ISE. Ver linha da tabela abaixo.
+
+`dP_ufv`/`dQ_ufv` (excursão máx-mín de P/Q na janela pós-clear) foram
+removidos em 2026-07-24 — não faziam sentido como métrica de desempenho do
+PLL. `t_clear` continua sendo lido de `fault_info.json` (usado pelo card de
+duração da falta e pelas linhas de falta no gráfico), só a métrica derivada
+saiu.
 
 **`T_SETTLE = 0.1 s`** (settings.py, 2026-07-12): nenhuma janela de cálculo
 começa antes disso — a partida do PLL (trava em ~0.08 s; pior sinal é |V|
@@ -72,22 +78,12 @@ em `export_sim_data.m`) ainda inclui a partida → viés de ~1.1% em
 | `peak_err` | max \|e\| pós-falta (rad) — cards mostram em °, ≥90° = perda de sincronismo |
 | `ts` / `settled` | última amostra com \|e\| > `TOL_RAD` (±0.02 rad ≈ ±1.15°). Se \|e\| ainda está fora nos últimos 2 ms da janela → `ts = None`, `settled = False` ("não acomodou" — evita tₛ falso no fim da simulação). **Regime → sempre `None`/`None`**: sem distúrbio não há o que acomodar (card omitido, "—" na tabela) |
 | `ts_delta` | `ts − t_fault` (base da classificação good/warn/bad) |
-| `dP_ufv`, `dQ_ufv` | max − min de P/Q **pós-clear** (pu) |
-| `vmin` | mínimo de `vbus2` pós-falta (pu) — severidade do sag vs LVRT |
-| `vmin_bus1`, `vmin_bus3` | idem para `vbus1`/`vbus3` — propagação do sag pela rede (cards de severidade + colunas Vmin B1/B3 na tabela; veredito LVRT continua só na B2) |
+| `t_ss` | início do regime: `ts` se `settled`, `T_SETTLE` em regime, senão `None` |
+| `err_ss_mean`, `err_ss_rms` | erro de fase **sustentado** em R.P. — média/RMS de \|e\| para `t ≥ t_ss` (rad; cards em °). `None` se a falta não reacomodou. Separa o erro de regime do `peak_err` transitório (Ponto 1 do professor, 2026-07-21) |
+| `vavg` | **média** (não mínimo, desde 2026-07-25) de `vbus2` — regime: janela inteira `[T_SETTLE, fim]`; falta: só o período do curto `[t_start, t_clear]` (ou fim, se `t_clear` for `None`) — severidade vs LVRT |
+| `vavg_bus1`, `vavg_bus3` | idem para `vbus1`/`vbus3` — propagação do sag pela rede (cards de severidade + colunas V méd. B1/B3 na tabela; veredito LVRT continua só na B2) |
 
 Sinal ausente → métrica `None` → "—" nos cards/tabela.
-
-## Frequência estimada do PLL (`_estimate_freq`)
-
-`f̂ = dθ̂/dt / 2π` sobre o ângulo **unwrapped**, por diferença central com
-passo largo (k amostras ≈ 0,5 ms para cada lado, ~1 ms de janela):
-
-- O passo largo já atua como filtro passa-baixa — suprime ripple de
-  chaveamento sem convolução sobre milhões de pontos de 5 µs (O(n)).
-- Usa `theta_pll_fast` (fallback `theta_pll`); expõe `f_pll`, `t_freq`
-  (encurtado em k de cada lado) e a flag `has_freq`.
-- Alimenta o painel "Frequência PLL (Hz)" — ver [[chart-analysis-overlays]].
 
 ## Consumidores do SimData
 

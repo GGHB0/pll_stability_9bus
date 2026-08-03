@@ -1,7 +1,7 @@
 ---
 name: svg-diagrams
 description: Cria qualquer SVG do projeto (diagramas, esquemáticos, curvas de norma, banners, ilustrações para README/KB/TCC) e exporta para PNG. Ativar sempre que o usuário pedir para criar/desenhar/gerar/ajustar um SVG, PNG, diagrama, esquemático, figura, banner ou ilustração — mesmo sem mencionar o formato (ex.: "precisa de uma figura do circuito do filtro LCL", "desenha o esquemático do VSI", "cria a curva do ONS", "atualiza o banner"). Também usar para converter um SVG existente do repositório em PNG.
-version: 1.1.0
+version: 1.3.0
 ---
 
 # SVG Diagrams — Skill de Criação de Figuras e Exportação PNG
@@ -37,6 +37,38 @@ Regras fixas:
 - Fonte: `font-family="ui-sans-serif, system-ui, -apple-system, sans-serif"`.
 - Texto em português com acentos é permitido no SVG (diferente dos `.mmd`, que devem ficar sem acento).
 
+## Legibilidade em Figuras do TCC/DOCX
+
+Quando o usuário reclamar que "a fonte fica pequena no relatório", a causa quase
+sempre não é o export e sim o **tamanho da fonte relativo ao `viewBox`**. Uma figura
+inserida ocupando a largura útil da página (~16 cm) é reduzida por um fator ~0,49
+(para um `viewBox` de ~920 px de largura). Regra prática:
+
+```
+pt_no_docx ≈ 0,49 × font_px         (viewBox ~920 px, figura na largura da página)
+```
+
+Generalizando p/ qualquer largura de `viewBox` W e largura no papel L_cm:
+`pt_no_docx ≈ font_px × (L_cm / W) × 28,35 / 12` ≈ `font_px × L_cm / W × 2,36`.
+
+| Fonte no SVG (W≈920) | ~pt no DOCX | Veredito |
+|---|---|---|
+| 9 px | ~4,4 pt | ilegível |
+| 13 px | ~6,4 pt | mínimo aceitável p/ rótulos secundários |
+| 15 px | ~7,4 pt | ok |
+| ≥18 px | ≥8,9 pt | confortável (use p/ títulos) |
+
+**Piso de fonte**: em figura destinada ao DOCX, nenhum texto abaixo de ~13 px
+(para W≈920). Se o piso não couber sem colisão, o problema é densidade — reduza
+conteúdo, divida em duas figuras, ou oriente o usuário a inserir a imagem maior
+(paisagem / página inteira). Não compense com export em escala maior: escala só
+melhora **nitidez**, não o tamanho aparente do texto na página.
+
+Ao **aumentar fontes de um SVG existente**, lembre que os grupos de texto empilhados
+(ex.: R/X/B de linha, kV de trafo, MW/MVAr de carga) têm espaçamento de linha fixo —
+aumente o `font-size` **e** reposicione os `y` (espaçamento ≈ 1,15× a fonte) senão as
+linhas colidem. Confira sempre no PNG rasterizado antes de dar por pronto.
+
 ## Armadilha 1 — Subscritos
 
 **Nunca** use underscore literal (`V_dc`, `u_abc`) como substituto de subscrito — isso
@@ -68,31 +100,37 @@ Defina um marcador por cor usada (a ponta da seta deve casar com a cor da linha)
 
 Não há rasterizador de SVG por CLI neste ambiente (sem inkscape, rsvg-convert,
 cairosvg ou imagemagick). O caminho que funciona é renderizar no Chrome via
-`mcp__Claude_Preview` e extrair o PNG por `canvas.toDataURL`.
+`mcp__Claude_Browser__*` e extrair o PNG por `canvas.toDataURL`.
 
-1. **Sirva a pasta do SVG** — confirme/adicione em `.claude/launch.json` um config
-   `assets-static` (`python -m http.server 8744 --directory assets/diagrams`) e chame
-   `mcp__Claude_Preview__preview_start` com esse nome. Se o SVG estiver em outra
-   pasta (ex.: `assets/`), ajuste o `--directory` do config ou crie um config irmão.
-2. **Ajuste o viewport ao viewBox exato** do SVG:
-   `mcp__Claude_Preview__preview_resize` com `width`/`height` = viewBox, `colorScheme: "light"`
-   (sem isso o fundo fora do SVG some com o dark mode do navegador).
-3. **Navegue direto para o arquivo**: `preview_eval` com
-   `window.location.href = 'http://localhost:8744/<arquivo>.svg'`.
-4. **Rasterize em canvas** (não devolva o data URL inteiro — só o tamanho, senão
-   estoura o limite de tokens da ferramenta):
+> **Namespace atual**: `mcp__Claude_Browser__*` — o antigo `mcp__Claude_Preview__*`
+> não existe mais. **Toda** chamada exige `tabId`: capture o `tabId` devolvido pelo
+> `preview_start` e repasse em `resize_window`, `javascript_tool` e `computer`.
+>
+> **Custo**: desenhar e decidir o layout é trabalho de modelo premium; o loop
+> mecânico abaixo (rodar o gerador, rasterizar, conferir, reajustar) é simples e
+> pode rodar em modelo mais barato.
+
+1. **Abra o SVG numa aba** — mais robusto que subir server por `name`:
+   `mcp__Claude_Browser__preview_start` com
+   `{url: "http://localhost:8744/<arquivo>.svg"}`. Funciona mesmo se a porta 8744 já
+   estiver tomada por outro chat (o config `assets-static` do `.claude/launch.json`
+   serve `assets/diagrams`; para `assets/` ajuste o `--directory`). Guarde o `tabId`.
+2. **Ajuste o viewport ao viewBox exato**: `mcp__Claude_Browser__resize_window` com
+   `tabId`, `width`/`height` = viewBox e `colorScheme: "light"` (sem isso o fundo fora
+   do SVG some no dark mode do navegador).
+3. **Rasterize em canvas** via `mcp__Claude_Browser__javascript_tool`
+   (`action: "javascript_exec"`, `tabId`) — devolva só o tamanho, senão estoura o
+   limite de tokens:
 
 ```js
 (async () => {
-  const svgEl = document.documentElement;
-  const xml = new XMLSerializer().serializeToString(svgEl);
+  const xml = new XMLSerializer().serializeToString(document.documentElement);
   const url = URL.createObjectURL(new Blob([xml], {type: 'image/svg+xml;charset=utf-8'}));
   const img = new Image();
-  const loaded = new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
-  img.src = url; await loaded;
+  await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
   // document.createElement falha aqui: o documento de um SVG standalone não é HTML.
   const canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
-  const scale = 2; // retina
+  const scale = 3; // 3× p/ nitidez em impressão/DOCX (2× ainda serve p/ tela)
   canvas.width = <VIEWBOX_W> * scale; canvas.height = <VIEWBOX_H> * scale;
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -102,27 +140,28 @@ cairosvg ou imagemagick). O caminho que funciona é renderizar no Chrome via
 })()
 ```
 
-5. **Recupere o PNG**: rode `preview_eval` de novo retornando `window.__pngData`.
-   Isso estoura o limite inline e é salvo automaticamente num `.txt` de
-   tool-results — leia esse arquivo, remova as aspas de string JSON e o prefixo
-   `data:image/png;base64,`, decodifique base64 e grave o `.png` ao lado do `.svg`:
+4. **Recupere o PNG** com outra chamada `javascript_tool` retornando `window.__pngData`.
+   ⚠️ **`window` é zerado por reload/navegação** — nunca rasterize e recupere através de
+   um `window.location.reload()`. Ao regenerar o SVG a ordem é: reload → (chamada nova)
+   rasterizar → (chamada nova) recuperar. O retorno estoura o limite e é salvo num
+   `.txt` de tool-results, no formato **JSON array `[{type, text}]`** (não string crua):
 
 ```python
-data = open(TOOL_RESULT_TXT, encoding='utf-8').read().strip()
-if data.startswith('"') and data.endswith('"'):
-    data = data[1:-1]
-b64 = data.split('base64,', 1)[1]
+import json, base64
+d = json.load(open(TOOL_RESULT_TXT, encoding='utf-8'))
+b64 = d[0]['text'].split('base64,', 1)[1]
 open(OUT_PNG, 'wb').write(base64.b64decode(b64))
 ```
 
-6. **Confira o resultado** lendo o PNG gerado com a ferramenta `Read` antes de
-   considerar a figura pronta — problemas de subscrito/seta só aparecem no raster.
+5. **Confira o resultado** lendo o PNG com `Read` antes de considerar pronto —
+   subscrito/seta/contraste só aparecem no raster.
 
 ### Se a aba travar
 
-`preview_screenshot` pode travar (timeout) depois de um `window.location.reload()`.
-Não insista na mesma aba: `preview_stop` no server e `preview_start` de novo cria
-uma aba limpa — mais rápido que depurar a trava.
+`mcp__Claude_Browser__computer {action:"screenshot"}` pode dar timeout (30s), às vezes
+logo após um reload. Não insista: o caminho de canvas acima **não precisa de
+screenshot**. Se a aba travar de fato, `preview_stop` no `serverId` + `preview_start`
+de novo cria aba limpa — mais rápido que depurar a trava.
 
 ## Depois de Criar a Figura
 

@@ -30,6 +30,11 @@ que já existe e é estável: `xref`.
   `xref = "x domain"` ou `f"x{{n}} domain"` — nunca `"paper"`.
 - `_group_title` (subtítulo "BARRA N") sempre usa `xref="paper"`.
 
+> ⚠️ **Ficou obsoleto desde o redesign de títulos (`b2bbb2a`, 2026-07-21)**:
+> `_label` passou a usar `xref="paper"` também (barra de título preenchida).
+> A distinção acima não vale mais — ver **Fix 5** no fim deste doc pela
+> versão corrente.
+
 ```javascript
 var annotations = (figData.layout.annotations || []).map(function(a) {
   var isGroupTitle = a.xref === "paper";
@@ -131,39 +136,8 @@ Corolário do gotcha do Fix 1: ao re-temar coleções (`annotations`, `shapes`)
 em massa, **sempre filtrar pelo subconjunto que realmente precisa** — o
 Plotly joga vlines/hlines/vrects na mesma lista que shapes manuais.
 
-## Fix 4 (2026-07-05): legenda invisível no dark — mesmas chaves dotted
+## Fix 4 e Fix 5
 
-Usuário reportou "legenda no modo dark não aparece". Mesma classe de bug do
-Fix 2, em outras vítimas: `BASE_DARK`/`BASE_LIGHT` ainda carregavam
-`"font.color"`, `"legend.bgcolor"` e `"hoverlabel.*"` como chaves dotted —
-ignoradas pelo `Plotly.react`. O `layout.font.color` ficava preso no
-`#111827` gravado pelo `chart.py`: texto de legenda `#111827` sobre paper
-`#111827` = literalmente invisível.
-
-Agravante: as legendas são **múltiplas e nomeadas** (`legend`, `legend2`, …
-— uma por painel, ver [[construcao-graficos]]), então um único
-`"legend.bgcolor"` nunca cobriria as demais; e as legendas internas dos
-painéis pareados têm `bgcolor: rgba(255,255,255,0.8)` fixo (branco no dark).
-
-Fix (`themedLayout`): `BASE_*` viraram paletas planas (`{paper, plot, font,
-legendInnerBg, hoverBg, hoverBorder}`) aplicadas **aninhadas**:
-
-```javascript
-var base = {
-  paper_bgcolor: C.paper, plot_bgcolor: C.plot,
-  font: Object.assign({}, figData.layout.font, { color: C.font }),
-  hoverlabel: Object.assign({}, figData.layout.hoverlabel,
-                            { bgcolor: C.hoverBg, bordercolor: C.hoverBorder }),
-};
-// no mesmo loop dos eixos:
-if (k.startsWith("legend")) {
-  var lg = figData.layout[k] || {};
-  var upd = { font: Object.assign({}, lg.font, { color: C.font }) };
-  if (lg.bgcolor && lg.bgcolor !== "rgba(0,0,0,0)") upd.bgcolor = C.legendInnerBg;
-  axUpd[k] = Object.assign({}, lg, upd);
-}
-```
-
-Só a bgcolor das legendas **internas** (semi-opacas) é re-temada
-(`rgba(26,36,54,0.85)` no dark); as externas seguem transparentes.
-Verificado via `gd._fullLayout.legendN.font.color` nos dois temas.
+Continuação em [[dark-mode-legend-title-fixes]] (fragmentado pelo limite de
+200 linhas): legenda invisível no dark (chaves dotted) e barra de título de
+painel re-temada por engano (cinza em vez de branco).

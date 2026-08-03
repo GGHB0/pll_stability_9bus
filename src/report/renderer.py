@@ -2,9 +2,9 @@
 renderer.py — Gera o HTML final com seletor de cenário, cards e Plotly embutido.
 
 HTMLRenderer(scenarios).render(out_path) → escreve o HTML e retorna o Path.
-scenarios: dict[key, {data, label, fig_inv, fig_sys, fig_res,
+scenarios: dict[key, {data, label, fig_inv, fig_sys,
                       figs_spec, tms_spec, spec_harm,
-                      tm_inv, tm_sys, tm_res}]
+                      tm_inv, tm_sys}]
 figs_spec/tms_spec são dicts por fase/eixo ("a"…"q"); spec_harm alimenta a
 tabela de harmônicas da aba Espectro.
 """
@@ -19,8 +19,10 @@ import plotly.graph_objects as go
 
 from ..config import (
     T_SETTLE, TOL_RAD, LVRT_THRESHOLD, F_FUND_HZ,
-    IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH, DP_THRESH, DQ_THRESH,
-    PEAK_ERR_DEG_THRESH, SYNC_LOSS_DEG, VBUS_MIN_THRESH,
+    IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH,
+    PEAK_ERR_DEG_THRESH, ERR_SS_DEG_THRESH, SYNC_LOSS_DEG, VBUS_AVG_THRESH,
+    SPEC_SEG_NO_NORM, CURR_ODD_LIMIT_PU, CURR_EVEN_LIMITS_PU,
+    VOLT_INDIVIDUAL_LIMIT_PU, DQ_UNBALANCE_WARN_PU, DQ_UNBALANCE_HIGH_PU,
 )
 from ..pipeline.loader import SimData
 
@@ -29,11 +31,10 @@ class HTMLRenderer:
     """Renderiza relatório HTML multi-cenário com seletor e duas seções de gráficos."""
 
     _SPEC_MODES = ("a", "b", "c", "d", "q")
-    _HARM_HI_PU = 0.4    # tabela de harmônicas: destaque se amp ≥ (pu)
     _HARM_LO_PU = 0.02   # tabela de harmônicas: apagado se amp < (pu)
 
     def __init__(self, scenarios: dict[str, dict]) -> None:
-        # {key: {data, label, fig_inv, fig_sys, fig_res, figs_spec, tm_*}}
+        # {key: {data, label, fig_inv, fig_sys, figs_spec, tm_*}}
         self._scenarios = scenarios
 
     # ── API pública ──────────────────────────────────────────────────────────
@@ -55,16 +56,13 @@ class HTMLRenderer:
             d  = sc["data"]
             fi = sc["fig_inv"]
             fs = sc["fig_sys"]
-            fr = sc.get("fig_res")
             fp = sc.get("figs_spec") or {}
             ti = sc["tm_inv"]
             ts = sc["tm_sys"]
-            tr = sc.get("tm_res") or []
             tp = sc.get("tms_spec") or {}
             sc_js[key] = {
                 "invData":   json.loads(fi.to_json()),
                 "sysData":   json.loads(fs.to_json()) if fs else None,
-                "resData":   json.loads(fr.to_json()) if fr else None,
                 "specData":  {m: json.loads(f.to_json()) for m, f in fp.items()},
                 "specModes": list(fp.keys()),
                 "invLight":  [x[1] for x in ti],
@@ -73,9 +71,6 @@ class HTMLRenderer:
                 "sysLight":  [x[1] for x in ts],
                 "sysDark":   [x[2] for x in ts],
                 "sysIdx":    [x[0] for x in ts],
-                "resLight":  [x[1] for x in tr],
-                "resDark":   [x[2] for x in tr],
-                "resIdx":    [x[0] for x in tr],
                 "specLight": {m: [x[1] for x in tm] for m, tm in tp.items()},
                 "specDark":  {m: [x[2] for x in tm] for m, tm in tp.items()},
                 "specIdx":   {m: [x[0] for x in tm] for m, tm in tp.items()},
@@ -86,7 +81,7 @@ class HTMLRenderer:
                 "metricsRow": self._table_row_data(d),
                 "hasInv":    True,
                 "hasSys":    fs is not None,
-                "hasRes":    fr is not None,
+                "hasRes":    True,
                 "hasSpec":   bool(fp),
                 "badPll":    sc.get("bad_pll", False),
                 "tFault":    d.t_fault,
@@ -97,10 +92,6 @@ class HTMLRenderer:
         scenarios_js  = json.dumps(sc_js)
         select_html   = self._select_html()
         pll_toggle_html = self._pll_toggle_html() if has_bad_pll else ""
-        ghost_btn_html = (
-            '<button class="toggle-btn diag-btn" id="ghost-toggle" '
-            'onclick="toggleGhost()">👻&nbsp;Comparar PLL</button>'
-        ) if has_bad_pll else ""
         uerj_logo_html = self._uerj_logo_html()
 
         return f"""<!DOCTYPE html>
@@ -127,7 +118,6 @@ class HTMLRenderer:
   </div>
   <div class="h-right">
     <button class="toggle-btn" onclick="toggleTheme()">
-      <span id="ico">🌙</span>
       <span id="lbl">Dark mode</span>
     </button>
   </div>
@@ -137,10 +127,9 @@ class HTMLRenderer:
   <span class="filter-label">Cenário</span>
   {select_html}
   {pll_toggle_html}
-  <button class="toggle-btn diag-btn" id="diagram-toggle" onclick="toggleDiagram()">🗺 Mapa IEEE 9-bus</button>
-  <button class="toggle-btn diag-btn" id="table-toggle" onclick="toggleTable()">📊 Comparativo</button>
-  <button class="toggle-btn diag-btn" id="zoom-fault" onclick="toggleZoomFault()">🔍&nbsp;Zoom na falta</button>
-  {ghost_btn_html}
+  <button class="toggle-btn diag-btn" id="diagram-toggle" onclick="toggleDiagram()">Mapa IEEE 9-bus</button>
+  <button class="toggle-btn diag-btn" id="table-toggle" onclick="toggleTable()">Comparativo</button>
+  <button class="toggle-btn diag-btn" id="zoom-fault" onclick="toggleZoomFault()">Zoom na falta</button>
 </div>
 
 <main class="main">
@@ -149,9 +138,6 @@ class HTMLRenderer:
 {self._svg_section_html()}
     <p class="diag-hint">Clique em uma barra ou linha para selecionar o cenário de falta</p>
   </div>
-
-  <div id="cards-area"></div>
-  <div id="story-area"></div>
 
   <div class="table-section" id="table-section" style="display:none">
     <div class="section-header">
@@ -166,11 +152,9 @@ class HTMLRenderer:
             <th data-key="ise">ISE (rad²·s)</th>
             <th data-key="ts">tₛ (s)</th>
             <th data-key="peak">|θ_err| pico (°)</th>
-            <th data-key="dp">ΔP (pu)</th>
-            <th data-key="dq">ΔQ (pu)</th>
-            <th data-key="vmin">Vmin B2 (pu)</th>
-            <th data-key="vmin_b1">Vmin B1 (pu)</th>
-            <th data-key="vmin_b3">Vmin B3 (pu)</th>
+            <th data-key="vavg">V méd. B2 (pu)</th>
+            <th data-key="vavg_b1">V méd. B1 (pu)</th>
+            <th data-key="vavg_b3">V méd. B3 (pu)</th>
           </tr>
         </thead>
         <tbody id="cmp-tbody"></tbody>
@@ -179,18 +163,15 @@ class HTMLRenderer:
   </div>
 
   <div class="tab-bar" id="tab-bar">
-    <button class="tab-btn active" id="tab-res"  onclick="switchTab('res')">📌 Resumo</button>
-    <button class="tab-btn" id="tab-inv"  onclick="switchTab('inv')">⚡ Inversor UFV</button>
-    <button class="tab-btn" id="tab-sys"  onclick="switchTab('sys')">🔌 Sistema 9-Bus</button>
-    <button class="tab-btn" id="tab-spec" onclick="switchTab('spec')">📈 Espectro FFT</button>
+    <button class="tab-btn active" id="tab-res"  onclick="switchTab('res')">Resumo</button>
+    <button class="tab-btn" id="tab-inv"  onclick="switchTab('inv')">Inversor UFV</button>
+    <button class="tab-btn" id="tab-sys"  onclick="switchTab('sys')">Sistema 9-Bus</button>
+    <button class="tab-btn" id="tab-spec" onclick="switchTab('spec')">Espectro FFT</button>
   </div>
 
   <div class="chart-section" id="sec-res" style="display:none">
-    <div class="section-header">
-      <span class="section-title">Resumo — resposta essencial</span>
-      <span class="fault-badge" id="badge-res"></span>
-    </div>
-    <div id="plot-res"></div>
+    <div id="cards-area"></div>
+    <div id="story-area"></div>
   </div>
 
   <div class="chart-section" id="sec-inv" style="display:none">
@@ -307,14 +288,15 @@ function themedLayout(figData, isDarkMode) {{
       axUpd[k] = Object.assign({{}}, lg, upd);
     }}
   }});
-  // _label (rótulo de painel) usa xref "x.../x{{n}} domain"; _group_title (subtítulo
-  // de barra) usa xref "paper" — só essas duas cores vêm fixas do chart.py (não
-  // herdam layout.font, então precisam de override manual por tema aqui.
+  // _group_title (subtítulo de barra) usa xref "paper" + yref "y.../y{{n}} domain" e
+  // precisa de override manual de cor por tema (não herda layout.font). _label
+  // (barra de título do painel) usa xref "paper" + yref "paper" também, mas sua
+  // fonte branca é fixa (texto sobre a barra azul) e deve ficar intocada nos dois
+  // temas — senão perde contraste contra o fundo escuro da barra.
   var annotations = (figData.layout.annotations || []).map(function(a) {{
-    var isGroupTitle = a.xref === "paper";
-    var color = isDarkMode
-      ? (isGroupTitle ? "#cbd5e1" : "#9ca3af")
-      : (isGroupTitle ? "#334155" : "#6b7280");
+    var isGroupTitle = a.xref === "paper" && a.yref !== "paper";
+    if (!isGroupTitle) return a;
+    var color = isDarkMode ? "#cbd5e1" : "#334155";
     return Object.assign({{}}, a, {{ font: Object.assign({{}}, a.font, {{ color: color }}) }});
   }});
   // Só a divisória do _group_title (xref "paper") é re-temada. Os demais shapes
@@ -357,8 +339,7 @@ function _renderChart(which) {{
   PLOTLY_CFG.toImageButtonOptions.filename =
     "pll_" + currentKey.split("/").join("_") + "_" + which
     + (which === "spec" ? "_" + specPhase : "");
-  var data = themedData(figData.data, light, dark, idx, isDark)
-    .concat(_ghostData(which));
+  var data = themedData(figData.data, light, dark, idx, isDark);
   Plotly.react(gd[which], data, themedLayout(figData, isDark), PLOTLY_CFG);
   _dirty[which] = false;
 }}
@@ -421,7 +402,7 @@ function switchTab(which) {{
     tabBtn[t].classList.toggle("active", t === which);
     secEl[t].style.display = (t === which && avail) ? "" : "none";
   }});
-  if (_dirty[which]) {{
+  if (which !== "res" && _dirty[which]) {{
     _renderChart(which);
     _ensureBridges();
     _applyZoom();
@@ -434,7 +415,7 @@ function switchTab(which) {{
 
 function goToChart(labelFrag) {{
   var sc = SCENARIOS[currentKey];
-  var order = ["res", "inv", "sys"];
+  var order = ["inv", "sys"];
   for (var i = 0; i < order.length; i++) {{
     var t = order[i];
     if (!sc[HASKEY[t]]) continue;
@@ -467,53 +448,6 @@ function _openTabAt(t, fig, yref) {{
   }}, 60);
 }}
 
-// ── Fantasma: sobrepõe o cenário equivalente do outro modo PLL ────────────
-
-var ghostMode = false;
-
-function _exactEquiv(key) {{
-  var sc = SCENARIOS[key];
-  if (!sc) return null;
-  var other = sc.badPll ? key.replace("_bad_pll", "") : key + "_bad_pll";
-  return SCENARIOS[other] ? other : null;
-}}
-
-function _ghostData(which) {{
-  if (!ghostMode) return [];
-  var other = _exactEquiv(currentKey);
-  if (!other) return [];
-  var o = SCENARIOS[other];
-  var fig, idx, colors;
-  if (which === "spec") {{
-    if (!o.specModes || o.specModes.indexOf(specPhase) === -1) return [];
-    fig    = o.specData[specPhase];
-    idx    = o.specIdx[specPhase];
-    colors = isDark ? o.specDark[specPhase] : o.specLight[specPhase];
-  }} else {{
-    fig    = o[which + "Data"];
-    idx    = o[which + "Idx"];
-    colors = isDark ? o[which + "Dark"] : o[which + "Light"];
-  }}
-  if (!fig) return [];
-  var tag = o.badPll ? " (sintonia inadequada)" : " (nominal)";
-  // mesma cor do traço principal; pontilhado + opacidade marcam o fantasma
-  return idx.map(function(i, pos) {{
-    var tr = fig.data[i];
-    return Object.assign({{}}, tr, {{
-      opacity: 0.5,
-      line: Object.assign({{}}, tr.line, {{ color: colors[pos], dash: "dot", width: 1.2 }}),
-      name: (tr.name || "") + tag,
-      showlegend: false,
-      hoverinfo: "skip",
-    }});
-  }});
-}}
-
-function toggleGhost() {{
-  ghostMode = !ghostMode;
-  switchScenario(currentKey);
-}}
-
 // ── Zoom na janela de falta ───────────────────────────────────────────────
 
 var zoomFault = false;
@@ -527,7 +461,7 @@ function toggleZoomFault() {{
 // Todos os eixos X têm matches="x" (setado no chart.py) — basta atualizar o
 // eixo raiz de cada figura que os demais painéis seguem. O spec fica de fora
 // (eixo x em Hz); gráficos sujos (nunca renderizados nesta aba) também.
-var TIME_TABS = ["res", "inv", "sys"];
+var TIME_TABS = ["inv", "sys"];
 var _syncingZoom = false;
 
 function _plotted(t) {{
@@ -605,14 +539,7 @@ function _syncCtrlButtons() {{
   if (sc.tFault == null) zoomFault = false;
   zbtn.disabled = (sc.tFault == null);
   zbtn.classList.toggle("active", zoomFault);
-  zbtn.innerHTML = zoomFault ? "🔍&nbsp;Visão completa" : "🔍&nbsp;Zoom na falta";
-  var gbtn = document.getElementById("ghost-toggle");
-  if (gbtn) {{
-    if (_exactEquiv(currentKey) == null) ghostMode = false;
-    gbtn.disabled = (_exactEquiv(currentKey) == null);
-    gbtn.classList.toggle("active", ghostMode);
-    gbtn.innerHTML = ghostMode ? "👻&nbsp;Ocultar comparação" : "👻&nbsp;Comparar PLL";
-  }}
+  zbtn.innerHTML = zoomFault ? "Visão completa" : "Zoom na falta";
 }}
 
 function updateFaultUI(sc) {{
@@ -694,7 +621,7 @@ function renderComparisonTable() {{
     var active = (k === currentKey) ? " cmp-active" : "";
     return "<tr class=\\"cmp-row" + active + "\\" onclick=\\"_pickTableRow('" + k + "')\\">"
       + "<td class=\\"cmp-label\\">" + sc.label + "</td>"
-      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.dp) + _cmpCell(r.dq) + _cmpCell(r.vmin) + _cmpCell(r.vmin_b1) + _cmpCell(r.vmin_b3)
+      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.vavg) + _cmpCell(r.vavg_b1) + _cmpCell(r.vavg_b3)
       + "</tr>";
   }}).join("");
 }}
@@ -844,7 +771,7 @@ function toggleDiagram() {{
   var btn = document.getElementById("diagram-toggle");
   var hidden = sec.style.display === "none";
   sec.style.display = hidden ? "" : "none";
-  btn.innerHTML = hidden ? "🗺&nbsp;Ocultar mapa" : "🗺&nbsp;Mapa IEEE 9-bus";
+  btn.innerHTML = hidden ? "Ocultar mapa" : "Mapa IEEE 9-bus";
   btn.style.opacity = hidden ? "1" : "0.85";
 }}
 
@@ -854,7 +781,6 @@ function toggleTheme() {{
   TABS.forEach(function(t) {{ _dirty[t] = true; }});
   _renderChart(activeTab);
   _applyZoom();
-  document.getElementById("ico").textContent = isDark ? "☀️" : "🌙";
   document.getElementById("lbl").textContent = isDark ? "Light mode" : "Dark mode";
 }}
 
@@ -931,15 +857,117 @@ switchScenario(currentKey);
 
     # ── Tabela de harmônicas (aba Espectro) ──────────────────────────────────
 
+    def _harm_cell_tier(self, kind: str, mode: str, k: int, seg_name: str,
+                         v: float) -> tuple[str, str]:
+        """Classe CSS + atributo title (tooltip) de uma célula da tabela de
+        harmônicas. Prioridade: fundamental (k=1, só em abc) > violação
+        normativa em abc / desequilíbrio em dq (h=2ª) > valor quase-zero
+        apagado > normal. Em d/q a linha k=1 NÃO é a fundamental (essa é DC
+        e sai do espectro junto com a média em `_amplitude_spectrum`) — é o
+        resíduo em 60 Hz, então fica na escala comum, sem destaque.
+        Limites por ordem harmônica (IEEE 519-2014/1547-2018) só valem no
+        domínio abc; em dq só a 2ª harmônica (120 Hz, sequência negativa) tem
+        critério (patamar empírico da TeseAGP) — ver
+        kb/standards/harmonic_significance_criteria.md. O segmento "Durante a
+        falta" fica isento SÓ da checagem abc (SPEC_SEG_NO_NORM): os limites
+        IEEE 519/1547 são critérios de regime permanente, não se aplicam ao
+        curto-circuito em si. O critério de desequilíbrio dq, ao contrário, é
+        sobre severidade do distúrbio — continua valendo durante a falta
+        (é justamente onde a sequência negativa é mais relevante)."""
+        if k == 1 and mode in ("a", "b", "c"):
+            return "harm-fund", ""
+        if k > 1 and mode in ("a", "b", "c") and seg_name not in SPEC_SEG_NO_NORM:
+            if kind == "i":
+                limit = CURR_ODD_LIMIT_PU if k % 2 else CURR_EVEN_LIMITS_PU.get(k)
+                norm = ("IEEE 519-2014 Tab.2 / IEEE 1547-2018 §7.3" if k % 2
+                         else "IEEE 1547-2018 §7.3 (Relaxed Evens)")
+            else:
+                limit = VOLT_INDIVIDUAL_LIMIT_PU
+                norm = "IEEE 519-2014 Tab.1"
+            if limit is not None and v >= limit:
+                return "harm-viol", f" title=\"excede {limit * 100:.1f}% ({norm})\""
+        elif mode in ("d", "q") and k == 2:
+            if v >= DQ_UNBALANCE_HIGH_PU:
+                return ("harm-unb", " title=\"desequilíbrio de sequência "
+                        f"negativa ≥{DQ_UNBALANCE_HIGH_PU * 100:.0f}% (TeseAGP)\"")
+            if v >= DQ_UNBALANCE_WARN_PU:
+                return ("harm-warn", " title=\"desequilíbrio de sequência "
+                        f"negativa ≥{DQ_UNBALANCE_WARN_PU * 100:.0f}% (TeseAGP)\"")
+        if v < self._HARM_LO_PU:
+            return "harm-lo", ""
+        return "", ""
+
+    def _harm_legend_html(self, has_no_norm_seg: bool) -> str:
+        """Legenda da tabela de harmônicas, em duas camadas: linha de swatches
+        sempre visível + `<details>` "Como ler esta tabela" com um bloco por
+        critério e as referências em forma curta.
+
+        Regra editorial (kb/standards/harmonic_norm_application.md, seção "O
+        que vai na tela vs. o que fica no KB"): aqui entra só a REGRA aplicada
+        — o limite, a base do percentual e a norma citada. A genealogia do
+        número (razão Isc/IL, nota "c" da Tab.2 do IEEE 519-2014, por que IL
+        foi descartado como base) fica no KB, não na tela."""
+        evens = sorted(CURR_EVEN_LIMITS_PU.items())
+        ev_lim = " / ".join(f"{v * 100:g}%" for _, v in evens)
+        ev_ord = " / ".join(f"{k}ª" for k, _ in evens)
+        items = [
+            ("a/b/c — conformidade normativa",
+             "Vermelho: a amplitude daquela ordem passa do limite individual. "
+             f"Corrente: {CURR_ODD_LIMIT_PU * 100:g}% nos ímpares, {ev_lim} na "
+             f"{ev_ord} — percentuais da corrente nominal do inversor. "
+             f"Tensão: {VOLT_INDIVIDUAL_LIMIT_PU * 100:g}%, sobre a nominal da "
+             "Barra 2 (20 kV). Fontes: IEEE 1547-2018 §7.3 (corrente), "
+             "IEEE 519-2014 Tabela 1 (tensão)."),
+            ("d/q, 2ª harmônica (120 Hz) — desequilíbrio, não conformidade",
+             f"Âmbar ≥{DQ_UNBALANCE_WARN_PU * 100:g}%, vermelho "
+             f"≥{DQ_UNBALANCE_HIGH_PU * 100:g}%: mede a fração de sequência "
+             "negativa. Patamar empírico (TeseAGP §5.2.2), sem base normativa."),
+            ("Por que d/q não é checado por ordem",
+             "A transformada de Park junta ordens diferentes no mesmo bin "
+             "(5ª e 7ª caem ambas em 360 Hz). Conformidade por ordem só é "
+             "verificável em a/b/c."),
+        ]
+        if has_no_norm_seg:
+            items.append((
+                "O * em “Durante a falta”",
+                "IEEE 519/1547 são limites de regime permanente, não se "
+                "aplicam ao curto-circuito em si. O critério de desequilíbrio "
+                "dq continua valendo — é ali que a sequência negativa é maior."))
+        items.append((
+            "A 1ª linha em d/q não é a fundamental",
+            "No dq a fundamental é DC e sai do espectro junto com o offset; "
+            "o valor mostrado é o resíduo em 60 Hz."))
+        rows = "".join(f"<dt>{t}</dt><dd>{d}</dd>" for t, d in items)
+        return (
+            "<div class='harm-legend'>"
+            "<p class='harm-leg-row'>"
+            "<span class='harm-leg-sw harm-leg-viol'></span>excede limite "
+            "normativo<span class='harm-leg-dot'>·</span>"
+            "<span class='harm-leg-sw harm-leg-warn'></span>"
+            "<span class='harm-leg-sw harm-leg-unb'></span>desequilíbrio dq"
+            "<span class='harm-leg-dot'>·</span>"
+            "<span class='harm-leg-sw harm-leg-lo'></span>abaixo de "
+            f"{self._HARM_LO_PU * 100:g}%"
+            "</p>"
+            "<details class='harm-help'><summary>Como ler esta tabela</summary>"
+            f"<dl>{rows}</dl>"
+            "<p class='harm-refs'>IEEE Std 519-2014 · IEEE Std 1547.2-2023 · "
+            "ALVES, A. G. P. Tese (Doutorado), COPPE/UFRJ, 2022.</p>"
+            "</details></div>"
+        )
+
     def _spec_table_html(self, harm: dict) -> str:
         """Tabelas de amplitude das harmônicas 1–7 (k·60 Hz), colunas
         agrupadas por segmento (pré/durante/pós-falta) × fase/eixo (a b c d q)
         — uma tabela para corrente, outra para tensão UFV. Valores vêm do
-        SpectrumBuilder (pico local do espectro de Hann em cada k·60 Hz)."""
+        SpectrumBuilder (pico local do espectro de Hann em cada k·60 Hz).
+        Células são comparadas a limites normativos reais via
+        `_harm_cell_tier` (ver docstring lá)."""
         segs = harm.get("segs") or []
         if not segs:
             return ""
         n_modes = len(self._SPEC_MODES)
+        has_no_norm_seg = any(s in SPEC_SEG_NO_NORM for s in segs)
         blocks: list[str] = []
         for kind, title in (("i", "Corrente UFV"), ("v", "Tensão UFV")):
             per_seg = harm.get(kind) or {}
@@ -948,7 +976,8 @@ switchScenario(currentKey);
             head1 = "<tr><th rowspan='2'>h</th><th rowspan='2'>f (Hz)</th>"
             head2 = "<tr>"
             for s in segs:
-                head1 += f"<th colspan='{n_modes}' class='harm-first'>{s}</th>"
+                star = " *" if s in SPEC_SEG_NO_NORM else ""
+                head1 += f"<th colspan='{n_modes}' class='harm-first'>{s}{star}</th>"
                 for j, mo in enumerate(self._SPEC_MODES):
                     first = " harm-first" if j == 0 else ""
                     head2 += f"<th class='harm-sub{first}'>{mo}</th>"
@@ -967,12 +996,10 @@ switchScenario(currentKey);
                         if v is None:
                             cells += f"<td class='harm-na{first}'>—</td>"
                             continue
-                        # limiares absolutos em pu: destaque só para amplitude
-                        # na ordem da nominal; quase-zero fica apagado
-                        tier = (" harm-top" if v >= self._HARM_HI_PU
-                                else " harm-lo" if v < self._HARM_LO_PU
-                                else "")
-                        cells += f"<td class='harm-val{first}{tier}'>{v:.3g}</td>"
+                        tier, title_attr = self._harm_cell_tier(kind, mo, k, s, v)
+                        tier_cls = f" {tier}" if tier else ""
+                        cells += (f"<td class='harm-val{first}{tier_cls}'"
+                                  f"{title_attr}>{v:.3g}</td>")
                 rows.append(f"<tr>{cells}</tr>")
             blocks.append(
                 f"<div class='harm-block'>"
@@ -981,6 +1008,8 @@ switchScenario(currentKey);
                 f"<thead>{head1}{head2}</thead>"
                 f"<tbody>{''.join(rows)}</tbody></table></div></div>"
             )
+        if blocks:
+            blocks.append(self._harm_legend_html(has_no_norm_seg))
         return "".join(blocks)
 
     # ── Cards ────────────────────────────────────────────────────────────────
@@ -1022,11 +1051,9 @@ switchScenario(currentKey);
             "ise":  cell(m.get("ISE"), 4, ISE_THRESH),
             "ts":   ts_cell,
             "peak": cell(peak_deg, 1, PEAK_ERR_DEG_THRESH),
-            "dp":   cell(m.get("dP_ufv"), 3, DP_THRESH),
-            "dq":   cell(m.get("dQ_ufv"), 3, DQ_THRESH),
-            "vmin":    cell(m.get("vmin"),      3, VBUS_MIN_THRESH, lower_is_better=False),
-            "vmin_b1": cell(m.get("vmin_bus1"), 3, VBUS_MIN_THRESH, lower_is_better=False),
-            "vmin_b3": cell(m.get("vmin_bus3"), 3, VBUS_MIN_THRESH, lower_is_better=False),
+            "vavg":    cell(m.get("vavg"),      3, VBUS_AVG_THRESH, lower_is_better=False),
+            "vavg_b1": cell(m.get("vavg_bus1"), 3, VBUS_AVG_THRESH, lower_is_better=False),
+            "vavg_b3": cell(m.get("vavg_bus3"), 3, VBUS_AVG_THRESH, lower_is_better=False),
         }
 
     def _cards_html(self, data: SimData) -> str:
@@ -1078,11 +1105,29 @@ switchScenario(currentKey);
         peak_win  = "em regime" if is_regime else "pós-falta"
         sync_loss = peak_deg is not None and peak_deg >= SYNC_LOSS_DEG
         peak_card = _card("|θ_err| pico", _v(peak_deg, 1), "°",
-                          "perda de sincronismo" if sync_loss else "máx |θ̂ − θ_rede|",
-                          f"Pico do erro de fase {peak_win} (≥ {SYNC_LOSS_DEG:.0f}° "
-                          "indica escorregamento do PLL)",
+                          "perda de sincronismo" if sync_loss else "pico transitório",
+                          f"Pico (máx instantâneo) do erro de fase {peak_win} — pior "
+                          f"excursão, distinto do erro sustentado de R.P. "
+                          f"(≥ {SYNC_LOSS_DEG:.0f}° indica escorregamento do PLL)",
                           self._classify(peak_deg, PEAK_ERR_DEG_THRESH),
                           target="Erro de fase")
+
+        # Erro de regime permanente: erro de fase SUSTENTADO (média de |e|) na
+        # janela após a acomodação (t ≥ t_ss). Só existe quando há regime a
+        # medir — falta que não reacomodou fica sem este card.
+        err_ss_deg = float(np.degrees(m["err_ss_mean"])) if m.get("err_ss_mean") is not None else None
+        t_ss       = m.get("t_ss")
+        if err_ss_deg is not None and t_ss is not None:
+            ss_card = _card("Erro R.P.", _v(err_ss_deg, 2), "°",
+                            f"média |e|, t ≥ {t_ss:.3f} s",
+                            f"Erro de fase sustentado em regime permanente — média de "
+                            f"|θ̂ − θ_rede| a partir de t = {t_ss:.3f} s "
+                            f"({'PLL travado' if is_regime else 'após a acomodação tₛ'}). "
+                            f"Não confundir com o pico transitório.",
+                            self._classify(err_ss_deg, ERR_SS_DEG_THRESH),
+                            target="Erro de fase")
+        else:
+            ss_card = ""
 
         pll = "".join([
             _card("IAE", _v(m.get("IAE"), 3), "rad·s", "∫|e| dt",
@@ -1095,42 +1140,35 @@ switchScenario(currentKey);
                   target="Erro de fase"),
             ts_card,
             peak_card,
-        ])
-
-        rec_sub = "regime" if is_regime else "pós-clear"
-        rec_ctx = ("em regime (oscilação sustentada)" if is_regime
-                   else "na recuperação")
-        inv = "".join([
-            _card("ΔP UFV", _v(m.get("dP_ufv"), 3), "pu", rec_sub,
-                  f"Excursão de potência ativa {rec_ctx} (UFV)",
-                  self._classify(m.get("dP_ufv"), DP_THRESH),
-                  target="P / Q UFV"),
-            _card("ΔQ UFV", _v(m.get("dQ_ufv"), 3), "pu", rec_sub,
-                  f"Excursão de potência reativa {rec_ctx} (UFV)",
-                  self._classify(m.get("dQ_ufv"), DQ_THRESH),
-                  target="P / Q UFV"),
+            ss_card,
         ])
 
         # Severidade: contexto do distúrbio — cor indica profundidade do sag,
         # mas não entra no veredito de desempenho
-        # "V residual" = tensão remanescente do afundamento (PRODIST/IEC);
-        # em regime não há curto, então o card volta a "V min"
-        vlab = "V min" if is_regime else "V residual"
+        # "V residual" = tensão remanescente do afundamento (PRODIST/IEC),
+        # aqui a MÉDIA (não o pior instante): em regime cobre o período
+        # inteiro pós-T_SETTLE; numa falta, só a janela t_fault–t_clear.
+        # Sem curto, o card volta a "V médio".
+        vlab = "V médio" if is_regime else "V residual médio"
+        janela_b2 = (f"t ≥ {T_SETTLE:.2f} s" if is_regime else
+                     f"t = {data.t_fault:.2f}–{data.t_clear:.2f} s"
+                     if data.t_clear is not None else f"t ≥ {data.t_fault:.2f} s")
         sev_cards = [
-            _card(f"{vlab} B2", _v(m.get("vmin"), 3), "pu", "POC do inversor (UFV)",
-                  f"Tensão mínima na Barra 2 (LVRT ≥ {LVRT_THRESHOLD} pu) — "
+            _card(f"{vlab} B2", _v(m.get("vavg"), 3), "pu", "POC do inversor (UFV)",
+                  f"Tensão média na Barra 2 ({janela_b2}, LVRT ≥ {LVRT_THRESHOLD} pu) — "
                   "severidade do distúrbio",
-                  self._classify(m.get("vmin"), VBUS_MIN_THRESH, lower_is_better=False),
+                  self._classify(m.get("vavg"), VBUS_AVG_THRESH, lower_is_better=False),
                   target="|V| Bus 2"),
         ]
-        for key, bus, sub in (("vmin_bus1", "B1", "barra do G1 (slack)"),
-                              ("vmin_bus3", "B3", "barra do G3")):
+        for key, bus, sub in (("vavg_bus1", "B1", "barra do G1 (slack)"),
+                              ("vavg_bus3", "B3", "barra do G3")):
             if m.get(key) is not None:
+                janela_txt = "todo o período" if is_regime else "durante o curto"
                 sev_cards.append(
                     _card(f"{vlab} {bus}", _v(m.get(key), 3), "pu", sub,
-                          f"Tensão mínima na barra {bus[1]} durante o curto — "
+                          f"Tensão média na barra {bus[1]} ({janela_txt}) — "
                           "propagação do afundamento pela rede",
-                          self._classify(m.get(key), VBUS_MIN_THRESH,
+                          self._classify(m.get(key), VBUS_AVG_THRESH,
                                          lower_is_better=False),
                           target=f"|V| Bus {bus[1]}"))
         if data.t_fault is not None and data.t_clear is not None:
@@ -1140,13 +1178,10 @@ switchScenario(currentKey);
                       f"t = {data.t_fault:.2f} – {data.t_clear:.2f} s",
                       "Duração da falta aplicada", "neutral"))
         sev_label = "Sistema 9-Bus" if is_regime else "Severidade do distúrbio"
-        inv_label = ("Estabilidade de potência" if is_regime
-                     else "Recuperação do inversor")
 
         return (
             _group(sev_label, "".join(sev_cards)) + "\n"
-            + _group("Desempenho do PLL", pll) + "\n"
-            + _group(inv_label, inv)
+            + _group("Desempenho do PLL", pll)
         )
 
     # ── Narrativa ────────────────────────────────────────────────────────────
@@ -1158,9 +1193,7 @@ switchScenario(currentKey);
         ts       = m.get("ts")
         ts_delta = m.get("ts_delta")
         settled  = m.get("settled")
-        dp       = m.get("dP_ufv")
-        dq       = m.get("dQ_ufv")
-        vmin     = m.get("vmin")
+        vavg     = m.get("vavg")
         peak_deg = float(np.degrees(m["peak_err"])) if m.get("peak_err") is not None else None
         tol      = round(float(np.degrees(TOL_RAD)), 2)
 
@@ -1173,22 +1206,22 @@ switchScenario(currentKey);
                           "Operação em regime permanente, sem contingência aplicada — "
                           "métricas calculadas descartando o transitório de partida "
                           f"(t ≥ {T_SETTLE:.2f} s)."))
-        elif vmin is not None:
-            sev = self._classify(vmin, VBUS_MIN_THRESH, lower_is_better=False)
+        elif vavg is not None:
+            sev = self._classify(vavg, VBUS_AVG_THRESH, lower_is_better=False)
             dur = (f" de {(data.t_clear - data.t_fault) * 1e3:.0f} ms"
                    if data.t_clear is not None else "")
             if sev == "good":
                 parts.append(("good", "Distúrbio",
                               f"Falta{dur} com afundamento leve na Barra 2 "
-                              f"(V residual = {vmin:.3f} pu)."))
+                              f"(V residual médio = {vavg:.3f} pu)."))
             elif sev == "warn":
                 parts.append(("warn", "Distúrbio",
                               f"Falta{dur} com afundamento moderado na Barra 2 "
-                              f"(V residual = {vmin:.3f} pu, abaixo do limiar LVRT)."))
+                              f"(V residual médio = {vavg:.3f} pu, abaixo do limiar LVRT)."))
             else:
                 parts.append(("bad", "Distúrbio",
                               f"Falta{dur} com afundamento severo na Barra 2 "
-                              f"(V residual = {vmin:.3f} pu) — condição crítica de LVRT."))
+                              f"(V residual médio = {vavg:.3f} pu) — condição crítica de LVRT."))
 
         # ── resposta do PLL ──────────────────────────────────────────────────
         peak_cls = self._classify(peak_deg, PEAK_ERR_DEG_THRESH)
@@ -1224,6 +1257,25 @@ switchScenario(currentKey);
                               f"Δt = {ts_delta:.2f} s (tₛ = {ts:.3f} s) — "
                               "resposta lenta."))
 
+        # ── erro sustentado em regime permanente (após a acomodação) ─────────
+        err_ss_deg = float(np.degrees(m["err_ss_mean"])) if m.get("err_ss_mean") is not None else None
+        t_ss       = m.get("t_ss")
+        if err_ss_deg is not None and t_ss is not None:
+            ss_cls = self._classify(err_ss_deg, ERR_SS_DEG_THRESH)
+            win = "regime permanente" if is_regime else "regime pós-falta"
+            if ss_cls == "good":
+                parts.append(("good", "Erro de regime",
+                              f"Erro de fase sustentado de {err_ss_deg:.2f}° "
+                              f"(média para t ≥ {t_ss:.3f} s) — desprezível."))
+            elif ss_cls == "warn":
+                parts.append(("warn", "Erro de regime",
+                              f"Erro de fase sustentado de {err_ss_deg:.2f}° em {win} "
+                              f"(t ≥ {t_ss:.3f} s) — moderado."))
+            else:
+                parts.append(("bad", "Erro de regime",
+                              f"Erro de fase sustentado de {err_ss_deg:.2f}° em {win} "
+                              f"(t ≥ {t_ss:.3f} s) — elevado para regime permanente."))
+
         iae_cls = self._classify(iae, IAE_THRESH)
         if iae is not None:
             if iae_cls == "good":
@@ -1236,31 +1288,6 @@ switchScenario(currentKey);
                 parts.append(("bad", "Erro acumulado",
                               f"IAE = {iae:.3f} rad·s — acumulação significativa."))
 
-        # ── recuperação (pós-clear) ou estabilidade de P/Q (regime) ──────────
-        dp_cls = self._classify(dp, DP_THRESH)
-        if dp is not None:
-            label = "Oscilação de potência" if is_regime else "Recuperação"
-            if dp_cls == "good":
-                if is_regime:
-                    parts.append(("good", label,
-                                  f"ΔP = {dp:.3f} pu — estável em operação normal."))
-                else:
-                    parts.append(("good", label,
-                                  f"ΔP = {dp:.3f} pu, sem oscilação residual após a falta."))
-            elif dp_cls == "warn":
-                parts.append(("warn", label,
-                              f"Oscilação moderada de potência ativa "
-                              f"(ΔP = {dp:.3f} pu)."))
-            else:
-                if is_regime:
-                    parts.append(("bad", label,
-                                  f"Oscilação sustentada em regime "
-                                  f"(ΔP = {dp:.3f} pu) — risco de atuação de proteção."))
-                else:
-                    parts.append(("bad", label,
-                                  f"Oscilação severa após a falta "
-                                  f"(ΔP = {dp:.3f} pu) — risco de atuação de proteção."))
-
         # Veredito: só métricas de desempenho/recuperação — a severidade do
         # afundamento (V min) é contexto e fica de fora
         statuses = [
@@ -1268,8 +1295,6 @@ switchScenario(currentKey);
             self._classify(m.get("ISE"), ISE_THRESH),
             ts_cls,
             peak_cls,
-            dp_cls,
-            self._classify(dq, DQ_THRESH),
         ]
         if "bad" in statuses:
             verdict_cls, verdict_txt = "bad",     "Desempenho crítico"
@@ -1323,6 +1348,8 @@ switchScenario(currentKey);
   --btn-bg:    #ffffff;
   --btn-fg:    #374151;
   --btn-bdr:   #d1d5db;
+  --danger:    #dc2626;
+  --warn:      #ca8a04;
 }
 [data-theme="dark"] {
   --bg:        #0a0f1e;
@@ -1339,6 +1366,8 @@ switchScenario(currentKey);
   --btn-bg:    #1f2937;
   --btn-fg:    #d1d5db;
   --btn-bdr:   #374151;
+  --danger:    #f87171;
+  --warn:      #fbbf24;
 }
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0 }
 body {
@@ -1550,7 +1579,10 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 }
 [data-theme="dark"] .fault-badge { color: #fcd34d; background: #451a03 }
 .spec-hint { font-size: 10.5px; color: var(--muted); letter-spacing: .2px }
-#plot-res, #plot-inv, #plot-sys, #plot-spec { width: 100% }
+#plot-inv, #plot-sys, #plot-spec { width: 100% }
+/* Resumo não tem section-header/plot próprios — cards + diagnóstico levam
+   o padding que antes vinha de .main diretamente */
+#sec-res { padding: 20px 20px 4px; }
 
 /* ── Abas de gráficos ── */
 .tab-bar {
@@ -1686,13 +1718,53 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 .harm-table tbody tr:hover { background: var(--bg) }
 .harm-h   { font-weight: 600; color: var(--text); text-align: center !important }
 .harm-val { color: var(--text) }
-.harm-top {
+.harm-fund {
   font-weight: 700; color: var(--accent);
   background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.harm-viol, .harm-unb {
+  font-weight: 700; color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+  cursor: help;
+}
+.harm-warn {
+  font-weight: 700; color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 14%, transparent);
+  cursor: help;
 }
 .harm-lo  { color: var(--muted); opacity: .5 }
 .harm-na  { color: var(--muted) }
 .harm-first { border-left: 1.5px solid var(--border) }
+.harm-legend {
+  font-size: 11px; color: var(--muted); padding: 6px 20px 12px;
+  line-height: 1.55;
+}
+.harm-leg-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 5px;
+  margin: 0 0 6px;
+}
+.harm-leg-dot { opacity: .45; margin: 0 3px }
+.harm-leg-sw {
+  display: inline-block; width: 11px; height: 11px; border-radius: 3px;
+}
+.harm-leg-viol, .harm-leg-unb { background: var(--danger) }
+.harm-leg-warn { background: var(--warn) }
+.harm-leg-lo   { background: var(--muted); opacity: .45 }
+.harm-help > summary {
+  cursor: pointer; font-weight: 700; color: var(--text);
+  list-style: none; display: inline-flex; align-items: center; gap: 5px;
+  padding: 2px 0;
+}
+.harm-help > summary::-webkit-details-marker { display: none }
+.harm-help > summary::before {
+  content: "\\25B8"; display: inline-block; font-size: 10px;
+  transition: transform .18s;
+}
+.harm-help[open] > summary::before { transform: rotate(90deg) }
+.harm-help dl { margin: 6px 0 0; max-width: 78ch }
+.harm-help dt { font-weight: 700; color: var(--text); margin-top: 9px }
+.harm-help dd { margin: 2px 0 0 }
+.harm-refs { margin: 11px 0 0; font-size: 10px; opacity: .75 }
 
 /* ── SVG tooltip ── */
 .svg-tip {

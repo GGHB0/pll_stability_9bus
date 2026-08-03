@@ -134,8 +134,14 @@ Frontmatter obrigatório em qualquer arquivo KB:
 name: slug-do-arquivo
 description: Uma linha descrevendo o conteúdo (usada para decidir relevância)
 source: Sobrenome Autor, Título Abreviado, ano, §seção ou p.páginas
+references:
+  - "Citação bibliográfica completa — ver .claude/rules/references.md"
 ---
 ```
+`references:` é obrigatório quando a fonte é literatura externa (livro, tese,
+artigo, norma, relatório) — regras completas em
+[references.md](../../rules/references.md). Os metadados extraídos no
+Passo 1 (`toc.txt`) normalmente já trazem autor/título/ano suficientes.
 
 ## PDFs com Mapa de Seções Conhecido
 

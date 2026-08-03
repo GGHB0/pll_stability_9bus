@@ -6,7 +6,11 @@ Classe principal: SimData
     .t_fast, .theta_pll_fast,   → ângulos na taxa nativa Ts (alta resolução)
     .theta_ref_fast, .theta_err_fast
     .metrics                     → dict com IAE, ISE, ts, ts_delta, settled,
-                                   peak_err, dP/dQ (pós-clear), vmin, vmin_bus1/3
+                                   peak_err (pico transitório), t_ss/err_ss_mean/
+                                   err_ss_rms (erro de fase em regime permanente,
+                                   após a acomodação), vavg (média de |V| —
+                                   período inteiro em regime, só a janela da
+                                   falta em contingência), vavg_bus1/3
     .has_ang, .has_dq_ufv, .has_ref_ufv → flags de disponibilidade de colunas
 
 Três CSVs exportados pelo MATLAB:
@@ -220,58 +224,24 @@ class SimData:
         else:
             self.id_ufv_ref = self.iq_ufv_ref = None
 
-        # ── frequência estimada do PLL ───────────────────────────────────────
-        self._estimate_freq()
-
         # ── métricas ─────────────────────────────────────────────────────────
         self.metrics = self._compute_metrics()
 
     # ── internos ─────────────────────────────────────────────────────────────
 
-    def _estimate_freq(self) -> None:
-        """f̂ = dθ̂/dt / 2π (Hz) por diferença central com janela ~1 ms.
-
-        A diferença com passo largo (k amostras ≈ 0,5 ms para cada lado) já
-        atua como filtro passa-baixa, suprimindo o ripple de chaveamento sem
-        precisar de convolução sobre os milhões de pontos do eixo rápido.
-        """
-        if self.theta_pll_fast is not None:
-            t, th = self.t_fast, self.theta_pll_fast
-        elif self.theta_pll is not None:
-            t, th = self.t, self.theta_pll
-        else:
-            t = th = None
-
-        if t is None or len(t) < 3:
-            self.t_freq = self.f_pll = None
-            self.has_freq = False
-            return
-
-        th_u = np.unwrap(th)
-        dt = float(np.median(np.diff(t[: min(len(t), 1000)])))
-        k = max(1, int(round(5e-4 / dt))) if dt > 0 else 1
-        if 2 * k >= len(t):
-            k = 1
-        self.f_pll = (th_u[2 * k:] - th_u[:-2 * k]) / (t[2 * k:] - t[:-2 * k]) / (2.0 * np.pi)
-        self.t_freq = t[k:-k]
-        self.has_freq = True
-
     def _compute_metrics(self) -> dict:
-        """Métricas em duas janelas: pós-falta (t ≥ t_fault → erro de fase, V_min)
-        e pós-clear (t ≥ t_clear → ΔP/ΔQ de recuperação, sem o afundamento em si).
-        Nenhuma janela começa antes de T_SETTLE: o transitório de partida do PLL
+        """Métricas na janela pós-falta (t ≥ t_fault → erro de fase, V_min).
+        A janela não começa antes de T_SETTLE: o transitório de partida do PLL
         (trava em ~0.08 s) não é falta de desempenho e fica fora das integrais.
-        Regime permanente (t_fault None) usa t ≥ T_SETTLE nas duas janelas."""
+        Regime permanente (t_fault None) usa t ≥ T_SETTLE."""
         is_regime = self.t_fault is None
         t_start = min(T_SETTLE, float(self.t[-1])) if is_regime \
             else max(self.t_fault, T_SETTLE)
-        t_rec   = self.t_clear if (not is_regime and self.t_clear is not None) else t_start
-        t_rec   = max(t_rec, T_SETTLE)
-        mask     = self.t >= t_start
-        mask_rec = self.t >= t_rec
+        mask = self.t >= t_start
         metrics: dict = {
             "IAE": None, "ISE": None, "ts": None, "ts_delta": None,
             "peak_err": None, "settled": None,
+            "t_ss": None, "err_ss_mean": None, "err_ss_rms": None,
         }
 
         if self.theta_err is not None:
@@ -297,15 +267,43 @@ class SimData:
                     if metrics["ts"] is not None:
                         metrics["ts_delta"] = metrics["ts"] - t_start
 
-        p_rec = self.P_ufv[mask_rec]
-        q_rec = self.Q_ufv[mask_rec]
-        metrics["dP_ufv"] = float(p_rec.max() - p_rec.min()) if len(p_rec) else None
-        metrics["dQ_ufv"] = float(q_rec.max() - q_rec.min()) if len(q_rec) else None
-        for key, vbus in (("vmin", self.vbus2), ("vmin_bus1", self.vbus1),
-                          ("vmin_bus3", self.vbus3)):
+                # ── erro de regime permanente (janela após a acomodação) ─────
+                # t_ss = instante em que o regime começa: tₛ quando a falta
+                # reacomodou; T_SETTLE em regime permanente (PLL já travado).
+                # Falta que não reacomodou não tem regime → métrica fica None.
+                # O pico (peak_err) é transitório e mede a pior excursão; aqui
+                # medimos o erro SUSTENTADO — média/RMS de |e| até o fim.
+                if is_regime:
+                    t_ss = t_start
+                elif metrics.get("settled") and metrics.get("ts") is not None:
+                    t_ss = metrics["ts"]
+                else:
+                    t_ss = None
+                if t_ss is not None:
+                    e_ss = self.theta_err[self.t >= t_ss]
+                    if len(e_ss):
+                        metrics["t_ss"]        = float(t_ss)
+                        metrics["err_ss_mean"] = float(np.mean(np.abs(e_ss)))
+                        metrics["err_ss_rms"]  = float(np.sqrt(np.mean(e_ss ** 2)))
+
+        # Média de |V|, não o mínimo: em regime cobre o período inteiro pós-
+        # T_SETTLE (mesma janela de t_start acima); numa falta, fica restrita
+        # à janela da falta em si (t_start → t_clear) — sem t_clear (falta
+        # permanente) vai até o fim, mesmo padrão de "durante a falta" usado
+        # em SpectrumBuilder._segments.
+        t_end = float(self.t[-1])
+        if is_regime:
+            v_hi = t_end
+        elif self.t_clear is not None and self.t_clear < t_end:
+            v_hi = self.t_clear
+        else:
+            v_hi = t_end
+        vmask = (self.t >= t_start) & (self.t <= v_hi)
+        for key, vbus in (("vavg", self.vbus2), ("vavg_bus1", self.vbus1),
+                          ("vavg_bus3", self.vbus3)):
             if vbus is not None:
-                v_pf = vbus[mask]
-                metrics[key] = float(v_pf.min()) if len(v_pf) else None
+                v_win = vbus[vmask]
+                metrics[key] = float(v_win.mean()) if len(v_win) else None
             else:
                 metrics[key] = None
         return metrics
@@ -318,5 +316,5 @@ class SimData:
         return (
             f"SimData(n={n}, "
             f"IAE={m.get('IAE')}, ISE={m.get('ISE')}, "
-            f"ts={m.get('ts')}, dP_ufv={m.get('dP_ufv'):.4f}, dQ_ufv={m.get('dQ_ufv'):.4f})"
+            f"ts={m.get('ts')})"
         )

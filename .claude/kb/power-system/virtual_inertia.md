@@ -2,6 +2,9 @@
 name: virtual-inertia
 description: Inércia virtual/sintética em IBRs — VSG/VSM, parâmetros J_virt e D, grid-forming vs grid-following, e posição como trabalho futuro do TCC
 source: MDPI Energies 15(20) 7767 (2022); MDPI Energies 15(22) 8406 (2022)
+references:
+  - "DIMOULIAS, Stelios C.; KONTIS, Eleftherios O.; PAPAGIANNIS, Grigoris K. Inertia Estimation of Synchronous Devices: Review of Available Techniques and Comparative Assessment of Conventional Measurement-Based Approaches. Energies, v. 15, n. 20, art. 7767, 2022. DOI: 10.3390/en15207767."
+  - "SHADOUL, M.; AHSHAN, R.; ALABRI, R. S.; AL-BADI, A.; ALBADI, M.; JAMIL, M. A Comprehensive Review on a Virtual-Synchronous Generator: Topologies, Control Orders and Techniques, Energy Storages, and Applications. Energies, v. 15, n. 22, art. 8406, 2022. DOI: 10.3390/en15228406."
 ---
 
 # Inércia Virtual / Sintética em Inversores

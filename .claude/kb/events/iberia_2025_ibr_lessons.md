@@ -2,6 +2,8 @@
 name: iberia-2025-ibr-lessons
 description: Lições do apagão ibérico 2025 para recursos inversorizados (IBR) — converter-driven instability, trips de inversores, recomendações e paralelo com o TCC
 source: ENTSO-E, Grid Incident in Spain and Portugal on 28 April 2025 — Final Report, mar/2026, §4.2, §4.3, §9.3–9.4
+references:
+  - "ENTSO-E. Grid Incident in Spain and Portugal on 28 April 2025 — Final Report (ICS Investigation Expert Panel). Bruxelas: ENTSO-E, mar. 2026."
 ---
 
 # Apagão Ibérico 2025 — Lições para Recursos Inversorizados

@@ -16,31 +16,37 @@ pré-computado em Python e embutido no objeto `SCENARIOS`.
    de tema.
 2. `.filter-bar` — `<select>` de cenário, toggle PLL
    ([[bad-pll-dashboard-filter]], só se houver cenário BAD_PLL), botões:
-   🗺 Mapa IEEE 9-bus, 📊 Comparativo, 🔍 Zoom na falta, 👻 Comparar PLL
-   ([[dashboard-zoom-ghost]]).
+   Mapa IEEE 9-bus, Comparativo, Zoom na falta ([[dashboard-zoom-export]]).
+   Botão "Comparar PLL" (overlay fantasma) removido em 2026-07-25.
 3. `#diagram-section` — SVG unifilar clicável.
-4. `#cards-area` / `#story-area` — HTML pré-gerado ([[cards-metricas]]);
-   cards de métrica são clicáveis → `goToChart` ([[tabs-navegacao]]).
-5. `#table-section` — comparativo, oculto por padrão ([[comparison-table]]).
-6. `.tab-bar` + painéis de aba `#sec-res`/`#sec-inv`/`#sec-sys`/`#sec-spec`
-   (figuras Plotly; espectro — [[espectro-fourier]]). Só a aba ativa fica
-   visível e renderizada; detalhes em [[tabs-navegacao]].
-7. `.footer`.
+4. `#table-section` — comparativo, oculto por padrão ([[comparison-table]]).
+5. `.tab-bar` + painéis de aba `#sec-res`/`#sec-inv`/`#sec-sys`/`#sec-spec`.
+   `#sec-res` não tem figura própria — contém `#cards-area`/`#story-area`
+   (HTML pré-gerado, [[cards-metricas]]; cards clicáveis → `goToChart`,
+   [[tabs-navegacao]]); os demais têm figuras Plotly (espectro —
+   [[espectro-fourier]]). Só a aba ativa fica visível/renderizada;
+   detalhes em [[tabs-navegacao]].
+6. `.footer`.
+
+> Até 2026-07-24, cards+diagnóstico ficavam soltos entre o mapa e a
+> tab-bar (visíveis em toda aba) e a aba Resumo tinha gráfico próprio
+> (`build_resume`). Ambos mudaram: cards+diagnóstico moraram para dentro
+> de `#sec-res` (só aparecem nessa aba) e o gráfico da aba Resumo foi
+> removido por ser repetitivo com Inversor/Sistema.
 
 ## Objeto SCENARIOS
 
-`{key: {resData, invData, sysData, specData, resLight/resDark/resIdx
-(trace_map), invLight/…, sysLight/…, specLight/…, label, cardsHtml,
-storyHtml, metricsRow, hasRes, hasInv, hasSys, hasSpec, badPll, tFault,
-tClear, tEnd}}`. As chaves por figura seguem o padrão `{t}Data/{t}Light/…`
-com `t ∈ {res, inv, sys, spec}` — o JS acessa genericamente
-(`sc[which + "Data"]`).
+`{key: {invData, sysData, specData, invLight/invDark/invIdx (trace_map),
+sysLight/…, specLight/…, label, cardsHtml, storyHtml, metricsRow, hasRes,
+hasInv, hasSys, hasSpec, badPll, tFault, tClear, tEnd}}`. As chaves por
+figura seguem o padrão `{t}Data/{t}Light/…` com `t ∈ {inv, sys, spec}` —
+`res` não tem essas chaves (sem figura); `hasRes` é sempre `true`. O JS
+acessa genericamente (`sc[which + "Data"]`).
 `key` = pasta do cenário, ex. `"bus7/3phase"`, `"line7_8/3phase_bad_pll"`.
 
 ## Fluxo `switchScenario(key)`
 
-1. `_syncCtrlButtons()` — habilita/desabilita zoom (sem `tFault`) e ghost
-   (sem par exato nominal↔bad_pll).
+1. `_syncCtrlButtons()` — habilita/desabilita zoom (sem `tFault`).
 2. `updateFaultUI(sc)` — subtítulo do header + badges "Falta: t = …" dos
    painéis de aba (ocultos em regime).
 3. Marca todos os gráficos como sujos e chama `switchTab(activeTab)` — só a

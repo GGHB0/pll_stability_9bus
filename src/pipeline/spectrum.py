@@ -8,7 +8,7 @@ uma figura com um painel de corrente e um de tensão UFV, com o tempo partido
 em três segmentos — pré-falta, durante a falta e pós-falta. No referencial
 abc a fundamental fica em 60 Hz; no dq ela vira DC (removida com a média) e
 a sequência negativa da falta assimétrica aparece em 120 Hz. harm carrega a
-amplitude das harmônicas 1–7 (k·60 Hz) por segmento/modo para a tabela do
+amplitude das harmônicas 1–12 (k·60 Hz) por segmento/modo para a tabela do
 relatório.
 """
 from __future__ import annotations
@@ -25,7 +25,7 @@ from .loader import SimData
 
 _MIN_DUR_S   = 0.05   # janela menor que isso → df > 20 Hz, não resolve 120 Hz
 _MIN_SAMPLES = 64
-_N_HARM      = 7      # harmônicas 1–7 extraídas para a tabela do relatório
+_N_HARM      = 12     # harmônicas 1–12 (até 12f₁=720 Hz) extraídas para a tabela
 
 
 def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,

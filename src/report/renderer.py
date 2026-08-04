@@ -21,7 +21,7 @@ from ..config import (
     T_SETTLE, TOL_RAD, LVRT_THRESHOLD, F_FUND_HZ,
     IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH,
     PEAK_ERR_DEG_THRESH, ERR_SS_DEG_THRESH, SYNC_LOSS_DEG, VBUS_AVG_THRESH,
-    SPEC_SEG_NO_NORM, CURR_ODD_LIMIT_PU, CURR_EVEN_LIMITS_PU,
+    SPEC_SEG_NO_NORM, CURR_ODD_LIMIT_PU, CURR_ODD_LIMIT_11_16_PU, CURR_EVEN_LIMITS_PU,
     VOLT_INDIVIDUAL_LIMIT_PU, DQ_UNBALANCE_WARN_PU, DQ_UNBALANCE_HIGH_PU,
 )
 from ..pipeline.loader import SimData
@@ -40,6 +40,11 @@ class HTMLRenderer:
         5: "—",
         6: "5ª/7ª",
         7: "—",
+        8: "—",
+        9: "8ª/10ª",
+        10: "—",
+        11: "—",
+        12: "11ª/13ª",
     }
 
     # Contexto de topologia por local de falta (loc = key.split("/")[0]).
@@ -913,6 +918,9 @@ switchScenario(currentKey);
         domínio abc; em dq só o bin de 120 Hz (fundamental de sequência
         negativa, não 2ª harmônica) tem critério (patamar empírico da TeseAGP) —
         ver kb/standards/harmonic_dq_frame_mapping.md e
+        kb/standards/harmonic_significance_criteria.md. A faixa ímpar 11≤h<17
+        (11ª/13ª) usa valor interino herdado da IEEE 519-2014 (Tabela 17 do
+        guia 1547-2018 é imagem no PDF, não extraível) — ver
         kb/standards/harmonic_significance_criteria.md. O segmento "Durante a
         falta" fica isento SÓ da checagem abc (SPEC_SEG_NO_NORM): os limites
         IEEE 519/1547 são critérios de regime permanente, não se aplicam ao
@@ -923,9 +931,16 @@ switchScenario(currentKey);
             return "harm-fund", ""
         if k > 1 and mode in ("a", "b", "c") and seg_name not in SPEC_SEG_NO_NORM:
             if kind == "i":
-                limit = CURR_ODD_LIMIT_PU if k % 2 else CURR_EVEN_LIMITS_PU.get(k)
-                norm = ("IEEE 519-2014 Tab.2 / IEEE 1547-2018 §7.3" if k % 2
-                         else "IEEE 1547-2018 §7.3 (Relaxed Evens)")
+                if k % 2:
+                    if k < 11:
+                        limit, norm = CURR_ODD_LIMIT_PU, "IEEE 519-2014 Tab.2 / IEEE 1547-2018 §7.3"
+                    elif k < 17:
+                        limit, norm = CURR_ODD_LIMIT_11_16_PU, "IEEE 519-2014 Tab.2 (11≤h<17) — valor 1547-2018 Tab.17 a confirmar"
+                    else:
+                        limit, norm = None, ""
+                else:
+                    limit = CURR_EVEN_LIMITS_PU.get(k)
+                    norm = "IEEE 1547-2018 §7.3 (Relaxed Evens)"
             else:
                 limit = VOLT_INDIVIDUAL_LIMIT_PU
                 norm = "IEEE 519-2014 Tab.1"
@@ -965,7 +980,7 @@ switchScenario(currentKey);
              f"{ev_ord} — percentuais da corrente nominal do inversor. "
              f"Tensão: {VOLT_INDIVIDUAL_LIMIT_PU * 100:g}%, sobre a nominal da "
              "Barra 2 (20 kV). Fontes: IEEE 1547-2018 §7.3 (corrente), "
-             "IEEE 519-2014 Tabela 1 (tensão)."),
+             "IEEE 519-2014 Tabela 1 (tensão). Ímpares 11ª/13ª: 2,0% — valor interino herdado da IEEE 519-2014 (Tabela 17 da 1547-2018 ainda não confirmada, ver KB)."),
             ("d/q, 120 Hz — desequilíbrio, não conformidade",
              f"Âmbar ≥{DQ_UNBALANCE_WARN_PU * 100:g}%, vermelho "
              f"≥{DQ_UNBALANCE_HIGH_PU * 100:g}%: mede a fração de sequência "
@@ -1002,7 +1017,7 @@ switchScenario(currentKey);
         )
 
     def _spec_table_html(self, harm: dict) -> str:
-        """Tabelas de amplitude das harmônicas 1–7 (k·60 Hz), colunas
+        """Tabelas de amplitude das harmônicas 1–12 (k·60 Hz), colunas
         agrupadas por segmento (pré/durante/pós-falta) × fase/eixo (a b c d q)
         — uma tabela para corrente, outra para tensão UFV. Valores vêm do
         SpectrumBuilder (pico local do espectro de Hann em cada k·60 Hz).
@@ -1032,7 +1047,7 @@ switchScenario(currentKey);
             head1 += "</tr>"
             head2 += "</tr>"
             rows: list[str] = []
-            for k in range(1, 8):
+            for k in range(1, 13):
                 cells = (f"<td class='harm-h'>{k * F_FUND_HZ:.0f}</td>"
                          f"<td class='harm-h'>{k}ª</td>"
                          f"<td class='harm-h harm-dqord'>{self._DQ_BIN_ORDERS[k]}</td>")

@@ -82,9 +82,16 @@ SPEC_SEG_NO_NORM = ("Durante a falta",)
 # kb/standards/harmonic_significance_criteria.md.
 # Corrente, harmônicos ímpares h<11 (mesmo valor no IEEE 1547-2018 §7.3):
 CURR_ODD_LIMIT_PU   = 0.04
+# Corrente, ímpares 11≤h<17 — a Tabela 17 do guia 1547.2-2023 é imagem no
+# PDF (não extraível por texto); valor herdado por inferência da IEEE
+# 519-2014 Tab.2 linha <20. A CONFIRMAR — ver
+# kb/standards/harmonic_significance_criteria.md:
+CURR_ODD_LIMIT_11_16_PU = 0.02
 # Corrente, pares h<11 — escala progressiva "Relaxed Evens" do IEEE 1547-2018
-# (Tabela 15; o 519-2014 usa 25% flat do ímpar em vez disso, ver KB):
-CURR_EVEN_LIMITS_PU = {2: 0.01, 4: 0.02, 6: 0.03}
+# (Tabela 15; o 519-2014 usa 25% flat do ímpar em vez disso, ver KB). 8ª
+# ordem confirmada por texto direto da 1547.2-2023 ("4% at 8th order
+# harmonic"), não é inferência:
+CURR_EVEN_LIMITS_PU = {2: 0.01, 4: 0.02, 6: 0.03, 8: 0.04}
 # Tensão, IEEE 519-2014 Tabela 1, classe 1 kV<V≤69 kV — limite individual
 # flat (a norma não varia o limite de TENSÃO por ordem, só o de corrente):
 VOLT_INDIVIDUAL_LIMIT_PU = 0.03

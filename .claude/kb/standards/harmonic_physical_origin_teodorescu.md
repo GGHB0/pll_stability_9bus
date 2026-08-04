@@ -1,6 +1,6 @@
 ---
 name: harmonic-physical-origin-teodorescu
-description: Fundamentação bibliográfica (Teodorescu, Liserre & Rodríguez 2011) para por que a checagem normativa por ordem harmônica precisa rodar em abc e não em dq, e a origem física de harmônicos pares vs ímpares em inversores — não altera nenhum limite aplicado no dashboard
+description: Fundamentação bibliográfica (Teodorescu, Liserre & Rodríguez 2011) para a origem física de harmônicos pares vs ímpares em inversores e a genealogia do limite de 1% na 2ª harmônica — não altera nenhum limite aplicado no dashboard
 source: Teodorescu, Liserre & Rodríguez (2011) §5.4.3 p.99; §12.3.5.1 p.330-331; Tab.3.6 p.37; Tab.12.1/12.2 p.315
 references:
   - "TEODORESCU, Remus; LISERRE, Marco; RODRÍGUEZ, Pedro. Grid Converters for Photovoltaic and Wind Power Systems. Chichester: John Wiley & Sons, Ltd, 2011. ISBN 978-0-470-05751-3."
@@ -8,37 +8,18 @@ metadata:
   type: reference
 ---
 
-# Origem física dos harmônicos e por que dq não separa 5ª de 7ª
+# Origem física dos harmônicos (Teodorescu et al., 2011)
 
 Complementa [harmonic_norm_application.md](harmonic_norm_application.md) — aqui fica
-a fundamentação bibliográfica de duas afirmações que já eram usadas nesse arquivo
-sem citação. **A regra aplicada no dashboard não muda**: continua exclusivamente
+a fundamentação bibliográfica de afirmações que já eram usadas nesse arquivo sem
+citação. **A regra aplicada no dashboard não muda**: continua exclusivamente
 IEEE 519-2014/IEEE 1547-2018 (ver `harmonic_norm_application.md`). Este arquivo é
-só o "porquê" por trás da arquitetura da checagem, não um limite novo.
-
-## Colisão 5ª/7ª no mesmo bin dq (§12.3.5.1, p.330-331)
-
-Num referencial síncrono girando a `ω` (velocidade da fundamental), a transformada
-de Park desloca cada harmônico de ordem `n` por `∓ω` conforme a sequência:
-sequência negativa desloca por `−(n+1)ω`, sequência positiva por `(n−1)ω`. O livro
-mostra o caso da 5ª (negativa) e da 7ª (positiva) caindo exatamente na mesma ordem
-6 no referencial dq:
-
-```
-5ª (sequência negativa): −5ω − ω = −6ω
-7ª (sequência positiva):  7ω − ω =  6ω
-```
-
-Citação literal: "they generate six-order harmonics of different sequences" — ou
-seja, um único filtro/observador sintonizado em 6ω não consegue distinguir se o
-que está vendo é 5ª ou 7ª, porque as duas produzem o mesmo componente de 6ª ordem
-no dq (360 Hz na base de 60 Hz deste projeto). O mesmo raciocínio se aplica à
-11ª (negativa) e 13ª (positiva), que colidem em 12ª ordem (720 Hz).
-
-Essa é a fundamentação formal da frase já existente em
-`harmonic_norm_application.md` ("5ª negativa + 7ª positiva → ambas em
-6f₁ = 360 Hz"), que até 2026-08-03 não tinha citação — o raciocínio era nosso,
-sem fonte. Agora tem.
+só o "porquê" físico por trás da tabela de harmônicas, não um limite novo. Para a
+derivação formal de por que a checagem por ordem precisa rodar em abc (colisão de
+ordens no mesmo bin dq, fundamental dq = DC), ver
+[harmonic_dq_frame_mapping.md](harmonic_dq_frame_mapping.md) — este livro chega à
+mesma colisão 5ª/7ª→6ª por outro caminho (§12.3.5.1, MSRF), citado lá como
+corroboração cruzada da derivação do Yazdani.
 
 ## Origem física dos harmônicos pares (§5.4.3, p.99)
 

@@ -113,6 +113,12 @@ justifica o uso de controladores PI no referencial síncrono (mesmo
 argumento já presente no texto atual do TCC, seção "Transformada de Park").
 A matriz de rotação `R[ε(t)]` é ortogonal: `R⁻¹[ε] = Rᵀ[ε] = R[-ε]`.
 
+Aplicando essa rotação aos fasores espaciais de cada ordem harmônica (§4.2.4,
+Tabela 4.1 — sequência positiva/negativa/zero por resto de `n` mod 3), obtém-se
+o mapeamento ordem→bin do espectro dq usado pelo dashboard, incluindo por que a
+própria fundamental (`n=1`) cai em DC: ver
+[harmonic_dq_frame_mapping.md](../standards/harmonic_dq_frame_mapping.md).
+
 ## Uso no TCC
 
 Este material dá uma segunda fonte, mais formal (fasor espacial → αβ → dq

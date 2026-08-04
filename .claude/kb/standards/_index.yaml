@@ -10,3 +10,6 @@ files:
   - file: ons_frequency_ride_through.md
     name: ons-frequency-ride-through
     description: Faixas de operação em frequência não nominal (Submódulo 2.10 §5.2.1) para eólica/fotovoltaica — trip/ride-through, droop de frequência, limites de redução de potência
+  - file: harmonic_dq_frame_mapping.md
+    name: harmonic-dq-frame-mapping
+    description: Mapeamento formal ordem harmônica → bin do espectro dq (Yazdani §4.2.4/4.3) — fundamental=DC, colisão 5ª/7ª→6ª, só sobra múltiplos de 3f₁

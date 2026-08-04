@@ -23,8 +23,8 @@ desloca cada componente por `±f₁` conforme a sequência (positiva: ordem `n` 
 `(n-1)·f₁` no dq; negativa: ordem `n` → `(n+1)·f₁`), então dois harmônicos de
 ordens diferentes podem cair no **mesmo bin** do espectro dq (5ª
 negativa + 7ª positiva → ambas em 6f₁ = 360 Hz; 11ª + 13ª → ambas em
-12f₁ = 720 Hz — fundamentação e citação em
-[harmonic_physical_origin_teodorescu.md](harmonic_physical_origin_teodorescu.md)).
+12f₁ = 720 Hz — derivação formal e mapa completo de bins em
+[harmonic_dq_frame_mapping.md](harmonic_dq_frame_mapping.md)).
 Um pico dq nesses bins não é atribuível a uma ordem `h`
 específica, então não dá pra comparar direto com a linha correspondente da
 Tabela 2.
@@ -45,9 +45,13 @@ desequilíbrio, não para conformidade normativa.
 **A fundamental do dq não existe no espectro exibido**: `_amplitude_spectrum`
 remove a média antes da FFT (`y_u -= y_u.mean()`), e a fundamental do dq é
 justamente essa componente DC — ela sai junto com o offset, não sobra como
-pico em 60 Hz. A linha h=1ª das colunas d/q na tabela não é "a fundamental
-dq"; é o resíduo em 60 Hz que sobra depois de remover o DC (~0,0008 pu em
-regime, cresce quando há conteúdo não estacionário no sinal).
+pico em 60 Hz. Isso não é só efeito do código: é a mesma rotação dq da seção
+acima aplicada à própria fundamental (ordem `n=1`, sequência positiva) —
+`(n-1)·f₁ = 0`, derivação completa em
+[harmonic_dq_frame_mapping.md](harmonic_dq_frame_mapping.md). A linha h=1ª das
+colunas d/q na tabela não é "a fundamental dq"; é o resíduo em 60 Hz que sobra
+depois de remover o DC (~0,0008 pu em regime, cresce quando há conteúdo não
+estacionário no sinal).
 
 **Achado da verificação (2026-07-29):** o critério de desequilíbrio dq **não
 pode** herdar a mesma isenção do segmento "Durante a falta" que a checagem

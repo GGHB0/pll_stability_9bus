@@ -41,6 +41,21 @@
     Referências ainda. Ver `content_map.md` (Cap.2) para o detalhe de cada
     citação e o KB-fonte correspondente.
 
+16. **Ano da CIGRE CSE N037** — a entrada inserida em 2026-08-04 na lista de
+    Referências está como `CIGRE. Suitable Classification of Power System
+    Stability Phenomena. CIGRE Science & Engineering, n. 37 [AUTORES E ANO A
+    CONFIRMAR]`, e a citação no §2.3 usa `(CIGRE, [ANO A CONFIRMAR])`. O ano
+    e os autores não foram confirmados em nenhuma fonte do projeto; a KB só
+    registra o título e o número da edição (via `stability_classification_
+    extended.md`, que a cita a partir do roadmap alemão). **Não inventar** —
+    localizar o documento antes de fechar.
+17. **Tempos de falta a re-simular** — o §4.3.3.2 agora afirma falta em
+    0,6/0,7 s com janela até 1,0 s para o Modelo com Sintonia Inadequada.
+    Isso bate com os 4 cenários `_bad_pll` já exportados, mas **não existe
+    nenhum cenário desajustado com falta assimétrica**, que é justamente o
+    caso que demonstra o mecanismo de 120 Hz descrito no §2.3 e no §3.4.
+    Ver `kb/simulation/cenarios_simulados.md` § Lacunas de cobertura.
+
 ## P3 — Limpeza
 
 11. **Figuras Cap. 2/3** — [FIGURA 2.1], [FIGURA 2.6] e 2 figuras ONS já têm

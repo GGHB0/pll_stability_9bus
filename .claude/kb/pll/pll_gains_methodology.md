@@ -37,6 +37,26 @@ Ki = 32 * 60**2 * (L1 + L2 + Lest)
 Com `Lg=0`: `Lest = L1+L2`, então o notebook calcula `Kp = 8·fg·2·(L1+L2)` — fator 2 a mais.
 Isso é equivalente a considerar `Lest_efetivo = 2·(L1+L2)` na equação da tese.
 
+## Armadilhas de leitura (verificadas 2026-08-04)
+
+Três confusões recorrentes ao reescrever essas fórmulas em texto:
+
+1. **É `fg`, não `ω0`.** A fórmula usa a frequência em **hertz** (60), não em
+   rad/s. Confere: `8·60·(0,030421+0,000289+0,030710) = 29,481`, que é o valor
+   gravado no modelo. Com `ω0 = 2π·60` sairia 96,1.
+2. **`Lest` não é `Lth`.** Aqui `Lest = L1+L2 = 30,71 mH` (indutância do filtro
+   vista pelo controlador, com `Lg=0`). O `Lth = 1,16 mH` que aparece nos
+   parâmetros é a **indutância de Thévenin da rede** usada como fonte
+   equivalente na fase PSIM (ver [[psim-modeling]] e [[ieee9bus-thevenin]]) —
+   grandeza diferente, que só convive no mesmo arquivo. Trocar uma pela outra
+   dá 15,30 no lugar de 29,48.
+3. **Estes não são os ganhos do PLL.** `Kp`/`Ki` daqui alimentam o
+   **controlador de corrente**, cuja saída vai para a modulante do SPWM. Os
+   ganhos do laço de sincronismo são `kp_pll = 460` e `ki_pll = 105 820`,
+   projetados por tempo de acomodação — ver [[pll-loop-filter-gains]]. A
+   divisão por 4 também é exclusiva desta família: os ganhos do PLL entram no
+   bloco de sincronismo sem escalamento algum.
+
 ## Estimação de Lest em Campo (TeseAGP, Fig. 4.4)
 
 ```

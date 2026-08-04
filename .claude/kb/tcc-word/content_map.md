@@ -35,7 +35,11 @@ metadata:
   (Gu & Green/JPROC: definição IEEE/CIGRE 2004, 3 dimensões, GFL vs. GFM)
 - ✅ **2.3** Classificação Estendida da Estabilidade — redigido 2026-07-19
   (Strauss-Mincu et al./Roadmap alemão: IEEE TR77, converter-driven stability
-  ~10 Hz, mitigação = sintonia Kp/Ki do PLL)
+  ~10 Hz, mitigação = sintonia `Kp,PLL`/`Ki,PLL` do PLL). **Ampliado
+  2026-08-04**: CIGRE CSE N037 citada como classificação alternativa (TR77
+  segue como base) e parágrafo novo com o mecanismo físico completo
+  (sequência negativa → 120 Hz em `v_q` → perda de travamento → cycle
+  slipping → colapso do controle vetorial)
 - ✅ **2.4** Principais blecautes — redigido 2026-07-19: intro + 2.4.1 Ibéria
   2025 (ENTSO-E) · 2.4.2 Chile 2025 (Coordinador Eléctrico Nacional) ·
   2.4.3 Brasil 2023 (ONS RAP-ONS 00012/2023 — inércia/SCC descartados como
@@ -61,7 +65,11 @@ metadata:
 - ✅ **3.2** Geração Distribuída e Inversores Conectados à Rede ([FIGURA 2.1])
 - ✅ **3.3** Controle de Inversores (3.3.1 PWM — funcional, escopo delimitado)
 - ✅ **3.4** O Sistema de Sincronismo SRF-PLL — PD/PI/VCO, linearização,
-  equações 3.1–3.17 em tabela invisível (ver `equacoes.md`)
+  equações 3.10–3.17 em tabela invisível (ver `equacoes.md`). **Ampliado
+  2026-08-04**: metodologia de projeto dos ganhos do laço (equações
+  3.18–3.20), `Kp,PLL = 460` e `Ki,PLL = 105 820` por 2ª ordem com ξ = 0,707
+  e `t_s` = 20 ms, fechando com `2ω_0` = 754 rad/s a 2,32·`ω_n`. É aqui que a
+  distinção contra os ganhos do controlador de corrente é estabelecida
 - ⬜ **3.5** Resumo ou Conclusões do Capítulo
 
 ## Cap. 4 — Metodologia de Análise (numeração confirmada 2026-07-22, tarde)
@@ -76,22 +84,41 @@ metadata:
     - **4.3.2.1** Dimensionamento do Filtro de Acoplamento (LCL) — eqs 4.1/4.2;
       inclui validação no bloco PSIM `PlantaLCL1` (ω_res = 9068,9968 rad/s) e
       amortecimento com valores de R_d1/R_d2/R_d3 (adicionado 2026-07-22)
+    - **4.3.2** abre (desde 2026-08-04) declarando as **duas etapas de
+      modelagem**: PSIM contra equivalente de Thévenin (`Rth` = 0,0100 Ω,
+      `Lth` = 1,16 mH) e depois Simulink sobre o IEEE 9 barras, com o `.slx`
+      como plataforma oficial dos resultados (ver [[psim-modeling]])
     - **4.3.2.2** Sintonia da Estratégia de Controle de Corrente — inclui
       parágrafo sobre a malha PSIM (I_d,ref/I_q,ref → m_a, portadora VTRI2,
-      5 kHz) adicionado 2026-07-22
+      5 kHz) adicionado 2026-07-22. **Desde 2026-08-04** é aqui que vive a
+      fórmula `Kp = 8·f_g·(L1+L2+Lest)` / `Ki = 32·f_g²·(...)` = 29,48 /
+      7075,6, com o escalamento para pu (7,37 / 1768,9). Ela estava
+      erradamente no 4.3.2.3 rotulada como ganho do PLL
     - **4.3.2.3 Modelagem do Sistema de Sincronismo (SRF-PLL)** — descreve
       implementação no **PSIM** (subcircuitos `.SUB Clarke`/`.SUB Park`, Loop
       Filter PI, VCO via bloco `RESETI_I1`); sem menção a arquivo/script de
       parâmetros nem ao notch 120 Hz (nunca existiu no PSIM, ver
       [[psim-modeling]]) — linguagem de código removida 2026-07-22
-      (ver `feedback_docx_no_code_artifacts` na memória)
+      (ver `feedback_docx_no_code_artifacts` na memória). **Corrigido
+      2026-08-04**: passa a citar `Kp,PLL` = 460 / `Ki,PLL` = 105 820 e
+      remeter ao §3.4, com aviso explícito de não confundir com os ganhos do
+      controlador de corrente
     - ⚠️ Referencia [FIGURA 3.1] mas **placeholder não existe** → P1
   - ✅ **4.3.3** Configuração da Simulação e Modelagem Dinâmica dos Geradores
-    - 4.3.3.1 Modelagem Dinâmica dos Geradores Síncronos (G1/G3)
+    — **desde 2026-08-04** apresenta os **dois cenários de sintonia**: Modelo
+      Nominal (460 / 105 820, `ω_n` = 325,3, ξ = 0,707) e Modelo com Sintonia
+      Inadequada (92 / 21 164, `ω_n` = 145,5, ξ = 0,316), com a sintonia do
+      PLL como única variável independente
+    - 4.3.3.1 Modelagem Dinâmica dos Geradores Síncronos (G1/G3) — fecha
+      ligando a baixa inércia (`H₁`, `H₃`) à sensibilidade ao PLL
     - **4.3.3.2** Topologia da Falta e Configuração do Bloco de Contingência —
-      Simulink (bloco `Fault Three-Phase` + chaves SPST), 0,3→0,4 s (6 ciclos),
-      4 tipos; "parâmetros configuráveis do modelo de simulação" (sem citar
-      variáveis/script — corrigido 2026-07-22)
+      Simulink (bloco `Fault Three-Phase` + chaves SPST), 4 tipos;
+      "parâmetros configuráveis do modelo de simulação" (sem citar
+      variáveis/script — corrigido 2026-07-22). **Desde 2026-08-04** traz as
+      **duas configurações temporais**: Nominal 0,3→0,4 s com janela até
+      0,6 s; Sintonia Inadequada 0,6→0,7 s com janela até 1,0 s, duração de
+      0,1 s (6 ciclos) nos dois. Confere com os `fault_info.json` exportados
+      (ver [[cenarios-simulados]])
     - 4.3.3.3 Configuração do Sistema de Monitoramento, Variáveis Relevantes e
       Tratamento de Dados
   - ✏️ **4.3.4** Protocolos de Contingência e Análise de Cenários
@@ -125,6 +152,11 @@ metadata:
 
 - ⚠️ Mistura template UERJ (refs fictícias) com refs reais — limpar
 - ⚠️ Parágrafo "REFERÊNCIAS" sem estilo de título (fora do Sumário)
+- **+4 entradas em 2026-08-04**: ALVES; DIAS; ROLIM (2020, DOI
+  10.1007/s40313-020-00576-x), CIGRE (CSE N037, **ano a confirmar**, ver
+  `pendencias.md` item 16), OGATA (2009) e STRAUSS-MINCU et al. (2026, DOI
+  10.1109/MPE.2025.3617895). As três últimas já eram citadas no texto sem
+  constar da lista
 
 ## Inventário de Figuras
 

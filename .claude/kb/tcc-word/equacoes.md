@@ -26,8 +26,13 @@ Armadilha: **duas tabelas adjacentes se fundem no Word** — sempre deixar um
 | 3.4–3.7 | Park: rotação αβ→dq, abc→dq, vd, vq | 3.1.2 |
 | 3.8–3.9 | P e Q em dq; caso vq=0 | 3.1.3 |
 | 3.10–3.17 | Modelo linearizado SRF-PLL: Kpd, PD, PI, integrador, L(s), G_PLL(s), E(s), vq(s) | 3.4 |
+| 3.18 | Forma canônica de 2ª ordem: G(s) = (2ξω_n·s + ω_n²)/(s² + 2ξω_n·s + ω_n²) | 3.4 |
+| 3.19 | Projeto do PLL: K_i,PLL = ω_n² e K_p,PLL = 2ξω_n | 3.4 |
+| 3.20 | Acomodação (critério 1%): t_s = 4,6/(ξω_n) e K_p,PLL = 9,2/t_s | 3.4 |
 | 4.1 | L₁ = V_dc / (24·f_sw·ΔI_max) — ripple (notebook, Alves 2021) | 4.3.2.1 |
 | 4.2 | ω_res = √((L₁+L₂)/(L₁·L₂·C_f)) — ressonância LCL | 4.3.2.1 |
+
+**Próximo número livre: 3.21** (e 4.3 no Cap. 4).
 
 - Os rótulos antigos "EQUAÇÃO 2.N — descrição" (2.5–2.12) viraram texto
   explicativo "Descrição:" acima da tabela; renumerados 2.N → 3.(N+5).
@@ -45,3 +50,9 @@ Armadilha: **duas tabelas adjacentes se fundem no Word** — sempre deixar um
 - Novos OMML (4.1/4.2) usam Cambria Math, `szCs=24`, mesmos `ctrlPr` do
   padrão existente; helpers `mr/ssub/frac/rad` em `C:\Temp\gen_eq_format.py`.
 - Pipeline completo: `gen_eq_format.py` → `verify_eqfmt.py` → `repack_eqfmt.py`.
+- **3.18–3.20 (2026-08-04)**: geradas por `C:\Temp\gen_pll_edits.py`
+  reaproveitando os helpers do `gen_eq_format.py`. Padrões confirmados na
+  verificação: `ω_n²` sai como `<m:sSubSup>` (não `sSub` + texto "2"), e duas
+  relações na mesma linha são separadas por 3 em-spaces (`\u2003`), mesmo
+  recurso das equações 3.8/3.9. Conferir com `C:\Temp\check_new_eqs.py`, que
+  extrai `<m:t>` e conta `m:f`/`m:sSub`/`m:sSubSup` por equação.

@@ -11,6 +11,11 @@ Quando `BAD_PLL=true` no MATLAB, os CSVs vão para pastas com sufixo `_bad_pll`
 (ex.: `bus5/3phase_bad_pll/`). O `scan_scenarios` do `app.py` os varre junto com
 os nominais → chaves coexistem no dict `SCENARIOS` do JS.
 
+> Inventário dos cenários existentes e as **duas configurações temporais**
+> (nominal: falta em 0,3 s, janela até 0,6 s; sintonia inadequada: falta em
+> 0,6 s, janela até 1,0 s) em [[cenarios-simulados]]. Os eixos de tempo dos
+> dois modos **não** são comparáveis diretamente.
+
 O dashboard precisa de um **toggle PLL** para:
 - exibir label limpa (sem `_bad_pll` no texto)
 - filtrar o `<select>` por modo ativo (nominal / sintonia inadequada)

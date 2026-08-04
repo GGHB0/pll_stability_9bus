@@ -136,46 +136,40 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
 
 ## Registro de IDs usados até agora
 
-> Registro válido para `TCC_Victor_Bruno_V9_novo_indice.docx` **após o usuário
-> aceitar as tracked changes e salvar no Word em 19/07/2026 12:04** (+ edições
-> Claude das siglas). O aceite eliminou quase todos os `w:ins` e o Word renumerou
-> tudo de novo — registros anteriores não valem.
+> Registro válido para `TCC_Victor_Bruno_V9_novo_indice_2.docx` (arquivo
+> canônico), medido com `check_ids.py` em 04/08/2026 sobre o XML recém-extraído.
+> O Word renumera IDs a cada save do usuário — **sempre rodar `check_ids.py` no
+> XML recém-extraído** antes de inserir qualquer elemento novo; registros de
+> sessões anteriores não valem.
 
-| Recurso | Estado observado (19/07, pós-reestruturação Cap.4) | Próximo disponível |
+| Recurso | Estado observado (04/08, pós-edições PLL) | Próximo disponível |
 |---|---|---|
-| Bookmark IDs | máximo em uso = 76 (69 bookmarks; 76 = título "4.1. Foco do Estudo", `_Toc235351739`) | **77** |
-| `w:ins` IDs | só restam ids 23–26 (título 2.6 não aceito); sem `w:del` | **27** |
-| `paraId` novos (prefixo `1FB.....`) | 0x1FB00000–0x1FB00059 nossos (0x10–0x2E siglas; 0x30–0x56 tabelas de equação; 0x57–0x59 seção 4.1 Foco) + `1FB3A4B3` do Word (sempre grepar antes) | **0x1FB0005A** |
+| Bookmark IDs | máximo em uso = 74 (68 bookmarks) | **75** |
+| Bookmarks `_Toc235351NNN` | máximo NNN = 739 | **740** |
+| `w:ins` IDs | só restam ids 25–26 (título 2.6 não aceito); sem `w:del` | **27** |
+| `paraId` novos (prefixo `1FB.....`) | 0x1FB00000–0x1FB00200 de sessões anteriores; **0x1FB00201–0x1FB00214** usados nas edições PLL de 04/08 (§2.3, §3.4, §4.3.2, §4.3.3, referências) + `1FB3A4B3` do Word (sempre grepar antes) | **0x1FB00215** |
 | `paraId` prefixo `16xxxxxx` | 16000001–16000003, 16100001–16100008, 16200001–16200009 (bloco 4.3.3; 1620000A–C liberados na reescrita do monitoramento — não reusar) | — |
 
 > Antes de inserir novos elementos, sempre buscar o maior ID existente no XML
 > com grep para garantir que não há colisão com IDs do documento original.
 
-## Armadilhas de edição XML (aprendidas na prática)
+## Armadilhas de edição XML
 
-- **Inserir parágrafo no fim do corpo**: localizar o sectPr final com
-  `xml.rindex('<w:sectPr', 0, xml.rindex('</w:body>'))`. **Nunca** usar regex
-  `<w:sectPr.*?</w:sectPr>\s*</w:body>` com `re.S` — o `.*?` faz o match começar
-  no PRIMEIRO sectPr do documento (quebras de seção pré-textuais) e a inserção
-  vai parar no começo do arquivo.
-- **Sanity check de parágrafos num trecho**: usar `re.search(r'<w:p[ >]', trecho)`.
-  O teste `'<w:p' in trecho` dá falso positivo com `<w:pgSz`/`<w:pgMar` do sectPr.
-- **Sempre regenerar a saída antes de verificar** — verificar `doc_tcc_modified.xml`
-  de um run anterior bugado valida o bug, não o fix.
-- **Títulos inseridos com `<w:ins>` aparecem azuis/sublinhados no Word** — é a
-  cor de revisão do autor "Claude", não formatação; ficam pretos ao aceitar as
-  alterações (Revisão → Aceitar). Já causou pergunta do usuário ("por que azul?").
-- **Arquivo aberto no Word bloqueia a cópia de volta ao OneDrive** ("Device or
-  resource busy") — pedir para fechar; se o usuário salvou mudanças, refazer a
-  edição sobre a versão salva (o Word também renumera IDs ao salvar).
+Movidas para `armadilhas_xml.md` em 2026-08-04 (limite de 200 linhas).
+Ler **antes** de escrever qualquer `gen_*.py`: corrupção por `ET.write`,
+`w:proofErr` quebrando replaces, sectPr final, fusão de tabelas.
 
 ## Estado atual
 
-Última entrega: **reestruturação interna do Cap.4** (2026-07-19, 19:49) —
-Cap.4 segue 100% o índice do professor (4.1 Foco do Estudo novo; 4.2
-Plataformas; 4.3 Modelagem com 4.3.1–4.3.4; 4.4 Resumo). Estado do XML de
-trabalho: `C:\Temp\doc_tcc_cap4.xml`; template ZIP para repack:
-`C:\Temp\tcc_v9_cap4.docx`.
+Última entrega: **edições PLL** (2026-08-04, 01:41), 729 → 746 blocos.
+Metodologia dos ganhos do PLL no §3.4 (equações 3.18–3.20), separação
+`Kp,PLL`/`Ki,PLL` contra `Kp`/`Ki` do controlador de corrente, CIGRE e
+mecanismo de cycle slipping no §2.3, dois cenários de sintonia no §4.3.3,
+duas etapas de modelagem no §4.3.2, e 4 referências novas.
+
+Estado do XML de trabalho: `C:\Temp\doc_tcc_pll.xml` (662 981 bytes);
+template ZIP para repack: `C:\Temp\tcc_edit.docx`; script gerador:
+`C:\Temp\gen_pll_edits.py`; spec: `C:\Temp\spec_pll_edits.md`.
 
 > Histórico completo de entregas (ANEXOS, siglas, equações, Cap.4, Oscar):
 > `historico_entregas.md`

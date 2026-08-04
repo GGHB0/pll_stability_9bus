@@ -144,13 +144,15 @@ e o formato legado (sem essas colunas) continua carregando sem erro.
 
 ## Flag BAD_PLL
 
-Simula PLL com sintonia inadequada (poorly tuned PLL): `kp_pll` reduzido a 20% do nominal.
+Simula PLL com sintonia inadequada (poorly tuned PLL): **ambos** os ganhos do
+laço reduzidos a 20% do nominal.
 
 ```matlab
 % params.m
-BAD_PLL = false;          % true → kp_pll mal dimensionado (×0.2)
+BAD_PLL = false;          % true → ganhos do PLL mal dimensionados (×0.2)
 if BAD_PLL
     kp_pll = kp_pll * 0.2;
+    ki_pll = ki_pll * 0.2;
 end
 ```
 
@@ -163,12 +165,19 @@ if BAD_PLL
 end
 ```
 
-| `BAD_PLL` | `kp_pll` efetivo | Pasta (ex.: bus5 / 3phase) |
-|-----------|-----------------|-------------------------------------|
-| `false`   | 460 (nominal)   | `output/results/bus5/3phase/`        |
-| `true`    | 92 (×0,2)       | `output/results/bus5/3phase_bad_pll/`|
+| `BAD_PLL` | `kp_pll` / `ki_pll` | Pasta (ex.: bus5 / 3phase) |
+|-----------|--------------------|-------------------------------------|
+| `false`   | 460 / 105 820      | `output/results/bus5/3phase/`        |
+| `true`    | 92 / 21 164 (×0,2) | `output/results/bus5/3phase_bad_pll/`|
+
+Reduzir os dois ganhos degrada banda **e** amortecimento simultaneamente:
+`ω_n` cai de 325,3 para 145,5 rad/s e ξ de 0,707 para 0,316 (ambos por √0,2).
 
 O campo `bad_pll` também é salvo em `fault_info.json`.
+
+> ⚠️ Os cenários `_bad_pll` exportados usam **instante de falta e janela
+> diferentes** dos nominais (0,6/0,7 s até 1,0 s, contra 0,3/0,4 s até 0,6 s).
+> Inventário completo e justificativa em [[cenarios-simulados]].
 
 ## Execução automática via StopFcn
 

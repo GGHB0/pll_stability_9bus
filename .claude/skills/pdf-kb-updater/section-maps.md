@@ -123,6 +123,29 @@ recomendados).
 **Arquivo .txt em ~/pdfext/ (2026-07-29):** `ieee519_5_limits.txt` (p.13-22).
 Sintetizado em `.claude/kb/standards/harmonic_significance_criteria.md`.
 
+## Teodorescu, Liserre & Rodríguez — *Grid Converters for PV and Wind Power Systems* (407 p.)
+
+**Não confundir com o artigo homônimo do mesmo autor** (mesma pasta de
+bibliografia): `426143109-Overview-of-Control-and-Grid-Synchronization-For-
+Distributed-Power-Generation-Systems.pdf` — Blaabjerg, Teodorescu, Liserre &
+Timbus, *Overview of Control and Grid Synchronization for Distributed Power
+Generation Systems* (IEEE TIE, 2006), só **12 páginas**. Cita PLL 23 vezes mas
+não traz fórmula de sintonia — não é a fonte da p.56/eq.(4.38).
+
+O **livro** (ISBN 978-0-470-05751-3, Chichester: John Wiley & Sons, 2011) tem
+3 cópias na pasta de bibliografia — mesmo conteúdo, 407 páginas cada:
+`GRID CONVERTERS FOR.pdf`, `grid-converters-for-photovoltaic-and-wind-power-
+systems.pdf`, `Grid Converters for Photovoltaic and Wind Power Systems --
+Remus Teodorescu; Marco Liserre; Pedro Rodríguez, -- ( WeLib.org ).pdf`.
+
+| Seção | Páginas PDF | Conteúdo |
+|-------|---------|---------|
+| §4.2.2.3 | 70 (impressa 56) | Modelo linearizado de 2ª ordem do PLL; eqs. (4.35)-(4.38); critério de acomodação de **1%** (`ts = 4,6τ`, `Kp = 9,2/ts`), citando Franklin et al. como ref. [14] |
+
+Confirmado por leitura direta da cópia WeLib em 2026-08-04 (rosto/copyright na
+p.1-3 do PDF batem com o ISBN acima). Sintetizado em
+`.claude/kb/pll/pll_loop_filter_gains.md` e `.claude/kb/pll/pll_ts_criterion_rationale.md`.
+
 ## Hu, Meng, Bu, Ren — *Test and Analysis of LVRT Characteristic of Wind Farm* (6 p.)
 
 Artigo curto (IJAPE Vol.2 Issue 4, 2013), sem outline — extraído por inteiro em

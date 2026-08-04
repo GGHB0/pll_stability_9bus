@@ -56,6 +56,13 @@ começou*.
 Consistências com o projeto atual (`CLAUDE.md`):
 - `wres`, `ξ`, `fs = 5 kHz`, e a **divisão por 4** dos ganhos/impedâncias
   (conversão pu, `Z_base = 4 Ω`) batem com a modelagem atual.
+- **A divisão por 4 é uniforme na planta inteira**, não um ajuste aplicado
+  aos ganhos: `L1`, `L2`, `C1`, `Rd1-3`, `Kp` e `Ki` são todos divididos por
+  4. O `/4` em `Kp`/`Ki` é **consequência** do `/4` nas indutâncias, já que
+  `Kp = 8·fg·(L1+L2+Lest)` é proporcional a `L`. Não confundir com
+  compensação de normalização do SPWM. Ver [[pll-gains-methodology]].
+- **`Lth` aqui não é `Lest`**: é a indutância da fonte equivalente que
+  representava a rede nesta fase, não a indutância vista pelo controlador.
 - **Vcc — o override já existia no PSIM:** o arquivo base usa 90,9 kV, mas
   a netlist do circuito 01 referencia `parameters100MVA_VCCnovo.txt` e usa
   **VDC = 136,4 kV** (o `VDC4` da ponte). É a origem da divergência
@@ -73,9 +80,26 @@ Consistências com o projeto atual (`CLAUDE.md`):
 
 ## Fio Narrativo para o TCC
 
-No PSIM foram construídos dois esquemáticos: uma **bancada de projeto do
-controle de corrente** (planta RL × LCL) e o **sistema EMT completo**
-(VSC + LCL + SRF-PLL com PD/PI/VCO + SPWM, com degrau de referência).
-Dessa fase inicial o trabalho migrou para **Simulink/MATLAB**
-(`pll_stability_9bus.slx`, ver [[export-workflow]] e
-`kb/inverter/simulink_model.md`) → análise em **Python** ([[python-pipeline]]).
+Confirmado pelo Victor (2026-08-04): a modelagem foi feita em **duas etapas
+declaradas**, e o PSIM é a etapa 1.
+
+**Etapa 1 (PSIM).** O conversor, o filtro LCL, o controlador de corrente e o
+SRF-PLL foram implementados contra uma rede representada por um **equivalente
+de Thévenin na barra de conexão** (`Rth` = 0,0100 Ω, `Lth` = 1,16 mH). Isolar
+o conversor dessa forma permite validar o controle de corrente e o laço de
+sincronismo sem a influência das demais máquinas. Foram construídos dois
+esquemáticos: uma **bancada de projeto do controle de corrente**
+(planta RL × LCL) e o **sistema EMT completo** (VSC + LCL + SRF-PLL com
+PD/PI/VCO + SPWM, com degrau de referência).
+
+**Etapa 2 (Simulink).** Verificado o funcionamento, o mesmo conjunto migrou
+para `pll_stability_9bus.slx`, onde o conversor substitui a geração da
+**Barra 2 do sistema IEEE de 9 barras** e passa a interagir com os geradores
+síncronos remanescentes e com as contingências aplicadas à rede
+(ver [[export-workflow]] e `kb/inverter/simulink_model.md`) → análise em
+**Python** ([[python-pipeline]]).
+
+> **O `.slx` é a plataforma oficial.** Todos os resultados do TCC vêm da
+> etapa 2. O PSIM entra no texto como etapa metodológica declarada, não como
+> fonte de resultados. Nenhum número do PSIM deve ser apresentado como
+> resultado nem usado para justificar escolhas de projeto do modelo atual.

@@ -4,6 +4,62 @@
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-08-04 — Ganhos do PLL (§3.4), CIGRE (§2.3), dois cenários (§4.3.3), duas etapas (§4.3.2)
+
+- **Motivação**: o Victor forneceu texto pronto para inserir no §3.4 sobre os
+  ganhos do PI do PLL, pedindo explicitamente "sem confundir os ganhos". A
+  inspeção mostrou que o texto fornecido apresentava a fórmula do
+  **controlador de corrente** (`Kp = 8·fg·(L1+L2+Lest)` = 29,48 / 7075,6)
+  rotulada como ganho do PLL, exatamente a confusão a evitar. Correção
+  aprovada pelo Victor antes da edição.
+- **Achados que mudaram o conteúdo** (detalhe em
+  `kb/pll/pll_gains_methodology.md` § Armadilhas de leitura):
+  1. os ganhos reais do laço são `kp_pll = 460` / `ki_pll = 105 820`,
+     projetados por 2ª ordem (ξ = 0,707, `ts` = 20 ms pelo critério de 1%);
+  2. a fórmula usa `fg` em hertz, não `ω0` em rad/s;
+  3. `Lest = L1+L2 = 30,71 mH`, não `Lth = 1,16 mH` (o `Lth` é a fonte
+     equivalente da fase PSIM, ver `kb/psim/psim_modeling.md`);
+  4. a divisão por 4 é exclusiva do controlador de corrente e acompanha o
+     escalamento da planta; os ganhos do PLL entram sem escala;
+  5. a janela do cenário desajustado é **1,0 s** (não 0,9 s), e a falta é
+     aplicada em 0,6 s, confirmado pelos `fault_info.json` (ver
+     `kb/simulation/cenarios_simulados.md`).
+- **Edições aplicadas** (17 blocos novos, 729 → 746):
+  - **A** §3.4: 10 blocos após EQUAÇÃO 3.17, incluindo as equações novas
+    **3.18** (forma canônica de 2ª ordem), **3.19** (`Ki,PLL = ωn²` e
+    `Kp,PLL = 2ξωn`) e **3.20** (`ts = 4,6/(ξωn)` e `Kp,PLL = 9,2/ts`).
+    Fecha ligando `2ω0` = 754 rad/s a 2,32·`ωn`.
+  - **A'** §4.3.2.2 [605]: fórmula `8·fg·L` movida para cá, onde é correta;
+    §4.3.2.3 [609]/[610]: notação `Kp,PLL`/`Ki,PLL` e remissão ao §3.4.
+  - **B** §2.3 [426]: CIGRE como classificação alternativa; [433] notação;
+    parágrafo novo com o mecanismo sequência negativa → 120 Hz → cycle
+    slipping → colapso do controle vetorial.
+  - **C** §4.3.3 [613] + parágrafo novo: dois modelos (460/105 820 contra
+    92/21 164, `ωn` e ξ caindo juntos por √0,2); §4.3.3.1 [616]: baixa
+    inércia amplifica a divergência; §4.3.3.2 [618]: duas configurações
+    temporais (0,3/0,4 até 0,6 s e 0,6/0,7 até 1,0 s).
+  - **D** §4.3.2: parágrafo declarando as duas etapas, PSIM sobre Thévenin
+    e Simulink sobre o IEEE 9 barras, com o `.slx` como plataforma oficial.
+  - **E** Referências: 4 entradas novas (ALVES; DIAS; ROLIM 2020; CIGRE;
+    OGATA 2009; STRAUSS-MINCU et al. 2026), em ordem alfabética.
+- **Notação adotada**: `Kp,PLL`/`Ki,PLL` para o laço de sincronismo,
+  `Kp`/`Ki` para o controlador de corrente. Aplicada em 2.3, 3.4, 4.3.2 e
+  4.3.3.
+- **Armadilha reencontrada**: `w:proofErr` do Word quebrava as substrings em
+  [609], [433] e [613]; o `docx-scripter` resolveu extraindo as âncoras
+  programaticamente por `paraId` em vez de transcrevê-las como literais.
+- **Script perigoso descartado**: `C:\Temp\set_toc_dirty_true.py` usa
+  `ET.parse` + `tree.write()` no `document.xml` inteiro, o que colapsa
+  namespaces de `mc:Ignorable` e corrompe o DOCX. Substituído por
+  `C:\Temp\set_toc_dirty_pll.py`, que marca **só** o campo TOC por
+  manipulação de texto bruto e valida com `ET.fromstring` antes de gravar.
+- **Verificado**: XML bem formado, 0 em-dash, 0 tabelas adjacentes sem `<w:p>`
+  entre elas, `EQUAÇÃO 3.18/3.19/3.20` uma vez cada, OMML com `oMathPara` e
+  Cambria Math (3.18: 1 fração + 2 `sSubSup`; 3.20: 2 frações), paraIds
+  `1FB00201`–`1FB00214` sem colisão.
+- **Entregue**: `TCC_Victor_Bruno_V9_novo_indice_2.docx`, 1 237 685 bytes,
+  04/08/2026 01:41 (antes: 1 234 318 bytes, 22/07 18:34). TOC marcado dirty.
+
 ## 2026-07-22 (noite, 2ª rodada) — Remoção retroativa de travessão/em-dash
 
 - **Motivação**: o Victor pediu para nunca usar travessão ("—") no texto do
@@ -112,88 +168,9 @@
   timestamp/tamanho do OneDrive antes da entrega bateu com o baseline do
   staging (1.235.451 bytes, 21/jul 22:53) — sem edições concorrentes.
 
-## 2026-07-22 — TCC_Victor_Bruno_V9_novo_indice.docx (arquivo obsoleto, ver acima)
+## Entregas de julho/2026 (anteriores)
 
-- **Correção 4.2.2.3 (SRF-PLL): Simulink → PSIM**: ✅ ENTREGUE — a seção
-  descrevia a implementação do SRF-PLL no Simscape Electrical (bloco
-  Sinusoidal Measurement, params.m, notch discreto 120 Hz via Tustin). Na
-  verdade essa fase (4.2.2 — conversor/filtro/PI de corrente/PLL) foi
-  inteiramente modelada no **PSIM**, não no Simulink; 4.2.3 (geradores/rede/
-  falta) permanece Simulink, sem alteração. 3 blocos reescritos: [527] troca
-  "Simscape Electrical do MATLAB/Simulink" → "PSIM (Altair Engineering)";
-  [528] reescrito descrevendo os subcircuitos `Clarke`/`Park` (detector de
-  fase), Loop Filter PI, VCO via bloco `RESETI_I` com reset em 2π, ganhos
-  carregados de `parameters100MVA.txt` — **sem menção a notch 120 Hz**
-  (confirmado por rastreio do netlist `PSim\01_Sistema PLL_vfinal_100MVA
-  (backup)1.txt`: o único notch do PSIM é o de ressonância LCL na malha de
-  corrente, TFCN1/TFCN2, não relacionado ao PLL); [529] "modelo Simulink" →
-  "PSIM" e "bloco de controle" → "blocos de ganho do compensador PI
-  implementado no circuito". Fonte técnica: `kb/psim/psim_modeling.md` +
-  `kb/psim/psim_netlists.md`. Pipeline: `gen_psim_422.py` (regex por
-  paraId, evita erro de transcrição Unicode) → TOC marcado dirty (49
-  fldChar) → `repack.py`. Estado do XML: `C:\Temp\doc_tcc_psim422.xml`;
-  DOCX final: `C:\Temp\tcc_final.docx` (500979 bytes de document.xml),
-  entregue ao OneDrive às 01:03 (569972 bytes).
-
-- **Descoberta de renumeração do Cap.4 desde 19/07**: durante a inspeção
-  para a correção acima, `dump_headings.py` revelou que a numeração do
-  Cap.4 registrada em `content_map.md` (4.1 Foco do Estudo / 4.2
-  Plataformas de Simulação / 4.3 Modelagem, filhos 4.3.1–4.3.4) estava
-  desatualizada — o usuário reestruturou no Word depois da sessão de
-  19/07: 4.1+4.2 antigos fundidos em **4.1** único, antigo 4.3 → **4.2**
-  (filhos um nível acima: 4.2.1–4.2.3), Protocolos de Contingência voltou
-  a Ttulo2 como **4.3** (era Ttulo4 em 4.3.4.x). `content_map.md`
-  atualizado para refletir a numeração real e verificada.
-
-- **Limpeza do notch 120 Hz do PLL na KB** (texto/documentação apenas — o
-  bloco já havia sido removido do `.slx` anteriormente, foi um teste
-  descartado): `kb/pll/pll_notch_implementation.md` marcado como histórico
-  (status no topo, título "(HISTORICO - removido do modelo)"),
-  `kb/pll/_index.yaml` e `kb/simulation/params_workflow.md` ajustados para
-  não descrever o notch como recurso atual. Não tocado: o notch de
-  ressonância LCL na malha de corrente (`simulink_model.md`,
-  `lcl_filter.md`, `agp_current_control_theory.md`, `psim_netlists.md`,
-  `psim_modeling.md`) — é outro filtro, ainda válido, não relacionado ao
-  PLL.
-
-## 2026-07-19 — TCC_Victor_Bruno_V9_novo_indice.docx
-
-- **Reestruturação interna do Cap.4** (19:49): ✅ ENTREGUE —
-  Cap.4 agora segue 100% o índice do professor: novo **4.1 Foco do Estudo**
-  (título + 2 §§ novos, paraIds 1FB00057–59); 4.1 antigo → **4.2 Plataformas
-  de Simulação – Características Individuais**; 4.2 antigo → **4.3** (filhos
-  4.3.1, 4.3.2 renomeado "Projeto do Conversor Fonte de Tensão e dos
-  Controladores", 4.3.2.1–3, 4.3.3 + 4.3.3.1–3); Protocolos rebaixado
-  Ttulo2→Ttulo3 como **4.3.4** (afundamentos viram Ttulo4 4.3.4.1/4.3.4.2,
-  fora do Sumário de 3 níveis). Reescritas: intro do 4.3.3 (ode23t =
-  trapezoidal implícito passo variável, RelTol 10⁻³, Ts=5 µs, janela 0,6 s,
-  **R2025a** — versão inferida do .slx, confirmar com Bruno), 4.3.3.2 (falta
-  sem local fixo; 0,3→0,4 s = 6 ciclos; 4 tipos; FAULT_TYPE/BUS/LINE via
-  params.m) e 4.3.3.3 (monitoramento alinhado ao dashboard: 5 grupos de
-  sinais, 2 taxas + interpolação, export StopFcn→CSV+metadados, métricas
-  IAE/ISE/ts/pico/ΔP/ΔQ/LVRT 1547-2018, tabela comparativa). 6 refs
-  cruzadas obsoletas corrigidas (4.2.1→5.2.1 ×3, 4.3.1→5.3.1 ×3,
-  4.1→5.1, 3.3→4.3.4). Comentários 43/46/48/49 preservados. Edições
-  diretas, sem `<w:ins>`. Pipeline: `gen_cap4_restructure.py` +
-  `repack_cap4.py`; estado atual do XML = `C:\Temp\doc_tcc_cap4.xml`,
-  template ZIP = `C:\Temp\tcc_v9_cap4.docx`.
-
-- **Reformatação das equações**: ✅ ENTREGUE — 17 equações em
-  tabela invisível (equação centralizada + "EQUAÇÃO N.M" à direita),
-  numeradas 3.1–3.17; eqs 4.1/4.2 do LCL inseridas; refs cruzadas
-  atualizadas. Detalhes e padrão XML: `equacoes.md`.
-
-- **Siglas + padronização IBR + fix MOHAN**: ✅ ENTREGUE no mesmo
-  DOCX — lista pré-textual com 31 siglas (ver `siglas_inventory.md`), RBI/ICR →
-  IBR (4 ocorrências), MOW → MOHAN (2 ocorrências). **Edições diretas, sem
-  `<w:ins>`** (aprovadas explicitamente pelo Victor; mesmo trade-off da
-  renumeração). Pipeline: `gen_move_anexos.py` → `gen_siglas_fixes.py` →
-  `repack_final.py` (todos em C:\Temp).
-
-- **Move do ANEXOS**: ✅ ENTREGUE — título ANEXOS (Ttulo1) movido
-  para o fim absoluto, após REFERÊNCIAS (ordem ABNT). A primeira versão ficou
-  obsoleta (usuário salvou no Word às 12:04 aceitando as tracked changes);
-  refeito sobre a versão nova e copiado ao OneDrive às 12:20.
+Ver `historico_entregas_2026_07.md`.
 
 ## Entregas anteriores (V8)
 

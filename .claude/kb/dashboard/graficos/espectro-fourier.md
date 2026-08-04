@@ -125,9 +125,23 @@ ambos em settings.py.
 
 ## Layout e integração
 
-- Eixo y amplitude linear (pu), `rangemode="tozero"`, título `"Amplitude (pu)"`
-  na **vertical** (encostado no eixo); `SPEC_XRANGE_HZ=1500` default,
-  duplo-clique expande até 2 kHz.
+- Eixo y amplitude linear (pu), título `"Amplitude (pu)"` na **vertical**
+  (encostado no eixo); `SPEC_XRANGE_HZ=1500` default, duplo-clique expande
+  até 2 kHz.
+- **Teto do eixo Y fixo em 1 pu por painel** (2026-08-02, a pedido do
+  usuário): antes o eixo usava `rangemode="tozero"` (autorange do Plotly),
+  que ajustava o topo ao maior valor da própria série — um pico de 0,012 pu
+  virava "o topo do gráfico", fazendo o ruído de fundo parecer proeminente.
+  Agora `_apply_layout` recebe `row_maxes` (pico real por subplot, calculado
+  em `_mode_fig` a partir de `amp.max()` de cada segmento) e fixa
+  `range=[0, max(1.0, row_max·1.05)]` — teto em 1 pu (escala plena) por
+  padrão, só sobe se o pico real ultrapassar 1 pu. Corrente e tensão (linhas
+  separadas da mesma figura) têm tetos **independentes**, não compartilhados
+  — cada subplot já tinha seu próprio eixo Y antes disso, mudou só a forma
+  como o teto é calculado. `_Y_CEIL_MARGIN=1.05` é a folga acima do pico
+  antes do piso de 1 pu entrar. Escopo é só `spectrum.py` — os outros
+  gráficos do dashboard (séries temporais em `chart.py`) continuam com
+  autorange normal.
 - **Barra de título no topo** (`_label`, 2026-07-21, Ponto 2 do professor):
   retângulo preenchido `#185FA5` com o nome do sinal ("Corrente iₐ UFV (abc)")
   em branco/negrito, posicionado **acima** das marcações de frequência

@@ -155,14 +155,17 @@ class SpectrumBuilder:
         fig = make_subplots(rows=n, cols=1, shared_xaxes=True,
                             vertical_spacing=0.13)
         tm: list[tuple[int, str, str]] = []
+        row_maxes: list[float] = []
 
         for ri, (kind, label, t, y) in enumerate(sigs, 1):
+            row_max = 0.0
             for seg_name, t0, t1 in segs:
                 mask = (t >= t0) & (t <= t1)
                 res = _amplitude_spectrum(t[mask], y[mask])
                 if res is None:
                     continue
                 f, amp = res
+                row_max = max(row_max, float(amp.max()) if len(amp) else 0.0)
                 harm[kind].setdefault(seg_name, {})[mode] = _harmonics(f, amp)
                 lc, dc = SPEC_SEG_COLORS[seg_name]
                 fig.add_trace(go.Scatter(
@@ -173,10 +176,11 @@ class SpectrumBuilder:
                 ), row=ri, col=1)
                 tm.append((len(fig.data) - 1, lc, dc))
             self._label(fig, label, ri, n)
+            row_maxes.append(row_max)
 
         markers = SPEC_MARKERS if mode in ("a", "b", "c") else SPEC_MARKERS_DQ
         self._marker_lines(fig, n, markers)
-        self._apply_layout(fig, n)
+        self._apply_layout(fig, n, row_maxes)
         return fig, tm
 
     # ── Helpers de figura ────────────────────────────────────────────────────
@@ -223,8 +227,11 @@ class SpectrumBuilder:
                 showarrow=False,
             )
 
-    @staticmethod
-    def _apply_layout(fig: go.Figure, n_rows: int) -> None:
+    _Y_CEIL_MARGIN = 1.05   # folga acima do pico real, antes de aplicar o piso de 1 pu
+
+    @classmethod
+    def _apply_layout(cls, fig: go.Figure, n_rows: int,
+                       row_maxes: list[float]) -> None:
         fig.update_xaxes(
             title_text="Frequência (Hz)", range=[0, SPEC_XRANGE_HZ],
             gridcolor="#f0f2f5", zerolinecolor="#e5e7eb", tickfont_size=10,
@@ -234,10 +241,16 @@ class SpectrumBuilder:
                 fig.layout[ax_name].matches = "x"
         fig.update_yaxes(
             title_text="Amplitude (pu)", title_font_size=11,
-            rangemode="tozero",
             gridcolor="#f0f2f5", zerolinecolor="#e5e7eb",
             tickfont_size=10,
         )
+        # Teto fixo em 1 pu (escala plena) por painel — só sobe se o pico real
+        # do sinal ultrapassar 1 pu. Sem isso o autorange do Plotly ajusta o
+        # topo ao maior valor da própria série (ex.: 0,012 pu), fazendo o
+        # ruído de fundo parecer proeminente em vez de desprezível.
+        for ri, row_max in enumerate(row_maxes, 1):
+            yname = "yaxis" if ri == 1 else f"yaxis{ri}"
+            fig.layout[yname].range = [0, max(1.0, row_max * cls._Y_CEIL_MARGIN)]
         fig.update_layout(
             margin=dict(t=64, b=16, l=64, r=100),
             paper_bgcolor="#ffffff", plot_bgcolor="#ffffff",

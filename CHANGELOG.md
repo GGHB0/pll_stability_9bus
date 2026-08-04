@@ -5,6 +5,27 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-08-02 — Teto fixo em 1 pu no eixo Y do espectro FFT
+
+Arquivos: `src/pipeline/spectrum.py`
+
+- **Eixo Y deixa de usar autorange** (`rangemode="tozero"`) e passa a ter
+  `range=[0, max(1.0, pico_real·1.05)]` fixo por subplot — a pedido do
+  usuário: com autorange, um pico de 0,012 pu virava o topo do gráfico e o
+  ruído de fundo parecia proeminente, quando na verdade é desprezível frente
+  à escala plena (1 pu). Teto padrão é 1 pu; só sobe se o pico real do
+  painel ultrapassar isso.
+- Escopo confirmado com o usuário: só a aba Espectro FFT (`spectrum.py`),
+  não os outros gráficos do dashboard; corrente e tensão (subplots
+  separados da mesma figura) têm tetos **independentes**, não
+  compartilhados.
+- `_mode_fig` agora calcula `row_maxes` (pico real por painel, a partir de
+  `amp.max()` de cada segmento) e repassa para `_apply_layout`, que aplica
+  o range por eixo (`yaxis`, `yaxis2`, ...) em vez de `update_yaxes` global.
+- Regenerado `output/pll_metrics.html` (24 cenários, execução limpa) e
+  verificado via JS no browser pane (`bus7/1phase`, eixo d): ambos os
+  subplots (corrente e tensão) confirmados com `range: [0, 1]`.
+
 ## 2026-08-02 — Legenda explicada da tabela de harmônicas
 
 Arquivos: `src/report/renderer.py`

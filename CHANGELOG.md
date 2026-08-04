@@ -5,6 +5,35 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-08-03 — Card e item de diagnóstico "Topologia" (line7_8 vs. line8_9)
+
+Arquivos: `src/report/renderer.py`
+
+- Novo card "Topologia" no grupo Severidade do distúrbio + item "Topologia"
+  no diagnóstico narrativo, só para os cenários `line7_8/*` e `line8_9/*`
+  (dict `_LINE_TOPOLOGY`, chave = `key.split("/")[0]`). Motivo: as duas
+  linhas têm topologia elétrica diferente e isso muda a leitura do
+  cenário — a pedido do usuário, que apontou a diferença; confirmado
+  também direto no `.slx` antes de escrever o texto.
+- **`line7_8`**: 2 blocos `Transmission Line (Three-Phase)` em série
+  (5 km + 45 km) com disjuntor em cada ponta — circuito único entre as
+  barras 7 e 8. Card "1 circuito", sub "falta no único caminho B7–B8".
+- **`line8_9`**: 2 blocos de 100 km cada, ambos ligando Bus8↔Bus9
+  diretamente — circuito duplo de verdade, falta atinge só um dos dois.
+  Card "2 circuitos", sub "falta em 1 dos 2, em paralelo".
+- `_cards_html`/`_story_html` passam a receber `key` (chave do cenário)
+  além de `data`. Bug pego na primeira rodada: um loop interno de
+  `_cards_html` já usava a variável `key` para outra coisa (chave de
+  métrica `vavg_bus1`/`vavg_bus3`), sombreando o parâmetro novo e fazendo
+  o card falhar silenciosamente — renomeado para `mkey`.
+- SVG do unifilar (`assets/diagrams/ieee9bus_unifilar.svg`) não foi
+  tocado, a pedido do usuário.
+- Regenerado `output/pll_metrics.html` (26 cenários, incl. `line8_9/2phase`
+  e `line8_9/3phase` trazidos do merge do GGHB) e verificado via browser
+  pane: card e item aparecem em `line7_8`/`line8_9`, ausentes em `bus*` e
+  `regime`; sem overflow de layout, sem erro no console.
+- Doc correspondente: `.claude/kb/dashboard/cards/cards-metricas.md`.
+
 ## 2026-08-02 — Teto fixo em 1 pu no eixo Y do espectro FFT
 
 Arquivos: `src/pipeline/spectrum.py`
@@ -117,73 +146,11 @@ Arquivos: `src/config/settings.py`, `src/pipeline/chart.py`
   `standards/ons_frequency_ride_through.md` (já existia, criado em sessão
   anterior).
 
-## 2026-07-25 — Eixo Y com nome+unidade, título branco fix e remoção do "Comparar PLL"
-
-Arquivos: `src/pipeline/chart.py`, `src/report/renderer.py`
-
-- **Eixo Y dos gráficos** (pedido do usuário): mostrava só a unidade
-  (`"°"`, `"pu"`); agora mostra a **grandeza física genérica** medida +
-  unidade (ex. `"Tensão (pu)"`, `"Frequência (Hz)"`, `"Potência (pu)"`),
-  via dicionário `_AXIS_LABELS[kind]` em `chart.py` — não o título
-  específico do painel (`"P / Q UFV (pu)"`, `"|V| Bus 2 (pu)"`), que o
-  usuário rejeitou numa 1ª tentativa por não identificar a grandeza de
-  forma consistente entre painéis (mesmo critério do `"Tempo (s)"` no eixo
-  X). A barra de título do painel continua mostrando o nome específico.
-- **Bug real corrigido — título do painel não ficava branco**: já era
-  branco no Python (`_label` em `chart.py`/`spectrum.py`), mas o JS
-  `themedLayout` (`renderer.py`) confundia a barra de título com o
-  subtítulo de grupo (`_group_title`) — ambos usam `xref="paper"` desde o
-  redesign de títulos (`b2bbb2a`, 2026-07-21) — e sobrescrevia a cor para
-  cinza/slate em ambos os temas. Fix: distinguir por `yref` (`"paper"` =
-  barra de título, intocada; `"y... domain"` = subtítulo de grupo,
-  re-temado). Detalhes em `dashboard/layout/dark-mode-legend-title-fixes.md`
-  (Fix 5).
-- **Removido o overlay "Comparar PLL"** (pedido do usuário — não estava
-  sendo usado): botão `ghost-toggle`, `ghostMode`, `_exactEquiv`,
-  `_ghostData`, `toggleGhost`, a injeção `.concat(_ghostData(which))` em
-  `_renderChart` e o bloco `gbtn` de `_syncCtrlButtons`. **Não afeta** o
-  toggle nominal/sintonia inadequada (`pllMode`) — feature separada,
-  mantida.
-- KB: `dashboard/graficos/construcao-graficos.md` (eixo Y),
-  `dashboard/layout/dark-mode-theming.md` +
-  `dashboard/layout/dark-mode-legend-title-fixes.md` (novo doc, fragmentado
-  do anterior pelo limite de 200 linhas — Fix 5), `dashboard/graficos/
-  dashboard-zoom-ghost.md` renomeado para `dashboard-zoom-export.md` (nome
-  não fazia mais sentido sem o fantasma), `dashboard/index.md`,
-  `dashboard/layout/{estrutura-html,tabs-navegacao}.md`,
-  `dashboard/graficos/espectro-fourier.md`; skill `dashboard-html-editor`
-  em v1.3.0.
-
-## 2026-07-25 — Cards de tensão: mínimo → média (V médio / V residual médio)
-
-Arquivos: `src/pipeline/loader.py`, `src/config/settings.py`,
-`src/config/__init__.py`, `src/report/renderer.py`
-
-- **Motivação (pedido do usuário)**: os cards de severidade (B1/B2/B3)
-  mostravam o **mínimo instantâneo** de |V| na janela pós-falta inteira
-  (até o fim da simulação). O usuário pediu regras de janela mais precisas
-  e a troca do mínimo pela **média**.
-- **Regras da nova janela** (`SimData._compute_metrics`): sempre começa em
-  `T_SETTLE` (nunca conta o transitório de partida do PLL); em **regime
-  permanente** cobre o período inteiro `[T_SETTLE, fim]`; numa **falta**
-  fica restrita ao **período do curto** `[t_start, t_clear]` (antes ia até
-  o fim da simulação, incluindo a recuperação pós-clear) — mesmo padrão de
-  "durante a falta" já usado no espectro FFT (`SpectrumBuilder._segments`).
-- **Renomeado** (chave antiga não descrevia mais o cálculo):
-  `vmin`/`vmin_bus1`/`vmin_bus3` → `vavg`/`vavg_bus1`/`vavg_bus3`;
-  `VBUS_MIN_THRESH` → `VBUS_AVG_THRESH` (mesmos valores 0.90/0.50 pu, a
-  revisitar se a distribuição real de médias reclassificar muitos
-  cenários). Rótulos: "V min"/"V residual" → **"V médio"**/**"V residual
-  médio"**; tabela comparativa: "Vmin B1/B2/B3" → **"V méd. B1/B2/B3"**.
-- Tooltip do B1/B3 parou de dizer "durante o curto" fixo em cenários de
-  regime (era impreciso — agora reflete a janela real por tipo de cenário).
-- KB atualizado: `dashboard/dados/pipeline-dados.md`,
-  `dashboard/cards/{cards-metricas,comparison-table}.md`; skill
-  `dashboard-html-editor` ganhou linha nova na tabela de mudanças
-  ("redefinir cálculo de métrica existente").
-
 ## Entradas anteriores
 
+- [2026-07-25](docs/changelog/2026-07-25.md) — eixo Y com nome+unidade,
+  título branco fix, remoção do overlay "Comparar PLL", cards de tensão
+  mínimo → média (V médio / V residual médio).
 - [2026-07-18 a 2026-07-24](docs/changelog/2026-07-18_24.md) — terminologia
   "sintonia inadequada", remoção dos ícones emoji dos botões/abas, remoção
   das métricas ΔP/ΔQ UFV, cards/diagnóstico movidos para a aba Resumo.

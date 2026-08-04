@@ -20,7 +20,7 @@ o conteúdo integral dessa aba.
 
 | Grupo | Cards | Papel |
 |---|---|---|
-| Severidade do distúrbio | V residual B2 (pu, POC do inversor, vs LVRT), V residual B1/B3 (quando `vbus1_pu`/`vbus3_pu` existem no CSV — propagação do sag; subtítulos "barra do G1 (slack)"/"barra do G3"), Duração da falta (ms, t_fault–t_clear) | **Contexto** — quão dura foi a falta; fora do veredito |
+| Severidade do distúrbio | V residual B2 (pu, POC do inversor, vs LVRT), V residual B1/B3 (quando `vbus1_pu`/`vbus3_pu` existem no CSV — propagação do sag; subtítulos "barra do G1 (slack)"/"barra do G3"), Duração da falta (ms, t_fault–t_clear), Topologia (só `line7_8`/`line8_9`, ver abaixo) | **Contexto** — quão dura foi a falta; fora do veredito |
 | Desempenho do PLL | IAE (rad·s), ISE (rad²·s), tₛ (s, ±1.15°), \|θ_err\| pico (°), **Erro R.P. (°)** | Julga o PLL |
 
 Fonte: `metrics` do [[pipeline-dados]] (janela pós-falta).
@@ -70,6 +70,32 @@ Estados especiais:
   substitui o tₛ falso que reportava a última amostra da simulação.
 - **\|θ_err\| pico ≥ `SYNC_LOSS_DEG` (90°)**: subtítulo vira
   "perda de sincronismo" (escorregamento do PLL, ex. BAD_PLL com 178°).
+
+## Topologia — circuito único vs. duplo (2026-08-03)
+
+Card novo no grupo Severidade + item novo no story, só para `line7_8`/
+`line8_9` (dict `_LINE_TOPOLOGY`, chave = `key.split("/")[0]`, thread via
+parâmetro `key` em `_cards_html`/`_story_html`). Motivo: as duas linhas têm
+topologia elétrica diferente e isso muda a leitura do cenário —
+confirmado direto no `.slx` (não só pela descrição do usuário), ver
+[[ieee9bus-line-params]]:
+
+- **`line7_8`**: 2 blocos `Transmission Line (Three-Phase)` **em série**
+  (5 km + 45 km), disjuntor (`SPST Switch`) em cada ponta — **circuito
+  único** entre as barras 7 e 8. Card: "1 circuito", sub "falta no único
+  caminho B7–B8".
+- **`line8_9`**: 2 blocos de **100 km cada, ambos ligando Bus8↔Bus9
+  diretamente** (mesmo x, y empilhado — layout de paralelo, confirmado por
+  `<Line>`/`<Branch>` no XML) — **circuito duplo** de verdade. A falta
+  atinge só um dos dois; o outro segue em serviço. Card: "2 circuitos", sub
+  "falta em 1 dos 2, em paralelo".
+
+Card classe `neutral` (contexto, não entra no veredito) — mesmo padrão do
+card Duração. Story: item "Topologia" logo após "Distúrbio"/"Cenário",
+também `neutral`. Não aparece em `bus*`/`regime` (dict não tem essas
+chaves). SVG do unifilar (`assets/diagrams/ieee9bus_unifilar.svg`) não foi
+tocado — a pedido do usuário, fica reservado para o texto do TCC; qualquer
+diagrama novo deve ser um arquivo separado.
 
 ## Erro R.P. — erro de fase em regime permanente (2026-07-21)
 

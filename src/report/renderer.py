@@ -33,6 +33,38 @@ class HTMLRenderer:
     _SPEC_MODES = ("a", "b", "c", "d", "q")
     _HARM_LO_PU = 0.02   # tabela de harmônicas: apagado se amp < (pu)
 
+    # Contexto de topologia por local de falta (loc = key.split("/")[0]).
+    # Só as linhas cuja topologia muda o diagnóstico entram aqui: 7-8 é
+    # circuito único (2 trechos em série, confirmado no .slx: 5 km + 45 km
+    # com disjuntor em cada ponta); 8-9 é circuito duplo (2 trechos de
+    # 100 km em paralelo, cada um ligando Bus8-Bus9 diretamente) — a falta
+    # atinge só um dos dois, o outro segue em serviço.
+    _LINE_TOPOLOGY = {
+        "line7_8": {
+            "val": "1", "unit": "circuito",
+            "sub": "falta no único caminho B7–B8",
+            "tip": "Linha 7-8 é um circuito único no modelo (dois trechos "
+                   "em série entre as barras 7 e 8). A falta interrompe o "
+                   "único caminho direto nesse trecho — não há circuito "
+                   "paralelo de reserva.",
+            "story": "Linha 7-8 é um circuito único entre as barras 7 e "
+                      "8 — a falta interrompe o único caminho direto nesse "
+                      "trecho, sem circuito paralelo de reserva.",
+        },
+        "line8_9": {
+            "val": "2", "unit": "circuitos",
+            "sub": "falta em 1 dos 2, em paralelo",
+            "tip": "Linha 8-9 é um circuito duplo no modelo — dois trechos "
+                   "de 100 km em paralelo entre as barras 8 e 9. A falta é "
+                   "aplicada em apenas um dos dois circuitos; o outro "
+                   "permanece em serviço durante o distúrbio.",
+            "story": "Linha 8-9 é um circuito duplo em paralelo — a falta "
+                      "atinge apenas um dos dois circuitos entre as barras "
+                      "8 e 9, e o outro permanece em serviço durante o "
+                      "distúrbio.",
+        },
+    }
+
     def __init__(self, scenarios: dict[str, dict]) -> None:
         # {key: {data, label, fig_inv, fig_sys, figs_spec, tm_*}}
         self._scenarios = scenarios
@@ -75,8 +107,8 @@ class HTMLRenderer:
                 "specDark":  {m: [x[2] for x in tm] for m, tm in tp.items()},
                 "specIdx":   {m: [x[0] for x in tm] for m, tm in tp.items()},
                 "label":     sc["label"],
-                "cardsHtml": self._cards_html(d),
-                "storyHtml": self._story_html(d),
+                "cardsHtml": self._cards_html(d, key),
+                "storyHtml": self._story_html(d, key),
                 "specTableHtml": self._spec_table_html(sc.get("spec_harm") or {}),
                 "metricsRow": self._table_row_data(d),
                 "hasInv":    True,
@@ -1056,7 +1088,7 @@ switchScenario(currentKey);
             "vavg_b3": cell(m.get("vavg_bus3"), 3, VBUS_AVG_THRESH, lower_is_better=False),
         }
 
-    def _cards_html(self, data: SimData) -> str:
+    def _cards_html(self, data: SimData, key: str) -> str:
         m = data.metrics
 
         def _v(val, decimals):
@@ -1160,15 +1192,15 @@ switchScenario(currentKey);
                   self._classify(m.get("vavg"), VBUS_AVG_THRESH, lower_is_better=False),
                   target="|V| Bus 2"),
         ]
-        for key, bus, sub in (("vavg_bus1", "B1", "barra do G1 (slack)"),
-                              ("vavg_bus3", "B3", "barra do G3")):
-            if m.get(key) is not None:
+        for mkey, bus, sub in (("vavg_bus1", "B1", "barra do G1 (slack)"),
+                               ("vavg_bus3", "B3", "barra do G3")):
+            if m.get(mkey) is not None:
                 janela_txt = "todo o período" if is_regime else "durante o curto"
                 sev_cards.append(
-                    _card(f"{vlab} {bus}", _v(m.get(key), 3), "pu", sub,
+                    _card(f"{vlab} {bus}", _v(m.get(mkey), 3), "pu", sub,
                           f"Tensão média na barra {bus[1]} ({janela_txt}) — "
                           "propagação do afundamento pela rede",
-                          self._classify(m.get(key), VBUS_AVG_THRESH,
+                          self._classify(m.get(mkey), VBUS_AVG_THRESH,
                                          lower_is_better=False),
                           target=f"|V| Bus {bus[1]}"))
         if data.t_fault is not None and data.t_clear is not None:
@@ -1177,6 +1209,11 @@ switchScenario(currentKey);
                 _card("Duração", f"{dur_ms:.0f}", "ms",
                       f"t = {data.t_fault:.2f} – {data.t_clear:.2f} s",
                       "Duração da falta aplicada", "neutral"))
+        topo = self._LINE_TOPOLOGY.get(key.split("/")[0])
+        if topo:
+            sev_cards.append(
+                _card("Topologia", topo["val"], topo["unit"], topo["sub"],
+                      topo["tip"], "neutral"))
         sev_label = "Sistema 9-Bus" if is_regime else "Severidade do distúrbio"
 
         return (
@@ -1186,7 +1223,7 @@ switchScenario(currentKey);
 
     # ── Narrativa ────────────────────────────────────────────────────────────
 
-    def _story_html(self, data: SimData) -> str:
+    def _story_html(self, data: SimData, key: str) -> str:
         m         = data.metrics
         is_regime = data.t_fault is None
         iae      = m.get("IAE")
@@ -1222,6 +1259,11 @@ switchScenario(currentKey);
                 parts.append(("bad", "Distúrbio",
                               f"Falta{dur} com afundamento severo na Barra 2 "
                               f"(V residual médio = {vavg:.3f} pu) — condição crítica de LVRT."))
+
+        # ── topologia do trecho (só faltas em linha; contexto, sem semáforo) ──
+        topo = self._LINE_TOPOLOGY.get(key.split("/")[0])
+        if topo:
+            parts.append(("neutral", "Topologia", topo["story"]))
 
         # ── resposta do PLL ──────────────────────────────────────────────────
         peak_cls = self._classify(peak_deg, PEAK_ERR_DEG_THRESH)

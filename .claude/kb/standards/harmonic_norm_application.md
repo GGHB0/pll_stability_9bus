@@ -23,7 +23,9 @@ desloca cada componente por `±f₁` conforme a sequência (positiva: ordem `n` 
 `(n-1)·f₁` no dq; negativa: ordem `n` → `(n+1)·f₁`), então dois harmônicos de
 ordens diferentes podem cair no **mesmo bin** do espectro dq (5ª
 negativa + 7ª positiva → ambas em 6f₁ = 360 Hz; 11ª + 13ª → ambas em
-12f₁ = 720 Hz). Um pico dq nesses bins não é atribuível a uma ordem `h`
+12f₁ = 720 Hz — fundamentação e citação em
+[harmonic_physical_origin_teodorescu.md](harmonic_physical_origin_teodorescu.md)).
+Um pico dq nesses bins não é atribuível a uma ordem `h`
 específica, então não dá pra comparar direto com a linha correspondente da
 Tabela 2.
 

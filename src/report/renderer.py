@@ -32,6 +32,15 @@ class HTMLRenderer:
 
     _SPEC_MODES = ("a", "b", "c", "d", "q")
     _HARM_LO_PU = 0.02   # tabela de harmônicas: apagado se amp < (pu)
+    _DQ_BIN_ORDERS = {
+        1: "—",
+        2: "fund. seq. neg.",
+        3: "2ª/4ª",
+        4: "—",
+        5: "—",
+        6: "5ª/7ª",
+        7: "—",
+    }
 
     # Contexto de topologia por local de falta (loc = key.split("/")[0]).
     # Só as linhas cuja topologia muda o diagnóstico entram aqui: 7-8 é
@@ -893,13 +902,17 @@ switchScenario(currentKey);
                          v: float) -> tuple[str, str]:
         """Classe CSS + atributo title (tooltip) de uma célula da tabela de
         harmônicas. Prioridade: fundamental (k=1, só em abc) > violação
-        normativa em abc / desequilíbrio em dq (h=2ª) > valor quase-zero
-        apagado > normal. Em d/q a linha k=1 NÃO é a fundamental (essa é DC
-        e sai do espectro junto com a média em `_amplitude_spectrum`) — é o
-        resíduo em 60 Hz, então fica na escala comum, sem destaque.
+        normativa em abc / desequilíbrio em dq (h=2ª) > bin dq sem ordem
+        correspondente (harm-noord) > valor quase-zero apagado > normal. Em
+        d/q a linha k=1 NÃO é a fundamental (essa é DC e sai do espectro
+        junto com a média em `_amplitude_spectrum`) — é o resíduo em 60 Hz;
+        como k=1 também não tem ordem harmônica em dq (só as ordens 2/4 em
+        180 Hz e 5/7 em 360 Hz colidem em bins dq), essa linha recebe a
+        marcação discreta harm-noord igual às demais linhas sem ordem.
         Limites por ordem harmônica (IEEE 519-2014/1547-2018) só valem no
-        domínio abc; em dq só a 2ª harmônica (120 Hz, sequência negativa) tem
-        critério (patamar empírico da TeseAGP) — ver
+        domínio abc; em dq só o bin de 120 Hz (fundamental de sequência
+        negativa, não 2ª harmônica) tem critério (patamar empírico da TeseAGP) —
+        ver kb/standards/harmonic_dq_frame_mapping.md e
         kb/standards/harmonic_significance_criteria.md. O segmento "Durante a
         falta" fica isento SÓ da checagem abc (SPEC_SEG_NO_NORM): os limites
         IEEE 519/1547 são critérios de regime permanente, não se aplicam ao
@@ -925,6 +938,9 @@ switchScenario(currentKey);
             if v >= DQ_UNBALANCE_WARN_PU:
                 return ("harm-warn", " title=\"desequilíbrio de sequência "
                         f"negativa ≥{DQ_UNBALANCE_WARN_PU * 100:.0f}% (TeseAGP)\"")
+        elif mode in ("d", "q") and self._DQ_BIN_ORDERS[k] == "—":
+            return ("harm-noord", " title=\"sem ordem harmônica correspondente "
+                    "em regime equilibrado; conteúdo aqui indica assimetria\"")
         if v < self._HARM_LO_PU:
             return "harm-lo", ""
         return "", ""
@@ -950,14 +966,12 @@ switchScenario(currentKey);
              f"Tensão: {VOLT_INDIVIDUAL_LIMIT_PU * 100:g}%, sobre a nominal da "
              "Barra 2 (20 kV). Fontes: IEEE 1547-2018 §7.3 (corrente), "
              "IEEE 519-2014 Tabela 1 (tensão)."),
-            ("d/q, 2ª harmônica (120 Hz) — desequilíbrio, não conformidade",
+            ("d/q, 120 Hz — desequilíbrio, não conformidade",
              f"Âmbar ≥{DQ_UNBALANCE_WARN_PU * 100:g}%, vermelho "
              f"≥{DQ_UNBALANCE_HIGH_PU * 100:g}%: mede a fração de sequência "
-             "negativa. Patamar empírico (TeseAGP §5.2.2), sem base normativa."),
+             "negativa (é a fundamental refletida, não a 2ª harmônica). Patamar empírico (TeseAGP §5.2.2), sem base normativa."),
             ("Por que d/q não é checado por ordem",
-             "A transformada de Park junta ordens diferentes no mesmo bin "
-             "(5ª e 7ª caem ambas em 360 Hz). Conformidade por ordem só é "
-             "verificável em a/b/c."),
+             "A transformada de Park desloca cada ordem conforme a sequência, então um bin dq junta ordens diferentes: 180 Hz = 2ª+4ª, 360 Hz = 5ª+7ª. A coluna \"dq: ordens\" diz o que cai em cada linha; \"—\" = sem ordem correspondente em regime equilibrado. Conformidade por ordem só é verificável em a/b/c."),
         ]
         if has_no_norm_seg:
             items.append((
@@ -967,8 +981,7 @@ switchScenario(currentKey);
                 "dq continua valendo — é ali que a sequência negativa é maior."))
         items.append((
             "A 1ª linha em d/q não é a fundamental",
-            "No dq a fundamental é DC e sai do espectro junto com o offset; "
-            "o valor mostrado é o resíduo em 60 Hz."))
+            "No dq a fundamental (ordem 1, sequência positiva) cai em 0 Hz e sai do espectro junto com o offset; o valor mostrado em 60 Hz é o resíduo."))
         rows = "".join(f"<dt>{t}</dt><dd>{d}</dd>" for t, d in items)
         return (
             "<div class='harm-legend'>"
@@ -993,6 +1006,9 @@ switchScenario(currentKey);
         agrupadas por segmento (pré/durante/pós-falta) × fase/eixo (a b c d q)
         — uma tabela para corrente, outra para tensão UFV. Valores vêm do
         SpectrumBuilder (pico local do espectro de Hann em cada k·60 Hz).
+        Tabela indexada por FREQUÊNCIA nas linhas; coluna "abc: h" vale para
+        colunas a/b/c e "dq: ordens" para d/q — ver
+        kb/standards/harmonic_dq_frame_mapping.md.
         Células são comparadas a limites normativos reais via
         `_harm_cell_tier` (ver docstring lá)."""
         segs = harm.get("segs") or []
@@ -1005,7 +1021,7 @@ switchScenario(currentKey);
             per_seg = harm.get(kind) or {}
             if not any(per_seg.get(s) for s in segs):
                 continue
-            head1 = "<tr><th rowspan='2'>h</th><th rowspan='2'>f (Hz)</th>"
+            head1 = "<tr><th rowspan='2'>f (Hz)</th><th rowspan='2'>abc: h</th><th rowspan='2'>dq: ordens</th>"
             head2 = "<tr>"
             for s in segs:
                 star = " *" if s in SPEC_SEG_NO_NORM else ""
@@ -1017,8 +1033,9 @@ switchScenario(currentKey);
             head2 += "</tr>"
             rows: list[str] = []
             for k in range(1, 8):
-                cells = (f"<td class='harm-h'>{k}ª</td>"
-                         f"<td class='harm-h'>{k * F_FUND_HZ:.0f}</td>")
+                cells = (f"<td class='harm-h'>{k * F_FUND_HZ:.0f}</td>"
+                         f"<td class='harm-h'>{k}ª</td>"
+                         f"<td class='harm-h harm-dqord'>{self._DQ_BIN_ORDERS[k]}</td>")
                 for s in segs:
                     mode_amps = per_seg.get(s) or {}
                     for j, mo in enumerate(self._SPEC_MODES):
@@ -1776,6 +1793,8 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 }
 .harm-lo  { color: var(--muted); opacity: .5 }
 .harm-na  { color: var(--muted) }
+.harm-dqord { font-weight: 500; color: var(--muted); font-size: 11px }
+.harm-noord { color: var(--muted); opacity: .35 }
 .harm-first { border-left: 1.5px solid var(--border) }
 .harm-legend {
   font-size: 11px; color: var(--muted); padding: 6px 20px 12px;

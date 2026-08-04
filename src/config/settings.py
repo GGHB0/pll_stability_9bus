@@ -35,7 +35,8 @@ SPEC_FMAX_HZ   = 2000.0   # Hz — limite superior do espectro calculado/exibido
 SPEC_XRANGE_HZ = 1500.0   # Hz — range default do eixo x: cobre harmônicas e f_res LCL
                           # (duplo-clique revela até FMAX)
 F_FUND_HZ      = 60.0     # Hz — fundamental no abc; seq. negativa da falta cai aqui
-F_2H_HZ        = 120.0    # Hz — 2ª harmônica no dq (sequência negativa da falta)
+F_2H_HZ        = 120.0    # Hz — fundamental de seq. negativa refletida no dq
+                          # (n=1 negativa → -(n+1)f₁); NÃO é a 2ª harmônica
 F_RES_LCL_HZ   = 1443.4   # Hz — ressonância do filtro LCL (ω_res = 9068.99 rad/s)
 
 # Frequências marcadas no espectro abc (vline tracejada + rótulo): fundamental,
@@ -48,9 +49,10 @@ SPEC_MARKERS = (
     (F_RES_LCL_HZ,   "f<sub>res</sub> LCL"),
 )
 
-# Frequências marcadas no espectro dq: a fundamental vira DC (removida com a
-# média); a seq. negativa da falta aparece em 2f₁ e as harmônicas 5ª/7ª do abc
-# caem juntas em 6f₁ (11ª/13ª em 12f₁).
+# Frequências marcadas no espectro dq: a fundamental (n=1 positiva) vira DC e sai
+# com a média; a fundamental de seq. negativa da falta reflete em 2f₁; as ordens
+# 5ª/7ª colidem em 6f₁ e 11ª/13ª em 12f₁ — ver
+# kb/standards/harmonic_dq_frame_mapping.md.
 SPEC_MARKERS_DQ = (
     (F_2H_HZ,        "2f<sub>1</sub>"),
     (6 * F_FUND_HZ,  "6f<sub>1</sub>"),

@@ -79,6 +79,39 @@ sempre nela). Mas os **pares divergem**: 519-2014 usa regra fixa de 25% do
 1/2/3/4% para 2ª/4ª/6ª/8ª — o próprio guia rotula isso de "Relaxed Evens"
 (Tabela 15), uma flexibilização proposital para unidades geradoras.
 
+**Lacuna confirmada em 2026-08-04 — Tabelas 17/18 do guia 1547.2-2023 (as
+tabelas de verdade, com faixas por ordem tipo `11≤h<17`) existem só como
+**imagem** no PDF `805035543-Ieee-Standard-1547-2018.pdf`.** A extração de
+texto (pypdf) pegou o título de cada tabela e "Source: Table 26/27 of IEEE
+Std 1547-2018", mas nenhum número de dentro delas — confirmado em duas
+tentativas de extração (`ieee1547_73_power_quality.txt` e
+`skim_ieee1547_05.txt`, ambos com o mesmo buraco). O único texto corrido com
+números reais é o já citado acima (4%/1%/2%/3%/4%, todos para `h<11` — o
+guia chama isso de "low-order harmonic range" explicitamente), que não cobre
+`h≥11`.
+
+**Decisão interina (2026-08-04, usuário):** para a faixa `11≤h<17` (ordens
+11ª/13ª, usadas no dashboard para o bin dq de 720 Hz), usar o valor da
+**IEEE 519-2014 Tabela 2, linha `<20`: 2,0%** — confirmado por extração de
+texto real (`ieee519_5_limits.txt`), não por imagem. Isso é uma **inferência
+por herança**, não o número lido direto da Tabela 17 do guia 1547-2018: o
+próprio texto da 1547.2-2023 diz que a exigência do 1547-2018 "is based on
+the most restrictive harmonic current limits from IEEE Std 519-2014" e os
+valores de `h<11` batem exatamente entre as duas normas, o que torna
+plausível que a faixa `11≤h<17` também bata — mas isso não foi confirmado
+lendo a Tabela 17 em si. Marcado como **`CURR_ODD_LIMIT_11_16_PU` (a
+confirmar)** no código e com tooltip equivalente na tela do dashboard. Se a
+Tabela 17/18 for extraída depois (ex.: OCR ou fonte com texto real), este
+valor deve ser conferido e o rótulo "a confirmar" removido.
+
+**Também confirmado por texto (não é inferência):** o 8º harmônico par tem
+limite de **4%** — está na mesma frase corrida citada acima ("4% at 8th
+order harmonic"), então entra no dashboard como dado direto, sem ressalva.
+Já os pares de ordem 10ª e 12ª (que aparecem se a tabela do dashboard for
+estendida até o bin de 720 Hz) não têm valor confirmado em lugar nenhum —
+ficam sem limite aplicado (célula sem destaque de violação), não um valor
+inventado.
+
 ## 2. Rejeição a distúrbio (significância funcional/empírica)
 
 TeseAGP §5.2.2 "Susceptibilidade a harmônicos de ordem elevada" (p.135):

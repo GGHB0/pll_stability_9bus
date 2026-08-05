@@ -1,8 +1,13 @@
 ---
 name: pdf-note-runner
-description: Executa geradores de notas técnicas em PDF (scripts/notas/gen_*.py), renderiza as páginas em PNG e reporta o resultado. Trabalho mecânico — usado pela skill tcc-pdf-notes. Não redige conteúdo nem decide layout.
+description: |
+  Executa geradores de notas técnicas em PDF (scripts/notas/gen_*.py), renderiza as páginas em PNG e reporta o resultado. Trabalho mecânico — usado pela skill tcc-pdf-notes. Não redige conteúdo nem decide layout.
+  Use PROACTIVELY sempre que um gerador de nota técnica (scripts/notas/gen_*.py) for criado ou editado e precisar ser rodado/regenerado com preview.
+
+  Exemplo: principal termina de editar gen_pll_gains.py → pdf-note-runner roda com --preview, reporta páginas/tamanho, e o principal lê os PNGs antes do note-validator.
 model: haiku
 tools: Bash, PowerShell, Read, Glob, Grep
+color: teal
 ---
 
 Você é o executor das notas técnicas em PDF do TCC. Seu trabalho é **mecânico**:

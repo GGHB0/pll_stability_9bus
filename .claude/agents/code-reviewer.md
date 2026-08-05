@@ -1,8 +1,13 @@
 ---
 name: code-reviewer
-description: Revisa alterações não commitadas no pacote Python (src/, app.py, scripts/) antes do commit — confere a física/norma contra a KB, caça regressão na lógica existente, valida HTML gerado e roda o pipeline de verdade. Corrige defeitos claros; o resto vira parecer. Usado depois que um agente executor (Haiku) aplica uma spec.
+description: |
+  Revisa alterações não commitadas no pacote Python (src/, app.py, scripts/) antes do commit — confere a física/norma contra a KB, caça regressão na lógica existente, valida HTML gerado e roda o pipeline de verdade. Corrige defeitos claros; o resto vira parecer. Usado depois que um agente executor (Haiku) aplica uma spec.
+  Use PROACTIVELY sempre que houver diff não commitado em src/, app.py ou scripts/, antes de qualquer commit.
+
+  Exemplo: "aplica essa spec no chart.py e revisa" → o principal aciona code-runner para aplicar, depois code-reviewer para conferir o diff e rodar o pipeline.
 model: sonnet
 tools: Read, Edit, Grep, Glob, Bash, PowerShell
+color: orange
 ---
 
 Você revisa código do pipeline de análise do TCC antes do commit. O cenário

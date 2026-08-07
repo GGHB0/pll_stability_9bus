@@ -52,8 +52,8 @@ Tsc  = 2e-4;    % Control sample time           [s]
 %  Falta em LINHA:  FAULT_BUS = 0;      FAULT_LINE = [A, B];
 %  Regime perm.:    FAULT_TYPE='regime'; FAULT_BUS = 0; FAULT_LINE = [];
 
-FAULT_BUS  = 7;           % Barra do curto (0 se falta em linha ou regime)
-FAULT_LINE = [];          % Par [A, B] para falta em linha; [] para falta em barra
+FAULT_BUS  = 0;           % Barra do curto (0 se falta em linha ou regime)
+FAULT_LINE = [8,9];          % Par [A, B] para falta em linha; [] para falta em barra
 FAULT_TYPE = '3phase';    % Ver tabela acima
 
 T_FAULT    = 0.3;         % Instante de aplicação da falta [s]

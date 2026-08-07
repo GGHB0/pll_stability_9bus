@@ -64,6 +64,30 @@ O circuito elétrico do filtro, composto pela indutância do lado do inversor (L
 
 **Modelagem do Sistema de Sincronismo (SRF-PLL):** O elemento central desta análise é o SRF-PLL, responsável por estimar o ângulo de fase (θ) e a frequência (ω) da tensão no PAC. A estrutura implementada segue o modelo padrão da literatura [3], composta por: Detector de Fase, Filtro de Loop (Controlador PI) e Oscilador Controlado por Tensão (VCO). O projeto dos ganhos (Kp e Ki) do controlador do PLL é o foco da análise de sensibilidade, pois envolve um compromisso crítico: ganhos elevados aumentam a velocidade de rastreamento, mas comprometem a rejeição a distúrbios harmônicos e ruídos de medição [4].
 
+### 3.4.2. Memorial de Cálculo dos Ganhos do SRF-PLL
+
+A função de transferência em malha fechada que descreve a dinâmica do erro angular do SRF-PLL linearizado em torno do ponto de operação é dada pelo sistema canônico de segunda ordem:
+
+$$H_{\text{pll}}(s) = \frac{\Delta \hat{\theta}(s)}{\Delta \theta(s)} = \frac{K_{p,\text{pll}} s + K_{i,\text{pll}}}{s^2 + K_{p,\text{pll}} s + K_{i,\text{pll}}} = \frac{2\zeta\omega_n s + \omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2}$$
+
+Igualando-se os coeficientes da equação característica, definem-se os ganhos proporcional e integral em função do fator de amortecimento ($\zeta$) e da frequência natural ($\omega_n$):
+
+$$K_{p,\text{pll}} = 2\zeta\omega_n \quad \text{e} \quad K_{i,\text{pll}} = \omega_n^2$$
+
+Para garantir o alinhamento de fase em aproximadamente um ciclo da frequência fundamental ($16{,}6\text{ ms}$), fixou-se o tempo de acomodação de projeto em $t_s = 20\text{ ms}$. Adotando-se o critério restrito de 1% de tolerância, obtém-se $\zeta\omega_n = \ln(100)/t_s \approx 230\text{ rad/s}$, o que leva ao ganho proporcional:
+
+$$K_{p,\text{pll}} = 2 \times 230 = 460$$
+
+Adotando-se o fator de amortecimento ótimo $\zeta = 0{,}7071$ ($1/\sqrt{2}$), a frequência natural resulta em $\omega_n \approx 325{,}27\text{ rad/s}$, consolidando o ganho integral do projeto:
+
+$$K_{i,\text{pll}} = \omega_n^2 \approx 105.820$$
+
+Para a condição de teste com Sintonia Inadequada ($\text{BAD\_PLL} = \text{true}$), aplicou-se um fator de escala de $0{,}2$ sobre os ganhos de projeto, resultando em $K_{p,\text{bad}} = 92$ e $K_{i,\text{bad}} = 21.164$. Essa redução degrada significativamente o desempenho da malha, reduzindo a frequência natural e impondo uma condição fortemente subamortecida, com maior propensão a oscilações e perda de sincronismo.
+
+### 3.4.3. Critério de 1% como Decisão de Projeto
+
+A escolha do critério de 1% não foi apenas numérica, mas de engenharia. O limite mais estrito reduz a margem residual de erro de fase após a energização e ajuda a garantir que o SRF-PLL chegue mais rapidamente a uma condição confiável antes da aplicação das faltas. Em contrapartida, essa opção amplia a exigência de rejeição de oscilações de segunda harmônica, o que torna o cenário de sintonia inadequada ainda mais didático para evidenciar a vulnerabilidade do laço.
+
 ## 3.3. PROTOCOLOS DE CONTINGÊNCIA E ANÁLISE DE CENÁRIOS
 
 *(Adicionado por Claude com tracked changes — ⚠️ texto sem acentuação)*

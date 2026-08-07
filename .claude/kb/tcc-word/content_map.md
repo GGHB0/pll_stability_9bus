@@ -20,7 +20,7 @@ metadata:
 
 ## Legenda
 
-- ✅ Redigido · ✏️ Parcial/problema · ⬜ Vazio · ⚠️ Problema estrutural
+- ✅ Redigido · ✏️ Parcial/problema · ⬜ ainda a redigir · ⚠️ Problema estrutural
 
 ## Cap. 1 — Introdução
 
@@ -42,7 +42,7 @@ metadata:
   causa, suporte de reativo dos IBR é o fator determinante)
 - ✅ **2.5** Contingências e Requisitos Normativos (migrado do antigo Cap.2):
   2.5.1 LVRT/FRT · 2.5.2 ONS Submódulo 2.10 · 2.5.3 natureza das contingências
-- ⬜ **2.6** Resumo do capítulo — vazio (título com tracked change não aceito)
+- ⬜ **2.6** Resumo do capítulo — ainda a redigir (título com tracked change não aceito)
 
 > 2.1-2.4.3 redigidos em sessão Opus (2026-07-19), fontes preparadas em sessão
 > Sonnet anterior — ver `kb/power-system/energy_transition_iea2026.md`,
@@ -85,7 +85,8 @@ metadata:
       parâmetros nem ao notch 120 Hz (nunca existiu no PSIM, ver
       [[psim-modeling]]) — linguagem de código removida 2026-07-22
       (ver `feedback_docx_no_code_artifacts` na memória)
-    - ⚠️ Referencia [FIGURA 3.1] mas **placeholder não existe** → P1
+    - ✅ Delimitação metodológica formal adicionada no texto: SRF-PLL clássico sem notch/DDSRF
+  - ⚠️ Referencia [FIGURA 3.1] mas **placeholder não existe** → P1
   - ✅ **4.3.3** Configuração da Simulação e Modelagem Dinâmica dos Geradores
     - 4.3.3.1 Modelagem Dinâmica dos Geradores Síncronos (G1/G3)
     - **4.3.3.2** Topologia da Falta e Configuração do Bloco de Contingência —
@@ -94,6 +95,7 @@ metadata:
       variáveis/script — corrigido 2026-07-22)
     - 4.3.3.3 Configuração do Sistema de Monitoramento, Variáveis Relevantes e
       Tratamento de Dados
+    - ✅ Janela temporal da falta ajustada no texto para 0,6 s a 0,7 s para acomodar o BAD_PLL
   - ✏️ **4.3.4** Protocolos de Contingência e Análise de Cenários
     - 4.3.4.1 Afundamento de Tensão Simétrico · 4.3.4.2 Afundamento de Tensão
       Assimétrico
@@ -103,17 +105,14 @@ metadata:
 ## Cap. 5 — Análise e Discussão de Resultados (PRIORIDADE)
 
 - ⬜ **5.1** Desempenho sob Afundamentos Simétricos
-  - ✏️ **5.1.1** Resposta Dinâmica e Tempo de Acomodação — contém apenas "."
-  - ⬜ **5.1.2** Impacto na Injeção de P e Q — vazio
+  - ✏️ **5.1.1** Resposta Dinâmica e Tempo de Acomodação — texto de partida inserido
+  - ⬜ **5.1.2** Impacto na Injeção de P e Q — ainda a redigir
 - ✏️ **5.2** Limites de Robustez sob Contingências Assimétricas e Saltos de Fase
   - ✏️ **5.2.1** Instabilidade sob Faltas Assimétricas — cycle slipping descrito
   - **Salto de fase NÃO implementar** (instrução do Oscar)
 - ✏️ **5.3** Impacto dos Ganhos do Controlador do SRF-PLL
-  - ✏️ **5.3.1** Influência dos Ganhos do PI — texto + [RESULTADOS A INSERIR];
-    referência à divisão adicional por 4 no Simulink limpa de "params.m"/
-    "bloco de controle" 2026-07-22 (mantém atribuição a Simulink, que é
-    correta aqui — ver `feedback_docx_no_code_artifacts`)
-  - ✏️ **5.3.2** Conformidade com LVRT — texto + [A COMPLEMENTAR: curva ONS]
+  - ✏️ **5.3.1** Influência dos Ganhos do PI — texto-base preparado; resultados num�ricos ainda a inserir
+  - ✏️ **5.3.2** Conformidade com LVRT — texto-base preparado; curva ONS ainda a complementar
 - ⬜ **5.4** (Resumo/fechamento)
 
 ## Cap. 6 — Conclusões · Cap. 7 — Trabalhos Futuros

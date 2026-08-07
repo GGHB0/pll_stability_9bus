@@ -48,6 +48,8 @@ Diante do exposto, o objetivo geral deste trabalho é analisar, de forma crític
 4. Analisar a capacidade do inversor em atender aos requisitos de suporte de reativos dos códigos de rede
 5. Identificar os fatores críticos que afetam a estabilidade do sincronismo, como os ganhos do controlador PI e a impedância da rede
 
+Destaca-se que o foco deste trabalho concentra-se na avaliação da estabilidade de sincronismo do inversor operando no modo *grid-following* via SRF-PLL clássico, analisando como a calibração dos seus ganhos internos condiciona a sobrevivência do equipamento frente a contingências severas na rede elétrica.
+
 ## Referências (Introdução)
 
 [1] MOW, N. Power Electronics: Converters, Applications, and Design. 3. ed. John Wiley & Sons, 2003.

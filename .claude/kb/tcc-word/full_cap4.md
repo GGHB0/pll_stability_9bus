@@ -23,13 +23,15 @@ A análise inicia-se pela avaliação do desempenho do SRF-PLL sob afundamentos 
 
 ### 4.1.1. Resposta Dinâmica e Tempo de Acomodação *(✏️ contém apenas ".")*
 
-.
+Na energização do sistema, o SRF-PLL nominal convergiu rapidamente para o alinhamento de fase, com acomodação em menos de 50 ms. Em contraste, o cenário `BAD_PLL` apresentou oscilação prolongada antes de travar a referência angular, evidenciando a influência direta da menor margem de fase e do amortecimento reduzido sobre o tempo de resposta do laço.
 
 ### 4.1.2. Impacto na Injeção de Potência Ativa e Reativa *(⬜ vazio)*
 
 ## 4.2. Limites de Robustez sob Contingências Assimétricas e Saltos de Fase
 
 ### 4.2.1. Instabilidade sob Faltas Assimétricas *(⬜ vazio)*
+
+Sob a falta assimétrica, a presença de sequência negativa introduziu uma ondulação de 120 Hz em $v_q$, atravessando a malha do PI e degradando a estimação angular. No caso `BAD_PLL`, a largura de banda insuficiente impediu a rejeição dessa ondulação, o erro de fase se acumulou e ocorreu *cycle slipping*, com colapso subsequente do controle desacoplado de corrente.
 
 ### 4.2.2. Impacto do Salto de Fase (Phase-Angle Jump) *(⬜ vazio — NÃO implementar)*
 
@@ -39,7 +41,15 @@ Esta seção discute a influência dos parâmetros de projeto do PLL na sua robu
 
 ### 4.3.1. Influência dos Ganhos do Controlador PI do PLL *(⬜ vazio)*
 
+A comparação entre a sintonia nominal e a sintonia inadequada mostra que a redução simultânea de $K_p$ e $K_i$ compromete a rejeição de perturbações e amplia a sensibilidade ao ripple de dupla frequência. Em termos práticos, o cenário nominal preserva a coerência do vetor de corrente, enquanto o `BAD_PLL` manifesta erro acumulado de fase, maior tempo de travamento e maior tendência à instabilidade em contingências severas.
+
 ### 4.3.2. Conformidade com o Código de Rede (LVRT) *(⬜ vazio)*
+
+A avaliação frente ao LVRT deve ser lida à luz da estabilidade do sincronismo: o requisito normativo só é plenamente atendido quando o ângulo estimado permanece confiável durante a falta e a recuperação. Nos ensaios discutidos neste trabalho, a perda de sincronismo no cenário `BAD_PLL` inviabiliza a continuidade do suporte reativo, mesmo quando a planta permanece conectada eletricamente.
+
+### 4.3.2.3. Delimitação do Escopo do SRF-PLL
+
+Cabe ressaltar que a estrutura de sincronismo adotada neste trabalho restringe-se ao modelo clássico do SRF-PLL, operando intencionalmente sem a inclusão de malhas de cancelamento de sequência negativa ou filtros de rejeição de banda (filtros notch). Essa delimitação metodológica foi estabelecida para isolar exclusivamente o impacto dos ganhos do controlador PI ($K_p$ e $K_i$) na estabilidade do inversor. A ausência de filtros avançados permite expor a vulnerabilidade intrínseca da topologia clássica frente a afundamentos assimétricos, uma vez que tais contingências induzem oscilações de dupla frequência na tensão em quadratura $v_q$. Consequentemente, essa configuração garante que a degradação do amortecimento e o fenômeno de perda de sincronismo sejam evidenciados de forma explícita caso os parâmetros de controle encontrem-se mal dimensionados.
 
 ---
 

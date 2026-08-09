@@ -70,9 +70,10 @@ não precisa criar pasta nem mover arquivo. Cenários `_bad_pll` usam o
 > `t_fault = 0.3 s` / `t_clear = 0.4 s`. Com esse timing errado o PLL parece
 > "nunca acomodar" (erro de fase fora de ±1,15° até o fim) — **é artefato do
 > dado, não comportamento físico**. Re-simular os `_bad_pll` com a **mesma
-> falta dos nominais (0.3/0.4 s)**; corrigido, o PLL estabiliza em ~0,51 s. Aí
-> o card **Erro R.P.** nasce sozinho com `t_ss = tₛ ≈ 0,51 s` (ver
-> [[cards-metricas]]) — o pipeline Python já trata; só depende do CSV certo.
+> falta dos nominais (0.3/0.4 s)**; corrigido, o PLL estabiliza em ~0,51 s e o
+> marcador tₛ volta a aparecer no painel "Erro de fase" — o pipeline Python já
+> trata; só depende do CSV certo. (O card **Erro R.P.**, citado aqui até
+> 2026-08-09, não existe mais — ver [[cards-metricas]].)
 
 Prioridade se não der tempo de rodar tudo: **#5 (bus6/1phase)** — é a falta
 assimétrica com a assinatura de sequência negativa mais clara.

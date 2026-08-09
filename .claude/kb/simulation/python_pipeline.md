@@ -123,27 +123,28 @@ Este valor real (não a constante global `T_FAULT`) é o que alimenta:
 - `HTMLRenderer` — `sc_js[key]["tFault"/"tClear"]` viaja para o JS; a função
   `updateFaultUI(sc)` atualiza o header e os badges "Falta: t = X – Y s" a
   cada `switchScenario`, e `_cards_html`/`_story_html` usam
-  `data.t_fault or T_FAULT` no lugar da constante global para `Δt = ts − t_fault`.
+  `data.t_fault`/`data.t_clear` reais do cenário no card de duração e no
+  texto do item "Distúrbio".
 
 ## Métricas calculadas (`_compute_metrics`)
 
 | Métrica (chave dict) | Fórmula | Janela |
 |---|---|---|
-| `IAE` | ∫\|θ_err\| dt | t ≥ max(t_fault, T_SETTLE) |
-| `ISE` | ∫θ_err² dt | t ≥ max(t_fault, T_SETTLE) |
-| `ts` | último t com \|θ_err\| > TOL_RAD | t ≥ max(t_fault, T_SETTLE) |
+| `ts` / `settled` | último t com \|θ_err\| > TOL_RAD | t ≥ max(t_fault, T_SETTLE) |
 | `vavg` | mean(vbus2_pu) — não mínimo, desde 2026-07-25 | regime: t ≥ T_SETTLE até o fim; falta: t_start → t_clear |
 | `vavg_bus1`, `vavg_bus3` | idem para vbus1/vbus3 | idem (`None` sem a coluna) |
 
-`dP_ufv`/`dQ_ufv` (excursão de P/Q na janela pós-clear) foram removidos em
-2026-07-24 — ver [[pipeline-dados]] em `kb/dashboard/dados/`.
+Removidas: `dP_ufv`/`dQ_ufv` (excursão de P/Q na janela pós-clear) em
+2026-07-24; `IAE`, `ISE`, `peak_err`, `ts_delta`, `t_ss`, `err_ss_mean`,
+`err_ss_rms` em 2026-08-09, junto com os cards de erro de ângulo — ver
+[[pipeline-dados]] em `kb/dashboard/dados/`.
 
 `t_fault` acima é `self.t_fault` (real do cenário, fallback `T_FAULT` global).
 `T_SETTLE = 0.1 s` (2026-07-12) clampa toda janela de cálculo: a partida do
-PLL (~0.08 s até travar) não entra em integral nenhuma nem na FFT; regime
+PLL (~0.08 s até travar) não entra no tₛ, na média de |V| nem na FFT; regime
 usa `t ≥ T_SETTLE` direto. Ver `kb/dashboard/dados/pipeline-dados.md`.
-`np.trapezoid` (NumPy ≥ 2.0). Baseline correction: subtrai `theta_err[idx_fault-1]`
-antes de `t_fault` para zerar drift da Repeating Sequence de referência.
+Baseline correction: subtrai `theta_err[idx_fault-1]` antes de `t_fault` para
+zerar drift da Repeating Sequence de referência.
 
 ## Rodar
 
@@ -170,8 +171,8 @@ decimação por passo uniforme, cap `_MAX_POINTS = 5000` por trace —
 de aplicação: todo `go.Scatter` passa por `_add` antes de `fig.add_trace`,
 então nenhuma chamada em `_add_panel` precisou mudar.
 
-**Por que não decimar em `loader.py`**: `_compute_metrics` (IAE/ISE/ts)
-usa os arrays brutos de `SimData` (`theta_err`, `P_ufv`, etc.) — decimar ali
+**Por que não decimar em `loader.py`**: `_compute_metrics` (tₛ, V médio)
+usa os arrays brutos de `SimData` (`theta_err`, `vbus*`, etc.) — decimar ali
 enviesaria as métricas. A decimação fica isolada em `chart.py`, que só cuida
 de visualização; `loader.py` continua entregando resolução total.
 

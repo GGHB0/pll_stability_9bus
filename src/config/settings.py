@@ -12,19 +12,16 @@ HTML_OUT   = PROJ_ROOT / "output" / "pll_metrics.html"
 # ── Parâmetros de simulação ─────────────────────────────────────────────────
 T_FAULT  = 0.2        # fallback (s) se fault_info.json não existir
 T_SETTLE = 0.1        # s — transitório de partida do PLL, excluído de TODO cálculo
-                      # (FFT, IAE/ISE/ts). Medido nos dados (bus6/1phase):
-                      # pior sinal é |V| Bus 2, que acomoda em 0.078 s
-TOL_RAD  = 0.02       # ±1.15° — critério de acomodação do PLL (rad)
+                      # (FFT, janela de tensão média, tₛ). Medido nos dados
+                      # (bus6/1phase): pior sinal é |V| Bus 2, acomoda em 0.078 s
+TOL_RAD  = 0.02       # ±1.15° — critério de acomodação do PLL (rad); faixa e
+                      # marcador tₛ no painel "Erro de fase" (chart.py)
 
 # Limiares de classificação: (bom_máx, moderado_máx); acima → crítico
-IAE_THRESH      = (0.05,  0.15)   # rad·s — erro de fase pós-falta
-ISE_THRESH      = (0.005, 0.020)  # rad²·s
-TS_DELTA_THRESH = (0.10,  0.30)   # s após t_fault
-PEAK_ERR_DEG_THRESH = (20.0, 60.0)  # ° — pico de |erro de fase| pós-falta
-ERR_SS_DEG_THRESH   = (0.5,  1.0)   # ° — erro de fase SUSTENTADO em regime permanente
-                                    # (média de |e| após a acomodação; PLL bem
-                                    # sintonizado tende a ~0°)
-SYNC_LOSS_DEG    = 90.0           # ° — acima disso: perda de sincronismo do PLL
+# Os limiares de erro de ângulo (IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH,
+# PEAK_ERR_DEG_THRESH, ERR_SS_DEG_THRESH, SYNC_LOSS_DEG) saíram em 2026-08-09
+# junto com os cards que classificavam — não havia fonte que sustentasse esses
+# acumulados/média/pico como medida de desempenho do PLL.
 VBUS_AVG_THRESH  = (0.90,  0.50)  # pu — severidade do afundamento (LVRT IEEE 1547);
                                   # aplicado à tensão MÉDIA (regime: período
                                   # inteiro; falta: só a janela t_fault–t_clear)

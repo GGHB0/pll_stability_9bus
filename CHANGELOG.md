@@ -5,6 +5,105 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-08-09 — Remoção dos cards de erro de ângulo (grupo "Desempenho do PLL")
+
+Arquivos: `src/report/renderer.py`, `src/pipeline/loader.py`,
+`src/config/settings.py`, `src/config/__init__.py`,
+`notebooks/dashboard_cards_explainer.ipynb`
+
+- A pedido do usuário: **não foi encontrada fonte que comprove** que acúmulo
+  (IAE/ISE), média (Erro R.P.) e pico do erro de ângulo `θ̂ − θ_rede` medem
+  desempenho do PLL. Sem base bibliográfica os números não podem ir para o
+  TCC nem sustentar um veredito, então o grupo inteiro saiu do relatório.
+- `renderer.py`: `_cards_html` perde os 5 cards e o `_group("Desempenho do
+  PLL", ...)` — resta só o grupo de severidade. `_table_row_data` e o
+  cabeçalho/JS da tabela comparativa perdem as colunas `iae`/`ise`/`ts`/
+  `peak` (sobram as 3 de tensão). `_story_html` perde os itens "Pico de
+  fase", "Acomodação", "Erro de regime" e "Erro acumulado" **e o chip de
+  veredito** (era calculado só com essas métricas); o bloco passa a ser
+  sempre `neutral` e o título vira "Contexto do cenário" / "Contexto —
+  regime permanente" (era "Diagnóstico pós-falta"). CSS `.story-verdict` e
+  `.story.good/.warn/.bad` removidos.
+- `settings.py`/`config/__init__.py`: `IAE_THRESH`, `ISE_THRESH`,
+  `TS_DELTA_THRESH`, `PEAK_ERR_DEG_THRESH`, `ERR_SS_DEG_THRESH` e
+  `SYNC_LOSS_DEG` deletados. `VBUS_AVG_THRESH` é o único threshold restante.
+- `loader.py`: `_compute_metrics` deixa de calcular `IAE`, `ISE`,
+  `peak_err`, `ts_delta`, `t_ss`, `err_ss_mean`, `err_ss_rms`.
+- **`ts`/`settled` ficaram** (decisão explícita do usuário): o instante de
+  acomodação importa porque interessa saber *como o PLL retorna pós-falta*.
+  O painel "Erro de fase", a faixa ±1,15° e o marcador tₛ seguem intactos —
+  só a exibição como card com semáforo saiu. O critério de ±0,02 rad em si
+  fica para revisão numa sessão futura.
+- Notebook explainer: seções 4.1/4.2/4.4/4.5 removidas, 4.3 (tₛ) virou a
+  seção 4, recorte `_t_pf`/`_e_pf` movido para a seção 3, verificação
+  cruzada reduzida ao `ts`. Reexecutado: 32 células, todas OK (`ts` manual =
+  `0.49723` = valor de produção).
+- Verificado: `app.py` roda os 26 cenários; no HTML gerado restam só os
+  cards de severidade (V médio/residual B1-B3, Duração, Topologia), 4
+  colunas na tabela comparativa e o story com "Distúrbio"/"Cenário" +
+  "Topologia"; 13 marcadores tₛ preservados nos gráficos.
+
+## 2026-08-05 — Linha de 0 Hz (fundamental em DC) na tabela dq (aba Espectro)
+
+Arquivos: `src/pipeline/spectrum.py`, `src/report/renderer.py`
+
+- A pedido do usuário: a tabela dq não mostrava a fundamental de jeito
+  nenhum — `_amplitude_spectrum` removia a média (`y_u -= y_u.mean()`) antes
+  da FFT e a máscara `f > 0` descartava o bin de 0 Hz, sem guardar esse
+  valor em nenhum lugar. Pela derivação de
+  `kb/standards/harmonic_dq_frame_mapping.md` (Yazdani §4.3), a ordem 1
+  (sequência positiva) vira DC no referencial síncrono — não é ruído, é o
+  próprio ponto de operação de id/iq — e serve de referência de escala para
+  julgar o tamanho do pico de 120 Hz (desequilíbrio).
+- `spectrum.py`: `_amplitude_spectrum` agora retorna também `dc` (a média
+  removida antes da FFT); `_harmonics(f, amp, dc)` devolve lista de 13
+  posições — índice 0 = `|dc|`, índices 1–12 = harmônicas como antes.
+- `renderer.py`: `_DQ_BIN_ORDERS` ganha `0: "fund. (DC)"` (entra
+  automaticamente em `_DQ_TABLE_ROWS`, sem tocar no filtro); leitura da
+  célula em `_harm_subtable_html` migrou de `amps[k - 1]` para `amps[k]`
+  (lista agora inclui o DC na posição 0); `_harm_cell_tier` ganha ramo
+  `k == 0 and mode in ("d", "q")` → reaproveita a classe `harm-fund` (mesmo
+  destaque do k=1 em abc) com tooltip próprio; legenda (`_harm_legend_html`)
+  ganha frase sobre a linha de 0 Hz.
+- Verificado no browser pane (`bus7/2phase`, servido via `python -m
+  http.server`): linha 0 Hz mostra id≈1/iq≈6e-6 pu no pré-falta (ponto de
+  operação nominal, fator de potência unitário) caindo para
+  id≈0,84/iq≈0,37 durante a falta assimétrica — fisicamente coerente;
+  tabela abc não regrediu com o shift de índice (12 linhas, valores iguais
+  ao rodado anterior).
+
+## 2026-08-05 — Tabela de harmônicas separada em abc e dq (aba Espectro)
+
+Arquivos: `src/report/renderer.py`
+
+- A pedido do usuário: a tabela única de harmônicas (linhas h=1ª…12ª,
+  colunas a/b/c/d/q) misturava dois domínios com semântica de linha
+  diferente — em abc, k = k-ésima harmônica (checável por ordem); em dq,
+  k = bin de colisão de duas ordens abc de sequências opostas, só k=2
+  (120 Hz) com critério normativo real. Resultado: 11 das 12 linhas em
+  d/q mostravam só ruído de fundo sem destaque, confundindo o leitor.
+- Separado em duas tabelas por bloco (Corrente UFV / Tensão UFV, mantido):
+  **abc** (12 linhas, igual à tabela antiga só sem colunas d/q) e **dq**
+  (5 linhas — só os bins significativos: 120/180/360/540/720 Hz, via novo
+  `_DQ_TABLE_ROWS`, que filtra `_DQ_BIN_ORDERS` descartando as entradas
+  "—"). Extraído `_harm_subtable_html` (chamado 2× por bloco) a partir do
+  antigo `_spec_table_html`.
+- `_harm_cell_tier`: removido o ramo morto `harm-noord` (bins "sem ordem"
+  não entram mais na tabela dq, então nunca chegam a essa função).
+- Legenda (`_harm_legend_html`) reescrita: item "d/q, 120 Hz" virou "Tabela
+  dq — desequilíbrio, não conformidade", explicando também que as demais
+  linhas (180/360/540/720 Hz) são só informativas; removidos os itens
+  sobre o "—" e sobre "1ª linha em d/q não é a fundamental" (não fazem
+  mais sentido — essas linhas não aparecem mais).
+- CSS: removida a classe `.harm-noord` (sem uso).
+- Regenerado `output/pll_metrics.html` (26 cenários, todos com abc+dq
+  desde a última re-simulação) e verificado via browser pane: 4 tabelas
+  por cenário (abc/dq × corrente/tensão), 12 linhas em abc, 5 em dq;
+  dado real confirma a física (pico em 120 Hz sobe de ~0,0007 para ~0,85
+  durante falta assimétrica em `bus7/2phase`).
+- Doc correspondente: `.claude/kb/dashboard/graficos/espectro-fourier.md`.
+  Iterativo — usuário revisando o resultado antes do commit final.
+
 ## 2026-08-03 — Card e item de diagnóstico "Topologia" (line7_8 vs. line8_9)
 
 Arquivos: `src/report/renderer.py`
@@ -34,120 +133,14 @@ Arquivos: `src/report/renderer.py`
   `regime`; sem overflow de layout, sem erro no console.
 - Doc correspondente: `.claude/kb/dashboard/cards/cards-metricas.md`.
 
-## 2026-08-02 — Teto fixo em 1 pu no eixo Y do espectro FFT
-
-Arquivos: `src/pipeline/spectrum.py`
-
-- **Eixo Y deixa de usar autorange** (`rangemode="tozero"`) e passa a ter
-  `range=[0, max(1.0, pico_real·1.05)]` fixo por subplot — a pedido do
-  usuário: com autorange, um pico de 0,012 pu virava o topo do gráfico e o
-  ruído de fundo parecia proeminente, quando na verdade é desprezível frente
-  à escala plena (1 pu). Teto padrão é 1 pu; só sobe se o pico real do
-  painel ultrapassar isso.
-- Escopo confirmado com o usuário: só a aba Espectro FFT (`spectrum.py`),
-  não os outros gráficos do dashboard; corrente e tensão (subplots
-  separados da mesma figura) têm tetos **independentes**, não
-  compartilhados.
-- `_mode_fig` agora calcula `row_maxes` (pico real por painel, a partir de
-  `amp.max()` de cada segmento) e repassa para `_apply_layout`, que aplica
-  o range por eixo (`yaxis`, `yaxis2`, ...) em vez de `update_yaxes` global.
-- Regenerado `output/pll_metrics.html` (24 cenários, execução limpa) e
-  verificado via JS no browser pane (`bus7/1phase`, eixo d): ambos os
-  subplots (corrente e tensão) confirmados com `range: [0, 1]`.
-
-## 2026-08-02 — Legenda explicada da tabela de harmônicas
-
-Arquivos: `src/report/renderer.py`
-
-- **Legenda reformulada em duas camadas** (novo `_harm_legend_html`): linha
-  compacta de swatches sempre visível (excede limite normativo /
-  desequilíbrio dq / abaixo de 2%) e um `<details>` "Como ler esta tabela"
-  com um bloco por critério — conformidade a/b/c (limite, base do percentual
-  e norma), desequilíbrio dq, por que dq não é checado por ordem, o `*` de
-  "Durante a falta" e o aviso sobre a 1ª linha em d/q. Fecha com as
-  referências em forma curta. Substitui o parágrafo único anterior.
-- **Regra editorial**: a tela leva só a regra aplicada; a genealogia do
-  número (razão Isc/IL, nota "c" da Tab.2 do IEEE 519-2014, descarte de `IL`
-  como base) fica no KB — `kb/standards/harmonic_norm_application.md`.
-  Limites vêm interpolados de `settings.py`, não hard-coded no texto.
-- **`harm-fund` só em a/b/c**: a linha h=1ª das colunas d/q deixa de ser
-  marcada como fundamental — no dq a fundamental é DC e sai do espectro com
-  a média; o valor é o resíduo em 60 Hz. Passa a cair na escala comum
-  (`harm-lo` quando <2%).
-- CSS: `.harm-leg-row`/`.harm-leg-sw`/`.harm-help`/`.harm-refs` novos;
-  `.harm-leg-viol`/`-unb` viram swatch (fundo) em vez de texto colorido.
-- Regenerado `output/pll_metrics.html` (24 cenários) e verificado no browser
-  pane (`bus4/1phase`): legenda abre/fecha, swatches nas cores corretas, e a
-  classificação segue intacta (h=2ª abc `harm-viol` fora da falta, dq
-  `harm-unb` em 0,303/0,309 durante a falta).
-
-## 2026-07-30 — Remoção do painel "Frequência PLL"
-
-Arquivos: `src/pipeline/loader.py`, `src/pipeline/chart.py`,
-`src/config/settings.py`, `src/config/__init__.py`
-
-- Removido o painel "Frequência PLL (Hz)" da aba Inversor UFV — a pedido do
-  usuário, não fazia sentido para a análise do TCC.
-- `loader.py`: deletados `_estimate_freq()`, a chamada em `__init__` e os
-  atributos `t_freq`/`f_pll`/`has_freq`.
-- `chart.py`: removida a linha do painel em `_inv_rows` (`has_freq` →
-  `rows.append`), o bloco `elif kind == "freq"` em `_add_panel` (curva
-  `f̂ PLL` + faixa ONS §5.2.1) e a entrada `"freq"` de `_AXIS_LABELS`.
-- `settings.py`/`config/__init__.py`: removidas as constantes
-  `FREQ_CONTINUOUS`, `FREQ_TRIP_MIN`, `FREQ_TRIP_MAX` (só usadas nesse
-  painel). Painel não tinha consumidores em cards/tabela/story — remoção
-  isolada, sem impacto em outras seções.
-- Regenerado `output/pll_metrics.html` (24 cenários) e verificado no browser
-  pane (regime + `bus7/3phase`): aba Inversor fica com Ângulo, Erro de fase,
-  Corrente dq, Tensão dq e P/Q — sem o painel de frequência.
-
-## 2026-07-29 — Destaque normativo (IEEE 519/1547) na tabela de harmônicas do FFT
-
-Arquivos: `src/config/settings.py`, `src/report/renderer.py`
-
-- **Tabela de harmônicas (aba Espectro) passa a comparar contra limites
-  normativos reais**, em vez do destaque estético anterior (`harm-top`
-  ≥0,4 pu / `harm-lo` <0,02 pu uniforme). Novo helper
-  `HTMLRenderer._harm_cell_tier`: linha h=1ª sempre isenta (fundamental,
-  classe `harm-fund`); colunas abc (a/b/c) comparadas ao IEEE 519-2014
-  Tab.1/Tab.2 e IEEE 1547-2018 §7.3 (ímpares h<11: 4,0%; pares h=2/4/6:
-  1%/2%/3%; tensão: 3,0% flat) — classe `harm-viol`; coluna dq (d/q), só a
-  2ª harmônica (120 Hz, sequência negativa) usa o patamar empírico da
-  TeseAGP (2%/3%) — classes `harm-warn`/`harm-unb`.
-- **Segmento "Durante a falta" isento só da checagem abc/IEEE** (limites de
-  regime permanente não valem durante o curto-circuito em si); o critério
-  de desequilíbrio dq continua valendo em todos os segmentos, inclusive
-  durante a falta — é onde a sequência negativa é mais relevante. Erro
-  descoberto e corrigido durante a verificação: a 1ª versão isentava os
-  dois critérios no mesmo segmento, o que fazia o alerta de desequilíbrio
-  nunca disparar na prática.
-- Novas constantes em `settings.py`: `CURR_ODD_LIMIT_PU`,
-  `CURR_EVEN_LIMITS_PU`, `VOLT_INDIVIDUAL_LIMIT_PU`,
-  `DQ_UNBALANCE_WARN_PU`/`_HIGH_PU`, `SPEC_SEG_NO_NORM`. Tooltip HTML
-  (`title=`) em cada célula violada citando o limite/norma. Legenda de
-  cores abaixo das tabelas. Tokens de tema `--danger`/`--warn` novos no CSS
-  (light/dark).
-- KB: `standards/harmonic_significance_criteria.md`,
-  `dashboard/graficos/espectro-fourier.md`.
-
-## 2026-07-28 — Faixa de frequência ONS §5.2.1 no painel "Frequência PLL"
-
-Arquivos: `src/config/settings.py`, `src/pipeline/chart.py`
-
-- **Faixa de frequência no painel "Frequência PLL"** (pedido do usuário):
-  `add_hrect` verde (58,5–62,5 Hz, operação contínua) + duas `add_hline`
-  vermelhas tracejadas (56 Hz / 63 Hz, trip instantâneo), conforme ONS
-  Submódulo 2.10 §5.2.1 (eólica/UFV). Novas constantes `FREQ_CONTINUOUS`,
-  `FREQ_TRIP_MIN`, `FREQ_TRIP_MAX` em `config/settings.py`.
-- Tentativa de painel adicional "Deslizamento de Fase PLL" (Δθ vs. relógio
-  nominal de 60 Hz) foi implementada e **revertida a pedido do usuário** —
-  não era o que tinha sido pedido; `loader.py` não foi alterado nesta entrada.
-- KB: `dashboard/graficos/chart-analysis-overlays.md`,
-  `standards/ons_frequency_ride_through.md` (já existia, criado em sessão
-  anterior).
-
 ## Entradas anteriores
 
+- [2026-08-02](docs/changelog/2026-08-02.md) — teto fixo em 1 pu no eixo Y
+  do espectro FFT, legenda explicada da tabela de harmônicas.
+- [2026-07-28 a 2026-07-30](docs/changelog/2026-07-28_30.md) — faixa de
+  frequência ONS §5.2.1 no painel "Frequência PLL" (depois removido),
+  destaque normativo (IEEE 519/1547) na tabela de harmônicas, remoção do
+  painel "Frequência PLL".
 - [2026-07-25](docs/changelog/2026-07-25.md) — eixo Y com nome+unidade,
   título branco fix, remoção do overlay "Comparar PLL", cards de tensão
   mínimo → média (V médio / V residual médio).

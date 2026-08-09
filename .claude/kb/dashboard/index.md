@@ -13,10 +13,11 @@ Histórico de mudanças por commit: `CHANGELOG.md` na raiz do repo.
 | `graficos/` | [chart-analysis-overlays.md](graficos/chart-analysis-overlays.md) | Janela de falta, hierarquia θ̂ PLL, marcador tₛ, envelope LVRT, painel de frequência |
 | `graficos/` | [dashboard-zoom-export.md](graficos/dashboard-zoom-export.md) | Zoom na falta sincronizado, export PNG 3× |
 | `graficos/` | [espectro-fourier.md](graficos/espectro-fourier.md) | SpectrumBuilder: FFT segmentada pré-falta/falta/pós-falta no dq, escala dB, marcadores 120 Hz e f_res LCL |
-| `cards/` | [cards-metricas.md](cards/cards-metricas.md) | Cards severidade/PLL, "não acomodou", pico θ_err, veredito só de desempenho |
+| `cards/` | [cards-metricas.md](cards/cards-metricas.md) | Cards de severidade (V médio, duração, topologia); remoção do grupo de erro de ângulo e do veredito (2026-08-09) |
+| `cards/` | [cards-explainer-notebook.md](cards/cards-explainer-notebook.md) | Notebook didático que reimplementa o cálculo de cada card, com verificação cruzada |
 | `cards/` | [comparison-table.md](cards/comparison-table.md) | Tabela comparativa de cenários, ordenável, filtrada por modo PLL |
 | `layout/` | [estrutura-html.md](layout/estrutura-html.md) | Esqueleto do HTML, filter-bar, SCENARIOS/switchScenario, mapa SVG |
-| `layout/` | [tabs-navegacao.md](layout/tabs-navegacao.md) | Abas Resumo (cards+diagnóstico, sem gráfico)/Inversor/Sistema/Espectro, lazy render, cards clicáveis |
+| `layout/` | [tabs-navegacao.md](layout/tabs-navegacao.md) | Abas Resumo (cards+contexto, sem gráfico)/Inversor/Sistema/Espectro, lazy render, cards clicáveis |
 | `layout/` | [dark-mode-theming.md](layout/dark-mode-theming.md) | Temas light/dark: themedLayout, Fix 1-3 (annotations/shapes/eixos, gotcha dotted-key) |
 | `layout/` | [dark-mode-legend-title-fixes.md](layout/dark-mode-legend-title-fixes.md) | Continuação: Fix 4 (legenda invisível) e Fix 5 (barra de título re-temada por engano) |
 | `layout/` | [header-branding.md](layout/header-branding.md) | Logo UERJ base64, regra de label de toggle |

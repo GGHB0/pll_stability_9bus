@@ -95,11 +95,27 @@ Os dois convivem no trabalho e são coisas diferentes:
 |---|---|---|
 | Natureza | relativo ao degrau | absoluto |
 | Valor | 1% (numerador 4,6) | ±0,02 rad = ±1,15° |
-| Onde entra | sintonia de `kp_pll`/`ki_pll` | métrica `ts` do dashboard e das simulações |
+| Onde entra | sintonia de `kp_pll`/`ki_pll` | `metrics["ts"]`, hoje só o marcador tₛ e a faixa ±1,15° do gráfico |
 
 Não se convertem um no outro sem fixar a amplitude do degrau de fase. Deixar
 implícito que são o mesmo critério é o tipo de detalhe que vira pergunta na
 defesa. Ver [[pll-contingencies]] para as métricas.
+
+## Status do critério de avaliação (2026-08-09)
+
+Em 2026-08-09 o dashboard perdeu todos os cards derivados do erro de ângulo
+(IAE, ISE, tₛ, \|θ_err\| pico, Erro R.P.) — não havia fonte que sustentasse
+acúmulo/média/pico como medida de desempenho do PLL ([[cards-metricas]]).
+
+O tₛ **não** foi descartado junto: o usuário quer manter visível **como o PLL
+retorna pós-falta**, então `metrics["ts"]` continua sendo calculado e o
+marcador segue no painel "Erro de fase" ([[chart-analysis-overlays]]). O que
+está em aberto é o próprio critério de ±0,02 rad como **critério de
+avaliação** — a revisar em sessão futura. Se ele cair, caem junto o marcador,
+a faixa verde e `ts`/`settled` no loader; se ficar, precisa da mesma
+ancoragem bibliográfica que o critério de projeto já tem acima
+(Franklin/Ogata para o critério relativo; o ±1,15° absoluto ainda é escolha
+do projeto, sem fonte).
 
 ## Nota em PDF
 

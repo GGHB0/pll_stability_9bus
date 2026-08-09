@@ -12,19 +12,29 @@ no mapa SVG). Com 12+ cenários, faltava uma visão de conjunto para comparar
 severidade entre barras/linhas de falta. Adicionado em 2026-07 como seção
 oculta por padrão (`table-toggle`), mesma UX do `diagram-toggle` existente.
 
-Colunas ΔP/ΔQ (`dp`/`dq`) removidas em 2026-07-24 — ver [[cards-metricas]].
+Colunas removidas ao longo do tempo:
+
+- ΔP/ΔQ (`dp`/`dq`) em 2026-07-24 — ver [[cards-metricas]].
+- **`iae`, `ise`, `ts`, `peak` em 2026-08-09**, junto com o grupo de cards
+  "Desempenho do PLL": eram todas derivadas do erro de ângulo
+  `θ̂ − θ_rede`, sem fonte que sustente acúmulo/média/pico como medida de
+  desempenho do PLL. Sumiram também os casos especiais que essas colunas
+  exigiam (a célula `"&gt; t_end"` do cenário que não acomodava, e a
+  classificação de `ts` por `ts_delta` em vez do valor exibido). Detalhe da
+  decisão em [[cards-metricas]].
+
+Sobraram as três colunas de tensão — a tabela hoje compara **severidade do
+distúrbio** entre cenários, não desempenho.
 
 ## Mudanças em `src/report/renderer.py`
 
 ### Python — `_table_row_data`
 
-Método novo, paralelo a `_cards_html`, reaproveitando `_classify`:
+Método paralelo a `_cards_html`, reaproveitando `_classify`:
 
 ```python
 def _table_row_data(self, data: SimData) -> dict:
     m = data.metrics
-    ts_val   = m.get("ts")
-    peak_deg = float(np.degrees(m["peak_err"])) if m.get("peak_err") is not None else None
 
     def cell(val, decimals, thresholds, lower_is_better=True):
         return {
@@ -34,10 +44,6 @@ def _table_row_data(self, data: SimData) -> dict:
         }
 
     return {
-        "iae": cell(m.get("IAE"), 3, IAE_THRESH),
-        "ise": cell(m.get("ISE"), 4, ISE_THRESH),
-        "ts":   ts_cell,   # ver casos especiais abaixo
-        "peak": cell(peak_deg, 1, PEAK_ERR_DEG_THRESH),
         "vavg":    cell(m.get("vavg"),      3, VBUS_AVG_THRESH, lower_is_better=False),
         "vavg_b1": cell(m.get("vavg_bus1"), 3, VBUS_AVG_THRESH, lower_is_better=False),
         "vavg_b3": cell(m.get("vavg_bus3"), 3, VBUS_AVG_THRESH, lower_is_better=False),
@@ -49,23 +55,14 @@ def _table_row_data(self, data: SimData) -> dict:
 só o período do curto). Threshold renomeado de `VBUS_MIN_THRESH` para
 `VBUS_AVG_THRESH` (mesmos valores 0.90/0.50 pu).
 
-Casos especiais (mesma lógica de `_cards_html`, ver [[cards-metricas]]):
-
-- `ts`: `val`/`raw` exibem/ordenam por `ts_val` absoluto, mas `cls` classifica
-  por `metrics["ts_delta"]` (margem em relação a `t_fault`). Se
-  `metrics["settled"] is False` a célula vira `"&gt; t_end"` com `raw = t_end`
-  (ordena junto dos piores) e `cls = "bad"` — cenário não acomodou na janela.
-- `peak`: pico do erro de fase em graus (`np.degrees(metrics["peak_err"])`),
-  coluna `|θ_err| pico (°)`.
-
 Em `_build_html`, cada `sc_js[key]` ganha `"metricsRow": self._table_row_data(d)`.
 
 ### HTML
 
 Botão `#table-toggle` ao lado do `#diagram-toggle` no `filter-bar`; seção
 `#table-section` (`display:none` por padrão) com `<table id="cmp-table">` —
-cabeçalho com `data-key` por coluna (`iae`, `ise`, `ts`, `peak`,
-`vavg`, `vavg_b1`, `vavg_b3`, mais `label` não-ordenável) e
+cabeçalho com `data-key` por coluna (`vavg`, `vavg_b1`, `vavg_b3`, mais
+`label` não-ordenável) e
 `<tbody id="cmp-tbody">` vazio, populado por JS. As três colunas de tensão
 são "V méd. B2/B1/B3 (pu)" — B2 primeiro por ser o POC do inversor; B1/B3
 mostram a propagação do afundamento pela rede ("—" em CSVs antigos sem
@@ -95,7 +92,7 @@ function renderComparisonTable() {
     var active = (k === currentKey) ? " cmp-active" : "";
     return "<tr class=\"cmp-row" + active + "\" onclick=\"_pickTableRow('" + k + "')\">"
       + "<td class=\"cmp-label\">" + sc.label + "</td>"
-      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.vavg) + _cmpCell(r.vavg_b1) + _cmpCell(r.vavg_b3)
+      + _cmpCell(r.vavg) + _cmpCell(r.vavg_b1) + _cmpCell(r.vavg_b3)
       + "</tr>";
   }).join("");
 }

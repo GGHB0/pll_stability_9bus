@@ -5,12 +5,11 @@ Classe principal: SimData
     .t, .P_ufv, .Q_ufv, .theta_err → arrays NumPy prontos para plotar
     .t_fast, .theta_pll_fast,   → ângulos na taxa nativa Ts (alta resolução)
     .theta_ref_fast, .theta_err_fast
-    .metrics                     → dict com IAE, ISE, ts, ts_delta, settled,
-                                   peak_err (pico transitório), t_ss/err_ss_mean/
-                                   err_ss_rms (erro de fase em regime permanente,
-                                   após a acomodação), vavg (média de |V| —
-                                   período inteiro em regime, só a janela da
-                                   falta em contingência), vavg_bus1/3
+    .metrics                     → dict com ts/settled (acomodação do erro de
+                                   fase em ±TOL_RAD, marcador do gráfico) e
+                                   vavg (média de |V| — período inteiro em
+                                   regime, só a janela da falta em
+                                   contingência), vavg_bus1/3
     .has_ang, .has_dq_ufv, .has_ref_ufv → flags de disponibilidade de colunas
 
 Três CSVs exportados pelo MATLAB:
@@ -230,61 +229,37 @@ class SimData:
     # ── internos ─────────────────────────────────────────────────────────────
 
     def _compute_metrics(self) -> dict:
-        """Métricas na janela pós-falta (t ≥ t_fault → erro de fase, V_min).
+        """Métricas na janela pós-falta (t ≥ t_fault → acomodação, V médio).
         A janela não começa antes de T_SETTLE: o transitório de partida do PLL
-        (trava em ~0.08 s) não é falta de desempenho e fica fora das integrais.
+        (trava em ~0.08 s) não é falta de desempenho e fica fora da conta.
         Regime permanente (t_fault None) usa t ≥ T_SETTLE."""
         is_regime = self.t_fault is None
         t_start = min(T_SETTLE, float(self.t[-1])) if is_regime \
             else max(self.t_fault, T_SETTLE)
         mask = self.t >= t_start
-        metrics: dict = {
-            "IAE": None, "ISE": None, "ts": None, "ts_delta": None,
-            "peak_err": None, "settled": None,
-            "t_ss": None, "err_ss_mean": None, "err_ss_rms": None,
-        }
+        # IAE, ISE, peak_err, ts_delta e err_ss_* saíram em 2026-08-09 junto com
+        # os cards que os exibiam (ver renderer._cards_html): não havia fonte
+        # que sustentasse acúmulo/média/pico do erro de ângulo como medida de
+        # desempenho do PLL. tₛ ficou: interessa saber COMO o PLL retorna
+        # pós-falta, e o marcador do painel "Erro de fase" (chart.py) o usa.
+        metrics: dict = {"ts": None, "settled": None}
 
         if self.theta_err is not None:
             t_pf = self.t[mask]
             e_pf = self.theta_err[mask]
-            if len(t_pf):
-                metrics["IAE"]      = float(np.trapezoid(np.abs(e_pf), t_pf))
-                metrics["ISE"]      = float(np.trapezoid(e_pf ** 2,    t_pf))
-                metrics["peak_err"] = float(np.abs(e_pf).max())
-                # tₛ só faz sentido como resposta a um distúrbio; em regime
-                # permanente fica None (card/story/tabela mostram "—" ou omitem).
-                if not is_regime:
-                    fora = t_pf[np.abs(e_pf) > TOL_RAD]
-                    # "Acomodou" exige |e| dentro da tolerância até o fim da
-                    # janela (margem de 2 ms); sem isso o último sample fora
-                    # vira ts falso em cenários que nunca reacomodam.
-                    if len(fora) == 0:
-                        metrics["ts"], metrics["settled"] = float(t_pf[0]), True
-                    elif float(fora[-1]) >= float(t_pf[-1]) - 2e-3:
-                        metrics["ts"], metrics["settled"] = None, False
-                    else:
-                        metrics["ts"], metrics["settled"] = float(fora[-1]), True
-                    if metrics["ts"] is not None:
-                        metrics["ts_delta"] = metrics["ts"] - t_start
-
-                # ── erro de regime permanente (janela após a acomodação) ─────
-                # t_ss = instante em que o regime começa: tₛ quando a falta
-                # reacomodou; T_SETTLE em regime permanente (PLL já travado).
-                # Falta que não reacomodou não tem regime → métrica fica None.
-                # O pico (peak_err) é transitório e mede a pior excursão; aqui
-                # medimos o erro SUSTENTADO — média/RMS de |e| até o fim.
-                if is_regime:
-                    t_ss = t_start
-                elif metrics.get("settled") and metrics.get("ts") is not None:
-                    t_ss = metrics["ts"]
+            # tₛ só faz sentido como resposta a um distúrbio; em regime
+            # permanente fica None (o marcador do gráfico é omitido).
+            if len(t_pf) and not is_regime:
+                fora = t_pf[np.abs(e_pf) > TOL_RAD]
+                # "Acomodou" exige |e| dentro da tolerância até o fim da
+                # janela (margem de 2 ms); sem isso o último sample fora
+                # vira ts falso em cenários que nunca reacomodam.
+                if len(fora) == 0:
+                    metrics["ts"], metrics["settled"] = float(t_pf[0]), True
+                elif float(fora[-1]) >= float(t_pf[-1]) - 2e-3:
+                    metrics["ts"], metrics["settled"] = None, False
                 else:
-                    t_ss = None
-                if t_ss is not None:
-                    e_ss = self.theta_err[self.t >= t_ss]
-                    if len(e_ss):
-                        metrics["t_ss"]        = float(t_ss)
-                        metrics["err_ss_mean"] = float(np.mean(np.abs(e_ss)))
-                        metrics["err_ss_rms"]  = float(np.sqrt(np.mean(e_ss ** 2)))
+                    metrics["ts"], metrics["settled"] = float(fora[-1]), True
 
         # Média de |V|, não o mínimo: em regime cobre o período inteiro pós-
         # T_SETTLE (mesma janela de t_start acima); numa falta, fica restrita
@@ -315,6 +290,5 @@ class SimData:
         m = self.metrics
         return (
             f"SimData(n={n}, "
-            f"IAE={m.get('IAE')}, ISE={m.get('ISE')}, "
-            f"ts={m.get('ts')})"
+            f"ts={m.get('ts')}, vavg={m.get('vavg')})"
         )

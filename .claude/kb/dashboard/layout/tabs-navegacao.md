@@ -55,9 +55,12 @@ manual (arrasto) não persiste para abas sujas, só o de botão.
 `onclick="goToChart('rótulo')"`. O rótulo é um fragmento do texto da
 annotation de painel gerada pelo `_label` do chart.py:
 
-- IAE / ISE / tₛ / pico → `"Erro de fase"`
 - V residual B1/B2/B3 → `"|V| Bus 1/2/3"`
-- Duração → sem target (não clicável)
+- Duração / Topologia → sem target (não clicáveis)
+
+Os cards que apontavam para `"Erro de fase"` (IAE, ISE, tₛ, \|θ_err\| pico,
+Erro R.P.) foram removidos em 2026-08-09 — ver [[cards-metricas]]. Hoje só os
+cards de tensão são clicáveis.
 
 `goToChart` varre as figuras na ordem **inv → sys** (res saiu da busca em
 2026-07-24 — não tem mais figura), acha a primeira annotation (não-`paper`)

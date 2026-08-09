@@ -18,9 +18,7 @@ import plotly
 import plotly.graph_objects as go
 
 from ..config import (
-    T_SETTLE, TOL_RAD, LVRT_THRESHOLD, F_FUND_HZ,
-    IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH,
-    PEAK_ERR_DEG_THRESH, ERR_SS_DEG_THRESH, SYNC_LOSS_DEG, VBUS_AVG_THRESH,
+    T_SETTLE, LVRT_THRESHOLD, F_FUND_HZ, VBUS_AVG_THRESH,
     SPEC_SEG_NO_NORM, CURR_ODD_LIMIT_PU, CURR_ODD_LIMIT_11_16_PU, CURR_EVEN_LIMITS_PU,
     VOLT_INDIVIDUAL_LIMIT_PU, DQ_UNBALANCE_WARN_PU, DQ_UNBALANCE_HIGH_PU,
 )
@@ -31,8 +29,11 @@ class HTMLRenderer:
     """Renderiza relatório HTML multi-cenário com seletor e duas seções de gráficos."""
 
     _SPEC_MODES = ("a", "b", "c", "d", "q")
+    _HARM_MODES_ABC = ("a", "b", "c")
+    _HARM_MODES_DQ = ("d", "q")
     _HARM_LO_PU = 0.02   # tabela de harmônicas: apagado se amp < (pu)
     _DQ_BIN_ORDERS = {
+        0: "fund. (DC)",
         1: "—",
         2: "fund. seq. neg.",
         3: "2ª/4ª",
@@ -46,6 +47,11 @@ class HTMLRenderer:
         11: "—",
         12: "11ª/13ª",
     }
+    # Linhas com bin dq fisicamente significativo (fundamental em DC, colisão
+    # de ordens, ou fundamental de sequência negativa) — as demais (k sem
+    # entrada aqui) só mostrariam ruído de fundo sem critério, e ficam fora
+    # da tabela dq.
+    _DQ_TABLE_ROWS = tuple(k for k, v in _DQ_BIN_ORDERS.items() if v != "—")
 
     # Contexto de topologia por local de falta (loc = key.split("/")[0]).
     # Só as linhas cuja topologia muda o diagnóstico entram aqui: 7-8 é
@@ -194,10 +200,6 @@ class HTMLRenderer:
         <thead>
           <tr>
             <th data-key="label">Cenário</th>
-            <th data-key="iae">IAE (rad·s)</th>
-            <th data-key="ise">ISE (rad²·s)</th>
-            <th data-key="ts">tₛ (s)</th>
-            <th data-key="peak">|θ_err| pico (°)</th>
             <th data-key="vavg">V méd. B2 (pu)</th>
             <th data-key="vavg_b1">V méd. B1 (pu)</th>
             <th data-key="vavg_b3">V méd. B3 (pu)</th>
@@ -667,7 +669,7 @@ function renderComparisonTable() {{
     var active = (k === currentKey) ? " cmp-active" : "";
     return "<tr class=\\"cmp-row" + active + "\\" onclick=\\"_pickTableRow('" + k + "')\\">"
       + "<td class=\\"cmp-label\\">" + sc.label + "</td>"
-      + _cmpCell(r.iae) + _cmpCell(r.ise) + _cmpCell(r.ts) + _cmpCell(r.peak) + _cmpCell(r.vavg) + _cmpCell(r.vavg_b1) + _cmpCell(r.vavg_b3)
+      + _cmpCell(r.vavg) + _cmpCell(r.vavg_b1) + _cmpCell(r.vavg_b3)
       + "</tr>";
   }}).join("");
 }}
@@ -906,14 +908,13 @@ switchScenario(currentKey);
     def _harm_cell_tier(self, kind: str, mode: str, k: int, seg_name: str,
                          v: float) -> tuple[str, str]:
         """Classe CSS + atributo title (tooltip) de uma célula da tabela de
-        harmônicas. Prioridade: fundamental (k=1, só em abc) > violação
-        normativa em abc / desequilíbrio em dq (h=2ª) > bin dq sem ordem
-        correspondente (harm-noord) > valor quase-zero apagado > normal. Em
-        d/q a linha k=1 NÃO é a fundamental (essa é DC e sai do espectro
-        junto com a média em `_amplitude_spectrum`) — é o resíduo em 60 Hz;
-        como k=1 também não tem ordem harmônica em dq (só as ordens 2/4 em
-        180 Hz e 5/7 em 360 Hz colidem em bins dq), essa linha recebe a
-        marcação discreta harm-noord igual às demais linhas sem ordem.
+        harmônicas. Prioridade: fundamental (k=1 em abc; k=0/DC em dq) >
+        violação normativa em abc / desequilíbrio em dq (h=2ª) > valor
+        quase-zero apagado > normal. A tabela dq (`_DQ_TABLE_ROWS`) só lista
+        bins com ordem correspondente, fundamental de sequência negativa, ou
+        a fundamental em DC (k=0) — bins "sem ordem"
+        (`_DQ_BIN_ORDERS[k] == "—"`) já ficam fora da tabela e nunca chegam
+        aqui, então não há mais ramo dedicado a eles.
         Limites por ordem harmônica (IEEE 519-2014/1547-2018) só valem no
         domínio abc; em dq só o bin de 120 Hz (fundamental de sequência
         negativa, não 2ª harmônica) tem critério (patamar empírico da TeseAGP) —
@@ -929,6 +930,10 @@ switchScenario(currentKey);
         (é justamente onde a sequência negativa é mais relevante)."""
         if k == 1 and mode in ("a", "b", "c"):
             return "harm-fund", ""
+        if k == 0 and mode in ("d", "q"):
+            return ("harm-fund", " title=\"fundamental representada como DC "
+                    "no referencial síncrono (Yazdani §4.3) — não é ruído "
+                    "nem harmônico, é o próprio ponto de operação\"")
         if k > 1 and mode in ("a", "b", "c") and seg_name not in SPEC_SEG_NO_NORM:
             if kind == "i":
                 if k % 2:
@@ -953,9 +958,6 @@ switchScenario(currentKey);
             if v >= DQ_UNBALANCE_WARN_PU:
                 return ("harm-warn", " title=\"desequilíbrio de sequência "
                         f"negativa ≥{DQ_UNBALANCE_WARN_PU * 100:.0f}% (TeseAGP)\"")
-        elif mode in ("d", "q") and self._DQ_BIN_ORDERS[k] == "—":
-            return ("harm-noord", " title=\"sem ordem harmônica correspondente "
-                    "em regime equilibrado; conteúdo aqui indica assimetria\"")
         if v < self._HARM_LO_PU:
             return "harm-lo", ""
         return "", ""
@@ -981,12 +983,21 @@ switchScenario(currentKey);
              f"Tensão: {VOLT_INDIVIDUAL_LIMIT_PU * 100:g}%, sobre a nominal da "
              "Barra 2 (20 kV). Fontes: IEEE 1547-2018 §7.3 (corrente), "
              "IEEE 519-2014 Tabela 1 (tensão). Ímpares 11ª/13ª: 2,0% — valor interino herdado da IEEE 519-2014 (Tabela 17 da 1547-2018 ainda não confirmada, ver KB)."),
-            ("d/q, 120 Hz — desequilíbrio, não conformidade",
-             f"Âmbar ≥{DQ_UNBALANCE_WARN_PU * 100:g}%, vermelho "
-             f"≥{DQ_UNBALANCE_HIGH_PU * 100:g}%: mede a fração de sequência "
-             "negativa (é a fundamental refletida, não a 2ª harmônica). Patamar empírico (TeseAGP §5.2.2), sem base normativa."),
-            ("Por que d/q não é checado por ordem",
-             "A transformada de Park desloca cada ordem conforme a sequência, então um bin dq junta ordens diferentes: 180 Hz = 2ª+4ª, 360 Hz = 5ª+7ª. A coluna \"dq: ordens\" diz o que cai em cada linha; \"—\" = sem ordem correspondente em regime equilibrado. Conformidade por ordem só é verificável em a/b/c."),
+            ("Tabela dq — desequilíbrio, não conformidade",
+             "0 Hz é a própria fundamental, representada como DC no "
+             "referencial síncrono (não é ruído nem harmônico) — serve de "
+             "referência de escala para as demais linhas. 120 Hz é a "
+             "fundamental refletida em sequência negativa (não a 2ª "
+             f"harmônica): âmbar ≥{DQ_UNBALANCE_WARN_PU * 100:g}%, vermelho "
+             f"≥{DQ_UNBALANCE_HIGH_PU * 100:g}%. Patamar empírico (TeseAGP "
+             "§5.2.2), sem base normativa. As linhas de 180/360/540/720 Hz "
+             "são só informativas — a transformada de Park desloca cada "
+             "ordem conforme a sequência, então cada bin dq junta duas "
+             "ordens abc diferentes (coluna \"dq: ordens\": 180 Hz = 2ª+4ª, "
+             "360 Hz = 5ª+7ª etc.) e não tem limite individual verificável; "
+             "conformidade por ordem só existe na tabela abc. Linhas sem "
+             "colisão nem fundamental (60/240/300/420/480/600/660 Hz) ficam "
+             "fora da tabela dq — mostrariam só ruído de fundo."),
         ]
         if has_no_norm_seg:
             items.append((
@@ -994,9 +1005,6 @@ switchScenario(currentKey);
                 "IEEE 519/1547 são limites de regime permanente, não se "
                 "aplicam ao curto-circuito em si. O critério de desequilíbrio "
                 "dq continua valendo — é ali que a sequência negativa é maior."))
-        items.append((
-            "A 1ª linha em d/q não é a fundamental",
-            "No dq a fundamental (ordem 1, sequência positiva) cai em 0 Hz e sai do espectro junto com o offset; o valor mostrado em 60 Hz é o resíduo."))
         rows = "".join(f"<dt>{t}</dt><dd>{d}</dd>" for t, d in items)
         return (
             "<div class='harm-legend'>"
@@ -1016,62 +1024,87 @@ switchScenario(currentKey);
             "</details></div>"
         )
 
+    def _harm_subtable_html(self, per_seg: dict, segs: list, kind: str,
+                             title: str, domain: str, modes: tuple,
+                             rows_k: tuple) -> str:
+        """Uma subtabela (abc OU dq) de um bloco (Corrente/Tensão). Separadas
+        porque abc e dq não compartilham semântica por linha: em abc, k é a
+        k-ésima harmônica, checável por ordem contra IEEE 519/1547; em dq, k
+        é um bin de colisão (duas ordens abc de sequências opostas) ou a
+        fundamental refletida em sequência negativa (k=2/120 Hz) — só essa
+        linha tem critério normativo. `rows_k` já vem filtrado pelo chamador
+        (`range(1,13)` em abc; `_DQ_TABLE_ROWS` em dq, que descarta os bins
+        sem ordem correspondente — mostrariam só ruído sem destaque). Ver
+        kb/standards/harmonic_dq_frame_mapping.md."""
+        if not any((per_seg.get(s) or {}).get(mo) for s in segs for mo in modes):
+            return ""
+        n_modes = len(modes)
+        ord_label = "abc: h" if domain == "abc" else "dq: ordens"
+        head1 = f"<tr><th rowspan='2'>f (Hz)</th><th rowspan='2'>{ord_label}</th>"
+        head2 = "<tr>"
+        for s in segs:
+            star = " *" if s in SPEC_SEG_NO_NORM else ""
+            head1 += f"<th colspan='{n_modes}' class='harm-first'>{s}{star}</th>"
+            for j, mo in enumerate(modes):
+                first = " harm-first" if j == 0 else ""
+                head2 += f"<th class='harm-sub{first}'>{mo}</th>"
+        head1 += "</tr>"
+        head2 += "</tr>"
+        rows: list[str] = []
+        for k in rows_k:
+            ord_cell = f"{k}ª" if domain == "abc" else self._DQ_BIN_ORDERS[k]
+            dqord_cls = "" if domain == "abc" else " harm-dqord"
+            cells = (f"<td class='harm-h'>{k * F_FUND_HZ:.0f}</td>"
+                     f"<td class='harm-h{dqord_cls}'>{ord_cell}</td>")
+            for s in segs:
+                mode_amps = per_seg.get(s) or {}
+                for j, mo in enumerate(modes):
+                    first = " harm-first" if j == 0 else ""
+                    amps = mode_amps.get(mo)
+                    v = amps[k] if amps else None
+                    if v is None:
+                        cells += f"<td class='harm-na{first}'>—</td>"
+                        continue
+                    tier, title_attr = self._harm_cell_tier(kind, mo, k, s, v)
+                    tier_cls = f" {tier}" if tier else ""
+                    cells += (f"<td class='harm-val{first}{tier_cls}'"
+                              f"{title_attr}>{v:.3g}</td>")
+            rows.append(f"<tr>{cells}</tr>")
+        domain_label = "abc" if domain == "abc" else "d/q"
+        return (
+            f"<div class='harm-block'>"
+            f"<p class='harm-title'>Harmônicas ({domain_label}) — {title} (pu)</p>"
+            f"<div class='table-wrap'><table class='harm-table'>"
+            f"<thead>{head1}{head2}</thead>"
+            f"<tbody>{''.join(rows)}</tbody></table></div></div>"
+        )
+
     def _spec_table_html(self, harm: dict) -> str:
-        """Tabelas de amplitude das harmônicas 1–12 (k·60 Hz), colunas
-        agrupadas por segmento (pré/durante/pós-falta) × fase/eixo (a b c d q)
-        — uma tabela para corrente, outra para tensão UFV. Valores vêm do
-        SpectrumBuilder (pico local do espectro de Hann em cada k·60 Hz).
-        Tabela indexada por FREQUÊNCIA nas linhas; coluna "abc: h" vale para
-        colunas a/b/c e "dq: ordens" para d/q — ver
-        kb/standards/harmonic_dq_frame_mapping.md.
-        Células são comparadas a limites normativos reais via
-        `_harm_cell_tier` (ver docstring lá)."""
+        """Duas tabelas por bloco (Corrente UFV / Tensão UFV): uma abc
+        (linhas h=1ª...12ª, checagem por ordem) e uma dq (linhas só nos bins
+        fisicamente significativos — ver `_DQ_TABLE_ROWS`), separadas porque
+        misturar as duas na mesma linha (mesma frequência k·60 Hz) confundia
+        o significado de cada coluna — ver kb/standards/harmonic_dq_frame_mapping.md
+        e `_harm_subtable_html`. Valores vêm do SpectrumBuilder (pico local
+        do espectro de Hann em cada k·60 Hz); células comparadas a limites
+        normativos reais via `_harm_cell_tier` (ver docstring lá)."""
         segs = harm.get("segs") or []
         if not segs:
             return ""
-        n_modes = len(self._SPEC_MODES)
         has_no_norm_seg = any(s in SPEC_SEG_NO_NORM for s in segs)
         blocks: list[str] = []
         for kind, title in (("i", "Corrente UFV"), ("v", "Tensão UFV")):
             per_seg = harm.get(kind) or {}
             if not any(per_seg.get(s) for s in segs):
                 continue
-            head1 = "<tr><th rowspan='2'>f (Hz)</th><th rowspan='2'>abc: h</th><th rowspan='2'>dq: ordens</th>"
-            head2 = "<tr>"
-            for s in segs:
-                star = " *" if s in SPEC_SEG_NO_NORM else ""
-                head1 += f"<th colspan='{n_modes}' class='harm-first'>{s}{star}</th>"
-                for j, mo in enumerate(self._SPEC_MODES):
-                    first = " harm-first" if j == 0 else ""
-                    head2 += f"<th class='harm-sub{first}'>{mo}</th>"
-            head1 += "</tr>"
-            head2 += "</tr>"
-            rows: list[str] = []
-            for k in range(1, 13):
-                cells = (f"<td class='harm-h'>{k * F_FUND_HZ:.0f}</td>"
-                         f"<td class='harm-h'>{k}ª</td>"
-                         f"<td class='harm-h harm-dqord'>{self._DQ_BIN_ORDERS[k]}</td>")
-                for s in segs:
-                    mode_amps = per_seg.get(s) or {}
-                    for j, mo in enumerate(self._SPEC_MODES):
-                        first = " harm-first" if j == 0 else ""
-                        amps = mode_amps.get(mo)
-                        v = amps[k - 1] if amps else None
-                        if v is None:
-                            cells += f"<td class='harm-na{first}'>—</td>"
-                            continue
-                        tier, title_attr = self._harm_cell_tier(kind, mo, k, s, v)
-                        tier_cls = f" {tier}" if tier else ""
-                        cells += (f"<td class='harm-val{first}{tier_cls}'"
-                                  f"{title_attr}>{v:.3g}</td>")
-                rows.append(f"<tr>{cells}</tr>")
-            blocks.append(
-                f"<div class='harm-block'>"
-                f"<p class='harm-title'>Harmônicas — {title} (pu)</p>"
-                f"<div class='table-wrap'><table class='harm-table'>"
-                f"<thead>{head1}{head2}</thead>"
-                f"<tbody>{''.join(rows)}</tbody></table></div></div>"
-            )
+            abc_html = self._harm_subtable_html(
+                per_seg, segs, kind, title, "abc",
+                self._HARM_MODES_ABC, tuple(range(1, 13)))
+            dq_html = self._harm_subtable_html(
+                per_seg, segs, kind, title, "dq",
+                self._HARM_MODES_DQ, self._DQ_TABLE_ROWS)
+            blocks.append(abc_html)
+            blocks.append(dq_html)
         if blocks:
             blocks.append(self._harm_legend_html(has_no_norm_seg))
         return "".join(blocks)
@@ -1088,10 +1121,11 @@ switchScenario(currentKey);
         return "good" if val >= lo else ("warn" if val >= hi else "bad")
 
     def _table_row_data(self, data: SimData) -> dict:
-        """Uma linha da tabela comparativa: {métrica: {val, raw, cls}} por cenário."""
+        """Uma linha da tabela comparativa: {métrica: {val, raw, cls}} por cenário.
+
+        Só severidade do distúrbio (V médio por barra): as métricas derivadas do
+        erro de ângulo saíram da tabela junto com os cards — ver `_cards_html`."""
         m = data.metrics
-        ts_val   = m.get("ts")
-        peak_deg = float(np.degrees(m["peak_err"])) if m.get("peak_err") is not None else None
 
         def cell(val, decimals, thresholds, lower_is_better=True):
             return {
@@ -1100,21 +1134,7 @@ switchScenario(currentKey);
                 "cls": self._classify(val, thresholds, lower_is_better),
             }
 
-        if m.get("settled") is False:
-            # não acomodou na janela simulada: ordena pelo fim da simulação
-            ts_cell = {"val": f"&gt; {data.t[-1]:.2f}", "raw": float(data.t[-1]), "cls": "bad"}
-        else:
-            ts_cell = {
-                "val": f"{ts_val:.3f}" if ts_val is not None else "—",
-                "raw": ts_val,
-                "cls": self._classify(m.get("ts_delta"), TS_DELTA_THRESH),
-            }
-
         return {
-            "iae":  cell(m.get("IAE"), 3, IAE_THRESH),
-            "ise":  cell(m.get("ISE"), 4, ISE_THRESH),
-            "ts":   ts_cell,
-            "peak": cell(peak_deg, 1, PEAK_ERR_DEG_THRESH),
             "vavg":    cell(m.get("vavg"),      3, VBUS_AVG_THRESH, lower_is_better=False),
             "vavg_b1": cell(m.get("vavg_bus1"), 3, VBUS_AVG_THRESH, lower_is_better=False),
             "vavg_b3": cell(m.get("vavg_bus3"), 3, VBUS_AVG_THRESH, lower_is_better=False),
@@ -1148,67 +1168,14 @@ switchScenario(currentKey);
             )
 
         is_regime = data.t_fault is None
-        ts_val    = m.get("ts")
-        peak_deg  = float(np.degrees(m["peak_err"])) if m.get("peak_err") is not None else None
 
-        # tₛ: três estados — acomodou, não acomodou na janela, sem dado.
-        # Em regime não há distúrbio para acomodar → card omitido.
-        if is_regime:
-            ts_card = ""
-        elif m.get("settled") is False:
-            ts_card = _card("tₛ", f"&gt; {data.t[-1]:.2f}", "s", "não acomodou",
-                            f"Erro de fase ainda fora de ±{np.degrees(TOL_RAD):.2f}° "
-                            "ao fim da janela simulada", "bad", target="Erro de fase")
-        else:
-            ts_card = _card("tₛ", _v(ts_val, 3), "s",
-                            f"±{np.degrees(TOL_RAD):.2f}°",
-                            "Tempo de acomodação do PLL",
-                            self._classify(m.get("ts_delta"), TS_DELTA_THRESH),
-                            target="Erro de fase")
+        # Grupo "Desempenho do PLL" removido (2026-08-09): IAE, ISE, tₛ,
+        # |θ_err| pico e Erro R.P. eram todos derivados do erro de ângulo
+        # θ̂ − θ_rede, sem fonte que sustente esses acumulados/média/pico como
+        # medida de desempenho do PLL. O sinal em si continua no painel
+        # "Erro de fase" do chart.py — só as métricas derivadas saíram.
 
-        peak_win  = "em regime" if is_regime else "pós-falta"
-        sync_loss = peak_deg is not None and peak_deg >= SYNC_LOSS_DEG
-        peak_card = _card("|θ_err| pico", _v(peak_deg, 1), "°",
-                          "perda de sincronismo" if sync_loss else "pico transitório",
-                          f"Pico (máx instantâneo) do erro de fase {peak_win} — pior "
-                          f"excursão, distinto do erro sustentado de R.P. "
-                          f"(≥ {SYNC_LOSS_DEG:.0f}° indica escorregamento do PLL)",
-                          self._classify(peak_deg, PEAK_ERR_DEG_THRESH),
-                          target="Erro de fase")
-
-        # Erro de regime permanente: erro de fase SUSTENTADO (média de |e|) na
-        # janela após a acomodação (t ≥ t_ss). Só existe quando há regime a
-        # medir — falta que não reacomodou fica sem este card.
-        err_ss_deg = float(np.degrees(m["err_ss_mean"])) if m.get("err_ss_mean") is not None else None
-        t_ss       = m.get("t_ss")
-        if err_ss_deg is not None and t_ss is not None:
-            ss_card = _card("Erro R.P.", _v(err_ss_deg, 2), "°",
-                            f"média |e|, t ≥ {t_ss:.3f} s",
-                            f"Erro de fase sustentado em regime permanente — média de "
-                            f"|θ̂ − θ_rede| a partir de t = {t_ss:.3f} s "
-                            f"({'PLL travado' if is_regime else 'após a acomodação tₛ'}). "
-                            f"Não confundir com o pico transitório.",
-                            self._classify(err_ss_deg, ERR_SS_DEG_THRESH),
-                            target="Erro de fase")
-        else:
-            ss_card = ""
-
-        pll = "".join([
-            _card("IAE", _v(m.get("IAE"), 3), "rad·s", "∫|e| dt",
-                  "Erro de fase acumulado",
-                  self._classify(m.get("IAE"), IAE_THRESH),
-                  target="Erro de fase"),
-            _card("ISE", _v(m.get("ISE"), 4), "rad²·s", "∫e² dt",
-                  "Energia do erro de fase",
-                  self._classify(m.get("ISE"), ISE_THRESH),
-                  target="Erro de fase"),
-            ts_card,
-            peak_card,
-            ss_card,
-        ])
-
-        # Severidade: contexto do distúrbio — cor indica profundidade do sag,
-        # mas não entra no veredito de desempenho
+        # Severidade: contexto do distúrbio — cor indica profundidade do sag.
         # "V residual" = tensão remanescente do afundamento (PRODIST/IEC),
         # aqui a MÉDIA (não o pior instante): em regime cobre o período
         # inteiro pós-T_SETTLE; numa falta, só a janela t_fault–t_clear.
@@ -1248,28 +1215,19 @@ switchScenario(currentKey);
                       topo["tip"], "neutral"))
         sev_label = "Sistema 9-Bus" if is_regime else "Severidade do distúrbio"
 
-        return (
-            _group(sev_label, "".join(sev_cards)) + "\n"
-            + _group("Desempenho do PLL", pll)
-        )
+        return _group(sev_label, "".join(sev_cards))
 
     # ── Narrativa ────────────────────────────────────────────────────────────
 
     def _story_html(self, data: SimData, key: str) -> str:
         m         = data.metrics
         is_regime = data.t_fault is None
-        iae      = m.get("IAE")
-        ts       = m.get("ts")
-        ts_delta = m.get("ts_delta")
-        settled  = m.get("settled")
-        vavg     = m.get("vavg")
-        peak_deg = float(np.degrees(m["peak_err"])) if m.get("peak_err") is not None else None
-        tol      = round(float(np.degrees(TOL_RAD)), 2)
+        vavg      = m.get("vavg")
 
-        # (classe do semáforo, rótulo, texto) — vira <li> na lista do diagnóstico
+        # (classe do semáforo, rótulo, texto) — vira <li> na lista
         parts: list[tuple[str, str, str]] = []
 
-        # ── contexto: severidade do distúrbio (não entra no veredito) ────────
+        # ── contexto: severidade do distúrbio ────────────────────────────────
         if is_regime:
             parts.append(("neutral", "Cenário",
                           "Operação em regime permanente, sem contingência aplicada — "
@@ -1297,87 +1255,10 @@ switchScenario(currentKey);
         if topo:
             parts.append(("neutral", "Topologia", topo["story"]))
 
-        # ── resposta do PLL ──────────────────────────────────────────────────
-        peak_cls = self._classify(peak_deg, PEAK_ERR_DEG_THRESH)
-        if peak_deg is not None:
-            if peak_deg >= SYNC_LOSS_DEG:
-                parts.append(("bad", "Pico de fase",
-                              f"{peak_deg:.0f}° — perda de sincronismo do PLL "
-                              "(escorregamento)."))
-            elif peak_cls == "bad":
-                parts.append(("bad", "Pico de fase",
-                              f"Excursão elevada, de até {peak_deg:.0f}°."))
-            elif peak_cls == "warn":
-                ctx = "em regime" if is_regime else "durante o distúrbio"
-                parts.append(("warn", "Pico de fase",
-                              f"Excursão de até {peak_deg:.0f}° {ctx}."))
-
-        ts_cls = "bad" if settled is False else self._classify(ts_delta, TS_DELTA_THRESH)
-        if settled is False:
-            parts.append(("bad", "Acomodação",
-                          "O PLL não reacomodou dentro da janela simulada "
-                          f"(erro fora de ±{tol:.2f}° em t = {data.t[-1]:.2f} s)."))
-        elif ts is not None:
-            if ts_cls == "good":
-                parts.append(("good", "Acomodação",
-                              f"Δt = {ts_delta:.2f} s (tₛ = {ts:.3f} s), "
-                              f"dentro do critério ±{tol:.2f}°."))
-            elif ts_cls == "warn":
-                parts.append(("warn", "Acomodação",
-                              f"Δt = {ts_delta:.2f} s (tₛ = {ts:.3f} s) — "
-                              "dentro dos limites, margem reduzida."))
-            else:
-                parts.append(("bad", "Acomodação",
-                              f"Δt = {ts_delta:.2f} s (tₛ = {ts:.3f} s) — "
-                              "resposta lenta."))
-
-        # ── erro sustentado em regime permanente (após a acomodação) ─────────
-        err_ss_deg = float(np.degrees(m["err_ss_mean"])) if m.get("err_ss_mean") is not None else None
-        t_ss       = m.get("t_ss")
-        if err_ss_deg is not None and t_ss is not None:
-            ss_cls = self._classify(err_ss_deg, ERR_SS_DEG_THRESH)
-            win = "regime permanente" if is_regime else "regime pós-falta"
-            if ss_cls == "good":
-                parts.append(("good", "Erro de regime",
-                              f"Erro de fase sustentado de {err_ss_deg:.2f}° "
-                              f"(média para t ≥ {t_ss:.3f} s) — desprezível."))
-            elif ss_cls == "warn":
-                parts.append(("warn", "Erro de regime",
-                              f"Erro de fase sustentado de {err_ss_deg:.2f}° em {win} "
-                              f"(t ≥ {t_ss:.3f} s) — moderado."))
-            else:
-                parts.append(("bad", "Erro de regime",
-                              f"Erro de fase sustentado de {err_ss_deg:.2f}° em {win} "
-                              f"(t ≥ {t_ss:.3f} s) — elevado para regime permanente."))
-
-        iae_cls = self._classify(iae, IAE_THRESH)
-        if iae is not None:
-            if iae_cls == "good":
-                parts.append(("good", "Erro acumulado",
-                              f"IAE = {iae:.3f} rad·s, baixo."))
-            elif iae_cls == "warn":
-                parts.append(("warn", "Erro acumulado",
-                              f"IAE = {iae:.3f} rad·s — acúmulo moderado."))
-            else:
-                parts.append(("bad", "Erro acumulado",
-                              f"IAE = {iae:.3f} rad·s — acumulação significativa."))
-
-        # Veredito: só métricas de desempenho/recuperação — a severidade do
-        # afundamento (V min) é contexto e fica de fora
-        statuses = [
-            iae_cls,
-            self._classify(m.get("ISE"), ISE_THRESH),
-            ts_cls,
-            peak_cls,
-        ]
-        if "bad" in statuses:
-            verdict_cls, verdict_txt = "bad",     "Desempenho crítico"
-        elif "warn" in statuses:
-            verdict_cls, verdict_txt = "warn",    "Desempenho em atenção"
-        elif "good" in statuses:
-            verdict_cls, verdict_txt = "good",    "Desempenho bom"
-        else:
-            verdict_cls, verdict_txt = "neutral", "Dados insuficientes"
+        # Itens de resposta do PLL (pico de fase, acomodação, erro de regime,
+        # erro acumulado) e o chip de veredito saíram em 2026-08-09 junto com
+        # os cards de erro de ângulo — ver `_cards_html`. Sobra o contexto do
+        # cenário: severidade do afundamento e topologia do trecho.
 
         if parts:
             items = "".join(
@@ -1386,17 +1267,16 @@ switchScenario(currentKey);
             )
             body = f'<ul class="story-list">{items}</ul>'
         else:
-            body = ('<p class="story-text">Dados insuficientes para análise '
-                    'narrativa.</p>')
-        title = "Diagnóstico — regime permanente" if is_regime else "Diagnóstico pós-falta"
+            body = ('<p class="story-text">Dados insuficientes para descrever '
+                    'o cenário.</p>')
+        title = "Contexto — regime permanente" if is_regime else "Contexto do cenário"
 
         return (
-            f'<div class="story {verdict_cls}">'
+            f'<div class="story neutral">'
             f'<div class="story-body">'
             f'<p class="story-title">{title}</p>'
             f'{body}'
             f'</div>'
-            f'<div class="story-verdict {verdict_cls}">{verdict_txt}</div>'
             f'</div>'
         )
 
@@ -1586,12 +1466,6 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
   margin-bottom: 22px;
   display: flex; align-items: center; justify-content: space-between; gap: 20px;
 }
-.story.good { border-left-color: #16a34a }
-.story.warn { border-left-color: #d97706 }
-.story.bad  { border-left-color: #dc2626 }
-[data-theme="dark"] .story.good { border-left-color: #4ade80 }
-[data-theme="dark"] .story.warn { border-left-color: #fbbf24 }
-[data-theme="dark"] .story.bad  { border-left-color: #f87171 }
 .story-title {
   font-size: 11px; font-weight: 700; text-transform: uppercase;
   letter-spacing: .6px; color: var(--muted); margin-bottom: 6px;
@@ -1615,19 +1489,6 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 [data-theme="dark"] .story-list li.warn::before { background: #fbbf24 }
 [data-theme="dark"] .story-list li.bad::before  { background: #f87171 }
 .story-list b { font-weight: 600 }
-.story-verdict {
-  flex-shrink: 0; white-space: nowrap;
-  font-size: 12px; font-weight: 700;
-  padding: 8px 18px; border-radius: 999px;
-}
-.story-verdict.good    { background: #dcfce7; color: #15803d }
-.story-verdict.warn    { background: #fef3c7; color: #b45309 }
-.story-verdict.bad     { background: #fee2e2; color: #991b1b }
-.story-verdict.neutral { background: var(--border); color: var(--muted) }
-[data-theme="dark"] .story-verdict.good    { background: #14532d; color: #4ade80 }
-[data-theme="dark"] .story-verdict.warn    { background: #451a03; color: #fbbf24 }
-[data-theme="dark"] .story-verdict.bad     { background: #450a0a; color: #f87171 }
-[data-theme="dark"] .story-verdict.neutral { background: var(--border); color: var(--muted) }
 
 /* ── Chart sections ── */
 .chart-section {
@@ -1809,7 +1670,6 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 .harm-lo  { color: var(--muted); opacity: .5 }
 .harm-na  { color: var(--muted) }
 .harm-dqord { font-weight: 500; color: var(--muted); font-size: 11px }
-.harm-noord { color: var(--muted); opacity: .35 }
 .harm-first { border-left: 1.5px solid var(--border) }
 .harm-legend {
   font-size: 11px; color: var(--muted); padding: 6px 20px 12px;

@@ -30,10 +30,17 @@ sinal sob análise.
 
 - `add_hrect(±TOL_RAD)` verde translúcido (`rgba(22,163,74,0.08)`) — "dentro
   da banda = acomodado"; bordas em linha pontilhada fina verde.
-- `_ts_marker()`: diamante verde em `(ts, erro(ts))` com texto `t_s`,
-  conectando o card de métrica ao gráfico. Trace adicionado **direto** com
-  `showlegend=False` e `marker.legend = self._legend_key` — não passa por
-  `_add`, logo fica fora do `trace_map` e mantém cor fixa nos dois temas.
+- `_ts_marker()`: diamante verde em `(ts, erro(ts))` com texto `t_s`. Trace
+  adicionado **direto** com `showlegend=False` e
+  `marker.legend = self._legend_key` — não passa por `_add`, logo fica fora
+  do `trace_map` e mantém cor fixa nos dois temas.
+
+⚠️ **Últimos consumidores de `metrics["ts"]`** (2026-08-09): os cards de erro
+de ângulo foram removidos ([[cards-metricas]]) e a banda + o marcador são hoje
+a única exibição do critério de acomodação no relatório. O loader continua
+calculando `ts`/`settled` só por causa deles. O critério em si está em
+revisão — ver [[pll-ts-criterion-rationale]]; se ele cair, estes dois overlays
+caem junto e `_compute_metrics` fica só com `vavg*`.
 
 ## Painel de frequência (removido 2026-07-30)
 

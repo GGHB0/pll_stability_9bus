@@ -8,8 +8,8 @@ uma figura com um painel de corrente e um de tensão UFV, com o tempo partido
 em três segmentos — pré-falta, durante a falta e pós-falta. No referencial
 abc a fundamental fica em 60 Hz; no dq ela vira DC (removida com a média) e
 a sequência negativa da falta assimétrica aparece em 120 Hz. harm carrega a
-amplitude das harmônicas 1–12 (k·60 Hz) por segmento/modo para a tabela do
-relatório.
+amplitude das harmônicas 1–12 (k·60 Hz) mais o componente DC (0 Hz, índice 0)
+por segmento/modo para a tabela do relatório.
 """
 from __future__ import annotations
 
@@ -33,10 +33,12 @@ def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
     """|FFT| de amplitude LINEAR (pu): reamostra em grade uniforme, trunca a
     janela para um número INTEIRO de ciclos da fundamental (60 Hz cai exato
     num bin — sem vazamento por janela cortada no meio do ciclo), remove a
-    média (offset DC; no abc a fundamental de 60 Hz permanece) e aplica janela
-    de Hann. Retorna (f, amp) com 0 < f ≤ fmax e amp em pu — escala linear
-    destaca os picos discretos (60 Hz + harmônicas) sobre o piso de ruído, ao
-    contrário do dB. Retorna None se o segmento for curto demais."""
+    média (offset DC; no abc a fundamental de 60 Hz permanece, no dq é a
+    própria fundamental — ver `_harmonics`) e aplica janela de Hann. Retorna
+    (f, amp, dc) com 0 < f ≤ fmax e amp em pu — escala linear destaca os
+    picos discretos (60 Hz + harmônicas) sobre o piso de ruído, ao contrário
+    do dB; dc é o valor médio removido antes da FFT. Retorna None se o
+    segmento for curto demais."""
     if len(t) < _MIN_SAMPLES or (t[-1] - t[0]) < _MIN_DUR_S:
         return None
     dt = float(np.median(np.diff(t)))
@@ -50,22 +52,28 @@ def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
         return None
     t_u = t[0] + np.arange(n) * dt
     y_u = np.interp(t_u, t, y)
-    y_u -= y_u.mean()
+    dc  = float(y_u.mean())
+    y_u = y_u - dc
     w   = np.hanning(len(y_u))
     amp = 2.0 * np.abs(np.fft.rfft(y_u * w)) / w.sum()
     f   = np.fft.rfftfreq(len(y_u), dt)
     m   = (f > 0) & (f <= fmax)
-    return f[m], amp[m]
+    return f[m], amp[m], dc
 
 
-def _harmonics(f: np.ndarray, amp: np.ndarray) -> list[float | None]:
-    """Amplitude nas harmônicas k·60 Hz (k = 1…_N_HARM): pico local em
-    ±1,5 bin em torno da frequência alvo — a janela de Hann espalha um tom
-    bin-centrado em 3 bins, com o pico verdadeiro no bin central."""
+def _harmonics(f: np.ndarray, amp: np.ndarray, dc: float) -> list[float | None]:
+    """Amplitude nas harmônicas k·60 Hz (k = 1…_N_HARM) mais o componente DC
+    (índice 0): pico local em ±1,5 bin em torno da frequência alvo — a janela
+    de Hann espalha um tom bin-centrado em 3 bins, com o pico verdadeiro no
+    bin central. O índice 0 (0 Hz) é |dc|, o valor médio removido antes da
+    FFT — em abc é só o offset de medição (perto de zero); em dq é a própria
+    fundamental representada no referencial síncrono (Yazdani §4.3, ver
+    kb/standards/harmonic_dq_frame_mapping.md), por isso entra na tabela dq
+    do relatório como linha de referência de escala."""
+    out: list[float | None] = [abs(dc)]
     if len(f) < 2:
-        return [None] * _N_HARM
-    df  = float(f[1] - f[0])
-    out: list[float | None] = []
+        return out + [None] * _N_HARM
+    df = float(f[1] - f[0])
     for k in range(1, _N_HARM + 1):
         m = np.abs(f - k * F_FUND_HZ) <= 1.5 * df
         out.append(float(amp[m].max()) if m.any() else None)
@@ -89,7 +97,8 @@ class SpectrumBuilder:
         if not modes or not segs:
             return {}, {}, {}
 
-        # harm["i"|"v"][segmento][modo] = [amp h1 … h7] (pu)
+        # harm["i"|"v"][segmento][modo] = [dc, amp h1 … h12] (pu) — índice 0
+        # é o componente DC (ver _harmonics), índice k é a k-ésima harmônica.
         harm: dict = {"segs": [s[0] for s in segs], "i": {}, "v": {}}
         figs: dict[str, go.Figure] = {}
         tms:  dict[str, list[tuple[int, str, str]]] = {}
@@ -164,9 +173,9 @@ class SpectrumBuilder:
                 res = _amplitude_spectrum(t[mask], y[mask])
                 if res is None:
                     continue
-                f, amp = res
+                f, amp, dc = res
                 row_max = max(row_max, float(amp.max()) if len(amp) else 0.0)
-                harm[kind].setdefault(seg_name, {})[mode] = _harmonics(f, amp)
+                harm[kind].setdefault(seg_name, {})[mode] = _harmonics(f, amp, dc)
                 lc, dc = SPEC_SEG_COLORS[seg_name]
                 fig.add_trace(go.Scatter(
                     x=f, y=amp, name=seg_name, mode="lines",

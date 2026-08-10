@@ -15,6 +15,12 @@ Continuação de [harmonic_significance_criteria.md](harmonic_significance_crite
 (as três noções de "significativo" e os limites originais). Este arquivo
 cobre como isso vira checagem célula a célula na tabela do dashboard.
 
+Mapas das normas em [ieee519_structure.md](ieee519_structure.md) e
+[ieee1547_power_quality_clause7.md](ieee1547_power_quality_clause7.md);
+condições de medição (janela, agregação, percentis) e o confronto com a FFT
+implementada em
+[harmonic_measurement_conditions.md](harmonic_measurement_conditions.md).
+
 ## abc × dq — qual norma vale em qual domínio
 
 Os limites por ordem harmônica `h` (Tabela 2 do IEEE 519-2014, §7.3 do IEEE
@@ -31,7 +37,7 @@ Tabela 2.
 
 Consequência prática: checagem de conformidade com IEEE 519/1547 deve usar o
 espectro em modo **abc** (fases a/b/c), casando os marcadores `SPEC_MARKERS`
-(f₁, 3f₁, 5f₁, 7f₁) com a tabela de harmônicas 1–7. O espectro em modo **dq**
+(f₁, 3f₁, 5f₁, 7f₁) com a tabela de harmônicas 1–12. O espectro em modo **dq**
 não serve para essa checagem — ele é um proxy da **fração de sequência
 negativa** (pico isolado em 2f₁ = 120 Hz), critério de desequilíbrio
 (limiar empírico da TeseAGP, análise da fração `b` do Yazdani — itens 2/3 de
@@ -42,16 +48,32 @@ checagem por ordem em abc está disponível na maior parte do dashboard — os
 poucos cenários sem esse CSV mostram só dq, útil para severidade de
 desequilíbrio, não para conformidade normativa.
 
-**A fundamental do dq não existe no espectro exibido**: `_amplitude_spectrum`
-remove a média antes da FFT (`y_u -= y_u.mean()`), e a fundamental do dq é
-justamente essa componente DC — ela sai junto com o offset, não sobra como
-pico em 60 Hz. Isso não é só efeito do código: é a mesma rotação dq da seção
-acima aplicada à própria fundamental (ordem `n=1`, sequência positiva) —
-`(n-1)·f₁ = 0`, derivação completa em
-[harmonic_dq_frame_mapping.md](harmonic_dq_frame_mapping.md). A linha h=1ª das
-colunas d/q na tabela não é "a fundamental dq"; é o resíduo em 60 Hz que sobra
-depois de remover o DC (~0,0008 pu em regime, cresce quando há conteúdo não
-estacionário no sinal).
+**A fundamental do dq aparece como DC, não como pico em 60 Hz** — e desde
+2026-08-05 essa componente é exibida na tabela dq (linha "0 Hz / fund.
+(DC)"), não mais descartada. `_amplitude_spectrum` continua removendo a
+média antes da FFT (`y_u -= y_u.mean()`) para o cálculo do espectro em si,
+mas agora guarda esse valor (`dc`) em vez de jogá-lo fora — é a mesma
+rotação dq da seção acima aplicada à própria fundamental (ordem `n=1`,
+sequência positiva) — `(n-1)·f₁ = 0`, derivação completa em
+[harmonic_dq_frame_mapping.md](harmonic_dq_frame_mapping.md). Note que essa
+linha **não tem critério normativo** (não é comparada a nenhum limite,
+classe CSS `harm-fund` só de destaque) — serve de referência de escala para
+julgar o tamanho do pico de 120 Hz (desequilíbrio). A tabela dq não mostra
+mais uma linha "h=1ª/60 Hz": esse bin não corresponde a nenhuma colisão de
+ordens nem à fundamental refletida (ver `_DQ_TABLE_ROWS` em
+`espectro-fourier.md`) e foi removido da tabela junto com as demais linhas
+"sem ordem" na separação abc/dq.
+
+**Base normativa da isenção por segmento (achado de 2026-08-09):** a **nota de
+rodapé 118** do IEEE 1547.2-2023 (pág. impressa 144) diz que os limites são
+valores de projeto para **regime normal com duração superior a 1 h**, e que em
+**partida ou condição inusual** *"the limits may be exceeded by 50%"*. Isso
+sustenta tanto o descarte de `T_SETTLE` quanto o tratamento diferenciado do
+segmento de falta — que até então eram raciocínio próprio, sem apoio de texto.
+**Ressalva:** a norma **afrouxa em 50%**, não isenta. O rigor mandaria aplicar
+limite ×1,5 (6% em vez de 4% no ímpar) durante a falta, em vez de suprimir a
+checagem. Pendência aberta, não implementada — ver
+[harmonic_measurement_conditions.md](harmonic_measurement_conditions.md).
 
 **Achado da verificação (2026-07-29):** o critério de desequilíbrio dq **não
 pode** herdar a mesma isenção do segmento "Durante a falta" que a checagem

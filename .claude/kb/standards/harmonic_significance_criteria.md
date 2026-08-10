@@ -23,32 +23,23 @@ geradora conectada ao SIN (Barra 2), essas duas normas são as aplicáveis — *
 o PRODIST Módulo 8** (ANEEL), que rege apenas conexões de distribuição (BT/MT).
 Correção registrada em 2026-07-28 (usuário).
 
-**IEEE 519-2014 §5** (extraído de `553147549-IEE-Std-519-2014.pdf`, p.17-21):
+**IEEE 519-2014 §5** (extraído de `553147549-IEE-Std-519-2014.pdf`, págs.
+impressas 5-10 = PDF 17-22). **Mapa completo das cinco tabelas, notas de
+rodapé e anexos em [ieee519_structure.md](ieee519_structure.md)**; aqui ficam
+só as linhas que se aplicam à Barra 2:
 
-*Tabela 1 — distorção de TENSÃO por classe do barramento no PCC:*
+- *Tabela 1* (tensão), classe **1 kV < V ≤ 69 kV**: **3,0% individual /
+  5,0% THD**, em % da tensão nominal no PCC. Limite **flat por ordem** — a
+  norma não escalona tensão por ordem harmônica.
+- *Tabela 2* (corrente 120 V-69 kV), linha **`Isc/IL < 20`**: **4,0%**
+  (3≤h<11), **2,0%** (11≤h<17), 1,5% / 0,6% / 0,3% nas faixas seguintes,
+  **TDD 5,0%** — tudo em % de `IL`. Pares a 25% do ímpar correspondente
+  (nota "a").
 
-| Tensão do PCC | Individual | THD |
-|---|---|---|
-| V ≤ 1 kV | 5,0% | 8,0% |
-| **1 kV < V ≤ 69 kV** | **3,0%** | **5,0%** |
-| 69 kV < V ≤ 161 kV | 1,5% | 2,5% |
-| V > 161 kV | 1,0% | 1,5% |
-
-*Tabela 2 — distorção de CORRENTE (sistemas 120V-69kV), por Isc/IL, em % de IL:*
-
-| Isc/IL | 3≤h<11 | 11≤h<17 | 17≤h<23 | 23≤h<35 | 35≤h≤50 | TDD |
-|---|---|---|---|---|---|---|
-| **< 20** | **4,0%** | **2,0%** | **1,5%** | **0,6%** | **0,3%** | **5,0%** |
-| 20-50 | 7,0% | 3,5% | 2,5% | 1,0% | 0,5% | 8,0% |
-| 50-100 | 10,0% | 4,5% | 4,0% | 1,5% | 0,7% | 12,0% |
-| 100-1000 | 12,0% | 5,5% | 5,0% | 2,0% | 1,0% | 15,0% |
-| > 1000 | 15,0% | 7,0% | 6,0% | 2,5% | 1,4% | 20,0% |
-
-Harmônicos pares limitados a 25% do limite ímpar correspondente. **Nota "c" da
-Tabela 2 (crítica para este TCC):** *"All power generation equipment is
-limited to these values of current distortion, regardless of actual
-Isc/IL"* — todo equipamento de geração fica obrigado à linha **<20** (a mais
-restritiva), independente da relação Isc/IL real na Barra 2.
+**Nota "c" da Tabela 2 (crítica para este TCC):** *"All power generation
+equipment is limited to these values of current distortion, regardless of
+actual Isc/IL"* — todo equipamento de geração fica obrigado à linha **<20**
+(a mais restritiva), independente da relação Isc/IL real na Barra 2.
 
 **Aplicação à Barra 2 (20 kV, base 100 MVA):** cai na faixa "1 kV < V ≤
 69 kV" → tensão: **3,0% individual / 5,0% THD**. Corrente (unidade
@@ -59,9 +50,13 @@ isso traduz direto para pu de corrente do dashboard: **0,04 pu** (h<11
 `id_ufv_pu`/`iq_ufv_pu`/`iabc_inverter`.
 
 **IEEE 1547-2018 §7.3 "Limitation of current distortion"** (extraído de
-IEEE 1547.2-2023, Application Guide, p.144-147 — arquivo
-`805035543-Ieee-Standard-1547-2018.pdf`; cláusula distinta da de ride-through
-já documentada em [ieee1547_ride_through.md](ieee1547_ride_through.md)): com
+IEEE 1547.2-2023, Application Guide, págs. impressas 144-146 = PDF 145-147 —
+arquivo `805035543-Ieee-Standard-1547-2018.pdf`; cláusula distinta da de
+ride-through já documentada em
+[ieee1547_ride_through.md](ieee1547_ride_through.md)). **Mapa da Cláusula 7
+inteira — §7.1 a §7.5, Tabelas 15/16, notas de rodapé 118/119 e a
+condicionante do transformador — em
+[ieee1547_power_quality_clause7.md](ieee1547_power_quality_clause7.md)**: com
 a DER servindo carga linear balanceada, a injeção de corrente harmônica no
 PCC não pode exceder **4%** em harmônicos ímpares individuais, **1% / 2% /
 3% / 4%** nos harmônicos pares de 2ª / 4ª / 6ª / 8ª ordem, e **5% TRD**
@@ -103,6 +98,31 @@ lendo a Tabela 17 em si. Marcado como **`CURR_ODD_LIMIT_11_16_PU` (a
 confirmar)** no código e com tooltip equivalente na tela do dashboard. Se a
 Tabela 17/18 for extraída depois (ex.: OCR ou fonte com texto real), este
 valor deve ser conferido e o rótulo "a confirmar" removido.
+
+**As Tabelas 17/18 são legíveis na tela** (pág. impressa 144 = PDF 145) — o
+que falta é extração por texto, não acesso. Se alguém abrir o PDF nessa
+página e transcrever a faixa `11≤h<17`, o valor interino acima deixa de ser
+inferência.
+
+**Condições e ressalvas do limite do 1547** (detalhe e citações literais em
+[ieee1547_power_quality_clause7.md](ieee1547_power_quality_clause7.md)):
+
+- O requisito vale sob **carga equilibrada e linear** e mede só a
+  **contribuição da DER** (exclui harmônico já presente na tensão da Area EPS).
+- **Nota 118:** os limites são valores de projeto para **regime normal com
+  duração > 1 h**; em **partida ou condição inusual** admite-se excedê-los em
+  **50%**. É a base normativa do `T_SETTLE` e do tratamento do segmento de
+  falta — ver [harmonic_measurement_conditions.md](harmonic_measurement_conditions.md).
+- **§7.3.1:** o requisito é definido em condição que a norma admite ser
+  irrealizável em campo, servindo de base para **ensaio de tipo em
+  laboratório**. É o que torna o 1547 metodologicamente compatível com uma
+  simulação EMT de inversor único, ao contrário do 519 (estatístico, de campo).
+- **§7.3.3:** os limites das Tab. 17/18 só são permitidos se o **transformador
+  de conexão não vir mais de 5%** da corrente nominal em harmônico
+  (IEEE C57.12.00; metodologia de avaliação no IEEE C57.110).
+- **Nota 119** fala em "TDD… 15-min or 30-min demand", contradizendo a Tabela
+  15 e os títulos das Tab. 17/18. É resíduo editorial herdado do 519 —
+  prevalece **TRD sobre `Irated`**.
 
 **Também confirmado por texto (não é inferência):** o 8º harmônico par tem
 limite de **4%** — está na mesma frase corrida citada acima ("4% at 8th

@@ -12,7 +12,8 @@ Histórico de mudanças por commit: `CHANGELOG.md` na raiz do repo.
 | `graficos/` | [construcao-graficos.md](graficos/construcao-graficos.md) | ChartBuilder: subplots, paletas, legendas por eixo, decimação, eixos linkados |
 | `graficos/` | [chart-analysis-overlays.md](graficos/chart-analysis-overlays.md) | Janela de falta, hierarquia θ̂ PLL, marcador tₛ, envelope LVRT, painel de frequência |
 | `graficos/` | [dashboard-zoom-export.md](graficos/dashboard-zoom-export.md) | Zoom na falta sincronizado, export PNG 3× |
-| `graficos/` | [espectro-fourier.md](graficos/espectro-fourier.md) | SpectrumBuilder: FFT segmentada pré-falta/falta/pós-falta no dq, escala dB, marcadores 120 Hz e f_res LCL |
+| `graficos/` | [espectro-fourier.md](graficos/espectro-fourier.md) | SpectrumBuilder: FFT segmentada pré-falta/falta/pós-falta, modos abc/dq, truncamento a ciclos inteiros, componente DC, marcadores 120 Hz e f_res LCL |
+| `graficos/` | [espectro-tabela-harmonicas.md](graficos/espectro-tabela-harmonicas.md) | Tabela de harmônicas: 4 tabelas abc/dq × corrente/tensão, destaque normativo por célula, legenda em duas camadas |
 | `cards/` | [cards-metricas.md](cards/cards-metricas.md) | Cards de severidade (V médio, duração, topologia); remoção do grupo de erro de ângulo e do veredito (2026-08-09) |
 | `cards/` | [cards-explainer-notebook.md](cards/cards-explainer-notebook.md) | Notebook didático que reimplementa o cálculo de cada card, com verificação cruzada |
 | `cards/` | [comparison-table.md](cards/comparison-table.md) | Tabela comparativa de cenários, ordenável, filtrada por modo PLL |

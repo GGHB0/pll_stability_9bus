@@ -24,8 +24,8 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import cm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import (BaseDocTemplate, Frame, PageTemplate, Paragraph,
-                                Spacer, Table, TableStyle)
+from reportlab.platypus import (BaseDocTemplate, Frame, PageBreak, PageTemplate,
+                                Paragraph, Spacer, Table, TableStyle)
 
 # simbolos prontos (todos conferidos no cmap do Times New Roman)
 W, XI, SQ, AP, AR, DL, TAU = "ω", "ξ", "√", "≈", "→", "δ", "τ"
@@ -136,6 +136,11 @@ class Note:
 
     def gap(self, pts=8):
         self.story.append(Spacer(1, pts))
+
+    def pagebreak(self):
+        """Quebra de pagina explicita: evita cabecalho de secao ou tabela
+        orfaos no pe da pagina, sem depender de espacador com valor magico."""
+        self.story.append(PageBreak())
 
     def eq(self, text, tag=None):
         """Bloco de equacao: fundo claro, barra de destaque, numero opcional."""

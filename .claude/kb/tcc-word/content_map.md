@@ -70,7 +70,14 @@ metadata:
   3.18–3.20), `Kp,PLL = 460` e `Ki,PLL = 105 820` por 2ª ordem com ξ = 0,707
   e `t_s` = 20 ms, fechando com `2ω_0` = 754 rad/s a 2,32·`ω_n`. É aqui que a
   distinção contra os ganhos do controlador de corrente é estabelecida
-- ⬜ **3.5** Resumo ou Conclusões do Capítulo
+- ✅ **3.5** Sintonia do Controlador de Corrente por Forma Canônica de
+  Segunda Ordem (**NOVA, 2026-08-05**) — reaplica a forma canônica de 2ª
+  ordem da Equação (3.18) à planta de corrente `G(s)=1/(s·Lest)` (equações
+  3.21–3.23), chegando às expressões `Kp=8·fg·Lest`/`Ki=32·fg²·Lest`
+  efetivamente usadas em §4.3.2.2. Motivação: pedido do usuário de que
+  "todas as formulações do capítulo 4" tenham contrapartida simbólica no
+  Cap. 3 antes de serem aplicadas — ver `historico_entregas.md`
+- ⬜ **3.6** Resumo ou Conclusões do Capítulo (renumerado de 3.5 → 3.6)
 
 ## Cap. 4 — Metodologia de Análise (numeração confirmada 2026-07-22, tarde)
 
@@ -90,25 +97,31 @@ metadata:
       como plataforma oficial dos resultados (ver [[psim-modeling]])
     - **4.3.2.2** Sintonia da Estratégia de Controle de Corrente — inclui
       parágrafo sobre a malha PSIM (I_d,ref/I_q,ref → m_a, portadora VTRI2,
-      5 kHz) adicionado 2026-07-22. **Desde 2026-08-04** é aqui que vive a
-      fórmula `Kp = 8·f_g·(L1+L2+Lest)` / `Ki = 32·f_g²·(...)` = 29,48 /
-      7075,6, com o escalamento para pu (7,37 / 1768,9). Ela estava
-      erradamente no 4.3.2.3 rotulada como ganho do PLL
+      5 kHz) adicionado 2026-07-22. Fórmula `Kp = 8·f_g·(L1+L2+Lest)` /
+      `Ki = 32·f_g²·(...)` = 29,48 / 7075,6, com o escalamento para pu
+      (7,37 / 1768,9). **Desde 2026-08-05**: não deduz mais a fórmula — cita
+      "Equação (3.23)" da nova §3.5 e aplica os parâmetros do projeto
+      diretamente (estratégia teoria-Cap.3/aplicação-Cap.4)
     - **4.3.2.3 Modelagem do Sistema de Sincronismo (SRF-PLL)** — descreve
       implementação no **PSIM** (subcircuitos `.SUB Clarke`/`.SUB Park`, Loop
       Filter PI, VCO via bloco `RESETI_I1`); sem menção a arquivo/script de
       parâmetros nem ao notch 120 Hz (nunca existiu no PSIM, ver
       [[psim-modeling]]) — linguagem de código removida 2026-07-22
       (ver `feedback_docx_no_code_artifacts` na memória). **Corrigido
-      2026-08-04**: passa a citar `Kp,PLL` = 460 / `Ki,PLL` = 105 820 e
-      remeter ao §3.4, com aviso explícito de não confundir com os ganhos do
-      controlador de corrente
+      2026-08-04**: passa a citar `Kp,PLL` = 460 / `Ki,PLL` = 105 820.
+      **Desde 2026-08-05**: cita explicitamente "Equações (3.19) e (3.20)"
+      em vez de só remeter ao §3.4 genericamente, e aponta para "Seção
+      4.3.2.2 (Equação 3.23)" ao distinguir dos ganhos do controlador de
+      corrente
     - ⚠️ Referencia [FIGURA 3.1] mas **placeholder não existe** → P1
   - ✅ **4.3.3** Configuração da Simulação e Modelagem Dinâmica dos Geradores
     — **desde 2026-08-04** apresenta os **dois cenários de sintonia**: Modelo
       Nominal (460 / 105 820, `ω_n` = 325,3, ξ = 0,707) e Modelo com Sintonia
       Inadequada (92 / 21 164, `ω_n` = 145,5, ξ = 0,316), com a sintonia do
-      PLL como única variável independente
+      PLL como única variável independente. **Desde 2026-08-05**: o Modelo
+      Nominal não reescreve mais os 4 números por extenso — remete a
+      "Seção 4.3.2.3" entre parênteses, cortando a 3ª repetição do mesmo
+      dado (Cap.3 → §4.3.2.3 → §4.3.3)
     - 4.3.3.1 Modelagem Dinâmica dos Geradores Síncronos (G1/G3) — fecha
       ligando a baixa inércia (`H₁`, `H₃`) à sensibilidade ao PLL
     - **4.3.3.2** Topologia da Falta e Configuração do Bloco de Contingência —
@@ -123,7 +136,10 @@ metadata:
       Tratamento de Dados
   - ✏️ **4.3.4** Protocolos de Contingência e Análise de Cenários
     - 4.3.4.1 Afundamento de Tensão Simétrico · 4.3.4.2 Afundamento de Tensão
-      Assimétrico
+      Assimétrico. **Corrigido 2026-08-05**: `2ω0` estava em pseudocódigo
+      ASCII com valor errado (`753 rad/s`); agora `2ω0 = 754 rad/s` em
+      Unicode, consistente com §3.4, com remissão explícita à Seção 3.4 em
+      vez de recalcular
     - ⚠️ Texto original sem acentuação — corrigir em edição futura
 - ⬜ **4.4** Resumo do Capítulo
 

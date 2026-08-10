@@ -4,6 +4,95 @@
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-08-05 (2ª rodada) — Fase 2: passe de estilo (Cap.3/Cap.4)
+
+- **Motivação**: sequência da revisão acadêmica (Fase 1 = estratégia de
+  equações, ver entrega abaixo). Fase 2 aplicou as diretrizes de estilo:
+  itálico em estrangeirismos consagrados, neutralização de adjetivos de
+  exaltação/promessas absolutas (rigorosa, essencial, crítico, indispensável,
+  garantindo, perfeitamente + sinônimos próximos usados em tom de exaltação:
+  crucial, fundamental, drasticamente, radicalmente, notável, insubstituível).
+- **Levantamento apresentado para aprovação antes de qualquer edição**: 12
+  termos estrangeiros sem itálico + 26 ocorrências de adjetivos de exaltação,
+  organizados em tabela "antes → depois" por bloco, sem reescrever parágrafos
+  inteiros (mudanças pontuais no nível da frase).
+- **Achado à parte, fora do escopo original mas sinalizado e aprovado**:
+  bloco 650 (§4.3.4.2) citava o nome do script `export_sim_data.m`
+  diretamente no texto, contrariando a regra já estabelecida
+  (`feedback_docx_no_code_artifacts`, blocos/subcircuitos do PSIM são a única
+  exceção). Removido junto com "callback" (termo de implementação).
+- **Execução** (script `C:\Temp\gen_style_pass.py`, 27 parágrafos editados):
+  a maioria das trocas foi substring direta dentro de um único `<w:t>`; 3
+  parágrafos (517, 518, 526, 596, 602, 633, 635, 638, 644) precisaram de
+  divisão de `<w:r>` para isolar o termo a itálicizar, preservando o `rPr`
+  original de cada segmento; bloco 536 tinha "precisa estar" fragmentado em
+  3 runs por histórico de edição do Word (sem diferença de formatação) —
+  contornado mirando um trecho mais curto (`perfeitamente sincronizado,`)
+  que cabia inteiro num único run, em vez de reconstruir o parágrafo.
+- **Cuidado extra**: bloco 650 tem uma âncora de comentário do Bruno
+  (`commentRangeStart/End w:id="52"`, "Vai virar a parte do csv e do
+  dashboard") que se estende até o bloco seguinte — preservada intacta
+  (editei só o texto dos runs, sem tocar as tags de comentário).
+- **Verificação em 3 camadas**: (1) `check_ids.py` + XML bem formado + 0
+  em-dash; (2) render real via Word (`win32com`, `ExportAsFixedFormat`); (3)
+  varredura sistemática das 60 condições (27 frases "antigas" ausentes + 27
+  "novas" presentes + termos em itálico) no texto extraído do PDF gerado —
+  todas as 60 passaram. TOC não precisou de atualização (nenhum título
+  alterado nesta rodada).
+- **Entregue**: `TCC_Victor_Bruno_V9_novo_indice_2.docx`, hash
+  `943f247d...` (antes: `9db47610...`, entrega da Fase 1 mais cedo no mesmo
+  dia). Pré-check de hash bateu com o staging antes da entrega.
+
+## 2026-08-05 — Nova §3.5 (controlador de corrente) + referências cruzadas Cap.3↔Cap.4
+
+- **Motivação**: o usuário pediu uma revisão aplicando a estratégia "Sintonia
+  Teórica (Cap.3) vs. Aplicação Prática (Cap.4)": o Cap.4 deveria referenciar
+  as equações do Cap.3 pelo número em vez de rededuzi-las. Refinamento
+  seguinte: "todas as formulações do capítulo 4 têm que existir no capítulo 3
+  antes" — a fórmula do controlador de corrente (`Kp=8·fg·Lest`,
+  `Ki=32·fg²·Lest`), até então só em §4.3.2.2 sem numeração, também precisava
+  de contrapartida simbólica no Cap.3.
+- **Achado de projeto (verificado algebricamente, não citação de terceiros)**:
+  os valores `Kp=29,48`/`Ki=7075,6` satisfazem exatamente `ωn²=Ki/Lest`,
+  `2ξωn=Kp/Lest` com `ξ=1/√2=0,707` — a mesma forma canônica de 2ª ordem e o
+  mesmo amortecimento ótimo já usados para o PLL (§3.4, Equação 3.18),
+  confirmado contra `pll_stability_9bus_analysis.ipynb` célula 41
+  (`ωn≈339,4 rad/s, ξ=0,707`). Decisão explícita: **não** usar a derivação de
+  cancelamento polo-zero por `Ki/Kp=R/L` (fator 4) de
+  `kb/inverter/agp_current_control_theory.md` — estruturalmente distinta
+  (escala com `R`, não `fg²`), não é a fonte confirmada desta fórmula.
+- **Edições aplicadas** (9 blocos novos em Cap.3 + 4 parágrafos reescritos em
+  Cap.4, script `C:\Temp\gen_cap3_current_ctrl.py`):
+  - **Nova §3.5** "Sintonia do Controlador de Corrente por Forma Canônica de
+    Segunda Ordem", inserida entre §3.4 e o Resumo (que virou §3.6, sem
+    renumerar as 20 equações existentes): Equações **3.21**
+    (`G(s)=1/(s·Lest)`), **3.22** (característica de malha fechada) e
+    **3.23** (`Kp=2ξωn·Lest`, `Ki=ωn²·Lest`), citando OGATA (2009) e
+    YAZDANI; IRAVANI (2010) — sem página específica da tese do Alves.
+  - **§4.3.2.2** [bloco 617→626]: fórmula solta substituída por referência à
+    Equação (3.23) + aplicação numérica (mesmos valores finais).
+  - **§4.3.2.3** [622→631]: passa a citar "Equações (3.19) e (3.20)"
+    explicitamente em vez de só "descrito na Seção 3.4".
+  - **§4.3.3** [626→635]: corta a 3ª repetição por extenso dos números do
+    PLL nominal, remete a "Seção 4.3.2.3 (Kp,PLL=460...)" entre parênteses.
+  - **§4.3.4.2** [650→659]: `2*omega_0 aprox. 753 rad/s` (pseudocódigo ASCII,
+    valor arredondado errado) → `2ω0 = 754 rad/s` (Unicode, consistente com
+    §3.4), remove adjetivo "crítico".
+- **TOC estava em cache**: após a inserção, o Sumário ainda listava "3.5.
+  Resumo..." (sem a nova seção) até forçar `doc.Fields.Update()` +
+  `TablesOfContents(1).Update()` via automação do Word antes de salvar —
+  ExportAsFixedFormat sozinho não recalcula os campos. Lição: **sempre
+  atualizar campos via Word antes de considerar a entrega pronta**, mesmo com
+  a flag `w:dirty` já marcada no XML.
+- **Verificação em duas camadas**: (1) estrutural — `check_ids.py`, XML bem
+  formado, 0 em-dash, todas as 5 edições presentes 1x cada; (2) visual real —
+  render para PDF via automação do Word (`win32com`, `ExportAsFixedFormat`) e
+  inspeção das páginas renderizadas (fórmulas OMML corretas, Sumário
+  atualizado com "3.5. Sintonia..." e "3.6. Resumo...").
+- **Entregue**: `TCC_Victor_Bruno_V9_novo_indice_2.docx`, 1.243.858 bytes,
+  05/08/2026 01:27 (antes: 1.237.685 bytes, 04/08 01:41). Pré-check de hash
+  bateu com o staging antes da entrega — sem edição concorrente.
+
 ## 2026-08-04 — Ganhos do PLL (§3.4), CIGRE (§2.3), dois cenários (§4.3.3), duas etapas (§4.3.2)
 
 - **Motivação**: o Victor forneceu texto pronto para inserir no §3.4 sobre os
@@ -60,117 +149,11 @@
 - **Entregue**: `TCC_Victor_Bruno_V9_novo_indice_2.docx`, 1 237 685 bytes,
   04/08/2026 01:41 (antes: 1 234 318 bytes, 22/07 18:34). TOC marcado dirty.
 
-## 2026-07-22 (noite, 2ª rodada) — Remoção retroativa de travessão/em-dash
+## Entregas de julho/2026 (2026-07-22 e anteriores)
 
-- **Motivação**: o Victor pediu para nunca usar travessão ("—") no texto do
-  TCC (regra registrada em `SKILL.md` § Convenções de escrita e na memória
-  `feedback_docx_no_em_dash`). Após adicionar a regra, ele pediu a limpeza
-  retroativa do texto já existente no `_2.docx`.
-- **Escopo**: 13 parágrafos continham travessão no corpo do documento
-  (`document.xml`); todos localizados por busca direta do caractere "—" +
-  paraId. Em todos os casos o travessão estava dentro de um único `<w:t>`
-  contínuo (sem `<w:proofErr>` interrompendo o trecho exato do travessão),
-  então optei por **replace cirúrgico de substring** em vez de reescrever o
-  parágrafo inteiro — mais seguro, preserva toda a formatação/OMML ao redor.
-  Duas ocorrências (`75AF0000`, `5E6D6F65`) precisaram ser divididas em duas
-  buscas menores porque a string alvo original cruzava um `<w:proofErr>`
-  em torno de "Kp" inserido pelo corretor do Word.
-- Substituições: vírgula, ponto e vírgula ou parênteses no lugar do
-  travessão, conforme o papel sintático (aposto, parentético, oração
-  coordenada). paraIds afetados: `16000003`, `16100002`, `16100004`,
-  `16100005`, `16100007`, `16200002`, `494DB39C`, `3BDB772E`, `75AF0001`,
-  `75AF0000`, `604CA2E5`, `5E6D6F64` (2×), `5E6D6F65` (2×).
-- **Deixado de fora do escopo**: paraId `75AF0001` ainda cita "notebook de
-  dimensionamento" (artefato de código/ferramenta) — não foi removido nesta
-  passada por não ter sido pedido explicitamente; sinalizado ao Victor.
-- Verificado: 0 travessões restantes no corpo, XML bem formado, tag raiz
-  idêntica ao staging. Entregue ao OneDrive às 18:34 (1.234.318 bytes).
-  Pré-check de timestamp/tamanho bateu com o staging (18:13:05) antes da
-  entrega — sem edições concorrentes (conteúdo textual também comparado
-  byte a byte contra a entrega anterior de 17:57: idêntico, a diferença de
-  tamanho era só ruído de reabertura do Word).
-
-## 2026-07-22 (noite) — Remoção de linguagem de código + merge de conteúdo (4.3.2.1–4.3.3.2)
-
-- **Motivação**: o Victor pediu para não citar arquivos/scripts/variáveis de
-  código (`params.m`, `parameters100MVA.txt`, `FAULT_TYPE/BUS/LINE`) no texto
-  do TCC — projeto de engenharia deve usar termos de componentes/modelagem
-  matemática, não de implementação. Nomes de bloco/subcircuito do PSIM
-  (`RESETI_I1`, `.SUB Clarke`, `VTRI2`, `PlantaLCL1`) foram mantidos — são
-  referências de esquemático, não de código. Ver memória
-  `feedback_docx_no_code_artifacts`.
-- **Conteúdo novo fornecido pelo Victor**, mesclado com o texto existente em
-  vez de substituí-lo por inteiro: menção ao bloco `PlantaLCL1` + ω_res
-  (4.3.2.1), resistências de amortecimento R_d1/R_d2/R_d3 (4.3.2.1), novo
-  parágrafo sobre a malha de corrente no PSIM (I_d,ref/I_q,ref → m_a,
-  portadora `VTRI2`, 4.3.2.2), nomes `.SUB Clarke`/`.SUB Park`/`RESETI_I1`
-  no lugar de `Clarke`/`Park`/`RESETI_I` (4.3.2.3).
-- **Achado**: o Victor havia colado manualmente no Word uma versão bruta
-  desse mesmo texto (com artefato de LaTeX quebrado, ex.:
-  "ωres=9068,9968\omega_{res}...") como parágrafo duplicado antes do
-  parágrafo original de 4.3.2.1. Esse duplicado foi removido e o conteúdo
-  novo foi integrado no parágrafo original (com variáveis em OMML nativo do
-  Word, reaproveitando os helpers `mr`/`ssub` de `gen_eq_format.py`), em vez
-  de manter o texto colado cru.
-- **Edição concorrente detectada**: entre a entrega das 01:28 e esta sessão,
-  o Victor editou e salvou o `_2.docx` no Word (17:22, +12 KB). O pré-check
-  de timestamp/tamanho pegou a divergência antes de sobrescrever — evitou
-  perda do trabalho dele. Re-staging feito a partir do arquivo das 17:22;
-  os 6 pontos de edição foram relocalizados por `paraId` (não por índice de
-  bloco, que muda) e 3 deles (`16000001`, `16100007`, `75AF0001`) precisaram
-  de reescrita completa do parágrafo em vez de replace cirúrgico, porque o
-  Word tinha inserido tags `<w:proofErr>` entre os runs desde o save do
-  Victor — quebrando os `replace_once` originais que esperavam runs
-  contíguos. Lição: **preferir replace por `paraId` inteiro** (regex
-  `<w:p w14:paraId="X"[^>]*>.*?</w:p>`) em vez de substring cirúrgica sempre
-  que o parágrafo já tiver passado por um save do Word desde a última
-  inspeção — `<w:proofErr>` pode aparecer a qualquer momento.
-- **Numeração confirmada nesta sessão**: o `_2.docx` retém a estrutura da
-  reestruturação de 2026-07-19 (4.1/4.2/4.3.1–4.3.4/4.4), diferente da
-  numeração do arquivo sem sufixo (obsoleto). `content_map.md` e
-  `equacoes.md` corrigidos de volta para essa numeração.
-- Entregue ao OneDrive às 17:57 (1.234.570 bytes). Pré-check de
-  timestamp/tamanho bateu com o baseline de 17:22 antes da entrega.
-
-## 2026-07-22 (tarde) — Corrupção + troca para TCC_Victor_Bruno_V9_novo_indice_2.docx
-
-- **Incidente**: o Word acusou "conteúdo ilegível" ao abrir
-  `TCC_Victor_Bruno_V9_novo_indice.docx` após a entrega da manhã. Causa raiz
-  identificada: dois scripts usados para marcar o Sumário como `w:dirty`
-  (`adjust_toc_dirty.py`, `set_toc_dirty_true.py`) fizeram
-  `ET.parse()` + `tree.write()` no `document.xml` **inteiro**. O
-  `ElementTree` do Python só emite declarações `xmlns:*` para namespaces
-  que ele detecta em uso na árvore — namespaces declarados na raiz mas só
-  referenciados como texto (em `mc:Ignorable="w15 w16se ..."` e em
-  `Requires="wps"` dentro de `mc:AlternateContent`) foram descartados
-  silenciosamente, mesmo com `ET.register_namespace()` chamado para todos
-  eles. A tag raiz `<w:document>` encolheu de 2390 para 959 bytes; o XML
-  continuava bem formado (`ET.fromstring` passava), então nenhum check do
-  pipeline pegou o problema — só o parser estrito do Word. **Lição: nunca
-  usar `ET.parse`+`tree.write` no documento inteiro; só regex/substituição
-  de string sobre o texto bruto** (como o próprio `set_toc_dirty_regex.py`
-  já fazia — ele rodou por último mas sobre o arquivo já corrompido pelos
-  dois anteriores).
-- **Descoberta durante a investigação**: existe um segundo arquivo,
-  `TCC_Victor_Bruno_V9_novo_indice_2.docx` (OneDrive, mesma pasta), maior
-  (1,2 MB) e mais recente (21/jul 22:53) que o arquivo sem sufixo. Segundo
-  o Victor, ele contém uma correção manual dele por cima de uma edição
-  minha anterior — é a versão real/atual do documento. O arquivo sem
-  sufixo ficou desatualizado **e agora corrompido**; não usar mais.
-  `config.py` (`DOCX_SOURCE`) atualizado para apontar para o `_2`.
-- **Correção**: reaplicada a correção do 4.2.2.3 (ver entrega abaixo) direto
-  sobre `doc_tcc_v2.xml` (extraído do `_2`, namespaces intactos,
-  2565 bytes na tag raiz — igual ao original) usando só `str.replace`/regex,
-  sem nenhum parse+write de árvore inteira. TOC marcado dirty (48
-  `fldChar`) pelo mesmo método regex. Validado: zip íntegro, `document.xml`
-  bem formado, tag raiz idêntica à original antes e depois do repack.
-  Entregue ao `_2` no OneDrive às 01:28 (1.230.587 bytes). Pré-check de
-  timestamp/tamanho do OneDrive antes da entrega bateu com o baseline do
-  staging (1.235.451 bytes, 21/jul 22:53) — sem edições concorrentes.
-
-## Entregas de julho/2026 (anteriores)
-
-Ver `historico_entregas_2026_07.md`.
+Ver `historico_entregas_2026_07.md` — inclui a remoção retroativa de
+travessão, a remoção de linguagem de código/merge de 4.3.2.1–4.3.3.2, e o
+incidente de corrupção que motivou a troca para `TCC_Victor_Bruno_V9_novo_indice_2.docx`.
 
 ## Entregas anteriores (V8)
 

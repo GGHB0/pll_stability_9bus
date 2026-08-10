@@ -29,10 +29,26 @@ Armadilha: **duas tabelas adjacentes se fundem no Word** — sempre deixar um
 | 3.18 | Forma canônica de 2ª ordem: G(s) = (2ξω_n·s + ω_n²)/(s² + 2ξω_n·s + ω_n²) | 3.4 |
 | 3.19 | Projeto do PLL: K_i,PLL = ω_n² e K_p,PLL = 2ξω_n | 3.4 |
 | 3.20 | Acomodação (critério 1%): t_s = 4,6/(ξω_n) e K_p,PLL = 9,2/t_s | 3.4 |
+| 3.21 | Planta de corrente por eixo: G(s) = 1/(s·Lest) | 3.5 (nova) |
+| 3.22 | Malha fechada com PI: s² + (Kp/Lest)·s + (Ki/Lest) = 0 | 3.5 (nova) |
+| 3.23 | Projeto do controlador de corrente: Kp = 2ξω_n·Lest e Ki = ω_n²·Lest | 3.5 (nova) |
 | 4.1 | L₁ = V_dc / (24·f_sw·ΔI_max) — ripple (notebook, Alves 2021) | 4.3.2.1 |
 | 4.2 | ω_res = √((L₁+L₂)/(L₁·L₂·C_f)) — ressonância LCL | 4.3.2.1 |
 
-**Próximo número livre: 3.21** (e 4.3 no Cap. 4).
+**Próximo número livre: 3.24** (Cap. 3). Cap. 4 não ganhou equação nova nesta
+rodada — a fórmula do controlador de corrente migrou para o Cap. 3 (ver nota
+abaixo).
+
+- **3.21–3.23 (2026-08-05, nova §3.5)**: aplicam a estratégia "sintonia
+  teórica vs. aplicação prática" também ao controlador de corrente, que até
+  então só tinha a fórmula `Kp=8·fg·Lest`/`Ki=32·fg²·Lest` solta em texto
+  corrido no Cap. 4 (§4.3.2.2), sem contrapartida simbólica no Cap. 3. A nova
+  §3.5 deriva essas expressões como **reaplicação da mesma forma canônica de
+  2ª ordem já estabelecida para o PLL (Equação 3.18)**, não como a derivação
+  de cancelamento polo-zero por `Ki/Kp=R/L` (fator 4) documentada em
+  `kb/inverter/agp_current_control_theory.md` — ver nota lá e em
+  `kb/pll/pll_gains_methodology.md`. §4.3.2.2 do Cap. 4 passou a citar
+  "Equação (3.23)" e aplicar os parâmetros do projeto, sem rededuzir.
 
 - Os rótulos antigos "EQUAÇÃO 2.N — descrição" (2.5–2.12) viraram texto
   explicativo "Descrição:" acima da tabela; renumerados 2.N → 3.(N+5).

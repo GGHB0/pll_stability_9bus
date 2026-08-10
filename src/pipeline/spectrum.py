@@ -29,22 +29,34 @@ _N_HARM      = 12     # harmônicas 1–12 (até 12f₁=720 Hz) extraídas para 
 
 
 def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
-                        fmax: float = SPEC_FMAX_HZ):
+                        fmax: float = SPEC_FMAX_HZ, window: str = "hann"):
     """|FFT| de amplitude LINEAR (pu): reamostra em grade uniforme, trunca a
     janela para um número INTEIRO de ciclos da fundamental (60 Hz cai exato
     num bin — sem vazamento por janela cortada no meio do ciclo), remove a
     média (offset DC; no abc a fundamental de 60 Hz permanece, no dq é a
-    própria fundamental — ver `_harmonics`) e aplica janela de Hann. Retorna
+    própria fundamental — ver `_harmonics`) e aplica a janela pedida. Retorna
     (f, amp, dc) com 0 < f ≤ fmax e amp em pu — escala linear destaca os
     picos discretos (60 Hz + harmônicas) sobre o piso de ruído, ao contrário
     do dB; dc é o valor médio removido antes da FFT. Retorna None se o
-    segmento for curto demais."""
+    segmento for curto demais.
+
+    `window="hann"` é o espectro EXIBIDO: contém vazamento em janela curta,
+    ao custo de espalhar cada tom em 3 bins. `window="rect"` é o espectro
+    MEDIDO para a tabela de harmônicas: como a janela já foi truncada a um
+    número inteiro de ciclos, a retangular não vaza nas harmônicas e é a
+    única compatível com o agrupamento de 3 bins do IEEE 519-2014 §4.1 —
+    aplicar aquele agrupamento sobre Hann superestimaria em 22,5% (a própria
+    Hann distribui um tom bin-centrado como [A/2, A, A/2], então a soma
+    quadrática dá √1,5·A). Ver kb/standards/harmonic_measurement_conditions.md."""
     if len(t) < _MIN_SAMPLES or (t[-1] - t[0]) < _MIN_DUR_S:
         return None
     dt = float(np.median(np.diff(t)))
     if dt <= 0:
         return None
-    n_cyc = int(np.floor((t[-1] - t[0]) * F_FUND_HZ))
+    # +1e-9 antes do floor: uma janela de 0,2 s dá 0,2*60 = 11,999999... em
+    # ponto flutuante, e o floor devolvia 11 ciclos onde há 12 — custava
+    # exatamente a janela de 12 ciclos / df = 5 Hz que o IEEE 519 §4.1 pede.
+    n_cyc = int(np.floor((t[-1] - t[0]) * F_FUND_HZ + 1e-9))
     if n_cyc < 1:
         return None
     n = int(round(n_cyc / F_FUND_HZ / dt))
@@ -54,7 +66,7 @@ def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
     y_u = np.interp(t_u, t, y)
     dc  = float(y_u.mean())
     y_u = y_u - dc
-    w   = np.hanning(len(y_u))
+    w   = np.hanning(len(y_u)) if window == "hann" else np.ones(len(y_u))
     amp = 2.0 * np.abs(np.fft.rfft(y_u * w)) / w.sum()
     f   = np.fft.rfftfreq(len(y_u), dt)
     m   = (f > 0) & (f <= fmax)
@@ -63,11 +75,19 @@ def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
 
 def _harmonics(f: np.ndarray, amp: np.ndarray, dc: float) -> list[float | None]:
     """Amplitude nas harmônicas k·60 Hz (k = 1…_N_HARM) mais o componente DC
-    (índice 0): pico local em ±1,5 bin em torno da frequência alvo — a janela
-    de Hann espalha um tom bin-centrado em 3 bins, com o pico verdadeiro no
-    bin central. O índice 0 (0 Hz) é |dc|, o valor médio removido antes da
-    FFT — em abc é só o offset de medição (perto de zero); em dq é a própria
-    fundamental representada no referencial síncrono (Yazdani §4.3, ver
+    (índice 0). Cada harmônica é a **combinação RMS do bin central com os dois
+    vizinhos** (±1,5 bin em torno do alvo), conforme o IEEE 519-2014 §4.1:
+    "the three values are combined into a single rms value that defines the
+    harmonic magnitude". Espera receber o espectro de janela RETANGULAR
+    (`_amplitude_spectrum(..., window="rect")`) — com Hann esse agrupamento
+    superestimaria em 22,5%, ver a docstring de `_amplitude_spectrum`.
+
+    Com a janela truncada a 12 ciclos, df = 5 Hz e o grupo de 3 bins cobre
+    exatamente ±5 Hz em torno de k·60 Hz, que é a definição da norma.
+
+    O índice 0 (0 Hz) é |dc|, o valor médio removido antes da FFT — em abc é
+    só o offset de medição (perto de zero); em dq é a própria fundamental
+    representada no referencial síncrono (Yazdani §4.3, ver
     kb/standards/harmonic_dq_frame_mapping.md), por isso entra na tabela dq
     do relatório como linha de referência de escala."""
     out: list[float | None] = [abs(dc)]
@@ -76,7 +96,7 @@ def _harmonics(f: np.ndarray, amp: np.ndarray, dc: float) -> list[float | None]:
     df = float(f[1] - f[0])
     for k in range(1, _N_HARM + 1):
         m = np.abs(f - k * F_FUND_HZ) <= 1.5 * df
-        out.append(float(amp[m].max()) if m.any() else None)
+        out.append(float(np.sqrt((amp[m] ** 2).sum())) if m.any() else None)
     return out
 
 
@@ -175,15 +195,22 @@ class SpectrumBuilder:
                     continue
                 f, amp, dc = res
                 row_max = max(row_max, float(amp.max()) if len(amp) else 0.0)
-                harm[kind].setdefault(seg_name, {})[mode] = _harmonics(f, amp, dc)
-                lc, dc = SPEC_SEG_COLORS[seg_name]
+                # Tabela usa espectro de janela RETANGULAR: é o único
+                # compatível com o agrupamento de 3 bins do IEEE 519 §4.1
+                # (ver _harmonics). O gráfico segue com Hann.
+                res_m = _amplitude_spectrum(t[mask], y[mask], window="rect")
+                if res_m is not None:
+                    f_m, amp_m, dc_m = res_m
+                    harm[kind].setdefault(seg_name, {})[mode] = _harmonics(
+                        f_m, amp_m, dc_m)
+                lc, dark = SPEC_SEG_COLORS[seg_name]
                 fig.add_trace(go.Scatter(
                     x=f, y=amp, name=seg_name, mode="lines",
                     line=dict(width=1.6, color=lc),
                     legendgroup=seg_name, showlegend=(ri == 1),
                     hovertemplate="%{x:.0f} Hz · %{y:.3g} pu<extra>" + seg_name + "</extra>",
                 ), row=ri, col=1)
-                tm.append((len(fig.data) - 1, lc, dc))
+                tm.append((len(fig.data) - 1, lc, dark))
             self._label(fig, label, ri, n)
             row_maxes.append(row_max)
 

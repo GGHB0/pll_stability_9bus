@@ -19,7 +19,7 @@ import plotly.graph_objects as go
 
 from ..config import (
     T_SETTLE, LVRT_THRESHOLD, F_FUND_HZ, VBUS_AVG_THRESH,
-    SPEC_SEG_NO_NORM, CURR_ODD_LIMIT_PU, CURR_ODD_LIMIT_11_16_PU, CURR_EVEN_LIMITS_PU,
+    SPEC_SEG_LIMIT_FACTOR, CURR_ODD_LIMIT_PU, CURR_ODD_LIMIT_11_16_PU, CURR_EVEN_LIMITS_PU,
     VOLT_INDIVIDUAL_LIMIT_PU, DQ_UNBALANCE_WARN_PU, DQ_UNBALANCE_HIGH_PU,
 )
 from ..pipeline.loader import SimData
@@ -923,18 +923,20 @@ switchScenario(currentKey);
         (11ª/13ª) usa valor interino herdado da IEEE 519-2014 (Tabela 17 do
         guia 1547-2018 é imagem no PDF, não extraível) — ver
         kb/standards/harmonic_significance_criteria.md. O segmento "Durante a
-        falta" fica isento SÓ da checagem abc (SPEC_SEG_NO_NORM): os limites
-        IEEE 519/1547 são critérios de regime permanente, não se aplicam ao
-        curto-circuito em si. O critério de desequilíbrio dq, ao contrário, é
-        sobre severidade do distúrbio — continua valendo durante a falta
-        (é justamente onde a sequência negativa é mais relevante)."""
+        falta" tem o limite abc RELAXADO em 50% (SPEC_SEG_LIMIT_FACTOR), não
+        suprimido: a nota 118 do IEEE 1547.2-2023 admite exceder os limites em
+        50% em "startups or unusual conditions", já que são valores de projeto
+        para regime com duração acima de 1 h. O critério de desequilíbrio dq,
+        ao contrário, é sobre severidade do distúrbio — vale integralmente em
+        todos os segmentos (é justamente durante a falta que a sequência
+        negativa é mais relevante)."""
         if k == 1 and mode in ("a", "b", "c"):
             return "harm-fund", ""
         if k == 0 and mode in ("d", "q"):
             return ("harm-fund", " title=\"fundamental representada como DC "
                     "no referencial síncrono (Yazdani §4.3) — não é ruído "
                     "nem harmônico, é o próprio ponto de operação\"")
-        if k > 1 and mode in ("a", "b", "c") and seg_name not in SPEC_SEG_NO_NORM:
+        if k > 1 and mode in ("a", "b", "c"):
             if kind == "i":
                 if k % 2:
                     if k < 11:
@@ -949,8 +951,14 @@ switchScenario(currentKey);
             else:
                 limit = VOLT_INDIVIDUAL_LIMIT_PU
                 norm = "IEEE 519-2014 Tab.1"
-            if limit is not None and v >= limit:
-                return "harm-viol", f" title=\"excede {limit * 100:.1f}% ({norm})\""
+            factor = SPEC_SEG_LIMIT_FACTOR.get(seg_name, 1.0)
+            if limit is not None and v >= limit * factor:
+                relax = ("" if factor == 1.0 else
+                         f"; limite {limit * 100:.1f}% relaxado ×{factor:g} "
+                         "em condição inusual, IEEE 1547.2-2023 nota 118")
+                return ("harm-viol",
+                        f" title=\"excede {limit * factor * 100:.1f}% "
+                        f"({norm}{relax})\"")
         elif mode in ("d", "q") and k == 2:
             if v >= DQ_UNBALANCE_HIGH_PU:
                 return ("harm-unb", " title=\"desequilíbrio de sequência "
@@ -962,7 +970,7 @@ switchScenario(currentKey);
             return "harm-lo", ""
         return "", ""
 
-    def _harm_legend_html(self, has_no_norm_seg: bool) -> str:
+    def _harm_legend_html(self, has_relaxed_seg: bool) -> str:
         """Legenda da tabela de harmônicas, em duas camadas: linha de swatches
         sempre visível + `<details>` "Como ler esta tabela" com um bloco por
         critério e as referências em forma curta.
@@ -999,12 +1007,14 @@ switchScenario(currentKey);
              "colisão nem fundamental (60/240/300/420/480/600/660 Hz) ficam "
              "fora da tabela dq — mostrariam só ruído de fundo."),
         ]
-        if has_no_norm_seg:
+        if has_relaxed_seg:
             items.append((
                 "O * em “Durante a falta”",
-                "IEEE 519/1547 são limites de regime permanente, não se "
-                "aplicam ao curto-circuito em si. O critério de desequilíbrio "
-                "dq continua valendo — é ali que a sequência negativa é maior."))
+                "limite abc relaxado em 50% (ex.: 6% no lugar de 4%): a norma "
+                "admite exceder os limites em condição inusual, por serem "
+                "valores de projeto para regime acima de 1 h (IEEE 1547.2-2023, "
+                "nota 118). O critério de desequilíbrio dq não é relaxado — é "
+                "ali que a sequência negativa é maior."))
         rows = "".join(f"<dt>{t}</dt><dd>{d}</dd>" for t, d in items)
         return (
             "<div class='harm-legend'>"
@@ -1043,7 +1053,7 @@ switchScenario(currentKey);
         head1 = f"<tr><th rowspan='2'>f (Hz)</th><th rowspan='2'>{ord_label}</th>"
         head2 = "<tr>"
         for s in segs:
-            star = " *" if s in SPEC_SEG_NO_NORM else ""
+            star = " *" if SPEC_SEG_LIMIT_FACTOR.get(s, 1.0) != 1.0 else ""
             head1 += f"<th colspan='{n_modes}' class='harm-first'>{s}{star}</th>"
             for j, mo in enumerate(modes):
                 first = " harm-first" if j == 0 else ""
@@ -1085,13 +1095,15 @@ switchScenario(currentKey);
         fisicamente significativos — ver `_DQ_TABLE_ROWS`), separadas porque
         misturar as duas na mesma linha (mesma frequência k·60 Hz) confundia
         o significado de cada coluna — ver kb/standards/harmonic_dq_frame_mapping.md
-        e `_harm_subtable_html`. Valores vêm do SpectrumBuilder (pico local
-        do espectro de Hann em cada k·60 Hz); células comparadas a limites
+        e `_harm_subtable_html`. Valores vêm do SpectrumBuilder (combinação RMS
+        de 3 bins do espectro de janela retangular, IEEE 519-2014 §4.1);
+        células comparadas a limites
         normativos reais via `_harm_cell_tier` (ver docstring lá)."""
         segs = harm.get("segs") or []
         if not segs:
             return ""
-        has_no_norm_seg = any(s in SPEC_SEG_NO_NORM for s in segs)
+        has_relaxed_seg = any(SPEC_SEG_LIMIT_FACTOR.get(s, 1.0) != 1.0
+                              for s in segs)
         blocks: list[str] = []
         for kind, title in (("i", "Corrente UFV"), ("v", "Tensão UFV")):
             per_seg = harm.get(kind) or {}
@@ -1106,7 +1118,7 @@ switchScenario(currentKey);
             blocks.append(abc_html)
             blocks.append(dq_html)
         if blocks:
-            blocks.append(self._harm_legend_html(has_no_norm_seg))
+            blocks.append(self._harm_legend_html(has_relaxed_seg))
         return "".join(blocks)
 
     # ── Cards ────────────────────────────────────────────────────────────────

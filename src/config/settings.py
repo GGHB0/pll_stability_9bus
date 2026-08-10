@@ -67,11 +67,15 @@ SPEC_SEG_COLORS = {
     "Regime":          ("#2563eb", "#60a5fa"),
 }
 
-# Segmentos isentos de checagem normativa na tabela de harmônicas: os limites
-# do IEEE 519/1547 são critérios de regime permanente — aplicá-los durante o
-# curto-circuito em si geraria falsos positivos triviais (distorção alta
-# durante falta é esperada, não é o que a norma mede).
-SPEC_SEG_NO_NORM = ("Durante a falta",)
+# Fator aplicado aos limites normativos por segmento na tabela de harmônicas.
+# A nota de rodapé 118 do IEEE 1547.2-2023 (p.144 impressa) diz que os limites
+# são valores de projeto para "normal operation (conditions that last longer
+# than 1 h)" e que, em "startups or unusual conditions, the limits may be
+# exceeded by 50%". A falta é uma dessas condições: o limite é RELAXADO em 50%,
+# não suprimido. Segmento ausente do dicionário usa fator 1,0.
+# Vale só para a checagem abc/IEEE — o critério de desequilíbrio dq (120 Hz) é
+# sobre severidade do distúrbio e não é relaxado em segmento nenhum.
+SPEC_SEG_LIMIT_FACTOR = {"Durante a falta": 1.5}
 
 # ── Limites normativos de harmônico — IEEE 519-2014 / IEEE 1547-2018 ────────
 # Unidade geradora conectada à Barra 2 (20 kV, classe 1 kV<V≤69 kV), linha

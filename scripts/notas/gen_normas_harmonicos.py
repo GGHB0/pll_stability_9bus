@@ -317,11 +317,15 @@ n.p("Por isso a <b>checagem normativa roda apenas no dom&#237;nio abc</b>. O esp
     "legenda.")
 
 n.p("<b>6.3 Os segmentos temporais.</b> O espectro &#233; calculado separadamente antes da "
-    "falta, durante a falta e depois da elimina&#231;&#227;o. A checagem normativa &#233; "
-    "suprimida no segmento <b>durante a falta</b>, e o transit&#243;rio inicial de partida "
-    "do PLL &#233; descartado de todo c&#225;lculo. Ambas as decis&#245;es t&#234;m amparo na "
+    "falta, durante a falta e depois da elimina&#231;&#227;o. No segmento <b>durante a "
+    "falta</b> os limites abc n&#227;o s&#227;o suprimidos: s&#227;o <b>relaxados em "
+    "50%</b>, de modo que o &#237;mpar passa a 6% e a 2&#170; ordem a 1,5%, e a "
+    "c&#233;lula destacada informa o limite base, o fator e a norma. O transit&#243;rio "
+    "inicial de partida do PLL &#233; descartado de todo c&#225;lculo. Ambas as "
+    "decis&#245;es t&#234;m amparo na "
     "nota 118 do guia do 1547, citada na se&#231;&#227;o 4.4: os limites s&#227;o valores de "
-    "regime, para condi&#231;&#245;es de mais de uma hora. J&#225; o crit&#233;rio de "
+    "regime, para condi&#231;&#245;es de mais de uma hora, e a norma admite "
+    "exced&#234;-los em 50% fora desse regime. J&#225; o crit&#233;rio de "
     "desequil&#237;brio em 120 Hz <b>continua valendo durante a falta</b> &#8212; &#233; "
     "exatamente ali que a sequ&#234;ncia negativa &#233; mais severa, e suprimi-lo esvaziaria "
     "o indicador.")
@@ -353,14 +357,28 @@ n.p("Em consequ&#234;ncia, <b>o dashboard faz uma compara&#231;&#227;o indicativ
     "dizer se um harm&#244;nico observado est&#225; pr&#243;ximo, muito abaixo ou muito acima "
     "do que a norma tolera, o que basta para o prop&#243;sito de comparar cen&#225;rios de "
     "conting&#234;ncia entre si.")
-n.p("H&#225; ainda tr&#234;s pontos em que o c&#225;lculo se afasta da Cl&#225;usula 4, "
-    "registrados por transpar&#234;ncia. A janela usada &#233; de 12 ciclos nos segmentos "
-    "de pr&#233; e p&#243;s-falta, coincidindo com a norma, mas de 6 ciclos durante a falta. "
-    "A janela de pondera&#231;&#227;o &#233; de Hann, e n&#227;o retangular, escolha feita "
-    "para conter vazamento espectral em janelas curtas. E a magnitude de cada harm&#244;nica "
-    "&#233; lida como o <b>pico</b> entre os tr&#234;s bins vizinhos, onde a norma pede a "
-    "<b>combina&#231;&#227;o RMS</b> dos tr&#234;s &#8212; o que subestima ligeiramente os "
-    "valores exibidos.")
+n.p("O que <b>&#233;</b> compat&#237;vel com a Cl&#225;usula 4 j&#225; foi implementado. "
+    "A janela &#233; truncada a um n&#250;mero inteiro de ciclos e vale <b>12 ciclos</b> "
+    "no pr&#233; e no p&#243;s-falta, dando resolu&#231;&#227;o espectral de <b>5,000 Hz</b> "
+    "exatos, que &#233; a grade da norma. E a magnitude de cada harm&#244;nica &#233; a "
+    "<b>combina&#231;&#227;o RMS do bin central com os dois vizinhos</b>, como o item 4.1 "
+    "exige.")
+n.p("Essa combina&#231;&#227;o exige uma cautela que n&#227;o &#233; &#243;bvia: ela s&#243; "
+    "vale sobre um espectro de janela <b>retangular</b>. Uma janela de Hann distribui "
+    "propositalmente um tom de amplitude A pelos tr&#234;s bins na propor&#231;&#227;o "
+    "A/2, A, A/2, de modo que a soma quadr&#225;tica devolveria a raiz de 1,5 vezes A, "
+    "isto &#233;, <b>22,5% a mais</b> que o valor verdadeiro. Por isso a tabela &#233; "
+    "calculada sobre um espectro retangular pr&#243;prio &#8212; leg&#237;timo porque a "
+    "janela j&#225; foi truncada a ciclos inteiros e n&#227;o h&#225; vazamento nas "
+    "harm&#244;nicas &#8212; enquanto o gr&#225;fico exibido continua com Hann, mais "
+    "leg&#237;vel. Nos dados reais a diferen&#231;a aparece: a fundamental de um "
+    "cen&#225;rio de refer&#234;ncia sai 1,0006 pu pelo caminho correto, contra 1,2254 pu "
+    "se o agrupamento fosse feito sobre Hann.")
+n.p("Resta <b>uma</b> diverg&#234;ncia de janela, declarada: o segmento <b>durante a "
+    "falta</b> dura 0,1 s nos cen&#225;rios, ou seja <b>6 ciclos</b>, metade da janela da "
+    "norma. Ali a resolu&#231;&#227;o &#233; de 10 Hz e o grupo de tr&#234;s bins cobre "
+    "&#177;10 Hz em vez de &#177;5 Hz. N&#227;o h&#225; corre&#231;&#227;o poss&#237;vel "
+    "sem alongar a falta na simula&#231;&#227;o.")
 
 # ── 8 ────────────────────────────────────────────────────────────────────────
 n.h("8. Pontos em aberto")
@@ -376,11 +394,12 @@ n.p("<b>O limite dos &#237;mpares de ordem 11 a 16 &#233; uma infer&#234;ncia.</
 n.p("<b>Pares de ordem 10 e 12 n&#227;o t&#234;m limite confirmado</b> em nenhuma das duas "
     "fontes dispon&#237;veis em texto. As c&#233;lulas correspondentes ficam sem destaque de "
     "viola&#231;&#227;o, o que &#233; prefer&#237;vel a aplicar um valor inventado.")
-n.p("<b>Duas melhorias de ader&#234;ncia est&#227;o mapeadas e n&#227;o implementadas</b>: "
-    "trocar a leitura de pico pela combina&#231;&#227;o RMS de tr&#234;s bins, conforme a "
-    "Cl&#225;usula 4.1 do 519; e substituir a supress&#227;o da checagem durante a falta por "
-    "um limite multiplicado por 1,5, conforme a nota 118 do guia do 1547 &#8212; o que "
-    "&#233; mais fiel &#224; norma e mais informativo que suprimir por completo.")
+n.p("<b>As duas melhorias de ader&#234;ncia que estavam mapeadas foram aplicadas</b> "
+    "em 9 de agosto de 2026, e esta nota j&#225; descreve o comportamento novo: o "
+    "agrupamento RMS de tr&#234;s bins da Cl&#225;usula 4.1 do 519, e o limite relaxado "
+    "em 50% durante a falta em lugar da supress&#227;o da checagem. A segunda mudan&#231;a "
+    "tem efeito vis&#237;vel no relat&#243;rio: <b>o segmento de falta passou a acusar "
+    "viola&#231;&#245;es</b>, onde antes nenhuma c&#233;lula era destacada.")
 
 n.refs([
     "IEEE. <i>IEEE Recommended Practice and Requirements for Harmonic Control in "

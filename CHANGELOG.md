@@ -5,6 +5,38 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-08-09 — Medição de harmônicas conforme IEEE 519 §4.1 e relaxamento ×1,5 na falta
+
+Arquivos: `src/pipeline/spectrum.py`, `src/report/renderer.py`,
+`src/config/settings.py`, `src/config/__init__.py`
+
+Duas divergências normativas levantadas na leitura integral das duas normas
+(ver `kb/standards/harmonic_measurement_conditions.md`) foram fechadas.
+
+- `_harmonics`: a amplitude de cada harmônica passa de **pico local** para a
+  **combinação RMS do bin central com os dois vizinhos**, que é a definição do
+  IEEE 519-2014 §4.1 ("the three values are combined into a single rms value").
+- `_amplitude_spectrum` ganha o parâmetro `window`. A tabela passa a ler um
+  espectro de janela **retangular** calculado à parte; o gráfico continua com
+  **Hann**. Motivo: o agrupamento de 3 bins sobre Hann superestima em **22,5%**
+  (a Hann distribui um tom como `[A/2, A, A/2]`, soma quadrática = √1,5·A).
+  Confirmado nos dados: a fundamental de `bus4/1phase` saía 1,2254 pu e agora
+  sai 1,0006 pu. A retangular é válida porque a janela já é truncada a ciclos
+  inteiros.
+- Bug de ponto flutuante no truncamento: `floor(0.2*60)` devolvia **11** ciclos
+  onde há 12, porque o produto dá 11,999999. Corrigido com `+1e-9`. Com isso
+  `df` volta a ser **5,000 Hz** exatos no pré/pós-falta, a grade do §4.1.
+- `SPEC_SEG_NO_NORM` (segmentos isentos) → `SPEC_SEG_LIMIT_FACTOR`
+  (`{"Durante a falta": 1.5}`). A nota 118 do IEEE 1547.2-2023 **relaxa** os
+  limites em 50% em condição inusual, não os suprime. Ímpar vira 6%, 2ª vira
+  1,5%; tooltip cita limite base, fator e a nota; legenda e `*` do cabeçalho
+  reescritos. **O segmento de falta passou a acusar violações**, onde antes
+  nenhuma célula era destacada. O critério de desequilíbrio dq não é relaxado.
+- Corrigido o sombreamento de `dc` (componente DC) pela cor escura do segmento
+  em `_mode_fig` — era inócuo na ordem atual, mas frágil.
+- Verificado: `app.py` roda os 26 cenários; HTML traz 96 marcações `*` no
+  cabeçalho e 307 tooltips citando a nota 118.
+
 ## 2026-08-09 — Remoção dos cards de erro de ângulo (grupo "Desempenho do PLL")
 
 Arquivos: `src/report/renderer.py`, `src/pipeline/loader.py`,

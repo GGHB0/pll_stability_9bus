@@ -58,7 +58,10 @@ eixos d/q usam `t`/`id_ufv_meas`/`iq_ufv_meas`/`vd_ufv`/`vq_ufv` (Tsc=200 µs
 
 **FFT (`_amplitude_spectrum`):** reamostra em grade uniforme (`dt` mediano +
 `np.interp`), **trunca a janela para um nº INTEIRO de ciclos de 60 Hz**
-(`floor(T·60)/60`) — garante que a fundamental caia exata num bin da FFT,
+(`floor(T·60 + 1e-9)/60`; o `+1e-9` corrige um bug de ponto flutuante que
+devolvia 11 ciclos onde há 12, porque `0.2*60 = 11,999999...` — custava a
+janela de 12 ciclos / `df` = 5 Hz do §4.1) — garante que a fundamental caia
+exata num bin da FFT,
 sem vazamento por janela cortada no meio do ciclo, independentemente dos
 tempos do cenário (com t=0.1/0.3/0.4/0.6 s os segmentos já eram 12/6/12
 ciclos exatos, mas a garantia agora está no código). Depois: remove a média
@@ -66,9 +69,15 @@ ciclos exatos, mas a garantia agora está no código). Depois: remove a média
 `2·|rfft|/Σw` em pu. Guardas: segmento < 0,05 s ou < 64 amostras é pulado.
 Retorna `(f, amp, dc)`.
 
-**Harmônicas (`_harmonics`):** amplitude em k·60 Hz (k=1…12) = pico local em
-±1,5 bin do alvo (Hann espalha um tom bin-centrado em 3 bins, pico verdadeiro
-no bin central), mais o componente DC no índice 0. **Componente DC
+**Harmônicas (`_harmonics`, revisto 2026-08-09):** amplitude em k·60 Hz
+(k=1…12) = **combinação RMS do bin central com os dois vizinhos** em ±1,5 bin
+(`sqrt((amp[m]**2).sum())`), conforme IEEE 519-2014 §4.1, mais o componente DC
+no índice 0. **Lê o espectro de janela RETANGULAR**
+(`_amplitude_spectrum(..., window="rect")`), calculado à parte só para a
+tabela — o gráfico continua com Hann. Fazer o agrupamento sobre Hann
+superestimaria em 22,5% (a Hann distribui um tom como `[A/2, A, A/2]`, soma
+quadrática = √1,5·A); a retangular é válida porque a janela já é truncada a
+ciclos inteiros. Ver `kb/standards/harmonic_measurement_conditions.md`. **Componente DC
 (2026-08-05)**: antes descartado (`_amplitude_spectrum` removia a média para
 não vazar energia no bin de 60 Hz, sem guardar o valor); agora `dc` é
 retornado e vira `|dc|` no índice 0. Em **abc** é só o offset de medição

@@ -67,14 +67,42 @@ não isenção. Ver [ieee1547_power_quality_clause7.md](ieee1547_power_quality_c
 
 ## Confronto com `spectrum.py`
 
+Estado após a implementação de 2026-08-09 (antes disso a tabela usava pico do
+espectro de Hann, e o segmento de falta era isento):
+
 | Norma pede | O que o código faz | Veredito |
 |---|---|---|
-| Janela de 12 ciclos (200 ms) | trunca a ciclos inteiros; pré-falta `0,1→0,3 s` = **exatamente 12 ciclos**; durante a falta `0,3→0,4 s` = **6 ciclos** | pré/pós conformes; falta com metade da janela (segmento já tratado à parte) |
-| Resolução de 5 Hz | `df = 1/T` → 5 Hz nos segmentos de 200 ms | coincide |
-| Harmônica = **RMS** do bin central + 2 vizinhos | `amp[m].max()` sobre ±1,5 bin → **pico** ([spectrum.py](../../../src/pipeline/spectrum.py) `_harmonics`) | **divergência real** — subestima: com Hann a energia se espalha em 3 bins e só o maior é lido |
+| Janela de 12 ciclos (200 ms) | trunca a ciclos inteiros; pré/pós-falta = **12 ciclos**, durante a falta = **6 ciclos** | pré/pós conformes; falta com metade da janela |
+| Resolução de 5 Hz | `df = 1/T` → **5,000 Hz** exatos no pré/pós; 10 Hz durante a falta | conforme onde a janela é de 12 ciclos |
+| Harmônica = **RMS** do bin central + 2 vizinhos | `sqrt((amp[m]**2).sum())` sobre ±1,5 bin em `_harmonics` | **conforme** desde 2026-08-09 |
+| Janela retangular (DFT do IEC) | **retangular na tabela**, Hann só no gráfico exibido | **conforme** na medição; ver a armadilha abaixo |
 | Agregação 3 s (15 janelas) e 10 min (200 valores) | não existe | **inaplicável** — a simulação EMT inteira tem ~1 s |
 | Percentil 99º/95º sobre dia/semana | valor único por segmento | **inaplicável** — mesma razão |
-| Janela retangular (DFT do IEC) | janela de **Hann** | escolha do projeto, para conter vazamento em janela curta |
+
+## Armadilha: RMS de 3 bins exige janela retangular
+
+Aplicar o agrupamento de 3 bins do §4.1 sobre um espectro de **Hann**
+**superestima em 22,5%**. A Hann distribui um tom bin-centrado de amplitude
+`A` como `[A/2, A, A/2]`, então a soma quadrática dá `√1,5·A ≈ 1,2247·A`.
+Verificado numericamente e depois nos dados reais: antes da correção a
+fundamental do pré-falta de `bus4/1phase` saía **1,2254 pu**; com janela
+retangular sai **1,0006 pu**.
+
+A retangular é legítima aqui **porque a janela já é truncada a um número
+inteiro de ciclos** — não há vazamento nas harmônicas. É exatamente a premissa
+do método do IEC 61000-4-7 que o §4.1 resume. Por isso
+`_amplitude_spectrum` ganhou o parâmetro `window`: `"hann"` para o gráfico
+(legibilidade), `"rect"` para a tabela (medição).
+
+## Bug de ponto flutuante no truncamento a ciclos inteiros
+
+Encontrado ao validar a mudança acima. `int(np.floor(dur * 60))` devolvia
+**11** ciclos para um segmento de 0,2 s, porque `0.2*60 = 11.999999...` em
+ponto flutuante. Consequência: `df = 5,4545 Hz` em vez de 5,000 Hz, e o grupo
+de 3 bins caía em ±5,45 Hz em vez dos ±5 Hz da norma. Corrigido com
+`np.floor(dur * F_FUND_HZ + 1e-9)`. As harmônicas continuavam caindo em bins
+exatos (60/11 divide todo k·60), então não havia vazamento — o custo era só
+sair da grade de 5 Hz exigida pelo §4.1.
 
 ## Consequência metodológica — como descrever isso no TCC
 
@@ -89,18 +117,27 @@ outras fontes harmônicas), que é exatamente o que uma simulação EMT de um ú
 inversor reproduz. É argumento a favor de citar o 1547 como critério primário e
 o 519 como origem histórica dos valores.
 
-## Pendências abertas (não implementadas)
+## Efeito da mudança nos valores exibidos
 
-Levantadas em 2026-08-09 na revisão das duas normas; **nenhuma foi aplicada ao
-código** — dependem de decisão do usuário.
+Medido em `bus4/1phase` (fase a, corrente). O RMS de 3 bins captura as bandas
+laterais de ±5 Hz, que é justamente o que a norma quer incluir — por isso as
+harmônicas de ordem baixa, próximas do piso de ruído, sobem bastante em termos
+relativos, embora continuem muito abaixo do limite:
 
-1. **Pico → RMS de 3 bins** em `_harmonics`. É a única divergência do §4.1
-   corrigível: trocar `amp[m].max()` por `sqrt((amp[m]**2).sum())` na mesma
-   janela de ±1,5 bin. Efeito esperado: valores ligeiramente maiores em todas as
-   células da tabela abc.
-2. **Isenção → limite ×1,5 no segmento "Durante a falta"**. Hoje
-   `SPEC_SEG_NO_NORM` remove a checagem por completo; a nota 118 do 1547
-   sustentaria aplicar o limite multiplicado por 1,5 (ex.: 6% em vez de 4% para
-   ímpar). Mais defensável e mais informativo que isenção total. Ver a seção de
-   isenção por segmento em
-   [harmonic_norm_application.md](harmonic_norm_application.md).
+| Segmento | h | Pico/Hann (antes) | RMS3/retangular (agora) |
+|---|---|---|---|
+| Pré-falta | 1ª | 0,99926 | 1,00059 |
+| Pré-falta | 5ª | 0,00168 | 0,00337 |
+| Pós-falta | 5ª | 0,00212 | 0,03032 |
+| Durante a falta | 2ª | 0,60554 | 0,58730 |
+
+O salto no pós-falta vem do transitório de recuperação, que é **banda larga**:
+o pico de um único bin ignorava essa energia, o agrupamento de 3 bins a
+contabiliza. É o comportamento pretendido pelo §4.1, não um artefato.
+
+## Ainda em aberto
+
+O **segmento "Durante a falta" continua com janela de 6 ciclos** (`df` = 10 Hz),
+metade da janela de 12 ciclos do §4.1, porque a falta em si dura 0,1 s nos
+cenários. O grupo de 3 bins ali cobre ±10 Hz em vez de ±5 Hz. Não há correção
+possível sem alongar a falta na simulação — fica como limitação declarada.

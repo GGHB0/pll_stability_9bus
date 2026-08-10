@@ -70,10 +70,13 @@ valores de projeto para **regime normal com duração superior a 1 h**, e que em
 **partida ou condição inusual** *"the limits may be exceeded by 50%"*. Isso
 sustenta tanto o descarte de `T_SETTLE` quanto o tratamento diferenciado do
 segmento de falta — que até então eram raciocínio próprio, sem apoio de texto.
-**Ressalva:** a norma **afrouxa em 50%**, não isenta. O rigor mandaria aplicar
-limite ×1,5 (6% em vez de 4% no ímpar) durante a falta, em vez de suprimir a
-checagem. Pendência aberta, não implementada — ver
-[harmonic_measurement_conditions.md](harmonic_measurement_conditions.md).
+A norma **afrouxa em 50%**, não isenta — e é assim que o dashboard passou a
+funcionar em **2026-08-09**: `SPEC_SEG_NO_NORM` (lista de segmentos isentos)
+deu lugar a `SPEC_SEG_LIMIT_FACTOR = {"Durante a falta": 1.5}`, um fator
+multiplicativo por segmento, com 1,0 como padrão. Durante a falta o ímpar é
+cobrado a 6% e a 2ª a 1,5%, com o tooltip da célula citando o limite base, o
+fator e a nota 118. Consequência prática: o segmento de falta **passou a
+acusar violações**, onde antes nenhuma célula era destacada.
 
 **Achado da verificação (2026-07-29):** o critério de desequilíbrio dq **não
 pode** herdar a mesma isenção do segmento "Durante a falta" que a checagem

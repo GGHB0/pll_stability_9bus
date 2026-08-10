@@ -62,15 +62,17 @@ em `kb/standards/harmonic_measurement_conditions.md`.
   origem de cada limite, e `kb/standards/harmonic_norm_application.md` para
   por que abc/dq usam critérios diferentes e a notação normalizada das
   variáveis de corrente (Isc/IL/I_rated — TDD não é usado).
-- **Segmento "Durante a falta" isento só da checagem abc/IEEE**
-  (`SPEC_SEG_NO_NORM`): limites de regime permanente não valem durante o
-  curto-circuito em si. **Pendência (2026-08-09):** a nota 118 do IEEE
-  1547.2-2023 sustenta limite **×1,5** nesse segmento em vez de isenção
-  total, e o §4.1 do IEEE 519-2014 pede **RMS de 3 bins** onde `_harmonics`
-  usa o pico — as duas divergências estão registradas, sem alteração de
-  código, em `kb/standards/harmonic_measurement_conditions.md`. O critério de desequilíbrio dq (linha 120 Hz)
-  continua valendo em todos os segmentos, inclusive durante a falta — é ali
-  que a sequência negativa é mais severa.
+- **Segmento "Durante a falta" com limite abc RELAXADO ×1,5**, não isento
+  (2026-08-09; `SPEC_SEG_LIMIT_FACTOR = {"Durante a falta": 1.5}` substitui
+  o antigo `SPEC_SEG_NO_NORM`): a nota 118 do IEEE 1547.2-2023 admite exceder
+  os limites em 50% em "startups or unusual conditions", por serem valores de
+  projeto para regime acima de 1 h. Ímpar vira 6%, a 2ª vira 1,5%; o tooltip
+  cita limite base, fator e a nota. `_harm_cell_tier` lê o fator com
+  `SPEC_SEG_LIMIT_FACTOR.get(seg_name, 1.0)`, então segmento fora do dicionário
+  usa 1,0. **Efeito**: o segmento de falta passou a acusar violações, onde
+  antes nenhuma célula era destacada. O critério de desequilíbrio dq (linha
+  120 Hz) não é relaxado em segmento nenhum — é ali que a sequência negativa é
+  mais severa.
 - **Legenda em duas camadas** (`.harm-legend`, ajustada 2026-08-05 para a
   separação abc/dq e para a linha DC): linha compacta sempre visível com os
   swatches (`.harm-leg-sw` + `.harm-leg-viol`/`-warn`/`-unb`/`-lo`) e um

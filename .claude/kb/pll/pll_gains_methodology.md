@@ -22,6 +22,20 @@ onde:
 
 Origem das constantes 8 e 32: cancelamento polo-zero do controlador de corrente no referencial síncrono, projetado para frequência de cruzamento `ωgc ≈ 527,4 rad/s` com margem de fase `≈ 61,7°` (antes do Notch).
 
+> ⚠️ **Nota (2026-08-05).** A explicação acima (crossover/margem de fase) e a
+> derivação de cancelamento polo-zero por `Ki/Kp=R/L` (fator 4) documentada
+> em [[agp-current-control-theory]] são **ambas distintas** da explicação
+> que o TCC efetivamente adotou (nova §3.5, Equações 3.21–3.23, entregue
+> 2026-08-05): reaplicação da **forma canônica de 2ª ordem** já usada para o
+> PLL (mesma Equação 3.18), com `ξ=1/√2=0,707` — idêntico ao do PLL — e
+> `ωn=4√2·fg≈339,4 rad/s`. Essa leitura foi verificada algebricamente contra
+> os números reais (`Kp=29,48`, `Ki=7075,6`, `Lest=61,42 mH`) e confirmada
+> contra `pll_stability_9bus_analysis.ipynb` célula 41
+> (`ωn≈339,4 rad/s, ξ=0,707`) — é a explicação mais bem verificada das três,
+> mas nenhuma citação de página específica da TeseAGP foi feita no TCC para
+> esta fórmula (decisão explícita do usuário, ver
+> `kb/tcc-word/historico_entregas.md`).
+
 ## Implementação no Notebook (`notebooks/pll_stability_9bus_analysis.ipynb`)
 
 ```python

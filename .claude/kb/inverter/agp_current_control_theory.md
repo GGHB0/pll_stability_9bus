@@ -84,6 +84,22 @@ isolado).
 > apenas; no TCC (seção 3.1/3.3) as duas sintonias devem ser apresentadas
 > como métodos distintos.
 
+> ⚠️ **Nota (2026-08-05).** Esta derivação (fator 4, `Ki/Kp=R/L`,
+> `tss=1/fg`) é a de **exemplo** da TeseAGP §3.1 (p.61-65) e **não** é a
+> fonte da fórmula `Kp=8·fg·Lest`/`Ki=32·fg²·Lest` efetivamente usada no
+> projeto (ver [[pll-gains-methodology]]) — estruturalmente distintas: a
+> fórmula do projeto escala com `fg²`, não com `R`, então não pode vir de um
+> cancelamento polo-zero contra o polo real `R/L`. Verificação algébrica
+> direta mostra que a fórmula do projeto é antes uma **reaplicação da forma
+> canônica de 2ª ordem (`ωn`/`ξ`)**, a mesma técnica já usada para o PLL:
+> com `ξ=1/√2=0,707` (idêntico ao do PLL) e `ωn=4√2·fg≈339,4 rad/s`
+> (confirmado em `pll_stability_9bus_analysis.ipynb`, célula 41), as
+> relações `Kp=2ξωn·Lest`/`Ki=ωn²·Lest` reproduzem exatamente `Kp=8·fg·Lest`/
+> `Ki=32·fg²·Lest`. O TCC (nova §3.5, Equações 3.21–3.23, entregue
+> 2026-08-05) apresenta a fórmula dessa forma, citando OGATA (2009) e
+> YAZDANI; IRAVANI (2010) — **sem** página específica da TeseAGP para essa
+> equação, porque a página/derivação exata na tese não foi confirmada.
+
 ## Planta LCL (§3.2) — modelo em espaço de estados
 
 ```

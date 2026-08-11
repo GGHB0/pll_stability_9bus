@@ -62,6 +62,17 @@ em `kb/standards/harmonic_measurement_conditions.md`.
   origem de cada limite, e `kb/standards/harmonic_norm_application.md` para
   por que abc/dq usam critérios diferentes e a notação normalizada das
   variáveis de corrente (Isc/IL/I_rated — TDD não é usado).
+- **Exceção do âmbar na 2ª harmônica de corrente** (`_harm_cell_tier`, ramo
+  `kind == "i" and k == 2 and seg_name in ("Pré-falta", "Regime")`): a célula
+  excede o limite de 1%, mas recebe `.harm-warn` em vez de `.harm-viol`. Não é
+  afrouxamento — **o número exibido é o mesmo**, só a cor deixa de sinalizar
+  defeito de projeto. Motivo: o excesso é majoritariamente vazamento espectral
+  de medição, não distorção real do inversor (a rede simulada ainda está em
+  resposta de droop quando a janela é capturada). Achado, evidência e a
+  correção parcial por `_measure_f1` em
+  `kb/standards/harmonic_frequency_leakage.md`. Atenção ao segmento
+  **"Regime"**: é o segmento único dos cenários **sem falta**, não "antes de
+  uma falta" — a condição do código lista os dois nomes justamente por isso.
 - **Segmento "Durante a falta" com limite abc RELAXADO ×1,5**, não isento
   (2026-08-09; `SPEC_SEG_LIMIT_FACTOR = {"Durante a falta": 1.5}` substitui
   o antigo `SPEC_SEG_NO_NORM`): a nota 118 do IEEE 1547.2-2023 admite exceder
@@ -81,6 +92,28 @@ em `kb/standards/harmonic_measurement_conditions.md`.
   informativas em dq, e o `*` de "Durante a falta". Fecha com as referências
   em forma curta (`.harm-refs`). Tokens de tema `--danger`/`--warn` no CSS
   (`_css()`).
+- **Tabela de critérios dentro da legenda** (2026-08-11,
+  `HTMLRenderer._harm_criteria_html`, chamada no topo do
+  `<details class='harm-help'>`): resumo tabular da formatação condicional —
+  *Grandeza e ordem / Limite / Cor / Norma* — com os swatches reais em vez de
+  descrever a cor por extenso. Serve de índice escaneável; a prosa em `<dl>`
+  continua abaixo como detalhamento, não foi substituída. Regras:
+  - **Todos os números vêm das constantes de `settings.py`**, nenhum escrito à
+    mão — a tabela não pode dessincronizar do que `_harm_cell_tier` aplica.
+  - Helper `_sw(*classes)` reaproveita as classes `.harm-leg-*` da linha
+    compacta, então trocar um token de tema vale para as duas de uma vez.
+    Confirmado nos dois temas (claro `#dc2626`/`#ca8a04`/`#2563eb`/`#64748b`,
+    escuro `#f87171`/`#fbbf24`/`#60a5fa`/`#9ca3af`).
+  - Linhas com **dois swatches** (pares 2ª/4ª/6ª/8ª e desequilíbrio dq) são as
+    que têm um segundo caso de cor; explicadas no `.harm-crit-note` abaixo.
+  - A linha **"Durante a falta"** só aparece quando `has_relaxed_seg`, mesma
+    condição do bloco de prosa correspondente.
+  - Espelha a **seção 6.1 da nota `output/normas_harmonicos.pdf`**
+    (`scripts/notas/gen_normas_harmonicos.py`) — as duas precisam continuar
+    batendo; ao mudar um limite, mudar nos dois.
+- **Swatch da fundamental na linha compacta** (`.harm-leg-fund`, `--accent`):
+  a tabela destaca a fundamental em azul desde 2026-08-05, mas a legenda
+  compacta não trazia esse swatch — só viol/warn/unb/lo. Corrigido junto.
 - **Regra editorial da legenda**: a tela carrega só **a regra aplicada**
   (qual limite, de qual norma). A *genealogia* do número — razão Isc/IL,
   nota "c" da Tab.2 do IEEE 519-2014, por que `IL` foi descartado — fica no

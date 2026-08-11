@@ -5,6 +5,44 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-08-11 — Tabela de critérios na legenda da tabela de harmônicas
+
+Arquivos: `src/report/renderer.py`, `scripts/notas/gen_normas_harmonicos.py`
+
+A pedido do usuário: a formatação condicional da tabela de harmônicas só era
+explicada em prosa dentro do `<details>` "Como ler esta tabela". Faltava o
+resumo escaneável de *qual limite gera qual cor* — que já existia, em papel,
+na seção 6.1 da nota `output/normas_harmonicos.pdf`.
+
+- Novo `HTMLRenderer._harm_criteria_html`: tabela *Grandeza e ordem / Limite /
+  Cor / Norma* no topo do `<details>`, com os swatches reais em vez de
+  descrever a cor por extenso. A prosa em `<dl>` continua abaixo, como
+  detalhamento — não foi substituída.
+- **Todos os números vêm de `settings.py`**, nenhum escrito à mão, para a
+  tabela não dessincronizar do que `_harm_cell_tier` de fato aplica. Linha
+  "Durante a falta" (base ×1,5) só aparece quando `has_relaxed_seg`.
+- Helper `_sw(*classes)` reaproveita as classes `.harm-leg-*` da linha
+  compacta de legenda; CSS novo `.harm-crit`/`.harm-crit-sw`/`.harm-crit-note`.
+- Corrigida uma lacuna achada no caminho: a linha compacta de legenda não
+  trazia o swatch **azul da fundamental** (`.harm-leg-fund`, `--accent`),
+  embora a tabela destaque a fundamental nessa cor desde 2026-08-05.
+- Verificado no browser pane (servido via `python -m http.server`): swatches
+  resolvem os tokens certos nos dois temas (claro `#dc2626`/`#ca8a04`/
+  `#2563eb`/`#64748b`, escuro `#f87171`/`#fbbf24`/`#60a5fa`/`#9ca3af`); linha
+  "Durante a falta" aparece em `bus4/1phase` e some em cenário de regime.
+- Nota `normas_harmonicos.pdf` atualizada em paralelo (coluna "Cor" na tabela
+  6.1, pontos coloridos na 6.4). Achados do `note-validator` corrigidos junto:
+  **IEEE C57.110 citado no corpo mas ausente da bibliografia** (só constava o
+  C57.12.00-2000, que é outro standard — a cláusula 7.3.3 invoca os dois para
+  coisas diferentes); redação "antes da falta" trocada por "colunas Pré-falta
+  e Regime", já que *Regime* é o segmento único dos cenários sem falta; e as
+  faixas de ordem ímpar passaram de "3 a 10"/"11 a 16" (bordas do teste no
+  código) para "3ª à 9ª"/"11ª à 15ª" (as ordens reais).
+- Docs: `.claude/kb/dashboard/graficos/espectro-tabela-harmonicas.md`, que
+  também ganhou o registro — até então ausente da KB — da **exceção do âmbar
+  na 2ª harmônica de corrente** (`kind=="i", k==2`, segmentos Pré-falta e
+  Regime), comportamento em produção desde a correção do vazamento espectral.
+
 ## 2026-08-11 — FFT mede a frequência real por segmento (abc) em vez de 60 Hz fixo
 
 Arquivo: `src/pipeline/spectrum.py`
@@ -102,69 +140,10 @@ Arquivos: `src/report/renderer.py`, `src/pipeline/loader.py`,
   colunas na tabela comparativa e o story com "Distúrbio"/"Cenário" +
   "Topologia"; 13 marcadores tₛ preservados nos gráficos.
 
-## 2026-08-05 — Linha de 0 Hz (fundamental em DC) na tabela dq (aba Espectro)
-
-Arquivos: `src/pipeline/spectrum.py`, `src/report/renderer.py`
-
-- A pedido do usuário: a tabela dq não mostrava a fundamental de jeito
-  nenhum — `_amplitude_spectrum` removia a média (`y_u -= y_u.mean()`) antes
-  da FFT e a máscara `f > 0` descartava o bin de 0 Hz, sem guardar esse
-  valor em nenhum lugar. Pela derivação de
-  `kb/standards/harmonic_dq_frame_mapping.md` (Yazdani §4.3), a ordem 1
-  (sequência positiva) vira DC no referencial síncrono — não é ruído, é o
-  próprio ponto de operação de id/iq — e serve de referência de escala para
-  julgar o tamanho do pico de 120 Hz (desequilíbrio).
-- `spectrum.py`: `_amplitude_spectrum` agora retorna também `dc` (a média
-  removida antes da FFT); `_harmonics(f, amp, dc)` devolve lista de 13
-  posições — índice 0 = `|dc|`, índices 1–12 = harmônicas como antes.
-- `renderer.py`: `_DQ_BIN_ORDERS` ganha `0: "fund. (DC)"` (entra
-  automaticamente em `_DQ_TABLE_ROWS`, sem tocar no filtro); leitura da
-  célula em `_harm_subtable_html` migrou de `amps[k - 1]` para `amps[k]`
-  (lista agora inclui o DC na posição 0); `_harm_cell_tier` ganha ramo
-  `k == 0 and mode in ("d", "q")` → reaproveita a classe `harm-fund` (mesmo
-  destaque do k=1 em abc) com tooltip próprio; legenda (`_harm_legend_html`)
-  ganha frase sobre a linha de 0 Hz.
-- Verificado no browser pane (`bus7/2phase`, servido via `python -m
-  http.server`): linha 0 Hz mostra id≈1/iq≈6e-6 pu no pré-falta (ponto de
-  operação nominal, fator de potência unitário) caindo para
-  id≈0,84/iq≈0,37 durante a falta assimétrica — fisicamente coerente;
-  tabela abc não regrediu com o shift de índice (12 linhas, valores iguais
-  ao rodado anterior).
-
-## 2026-08-05 — Tabela de harmônicas separada em abc e dq (aba Espectro)
-
-Arquivos: `src/report/renderer.py`
-
-- A pedido do usuário: a tabela única de harmônicas (linhas h=1ª…12ª,
-  colunas a/b/c/d/q) misturava dois domínios com semântica de linha
-  diferente — em abc, k = k-ésima harmônica (checável por ordem); em dq,
-  k = bin de colisão de duas ordens abc de sequências opostas, só k=2
-  (120 Hz) com critério normativo real. Resultado: 11 das 12 linhas em
-  d/q mostravam só ruído de fundo sem destaque, confundindo o leitor.
-- Separado em duas tabelas por bloco (Corrente UFV / Tensão UFV, mantido):
-  **abc** (12 linhas, igual à tabela antiga só sem colunas d/q) e **dq**
-  (5 linhas — só os bins significativos: 120/180/360/540/720 Hz, via novo
-  `_DQ_TABLE_ROWS`, que filtra `_DQ_BIN_ORDERS` descartando as entradas
-  "—"). Extraído `_harm_subtable_html` (chamado 2× por bloco) a partir do
-  antigo `_spec_table_html`.
-- `_harm_cell_tier`: removido o ramo morto `harm-noord` (bins "sem ordem"
-  não entram mais na tabela dq, então nunca chegam a essa função).
-- Legenda (`_harm_legend_html`) reescrita: item "d/q, 120 Hz" virou "Tabela
-  dq — desequilíbrio, não conformidade", explicando também que as demais
-  linhas (180/360/540/720 Hz) são só informativas; removidos os itens
-  sobre o "—" e sobre "1ª linha em d/q não é a fundamental" (não fazem
-  mais sentido — essas linhas não aparecem mais).
-- CSS: removida a classe `.harm-noord` (sem uso).
-- Regenerado `output/pll_metrics.html` (26 cenários, todos com abc+dq
-  desde a última re-simulação) e verificado via browser pane: 4 tabelas
-  por cenário (abc/dq × corrente/tensão), 12 linhas em abc, 5 em dq;
-  dado real confirma a física (pico em 120 Hz sobe de ~0,0007 para ~0,85
-  durante falta assimétrica em `bus7/2phase`).
-- Doc correspondente: `.claude/kb/dashboard/graficos/espectro-fourier.md`.
-  Iterativo — usuário revisando o resultado antes do commit final.
-
 ## Entradas anteriores
 
+- [2026-08-05](docs/changelog/2026-08-05.md) — linha de 0 Hz (fundamental em
+  DC) na tabela dq, tabela de harmônicas separada em abc e dq.
 - [2026-08-03](docs/changelog/2026-08-03.md) — card e item de diagnóstico
   "Topologia" (line7_8 vs. line8_9, circuito único vs. duplo).
 - [2026-08-02](docs/changelog/2026-08-02.md) — teto fixo em 1 pu no eixo Y

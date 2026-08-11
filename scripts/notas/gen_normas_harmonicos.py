@@ -12,6 +12,17 @@ LE = "&lt;"
 LEQ = "&#8804;"
 X = "&#215;"
 
+# Pontos coloridos das tabelas 6.1 e 6.4: as cores sao as mesmas variaveis do
+# tema claro do dashboard (--danger e --warn em renderer.py), para que papel e
+# tela batam. U+25CF conferido presente no cmap do Times New Roman.
+DOT = "&#9679;"
+D_VIOL = f'<font color="#DC2626">{DOT}</font>'   # --danger
+D_WARN = f'<font color="#CA8A04">{DOT}</font>'   # --warn
+D_FUND = f'<font color="#2563EB">{DOT}</font>'   # --accent (linha da fundamental)
+# --muted (#64748B) a 50% sobre o fundo do card cai por volta de #B2BAC5; o
+# valor abaixo e uma aproximacao a olho, nao a mistura exata.
+D_LO = f'<font color="#A3ADBA">{DOT}</font>'
+
 n = Note(
     title="Os limites de harm&#244;nico do IEEE 519 e do IEEE 1547",
     subtitle="O que cada norma exige, onde achar cada n&#250;mero e como isso vira "
@@ -248,8 +259,9 @@ n.gap(2)
 n.note("A cl&#225;usula 7.3.3 acrescenta uma condicionante que raramente se menciona: os "
        "limites das Tabelas 17 e 18 <b>s&#243; s&#227;o permiss&#237;veis</b> se o "
        "transformador de conex&#227;o n&#227;o for submetido a mais de 5% da sua corrente "
-       "nominal em harm&#244;nico. Acima disso, aplica-se a metodologia do IEEE C57.110 e o "
-       "transformador pode precisar ser reavaliado.")
+       "nominal em harm&#244;nico &#8212; corrente nominal no sentido do IEEE "
+       "C57.12.00-2000, que a pr&#243;pria cl&#225;usula invoca. Acima desses 5%, aplica-se "
+       "a metodologia do IEEE C57.110 e o transformador pode precisar ser reavaliado.")
 
 # ── 5 ────────────────────────────────────────────────────────────────────────
 n.h("5. As duas normas lado a lado")
@@ -280,18 +292,28 @@ n.pagebreak()
 n.h("6. Aplica&#231;&#227;o no dashboard")
 n.p("<b>6.1 Os limites efetivamente aplicados.</b> Cada c&#233;lula da tabela de "
     "harm&#244;nicas &#233; comparada, por ordem, aos valores abaixo:")
-n.table(["Grandeza e ordem", "Limite", "Fonte"],
-        [["Corrente, &#237;mpares de ordem 3 a 10", "4%",
+n.table(["Grandeza e ordem", "Limite", "Cor", "Fonte"],
+        [["Corrente, &#237;mpares da 3&#170; &#224; 9&#170;", "4%", D_VIOL,
           "1547-2018 7.3, texto direto; coincide com o 519"],
-         ["Corrente, &#237;mpares de ordem 11 a 16", "2%",
+         ["Corrente, &#237;mpares da 11&#170; &#224; 15&#170;", "2%", D_VIOL,
           "519-2014 Tabela 2, linha " + LE + "&#160;20 &#8212; <b>infer&#234;ncia, ver 8</b>"],
          ["Corrente, 2&#170;/4&#170;/6&#170;/8&#170; ordem", "1 / 2 / 3 / 4%",
+          D_VIOL + " " + D_WARN,
           "1547-2018 7.3, texto direto (pares relaxados)"],
-         ["Tens&#227;o, qualquer ordem individual", "3%",
+         ["Tens&#227;o, qualquer ordem individual", "3%", D_VIOL,
           "519-2014 Tabela 1, classe 1 a 69 kV"],
          ["Desequil&#237;brio em 120 Hz (eixos <i>dq</i>)", "2% e 3%",
+          D_WARN + " " + D_VIOL,
           "<b>emp&#237;rico</b>, tese de doutorado do coorientador &#8212; sem base normativa"]],
-        [5.5, 2.4, 6.8])
+        [5.5, 2.3, 1.2, 5.7])
+n.gap(4)
+n.note("A coluna <b>Cor</b> antecipa o destaque que a c&#233;lula recebe no dashboard "
+       "quando o valor excede o limite. As duas linhas com dois pontos t&#234;m um "
+       "segundo caso: na <b>2&#170; ordem de corrente</b>, o excesso medido nas colunas "
+       "<i>Pr&#233;-falta</i> e <i>Regime</i> sai em amarelo, e n&#227;o em vermelho, por "
+       "ser majoritariamente vazamento espectral de medi&#231;&#227;o; no "
+       "<b>desequil&#237;brio</b>, 2% &#233; apenas alerta e 3% &#233; o patamar severo. "
+       "A se&#231;&#227;o 6.4 detalha.")
 n.gap(4)
 n.p("Todos os limites de corrente s&#227;o percentuais da <b>corrente nominal do "
     "inversor</b>, que vale 1,0 pu nas condi&#231;&#245;es de refer&#234;ncia do modelo. "
@@ -352,13 +374,24 @@ n.p("<b>6.3 Os segmentos temporais.</b> O espectro &#233; calculado separadament
 
 n.p("<b>6.4 Como ler as cores.</b>")
 n.table(["Destaque", "Significa"],
-        [["vermelho", "excede um limite do IEEE 519 ou do IEEE 1547; a c&#233;lula traz o "
-                      "limite violado em seu texto de apoio"],
-         ["amarelo", "desequil&#237;brio acima do patamar emp&#237;rico, apenas na linha de "
-                     "120 Hz dos eixos <i>dq</i>"],
-         ["neutro em destaque", "linha da fundamental &#8212; refer&#234;ncia de escala, "
-                                "n&#227;o comparada a limite algum"],
-         ["apagado", "valor pr&#243;ximo de zero, sem crit&#233;rio normativo aplic&#225;vel"]],
+        [[D_VIOL + " vermelho",
+          "excede um limite do IEEE 519 ou do IEEE 1547; a c&#233;lula traz o "
+          "limite violado em seu texto de apoio"],
+         [D_WARN + " amarelo",
+          "dois casos distintos. Na linha de 120 Hz dos eixos <i>dq</i>, "
+          "desequil&#237;brio acima do patamar emp&#237;rico de 2%, abaixo do "
+          "patamar severo de 3%. Na <b>2&#170; harm&#244;nica de corrente</b>, nas "
+          "colunas <i>Pr&#233;-falta</i> e <i>Regime</i> (esta &#250;ltima &#233; o "
+          "segmento &#250;nico dos cen&#225;rios sem falta), excesso sobre o limite de "
+          "1% que se sabe ser majoritariamente <b>vazamento espectral de "
+          "medi&#231;&#227;o</b>, "
+          "e n&#227;o distor&#231;&#227;o real do inversor: a rede simulada ainda est&#225; "
+          "em resposta de <i>droop</i> quando a janela &#233; capturada. O valor "
+          "exibido n&#227;o &#233; alterado, apenas o destaque"],
+         [D_FUND + " azul", "linha da fundamental &#8212; refer&#234;ncia de escala, "
+                            "n&#227;o comparada a limite algum"],
+         [D_LO + " apagado",
+          "valor pr&#243;ximo de zero, sem crit&#233;rio normativo aplic&#225;vel"]],
         [3.6, 11.1])
 
 # ── 7 ────────────────────────────────────────────────────────────────────────
@@ -439,6 +472,11 @@ n.refs([
     "IEEE. <i>IEEE Standard General Requirements for Liquid-Immersed Distribution, "
     "Power, and Regulating Transformers</i>. IEEE Std C57.12.00-2000. New York: "
     "Institute of Electrical and Electronics Engineers, 2000.",
+    "IEEE. <i>IEEE Recommended Practice for Establishing Liquid-Filled and Dry-Type "
+    "Power and Distribution Transformer Capability When Supplied by Nonsinusoidal Load "
+    "Currents</i>. IEEE Std C57.110. New York: Institute of Electrical and Electronics "
+    "Engineers. (edi&#231;&#227;o e ano a confirmar &#8212; citada pela nota 120 do "
+    "IEEE 1547.2-2023, que n&#227;o traz o ano.)",
     "INTERNATIONAL ELECTROTECHNICAL COMMISSION. <i>Electromagnetic compatibility (EMC) "
     "&#8212; Part 4-7: Testing and measurement techniques &#8212; General guide on "
     "harmonics and interharmonics measurements and instrumentation</i>. IEC 61000-4-7.",

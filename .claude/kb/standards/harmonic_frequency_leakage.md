@@ -1,7 +1,9 @@
 ---
 name: harmonic-frequency-leakage
 description: Achado 2026-08-10, corrigido 2026-08-11 — o "2º harmônico" elevado na tabela pré-falta de todo cenário era vazamento espectral por F_FUND_HZ fixo; _measure_f1 (cruzamento de zero, modo abc) elimina quase todo o vazamento nas ordens 3ª/4ª, mas deixa residual na 2ª porque a rede está em chirp contínuo, não só deslocada de 60 Hz — residual é físico, não bug
-source: investigação direta em output/results/*/sim_data*.csv (2026-08-10, 2026-08-11)
+source: investigação direta em output/results/*/sim_data*.csv (2026-08-10, 2026-08-11); Carvalho et al. 2014 p.74-76 (fundamento teórico, seção 2)
+references:
+  - "CARVALHO, Janison R. de; DUQUE, Carlos A.; LIMA, Marcelo A. A.; COURY, Denis V.; RIBEIRO, Paulo F. A novel DFT-based method for spectral analysis under time-varying frequency conditions. Electric Power Systems Research, v. 108, p. 74-81, 2014. DOI: 10.1016/j.epsr.2013.10.017."
 metadata:
   type: reference
 ---
@@ -106,6 +108,37 @@ por ter ganhos de PLL mais lentos = menos ripple no próprio sinal medido).
 (menos ciclos, menos chirp acumulado) às custas da resolução de 5 Hz que o
 IEEE 519-2014 §4.1 pede, uma troca já sinalizada como limitação declarada
 em `harmonic_measurement_conditions.md` ("Ainda em aberto").
+
+## Fundamento teórico do mecanismo
+
+Carvalho et al. (2014) formaliza exatamente esse mecanismo para DFT em
+sistemas de potência: com amostragem síncrona (`f = f0`), a saída da DFT é
+um único fasor estacionário (Eq. 5 do artigo). Com `f = f0 + Δf` — "the
+operating frequency is prone to small variations (Δf) due to the dynamic
+power balance" (p.75, citação verbatim) —, o segundo termo da Eq. 4 deixa
+de ser cancelado, e a
+saída vira soma de dois fasores girando em sentidos opostos: amplitude e
+fase da DFT passam a oscilar senoidalmente em 2Δf **dentro da própria
+janela**, em vez de convergir a um valor estável. É a mesma física por trás
+das Eqs. 1-3 de `scripts/notas/gen_vazamento_espectral_harmonicos.py`.
+
+Ressalva: o modelo do artigo trata `Δf` como quase-estático **por janela**
+(rastreado janela a janela por um filtro passa-baixa nas oscilações de
+|X₁|). O achado desta nota — `Δf` variando *dentro* de uma única janela de
+0,5 s, não só entre janelas sucessivas — é uma extensão natural do mesmo
+mecanismo (se `Δf` constante já produz esse batimento, `Δf` variando ao
+longo da janela só agrava o descasamento), não uma alegação que o artigo
+prove literalmente.
+
+## Consequência no destaque da tabela do dashboard
+
+Como o residual é físico e conhecido, `_harm_cell_tier` marca a 2ª harmônica
+de **corrente** dos segmentos `("Pré-falta", "Regime")` em **âmbar**
+(`.harm-warn`) em vez de vermelho quando ela excede o limite de 1%. O valor
+exibido **não muda** — só a cor deixa de imputar ao inversor um excesso que se
+sabe ser majoritariamente resíduo de medição. Detalhe de implementação em
+[espectro-tabela-harmonicas.md](../dashboard/graficos/espectro-tabela-harmonicas.md);
+explicação ao leitor na seção 6.4 de `output/normas_harmonicos.pdf`.
 
 ## Em aberto
 

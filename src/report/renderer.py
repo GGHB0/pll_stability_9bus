@@ -956,6 +956,22 @@ switchScenario(currentKey);
                 relax = ("" if factor == 1.0 else
                          f"; limite {limit * 100:.1f}% relaxado ×{factor:g} "
                          "em condição inusual, IEEE 1547.2-2023 nota 118")
+                # 2ª harmônica de corrente, pré-falta/Regime: excesso é
+                # majoritariamente vazamento espectral de medição (chirp de
+                # frequência dentro da janela, rede ainda em resposta de
+                # droop), não distorção real do inversor — achado e correção
+                # em kb/standards/harmonic_frequency_leakage.md. Âmbar em vez
+                # de vermelho aqui não afrouxa o limite (o número mostrado
+                # continua o mesmo, sem viés) — só evita marcar como defeito
+                # do inversor algo que já se sabe ser majoritariamente
+                # resíduo de medição documentado.
+                if kind == "i" and k == 2 and seg_name in ("Pré-falta", "Regime"):
+                    return ("harm-warn",
+                            f" title=\"excede {limit * factor * 100:.1f}% "
+                            f"({norm}) mas é majoritariamente vazamento espectral de "
+                            "medição — a rede simulada ainda está em transitório de "
+                            "droop quando a janela é capturada, não distorção real do "
+                            "inversor (ver nota técnica vazamento_espectral_harmonicos.pdf)\"")
                 return ("harm-viol",
                         f" title=\"excede {limit * factor * 100:.1f}% "
                         f"({norm}{relax})\"")
@@ -990,7 +1006,12 @@ switchScenario(currentKey);
              f"{ev_ord} — percentuais da corrente nominal do inversor. "
              f"Tensão: {VOLT_INDIVIDUAL_LIMIT_PU * 100:g}%, sobre a nominal da "
              "Barra 2 (20 kV). Fontes: IEEE 1547-2018 §7.3 (corrente), "
-             "IEEE 519-2014 Tabela 1 (tensão). Ímpares 11ª/13ª: 2,0% — valor interino herdado da IEEE 519-2014 (Tabela 17 da 1547-2018 ainda não confirmada, ver KB)."),
+             "IEEE 519-2014 Tabela 1 (tensão). Ímpares 11ª/13ª: 2,0% — valor interino herdado da IEEE 519-2014 (Tabela 17 da 1547-2018 ainda não confirmada, ver KB). "
+             "Âmbar (só na 2ª harmônica de corrente, colunas Pré-falta/Regime): "
+             "passa do limite, mas o excesso é majoritariamente vazamento espectral "
+             "de medição, não distorção real do inversor — a rede simulada ainda "
+             "está em transitório de droop quando a janela é capturada. O número "
+             "mostrado não muda, só a cor deixa de sinalizar defeito de projeto."),
             ("Tabela dq — desequilíbrio, não conformidade",
              "0 Hz é a própria fundamental, representada como DC no "
              "referencial síncrono (não é ruído nem harmônico) — serve de "
@@ -1021,18 +1042,75 @@ switchScenario(currentKey);
             "<p class='harm-leg-row'>"
             "<span class='harm-leg-sw harm-leg-viol'></span>excede limite "
             "normativo<span class='harm-leg-dot'>·</span>"
-            "<span class='harm-leg-sw harm-leg-warn'></span>"
-            "<span class='harm-leg-sw harm-leg-unb'></span>desequilíbrio dq"
+            "<span class='harm-leg-sw harm-leg-warn'></span>excesso atribuído a "
+            "vazamento de medição (2ª abc) ou desequilíbrio dq intermediário"
             "<span class='harm-leg-dot'>·</span>"
+            "<span class='harm-leg-sw harm-leg-unb'></span>desequilíbrio dq alto"
+            "<span class='harm-leg-dot'>·</span>"
+            "<span class='harm-leg-sw harm-leg-fund'></span>fundamental, sem "
+            "limite<span class='harm-leg-dot'>·</span>"
             "<span class='harm-leg-sw harm-leg-lo'></span>abaixo de "
             f"{self._HARM_LO_PU * 100:g}%"
             "</p>"
             "<details class='harm-help'><summary>Como ler esta tabela</summary>"
+            f"{self._harm_criteria_html(has_relaxed_seg)}"
             f"<dl>{rows}</dl>"
             "<p class='harm-refs'>IEEE Std 519-2014 · IEEE Std 1547.2-2023 · "
             "ALVES, A. G. P. Tese (Doutorado), COPPE/UFRJ, 2022.</p>"
             "</details></div>"
         )
+
+    @staticmethod
+    def _sw(*classes: str) -> str:
+        """Um ou mais swatches de cor da legenda, na ordem dada. Reaproveita as
+        classes `.harm-leg-*` da linha compacta, então uma troca de token de
+        tema vale para a legenda e para a tabela de critérios de uma vez."""
+        return "".join(f"<span class='harm-leg-sw harm-leg-{c}'></span>"
+                       for c in classes)
+
+    def _harm_criteria_html(self, has_relaxed_seg: bool) -> str:
+        """Resumo tabular dos critérios de formatação condicional: por grandeza
+        e ordem, o limite aplicado, a cor que a célula recebe e a norma de
+        origem. Espelha a seção 6.1 da nota `output/normas_harmonicos.pdf` — as
+        duas precisam continuar batendo, e por isso os números vêm todos das
+        constantes de `settings.py`, nunca escritos à mão aqui."""
+        evens = sorted(CURR_EVEN_LIMITS_PU.items())
+        ev_lim = " / ".join(f"{v * 100:g}%" for _, v in evens)
+        ev_ord = "/".join(f"{k}ª" for k, _ in evens)
+        rows = [
+            ("Corrente, ímpares 3ª–9ª", f"{CURR_ODD_LIMIT_PU * 100:g}%",
+             self._sw("viol"), "IEEE 1547-2018 §7.3"),
+            ("Corrente, ímpares 11ª–15ª", f"{CURR_ODD_LIMIT_11_16_PU * 100:g}%",
+             self._sw("viol"), "IEEE 519-2014 Tab.2 (interino)"),
+            (f"Corrente, {ev_ord}", ev_lim, self._sw("viol", "warn"),
+             "IEEE 1547-2018 §7.3"),
+            ("Tensão, qualquer ordem", f"{VOLT_INDIVIDUAL_LIMIT_PU * 100:g}%",
+             self._sw("viol"), "IEEE 519-2014 Tab.1"),
+            ("Desequilíbrio dq, 120 Hz",
+             f"{DQ_UNBALANCE_WARN_PU * 100:g}% / {DQ_UNBALANCE_HIGH_PU * 100:g}%",
+             self._sw("warn", "unb"), "TeseAGP §5.2.2 (empírico)"),
+            ("Fundamental (1ª abc, 0 Hz dq)", "—", self._sw("fund"),
+             "referência de escala, sem limite"),
+            (f"Abaixo de {self._HARM_LO_PU * 100:g}%", "—", self._sw("lo"),
+             "sem critério aplicável"),
+        ]
+        if has_relaxed_seg:
+            factor = SPEC_SEG_LIMIT_FACTOR.get("Durante a falta", 1.0)
+            rows.append(("Durante a falta", f"base ×{factor:g}", "",
+                         "IEEE 1547.2-2023 nota 118"))
+        body = "".join(
+            f"<tr><th>{grand}</th><td>{lim}</td><td class='harm-crit-sw'>{sw}</td>"
+            f"<td>{norma}</td></tr>" for grand, lim, sw, norma in rows)
+        return (
+            "<table class='harm-crit'><thead><tr><th>Grandeza e ordem</th>"
+            "<th>Limite</th><th>Cor</th><th>Norma</th></tr></thead>"
+            f"<tbody>{body}</tbody></table>"
+            "<p class='harm-crit-note'>Duas cores na mesma linha indicam um "
+            "segundo caso: a 2ª harmônica de corrente sai em âmbar nas colunas "
+            "Pré-falta/Regime, por ser majoritariamente vazamento espectral de "
+            "medição; o desequilíbrio é âmbar no patamar de alerta e vermelho "
+            "no severo. Percentuais de corrente são da nominal do inversor; os "
+            "de tensão, da nominal da Barra 2.</p>")
 
     def _harm_subtable_html(self, per_seg: dict, segs: list, kind: str,
                              title: str, domain: str, modes: tuple,
@@ -1697,6 +1775,7 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 }
 .harm-leg-viol, .harm-leg-unb { background: var(--danger) }
 .harm-leg-warn { background: var(--warn) }
+.harm-leg-fund { background: var(--accent) }
 .harm-leg-lo   { background: var(--muted); opacity: .45 }
 .harm-help > summary {
   cursor: pointer; font-weight: 700; color: var(--text);
@@ -1712,6 +1791,21 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 .harm-help dl { margin: 6px 0 0; max-width: 78ch }
 .harm-help dt { font-weight: 700; color: var(--text); margin-top: 9px }
 .harm-help dd { margin: 2px 0 0 }
+.harm-crit {
+  border-collapse: collapse; margin: 9px 0 0; max-width: 78ch;
+  font-size: 11px;
+}
+.harm-crit th, .harm-crit td {
+  text-align: left; padding: 4px 12px 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+.harm-crit thead th {
+  font-weight: 700; color: var(--text); white-space: nowrap;
+}
+.harm-crit tbody th { font-weight: 500; color: var(--text) }
+.harm-crit-sw { white-space: nowrap }
+.harm-crit-sw .harm-leg-sw + .harm-leg-sw { margin-left: 3px }
+.harm-crit-note { margin: 7px 0 0; max-width: 78ch }
 .harm-refs { margin: 11px 0 0; font-size: 10px; opacity: .75 }
 
 /* ── SVG tooltip ── */

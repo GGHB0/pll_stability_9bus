@@ -5,6 +5,33 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-08-11 — FFT mede a frequência real por segmento (abc) em vez de 60 Hz fixo
+
+Arquivo: `src/pipeline/spectrum.py`
+
+Achado de 2026-08-10 (`kb/standards/harmonic_frequency_leakage.md`): a "2ª
+harmônica" de 1,3-2,1% na coluna pré-falta de todo cenário era vazamento
+espectral, não distorção real — a rede simulada nunca fecha em 60,000 Hz
+exatos (resposta de droop dos geradores síncronos ainda em curso) e a janela
+da FFT truncava por `F_FUND_HZ` fixo, desalinhada do ciclo real do sinal.
+
+- Nova função `_measure_f1`: mede a frequência real por cruzamento de zero
+  ascendente (interpolado linearmente), com fallback para `F_FUND_HZ` se
+  houver menos de 3 cruzamentos ou o resultado fugir de 50-70 Hz.
+- `_amplitude_spectrum` e `_harmonics` ganham o parâmetro `f1` (default
+  `F_FUND_HZ`), usado no truncamento da janela e na busca do bin — o índice
+  de ordem na tabela (rótulo "120 Hz" pra 2ª) continua nominal.
+- `_mode_fig` mede `f1` só em modo **abc** (`mode in ("a","b","c")`); em dq a
+  fundamental vira DC e cruzamento de zero não se aplica, mantém `F_FUND_HZ`.
+- Efeito medido (Regime, corrente, fase a): 3ª harmônica cai de 0,55% para
+  0,08%, 4ª de 0,46% para 0,15% — o realinhamento elimina quase todo o
+  vazamento nos harmônicos mais distantes da fundamental. A 2ª cai só de
+  1,70% para 1,42%: a rede não está só deslocada de 60 Hz, está em **chirp
+  contínuo** (frequência ainda caindo ao longo da janela de 0,5 s), e uma
+  única `f1` média por janela não cancela o alargamento espectral desse
+  chirp — mais pronunciado perto da fundamental. Residual documentado em
+  `kb/standards/harmonic_frequency_leakage.md`, não é bug.
+
 ## 2026-08-09 — Medição de harmônicas conforme IEEE 519 §4.1 e relaxamento ×1,5 na falta
 
 Arquivos: `src/pipeline/spectrum.py`, `src/report/renderer.py`,
@@ -136,37 +163,10 @@ Arquivos: `src/report/renderer.py`
 - Doc correspondente: `.claude/kb/dashboard/graficos/espectro-fourier.md`.
   Iterativo — usuário revisando o resultado antes do commit final.
 
-## 2026-08-03 — Card e item de diagnóstico "Topologia" (line7_8 vs. line8_9)
-
-Arquivos: `src/report/renderer.py`
-
-- Novo card "Topologia" no grupo Severidade do distúrbio + item "Topologia"
-  no diagnóstico narrativo, só para os cenários `line7_8/*` e `line8_9/*`
-  (dict `_LINE_TOPOLOGY`, chave = `key.split("/")[0]`). Motivo: as duas
-  linhas têm topologia elétrica diferente e isso muda a leitura do
-  cenário — a pedido do usuário, que apontou a diferença; confirmado
-  também direto no `.slx` antes de escrever o texto.
-- **`line7_8`**: 2 blocos `Transmission Line (Three-Phase)` em série
-  (5 km + 45 km) com disjuntor em cada ponta — circuito único entre as
-  barras 7 e 8. Card "1 circuito", sub "falta no único caminho B7–B8".
-- **`line8_9`**: 2 blocos de 100 km cada, ambos ligando Bus8↔Bus9
-  diretamente — circuito duplo de verdade, falta atinge só um dos dois.
-  Card "2 circuitos", sub "falta em 1 dos 2, em paralelo".
-- `_cards_html`/`_story_html` passam a receber `key` (chave do cenário)
-  além de `data`. Bug pego na primeira rodada: um loop interno de
-  `_cards_html` já usava a variável `key` para outra coisa (chave de
-  métrica `vavg_bus1`/`vavg_bus3`), sombreando o parâmetro novo e fazendo
-  o card falhar silenciosamente — renomeado para `mkey`.
-- SVG do unifilar (`assets/diagrams/ieee9bus_unifilar.svg`) não foi
-  tocado, a pedido do usuário.
-- Regenerado `output/pll_metrics.html` (26 cenários, incl. `line8_9/2phase`
-  e `line8_9/3phase` trazidos do merge do GGHB) e verificado via browser
-  pane: card e item aparecem em `line7_8`/`line8_9`, ausentes em `bus*` e
-  `regime`; sem overflow de layout, sem erro no console.
-- Doc correspondente: `.claude/kb/dashboard/cards/cards-metricas.md`.
-
 ## Entradas anteriores
 
+- [2026-08-03](docs/changelog/2026-08-03.md) — card e item de diagnóstico
+  "Topologia" (line7_8 vs. line8_9, circuito único vs. duplo).
 - [2026-08-02](docs/changelog/2026-08-02.md) — teto fixo em 1 pu no eixo Y
   do espectro FFT, legenda explicada da tabela de harmônicas.
 - [2026-07-28 a 2026-07-30](docs/changelog/2026-07-28_30.md) — faixa de

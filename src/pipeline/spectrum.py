@@ -26,19 +26,56 @@ from .loader import SimData
 _MIN_DUR_S   = 0.05   # janela menor que isso → df > 20 Hz, não resolve 120 Hz
 _MIN_SAMPLES = 64
 _N_HARM      = 12     # harmônicas 1–12 (até 12f₁=720 Hz) extraídas para a tabela
+_F1_MIN_HZ   = 50.0    # faixa sã para a frequência medida por cruzamento de zero
+_F1_MAX_HZ   = 70.0
+_F1_MIN_CROSSINGS = 3  # abaixo disso não dá pra estimar período com confiança
+
+
+def _measure_f1(t: np.ndarray, y: np.ndarray,
+                 fallback: float = F_FUND_HZ) -> float:
+    """Frequência real do segmento por cruzamento de zero ascendente, em vez
+    de assumir F_FUND_HZ fixo. A rede simulada raramente fecha em 60,000 Hz
+    exatos (resposta de droop dos geradores síncronos ainda em curso — ver
+    kb/standards/harmonic_frequency_leakage.md); truncar a janela da FFT pela
+    frequência nominal em vez da real desalinha a janela do ciclo do sinal e
+    vaza energia da fundamental para os bins vizinhos, inflando "harmônicas"
+    que não existem. Cai no `fallback` (nominal) se o sinal não tiver
+    cruzamentos suficientes ou a frequência medida fugir de uma faixa sã
+    (50-70 Hz) — sinal ruim demais para confiar na medição."""
+    y_c = y - float(np.mean(y))
+    sign = y_c >= 0
+    up = np.flatnonzero(sign[1:] & ~sign[:-1]) + 1  # cruzamentos ascendentes
+    if len(up) < _F1_MIN_CROSSINGS:
+        return fallback
+    # interpolação linear do instante exato do cruzamento em cada índice
+    y0, y1 = y_c[up - 1], y_c[up]
+    t0, t1 = t[up - 1], t[up]
+    t_cross = t0 + (0.0 - y0) * (t1 - t0) / (y1 - y0)
+    f1 = (len(t_cross) - 1) / (t_cross[-1] - t_cross[0])
+    if not (_F1_MIN_HZ <= f1 <= _F1_MAX_HZ):
+        return fallback
+    return float(f1)
 
 
 def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
-                        fmax: float = SPEC_FMAX_HZ, window: str = "hann"):
+                        fmax: float = SPEC_FMAX_HZ, window: str = "hann",
+                        f1: float = F_FUND_HZ):
     """|FFT| de amplitude LINEAR (pu): reamostra em grade uniforme, trunca a
-    janela para um número INTEIRO de ciclos da fundamental (60 Hz cai exato
-    num bin — sem vazamento por janela cortada no meio do ciclo), remove a
-    média (offset DC; no abc a fundamental de 60 Hz permanece, no dq é a
+    janela para um número INTEIRO de ciclos da fundamental (a de `f1` cai
+    exata num bin — sem vazamento por janela cortada no meio do ciclo),
+    remove a média (offset DC; no abc a fundamental permanece, no dq é a
     própria fundamental — ver `_harmonics`) e aplica a janela pedida. Retorna
     (f, amp, dc) com 0 < f ≤ fmax e amp em pu — escala linear destaca os
-    picos discretos (60 Hz + harmônicas) sobre o piso de ruído, ao contrário
-    do dB; dc é o valor médio removido antes da FFT. Retorna None se o
-    segmento for curto demais.
+    picos discretos (fundamental + harmônicas) sobre o piso de ruído, ao
+    contrário do dB; dc é o valor médio removido antes da FFT. Retorna None
+    se o segmento for curto demais.
+
+    `f1` é a frequência usada para truncar a janela a um nº inteiro de
+    ciclos — por padrão `F_FUND_HZ` (60 Hz nominal), mas em modo abc
+    `_mode_fig` passa a frequência REAL medida por `_measure_f1`: a rede
+    simulada raramente fecha em 60,000 Hz exatos, e truncar pelo nominal
+    vaza a fundamental para os bins vizinhos (ver
+    kb/standards/harmonic_frequency_leakage.md).
 
     `window="hann"` é o espectro EXIBIDO: contém vazamento em janela curta,
     ao custo de espalhar cada tom em 3 bins. `window="rect"` é o espectro
@@ -56,10 +93,10 @@ def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
     # +1e-9 antes do floor: uma janela de 0,2 s dá 0,2*60 = 11,999999... em
     # ponto flutuante, e o floor devolvia 11 ciclos onde há 12 — custava
     # exatamente a janela de 12 ciclos / df = 5 Hz que o IEEE 519 §4.1 pede.
-    n_cyc = int(np.floor((t[-1] - t[0]) * F_FUND_HZ + 1e-9))
+    n_cyc = int(np.floor((t[-1] - t[0]) * f1 + 1e-9))
     if n_cyc < 1:
         return None
-    n = int(round(n_cyc / F_FUND_HZ / dt))
+    n = int(round(n_cyc / f1 / dt))
     if n < _MIN_SAMPLES:
         return None
     t_u = t[0] + np.arange(n) * dt
@@ -73,8 +110,9 @@ def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
     return f[m], amp[m], dc
 
 
-def _harmonics(f: np.ndarray, amp: np.ndarray, dc: float) -> list[float | None]:
-    """Amplitude nas harmônicas k·60 Hz (k = 1…_N_HARM) mais o componente DC
+def _harmonics(f: np.ndarray, amp: np.ndarray, dc: float,
+               f1: float = F_FUND_HZ) -> list[float | None]:
+    """Amplitude nas harmônicas k·f1 (k = 1…_N_HARM) mais o componente DC
     (índice 0). Cada harmônica é a **combinação RMS do bin central com os dois
     vizinhos** (±1,5 bin em torno do alvo), conforme o IEEE 519-2014 §4.1:
     "the three values are combined into a single rms value that defines the
@@ -83,7 +121,15 @@ def _harmonics(f: np.ndarray, amp: np.ndarray, dc: float) -> list[float | None]:
     superestimaria em 22,5%, ver a docstring de `_amplitude_spectrum`.
 
     Com a janela truncada a 12 ciclos, df = 5 Hz e o grupo de 3 bins cobre
-    exatamente ±5 Hz em torno de k·60 Hz, que é a definição da norma.
+    exatamente ±5 Hz em torno de k·f1, que é a definição da norma.
+
+    `f1` busca o bin pela frequência REAL do segmento (medida por
+    `_measure_f1` em modo abc), não pela nominal — mas o ÍNDICE `k` da lista
+    de saída continua a ORDEM nominal (a tabela do relatório rotula "120 Hz"
+    pela 2ª ordem independente de f1 ter sido 59,7 ou 60,0 Hz; ver
+    kb/standards/harmonic_frequency_leakage.md). Sem isso, buscar em k·60 Hz
+    quando a fundamental real está em 59,7 Hz erra o bin e conta vazamento
+    como se fosse harmônico.
 
     O índice 0 (0 Hz) é |dc|, o valor médio removido antes da FFT — em abc é
     só o offset de medição (perto de zero); em dq é a própria fundamental
@@ -95,7 +141,7 @@ def _harmonics(f: np.ndarray, amp: np.ndarray, dc: float) -> list[float | None]:
         return out + [None] * _N_HARM
     df = float(f[1] - f[0])
     for k in range(1, _N_HARM + 1):
-        m = np.abs(f - k * F_FUND_HZ) <= 1.5 * df
+        m = np.abs(f - k * f1) <= 1.5 * df
         out.append(float(np.sqrt((amp[m] ** 2).sum())) if m.any() else None)
     return out
 
@@ -186,11 +232,17 @@ class SpectrumBuilder:
         tm: list[tuple[int, str, str]] = []
         row_maxes: list[float] = []
 
+        # Frequência real medida por cruzamento de zero, só em abc — em dq a
+        # fundamental vira DC e cruzamento de zero não se aplica (ver
+        # _measure_f1 e kb/standards/harmonic_frequency_leakage.md).
+        is_abc = mode in ("a", "b", "c")
+
         for ri, (kind, label, t, y) in enumerate(sigs, 1):
             row_max = 0.0
             for seg_name, t0, t1 in segs:
                 mask = (t >= t0) & (t <= t1)
-                res = _amplitude_spectrum(t[mask], y[mask])
+                f1 = _measure_f1(t[mask], y[mask]) if is_abc else F_FUND_HZ
+                res = _amplitude_spectrum(t[mask], y[mask], f1=f1)
                 if res is None:
                     continue
                 f, amp, dc = res
@@ -198,11 +250,11 @@ class SpectrumBuilder:
                 # Tabela usa espectro de janela RETANGULAR: é o único
                 # compatível com o agrupamento de 3 bins do IEEE 519 §4.1
                 # (ver _harmonics). O gráfico segue com Hann.
-                res_m = _amplitude_spectrum(t[mask], y[mask], window="rect")
+                res_m = _amplitude_spectrum(t[mask], y[mask], window="rect", f1=f1)
                 if res_m is not None:
                     f_m, amp_m, dc_m = res_m
                     harm[kind].setdefault(seg_name, {})[mode] = _harmonics(
-                        f_m, amp_m, dc_m)
+                        f_m, amp_m, dc_m, f1=f1)
                 lc, dark = SPEC_SEG_COLORS[seg_name]
                 fig.add_trace(go.Scatter(
                     x=f, y=amp, name=seg_name, mode="lines",

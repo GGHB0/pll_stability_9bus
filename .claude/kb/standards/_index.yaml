@@ -15,4 +15,4 @@ files:
     description: Mapeamento formal ordem harmônica → bin do espectro dq (Yazdani §4.2.4/4.3) — fundamental=DC, colisão 5ª/7ª→6ª, só sobra múltiplos de 3f₁
   - file: harmonic_frequency_leakage.md
     name: harmonic-frequency-leakage
-    description: Achado 2026-08-10 — 2ª harmônica elevada na coluna pré-falta de todo cenário é vazamento espectral (rede não fecha em 60,000 Hz + janela FFT truncada com F_FUND_HZ fixo), não distorção real; correção proposta (medir frequência real por segmento) pendente de implementação
+    description: Achado 2026-08-10, corrigido 2026-08-11 — 2ª harmônica elevada na coluna pré-falta era vazamento espectral (rede não fecha em 60,000 Hz + FFT truncada com F_FUND_HZ fixo); _measure_f1 (cruzamento de zero, modo abc) implementado em spectrum.py, elimina quase todo vazamento na 3ª/4ª mas deixa residual físico na 2ª por chirp contínuo de frequência

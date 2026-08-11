@@ -1,7 +1,7 @@
 ---
 name: harmonic-frequency-leakage
-description: Achado 2026-08-10 — o "2º harmônico" elevado na tabela pré-falta de todo cenário é vazamento espectral, não distorção real; a rede simulada nunca fecha em 60,000 Hz exatos (ainda em resposta primária de droop) e a FFT trunca a janela assumindo F_FUND_HZ=60 fixo
-source: investigação direta em output/results/*/sim_data*.csv (2026-08-10)
+description: Achado 2026-08-10, corrigido 2026-08-11 — o "2º harmônico" elevado na tabela pré-falta de todo cenário era vazamento espectral por F_FUND_HZ fixo; _measure_f1 (cruzamento de zero, modo abc) elimina quase todo o vazamento nas ordens 3ª/4ª, mas deixa residual na 2ª porque a rede está em chirp contínuo, não só deslocada de 60 Hz — residual é físico, não bug
+source: investigação direta em output/results/*/sim_data*.csv (2026-08-10, 2026-08-11)
 metadata:
   type: reference
 ---
@@ -62,23 +62,50 @@ fases a/b/c; bus9/1phase 1,54%/1,85%/1,50%). Toda célula de 2ª (e, em menor
 grau, 4ª) harmônica na coluna pré-falta de qualquer cenário com
 `sim_data_abc.csv` está inflada pelo mesmo efeito.
 
-## Correção proposta (aprovada pelo usuário 2026-08-10, pendente de implementação)
+## Correção implementada (2026-08-11)
 
-Medir a frequência real do segmento (cruzamento de zero no próprio sinal
-sendo analisado, com fallback pra `F_FUND_HZ` nominal se o sinal não tiver
-cruzamentos suficientes ou a frequência medida fugir de uma faixa sã, ex.
-50-70 Hz) e truncar a janela por essa frequência medida em vez de 60 Hz
-fixo — replica o "gating" sincronizado que o IEC 61000-4-7 pressupõe (a
-norma assume um relógio de amostragem travado na frequência real da rede;
-o agrupamento de 3 bins do §4.1 existe pra capturar vazamento residual
-*dentro* de uma janela bem sincronizada, não pra compensar uma janela
-inteira desalinhada — ver
+`src/pipeline/spectrum.py` ganhou `_measure_f1(t, y, fallback=F_FUND_HZ)`:
+mede a frequência real por cruzamento de zero ascendente (interpolado
+linearmente entre amostras), com fallback pro nominal se houver menos de 3
+cruzamentos ou o resultado fugir de 50-70 Hz. `_amplitude_spectrum` e
+`_harmonics` ganharam o parâmetro `f1`, usado no truncamento da janela e na
+busca do bin — replica o "gating" sincronizado que o IEC 61000-4-7
+pressupõe (a norma assume um relógio de amostragem travado na frequência
+real da rede; o agrupamento de 3 bins do §4.1 existe pra capturar vazamento
+residual *dentro* de uma janela bem sincronizada, não pra compensar uma
+janela inteira desalinhada — ver
 [harmonic_measurement_conditions.md](harmonic_measurement_conditions.md)).
-Escopo: só o modo **abc** (onde a fundamental realmente oscila em ~60 Hz);
-o modo **dq** mantém `F_FUND_HZ` fixo, já que ali a fundamental vira DC e
-cruzamento de zero não se aplica. Rótulo da linha na tabela continua pela
-**ordem nominal** (ex. "120 Hz" pra 2ª), só a janela de busca do bin se
-desloca pra perto da frequência medida.
+Escopo: só o modo **abc** (`_mode_fig` só chama `_measure_f1` quando
+`mode in ("a","b","c")`); o modo **dq** mantém `F_FUND_HZ` fixo, já que ali
+a fundamental vira DC e cruzamento de zero não se aplica. Rótulo da linha
+na tabela continua pela **ordem nominal** (ex. "120 Hz" pra 2ª) — o índice
+`k` de `_harmonics` não muda, só a frequência usada pra buscar o bin.
+
+### Resultado medido — reduz mas não elimina, e por um motivo físico
+
+Regime, corrente, fase a, `f1` medido = 59,673 Hz (vs. 60,000 Hz nominal):
+
+| h | Antes (60 Hz fixo) | Depois (`f1` medido) |
+|---|---|---|
+| 2ª | 1,70% | 1,42% |
+| 3ª | 0,55% | 0,08% |
+| 4ª | 0,46% | 0,15% |
+
+A 3ª/4ª quase zeram — confirma que o realinhamento da janela funciona. A 2ª
+só caiu ~17% porque a causa raiz **não é um simples deslocamento de 60,000
+para 59,673 Hz**: é um **chirp contínuo** — a frequência ainda está caindo
+ao longo de toda a janela de 0,5 s (mesma resposta de droop descrita em "O
+achado"). Uma única `f1` (média medida por cruzamento de zero em toda a
+janela) alinha o *início e fim* da janela corretamente, mas não cancela o
+alargamento espectral causado pela variação de frequência *dentro* da
+janela — que é maior perto da fundamental (por isso a 2ª sofre mais que a
+3ª/4ª, mais distantes). Confirmado em todos os 26 cenários: pré-falta
+sistematicamente 1,3-1,6% (BAD_PLL cai abaixo de 1%, 0,88-1,19%, plausível
+por ter ganhos de PLL mais lentos = menos ripple no próprio sinal medido).
+**Residual é físico, não bug** — reduzir mais exigiria encurtar a janela
+(menos ciclos, menos chirp acumulado) às custas da resolução de 5 Hz que o
+IEEE 519-2014 §4.1 pede, uma troca já sinalizada como limitação declarada
+em `harmonic_measurement_conditions.md` ("Ainda em aberto").
 
 ## Em aberto
 

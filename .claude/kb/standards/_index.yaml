@@ -13,3 +13,6 @@ files:
   - file: harmonic_dq_frame_mapping.md
     name: harmonic-dq-frame-mapping
     description: Mapeamento formal ordem harmônica → bin do espectro dq (Yazdani §4.2.4/4.3) — fundamental=DC, colisão 5ª/7ª→6ª, só sobra múltiplos de 3f₁
+  - file: harmonic_frequency_leakage.md
+    name: harmonic-frequency-leakage
+    description: Achado 2026-08-10 — 2ª harmônica elevada na coluna pré-falta de todo cenário é vazamento espectral (rede não fecha em 60,000 Hz + janela FFT truncada com F_FUND_HZ fixo), não distorção real; correção proposta (medir frequência real por segmento) pendente de implementação

@@ -141,3 +141,10 @@ O **segmento "Durante a falta" continua com janela de 6 ciclos** (`df` = 10 Hz),
 metade da janela de 12 ciclos do §4.1, porque a falta em si dura 0,1 s nos
 cenários. O grupo de 3 bins ali cobre ±10 Hz em vez de ±5 Hz. Não há correção
 possível sem alongar a falta na simulação — fica como limitação declarada.
+
+**Achado 2026-08-10 — vazamento por `F_FUND_HZ` fixo**: a truncagem da
+janela assume 60,000 Hz exatos, mas a rede simulada nunca fecha nesse valor
+(ainda em resposta de droop no fim da janela de 0,6 s). Isso infla a 2ª/4ª
+harmônica na coluna pré-falta de todo cenário — não é distorção real. Achado,
+evidência e correção proposta em
+[harmonic_frequency_leakage.md](harmonic_frequency_leakage.md).

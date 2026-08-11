@@ -14,7 +14,12 @@ Regras aprendidas (nao mexer sem motivo):
 - Nunca usar o atributo `rise` em <sub>/<super>: desalinha o avanco horizontal.
 - Nao usar U+2713 (check): ausente no Times New Roman. Grego, seta, raiz e
   aproximadamente estao todos presentes.
+- `eq_tex()` (mathtext do matplotlib, fontes STIX) e o modo recomendado para
+  qualquer formula com fracao, raiz de expressao, soma/integral ou mais de um
+  nivel de sub/sobrescrito. `eq()` (Paragraph com entidades HTML) fica so
+  para simbolo isolado ou substituicao trivial de uma variavel.
 """
+import io
 from pathlib import Path
 
 from reportlab.lib import colors
@@ -24,8 +29,8 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import cm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import (BaseDocTemplate, Frame, PageBreak, PageTemplate,
-                                Paragraph, Spacer, Table, TableStyle)
+from reportlab.platypus import (BaseDocTemplate, Frame, Image as RLImage, PageBreak,
+                                PageTemplate, Paragraph, Spacer, Table, TableStyle)
 
 # simbolos prontos (todos conferidos no cmap do Times New Roman)
 W, XI, SQ, AP, AR, DL, TAU = "ω", "ξ", "√", "≈", "→", "δ", "τ"
@@ -52,6 +57,32 @@ def _register_fonts():
     pdfmetrics.registerFontFamily("TNR", normal="TNR", bold="TNR-Bold",
                                   italic="TNR-Italic", boldItalic="TNR-BoldItalic")
     _registered = True
+
+
+def _mathtext_image(expr, fontsize=15, color="#14232E", dpi=300):
+    """Renderiza `expr` (sintaxe LaTeX/mathtext, sem os `$`) num PNG com fundo
+    transparente, recortado ao bounding box do glifo. Usa o backend Agg do
+    matplotlib (sem display) e fontes STIX, desenhadas para casar
+    metricamente com Times New Roman. Retorna (buffer_png, largura_pt,
+    altura_pt) prontos para um reportlab Image."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from PIL import Image as PILImage
+
+    fig = plt.figure(figsize=(0.1, 0.1))
+    fig.patch.set_alpha(0)
+    fig.text(0, 0, f"${expr}$", fontsize=fontsize, color=color,
+              math_fontfamily="stix")
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", dpi=dpi, transparent=True, bbox_inches="tight",
+                pad_inches=0.06)
+    plt.close(fig)
+    buf.seek(0)
+    with PILImage.open(buf) as im:
+        px_w, px_h = im.size
+    buf.seek(0)
+    return buf, px_w * 72.0 / dpi, px_h * 72.0 / dpi
 
 
 def _plain(text):
@@ -142,9 +173,7 @@ class Note:
         orfaos no pe da pagina, sem depender de espacador com valor magico."""
         self.story.append(PageBreak())
 
-    def eq(self, text, tag=None):
-        """Bloco de equacao: fundo claro, barra de destaque, numero opcional."""
-        inner = Paragraph(text, self.s_eq)
+    def _eq_box(self, inner, tag):
         if tag:
             data, widths = [[inner, Paragraph(f"({tag})", self.s_tag)]], [13.1 * cm, 1.6 * cm]
         else:
@@ -154,11 +183,68 @@ class Note:
             ("BACKGROUND", (0, 0), (0, -1), BOXBG),
             ("LINEBEFORE", (0, 0), (0, -1), 2, ACCENT),
             ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("ALIGN", (0, 0), (0, -1), "CENTER"),
             ("LEFTPADDING", (0, 0), (0, -1), 12),
             ("TOPPADDING", (0, 0), (-1, -1), 7),
             ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
         ]))
         self.story.append(t)
+
+    def eq(self, text, tag=None):
+        """Bloco de equacao em texto simples (Paragraph + entidades HTML):
+        fundo claro, barra de destaque, numero opcional. Serve para simbolo
+        isolado ou substituicao trivial de uma variavel. Para fracao, raiz de
+        expressao, soma/integral ou sub/sobrescrito aninhado, usar eq_tex()."""
+        self._eq_box(Paragraph(text, self.s_eq), tag)
+
+    def eq_tex(self, expr, tag=None, fontsize=15):
+        """Bloco de equacao com tipografia real via mathtext do matplotlib
+        (fontes STIX, casam com Times): fracao com barra, raiz com vinculo,
+        sub/sobrescrito aninhado, somatorio/integral. `expr` em sintaxe
+        LaTeX/mathtext, SEM os `$` delimitadores — ex.:
+        r"K_p = 2\\xi\\omega_n", r"\\sqrt{L_1 L_2 C}",
+        r"\\frac{A}{\\pi\\,\\Delta f\\,T}". Cai para o modo texto (eq()) se a
+        renderizacao falhar (parse invalido, glifo ausente)."""
+        try:
+            buf, w_pt, h_pt = _mathtext_image(expr, fontsize=fontsize)
+            # ao contrario de Paragraph, uma Image nao quebra linha sozinha:
+            # expressao comprida precisa ser reduzida pra caber na coluna.
+            max_w = (12.3 if tag else 13.9) * cm
+            if w_pt > max_w:
+                scale = max_w / w_pt
+                w_pt, h_pt = w_pt * scale, h_pt * scale
+            img = RLImage(buf, width=w_pt, height=h_pt)
+            img.hAlign = "CENTER"
+            inner = img
+        except Exception as exc:
+            print(f"AVISO: eq_tex('{expr}') falhou ({exc!r}) - usando texto plano")
+            inner = Paragraph(expr, self.s_eq)
+        self._eq_box(inner, tag)
+
+    def image(self, path, width_cm=None, caption=None, max_height_cm=9.0):
+        """Insere um PNG/JPG centralizado na coluna util (14.7 cm) — grafico,
+        captura de tela, diagrama exportado. Sem width_cm, ajusta a imagem a
+        essa largura limitada a max_height_cm de altura (o que for mais
+        restritivo). caption opcional aparece abaixo, centrado, como legenda
+        (estilo s_tag, ja usado nos numeros de equacao)."""
+        from PIL import Image as PILImage
+        path = Path(path)
+        with PILImage.open(path) as im:
+            px_w, px_h = im.size
+        aspect = px_h / px_w
+        w = (width_cm or 14.7) * cm
+        h = w * aspect
+        max_h = max_height_cm * cm
+        if h > max_h:
+            h = max_h
+            w = h / aspect
+        img = RLImage(str(path), width=w, height=h)
+        img.hAlign = "CENTER"
+        self.story.append(img)
+        if caption:
+            self.story.append(Spacer(1, 5))
+            self.story.append(Paragraph(caption, self.s_tag))
+        self.gap(10)
 
     def table(self, header, rows, widths):
         """widths em cm; a soma util da coluna de texto e 14.7 cm."""

@@ -315,6 +315,26 @@ n.p("Por isso a <b>checagem normativa roda apenas no dom&#237;nio abc</b>. O esp
     "de interesse nas faltas assim&#233;tricas estudadas no trabalho. O limiar aplicado ali "
     "&#233; emp&#237;rico, extra&#237;do da literatura, e est&#225; identificado como tal na "
     "legenda.")
+n.p("Como consequ&#234;ncia, a tabela <i>dq</i> do dashboard n&#227;o lista as 12 ordens "
+    "como a tabela abc: ela mostra s&#243; os bins onde algo &#233; fisicamente "
+    "atribu&#237;vel &#8212; fundamental refletida ou colis&#227;o de ordens &#8212; e descarta "
+    "o resto, que s&#243; exibiria ru&#237;do de fundo:")
+n.table(["Bin", "Conte&#250;do"],
+        [["0 Hz", "fundamental refletida como DC (ordem 1&#170;, sequ&#234;ncia positiva)"],
+         ["120 Hz", "fundamental refletida em sequ&#234;ncia negativa &#8212; s&#243; sob "
+                    "desequil&#237;brio; &#233; a linha comparada ao limiar de 6.1"],
+         ["180 Hz", "colis&#227;o 2&#170; (seq. negativa) + 4&#170; (seq. positiva)"],
+         ["360 Hz", "colis&#227;o 5&#170; (seq. negativa) + 7&#170; (seq. positiva)"],
+         ["540 Hz", "colis&#227;o 8&#170; (seq. negativa) + 10&#170; (seq. positiva)"],
+         ["720 Hz", "colis&#227;o 11&#170; (seq. negativa) + 13&#170; (seq. positiva)"]],
+        [4.5, 10.2])
+n.gap(4)
+n.p("As demais frequ&#234;ncias da grade de 60 Hz (60, 240, 300, 420, 480, 600 e 660 Hz) "
+    "n&#227;o recebem nem colis&#227;o nem fundamental refletida &#8212; s&#227;o ordens "
+    "m&#250;ltiplas de 3, que se cancelam no fasor espacial, ou bins sem par de "
+    "sequ&#234;ncias opostas caindo ali &#8212; por isso ficam de fora da tabela "
+    "(par&#226;metros <i>_DQ_TABLE_ROWS</i>/<i>_DQ_BIN_ORDERS</i> em "
+    "<i>src/report/renderer.py</i>).")
 
 n.p("<b>6.3 Os segmentos temporais.</b> O espectro &#233; calculado separadamente antes da "
     "falta, durante a falta e depois da elimina&#231;&#227;o. No segmento <b>durante a "

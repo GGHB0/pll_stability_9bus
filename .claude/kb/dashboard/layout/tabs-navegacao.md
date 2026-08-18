@@ -12,7 +12,7 @@ Desde 2026-07-15 as seções de gráficos não são mais empilhadas: uma
 |---|---|---|---|
 | Resumo | `sec-res` | `#cards-area` + `#story-area` (sem gráfico) | `hasRes` (sempre true) |
 | Inversor UFV | `sec-inv` | `fig_inv` | `hasInv` (sempre true) |
-| Sistema 9-Bus | `sec-sys` | `fig_sys` | `hasSys` |
+| Barras de Geração | `sec-sys` | `fig_sys` | `hasSys` |
 | Espectro FFT | `sec-spec` | `fig_spec` ([[espectro-fourier]]) | `hasSpec` |
 
 > Desde 2026-07-24 a aba Resumo **não tem gráfico próprio** — `build_resume`

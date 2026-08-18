@@ -1,5 +1,5 @@
 ﻿"""
-chart.py — Constrói figuras Plotly por seção (Resumo / Inversor / Sistema 9-Bus).
+chart.py — Constrói figuras Plotly por seção (Resumo / Inversor / Barras de Geração).
 
 ChartBuilder.build_sections() → (fig_inv, fig_sys, trace_map_inv, trace_map_sys)
 fig_sys é None se não houver dados disponíveis.

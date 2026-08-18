@@ -22,7 +22,7 @@ o conteúdo integral dessa aba.
 |---|---|---|
 | Severidade do distúrbio | V residual B2 (pu, POC do inversor, vs LVRT), V residual B1/B3 (quando `vbus1_pu`/`vbus3_pu` existem no CSV — propagação do sag; subtítulos "barra do G1 (slack)"/"barra do G3"), Duração da falta (ms, t_fault–t_clear), Topologia (só `line7_8`/`line8_9`, ver abaixo) | Contexto — quão dura foi a falta |
 
-Fonte: `metrics` do [[pipeline-dados]]. Rótulo do grupo vira "Sistema 9-Bus"
+Fonte: `metrics` do [[pipeline-dados]]. Rótulo do grupo vira "Barras de Geração"
 em regime permanente (sem falta a caracterizar).
 
 Cada card: nome, valor (ou "—" se `None`), unidade, subtítulo e tooltip via

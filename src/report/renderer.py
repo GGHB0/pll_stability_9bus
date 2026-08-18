@@ -213,7 +213,7 @@ class HTMLRenderer:
   <div class="tab-bar" id="tab-bar">
     <button class="tab-btn active" id="tab-res"  onclick="switchTab('res')">Resumo</button>
     <button class="tab-btn" id="tab-inv"  onclick="switchTab('inv')">Inversor UFV</button>
-    <button class="tab-btn" id="tab-sys"  onclick="switchTab('sys')">Sistema 9-Bus</button>
+    <button class="tab-btn" id="tab-sys"  onclick="switchTab('sys')">Barras de Geração</button>
     <button class="tab-btn" id="tab-spec" onclick="switchTab('spec')">Espectro FFT</button>
   </div>
 
@@ -232,7 +232,7 @@ class HTMLRenderer:
 
   <div class="chart-section" id="sec-sys" style="display:none">
     <div class="section-header">
-      <span class="section-title">Sistema 9-Bus</span>
+      <span class="section-title">Barras de Geração</span>
       <span class="fault-badge" id="badge-sys"></span>
     </div>
     <div id="plot-sys"></div>
@@ -1303,7 +1303,7 @@ switchScenario(currentKey);
             sev_cards.append(
                 _card("Topologia", topo["val"], topo["unit"], topo["sub"],
                       topo["tip"], "neutral"))
-        sev_label = "Sistema 9-Bus" if is_regime else "Severidade do distúrbio"
+        sev_label = "Barras de Geração" if is_regime else "Severidade do distúrbio"
 
         return _group(sev_label, "".join(sev_cards))
 

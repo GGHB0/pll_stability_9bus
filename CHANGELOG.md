@@ -5,6 +5,24 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-08-17 — Aba "Sistema 9-Bus" renomeada para "Barras de Geração"
+
+Arquivos: `src/report/renderer.py`, `src/pipeline/chart.py`
+
+A pedido do usuário. Três ocorrências do rótulo trocadas:
+
+- Botão da `tab-bar` (`#tab-sys`).
+- Cabeçalho `.section-title` da seção `#sec-sys`.
+- Título do grupo de cards de topologia/severidade na aba Resumo, exibido
+  quando o cenário é regime permanente (`sev_label` em `_group_severidade`,
+  antes idêntico ao nome da aba) — confirmado com o usuário que também
+  deveria mudar, já que reutilizava o mesmo texto.
+
+Comentário de docstring em `chart.py` atualizado por consistência. Nenhuma
+mudança de comportamento — só rótulo. Verificado no browser pane (servido
+via `python -m http.server`): botão, cabeçalho da seção e grupo de cards do
+Resumo (cenário `regime`) todos exibindo "Barras de Geração".
+
 ## 2026-08-11 — Tabela de critérios na legenda da tabela de harmônicas
 
 Arquivos: `src/report/renderer.py`, `scripts/notas/gen_normas_harmonicos.py`

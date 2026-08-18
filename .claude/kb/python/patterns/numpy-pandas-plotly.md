@@ -55,7 +55,7 @@ ts   = float(fora[-1]) if len(fora) else float(t_pf[0])
 ## Subplots Plotly — layout misto (single / pair)
 
 `ChartBuilder.build_sections()` retorna `(fig_inv, fig_sys, tm_inv, tm_sys)` — duas
-figuras separadas (Inversor UFV e Sistema 9-Bus), cada uma com layout de 2 colunas
+figuras separadas (Inversor UFV e Barras de Geração), cada uma com layout de 2 colunas
 onde linhas podem ser full-width (`_S`) ou par lado-a-lado (`_P`, não usado atualmente).
 
 ```python

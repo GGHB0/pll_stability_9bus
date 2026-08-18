@@ -321,12 +321,19 @@ class SpectrumBuilder:
     def _apply_layout(cls, fig: go.Figure, n_rows: int,
                        row_maxes: list[float]) -> None:
         fig.update_xaxes(
-            title_text="Frequência (Hz)", range=[0, SPEC_XRANGE_HZ],
+            title_text="", range=[0, SPEC_XRANGE_HZ],
             gridcolor="#f0f2f5", zerolinecolor="#e5e7eb", tickfont_size=10,
         )
         for ax_name in fig.layout:
             if ax_name.startswith("xaxis") and ax_name != "xaxis":
                 fig.layout[ax_name].matches = "x"
+        # shared_xaxes já esconde os ticks das linhas de cima (só a de baixo
+        # mostra números), mas o TÍTULO do eixo x é setado por linha e não
+        # some sozinho com os ticks — sobrando "Frequência (Hz)" de cada
+        # painel de cima bem no vão estreito antes da barra de título do
+        # painel seguinte (colisão visual). Título só na última linha.
+        last_ax = "xaxis" if n_rows == 1 else f"xaxis{n_rows}"
+        fig.layout[last_ax].title.text = "Frequência (Hz)"
         fig.update_yaxes(
             title_text="Amplitude (pu)", title_font_size=11,
             gridcolor="#f0f2f5", zerolinecolor="#e5e7eb",

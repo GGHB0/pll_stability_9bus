@@ -135,6 +135,19 @@ ambos em settings.py.
   canto com "— amplitude (pu)" no texto (redundante com o eixo Y).
   `vertical_spacing` subiu p/ 0.13, margem `l=64`/`t=64`, legenda subiu p/
   `y=1.22` para não colidir com a barra. Ver [[construcao-graficos]].
+- **Título "Frequência (Hz)" só na última linha** (2026-08-18): `_apply_layout`
+  chamava `fig.update_xaxes(title_text=...)` sem filtro de linha, então TODO
+  eixo x (inclusive o da linha de corrente, em cima) ganhava o título — mesmo
+  com `shared_xaxes=True` escondendo os números do eixo de cima, o **título**
+  não some sozinho junto com os ticks (é propriedade independente). O título
+  da linha de cima caía exatamente no vão estreito antes da barra azul da
+  linha de baixo (mesmo espaço calculado pra caber só a barra), colidindo
+  visualmente com "Tensão v̂ₐ UFV (abc)". Fix: `title_text=""` no
+  `update_xaxes` geral, depois `fig.layout[last_ax].title.text =
+  "Frequência (Hz)"` só no eixo da última linha (`last_ax = "xaxis"` se
+  `n_rows==1` senão `f"xaxis{n_rows}"`). Confirmado no browser pane
+  (`gd._fullLayout.xaxis.title.text === ""` / `xaxis2.title.text ===
+  "Frequência (Hz)"`).
 - Legenda única horizontal no topo (`legendgroup` por segmento).
 - Renderizado sob demanda ao abrir a aba ([[tabs-navegacao]]); zoom na falta
   não afeta o espectro (`_applyZoom` só toca res/inv/sys).

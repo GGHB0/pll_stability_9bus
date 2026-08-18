@@ -5,6 +5,29 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-08-18 — Fix: título do eixo X do espectro FFT sobrepondo painel abaixo
+
+Arquivos: `src/pipeline/spectrum.py`
+
+Bug reportado pelo usuário: no painel de espectro FFT (abc), quando o modo
+tem 2 linhas (corrente + tensão), o texto "Frequência (Hz)" do eixo x da
+linha de cima (corrente) aparecia sobreposto à barra de título azul da linha
+de baixo ("Tensão v̂ₐ UFV (abc)").
+
+Causa: `_apply_layout` setava `title_text="Frequência (Hz)"` via
+`fig.update_xaxes(...)` sem filtrar por linha — `shared_xaxes=True` já
+esconde os números do eixo de cima, mas não some com o **título** do eixo
+(propriedade independente dos ticks), que ficava caindo no vão estreito
+reservado só para a barra de título da linha seguinte.
+
+Fix: título em branco no `update_xaxes` geral; "Frequência (Hz)" setado só
+no eixo x da última linha (`fig.layout[last_ax].title.text`). Verificado
+regenerando os 30 cenários (sem exceptions) e inspecionando
+`gd._fullLayout` no browser pane (servido via `python -m http.server`):
+`xaxis.title.text === ""` / `xaxis2.title.text === "Frequência (Hz)"` no
+modo `a` do cenário `bus4/1phase`; posição das duas barras de título
+("Corrente"/"Tensão") sem sobreposição no DOM.
+
 ## 2026-08-17 — Aba "Sistema 9-Bus" renomeada para "Barras de Geração"
 
 Arquivos: `src/report/renderer.py`, `src/pipeline/chart.py`
@@ -120,46 +143,11 @@ Duas divergências normativas levantadas na leitura integral das duas normas
 - Verificado: `app.py` roda os 26 cenários; HTML traz 96 marcações `*` no
   cabeçalho e 307 tooltips citando a nota 118.
 
-## 2026-08-09 — Remoção dos cards de erro de ângulo (grupo "Desempenho do PLL")
-
-Arquivos: `src/report/renderer.py`, `src/pipeline/loader.py`,
-`src/config/settings.py`, `src/config/__init__.py`,
-`notebooks/dashboard_cards_explainer.ipynb`
-
-- A pedido do usuário: **não foi encontrada fonte que comprove** que acúmulo
-  (IAE/ISE), média (Erro R.P.) e pico do erro de ângulo `θ̂ − θ_rede` medem
-  desempenho do PLL. Sem base bibliográfica os números não podem ir para o
-  TCC nem sustentar um veredito, então o grupo inteiro saiu do relatório.
-- `renderer.py`: `_cards_html` perde os 5 cards e o `_group("Desempenho do
-  PLL", ...)` — resta só o grupo de severidade. `_table_row_data` e o
-  cabeçalho/JS da tabela comparativa perdem as colunas `iae`/`ise`/`ts`/
-  `peak` (sobram as 3 de tensão). `_story_html` perde os itens "Pico de
-  fase", "Acomodação", "Erro de regime" e "Erro acumulado" **e o chip de
-  veredito** (era calculado só com essas métricas); o bloco passa a ser
-  sempre `neutral` e o título vira "Contexto do cenário" / "Contexto —
-  regime permanente" (era "Diagnóstico pós-falta"). CSS `.story-verdict` e
-  `.story.good/.warn/.bad` removidos.
-- `settings.py`/`config/__init__.py`: `IAE_THRESH`, `ISE_THRESH`,
-  `TS_DELTA_THRESH`, `PEAK_ERR_DEG_THRESH`, `ERR_SS_DEG_THRESH` e
-  `SYNC_LOSS_DEG` deletados. `VBUS_AVG_THRESH` é o único threshold restante.
-- `loader.py`: `_compute_metrics` deixa de calcular `IAE`, `ISE`,
-  `peak_err`, `ts_delta`, `t_ss`, `err_ss_mean`, `err_ss_rms`.
-- **`ts`/`settled` ficaram** (decisão explícita do usuário): o instante de
-  acomodação importa porque interessa saber *como o PLL retorna pós-falta*.
-  O painel "Erro de fase", a faixa ±1,15° e o marcador tₛ seguem intactos —
-  só a exibição como card com semáforo saiu. O critério de ±0,02 rad em si
-  fica para revisão numa sessão futura.
-- Notebook explainer: seções 4.1/4.2/4.4/4.5 removidas, 4.3 (tₛ) virou a
-  seção 4, recorte `_t_pf`/`_e_pf` movido para a seção 3, verificação
-  cruzada reduzida ao `ts`. Reexecutado: 32 células, todas OK (`ts` manual =
-  `0.49723` = valor de produção).
-- Verificado: `app.py` roda os 26 cenários; no HTML gerado restam só os
-  cards de severidade (V médio/residual B1-B3, Duração, Topologia), 4
-  colunas na tabela comparativa e o story com "Distúrbio"/"Cenário" +
-  "Topologia"; 13 marcadores tₛ preservados nos gráficos.
-
 ## Entradas anteriores
 
+- [2026-08-09](docs/changelog/2026-08-09.md) — remoção dos cards de erro de
+  ângulo (grupo "Desempenho do PLL": IAE/ISE/tₛ/pico/Erro R.P.), sem base
+  bibliográfica que os sustentasse como métrica de desempenho.
 - [2026-08-05](docs/changelog/2026-08-05.md) — linha de 0 Hz (fundamental em
   DC) na tabela dq, tabela de harmônicas separada em abc e dq.
 - [2026-08-03](docs/changelog/2026-08-03.md) — card e item de diagnóstico

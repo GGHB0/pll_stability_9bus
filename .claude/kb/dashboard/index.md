@@ -23,6 +23,7 @@ Histórico de mudanças por commit: `CHANGELOG.md` na raiz do repo.
 | `layout/` | [dark-mode-legend-title-fixes.md](layout/dark-mode-legend-title-fixes.md) | Continuação: Fix 4 (legenda invisível) e Fix 5 (barra de título re-temada por engano) |
 | `layout/` | [header-branding.md](layout/header-branding.md) | Logo UERJ base64, regra de label de toggle |
 | `layout/` | [bad-pll-dashboard-filter.md](layout/bad-pll-dashboard-filter.md) | Toggle PLL nominal/sintonia inadequada |
+| `layout/` | [bad-pll-select-init-bug.md](layout/bad-pll-select-init-bug.md) | Bug corrigido: filtro do select não aplicado na carga inicial (fix 2026-08-18) |
 
 ## Visão geral do fluxo
 

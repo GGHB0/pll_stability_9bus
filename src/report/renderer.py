@@ -832,7 +832,7 @@ function toggleTheme() {{
   document.getElementById("lbl").textContent = isDark ? "Light mode" : "Dark mode";
 }}
 
-switchScenario(currentKey);
+setPllMode(pllMode);
 </script>
 
 </body>

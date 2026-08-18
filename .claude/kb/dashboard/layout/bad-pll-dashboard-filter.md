@@ -182,3 +182,6 @@ function selectLocation(loc, el) {
 | BAD_PLL=true, cenário equivalente existe | Troca diretamente para o equivalente |
 | BAD_PLL=true, sem equivalente | Salta para o 1° cenário do modo |
 | Clique no SVG no modo "bad" | Tooltip lista apenas os `_bad_pll` daquele local |
+
+> Bug conhecido de inicialização do filtro do `<select>` (fix 2026-08-18):
+> ver [[bad-pll-select-init-bug]].

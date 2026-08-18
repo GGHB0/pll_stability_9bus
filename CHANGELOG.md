@@ -5,6 +5,34 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-08-18 — Fix: filtro do toggle PLL não aplicado na carga inicial do HTML
+
+Arquivos: `src/report/renderer.py`
+
+Bug reportado pelo usuário: ao abrir o HTML pela primeira vez, com o toggle
+"Nominal" ativo, o `<select>` de cenário mostrava (e permitia abrir) todos
+os casos de sintonia inadequada (`_bad_pll`) também. Só depois de alternar
+manualmente para "Sintonia inadequada" e voltar para "Nominal" é que o
+filtro passava a funcionar corretamente.
+
+Causa: o script de inicialização só chamava `switchScenario(currentKey)` no
+final da página — nunca `setPllMode(pllMode)`. A filtragem das `<option>`
+do `<select>` (`opt.hidden = ...`) só acontece dentro de `setPllMode`, então
+nunca rodava na carga inicial, mesmo com a variável `pllMode` já valendo
+`"nominal"` e o botão correspondente marcado como ativo.
+
+Fix: trocado `switchScenario(currentKey);` por `setPllMode(pllMode);` na
+inicialização (linha final do `<script>`). `setPllMode("nominal")` já
+reencontra o cenário equivalente (o próprio `currentKey`, pois os cenários
+nominais vêm primeiro na ordenação) e chama `switchScenario` internamente,
+então o cenário inicial exibido não muda — só passa a aplicar o filtro do
+`<select>` desde o primeiro carregamento.
+
+Verificado no browser pane (via `http.server` local): na carga inicial,
+30 opções totais, 22 visíveis, 0 `_bad_pll` visíveis (as 8 corretamente
+ocultas). Alternância manual "Sintonia inadequada" ↔ "Nominal" continua
+funcionando nos dois sentidos.
+
 ## 2026-08-18 — Fix: título do eixo X do espectro FFT sobrepondo painel abaixo
 
 Arquivos: `src/pipeline/spectrum.py`

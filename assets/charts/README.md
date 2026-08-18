@@ -7,26 +7,52 @@ Plotly usado no dashboard — destinados a figuras estáticas do TCC.
 
 Gerados com **matplotlib** (`svg.fonttype: none`, texto permanece editável no
 SVG), usando a paleta de cores do projeto (`src/config/settings.py`,
-`LIGHT_COLORS`) e as mesmas convenções do dashboard (ex.: `T_SETTLE`).
+`LIGHT_COLORS`) e as mesmas convenções de série do dashboard.
+`scripts/gen_regime_waveforms.py` gera os dois cenários abaixo de uma vez.
 
-Todos os gráficos abaixo vêm do cenário `regime` (regime permanente, sem
-falta, PLL nominal) e são gerados por `scripts/gen_regime_waveforms.py`.
+## Cenário `regime` — PLL nominal (regime permanente, sem falta)
 
 | Arquivo | Conteúdo | Janela |
 |---|---|---|
 | `regime_correntes_abc.svg` / `.png` | Correntes trifásicas do inversor (`i_a, i_b, i_c`) | 0,55–0,60 s (3 ciclos) |
 | `regime_tensoes_abc.svg` / `.png` | Tensões trifásicas do inversor (`v_a, v_b, v_c`) | 0,55–0,60 s (3 ciclos) |
 | `regime_potencia_pq.svg` / `.png` | Potência ativa e reativa do inversor (`P, Q`) | 0–0,6 s completo |
-| `regime_corrente_dq.svg` / `.png` | Corrente no referencial dq, medida (sólido) + referência (tracejado) — `i_d, i_q` | 0–0,6 s completo |
-| `regime_tensao_dq.svg` / `.png` | Tensão no referencial dq, Rede (sólido) + Inversor (pontilhado) — `v_d, v_q` | 0–0,6 s completo |
+| `regime_corrente_dq.svg` / `.png` | Corrente dq, medida (sólido) + referência (tracejado) — `i_d, i_q` | 0–0,6 s completo |
+| `regime_tensao_dq.svg` / `.png` | Tensão dq, Rede (sólido) + Inversor (pontilhado) — `v_d, v_q` | 0–0,6 s completo |
 
-Todos com marcador do transitório de partida (`T_settle = 0,1 s`, excluído de
-todo cálculo do dashboard) exceto os dois em janela zoomada, que já começam
-bem depois dele. Convenções de série (medido vs. ref, Rede vs. Inversor)
-seguem `src/pipeline/chart.py` (`kind="dq_combined"`/`"vdq_combined"`).
+Marcador de assentamento: `T_settle = 0,1 s` (constante oficial do dashboard,
+`src/config/settings.py`, excluída de todo cálculo).
 
-Fonte de dados: `output/results/regime/sim_data.csv` (P, Q, dq) e
+Fonte: `output/results/regime/sim_data.csv` (P, Q, dq) e
 `output/results/regime/sim_data_abc.csv` (abc).
+
+## Cenário `regime_bad_pll` — sintonia inadequada (Kp/Ki_pll ×0,2)
+
+| Arquivo | Conteúdo | Janela |
+|---|---|---|
+| `regime_bad_pll_correntes_abc.svg` / `.png` | Correntes trifásicas do inversor | 0,95–1,00 s (3 ciclos) |
+| `regime_bad_pll_tensoes_abc.svg` / `.png` | Tensões trifásicas do inversor | 0,95–1,00 s (3 ciclos) |
+| `regime_bad_pll_potencia_pq.svg` / `.png` | Potência ativa e reativa (`P, Q`) | 0–1,0 s completo |
+| `regime_bad_pll_corrente_dq.svg` / `.png` | Corrente dq, medida + referência | 0–1,0 s completo |
+| `regime_bad_pll_tensao_dq.svg` / `.png` | Tensão dq, Rede + Inversor | 0–1,0 s completo |
+
+Com ξ = 0,316 (vs. 0,707 nominal) o transitório de energização é muito mais
+lento e oscilatório — visível na P/Q e na corrente/tensão dq oscilando bem
+acima do valor final por ~0,5 s antes de convergir. Marcador de assentamento
+aqui é **empírico** (`≈ 0,55 s`, última vez que P/Q se afastam >0,08 pu do
+valor final), não o `T_SETTLE` global do dashboard — este último foi medido
+só para o caso nominal e não vale pra esta sintonia. Motivo do intervalo
+completo ir a 1,0 s (não 0,6 s como o nominal): mesma convenção temporal dos
+cenários com sintonia inadequada, ver `.claude/kb/simulation/cenarios_simulados.md`.
+
+Fonte: `output/results/regime_bad_pll/sim_data.csv` e `sim_data_abc.csv`.
+
+## Convenções de série (todos os gráficos)
+
+Seguem `src/pipeline/chart.py` (`kind="dq_combined"`/`"vdq_combined"`):
+corrente dq = medido sólido + referência tracejada; tensão dq = Rede sólido +
+Inversor pontilhado (praticamente sobrepostos em regime permanente — não há
+falta, PCC ≈ tensão de rede).
 
 ## Gerar / regenerar
 
@@ -36,4 +62,4 @@ Fonte de dados: `output/results/regime/sim_data.csv` (P, Q, dq) e
 ```
 
 Reproduzível sempre que os dados de simulação forem atualizados (regera os
-5 arquivos de uma vez).
+10 arquivos dos dois cenários de uma vez).

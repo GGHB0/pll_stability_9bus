@@ -1,7 +1,7 @@
 ---
 name: svg-diagrams
-description: Cria qualquer SVG do projeto (diagramas, esquemáticos, curvas de norma, banners, ilustrações para README/KB/TCC) e exporta para PNG. Ativar sempre que o usuário pedir para criar/desenhar/gerar/ajustar um SVG, PNG, diagrama, esquemático, figura, banner ou ilustração — mesmo sem mencionar o formato (ex.: "precisa de uma figura do circuito do filtro LCL", "desenha o esquemático do VSI", "cria a curva do ONS", "atualiza o banner"). Também usar para converter um SVG existente do repositório em PNG.
-version: 1.3.0
+description: Cria qualquer SVG do projeto (diagramas, esquemáticos, curvas de norma, banners, ilustrações para README/KB/TCC) e exporta para PNG. Ativar sempre que o usuário pedir para criar/desenhar/gerar/ajustar um SVG, PNG, diagrama, esquemático, figura, banner ou ilustração — mesmo sem mencionar o formato (ex.: "precisa de uma figura do circuito do filtro LCL", "desenha o esquemático do VSI", "cria a curva do ONS", "atualiza o banner"). Também cobre gráficos com dados reais de simulação (waveforms, séries temporais do dashboard) para o TCC — ver seção "Gráficos de Dados Reais". Também usar para converter um SVG existente do repositório em PNG.
+version: 1.4.0
 ---
 
 # SVG Diagrams — Skill de Criação de Figuras e Exportação PNG
@@ -17,6 +17,24 @@ gerais (banner etc.). Na dúvida sobre o destino, pergunte.
 Antes de desenhar, olhe 1-2 SVGs existentes em `assets/diagrams/` (ex.:
 `pll_system_circuit.svg`, `vsi_grid_schematic.svg`) para absorver o estilo real,
 não só a tabela abaixo.
+
+## Gráficos de Dados Reais (não desenhados à mão)
+
+Para gráfico plotando **dados reais de simulação** (correntes/tensões abc,
+dq, P/Q, séries temporais de `output/results/*/sim_data*.csv`) — não desenhar
+o SVG à mão. Usar **matplotlib** direto do CSV (`svg.fonttype: "none"` p/
+manter texto editável), com a paleta de `src/config/settings.py`
+(`LIGHT_COLORS`) e as convenções de série do dashboard (`src/pipeline/chart.py`:
+medido sólido + ref tracejado; Rede sólido + Inversor pontilhado). `savefig`
+gera SVG **e** PNG direto — dispensa o workflow de rasterização via browser
+abaixo, que é só para SVG desenhado à mão.
+
+Destino: `assets/charts/` (não `assets/diagrams/`), um SVG por gráfico
+(não empacotar vários painéis numa figura só, a menos que pedido). Script
+gerador versionado em `scripts/gen_<nome>.py`, reproduzível a cada
+re-simulação. Ver `assets/charts/README.md` e `scripts/gen_regime_waveforms.py`
+como referência de estilo (legenda com fundo branco fora das curvas,
+`T_SETTLE` sombreado, título com `pad` quando a legenda fica acima do eixo).
 
 ## Convenção Visual
 

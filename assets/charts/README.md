@@ -5,9 +5,12 @@ puro), esta pasta guarda **gráficos gerados a partir dos dados reais de
 simulação** (`output/results/*/sim_data*.csv`), sem o layout interativo do
 Plotly usado no dashboard — destinados a figuras estáticas do TCC.
 
-Gerados com **matplotlib** (`svg.fonttype: none`, texto permanece editável no
-SVG), usando a paleta de cores do projeto (`src/config/settings.py`,
-`LIGHT_COLORS`) e as mesmas convenções de série do dashboard.
+Gerados com **matplotlib** (`svg.fonttype: path`, glifos viram contorno
+vetorial no SVG — texto não é mais selecionável/editável, mas renderiza
+identico em qualquer visualizador; `none` foi tentado antes e quebrava o
+espaçamento de rótulos com subscrito, ver seção de convenções abaixo), usando
+a paleta de cores do projeto (`src/config/settings.py`, `LIGHT_COLORS`) e as
+mesmas convenções de série do dashboard.
 `scripts/gen_regime_waveforms.py` gera os dois cenários abaixo de uma vez.
 
 ## Cenário `regime` — PLL nominal (regime permanente, sem falta)
@@ -54,18 +57,29 @@ corrente dq = medido sólido + referência tracejada; tensão dq = Rede sólido 
 Inversor pontilhado (praticamente sobrepostos em regime permanente — não há
 falta, PCC ≈ tensão de rede).
 
-**Padrão de cor/z-order do par medido↔alvo** (corrente dq e tensão dq):
-a curva "alvo" de cada par (referência em corrente dq; Rede em tensão dq) usa
+**Padrão de cor/z-order do par medido↔alvo** (corrente dq e tensão dq): a
+curva "alvo" de cada par (referência em corrente dq; Rede em tensão dq) usa
 um tom mais escuro/saturado da mesma cor-base (`AZUL_REF #1d4ed8` /
-`VERMELHO_REF #b91c1c` em `scripts/gen_regime_waveforms.py`) para se destacar
-sobre a medida. Em corrente dq isso já é suficiente porque as curvas se
-separam visivelmente no transitório. Em tensão dq, como Rede e Inversor quase
-coincidem o tempo todo, a cor sozinha não bastava: o traço pontilhado do
-Inversor precisa ficar **por cima** (zorder maior) para suas lacunas
-revelarem o traço sólido por baixo, e usa cinza-ardósia neutro
-(`CINZA_MEDIDO #334155`) em vez de um tom do próprio azul/vermelho — duas
-tonalidades da mesma cor não geram contraste suficiente quando uma cobre a
-outra quase por completo.
+`VERMELHO_REF #b91c1c` em `scripts/gen_regime_waveforms.py`), desenhada
+**primeiro** (zorder menor); a curva secundária (medido/Inversor) é
+tracejada/pontilhada e desenhada **por cima** (zorder maior), para suas
+lacunas revelarem o traço sólido por baixo.
+
+A cor da curva secundária depende de quanto ela já se distingue por forma:
+- **Mesma cor-base, mais clara** (`AZUL`/`VERMELHO`) quando a curva já tem
+  ondulação própria visível (corrente dq inteira; `v_q` em tensão dq) — o
+  traço/pontilhado sozinho já separa as duas, e usar a mesma família de cor
+  evita que a sobreposição densa vire uma mancha de alto contraste.
+- **Cinza-ardósia neutro** (`CINZA_MEDIDO #334155`) só onde as curvas ficam
+  quase idênticas o tempo todo, sem ondulação própria que as separe (`v_d`
+  em tensão dq, que fica colado em ~1,0 pu) — aí duas tonalidades da mesma
+  cor não bastam, é preciso um tom de família diferente para o olho pegar o
+  traço por cima.
+
+Os dados de `sim_data.csv` vêm a 5 µs (~120 mil pontos em 0,6-1,0 s); P/Q e
+corrente/tensão dq são decimados para ~4 000 pontos antes de plotar (mesmo
+teto do dashboard, `_MAX_POINTS` em `src/pipeline/chart.py`) para não
+sobrepor dezenas de amostras por pixel.
 
 ## Gerar / regenerar
 

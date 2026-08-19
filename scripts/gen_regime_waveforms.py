@@ -35,12 +35,17 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 # ── paleta do projeto (src/config/settings.py, LIGHT_COLORS) ────────────────
 AZUL, VERMELHO, VERDE, LARANJA = "#2563eb", "#dc2626", "#16a34a", "#ea580c"
 # tons mais saturados/escuros -- usados na serie "alvo" de cada par medido/alvo
-# (referencia em corrente dq, Rede em tensao dq), sempre desenhada por cima
-# (zorder maior) do medido/Inversor para destaca-la -- ver assets/charts/README.md
+# (referencia em corrente dq, Rede em tensao dq), sempre desenhada primeiro
+# (zorder menor); a secundaria (medido/Inversor) e tracejada/pontilhada e
+# desenhada por cima, para suas lacunas revelarem o traco solido por baixo
+# -- ver assets/charts/README.md
 AZUL_REF, VERMELHO_REF = "#1d4ed8", "#b91c1c"
-# cinza neutro p/ a serie "medido" quando ela precisa ficar por cima (pontilhada)
-# de uma serie quase coincidente -- azul/vermelho mais claro nao rende contraste
-# suficiente contra o proprio azul/vermelho escuro por baixo (ver tensao dq)
+# cinza neutro p/ a serie secundaria SO quando ela fica quase identica a
+# principal o tempo todo, sem ondulacao propria que as separe (caso de v_d
+# em tensao dq) -- aí duas tonalidades da mesma cor nao bastam. Quando ja ha
+# ondulacao visivel (corrente dq inteira, v_q em tensao dq), usa-se AZUL/
+# VERMELHO (mais claro que AZUL_REF/VERMELHO_REF) em vez de cinza, pra nao
+# criar uma mancha de alto contraste onde o traco denso se sobrepoe.
 CINZA_MEDIDO = "#334155"
 NAVY = "#0B132B"
 GRID_COLOR = "#e2e8f0"
@@ -56,7 +61,13 @@ plt.rcParams.update({
     "ytick.color": "#334155",
     "axes.titlesize": 11,
     "axes.titleweight": "bold",
-    "svg.fonttype": "none",   # mantem texto editavel no SVG (nao vira path)
+    # "path": glifos viram contorno vetorial no SVG. Foi "none" (texto editavel)
+    # antes, mas mathtext (subscritos $v_d$ etc.) exporta cada glifo com x fixo
+    # e font-family sem fallback -- se o visualizador nao tiver a fonte exata
+    # instalada (raro fora do matplotlib), as letras "esticam". "path" elimina
+    # a dependencia de fonte por completo (sempre renderiza identico), ao custo
+    # de o texto nao ser mais selecionavel/editavel dentro do SVG.
+    "svg.fonttype": "path",
 })
 
 LEGEND_KW = dict(frameon=True, facecolor="white", edgecolor="none", framealpha=0.9)
@@ -65,7 +76,7 @@ fase_cores = [("Fase a", AZUL), ("Fase b", VERMELHO), ("Fase c", VERDE)]
 SCENARIOS = [
     dict(folder="regime", prefix="regime", t_end=0.6, window=(0.55, 0.60),
          settle_t=0.1, title_suffix=" -- regime permanente",
-         settle_label="transitório de partida excluído dos cálculos\n(T_settle = 0,1 s)"),
+         settle_label="transitório de partida excluído dos cálculos\n(T$_{settle}$ = 0,1 s)"),
     dict(folder="regime_bad_pll", prefix="regime_bad_pll", t_end=1.0, window=(0.95, 1.00),
          settle_t=0.55, title_suffix=" -- sintonia inadequada",
          settle_label="assentamento mais lento (sintonia inadequada)\n≈0,55 s vs 0,1 s no caso nominal"),
@@ -109,12 +120,21 @@ def mark_settle(ax, settle_t, label):
 
 
 def gen_scenario(sc):
-    d_pq = pd.read_csv(ROOT / f"output/results/{sc['folder']}/sim_data.csv")
+    d_pq_full = pd.read_csv(ROOT / f"output/results/{sc['folder']}/sim_data.csv")
     d_abc = pd.read_csv(ROOT / f"output/results/{sc['folder']}/sim_data_abc.csv")
     t0, t1 = sc["window"]
     win = d_abc[(d_abc.t_s >= t0) & (d_abc.t_s <= t1)].iloc[::8].copy()
     win["t_ms"] = win.t_s * 1000
     prefix, suf, t_end = sc["prefix"], sc["title_suffix"], sc["t_end"]
+
+    # sim_data.csv vem a 5 us (dt do export, ver kb/simulation/export_workflow.md)
+    # -- 120 mil amostras numa janela de 0,6-1,0 s plotadas em ~430px de largura
+    # da ~280 amostras/pixel, e o traco vira uma mancha solida (visivel sobretudo
+    # em v_q, cuja faixa de variacao e pequena). Decima para ~4000 pontos, igual
+    # ao teto do dashboard (_MAX_POINTS, src/pipeline/chart.py) -- preserva a
+    # forma da ondulacao sem sobrepor dezenas de amostras por pixel.
+    stride = max(1, len(d_pq_full) // 4000)
+    d_pq = d_pq_full.iloc[::stride].copy()
 
     # 1. correntes abc -------------------------------------------------
     fig, ax = new_fig()
@@ -166,7 +186,7 @@ def gen_scenario(sc):
     ax.set_xlim(0, t_end)
     mark_settle(ax, sc["settle_t"], sc["settle_label"])
     ax.legend([ln_id, ln_idr, ln_iq, ln_iqr],
-              ["i_d med.", "i_d ref.", "i_q med.", "i_q ref."],
+              [r"$i_d$ med.", r"$i_d$ ref.", r"$i_q$ med.", r"$i_q$ ref."],
               loc="lower right", ncol=2, fontsize=9, **LEGEND_KW)
     save(fig, f"{prefix}_corrente_dq")
 
@@ -175,7 +195,11 @@ def gen_scenario(sc):
     ln_vdr = ax.plot(d_pq.t_s, d_pq.vd_rede_pu, color=AZUL_REF, linewidth=0.8, zorder=2)[0]
     ln_vqr = ax.plot(d_pq.t_s, d_pq.vq_rede_pu, color=VERMELHO_REF, linewidth=0.8, zorder=2)[0]
     ln_vdi = ax.plot(d_pq.t_s, d_pq.vd_ufv_pu, color=CINZA_MEDIDO, linewidth=0.55, linestyle=":", zorder=3)[0]
-    ln_vqi = ax.plot(d_pq.t_s, d_pq.vq_ufv_pu, color=CINZA_MEDIDO, linewidth=0.55, linestyle=(0, (1, 1.4)), zorder=3)[0]
+    # v_q usa o MESMO tom (vermelho claro, nao cinza) que id/iq -- diferente de
+    # v_d, v_q ja tem ondulacao propria visivel (ver corrente dq), entao o
+    # contraste de cor extra do cinza so acrescentava uma mancha escura sobre
+    # o vermelho sem ajudar a leitura (ver assets/charts/README.md)
+    ln_vqi = ax.plot(d_pq.t_s, d_pq.vq_ufv_pu, color=VERMELHO, linewidth=0.6, linestyle="--", zorder=3)[0]
     style_axes(ax)
     ax.axhline(0.0, color="#94a3b8", linewidth=1.0, linestyle=":", zorder=0)
     ax.set_ylabel("Tensão (pu)")
@@ -184,7 +208,7 @@ def gen_scenario(sc):
     ax.set_xlim(0, t_end)
     mark_settle(ax, sc["settle_t"], sc["settle_label"])
     ax.legend([ln_vdr, ln_vqr, ln_vdi, ln_vqi],
-              ["v_d Rede", "v_q Rede", "v_d Inversor", "v_q Inversor"],
+              [r"$v_d$ Rede", r"$v_q$ Rede", r"$v_d$ Inversor", r"$v_q$ Inversor"],
               loc="lower right", ncol=2, fontsize=9, **LEGEND_KW)
     save(fig, f"{prefix}_tensao_dq")
 

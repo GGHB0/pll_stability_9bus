@@ -25,6 +25,7 @@ gerador de figura, nao pelo pipeline principal do dashboard).
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from pathlib import Path
 
@@ -112,6 +113,41 @@ def save(fig, name):
     print("OK", svg_path)
 
 
+def decimate_envelope(t, y, target_points=4000):
+    """Decimacao por envelope (min+max por bin) em vez de subamostragem
+    ingenua (pegar 1 a cada N amostras). Sinais com ondulacao mais rapida que
+    a taxa decimada -- caso do batimento em v_q/v_d durante a "barriga" de
+    sintonia inadequada -- aliasavam em zigue-zague artificial quando so 1
+    amostra por bin sobrevivia (pontos escolhidos caiam em fases aleatorias
+    da oscilacao real). Manter o min E o max de cada bin preserva o envelope
+    verdadeiro sem cortar picos nem inventar ruido; em trechos suaves (sem
+    ondulacao dentro do bin) degrada para o mesmo efeito de 1 amostra por
+    bin, sem alargar a linha -- ver assets/charts/README.md.
+    """
+    t = np.asarray(t)
+    y = np.asarray(y)
+    n = len(y)
+    n_bins = max(1, target_points // 2)
+    bin_size = n // n_bins
+    if bin_size < 2:
+        return t, y
+    n_used = n_bins * bin_size
+    t_b = t[:n_used].reshape(n_bins, bin_size)
+    y_b = y[:n_used].reshape(n_bins, bin_size)
+    rows = np.arange(n_bins)
+    imin = np.argmin(y_b, axis=1)
+    imax = np.argmax(y_b, axis=1)
+    t_min, y_min = t_b[rows, imin], y_b[rows, imin]
+    t_max, y_max = t_b[rows, imax], y_b[rows, imax]
+    swap = imin > imax  # mantem ordem cronologica dentro do bin
+    t_lo, y_lo = np.where(swap, t_max, t_min), np.where(swap, y_max, y_min)
+    t_hi, y_hi = np.where(swap, t_min, t_max), np.where(swap, y_min, y_max)
+    t_out, y_out = np.empty(n_bins * 2), np.empty(n_bins * 2)
+    t_out[0::2], t_out[1::2] = t_lo, t_hi
+    y_out[0::2], y_out[1::2] = y_lo, y_hi
+    return t_out, y_out
+
+
 def mark_settle(ax, settle_t, label):
     ax.axvspan(0, settle_t, color="#94a3b8", alpha=0.15, zorder=0)
     ax.axvline(settle_t, color="#94a3b8", linewidth=1.0, linestyle="--", zorder=1)
@@ -129,12 +165,18 @@ def gen_scenario(sc):
 
     # sim_data.csv vem a 5 us (dt do export, ver kb/simulation/export_workflow.md)
     # -- 120 mil amostras numa janela de 0,6-1,0 s plotadas em ~430px de largura
-    # da ~280 amostras/pixel, e o traco vira uma mancha solida (visivel sobretudo
-    # em v_q, cuja faixa de variacao e pequena). Decima para ~4000 pontos, igual
-    # ao teto do dashboard (_MAX_POINTS, src/pipeline/chart.py) -- preserva a
-    # forma da ondulacao sem sobrepor dezenas de amostras por pixel.
-    stride = max(1, len(d_pq_full) // 4000)
-    d_pq = d_pq_full.iloc[::stride].copy()
+    # da ~280 amostras/pixel. Decima por envelope (min+max por bin, ver
+    # decimate_envelope acima) para ~4000 pontos/traco, igual ao teto do
+    # dashboard (_MAX_POINTS, src/pipeline/chart.py), mas cada coluna e
+    # decimada independentemente -- um stride unico por linha do CSV (como
+    # antes) escolhe a MESMA fase de amostragem p/ todo mundo, o que aliasa
+    # em zigue-zague qualquer coluna cuja ondulacao seja mais rapida que a
+    # taxa decimada (visivel sobretudo em v_q durante a "barriga" de batimento
+    # da sintonia inadequada).
+    t_full = d_pq_full.t_s.values
+
+    def dec(col):
+        return decimate_envelope(t_full, d_pq_full[col].values)
 
     # 1. correntes abc -------------------------------------------------
     fig, ax = new_fig()
@@ -162,8 +204,10 @@ def gen_scenario(sc):
 
     # 3. potencia P/Q ---------------------------------------------------
     fig, ax = new_fig()
-    ax.plot(d_pq.t_s, d_pq.P_ufv_pu, color=AZUL, linewidth=1.2, label="P")
-    ax.plot(d_pq.t_s, d_pq.Q_ufv_pu, color=LARANJA, linewidth=1.2, label="Q")
+    t_p, y_p = dec("P_ufv_pu")
+    t_q, y_q = dec("Q_ufv_pu")
+    ax.plot(t_p, y_p, color=AZUL, linewidth=1.2, label="P")
+    ax.plot(t_q, y_q, color=LARANJA, linewidth=1.2, label="Q")
     style_axes(ax)
     ax.set_ylabel("Potência (pu)")
     ax.set_xlabel("Tempo (s)")
@@ -175,10 +219,10 @@ def gen_scenario(sc):
 
     # 4. corrente dq ------------------------------------------------------
     fig, ax = new_fig()
-    ln_id  = ax.plot(d_pq.t_s, d_pq.id_ufv_pu, color=AZUL, linewidth=0.6, zorder=2)[0]
-    ln_idr = ax.plot(d_pq.t_s, d_pq.id_ufv_ref_pu, color=AZUL_REF, linewidth=0.9, linestyle="--", zorder=3)[0]
-    ln_iq  = ax.plot(d_pq.t_s, d_pq.iq_ufv_pu, color=VERMELHO, linewidth=0.6, zorder=2)[0]
-    ln_iqr = ax.plot(d_pq.t_s, d_pq.iq_ufv_ref_pu, color=VERMELHO_REF, linewidth=0.9, linestyle="--", zorder=3)[0]
+    ln_id  = ax.plot(*dec("id_ufv_pu"), color=AZUL, linewidth=0.6, zorder=2)[0]
+    ln_idr = ax.plot(*dec("id_ufv_ref_pu"), color=AZUL_REF, linewidth=0.9, linestyle="--", zorder=3)[0]
+    ln_iq  = ax.plot(*dec("iq_ufv_pu"), color=VERMELHO, linewidth=0.6, zorder=2)[0]
+    ln_iqr = ax.plot(*dec("iq_ufv_ref_pu"), color=VERMELHO_REF, linewidth=0.9, linestyle="--", zorder=3)[0]
     style_axes(ax)
     ax.set_ylabel("Corrente (pu)")
     ax.set_xlabel("Tempo (s)")
@@ -192,14 +236,14 @@ def gen_scenario(sc):
 
     # 5. tensao dq --------------------------------------------------------
     fig, ax = new_fig()
-    ln_vdr = ax.plot(d_pq.t_s, d_pq.vd_rede_pu, color=AZUL_REF, linewidth=0.8, zorder=2)[0]
-    ln_vqr = ax.plot(d_pq.t_s, d_pq.vq_rede_pu, color=VERMELHO_REF, linewidth=0.8, zorder=2)[0]
-    ln_vdi = ax.plot(d_pq.t_s, d_pq.vd_ufv_pu, color=CINZA_MEDIDO, linewidth=0.55, linestyle=":", zorder=3)[0]
+    ln_vdr = ax.plot(*dec("vd_rede_pu"), color=AZUL_REF, linewidth=0.8, zorder=2)[0]
+    ln_vqr = ax.plot(*dec("vq_rede_pu"), color=VERMELHO_REF, linewidth=0.8, zorder=2)[0]
+    ln_vdi = ax.plot(*dec("vd_ufv_pu"), color=CINZA_MEDIDO, linewidth=0.55, linestyle=":", zorder=3)[0]
     # v_q usa o MESMO tom (vermelho claro, nao cinza) que id/iq -- diferente de
     # v_d, v_q ja tem ondulacao propria visivel (ver corrente dq), entao o
     # contraste de cor extra do cinza so acrescentava uma mancha escura sobre
     # o vermelho sem ajudar a leitura (ver assets/charts/README.md)
-    ln_vqi = ax.plot(d_pq.t_s, d_pq.vq_ufv_pu, color=VERMELHO, linewidth=0.6, linestyle="--", zorder=3)[0]
+    ln_vqi = ax.plot(*dec("vq_ufv_pu"), color=VERMELHO, linewidth=0.6, linestyle="--", zorder=3)[0]
     style_axes(ax)
     ax.axhline(0.0, color="#94a3b8", linewidth=1.0, linestyle=":", zorder=0)
     ax.set_ylabel("Tensão (pu)")

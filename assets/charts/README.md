@@ -78,8 +78,14 @@ A cor da curva secundária depende de quanto ela já se distingue por forma:
 
 Os dados de `sim_data.csv` vêm a 5 µs (~120 mil pontos em 0,6-1,0 s); P/Q e
 corrente/tensão dq são decimados para ~4 000 pontos antes de plotar (mesmo
-teto do dashboard, `_MAX_POINTS` em `src/pipeline/chart.py`) para não
-sobrepor dezenas de amostras por pixel.
+teto do dashboard, `_MAX_POINTS` em `src/pipeline/chart.py`), por
+`decimate_envelope()` — min **e** max de cada bin, não 1 amostra a cada N.
+Uma subamostragem ingênua (`iloc[::stride]`) escolhe a mesma fase de
+amostragem pra toda coluna; onde a ondulação real é mais rápida que a taxa
+decimada (caso do batimento em `v_q`/`v_d` durante a "barriga" de sintonia
+inadequada), isso aliasa em zigue-zague artificial em vez do envelope
+suave real. Manter min+max por bin preserva a forma verdadeira sem cortar
+picos; em trechos suaves degrada pro mesmo efeito de 1 amostra por bin.
 
 ## Gerar / regenerar
 

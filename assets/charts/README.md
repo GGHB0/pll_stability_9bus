@@ -52,6 +52,34 @@ cenários com sintonia inadequada, ver `.claude/kb/simulation/cenarios_simulados
 
 Fonte: `output/results/regime_bad_pll/sim_data.csv` e `sim_data_abc.csv`.
 
+## Cenário `bus7_3phase` — falta trifásica na Barra 7
+
+Gerado por `scripts/gen_fault_waveforms.py` (script separado do de regime —
+fonte de dados e lógica de janela são diferentes, ver docstring do módulo).
+
+| Arquivo | Conteúdo | Janela |
+|---|---|---|
+| `bus7_3phase_correntes_abc.svg` / `.png` | Correntes trifásicas do inversor | ~0,267–0,45 s (2 ciclos antes da falta a 3 ciclos após a eliminação) |
+| `bus7_3phase_tensoes_abc.svg` / `.png` | Tensões trifásicas do inversor | mesma janela |
+| `bus7_3phase_potencia_pq.svg` / `.png` | Potência ativa e reativa (`P, Q`) | T$_{settle}$ (0,1 s) – 0,6 s |
+| `bus7_3phase_corrente_dq.svg` / `.png` | Corrente dq, medida + referência | T$_{settle}$ – 0,6 s |
+| `bus7_3phase_tensao_dq_rede.svg` / `.png` | Tensão dq do lado da Rede | T$_{settle}$ – 0,6 s |
+| `bus7_3phase_tensao_dq_inversor.svg` / `.png` | Tensão dq do lado do Inversor | T$_{settle}$ – 0,6 s |
+
+Falta aplicada em `t = 0,3 s`, eliminada em `t = 0,4 s` (lido de
+`fault_info.json`, não hardcoded — ver
+`.claude/kb/simulation/cenarios_simulados.md`). Marcador de falta: sombreado
+vermelho + vline tracejada vermelha (início) / verde (eliminação), mesma
+convenção do dashboard (`src/pipeline/chart.py`, método `_vline`).
+
+Diferente do cenário `regime`, os gráficos de linha do tempo completa (P/Q,
+corrente/tensão dq) **cortam** o trecho antes de T$_{settle}$ em vez de só
+sombreá-lo — aqui o fenômeno de interesse é a falta (que já ocorre depois de
+T$_{settle}$), não o transitório de partida do PLL.
+
+Fonte: `output/results/bus7/3phase/sim_data.csv`, `sim_data_abc.csv` e
+`fault_info.json`.
+
 ## Convenções de série (todos os gráficos)
 
 Corrente dq segue `src/pipeline/chart.py` (`kind="dq_combined"`): medido
@@ -89,8 +117,11 @@ picos; em trechos suaves degrada pro mesmo efeito de 1 amostra por bin.
 
 ```powershell
 .venv\Scripts\pip install matplotlib   # não está no requirements.txt do pipeline principal
-.venv\Scripts\python.exe scripts\gen_regime_waveforms.py
+.venv\Scripts\python.exe scripts\gen_regime_waveforms.py   # regime / regime_bad_pll (12 arquivos)
+.venv\Scripts\python.exe scripts\gen_fault_waveforms.py    # cenários de falta (6 arquivos por cenário em SCENARIOS)
 ```
 
-Reproduzível sempre que os dados de simulação forem atualizados (regera os
-12 arquivos dos dois cenários de uma vez).
+Reproduzível sempre que os dados de simulação forem atualizados. Novos
+cenários de falta entram em `SCENARIOS` no topo de
+`scripts/gen_fault_waveforms.py` (ver inventário completo em
+`.claude/kb/simulation/cenarios_simulados.md`).

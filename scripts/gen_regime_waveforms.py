@@ -142,8 +142,8 @@ def gen_scenario(sc):
 
     # 3. potencia P/Q ---------------------------------------------------
     fig, ax = new_fig()
-    ax.plot(d_pq.t_s, d_pq.P_ufv_pu, color=AZUL, linewidth=1.2, label="$P$")
-    ax.plot(d_pq.t_s, d_pq.Q_ufv_pu, color=LARANJA, linewidth=1.2, label="$Q$")
+    ax.plot(d_pq.t_s, d_pq.P_ufv_pu, color=AZUL, linewidth=0.7, label="$P$")
+    ax.plot(d_pq.t_s, d_pq.Q_ufv_pu, color=LARANJA, linewidth=0.7, label="$Q$")
     style_axes(ax)
     ax.set_ylabel("Potência (pu)")
     ax.set_xlabel("Tempo (s)")
@@ -155,10 +155,10 @@ def gen_scenario(sc):
 
     # 4. corrente dq ------------------------------------------------------
     fig, ax = new_fig()
-    ln_id  = ax.plot(d_pq.t_s, d_pq.id_ufv_pu, color=AZUL, linewidth=1.3, zorder=2)[0]
-    ln_idr = ax.plot(d_pq.t_s, d_pq.id_ufv_ref_pu, color=AZUL_REF, linewidth=1.6, linestyle="--", zorder=3)[0]
-    ln_iq  = ax.plot(d_pq.t_s, d_pq.iq_ufv_pu, color=VERMELHO, linewidth=1.3, zorder=2)[0]
-    ln_iqr = ax.plot(d_pq.t_s, d_pq.iq_ufv_ref_pu, color=VERMELHO_REF, linewidth=1.6, linestyle="--", zorder=3)[0]
+    ln_id  = ax.plot(d_pq.t_s, d_pq.id_ufv_pu, color=AZUL, linewidth=0.6, zorder=2)[0]
+    ln_idr = ax.plot(d_pq.t_s, d_pq.id_ufv_ref_pu, color=AZUL_REF, linewidth=0.9, linestyle="--", zorder=3)[0]
+    ln_iq  = ax.plot(d_pq.t_s, d_pq.iq_ufv_pu, color=VERMELHO, linewidth=0.6, zorder=2)[0]
+    ln_iqr = ax.plot(d_pq.t_s, d_pq.iq_ufv_ref_pu, color=VERMELHO_REF, linewidth=0.9, linestyle="--", zorder=3)[0]
     style_axes(ax)
     ax.set_ylabel("Corrente (pu)")
     ax.set_xlabel("Tempo (s)")
@@ -172,10 +172,10 @@ def gen_scenario(sc):
 
     # 5. tensao dq --------------------------------------------------------
     fig, ax = new_fig()
-    ln_vdr = ax.plot(d_pq.t_s, d_pq.vd_rede_pu, color=AZUL_REF, linewidth=1.6, zorder=2)[0]
-    ln_vqr = ax.plot(d_pq.t_s, d_pq.vq_rede_pu, color=VERMELHO_REF, linewidth=1.6, zorder=2)[0]
-    ln_vdi = ax.plot(d_pq.t_s, d_pq.vd_ufv_pu, color=CINZA_MEDIDO, linewidth=1.1, linestyle=":", zorder=3)[0]
-    ln_vqi = ax.plot(d_pq.t_s, d_pq.vq_ufv_pu, color=CINZA_MEDIDO, linewidth=1.1, linestyle=(0, (1, 1.4)), zorder=3)[0]
+    ln_vdr = ax.plot(d_pq.t_s, d_pq.vd_rede_pu, color=AZUL_REF, linewidth=0.8, zorder=2)[0]
+    ln_vqr = ax.plot(d_pq.t_s, d_pq.vq_rede_pu, color=VERMELHO_REF, linewidth=0.8, zorder=2)[0]
+    ln_vdi = ax.plot(d_pq.t_s, d_pq.vd_ufv_pu, color=CINZA_MEDIDO, linewidth=0.55, linestyle=":", zorder=3)[0]
+    ln_vqi = ax.plot(d_pq.t_s, d_pq.vq_ufv_pu, color=CINZA_MEDIDO, linewidth=0.55, linestyle=(0, (1, 1.4)), zorder=3)[0]
     style_axes(ax)
     ax.axhline(0.0, color="#94a3b8", linewidth=1.0, linestyle=":", zorder=0)
     ax.set_ylabel("Tensão (pu)")

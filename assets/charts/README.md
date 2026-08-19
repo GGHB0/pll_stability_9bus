@@ -21,7 +21,8 @@ mesmas convenções de série do dashboard.
 | `regime_tensoes_abc.svg` / `.png` | Tensões trifásicas do inversor (`v_a, v_b, v_c`) | 0,55–0,60 s (3 ciclos) |
 | `regime_potencia_pq.svg` / `.png` | Potência ativa e reativa do inversor (`P, Q`) | 0–0,6 s completo |
 | `regime_corrente_dq.svg` / `.png` | Corrente dq, medida (sólido) + referência (tracejado) — `i_d, i_q` | 0–0,6 s completo |
-| `regime_tensao_dq.svg` / `.png` | Tensão dq, Rede (sólido) + Inversor (pontilhado) — `v_d, v_q` | 0–0,6 s completo |
+| `regime_tensao_dq_rede.svg` / `.png` | Tensão dq do lado da Rede — `v_d, v_q` | 0–0,6 s completo |
+| `regime_tensao_dq_inversor.svg` / `.png` | Tensão dq do lado do Inversor — `v_d, v_q` | 0–0,6 s completo |
 
 Marcador de assentamento: `T_settle = 0,1 s` (constante oficial do dashboard,
 `src/config/settings.py`, excluída de todo cálculo).
@@ -37,7 +38,8 @@ Fonte: `output/results/regime/sim_data.csv` (P, Q, dq) e
 | `regime_bad_pll_tensoes_abc.svg` / `.png` | Tensões trifásicas do inversor | 0,95–1,00 s (3 ciclos) |
 | `regime_bad_pll_potencia_pq.svg` / `.png` | Potência ativa e reativa (`P, Q`) | 0–1,0 s completo |
 | `regime_bad_pll_corrente_dq.svg` / `.png` | Corrente dq, medida + referência | 0–1,0 s completo |
-| `regime_bad_pll_tensao_dq.svg` / `.png` | Tensão dq, Rede + Inversor | 0–1,0 s completo |
+| `regime_bad_pll_tensao_dq_rede.svg` / `.png` | Tensão dq do lado da Rede | 0–1,0 s completo |
+| `regime_bad_pll_tensao_dq_inversor.svg` / `.png` | Tensão dq do lado do Inversor | 0–1,0 s completo |
 
 Com ξ = 0,316 (vs. 0,707 nominal) o transitório de energização é muito mais
 lento e oscilatório — visível na P/Q e na corrente/tensão dq oscilando bem
@@ -52,29 +54,25 @@ Fonte: `output/results/regime_bad_pll/sim_data.csv` e `sim_data_abc.csv`.
 
 ## Convenções de série (todos os gráficos)
 
-Seguem `src/pipeline/chart.py` (`kind="dq_combined"`/`"vdq_combined"`):
-corrente dq = medido sólido + referência tracejada; tensão dq = Rede sólido +
-Inversor pontilhado (praticamente sobrepostos em regime permanente — não há
-falta, PCC ≈ tensão de rede).
+Corrente dq segue `src/pipeline/chart.py` (`kind="dq_combined"`): medido
+sólido + referência tracejada, sobrepostos na mesma figura.
 
-**Padrão de cor/z-order do par medido↔alvo** (corrente dq e tensão dq): a
-curva "alvo" de cada par (referência em corrente dq; Rede em tensão dq) usa
-um tom mais escuro/saturado da mesma cor-base (`AZUL_REF #1d4ed8` /
-`VERMELHO_REF #b91c1c` em `scripts/gen_regime_waveforms.py`), desenhada
-**primeiro** (zorder menor); a curva secundária (medido/Inversor) é
-tracejada/pontilhada e desenhada **por cima** (zorder maior), para suas
-lacunas revelarem o traço sólido por baixo.
+**Padrão de cor/z-order do par medido↔referência** (corrente dq): a curva
+"alvo" (referência) usa um tom mais escuro/saturado da mesma cor-base
+(`AZUL_REF #1d4ed8` / `VERMELHO_REF #b91c1c` em
+`scripts/gen_regime_waveforms.py`), desenhada **primeiro** (zorder menor); a
+curva medida é tracejada e desenhada **por cima** (zorder maior), para suas
+lacunas revelarem o traço sólido por baixo. Como o medido já tem ondulação
+própria visível, usar a mesma família de cor (mais clara) evita que a
+sobreposição densa vire uma mancha de alto contraste.
 
-A cor da curva secundária depende de quanto ela já se distingue por forma:
-- **Mesma cor-base, mais clara** (`AZUL`/`VERMELHO`) quando a curva já tem
-  ondulação própria visível (corrente dq inteira; `v_q` em tensão dq) — o
-  traço/pontilhado sozinho já separa as duas, e usar a mesma família de cor
-  evita que a sobreposição densa vire uma mancha de alto contraste.
-- **Cinza-ardósia neutro** (`CINZA_MEDIDO #334155`) só onde as curvas ficam
-  quase idênticas o tempo todo, sem ondulação própria que as separe (`v_d`
-  em tensão dq, que fica colado em ~1,0 pu) — aí duas tonalidades da mesma
-  cor não bastam, é preciso um tom de família diferente para o olho pegar o
-  traço por cima.
+Tensão dq **não** segue mais `kind="vdq_combined"` do dashboard (Rede +
+Inversor sobrepostos): as duas séries ficam quase coincidentes o tempo todo
+em regime permanente (sem falta, PCC ≈ tensão de rede), e sobrepor exigia
+truques de cor/zorder que mesmo assim ficavam difíceis de ler. A pedido do
+usuário, viraram **arquivos separados** (`..._tensao_dq_rede` /
+`..._tensao_dq_inversor`), cada um com `v_d`/`v_q` em `AZUL`/`VERMELHO`
+puro e o mesmo eixo Y nos dois arquivos do par, para comparação lado a lado.
 
 Os dados de `sim_data.csv` vêm a 5 µs (~120 mil pontos em 0,6-1,0 s); P/Q e
 corrente/tensão dq são decimados para ~4 000 pontos antes de plotar (mesmo
@@ -95,4 +93,4 @@ picos; em trechos suaves degrada pro mesmo efeito de 1 amostra por bin.
 ```
 
 Reproduzível sempre que os dados de simulação forem atualizados (regera os
-10 arquivos dos dois cenários de uma vez).
+12 arquivos dos dois cenários de uma vez).

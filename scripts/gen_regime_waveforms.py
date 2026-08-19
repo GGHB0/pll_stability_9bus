@@ -2,16 +2,21 @@
 Gera os graficos dos cenarios 'regime' e 'regime_bad_pll' (regime permanente,
 sem falta -- PLL nominal e sintonia inadequada) em assets/charts/ -- um SVG +
 PNG por grafico, sem Plotly, matplotlib puro, com a paleta do projeto
-(src/config/settings.py) e as mesmas convencoes de serie do dashboard (dq:
-medido solido + ref tracejado; vdq: Rede solido + Inversor pontilhado -- ver
-src/pipeline/chart.py kind="dq_combined"/"vdq_combined").
+(src/config/settings.py). Corrente dq segue a convencao do dashboard (medido
+solido + ref tracejado, mesmos eixos -- ver src/pipeline/chart.py
+kind="dq_combined"). Tensao dq foge dessa convencao de proposito: Rede e
+Inversor vao em arquivos separados (ver comentario na secao 5), nao
+sobrepostos como no dashboard (kind="vdq_combined") -- a pedido do usuario,
+depois de repetidos problemas de legibilidade com as duas series quase
+coincidentes na mesma figura.
 
-Por cenario, 5 graficos (prefixo = SCENARIOS[i]["prefix"]):
-  <prefixo>_correntes_abc.svg  -- i_a, i_b, i_c            (janela final, 3 ciclos)
-  <prefixo>_tensoes_abc.svg    -- v_a, v_b, v_c             (mesma janela)
-  <prefixo>_potencia_pq.svg    -- P, Q                      (0-t_end completo)
-  <prefixo>_corrente_dq.svg    -- i_d/i_q medido + ref       (0-t_end completo)
-  <prefixo>_tensao_dq.svg      -- v_d/v_q Rede + Inversor    (0-t_end completo)
+Por cenario, 6 graficos (prefixo = SCENARIOS[i]["prefix"]):
+  <prefixo>_correntes_abc.svg       -- i_a, i_b, i_c            (janela final, 3 ciclos)
+  <prefixo>_tensoes_abc.svg         -- v_a, v_b, v_c             (mesma janela)
+  <prefixo>_potencia_pq.svg         -- P, Q                      (0-t_end completo)
+  <prefixo>_corrente_dq.svg         -- i_d/i_q medido + ref       (0-t_end completo)
+  <prefixo>_tensao_dq_rede.svg      -- v_d/v_q do lado da Rede     (0-t_end completo)
+  <prefixo>_tensao_dq_inversor.svg  -- v_d/v_q do lado do Inversor (0-t_end completo)
 
 O cenario 'regime_bad_pll' (Kp/Ki_pll x0,2, ver [[project_bad_pll]] na KB)
 assenta muito mais devagar que o nominal -- empiricamente ~0,55 s (ultima vez
@@ -35,19 +40,13 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ── paleta do projeto (src/config/settings.py, LIGHT_COLORS) ────────────────
 AZUL, VERMELHO, VERDE, LARANJA = "#2563eb", "#dc2626", "#16a34a", "#ea580c"
-# tons mais saturados/escuros -- usados na serie "alvo" de cada par medido/alvo
-# (referencia em corrente dq, Rede em tensao dq), sempre desenhada primeiro
-# (zorder menor); a secundaria (medido/Inversor) e tracejada/pontilhada e
-# desenhada por cima, para suas lacunas revelarem o traco solido por baixo
-# -- ver assets/charts/README.md
+# tom mais saturado/escuro -- usado na serie de referencia em corrente dq
+# (medido e alvo ficam na mesma figura, precisam de contraste entre si),
+# desenhado primeiro (zorder menor); o medido e tracejado e desenhado por
+# cima, pra suas lacunas revelarem o traco solido por baixo -- ver
+# assets/charts/README.md. Tensao dq nao usa mais esse par: Rede e Inversor
+# viraram arquivos separados (secao 5), entao cada um usa AZUL/VERMELHO puro.
 AZUL_REF, VERMELHO_REF = "#1d4ed8", "#b91c1c"
-# cinza neutro p/ a serie secundaria SO quando ela fica quase identica a
-# principal o tempo todo, sem ondulacao propria que as separe (caso de v_d
-# em tensao dq) -- aí duas tonalidades da mesma cor nao bastam. Quando ja ha
-# ondulacao visivel (corrente dq inteira, v_q em tensao dq), usa-se AZUL/
-# VERMELHO (mais claro que AZUL_REF/VERMELHO_REF) em vez de cinza, pra nao
-# criar uma mancha de alto contraste onde o traco denso se sobrepoe.
-CINZA_MEDIDO = "#334155"
 NAVY = "#0B132B"
 GRID_COLOR = "#e2e8f0"
 
@@ -234,27 +233,41 @@ def gen_scenario(sc):
               loc="lower right", ncol=2, fontsize=9, **LEGEND_KW)
     save(fig, f"{prefix}_corrente_dq")
 
-    # 5. tensao dq --------------------------------------------------------
-    fig, ax = new_fig()
-    ln_vdr = ax.plot(*dec("vd_rede_pu"), color=AZUL_REF, linewidth=0.8, zorder=2)[0]
-    ln_vqr = ax.plot(*dec("vq_rede_pu"), color=VERMELHO_REF, linewidth=0.8, zorder=2)[0]
-    ln_vdi = ax.plot(*dec("vd_ufv_pu"), color=CINZA_MEDIDO, linewidth=0.55, linestyle=":", zorder=3)[0]
-    # v_q usa o MESMO tom (vermelho claro, nao cinza) que id/iq -- diferente de
-    # v_d, v_q ja tem ondulacao propria visivel (ver corrente dq), entao o
-    # contraste de cor extra do cinza so acrescentava uma mancha escura sobre
-    # o vermelho sem ajudar a leitura (ver assets/charts/README.md)
-    ln_vqi = ax.plot(*dec("vq_ufv_pu"), color=VERMELHO, linewidth=0.6, linestyle="--", zorder=3)[0]
-    style_axes(ax)
-    ax.axhline(0.0, color="#94a3b8", linewidth=1.0, linestyle=":", zorder=0)
-    ax.set_ylabel("Tensão (pu)")
-    ax.set_xlabel("Tempo (s)")
-    ax.set_title("Tensão no referencial dq" + suf)
-    ax.set_xlim(0, t_end)
-    mark_settle(ax, sc["settle_t"], sc["settle_label"])
-    ax.legend([ln_vdr, ln_vqr, ln_vdi, ln_vqi],
-              [r"$v_d$ Rede", r"$v_q$ Rede", r"$v_d$ Inversor", r"$v_q$ Inversor"],
-              loc="lower right", ncol=2, fontsize=9, **LEGEND_KW)
-    save(fig, f"{prefix}_tensao_dq")
+    # 5. tensao dq -- Rede e Inversor em arquivos separados ---------------
+    # Ao contrario de corrente dq (medido/ref sobrepostos), aqui as duas
+    # series ficam quase coincidentes o tempo todo (sem falta, PCC ~= tensao
+    # de rede) -- sobrepor na mesma figura exigia truque de cor/zorder pra
+    # não virar uma mancha, e mesmo assim ficava dificil de ler (pedido do
+    # usuario p/ separar). Cada arquivo usa AZUL/VERMELHO puro (sem par
+    # claro/escuro, que so fazia sentido pra diferenciar series sobrepostas).
+    t_vdr, y_vdr = dec("vd_rede_pu")
+    t_vqr, y_vqr = dec("vq_rede_pu")
+    t_vdi, y_vdi = dec("vd_ufv_pu")
+    t_vqi, y_vqi = dec("vq_ufv_pu")
+
+    # eixo Y compartilhado entre os dois arquivos, p/ poderem ser comparados
+    # lado a lado no TCC na mesma escala
+    y_all = np.concatenate([y_vdr, y_vqr, y_vdi, y_vqi])
+    pad = 0.05 * (y_all.max() - y_all.min())
+    ylim = (y_all.min() - pad, y_all.max() + pad)
+
+    for suf_name, label, (t_d, y_d), (t_q, y_q) in [
+        ("rede", "Rede", (t_vdr, y_vdr), (t_vqr, y_vqr)),
+        ("inversor", "Inversor", (t_vdi, y_vdi), (t_vqi, y_vqi)),
+    ]:
+        fig, ax = new_fig()
+        ax.plot(t_d, y_d, color=AZUL, linewidth=0.7, label=r"$v_d$")
+        ax.plot(t_q, y_q, color=VERMELHO, linewidth=0.7, label=r"$v_q$")
+        style_axes(ax)
+        ax.axhline(0.0, color="#94a3b8", linewidth=1.0, linestyle=":", zorder=0)
+        ax.set_ylabel("Tensão (pu)")
+        ax.set_xlabel("Tempo (s)")
+        ax.set_title(f"Tensão no referencial dq ({label})" + suf)
+        ax.set_xlim(0, t_end)
+        ax.set_ylim(*ylim)
+        mark_settle(ax, sc["settle_t"], sc["settle_label"])
+        ax.legend(loc="lower right", fontsize=9, **LEGEND_KW)
+        save(fig, f"{prefix}_tensao_dq_{suf_name}")
 
 
 if __name__ == "__main__":

@@ -34,6 +34,14 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ── paleta do projeto (src/config/settings.py, LIGHT_COLORS) ────────────────
 AZUL, VERMELHO, VERDE, LARANJA = "#2563eb", "#dc2626", "#16a34a", "#ea580c"
+# tons mais saturados/escuros -- usados na serie "alvo" de cada par medido/alvo
+# (referencia em corrente dq, Rede em tensao dq), sempre desenhada por cima
+# (zorder maior) do medido/Inversor para destaca-la -- ver assets/charts/README.md
+AZUL_REF, VERMELHO_REF = "#1d4ed8", "#b91c1c"
+# cinza neutro p/ a serie "medido" quando ela precisa ficar por cima (pontilhada)
+# de uma serie quase coincidente -- azul/vermelho mais claro nao rende contraste
+# suficiente contra o proprio azul/vermelho escuro por baixo (ver tensao dq)
+CINZA_MEDIDO = "#334155"
 NAVY = "#0B132B"
 GRID_COLOR = "#e2e8f0"
 
@@ -147,25 +155,27 @@ def gen_scenario(sc):
 
     # 4. corrente dq ------------------------------------------------------
     fig, ax = new_fig()
-    ax.plot(d_pq.t_s, d_pq.id_ufv_pu, color=AZUL, linewidth=1.3, label=r"$i_d$ med.")
-    ax.plot(d_pq.t_s, d_pq.id_ufv_ref_pu, color=AZUL, linewidth=1.6, linestyle="--", label=r"$i_d$ ref")
-    ax.plot(d_pq.t_s, d_pq.iq_ufv_pu, color=VERMELHO, linewidth=1.3, label=r"$i_q$ med.")
-    ax.plot(d_pq.t_s, d_pq.iq_ufv_ref_pu, color=VERMELHO, linewidth=1.6, linestyle="--", label=r"$i_q$ ref")
+    ln_id  = ax.plot(d_pq.t_s, d_pq.id_ufv_pu, color=AZUL, linewidth=1.3, zorder=2)[0]
+    ln_idr = ax.plot(d_pq.t_s, d_pq.id_ufv_ref_pu, color=AZUL_REF, linewidth=1.6, linestyle="--", zorder=3)[0]
+    ln_iq  = ax.plot(d_pq.t_s, d_pq.iq_ufv_pu, color=VERMELHO, linewidth=1.3, zorder=2)[0]
+    ln_iqr = ax.plot(d_pq.t_s, d_pq.iq_ufv_ref_pu, color=VERMELHO_REF, linewidth=1.6, linestyle="--", zorder=3)[0]
     style_axes(ax)
     ax.set_ylabel("Corrente (pu)")
     ax.set_xlabel("Tempo (s)")
     ax.set_title("Corrente do inversor no referencial dq" + suf)
     ax.set_xlim(0, t_end)
     mark_settle(ax, sc["settle_t"], sc["settle_label"])
-    ax.legend(loc="lower right", ncol=2, fontsize=9, **LEGEND_KW)
+    ax.legend([ln_id, ln_idr, ln_iq, ln_iqr],
+              [r"$i_d$ med.", r"$i_d$ ref", r"$i_q$ med.", r"$i_q$ ref"],
+              loc="lower right", ncol=2, fontsize=9, **LEGEND_KW)
     save(fig, f"{prefix}_corrente_dq")
 
     # 5. tensao dq --------------------------------------------------------
     fig, ax = new_fig()
-    ax.plot(d_pq.t_s, d_pq.vd_rede_pu, color=AZUL, linewidth=1.4, label=r"$v_d$ Rede")
-    ax.plot(d_pq.t_s, d_pq.vq_rede_pu, color=VERMELHO, linewidth=1.4, label=r"$v_q$ Rede")
-    ax.plot(d_pq.t_s, d_pq.vd_ufv_pu, color=AZUL, linewidth=1.3, linestyle=":", label=r"$v_d$ Inversor")
-    ax.plot(d_pq.t_s, d_pq.vq_ufv_pu, color=VERMELHO, linewidth=1.3, linestyle=":", label=r"$v_q$ Inversor")
+    ln_vdr = ax.plot(d_pq.t_s, d_pq.vd_rede_pu, color=AZUL_REF, linewidth=1.6, zorder=2)[0]
+    ln_vqr = ax.plot(d_pq.t_s, d_pq.vq_rede_pu, color=VERMELHO_REF, linewidth=1.6, zorder=2)[0]
+    ln_vdi = ax.plot(d_pq.t_s, d_pq.vd_ufv_pu, color=CINZA_MEDIDO, linewidth=1.1, linestyle=":", zorder=3)[0]
+    ln_vqi = ax.plot(d_pq.t_s, d_pq.vq_ufv_pu, color=CINZA_MEDIDO, linewidth=1.1, linestyle=(0, (1, 1.4)), zorder=3)[0]
     style_axes(ax)
     ax.axhline(0.0, color="#94a3b8", linewidth=1.0, linestyle=":", zorder=0)
     ax.set_ylabel("Tensão (pu)")
@@ -173,7 +183,9 @@ def gen_scenario(sc):
     ax.set_title("Tensão no referencial dq" + suf)
     ax.set_xlim(0, t_end)
     mark_settle(ax, sc["settle_t"], sc["settle_label"])
-    ax.legend(loc="lower right", ncol=2, fontsize=9, **LEGEND_KW)
+    ax.legend([ln_vdr, ln_vqr, ln_vdi, ln_vqi],
+              [r"$v_d$ Rede", r"$v_q$ Rede", r"$v_d$ Inversor", r"$v_q$ Inversor"],
+              loc="lower right", ncol=2, fontsize=9, **LEGEND_KW)
     save(fig, f"{prefix}_tensao_dq")
 
 

@@ -54,6 +54,19 @@ corrente dq = medido sólido + referência tracejada; tensão dq = Rede sólido 
 Inversor pontilhado (praticamente sobrepostos em regime permanente — não há
 falta, PCC ≈ tensão de rede).
 
+**Padrão de cor/z-order do par medido↔alvo** (corrente dq e tensão dq):
+a curva "alvo" de cada par (referência em corrente dq; Rede em tensão dq) usa
+um tom mais escuro/saturado da mesma cor-base (`AZUL_REF #1d4ed8` /
+`VERMELHO_REF #b91c1c` em `scripts/gen_regime_waveforms.py`) para se destacar
+sobre a medida. Em corrente dq isso já é suficiente porque as curvas se
+separam visivelmente no transitório. Em tensão dq, como Rede e Inversor quase
+coincidem o tempo todo, a cor sozinha não bastava: o traço pontilhado do
+Inversor precisa ficar **por cima** (zorder maior) para suas lacunas
+revelarem o traço sólido por baixo, e usa cinza-ardósia neutro
+(`CINZA_MEDIDO #334155`) em vez de um tom do próprio azul/vermelho — duas
+tonalidades da mesma cor não geram contraste suficiente quando uma cobre a
+outra quase por completo.
+
 ## Gerar / regenerar
 
 ```powershell

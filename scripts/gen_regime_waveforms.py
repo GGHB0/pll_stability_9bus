@@ -142,8 +142,8 @@ def gen_scenario(sc):
 
     # 3. potencia P/Q ---------------------------------------------------
     fig, ax = new_fig()
-    ax.plot(d_pq.t_s, d_pq.P_ufv_pu, color=AZUL, linewidth=0.7, label="P")
-    ax.plot(d_pq.t_s, d_pq.Q_ufv_pu, color=LARANJA, linewidth=0.7, label="Q")
+    ax.plot(d_pq.t_s, d_pq.P_ufv_pu, color=AZUL, linewidth=1.2, label="P")
+    ax.plot(d_pq.t_s, d_pq.Q_ufv_pu, color=LARANJA, linewidth=1.2, label="Q")
     style_axes(ax)
     ax.set_ylabel("Potência (pu)")
     ax.set_xlabel("Tempo (s)")

@@ -73,6 +73,7 @@ FAULT_TYPE_LABEL = {"1phase": "monofásica", "2phase": "bifásica", "3phase": "t
 
 SCENARIOS = [
     dict(folder="bus7/3phase", prefix="bus7_3phase", bus="Barra 7", fault_type="3phase"),
+    dict(folder="bus7/1phase", prefix="bus7_1phase", bus="Barra 7", fault_type="1phase"),
 ]
 
 

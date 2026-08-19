@@ -52,33 +52,38 @@ cenários com sintonia inadequada, ver `.claude/kb/simulation/cenarios_simulados
 
 Fonte: `output/results/regime_bad_pll/sim_data.csv` e `sim_data_abc.csv`.
 
-## Cenário `bus7_3phase` — falta trifásica na Barra 7
+## Cenários de falta — Barra 7 (`bus7_3phase`, `bus7_1phase`, ...)
 
-Gerado por `scripts/gen_fault_waveforms.py` (script separado do de regime —
+Gerados por `scripts/gen_fault_waveforms.py` (script separado do de regime —
 fonte de dados e lógica de janela são diferentes, ver docstring do módulo).
+Cada cenário em `SCENARIOS` produz o mesmo conjunto de 6 arquivos, prefixo
+`<pasta>_<tipo_falta>`:
 
 | Arquivo | Conteúdo | Janela |
 |---|---|---|
-| `bus7_3phase_correntes_abc.svg` / `.png` | Correntes trifásicas do inversor | ~0,267–0,45 s (2 ciclos antes da falta a 3 ciclos após a eliminação) |
-| `bus7_3phase_tensoes_abc.svg` / `.png` | Tensões trifásicas do inversor | mesma janela |
-| `bus7_3phase_potencia_pq.svg` / `.png` | Potência ativa e reativa (`P, Q`) | T$_{settle}$ (0,1 s) – 0,6 s |
-| `bus7_3phase_corrente_dq.svg` / `.png` | Corrente dq, medida + referência | T$_{settle}$ – 0,6 s |
-| `bus7_3phase_tensao_dq_rede.svg` / `.png` | Tensão dq do lado da Rede | T$_{settle}$ – 0,6 s |
-| `bus7_3phase_tensao_dq_inversor.svg` / `.png` | Tensão dq do lado do Inversor | T$_{settle}$ – 0,6 s |
+| `<prefixo>_correntes_abc.svg` / `.png` | Correntes trifásicas do inversor | ~2 ciclos antes da falta a 3 ciclos após a eliminação |
+| `<prefixo>_tensoes_abc.svg` / `.png` | Tensões trifásicas do inversor | mesma janela |
+| `<prefixo>_potencia_pq.svg` / `.png` | Potência ativa e reativa (`P, Q`) | T$_{settle}$ (0,1 s) – fim da simulação |
+| `<prefixo>_corrente_dq.svg` / `.png` | Corrente dq, medida + referência | T$_{settle}$ – fim |
+| `<prefixo>_tensao_dq_rede.svg` / `.png` | Tensão dq do lado da Rede | T$_{settle}$ – fim |
+| `<prefixo>_tensao_dq_inversor.svg` / `.png` | Tensão dq do lado do Inversor | T$_{settle}$ – fim |
 
-Falta aplicada em `t = 0,3 s`, eliminada em `t = 0,4 s` (lido de
-`fault_info.json`, não hardcoded — ver
-`.claude/kb/simulation/cenarios_simulados.md`). Marcador de falta: sombreado
-vermelho + vline tracejada vermelha (início) / verde (eliminação), mesma
-convenção do dashboard (`src/pipeline/chart.py`, método `_vline`).
+`t_fault`/`t_clear` vêm de `fault_info.json` de cada pasta (não hardcoded —
+ver `.claude/kb/simulation/cenarios_simulados.md`). Marcador de falta:
+sombreado vermelho + vline tracejada vermelha (início) / verde (eliminação),
+mesma convenção do dashboard (`src/pipeline/chart.py`, método `_vline`).
 
 Diferente do cenário `regime`, os gráficos de linha do tempo completa (P/Q,
 corrente/tensão dq) **cortam** o trecho antes de T$_{settle}$ em vez de só
 sombreá-lo — aqui o fenômeno de interesse é a falta (que já ocorre depois de
 T$_{settle}$), não o transitório de partida do PLL.
 
-Fonte: `output/results/bus7/3phase/sim_data.csv`, `sim_data_abc.csv` e
-`fault_info.json`.
+- **`bus7_3phase`** — falta trifásica na Barra 7, `t = 0,3–0,4 s`, fim em
+  `0,6 s`. Fonte: `output/results/bus7/3phase/`.
+- **`bus7_1phase`** — falta monofásica na Barra 7, mesma janela temporal.
+  Assimétrica → sequência negativa → oscilação visível em ~120 Hz (`2f₁`) em
+  `P`/`Q` e em `v_d`/`v_q` durante a falta, ausente na trifásica (equilibrada).
+  Fonte: `output/results/bus7/1phase/`.
 
 ## Convenções de série (todos os gráficos)
 

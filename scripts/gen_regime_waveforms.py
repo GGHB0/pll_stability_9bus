@@ -65,7 +65,7 @@ fase_cores = [("Fase a", AZUL), ("Fase b", VERMELHO), ("Fase c", VERDE)]
 SCENARIOS = [
     dict(folder="regime", prefix="regime", t_end=0.6, window=(0.55, 0.60),
          settle_t=0.1, title_suffix=" -- regime permanente",
-         settle_label="transitório de partida excluído dos cálculos\n(T$_{settle}$ = 0,1 s)"),
+         settle_label="transitório de partida excluído dos cálculos\n(T_settle = 0,1 s)"),
     dict(folder="regime_bad_pll", prefix="regime_bad_pll", t_end=1.0, window=(0.95, 1.00),
          settle_t=0.55, title_suffix=" -- sintonia inadequada",
          settle_label="assentamento mais lento (sintonia inadequada)\n≈0,55 s vs 0,1 s no caso nominal"),
@@ -142,8 +142,8 @@ def gen_scenario(sc):
 
     # 3. potencia P/Q ---------------------------------------------------
     fig, ax = new_fig()
-    ax.plot(d_pq.t_s, d_pq.P_ufv_pu, color=AZUL, linewidth=0.7, label="$P$")
-    ax.plot(d_pq.t_s, d_pq.Q_ufv_pu, color=LARANJA, linewidth=0.7, label="$Q$")
+    ax.plot(d_pq.t_s, d_pq.P_ufv_pu, color=AZUL, linewidth=0.7, label="P")
+    ax.plot(d_pq.t_s, d_pq.Q_ufv_pu, color=LARANJA, linewidth=0.7, label="Q")
     style_axes(ax)
     ax.set_ylabel("Potência (pu)")
     ax.set_xlabel("Tempo (s)")
@@ -166,7 +166,7 @@ def gen_scenario(sc):
     ax.set_xlim(0, t_end)
     mark_settle(ax, sc["settle_t"], sc["settle_label"])
     ax.legend([ln_id, ln_idr, ln_iq, ln_iqr],
-              [r"$i_d$ med.", r"$i_d$ ref", r"$i_q$ med.", r"$i_q$ ref"],
+              ["i_d med.", "i_d ref.", "i_q med.", "i_q ref."],
               loc="lower right", ncol=2, fontsize=9, **LEGEND_KW)
     save(fig, f"{prefix}_corrente_dq")
 
@@ -184,7 +184,7 @@ def gen_scenario(sc):
     ax.set_xlim(0, t_end)
     mark_settle(ax, sc["settle_t"], sc["settle_label"])
     ax.legend([ln_vdr, ln_vqr, ln_vdi, ln_vqi],
-              [r"$v_d$ Rede", r"$v_q$ Rede", r"$v_d$ Inversor", r"$v_q$ Inversor"],
+              ["v_d Rede", "v_q Rede", "v_d Inversor", "v_q Inversor"],
               loc="lower right", ncol=2, fontsize=9, **LEGEND_KW)
     save(fig, f"{prefix}_tensao_dq")
 

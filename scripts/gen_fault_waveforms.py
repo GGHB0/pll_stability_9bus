@@ -8,19 +8,25 @@ puro, paleta do projeto), mas com duas diferencas de estrutura:
    de cada pasta -- ver .claude/kb/simulation/cenarios_simulados.md (params.m
    nao e fonte confiavel do que cada cenario exportado usou).
 2. Janela dos graficos de linha do tempo completa (P/Q, corrente dq, tensao
-   dq): comeca em T_SETTLE (0,1 s) em vez de 0 -- o fenomeno de interesse
-   aqui e a falta, nao o transitorio de partida do PLL, entao o trecho
-   anterior a T_SETTLE e simplesmente cortado (nao so sombreado como em
-   gen_regime_waveforms.py). Como t_fault dos cenarios nominais e sempre
-   0,3 s (> T_SETTLE), a falta sempre cai dentro da janela exibida.
+   dq): comeca no instante de assentamento do cenario em vez de 0 -- o
+   fenomeno de interesse aqui e a falta, nao o transitorio de partida do
+   PLL, entao o trecho anterior e simplesmente cortado (nao so sombreado
+   como em gen_regime_waveforms.py). Esse instante depende do modelo (campo
+   "bad_pll" do fault_info.json, ver cenarios_simulados.md):
+     - Nominal: T_SETTLE = 0,1 s (constante oficial, src/config/settings.py).
+       t_fault = 0,3 s cai sempre depois.
+     - Sintonia inadequada (Kp/Ki_pll x0,2): energizacao muito mais lenta e
+       oscilatoria (xi=0,316) -- mesmo instante empirico ~0,55 s usado em
+       gen_regime_waveforms.py, nao T_SETTLE global (medido so p/ o caso
+       nominal). t_fault = 0,6 s cai sempre depois.
 
 Por cenario, 6 graficos (prefixo = SCENARIOS[i]["prefix"]):
   <prefixo>_correntes_abc.svg       -- i_a, i_b, i_c   (janela em torno da falta)
   <prefixo>_tensoes_abc.svg         -- v_a, v_b, v_c    (mesma janela)
-  <prefixo>_potencia_pq.svg         -- P, Q             (T_SETTLE-t_end, falta marcada)
-  <prefixo>_corrente_dq.svg         -- i_d/i_q medido+ref (T_SETTLE-t_end, falta marcada)
-  <prefixo>_tensao_dq_rede.svg      -- v_d/v_q Rede      (T_SETTLE-t_end, falta marcada)
-  <prefixo>_tensao_dq_inversor.svg  -- v_d/v_q Inversor  (T_SETTLE-t_end, falta marcada)
+  <prefixo>_potencia_pq.svg         -- P, Q             (settle_t-t_end, falta marcada)
+  <prefixo>_corrente_dq.svg         -- i_d/i_q medido+ref (settle_t-t_end, falta marcada)
+  <prefixo>_tensao_dq_rede.svg      -- v_d/v_q Rede      (settle_t-t_end, falta marcada)
+  <prefixo>_tensao_dq_inversor.svg  -- v_d/v_q Inversor  (settle_t-t_end, falta marcada)
 
 Marcador de falta: sombreado vermelho + vline tracejada vermelha em t_fault +
 vline tracejada verde em t_clear -- mesma convencao do dashboard
@@ -47,9 +53,14 @@ NAVY = "#0B132B"
 GRID_COLOR = "#e2e8f0"
 
 # T_SETTLE = 0,1 s -- transitorio de partida do PLL, excluido de todo calculo
-# (src/config/settings.py). Cenarios de falta nominais aplicam a falta em
-# 0,3 s, sempre depois de T_SETTLE -- ver cenarios_simulados.md.
+# (src/config/settings.py). So vale para o modelo NOMINAL. Cenarios de falta
+# nominais aplicam a falta em 0,3 s, sempre depois -- ver cenarios_simulados.md.
 T_SETTLE = 0.1
+# Sintonia inadequada assenta muito mais devagar (xi=0,316) -- mesmo valor
+# empirico usado em gen_regime_waveforms.py (regime_bad_pll), nao T_SETTLE
+# global. Cenarios de falta com sintonia inadequada aplicam a falta em
+# 0,6 s, sempre depois.
+BAD_PLL_SETTLE = 0.55
 CICLO_S = 1 / 60  # 60 Hz
 
 plt.rcParams.update({
@@ -73,7 +84,13 @@ FAULT_TYPE_LABEL = {"1phase": "monofásica", "2phase": "bifásica", "3phase": "t
 
 SCENARIOS = [
     dict(folder="bus7/3phase", prefix="bus7_3phase", bus="Barra 7", fault_type="3phase"),
+    dict(folder="bus7/3phase_bad_pll", prefix="bus7_3phase_bad_pll", bus="Barra 7", fault_type="3phase"),
+    dict(folder="bus6/3phase", prefix="bus6_3phase", bus="Barra 6", fault_type="3phase"),
+    dict(folder="bus6/3phase_bad_pll", prefix="bus6_3phase_bad_pll", bus="Barra 6", fault_type="3phase"),
     dict(folder="bus7/1phase", prefix="bus7_1phase", bus="Barra 7", fault_type="1phase"),
+    dict(folder="bus7/1phase_bad_pll", prefix="bus7_1phase_bad_pll", bus="Barra 7", fault_type="1phase"),
+    dict(folder="bus6/2phase", prefix="bus6_2phase", bus="Barra 6", fault_type="2phase"),
+    dict(folder="bus6/2phase_bad_pll", prefix="bus6_2phase_bad_pll", bus="Barra 6", fault_type="2phase"),
 ]
 
 
@@ -93,6 +110,23 @@ def new_fig():
 def legend_above(ax, handles, labels, ncol):
     ax.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 1.02),
               ncol=ncol, fontsize=9, **LEGEND_KW)
+
+
+def set_title(ax, text, pad=None):
+    """Titulo com fonte reduzida conforme o comprimento -- os cenarios de
+    sintonia inadequada acrescentam "(sintonia inadequada)" ao sufixo, e no
+    fontsize padrao (11, bold) o texto ficava mais largo que a figura e
+    cortava na borda direita do PNG/SVG."""
+    if len(text) > 78:
+        fontsize = 8.3
+    elif len(text) > 62:
+        fontsize = 9.5
+    else:
+        fontsize = 11
+    kw = dict(fontsize=fontsize)
+    if pad is not None:
+        kw["pad"] = pad
+    ax.set_title(text, **kw)
 
 
 def save(fig, name):
@@ -153,12 +187,16 @@ def gen_scenario(sc):
     d_abc_full = pd.read_csv(folder / "sim_data_abc.csv")
     t_end = float(d_pq_full.t_s.max())
     prefix = sc["prefix"]
+    bad_pll = bool(fault_info.get("bad_pll", False))
+    settle_t = BAD_PLL_SETTLE if bad_pll else T_SETTLE
     suf = f" -- falta {FAULT_TYPE_LABEL[sc['fault_type']]} na {sc['bus']}"
+    if bad_pll:
+        suf += " (sintonia inadequada)"
 
-    # janelas de linha do tempo completa comecam em T_SETTLE, nao em 0 (ver
-    # docstring do modulo) -- filtra antes de decimar p/ nao gastar pontos
-    # no trecho cortado.
-    d_settle = d_pq_full[d_pq_full.t_s >= T_SETTLE]
+    # janelas de linha do tempo completa comecam no assentamento do modelo
+    # (settle_t), nao em 0 (ver docstring do modulo) -- filtra antes de
+    # decimar p/ nao gastar pontos no trecho cortado.
+    d_settle = d_pq_full[d_pq_full.t_s >= settle_t]
     t_full = d_settle.t_s.values
 
     def dec(col):
@@ -176,7 +214,7 @@ def gen_scenario(sc):
     style_axes(ax)
     ax.set_ylabel("Corrente (pu)")
     ax.set_xlabel("Tempo (ms)")
-    ax.set_title("Correntes trifásicas do inversor" + suf, pad=32)
+    set_title(ax, "Correntes trifásicas do inversor" + suf, pad=32)
     ax.axvspan(t_fault * 1000, t_clear * 1000, color=VERMELHO, alpha=0.07, zorder=0)
     ax.axvline(t_fault * 1000, color=VERMELHO, linewidth=1.3, linestyle="--", zorder=1, alpha=0.8)
     ax.axvline(t_clear * 1000, color=VERDE, linewidth=1.3, linestyle="--", zorder=1, alpha=0.7)
@@ -191,7 +229,7 @@ def gen_scenario(sc):
     style_axes(ax)
     ax.set_ylabel("Tensão (pu)")
     ax.set_xlabel("Tempo (ms)")
-    ax.set_title("Tensões trifásicas do inversor" + suf, pad=32)
+    set_title(ax, "Tensões trifásicas do inversor" + suf, pad=32)
     ax.axvspan(t_fault * 1000, t_clear * 1000, color=VERMELHO, alpha=0.07, zorder=0)
     ax.axvline(t_fault * 1000, color=VERMELHO, linewidth=1.3, linestyle="--", zorder=1, alpha=0.8)
     ax.axvline(t_clear * 1000, color=VERDE, linewidth=1.3, linestyle="--", zorder=1, alpha=0.7)
@@ -208,8 +246,8 @@ def gen_scenario(sc):
     style_axes(ax)
     ax.set_ylabel("Potência (pu)")
     ax.set_xlabel("Tempo (s)")
-    ax.set_title("Potência ativa e reativa do inversor" + suf)
-    ax.set_xlim(T_SETTLE, t_end)
+    set_title(ax, "Potência ativa e reativa do inversor" + suf)
+    ax.set_xlim(settle_t, t_end)
     mark_fault(ax, t_fault, t_clear)
     ax.legend(loc="lower right", fontsize=9, **LEGEND_KW)
     save(fig, f"{prefix}_potencia_pq")
@@ -223,8 +261,8 @@ def gen_scenario(sc):
     style_axes(ax)
     ax.set_ylabel("Corrente (pu)")
     ax.set_xlabel("Tempo (s)")
-    ax.set_title("Corrente do inversor no referencial dq" + suf)
-    ax.set_xlim(T_SETTLE, t_end)
+    set_title(ax, "Corrente do inversor no referencial dq" + suf)
+    ax.set_xlim(settle_t, t_end)
     mark_fault(ax, t_fault, t_clear)
     ax.legend([ln_id, ln_idr, ln_iq, ln_iqr],
               [r"$i_d$ med.", r"$i_d$ ref.", r"$i_q$ med.", r"$i_q$ ref."],
@@ -253,8 +291,8 @@ def gen_scenario(sc):
         ax.axhline(0.0, color="#94a3b8", linewidth=1.0, linestyle=":", zorder=0)
         ax.set_ylabel("Tensão (pu)")
         ax.set_xlabel("Tempo (s)")
-        ax.set_title(f"Tensão no referencial dq ({label})" + suf)
-        ax.set_xlim(T_SETTLE, t_end)
+        set_title(ax, f"Tensão no referencial dq ({label})" + suf)
+        ax.set_xlim(settle_t, t_end)
         ax.set_ylim(*ylim)
         mark_fault(ax, t_fault, t_clear)
         ax.legend(loc="lower right", fontsize=9, **LEGEND_KW)

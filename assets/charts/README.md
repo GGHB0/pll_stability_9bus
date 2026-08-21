@@ -52,21 +52,21 @@ cenários com sintonia inadequada, ver `.claude/kb/simulation/cenarios_simulados
 
 Fonte: `output/results/regime_bad_pll/sim_data.csv` e `sim_data_abc.csv`.
 
-## Cenários de falta — Barra 7 (`bus7_3phase`, `bus7_1phase`, ...)
+## Cenários de falta — Barras 6 e 7
 
 Gerados por `scripts/gen_fault_waveforms.py` (script separado do de regime —
 fonte de dados e lógica de janela são diferentes, ver docstring do módulo).
 Cada cenário em `SCENARIOS` produz o mesmo conjunto de 6 arquivos, prefixo
-`<pasta>_<tipo_falta>`:
+`<pasta>_<tipo_falta>[_bad_pll]`:
 
 | Arquivo | Conteúdo | Janela |
 |---|---|---|
 | `<prefixo>_correntes_abc.svg` / `.png` | Correntes trifásicas do inversor | ~2 ciclos antes da falta a 3 ciclos após a eliminação |
 | `<prefixo>_tensoes_abc.svg` / `.png` | Tensões trifásicas do inversor | mesma janela |
-| `<prefixo>_potencia_pq.svg` / `.png` | Potência ativa e reativa (`P, Q`) | T$_{settle}$ (0,1 s) – fim da simulação |
-| `<prefixo>_corrente_dq.svg` / `.png` | Corrente dq, medida + referência | T$_{settle}$ – fim |
-| `<prefixo>_tensao_dq_rede.svg` / `.png` | Tensão dq do lado da Rede | T$_{settle}$ – fim |
-| `<prefixo>_tensao_dq_inversor.svg` / `.png` | Tensão dq do lado do Inversor | T$_{settle}$ – fim |
+| `<prefixo>_potencia_pq.svg` / `.png` | Potência ativa e reativa (`P, Q`) | assentamento – fim da simulação |
+| `<prefixo>_corrente_dq.svg` / `.png` | Corrente dq, medida + referência | assentamento – fim |
+| `<prefixo>_tensao_dq_rede.svg` / `.png` | Tensão dq do lado da Rede | assentamento – fim |
+| `<prefixo>_tensao_dq_inversor.svg` / `.png` | Tensão dq do lado do Inversor | assentamento – fim |
 
 `t_fault`/`t_clear` vêm de `fault_info.json` de cada pasta (não hardcoded —
 ver `.claude/kb/simulation/cenarios_simulados.md`). Marcador de falta:
@@ -74,16 +74,35 @@ sombreado vermelho + vline tracejada vermelha (início) / verde (eliminação),
 mesma convenção do dashboard (`src/pipeline/chart.py`, método `_vline`).
 
 Diferente do cenário `regime`, os gráficos de linha do tempo completa (P/Q,
-corrente/tensão dq) **cortam** o trecho antes de T$_{settle}$ em vez de só
-sombreá-lo — aqui o fenômeno de interesse é a falta (que já ocorre depois de
-T$_{settle}$), não o transitório de partida do PLL.
+corrente/tensão dq) **cortam** o trecho antes do assentamento em vez de só
+sombreá-lo — aqui o fenômeno de interesse é a falta, não o transitório de
+partida do PLL. O instante de corte depende do modelo (`bad_pll` no
+`fault_info.json`): T$_{settle}$ = 0,1 s (nominal, constante oficial do
+dashboard) ou ≈0,55 s empírico (sintonia inadequada, xi=0,316 assenta bem
+mais devagar — mesmo valor de `gen_regime_waveforms.py`).
 
-- **`bus7_3phase`** — falta trifásica na Barra 7, `t = 0,3–0,4 s`, fim em
-  `0,6 s`. Fonte: `output/results/bus7/3phase/`.
-- **`bus7_1phase`** — falta monofásica na Barra 7, mesma janela temporal.
-  Assimétrica → sequência negativa → oscilação visível em ~120 Hz (`2f₁`) em
-  `P`/`Q` e em `v_d`/`v_q` durante a falta, ausente na trifásica (equilibrada).
-  Fonte: `output/results/bus7/1phase/`.
+| Prefixo | Barra | Tipo | Modelo | Falta | Fim |
+|---|---|---|---|---|---|
+| `bus7_3phase` | 7 | trifásica | nominal | 0,3–0,4 s | 0,6 s |
+| `bus7_3phase_bad_pll` | 7 | trifásica | sintonia inadequada | 0,6–0,7 s | 1,0 s |
+| `bus6_3phase` | 6 | trifásica | nominal | 0,3–0,4 s | 0,6 s |
+| `bus6_3phase_bad_pll` | 6 | trifásica | sintonia inadequada | 0,6–0,7 s | 1,0 s |
+| `bus7_1phase` | 7 | monofásica | nominal | 0,3–0,4 s | 0,6 s |
+| `bus7_1phase_bad_pll` | 7 | monofásica | sintonia inadequada | 0,6–0,7 s | 1,0 s |
+| `bus6_2phase` | 6 | bifásica | nominal | 0,3–0,4 s | 0,6 s |
+| `bus6_2phase_bad_pll` | 6 | bifásica | sintonia inadequada | 0,6–0,7 s | 1,0 s |
+
+Fonte de cada linha: `output/results/bus<N>/<tipo>[_bad_pll]/` (`sim_data.csv`,
+`sim_data_abc.csv`, `fault_info.json`).
+
+As faltas monofásica e bifásica são **assimétricas** → sequência negativa →
+oscilação visível em ~120 Hz (`2f₁`) em `P`/`Q` e em `v_d`/`v_q` durante a
+falta, ausente na trifásica (equilibrada) — mais pronunciada ainda com
+sintonia inadequada, que não amortece a oscilação tão bem.
+
+Título com sufixo "(sintonia inadequada)" fica mais longo que os demais —
+`set_title()` reduz a fonte automaticamente acima de 62/78 caracteres pra não
+cortar na borda da figura.
 
 ## Convenções de série (todos os gráficos)
 
@@ -128,5 +147,5 @@ picos; em trechos suaves degrada pro mesmo efeito de 1 amostra por bin.
 
 Reproduzível sempre que os dados de simulação forem atualizados. Novos
 cenários de falta entram em `SCENARIOS` no topo de
-`scripts/gen_fault_waveforms.py` (ver inventário completo em
-`.claude/kb/simulation/cenarios_simulados.md`).
+`scripts/gen_fault_waveforms.py` (48 arquivos hoje — 8 cenários × 6). Ver
+inventário completo em `.claude/kb/simulation/cenarios_simulados.md`.

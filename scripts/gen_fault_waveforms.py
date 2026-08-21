@@ -91,6 +91,10 @@ SCENARIOS = [
     dict(folder="bus7/1phase_bad_pll", prefix="bus7_1phase_bad_pll", bus="Barra 7", fault_type="1phase"),
     dict(folder="bus6/2phase", prefix="bus6_2phase", bus="Barra 6", fault_type="2phase"),
     dict(folder="bus6/2phase_bad_pll", prefix="bus6_2phase_bad_pll", bus="Barra 6", fault_type="2phase"),
+    dict(folder="line7_8/3phase", prefix="line7_8_3phase", bus="Linha 7-8", fault_type="3phase"),
+    dict(folder="line7_8/3phase_bad_pll", prefix="line7_8_3phase_bad_pll", bus="Linha 7-8", fault_type="3phase"),
+    dict(folder="line8_9/3phase", prefix="line8_9_3phase", bus="Linha 8-9", fault_type="3phase"),
+    dict(folder="line8_9/2phase", prefix="line8_9_2phase", bus="Linha 8-9", fault_type="2phase"),
 ]
 
 

@@ -52,7 +52,7 @@ cenários com sintonia inadequada, ver `.claude/kb/simulation/cenarios_simulados
 
 Fonte: `output/results/regime_bad_pll/sim_data.csv` e `sim_data_abc.csv`.
 
-## Cenários de falta — Barras 6 e 7
+## Cenários de falta — Barras 6/7 e Linhas 7-8/8-9
 
 Gerados por `scripts/gen_fault_waveforms.py` (script separado do de regime —
 fonte de dados e lógica de janela são diferentes, ver docstring do módulo).
@@ -91,9 +91,20 @@ mais devagar — mesmo valor de `gen_regime_waveforms.py`).
 | `bus7_1phase_bad_pll` | 7 | monofásica | sintonia inadequada | 0,6–0,7 s | 1,0 s |
 | `bus6_2phase` | 6 | bifásica | nominal | 0,3–0,4 s | 0,6 s |
 | `bus6_2phase_bad_pll` | 6 | bifásica | sintonia inadequada | 0,6–0,7 s | 1,0 s |
+| `line7_8_3phase` | Linha 7-8 | trifásica | nominal | 0,3–0,4 s | 0,6 s |
+| `line7_8_3phase_bad_pll` | Linha 7-8 | trifásica | sintonia inadequada | 0,6–0,7 s | 1,0 s |
+| `line8_9_3phase` | Linha 8-9 | trifásica | nominal | 0,3–0,4 s | 0,6 s |
+| `line8_9_2phase` | Linha 8-9 | bifásica | nominal | 0,3–0,4 s | 0,6 s |
 
-Fonte de cada linha: `output/results/bus<N>/<tipo>[_bad_pll]/` (`sim_data.csv`,
+Fonte de cada linha do inventário: `output/results/bus<N>/<tipo>[_bad_pll]/`
+ou `output/results/line<X>_<Y>/<tipo>[_bad_pll]/` (`sim_data.csv`,
 `sim_data_abc.csv`, `fault_info.json`).
+
+As linhas têm cobertura parcial: `line8_9` não tem variante `_bad_pll`
+simulada, e nenhuma das duas linhas tem falta monofásica ainda — só `bus6`/
+`bus7` cobrem os três tipos completos hoje. Ver
+`.claude/kb/simulation/cenarios_simulados.md` para o levantamento completo
+de lacunas.
 
 As faltas monofásica e bifásica são **assimétricas** → sequência negativa →
 oscilação visível em ~120 Hz (`2f₁`) em `P`/`Q` e em `v_d`/`v_q` durante a
@@ -147,5 +158,5 @@ picos; em trechos suaves degrada pro mesmo efeito de 1 amostra por bin.
 
 Reproduzível sempre que os dados de simulação forem atualizados. Novos
 cenários de falta entram em `SCENARIOS` no topo de
-`scripts/gen_fault_waveforms.py` (48 arquivos hoje — 8 cenários × 6). Ver
+`scripts/gen_fault_waveforms.py` (72 arquivos hoje — 12 cenários × 6). Ver
 inventário completo em `.claude/kb/simulation/cenarios_simulados.md`.

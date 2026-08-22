@@ -59,6 +59,31 @@ com sintonia inadequada apontada na revisão anterior deste inventário
 (2026-08-04). Todos os 10 têm par nominal correspondente, então o toggle do
 dashboard encontra equivalente em ambas as direções.
 
+## ⚠️ Duas safras de modelo nos cenários `_bad_pll`
+
+Descoberto em 2026-08-22 ao redigir o Cap. 5 (ver
+[[tcc-revisao-fragmento-cap5]]). Os cenários com sintonia inadequada **não**
+vêm todos da mesma versão do modelo. Impressão digital = transitório de
+energização, que independe da falta aplicada:
+
+| Safra | Cenários | Acomoda (±5°) | `v_d` pré-falta |
+|---|---|---|---|
+| **Julho** | `regime_bad_pll`, `bus7/3phase_bad_pll`, `bus6/3phase_bad_pll`, `line7_8/3phase_bad_pll` | ~599 ms | **0,80–0,82 pu** |
+| **Agosto (11-12)** | `bus6`/`bus7` × `1phase_bad_pll`/`2phase_bad_pll` | 54 ms | **0,99 pu** |
+| *(nominais)* | todos | 32 ms | 0,97–0,99 pu |
+
+O pico de erro na energização é 26,4° nas duas safras contra 45,2° dos
+nominais, então **os ganhos reduzidos estão aplicados em ambas** — o que mudou
+foi o resto do modelo. O `v_d` deprimido de julho não é efeito do PLL.
+
+**Regra prática:** só comparar cenário `_bad_pll` com seu par nominal se for
+da safra de agosto. Os quatro pares assimétricos de `bus6`/`bus7` são os
+únicos rigorosamente pareáveis hoje.
+
+Anomalia à parte: `line7_8/3phase_bad_pll` tem retenção de 64,9% (nominal:
+10,4%) e 0,384 pu de 120 Hz numa falta **trifásica equilibrada** (nominal:
+0,008 pu). Esse run não corresponde à falta que o nome indica — não usar.
+
 ## Lacunas de cobertura
 
 1. `bus4`, `bus5`, `bus8`, `bus9` e `line8_9` não têm variante

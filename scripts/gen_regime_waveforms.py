@@ -80,6 +80,17 @@ SCENARIOS = [
     dict(folder="regime_bad_pll", prefix="regime_bad_pll", t_end=1.0, window=(0.95, 1.00),
          settle_t=0.55, title_suffix=" -- sintonia inadequada",
          settle_label="assentamento mais lento (sintonia inadequada)\n≈0,55 s vs 0,1 s no caso nominal"),
+    # Regime da sintonia inadequada na versao ATUAL do modelo. A pasta
+    # regime_bad_pll acima e de 14/07 e opera em ponto deslocado (v_d ~0,82 pu);
+    # os cenarios re-simulados em 11-12/08 operam em ~0,99 pu, como os nominais.
+    # Nao ha pasta "regime" nessa safra, entao a fonte e a janela PRE-FALTA de
+    # bus6/1phase_bad_pll (falta so em 0,6 s), que e regime permanente legitimo.
+    # t_max trunca o CSV antes de decimar, p/ a escala do eixo Y nao ser puxada
+    # pela excursao da falta. Ver kb/tcc-word/revisao_fragmento_cap5.md.
+    dict(folder="bus6/1phase_bad_pll", prefix="regime_bad_pll_v2", t_end=0.6,
+         t_max=0.6, window=(0.55, 0.60), settle_t=0.074,
+         title_suffix=" -- sintonia inadequada",
+         settle_label="erro de fase entra na faixa de ±2°\nem 74 ms (34 ms no caso nominal)"),
 ]
 
 
@@ -157,6 +168,11 @@ def mark_settle(ax, settle_t, label):
 def gen_scenario(sc):
     d_pq_full = pd.read_csv(ROOT / f"output/results/{sc['folder']}/sim_data.csv")
     d_abc = pd.read_csv(ROOT / f"output/results/{sc['folder']}/sim_data_abc.csv")
+    # t_max: corta o CSV antes de qualquer decimacao/escala (ver SCENARIOS) --
+    # usado quando a fonte e a janela pre-falta de um cenario de contingencia.
+    if sc.get("t_max") is not None:
+        d_pq_full = d_pq_full[d_pq_full.t_s <= sc["t_max"]]
+        d_abc = d_abc[d_abc.t_s <= sc["t_max"]]
     t0, t1 = sc["window"]
     win = d_abc[(d_abc.t_s >= t0) & (d_abc.t_s <= t1)].iloc[::8].copy()
     win["t_ms"] = win.t_s * 1000

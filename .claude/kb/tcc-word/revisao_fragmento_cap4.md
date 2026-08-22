@@ -118,5 +118,9 @@ usuário:
 ## Próximos passos
 
 - Cap. 4 do fragmento está fechado (grupos A e B completos).
-- Próximo: revisar Cap. 5 do fragmento contra o canônico.
+- Cap. 5 reescrito em 2026-08-22 — ver [[tcc-revisao-fragmento-cap5]].
+- ⚠️ **Pendência aberta no Cap. 4:** o parágrafo do painel interativo (índice
+  28) cita "*cycle slipping*" como fenômeno visualizável, mas o Cap. 5 deixou
+  de afirmar esse fenômeno (os dados consistentes não o sustentam). Conferir
+  com o usuário se esse parágrafo do Cap. 4 deve ser ajustado.
 - Mesclagem no canônico é etapa posterior, ainda não decidida.

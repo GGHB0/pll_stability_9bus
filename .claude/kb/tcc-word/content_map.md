@@ -133,7 +133,9 @@ metadata:
       0,1 s (6 ciclos) nos dois. Confere com os `fault_info.json` exportados
       (ver [[cenarios-simulados]])
     - 4.3.3.3 Configuração do Sistema de Monitoramento, Variáveis Relevantes e
-      Tratamento de Dados
+      Tratamento de Dados — **em revisão colaborativa (2026-08-22)** num
+      fragmento externo (`capitulos_4_5_revisados.docx`), ainda não mesclada
+      aqui; ver [[tcc-revisao-fragmento-cap4]]
   - ✏️ **4.3.4** Protocolos de Contingência e Análise de Cenários
     - 4.3.4.1 Afundamento de Tensão Simétrico · 4.3.4.2 Afundamento de Tensão
       Assimétrico. **Corrigido 2026-08-05**: `2ω0` estava em pseudocódigo

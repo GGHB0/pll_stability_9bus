@@ -108,12 +108,15 @@ usuário:
    `canon_4_3_3.txt`) — não usados os valores de referência da TeseAGP
    (220V/5kVA, sistema de escala diferente).
 5. **Separar §4.3.2.2 em corrente e PLL** (como o canônico faz em 4.3.2.2 /
-   4.3.2.3) — **pendente**: usuário pediu para ver um comparativo antes de
-   decidir. Ainda não implementado.
+   4.3.2.3) — **feito**, após comparativo aprovado pelo usuário. Novo título
+   "4.3.2.2 Sintonia do Controle de Corrente" (renomeado, tirado "e do
+   SRF-PLL") seguido de "4.3.2.3 Modelagem do Sistema de Sincronismo
+   (SRF-PLL)" (título novo, inserido antes do parágrafo com Kp,PLL/Ki,PLL).
+   Texto dos dois parágrafos não mudou, só a quebra de seção. Documento
+   passou de 76 para 77 parágrafos.
 
 ## Próximos passos
 
-- Montar e apresentar o comparativo do item B5 (separar ou manter fundida a
-  subseção de sintonia de corrente + PLL) antes de implementar.
-- Só depois: revisar Cap. 5 do fragmento contra o canônico.
+- Cap. 4 do fragmento está fechado (grupos A e B completos).
+- Próximo: revisar Cap. 5 do fragmento contra o canônico.
 - Mesclagem no canônico é etapa posterior, ainda não decidida.

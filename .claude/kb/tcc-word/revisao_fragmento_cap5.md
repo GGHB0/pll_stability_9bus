@@ -113,7 +113,11 @@ herda o estilo Normal — conforme já praticado no Cap. 4 do fragmento.
 | 5.8 | `bus6_2phase_bad_pll_potencia_pq` |
 
 As imagens ficam empilhadas verticalmente no Word (pouco espaço horizontal),
-não lado a lado.
+não lado a lado. **Inseridas no fragmento em 2026-08-22**: parágrafo de imagem
+(centralizado, 5,5" de largura — página Letter, margens 1", 6,5" úteis)
+logo acima de cada legenda "Figura 5.X - ...". Documento passou de 77 para
+85 parágrafos. Cap. 4 não foi tocado (legendas de Fig. 4.1/4.2 continuam sem
+imagem, fora de escopo).
 
 ### `regime_bad_pll_v2` — por que existe
 

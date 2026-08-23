@@ -23,9 +23,8 @@
 
 ## P2 — Conteúdo pendente
 
-6. **Cap. 5 (Resultados) quase vazio** — 5.1.1 contém apenas "."; prioridade
-   do TCC. A redigir: 5.1.1, 5.1.2, complementos de 5.2.1, 5.3.1, 5.3.2
-   ([RESULTADOS A INSERIR] / [A COMPLEMENTAR]).
+6. **Cap. 5 (Resultados) quase vazio no canônico** — ver item 18 (P2) para o
+   estado atual: já redigido no fragmento externo, falta mesclar.
    **Salto de fase NÃO implementar** — instrução do Oscar.
 7. **Referências MATLAB/PSIM** — Oscar comentário #9, seção 4.2 (Plataformas).
    Citar MathWorks (MATLAB) e Powersim Inc. ou artigo (PSIM).
@@ -49,12 +48,21 @@
     registra o título e o número da edição (via `stability_classification_
     extended.md`, que a cita a partir do roadmap alemão). **Não inventar** —
     localizar o documento antes de fechar.
-17. **Tempos de falta a re-simular** — o §4.3.3.2 agora afirma falta em
-    0,6/0,7 s com janela até 1,0 s para o Modelo com Sintonia Inadequada.
-    Isso bate com os 4 cenários `_bad_pll` já exportados, mas **não existe
-    nenhum cenário desajustado com falta assimétrica**, que é justamente o
-    caso que demonstra o mecanismo de 120 Hz descrito no §2.3 e no §3.4.
-    Ver `kb/simulation/cenarios_simulados.md` § Lacunas de cobertura.
+17. ~~**Tempos de falta a re-simular**~~ — ✅ RESOLVIDO (2026-08-11/12): a
+    lacuna de falta assimétrica com sintonia inadequada foi preenchida
+    (`bus6`/`bus7` × 1phase/2phase_bad_pll). **Mas ver achado novo em
+    2026-08-22**: esses cenários são de uma safra de modelo diferente da dos
+    `_bad_pll` trifásicos/regime de julho (`v_d` pré-falta 0,99 vs. 0,80 pu) —
+    só a safra de agosto é pareável com os nominais. Detalhe completo em
+    `kb/simulation/cenarios_simulados.md` § Duas safras de modelo e em
+    `kb/tcc-word/revisao_fragmento_cap5.md`.
+
+18. **Cap. 5 canônico segue vazio** (5.1.1 só tem "."; 5.1.2, 5.3.1, 5.3.2
+    com placeholders) — o fragmento `capitulos_4_5_revisados.docx` já tem
+    esse capítulo redigido por completo, com números medidos e figuras
+    inseridas. Ver `kb/tcc-word/revisao_fragmento_cap5.md` para o texto e a
+    tese aplicada (compromisso de banda passante, sem *cycle slipping*
+    observado); mesclagem no canônico ainda não tem data.
 
 ## P3 — Limpeza
 

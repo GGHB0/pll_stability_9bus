@@ -147,6 +147,14 @@ metadata:
 
 ## Cap. 5 — Análise e Discussão de Resultados (PRIORIDADE)
 
+> **Já redigido no fragmento externo** `capitulos_4_5_revisados.docx`
+> (2026-08-22), com números medidos e 8 figuras inseridas — ver
+> [[tcc-revisao-fragmento-cap5]]. Estrutura do fragmento (5.1 regime
+> permanente · 5.2 simétricas por localização · 5.3 assimétricas por sintonia
+> · 5.4 conformidade · 5.5 resumo) diverge da numeração canônica abaixo; não
+> mesclado ainda. Tese aplicada: sintonia inadequada como compromisso de
+> banda passante, sem *cycle slipping* observado nos dados consistentes.
+
 - ⬜ **5.1** Desempenho sob Afundamentos Simétricos
   - ✏️ **5.1.1** Resposta Dinâmica e Tempo de Acomodação — contém apenas "."
   - ⬜ **5.1.2** Impacto na Injeção de P e Q — vazio

@@ -5,6 +5,31 @@ Edita o TCC DOCX (arquivo atual definido em `config.py` — hoje
 Modo aceito pelo Victor: **edições diretas no XML, sem tracked changes**
 (`helpers.py` mantém os geradores com `w:ins` caso volte a ser necessário).
 
+## Fragmento externo (não o canônico) — workflow mais simples
+
+Quando o alvo é um rascunho externo isolado (ex.: `capitulos_4_5_revisados.docx`
+em Downloads, plain-Normal-style, sem tracked changes/comentários/tabelas), o
+OOXML-surgery abaixo é overkill. Usar **python-docx direto**:
+
+- `docx.Document(path)` → editar `d.paragraphs[i].runs`/`insert_paragraph_before()`
+  → `d.save(path)`. Sem staging, sem `repack.py`, sem IDs a rastrear.
+- Reescrever texto de um parágrafo: remover todos os `w:r` (`for r in
+  list(p.runs): r._element.getparent().remove(r._element)`) e recriar com
+  `p.add_run(...)`, setando `bold`/`italic`/`font.name`/`font.size` (`Pt(...)`).
+- Inserir parágrafo novo: `paragraph.insert_paragraph_before()` — desloca em
+  +1 o índice de **todo** parágrafo seguinte; se for inserir vários, ou
+  buscar cada alvo por texto (`p.text.startswith(...)`) em vez de índice fixo,
+  ou processar em ordem que não invalide os índices já usados.
+- Inserir imagem: `paragraph.add_run().add_picture(path, width=Inches(...))`;
+  conferir `section.page_width - left_margin - right_margin` antes de escolher
+  a largura (não há tracked changes/OOXML a ajustar para caber).
+- Verificar acentuação: nunca confiar no stdout do terminal (mojibake mesmo
+  com conteúdo correto) — escrever um dump UTF-8 (`io.open(..., 'w',
+  encoding='utf-8')`) e reler com a ferramenta de leitura de arquivo.
+- KB desse workflow fica em `kb/tcc-word/revisao_fragmento_cap4.md` e
+  `revisao_fragmento_cap5.md`, não em `docx_structure.md`/`historico_entregas.md`
+  (que são só do canônico).
+
 ## Convenções de escrita
 
 - **Nunca usar travessão/em-dash ("—") no texto do TCC.** Reescrever a

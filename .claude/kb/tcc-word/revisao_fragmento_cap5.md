@@ -14,8 +14,14 @@ canônico.
 ## Achado crítico: duas safras de modelo nos cenários `_bad_pll`
 
 Levantado pela impressão digital do transitório de **energização** (independe
-da falta aplicada). Os ganhos reduzidos estão aplicados nas duas safras (pico
-de erro 26,4° contra 45,2° do nominal), mas o resto do modelo mudou:
+da falta aplicada). Os ganhos reduzidos estão aplicados nas duas safras, mas o
+resto do modelo mudou:
+
+> **Não usar o pico do erro de fase na energização como métrica.** Ele é
+> dominado pela singularidade de `atan2` quando a tensão passa por zero: o
+> valor cai de 172° para 22° só movendo o corte inicial de 1 ms para 5 ms, nos
+> dois cenários. Foi essa métrica que produziu os "26,4° contra 45,2°" do
+> texto antigo. Retirada do fragmento em 2026-08-23.
 
 | Safra | Cenários | Acomoda (±5°) | v_d pré-falta |
 |---|---|---|---|
@@ -23,9 +29,39 @@ de erro 26,4° contra 45,2° do nominal), mas o resto do modelo mudou:
 | **Agosto (11-12)** | `bus7/1phase_bad_pll`, `bus7/2phase_bad_pll`, `bus6/1phase_bad_pll`, `bus6/2phase_bad_pll` | 54 ms | **0,99 pu** |
 | *(nominal, julho)* | todos | 32 ms | 0,97–0,99 pu |
 
-**Consequência:** só a safra de agosto é pareável com os nominais. O
-`v_d` deprimido em 0,80 pu da safra de julho **não** é efeito dos ganhos do
-PLL — é do modelo daquela época. Ver também [[cenarios-simulados]].
+### Causa raiz identificada (2026-08-23)
+
+A divisão não é "julho vs agosto" genérica: é o commit `2a9b6d2`
+(2026-07-21), *Fix ONS_2_11 overvoltage sign bug*. Antes dele o ramo de
+sobretensão usava `k_high = -10`, levando `iq_ref` a −1 acima de 1,10 pu em
+vez de +1. Ver [[ons-2-11]].
+
+Teste que separa os 30 cenários sem ambiguidade: `iq_ref` médio enquanto
+a magnitude no PAC excede 1,10 pu durante a energização.
+
+| Grupo | Cenários | `iq_ref` em sobretensão |
+|---|---|---|
+| Pré-correção | 26 (todos os nominais + os 4 `_bad_pll` de julho) | −0,417 a −0,495 |
+| Pós-correção | 4 (`bus6`/`bus7` × `1phase`/`2phase_bad_pll`) | +0,110 |
+
+**Alcance é limitado à energização.** Os estados pré-falta dos dois lados
+coincidem (`v_d` 0,9894 pré contra 0,9963 pós; P 0,875 contra 0,869; erro
+< 0,02°), e a janela do bug fecha em ~38 ms, muito antes das faltas em 0,3 s
+ou 0,6 s. Logo 5.2 e 5.3 não são afetadas; só a 5.1, que analisa justamente
+a energização.
+
+### Decisão do usuário (2026-08-23)
+
+Optou por **usar o `regime_bad_pll` como está**, atribuindo o intervalo de
+450 ms com `id_ref` nula e `iq_ref` saturada ao **atraso do estimador** com
+ganhos subdimensionados: o laço lento mantém a excursão de energização fora
+da faixa normal por 37 ms contra 18 ms do nominal, e é esse alongamento que
+prolonga a atuação do suporte reativo. Sem re-simulação.
+
+Ressalva registrada e não resolvida: o Cap. 4 do fragmento estabelece
+ωn = 325,3 → 145,5 rad/s e ξ = 0,707 → 0,316, o que prevê acomodação ~5×
+mais lenta; o `regime_bad_pll` dá 17×, e os cenários de agosto com os mesmos
+ganhos dão 2,3×. Ver também [[cenarios-simulados]].
 
 Anomalia adicional: `line7_8/3phase_bad_pll` tem retenção de 64,9% contra
 10,4% do nominal na mesma linha, e 0,384 pu de 120 Hz numa falta trifásica
@@ -80,8 +116,9 @@ Progressão monotônica em todas as colunas. Em todos os casos o erro volta a
 ## Correções de fato no texto anterior
 
 - "despacha a potência ativa de **1 p.u.**" → medido **0,87 pu**.
-- "sintonia inadequada resulta em tensões médias reduzidas no PAC" → **falso**
-  na safra correta; os dois modelos convergem para 0,99 pu.
+- "os dois modelos convergem para o mesmo ponto de operação" → **falso** com
+  o `regime_bad_pll`: 0,983 pu (nominal) contra 0,808 pu, ainda subindo ao
+  final da janela. Texto reescrito em 2026-08-23.
 - O critério de ±1,15° (`TOL_RAD`, `src/config/settings.py`) **nunca** é
   atingido: a ondulação residual é de ~2,0° (nominal) e ~3,1° (inadequada).
   O capítulo usa ±2° para erro de fase e ±5% para `v_d`.
@@ -89,9 +126,9 @@ Progressão monotônica em todas as colunas. Em todos os casos o erro volta a
 ## Estrutura aplicada (41 parágrafos, índices 36-76, substituição 1:1)
 
 ```
-5.1 Validação da operação em regime permanente        Fig 5.1, 5.2
-5.2 Faltas simétricas: severidade e localização        Fig 5.3, 5.4, 5.5
-5.3 Faltas assimétricas: sequência negativa e sintonia Fig 5.6, 5.7, 5.8
+5.1 Validação da operação em regime permanente        Fig 5.1, 5.2, 5.3
+5.2 Faltas simétricas: severidade e localização        Fig 5.4, 5.5, 5.6
+5.3 Faltas assimétricas: sequência negativa e sintonia Fig 5.7, 5.8, 5.9
 5.4 Conformidade com o código de rede   (promovido do antigo 5.3.1 órfão)
 5.5 Resumo e conclusões do capítulo
 ```
@@ -104,30 +141,34 @@ herda o estilo Normal — conforme já praticado no Cap. 4 do fragmento.
 | Fig | Arquivo em `assets/charts/` |
 |---|---|
 | 5.1 | `regime_tensao_dq_rede` |
-| 5.2 | `regime_bad_pll_v2_tensao_dq_rede` |
-| 5.3 | `bus7_3phase_tensao_dq_rede` |
-| 5.4 | `bus6_3phase_tensao_dq_rede` |
-| 5.5 | `bus7_3phase_potencia_pq` |
-| 5.6 | `bus7_2phase_tensao_dq_rede` |
-| 5.7 | `bus7_2phase_bad_pll_tensao_dq_rede` |
-| 5.8 | `bus6_2phase_bad_pll_potencia_pq` |
+| 5.2 | `regime_bad_pll_tensao_dq_rede` |
+| 5.3 | `regime_bad_pll_potencia_pq` |
+| 5.4 | `bus7_3phase_tensao_dq_rede` |
+| 5.5 | `bus6_3phase_tensao_dq_rede` |
+| 5.6 | `bus7_3phase_potencia_pq` |
+| 5.7 | `bus7_2phase_tensao_dq_rede` |
+| 5.8 | `bus7_2phase_bad_pll_tensao_dq_rede` |
+| 5.9 | `bus6_2phase_bad_pll_potencia_pq` |
 
 As imagens ficam empilhadas verticalmente no Word (pouco espaço horizontal),
 não lado a lado. **Inseridas no fragmento em 2026-08-22**: parágrafo de imagem
 (centralizado, 5,5" de largura — página Letter, margens 1", 6,5" úteis)
 logo acima de cada legenda "Figura 5.X - ...". Documento passou de 77 para
-85 parágrafos. Cap. 4 não foi tocado (legendas de Fig. 4.1/4.2 continuam sem
+85 parágrafos, e para 88 com a Figura 5.3 (2026-08-23). Cap. 4 não foi tocado (legendas de Fig. 4.1/4.2 continuam sem
 imagem, fora de escopo).
 
-### `regime_bad_pll_v2` — por que existe
+### `regime_bad_pll_v2` — criado e removido
 
-Não há pasta `regime` na safra de agosto. A fonte é a **janela pré-falta** de
-`bus6/1phase_bad_pll` (falta só em 0,6 s), que é regime permanente legítimo do
-modelo atual. `gen_regime_waveforms.py` ganhou o campo `t_max`, que trunca o
-CSV antes de decimar para a escala do eixo Y não ser puxada pela falta.
+Existiu entre 22 e 23/08 como regime da sintonia inadequada da safra de
+agosto, construído a partir da **janela pré-falta** de `bus6/1phase_bad_pll`
+truncada em 0,6 s (campo `t_max` no gerador).
 
-O `regime_bad_pll` antigo (safra julho, `v_d` em 0,82 pu) **foi mantido** e não
-deve ser usado no TCC. Decidir depois se é aposentado.
+**Removido em 2026-08-23**, por regra do usuário: *"tudo que está em assets é
+o resultado a ser usado, são os dados reais, nada de manipulações"*. Cenário
+sintético não entra em `assets/`. O campo `t_max` saiu junto de
+`gen_regime_waveforms.py` (não era usado por mais nada), e entrou
+`ylim_dq`/`YLIM_DQ_REGIME`, que fixa a escala dq comum a `regime` e
+`regime_bad_pll` para as Figuras 5.1 e 5.2 poderem ser lidas na mesma escala.
 
 ### SVGs gerados nesta sessão
 
@@ -142,6 +183,9 @@ deve ser usado no TCC. Decidir depois se é aposentado.
   conferir se o Cap. 4 deve ser ajustado (o Cap. 4 estava fechado).
 - **Cap. 6/Conclusões do canônico** afirmam *cycle slipping* como resultado
   observado; precisam do mesmo alinhamento quando a mesclagem acontecer.
+- **Aberta:** por que os mesmos ganhos dão 563 ms de acomodação no
+  `regime_bad_pll` e 79 ms nos cenários de agosto, se a teoria de segunda
+  ordem do Cap. 4 prevê ~5×? Usuário optou por seguir sem resolver.
 - Se o Bruno re-simular os 4 cenários de julho no modelo atual, vale reavaliar
   se a perda de sincronismo do `bus7/3phase_bad_pll` (erro pós-falta de 180°,
   excursão de 359,8°) sobrevive — seria a tese *afundamento profundo + laço

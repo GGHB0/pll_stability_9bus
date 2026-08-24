@@ -72,13 +72,32 @@ energização, que independe da falta aplicada:
 | **Agosto (11-12)** | `bus6`/`bus7` × `1phase_bad_pll`/`2phase_bad_pll` | 54 ms | **0,99 pu** |
 | *(nominais)* | todos | 32 ms | 0,97–0,99 pu |
 
-O pico de erro na energização é 26,4° nas duas safras contra 45,2° dos
-nominais, então **os ganhos reduzidos estão aplicados em ambas** — o que mudou
-foi o resto do modelo. O `v_d` deprimido de julho não é efeito do PLL.
+### Causa raiz (2026-08-23)
 
-**Regra prática:** só comparar cenário `_bad_pll` com seu par nominal se for
-da safra de agosto. Os quatro pares assimétricos de `bus6`/`bus7` são os
-únicos rigorosamente pareáveis hoje.
+Commit `2a9b6d2` de 2026-07-21, *Fix ONS_2_11 overvoltage sign bug*: antes
+dele o ramo de sobretensão da função usava `k_high = -10`, levando `iq_ref`
+a −1 acima de 1,10 pu em vez de +1. Ver [[ons-2-11]].
+
+**Teste para classificar qualquer pasta:** `iq_ref` médio enquanto
+`hypot(vd_ufv_pu, vq_ufv_pu) > 1,10` nos primeiros 300 ms.
+
+| Grupo | Nº | `iq_ref` em sobretensão |
+|---|---|---|
+| Pré-correção | 26 (todos os nominais + os 4 `_bad_pll` de julho) | −0,417 a −0,495 |
+| Pós-correção | 4 (`bus6`/`bus7` × `1phase`/`2phase_bad_pll`) | +0,110 |
+
+O corte é limpo, sem valores intermediários. Note que **todos os nominais são
+pré-correção**, inclusive `bus7/3phase` (21/07) e `line8_9/*` (22/07).
+
+**Alcance:** o bug age só na energização (janela fecha em ~38 ms). Os estados
+pré-falta coincidem entre os grupos — `v_d` 0,9894 (pré) contra 0,9963 (pós),
+P 0,875 contra 0,869, erro de fase < 0,02° nos dois. Como as faltas entram em
+0,3 s ou 0,6 s, **a resposta à falta não é contaminada**; só análises da
+partida é que são.
+
+**Regra prática:** para comparar resposta à falta, qualquer par serve. Para
+comparar energização ou regime, conferir se os dois lados estão no mesmo
+grupo.
 
 Anomalia à parte: `line7_8/3phase_bad_pll` tem retenção de 64,9% (nominal:
 10,4%) e 0,384 pu de 120 Hz numa falta **trifásica equilibrada** (nominal:

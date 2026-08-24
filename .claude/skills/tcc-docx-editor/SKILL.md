@@ -23,6 +23,24 @@ OOXML-surgery abaixo é overkill. Usar **python-docx direto**:
 - Inserir imagem: `paragraph.add_run().add_picture(path, width=Inches(...))`;
   conferir `section.page_width - left_margin - right_margin` antes de escolher
   a largura (não há tracked changes/OOXML a ajustar para caber).
+- **Trocar a imagem de uma figura sem mexer no parágrafo:** sobrescrever o
+  blob da parte, não o desenho — `rel.target_part._blob = open(png,'rb').read()`
+  para o `rel` de `d.part.rels.values()` cujo `target_part.partname` termina
+  no `imageN.png` desejado. Preserva extent, alinhamento e legenda.
+- **Inserir figura no meio do documento** preservando a formatação das
+  existentes: `copy.deepcopy` do `w:p` de uma figura já pronta, depois
+  `rId, _ = d.part.get_or_add_image(png)`, `blip.set(qn('r:embed'), rId)` e
+  `docPr.set('id', ...)`/`set('name', ...)` com valores únicos. Inserir com
+  `ancora._p.addnext(node)` — em ordem **inversa** à desejada, porque cada
+  `addnext` empurra os anteriores para baixo.
+- **Renumerar figuras:** nunca dar `replace("5.3", "5.4")` solto no texto —
+  isso acerta também os títulos de seção (`5.3 Faltas assimétricas`) e as
+  referências cruzadas. Renumerar em ordem **decrescente** (5.8→5.9 antes de
+  5.7→5.8) e conferir depois se algum título `X.Y` foi arrastado junto.
+- **Conferir sempre ao final:** MD5 de cada `word/media/*` contra
+  `assets/charts/*.png`, ordem das imagens na sequência do documento,
+  legenda × chamada no corpo, títulos de seção, e varredura de em-dash e de
+  artefatos de código. Ver [[tcc-revisao-fragmento-cap5]].
 - Verificar acentuação: nunca confiar no stdout do terminal (mojibake mesmo
   com conteúdo correto) — escrever um dump UTF-8 (`io.open(..., 'w',
   encoding='utf-8')`) e reler com a ferramenta de leitura de arquivo.

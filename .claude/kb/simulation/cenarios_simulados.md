@@ -97,11 +97,15 @@ partida é que são.
 
 **Regra prática:** para comparar resposta à falta, qualquer par serve. Para
 comparar energização ou regime, conferir se os dois lados estão no mesmo
-grupo.
+grupo. Confirmado na auditoria de 2026-08-23: os 4 pares do Cap. 5 cruzam a
+fronteira (nominal pré, `_bad_pll` pós) e ainda assim os estados pré-falta
+ficam a 0,7% um do outro em `v_d` e em P.
 
-Anomalia à parte: `line7_8/3phase_bad_pll` tem retenção de 64,9% (nominal:
-10,4%) e 0,384 pu de 120 Hz numa falta **trifásica equilibrada** (nominal:
-0,008 pu). Esse run não corresponde à falta que o nome indica — não usar.
+Anomalia à parte: `line7_8/3phase_bad_pll` tem retenção de 65,5% (nominal:
+11,3%) e 0,416 pu de 120 Hz numa falta **trifásica equilibrada** (nominal:
+0,0002 pu). Esse run não corresponde à falta que o nome indica, não usar.
+Números refeitos em 2026-08-23 com as definições fechadas em
+[[tcc-revisao-fragmento-cap5-metricas]].
 
 ## Lacunas de cobertura
 

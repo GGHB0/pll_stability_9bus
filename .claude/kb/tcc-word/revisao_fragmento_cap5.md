@@ -14,41 +14,20 @@ canônico.
 ## Achado crítico: duas safras de modelo nos cenários `_bad_pll`
 
 Levantado pela impressão digital do transitório de **energização** (independe
-da falta aplicada). Os ganhos reduzidos estão aplicados nas duas safras, mas o
-resto do modelo mudou:
+da falta aplicada). Causa raiz, teste de classificação e alcance ficam em
+[[cenarios-simulados]]: é o commit `2a9b6d2` (2026-07-21), *Fix ONS_2_11
+overvoltage sign bug*, ver [[ons-2-11]].
+
+O que importa para este capítulo: **todos os nominais e os 4 `_bad_pll` de
+julho são pré-correção; só os 4 pares de agosto são pós-correção**. Como o bug
+age apenas nos ~38 ms da energização e os estados pré-falta coincidem, 5.2 e
+5.3 não são afetadas. Só a 5.1 é, porque analisa justamente a partida.
 
 > **Não usar o pico do erro de fase na energização como métrica.** Ele é
 > dominado pela singularidade de `atan2` quando a tensão passa por zero: o
 > valor cai de 172° para 22° só movendo o corte inicial de 1 ms para 5 ms, nos
 > dois cenários. Foi essa métrica que produziu os "26,4° contra 45,2°" do
 > texto antigo. Retirada do fragmento em 2026-08-23.
-
-| Safra | Cenários | Acomoda (±5°) | v_d pré-falta |
-|---|---|---|---|
-| **Julho** | `regime_bad_pll`, `bus7/3phase_bad_pll`, `bus6/3phase_bad_pll`, `line7_8/3phase_bad_pll` | ~599 ms | **0,80–0,82 pu** |
-| **Agosto (11-12)** | `bus7/1phase_bad_pll`, `bus7/2phase_bad_pll`, `bus6/1phase_bad_pll`, `bus6/2phase_bad_pll` | 54 ms | **0,99 pu** |
-| *(nominal, julho)* | todos | 32 ms | 0,97–0,99 pu |
-
-### Causa raiz identificada (2026-08-23)
-
-A divisão não é "julho vs agosto" genérica: é o commit `2a9b6d2`
-(2026-07-21), *Fix ONS_2_11 overvoltage sign bug*. Antes dele o ramo de
-sobretensão usava `k_high = -10`, levando `iq_ref` a −1 acima de 1,10 pu em
-vez de +1. Ver [[ons-2-11]].
-
-Teste que separa os 30 cenários sem ambiguidade: `iq_ref` médio enquanto
-a magnitude no PAC excede 1,10 pu durante a energização.
-
-| Grupo | Cenários | `iq_ref` em sobretensão |
-|---|---|---|
-| Pré-correção | 26 (todos os nominais + os 4 `_bad_pll` de julho) | −0,417 a −0,495 |
-| Pós-correção | 4 (`bus6`/`bus7` × `1phase`/`2phase_bad_pll`) | +0,110 |
-
-**Alcance é limitado à energização.** Os estados pré-falta dos dois lados
-coincidem (`v_d` 0,9894 pré contra 0,9963 pós; P 0,875 contra 0,869; erro
-< 0,02°), e a janela do bug fecha em ~38 ms, muito antes das faltas em 0,3 s
-ou 0,6 s. Logo 5.2 e 5.3 não são afetadas; só a 5.1, que analisa justamente
-a energização.
 
 ### Decisão do usuário (2026-08-23)
 
@@ -63,10 +42,11 @@ Ressalva registrada e não resolvida: o Cap. 4 do fragmento estabelece
 mais lenta; o `regime_bad_pll` dá 17×, e os cenários de agosto com os mesmos
 ganhos dão 2,3×. Ver também [[cenarios-simulados]].
 
-Anomalia adicional: `line7_8/3phase_bad_pll` tem retenção de 64,9% contra
-10,4% do nominal na mesma linha, e 0,384 pu de 120 Hz numa falta trifásica
-**equilibrada** (o nominal tem 0,008 pu). Esse run não parece ser a falta que
-o nome indica. Descartado.
+Anomalia adicional: `line7_8/3phase_bad_pll` tem retenção de 65,5% contra
+11,3% do nominal na mesma linha, e 0,416 pu de 120 Hz numa falta trifásica
+**equilibrada** (o nominal tem 0,0002 pu). Esse run não é a falta que o nome
+indica. Descartado. Valores refeitos com as definições de
+[[tcc-revisao-fragmento-cap5-metricas]].
 
 ## Decisões do usuário (2026-08-22)
 
@@ -82,21 +62,27 @@ comparativa completa.
 
 ## A tese que os dados sustentam
 
-O laço subdimensionado **não** é uniformemente pior — é um compromisso:
+Receitas de cálculo e valores conferidos em
+[[tcc-revisao-fragmento-cap5-metricas]]. Os números desta seção na versão
+anterior deste arquivo estavam errados e foram corrigidos em 2026-08-23.
 
-- **Durante a falta:** excursão angular **menor** nos 4 pares (40,1°→34,2°;
-  58,9°→46,8°; 44,3°→19,0°; 15,0°→9,2°). Menor banda passante rejeita melhor
-  a oscilação de 120 Hz.
-- **Na recuperação:** reaquisição 2 a 3× mais lenta (55→187 ms; 47→103 ms;
-  39→95 ms). Ondulação de Q pós-falta na Barra 6 bifásica vai de 4,8 a
-  11,7 pu.
-- **Em regime:** sincronização ~2× mais lenta (34→74 ms para ±2°) e erro de
-  fase estático ~2× maior (0,81°→1,48°). Mesmo ponto de operação final.
+O laço subdimensionado **não** é uniformemente pior, é um compromisso:
+
+- **Durante a falta:** excursão angular **menor** em 3 dos 4 pares
+  (96,0°→34,9° na Barra 6 bifásica; 89,7°→72,2° na Barra 7 monofásica). No
+  par mais brando (Barra 6 monofásica) empatam, 12,0° contra 13,2°. Na Barra
+  7 bifásica os dois saturam em 180°.
+- **Na recuperação:** reaquisição ~2× mais lenta (51→99 ms; 46→98 ms;
+  48→78 ms; 39→47 ms). Ondulação de Q pós-falta na Barra 6 bifásica vai de
+  4,8 a 11,7 pu.
+- **Em regime:** o que degrada é o ponto de operação (`v_d` 0,983 contra
+  0,808 pu). O erro de fase estático é **igual** nos dois modelos (rms 0,442°
+  contra 0,444°); o "~2× maior" registrado antes era falso.
 
 **Resultado mais sólido do capítulo** (independe de sintonia): a componente de
-120 Hz em `v_d` vale 0,008–0,014 pu nas faltas trifásicas contra 0,28–0,71 pu
-nas assimétricas — uma a quase duas ordens de grandeza. É a confirmação
-empírica do mecanismo de sequência negativa descrito no Cap. 3.
+120 Hz em `v_d` vale 0,0001–0,0013 pu nas faltas trifásicas contra 0,29–0,71 pu
+nas assimétricas, mais de duas ordens de grandeza. É a confirmação empírica do
+mecanismo de sequência negativa descrito no Cap. 3.
 
 ## Gradiente de localização (5.2, só nominal, falta trifásica)
 
@@ -105,13 +91,16 @@ eletricamente mais distante (3 linhas). Ver [[ieee9bus-topology]].
 
 | Local | Retenção `v_d` | Pico erro de fase | P durante | `i_q,ref` |
 |---|---|---|---|---|
-| Barra 7 (PAC) | 8,5% | 53,9° | 0,00 pu | −0,97 |
-| Linha 7-8 | 10,4% | 44,3° | 0,00 pu | −0,97 |
-| Linha 8-9 | 46,4% | 23,5° | 0,04 pu | −0,94 |
-| Barra 6 (remota) | 58,4% | 21,0° | 0,36 pu | −0,67 |
+| Barra 7 (PAC) | 9,2% | 37,3° | 0,00 pu | 1,000 |
+| Linha 7-8 | 11,3% | 32,5° | 0,01 pu | 1,000 |
+| Linha 8-9 | 47,1% | 29,8° | 0,00 pu | 1,000 |
+| Barra 6 (remota) | 58,4% | 7,3° | 0,34 pu | 0,776 |
 
-Progressão monotônica em todas as colunas. Em todos os casos o erro volta a
-±2° em até 100 ms após a eliminação.
+Progressão monotônica em todas as colunas. O erro volta a ±2° em até 112 ms
+após a eliminação; o pior caso é a Linha 8-9, e o "100 ms" registrado antes
+era furado por ela. Pico medido a partir do 1º ciclo após a aplicação, para
+excluir o transitório de comutação, ver
+[[tcc-revisao-fragmento-cap5-metricas]].
 
 ## Correções de fato no texto anterior
 
@@ -128,7 +117,7 @@ Progressão monotônica em todas as colunas. Em todos os casos o erro volta a
 ```
 5.1 Validação da operação em regime permanente        Fig 5.1, 5.2, 5.3
 5.2 Faltas simétricas: severidade e localização        Fig 5.4, 5.5, 5.6
-5.3 Faltas assimétricas: sequência negativa e sintonia Fig 5.7, 5.8, 5.9
+5.3 Faltas assimétricas: sequência negativa e sintonia Fig 5.7 a 5.10
 5.4 Conformidade com o código de rede   (promovido do antigo 5.3.1 órfão)
 5.5 Resumo e conclusões do capítulo
 ```
@@ -147,14 +136,20 @@ herda o estilo Normal — conforme já praticado no Cap. 4 do fragmento.
 | 5.5 | `bus6_3phase_tensao_dq_rede` |
 | 5.6 | `bus7_3phase_potencia_pq` |
 | 5.7 | `bus7_2phase_tensao_dq_rede` |
-| 5.8 | `bus7_2phase_bad_pll_tensao_dq_rede` |
-| 5.9 | `bus6_2phase_bad_pll_potencia_pq` |
+| 5.8 | `bus6_2phase_tensao_dq_rede` |
+| 5.9 | `bus6_2phase_bad_pll_tensao_dq_rede` |
+| 5.10 | `bus6_2phase_bad_pll_potencia_pq` |
+
+As Figuras 5.8 e 5.9 substituíram o par `bus7/2phase`, que satura em 180° nas
+duas sintonias e por isso não ilustrava o efeito da parametrização. Motivo e
+escalas compartilhadas em [[tcc-revisao-fragmento-cap5-metricas]].
 
 As imagens ficam empilhadas verticalmente no Word (pouco espaço horizontal),
 não lado a lado. **Inseridas no fragmento em 2026-08-22**: parágrafo de imagem
 (centralizado, 5,5" de largura — página Letter, margens 1", 6,5" úteis)
 logo acima de cada legenda "Figura 5.X - ...". Documento passou de 77 para
-85 parágrafos, e para 88 com a Figura 5.3 (2026-08-23). Cap. 4 não foi tocado (legendas de Fig. 4.1/4.2 continuam sem
+85 parágrafos, para 88 com a Figura 5.3 e para 91 com a Figura 5.9
+(2026-08-23). Cap. 4 não foi tocado (legendas de Fig. 4.1/4.2 continuam sem
 imagem, fora de escopo).
 
 ### `regime_bad_pll_v2` — criado e removido
@@ -190,4 +185,7 @@ sintético não entra em `assets/`. O campo `t_max` saiu junto de
   se a perda de sincronismo do `bus7/3phase_bad_pll` (erro pós-falta de 180°,
   excursão de 359,8°) sobrevive — seria a tese *afundamento profundo + laço
   lento*, mais forte que a atual.
+- Toda métrica nova do capítulo precisa entrar em
+  [[tcc-revisao-fragmento-cap5-metricas]] com a receita junto. Números sem
+  receita foi exatamente o que a auditoria de 2026-08-23 teve de desfazer.
 - Mesclagem no canônico segue sem data definida.

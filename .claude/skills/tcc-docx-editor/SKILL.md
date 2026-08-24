@@ -41,6 +41,21 @@ OOXML-surgery abaixo é overkill. Usar **python-docx direto**:
   `assets/charts/*.png`, ordem das imagens na sequência do documento,
   legenda × chamada no corpo, títulos de seção, e varredura de em-dash e de
   artefatos de código. Ver [[tcc-revisao-fragmento-cap5]].
+- **Regenerou gráfico em `assets/`? Todo blob do documento fica suspeito.**
+  Mexer no gerador muda o PNG de figuras que você nem pretendia tocar (uma
+  escala compartilhada nova redesenha o par inteiro). O MD5 do item anterior é
+  o que pega isso: qualquer `word/media/*` sem correspondência em `assets/` é
+  figura desatualizada, não erro de conferência. Reescrever o blob e rodar a
+  conferência de novo.
+- **Número no texto exige receita no KB.** Toda métrica escrita no documento
+  precisa ter a definição registrada (janela, sinal, estatística) junto do
+  valor. Métrica sem receita não é reproduzível e não sobrevive à próxima
+  auditoria — foi assim que meia dúzia de valores do Cap. 5 caiu em
+  2026-08-23. Ver [[tcc-revisao-fragmento-cap5-metricas]].
+- **Entrega pode falhar com o arquivo aberto no Word:** `Copy-Item` devolve
+  `IOException ... sendo usado por outro processo`. Não renomear o destino
+  para contornar (gera arquivo canônico duplicado): pedir para fechar o Word e
+  repetir a cópia.
 - Verificar acentuação: nunca confiar no stdout do terminal (mojibake mesmo
   com conteúdo correto) — escrever um dump UTF-8 (`io.open(..., 'w',
   encoding='utf-8')`) e reler com a ferramenta de leitura de arquivo.

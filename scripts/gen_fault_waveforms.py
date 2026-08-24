@@ -19,6 +19,9 @@ puro, paleta do projeto), mas com duas diferencas de estrutura:
        oscilatoria (xi=0,316) -- mesmo instante empirico ~0,55 s usado em
        gen_regime_waveforms.py, nao T_SETTLE global (medido so p/ o caso
        nominal). t_fault = 0,6 s cai sempre depois.
+3. Escala Y compartilhada nos pares de figuras que o TCC compara lado a
+   lado (YLIM_GROUPS): o ylim vira a uniao dos extremos dq do grupo, para
+   que a comparacao visual nao seja falseada pela autoescala por figura.
 
 Por cenario, 6 graficos (prefixo = SCENARIOS[i]["prefix"]):
   <prefixo>_correntes_abc.svg       -- i_a, i_b, i_c   (janela em torno da falta)
@@ -100,6 +103,41 @@ SCENARIOS = [
     dict(folder="line8_9/3phase", prefix="line8_9_3phase", bus="Linha 8-9", fault_type="3phase"),
     dict(folder="line8_9/2phase", prefix="line8_9_2phase", bus="Linha 8-9", fault_type="2phase"),
 ]
+
+# ── escalas dq compartilhadas entre figuras lidas lado a lado ───────────────
+# Duas figuras so podem ser comparadas visualmente se dividirem o eixo Y.
+# Cada grupo abaixo corresponde a um par de figuras do Cap. 5 do TCC; o ylim
+# passa a ser a uniao dos extremos de vd/vq (rede e inversor) de todos os
+# cenarios do grupo, medidos a partir do assentamento de cada modelo. Sem
+# isso o matplotlib escala cada figura pelos proprios dados e a comparacao
+# fica falseada -- mesmo motivo de YLIM_DQ_REGIME em gen_regime_waveforms.py.
+YLIM_GROUPS = {
+    # Figuras 5.4 e 5.5: gradiente de localizacao, trifasica nominal
+    "sim_localizacao": ["bus7/3phase", "bus6/3phase"],
+    # Figuras 5.8 e 5.9: efeito da sintonia, bifasica na Barra 6
+    "assim_sintonia": ["bus6/2phase", "bus6/2phase_bad_pll"],
+}
+
+# preenchido em build_group_ylims(); {pasta: (ymin, ymax)}
+GROUP_YLIM = {}
+
+
+def build_group_ylims():
+    """Uniao dos extremos dq de cada grupo de YLIM_GROUPS."""
+    for folders in YLIM_GROUPS.values():
+        lo, hi = np.inf, -np.inf
+        for f in folders:
+            base = ROOT / "output" / "results" / f
+            fi = json.loads((base / "fault_info.json").read_text())
+            d = pd.read_csv(base / "sim_data.csv")
+            settle = BAD_PLL_SETTLE if fi.get("bad_pll") else T_SETTLE
+            sub = d[d.t_s >= settle]
+            for c in ("vd_rede_pu", "vq_rede_pu", "vd_ufv_pu", "vq_ufv_pu"):
+                lo = min(lo, float(sub[c].min()))
+                hi = max(hi, float(sub[c].max()))
+        pad = 0.05 * (hi - lo)
+        for f in folders:
+            GROUP_YLIM[f] = (lo - pad, hi + pad)
 
 
 def style_axes(ax):
@@ -284,9 +322,11 @@ def gen_scenario(sc):
     t_vdi, y_vdi = dec("vd_ufv_pu")
     t_vqi, y_vqi = dec("vq_ufv_pu")
 
-    y_all = np.concatenate([y_vdr, y_vqr, y_vdi, y_vqi])
-    pad = 0.05 * (y_all.max() - y_all.min())
-    ylim = (y_all.min() - pad, y_all.max() + pad)
+    ylim = GROUP_YLIM.get(sc["folder"])
+    if ylim is None:
+        y_all = np.concatenate([y_vdr, y_vqr, y_vdi, y_vqi])
+        pad = 0.05 * (y_all.max() - y_all.min())
+        ylim = (y_all.min() - pad, y_all.max() + pad)
 
     for suf_name, label, (t_d, y_d), (t_q, y_q) in [
         ("rede", "Rede", (t_vdr, y_vdr), (t_vqr, y_vqr)),
@@ -308,5 +348,10 @@ def gen_scenario(sc):
 
 
 if __name__ == "__main__":
+    import sys
+    build_group_ylims()
+    alvo = sys.argv[1:]  # opcional: regenera so os prefixos informados
     for sc in SCENARIOS:
+        if alvo and sc["prefix"] not in alvo:
+            continue
         gen_scenario(sc)

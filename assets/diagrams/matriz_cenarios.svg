@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 560" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <rect width="760" height="560" fill="#ffffff"/>
+  <text x="380" y="32" text-anchor="middle" font-size="19" font-weight="700" fill="#0B132B">Cenários simulados: local da falta, tipo e sintonia do PLL</text>
+  <rect x="50" y="62" width="660" height="40" fill="#f1f5f9"/>
+  <text x="64" y="88" font-size="16" font-weight="700" fill="#0B132B">Local da falta</text>
+  <text x="310" y="88" text-anchor="middle" font-size="16" font-weight="700" fill="#0B132B">Monofásica (1φ)</text>
+  <text x="470" y="88" text-anchor="middle" font-size="16" font-weight="700" fill="#0B132B">Bifásica (2φ)</text>
+  <text x="630" y="88" text-anchor="middle" font-size="16" font-weight="700" fill="#0B132B">Trifásica (3φ)</text>
+  <text x="64" y="127" font-size="15" fill="#0B132B">Barra 4</text>
+  <rect x="295" y="110" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="310" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="455" y="110" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="470" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="615" y="110" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="630" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="50" y="140" width="660" height="38" fill="#f8fafc"/>
+  <text x="64" y="165" font-size="15" fill="#0B132B">Barra 5</text>
+  <rect x="295" y="148" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="310" y="164" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="455" y="148" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="470" y="164" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="615" y="148" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="630" y="164" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <text x="64" y="203" font-size="15" fill="#0B132B">Barra 6</text>
+  <rect x="276" y="186" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="291" y="202" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="314" y="186" width="30" height="22" rx="5" fill="#F97316"/>
+  <text x="329" y="202" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">I</text>
+  <rect x="436" y="186" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="451" y="202" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="474" y="186" width="30" height="22" rx="5" fill="#F97316"/>
+  <text x="489" y="202" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">I</text>
+  <rect x="596" y="186" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="611" y="202" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="634" y="186" width="30" height="22" rx="5" fill="#F97316"/>
+  <text x="649" y="202" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">I</text>
+  <rect x="50" y="216" width="660" height="38" fill="#f8fafc"/>
+  <text x="64" y="241" font-size="15" fill="#0B132B">Barra 7</text>
+  <rect x="276" y="224" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="291" y="240" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="314" y="224" width="30" height="22" rx="5" fill="#F97316"/>
+  <text x="329" y="240" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">I</text>
+  <rect x="436" y="224" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="451" y="240" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="474" y="224" width="30" height="22" rx="5" fill="#F97316"/>
+  <text x="489" y="240" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">I</text>
+  <rect x="596" y="224" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="611" y="240" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="634" y="224" width="30" height="22" rx="5" fill="#F97316"/>
+  <text x="649" y="240" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">I</text>
+  <text x="64" y="279" font-size="15" fill="#0B132B">Barra 8</text>
+  <rect x="295" y="262" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="310" y="278" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="455" y="262" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="470" y="278" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="615" y="262" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="630" y="278" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="50" y="292" width="660" height="38" fill="#f8fafc"/>
+  <text x="64" y="317" font-size="15" fill="#0B132B">Barra 9</text>
+  <rect x="295" y="300" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="310" y="316" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="455" y="300" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="470" y="316" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="615" y="300" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="630" y="316" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <text x="64" y="355" font-size="15" fill="#0B132B">Linha 7-8</text>
+  <text x="310" y="354" text-anchor="middle" font-size="16" fill="#94a3b8">–</text>
+  <text x="470" y="354" text-anchor="middle" font-size="16" fill="#94a3b8">–</text>
+  <rect x="596" y="338" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="611" y="354" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="634" y="338" width="30" height="22" rx="5" fill="#F97316"/>
+  <text x="649" y="354" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">I</text>
+  <rect x="50" y="368" width="660" height="38" fill="#f8fafc"/>
+  <text x="64" y="393" font-size="15" fill="#0B132B">Linha 8-9</text>
+  <text x="310" y="392" text-anchor="middle" font-size="16" fill="#94a3b8">–</text>
+  <rect x="455" y="376" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="470" y="392" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="615" y="376" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="630" y="392" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="50" y="406" width="660" height="50" fill="#eef2f7"/>
+  <text x="64" y="428" font-size="15" fill="#0B132B">Regime permanente</text>
+  <text x="64" y="446" font-size="13" font-style="italic" fill="#6b7280">sem falta aplicada</text>
+  <rect x="436" y="420" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="451" y="436" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <rect x="474" y="420" width="30" height="22" rx="5" fill="#F97316"/>
+  <text x="489" y="436" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">I</text>
+  <line x1="50" y1="62" x2="50" y2="456" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="230" y1="62" x2="230" y2="456" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="390" y1="62" x2="390" y2="406" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="550" y1="62" x2="550" y2="406" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="710" y1="62" x2="710" y2="456" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="62" x2="710" y2="62" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="102" x2="710" y2="102" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="140" x2="710" y2="140" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="178" x2="710" y2="178" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="216" x2="710" y2="216" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="254" x2="710" y2="254" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="292" x2="710" y2="292" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="330" x2="710" y2="330" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="368" x2="710" y2="368" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="406" x2="710" y2="406" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="50" y1="456" x2="710" y2="456" stroke="#cbd5e1" stroke-width="1"/>
+  <rect x="196" y="488" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="211" y="504" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <text x="234" y="504" font-size="15" fill="#0B132B">sintonia nominal</text>
+  <rect x="400" y="488" width="30" height="22" rx="5" fill="#F97316"/>
+  <text x="415" y="504" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">I</text>
+  <text x="438" y="504" font-size="15" fill="#0B132B">sintonia inadequada</text>
+  <text x="380" y="538" text-anchor="middle" font-size="14" fill="#6b7280">30 cenários exportados: 22 com sintonia nominal e 8 com sintonia inadequada.</text>
+</svg>

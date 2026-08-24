@@ -1,6 +1,6 @@
 ---
 name: cenarios-simulados
-description: Inventário dos cenários exportados em output/results — 22 nominais + 10 com sintonia inadequada, as duas configurações temporais de falta e as lacunas de cobertura
+description: Inventário dos cenários exportados em output/results — 22 nominais + 8 com sintonia inadequada, as duas configurações temporais de falta e as lacunas de cobertura
 source: output/results/*/fault_info.json (levantamento 2026-08-19); params.m linhas 13-17, 59-61
 ---
 
@@ -34,7 +34,7 @@ para 0,6 s garante que a falta atinja um sistema já em regime.
 > (hoje 0,3/0,4). Ele **não** é fonte confiável do que cada cenário exportado
 > usou. A fonte correta é o `fault_info.json` de cada pasta.
 
-## Inventário (32 cenários)
+## Inventário (30 cenários)
 
 ### Nominais (22)
 
@@ -45,7 +45,7 @@ para 0,6 s garante que a falta atinja um sistema já em regime.
 | `line8_9` | 2phase, 3phase |
 | `regime` | (sem falta) |
 
-### Sintonia inadequada (10)
+### Sintonia inadequada (8)
 
 | Local | Tipos de falta |
 |---|---|
@@ -56,8 +56,18 @@ para 0,6 s garante que a falta atinja um sistema já em regime.
 `bus6` e `bus7` ganharam o conjunto completo (1/2/3phase) em 2026-08-11/12 —
 antes só tinham `3phase_bad_pll`, preenchendo a lacuna de falta assimétrica
 com sintonia inadequada apontada na revisão anterior deste inventário
-(2026-08-04). Todos os 10 têm par nominal correspondente, então o toggle do
+(2026-08-04). Todos os 8 têm par nominal correspondente, então o toggle do
 dashboard encontra equivalente em ambas as direções.
+
+> **Contagem corrigida em 2026-08-23.** Este arquivo dizia "32 cenários /
+> 10 com sintonia inadequada" no cabeçalho, mas as próprias tabelas acima
+> somam 8 (3 na Barra 6, 3 na Barra 7, 1 na Linha 7-8, 1 em regime). O disco
+> confirma 8. O erro era só do cabeçalho, as tabelas sempre estiveram certas.
+
+> A matriz é desenhada por `scripts/gen_matriz_cenarios.py`, que lê
+> `output/results/` direto e gera `assets/diagrams/matriz_cenarios.svg` (a
+> Figura 4.4 do fragmento, ver [[tcc-revisao-fragmento-cap4]]). Rodar de novo
+> depois de qualquer re-simulação: a figura se atualiza sozinha.
 
 ## ⚠️ Duas safras de modelo nos cenários `_bad_pll`
 

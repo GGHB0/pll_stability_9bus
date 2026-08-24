@@ -192,7 +192,7 @@ metadata:
 | 2.6 | Perfil característico de afundamento de tensão | placeholder texto OK |
 | 2.X (ONS) | Curva de suportabilidade LVRT — ONS Sub. 2.10 | placeholder texto OK |
 | 2.X (ONS) | Requisito de injeção de reativo — ONS Sub. 2.10 | placeholder texto OK |
-| **3.1** | **Circuito VSI trifásico com filtro LCL e blocos PWM** | **SEM placeholder ⚠️** (citada em 4.3.2.1) |
+| **3.1** | **Circuito VSI trifásico com filtro LCL e blocos PWM** | ✅ virou a Fig. 4.2 do fragmento ([[tcc-revisao-fragmento-cap4]]) |
 
 > Numeração das figuras ainda é a herdada do V8 (2.1, 2.6, 3.1...) — não foi
 > renumerada junto com os capítulos; revisar quando as imagens forem inseridas.

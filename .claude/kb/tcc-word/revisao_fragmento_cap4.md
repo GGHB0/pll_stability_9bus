@@ -115,6 +115,12 @@ usuário:
    Texto dos dois parágrafos não mudou, só a quebra de seção. Documento
    passou de 76 para 77 parágrafos.
 
+## Figuras do Cap. 4
+
+Quatro imagens inseridas em 2026-08-23 (noite), com renumeração de 4.1-4.3
+para 4.2-4.4. Mapa das figuras, decisões de redação e as duas pendências de
+legibilidade em [[tcc-revisao-fragmento-cap4-figuras]].
+
 ## Próximos passos
 
 - Cap. 4 do fragmento está fechado (grupos A e B completos).

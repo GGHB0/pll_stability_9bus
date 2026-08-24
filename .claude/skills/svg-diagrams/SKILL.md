@@ -1,7 +1,7 @@
 ---
 name: svg-diagrams
 description: Cria qualquer SVG do projeto (diagramas, esquemáticos, curvas de norma, banners, ilustrações para README/KB/TCC) e exporta para PNG. Ativar sempre que o usuário pedir para criar/desenhar/gerar/ajustar um SVG, PNG, diagrama, esquemático, figura, banner ou ilustração — mesmo sem mencionar o formato (ex.: "precisa de uma figura do circuito do filtro LCL", "desenha o esquemático do VSI", "cria a curva do ONS", "atualiza o banner"). Também cobre gráficos com dados reais de simulação (waveforms, séries temporais do dashboard) para o TCC — ver seção "Gráficos de Dados Reais". Também usar para converter um SVG existente do repositório em PNG.
-version: 1.4.0
+version: 1.5.0
 ---
 
 # SVG Diagrams — Skill de Criação de Figuras e Exportação PNG
@@ -36,6 +36,23 @@ re-simulação. Ver `assets/charts/README.md` e `scripts/gen_regime_waveforms.py
 como referência de estilo (legenda com fundo branco fora das curvas,
 `T_SETTLE` sombreado, título com `pad` quando a legenda fica acima do eixo).
 
+## Figura Desenhada à Mão, Conteúdo Lido do Disco
+
+Caso intermediário entre os dois acima: o **layout** é desenhado (uma matriz,
+um quadro-síntese, um inventário), mas o **conteúdo** vem do repositório e
+muda a cada re-simulação. Aí não se escreve o SVG à mão nem se usa matplotlib:
+escreve-se um gerador que lê a fonte e emite o SVG.
+
+Referência: `scripts/gen_matriz_cenarios.py`, que varre `output/results/` e
+gera `assets/diagrams/matriz_cenarios.svg` (a Figura 4.4 do TCC). Ganho real:
+a figura não pode divergir do que foi simulado, e a contagem impressa no
+rodapé é contada, não digitada — foi assim que se descobriu que a KB dizia 32
+cenários onde havia 30.
+
+Vale a pena quando o conteúdo é volátil ou quando errar o número tem custo.
+Para um diagrama conceitual estável (circuito, laço de controle), continua
+sendo SVG escrito à mão.
+
 ## Convenção Visual
 
 | Elemento | Cor | Uso |
@@ -66,8 +83,19 @@ inserida ocupando a largura útil da página (~16 cm) é reduzida por um fator ~
 pt_no_docx ≈ 0,49 × font_px         (viewBox ~920 px, figura na largura da página)
 ```
 
-Generalizando p/ qualquer largura de `viewBox` W e largura no papel L_cm:
-`pt_no_docx ≈ font_px × (L_cm / W) × 28,35 / 12` ≈ `font_px × L_cm / W × 2,36`.
+Generalizando p/ qualquer largura de `viewBox` W (px) e largura no papel L_cm:
+
+```
+pt_no_docx ≈ font_px × L_cm × 28,35 / W        (1 cm = 28,35 pt)
+```
+
+Confere com a regra prática acima: W = 920 e L = 16 cm dão 16 × 28,35 / 920 =
+**0,49 pt por px**. (A versão anterior desta linha trazia um `/ 12` a mais e
+devolvia 0,041 — ~12× baixo, contradizendo a própria tabela abaixo. Corrigida
+em 2026-08-23.)
+
+Largura de inserção usual no fragmento do TCC: 5,5" = 13,97 cm; a largura útil
+da página Letter com margens de 1" é 6,5" = 16,51 cm.
 
 | Fonte no SVG (W≈920) | ~pt no DOCX | Veredito |
 |---|---|---|
@@ -75,6 +103,13 @@ Generalizando p/ qualquer largura de `viewBox` W e largura no papel L_cm:
 | 13 px | ~6,4 pt | mínimo aceitável p/ rótulos secundários |
 | 15 px | ~7,4 pt | ok |
 | ≥18 px | ≥8,9 pt | confortável (use p/ títulos) |
+
+**Quando o piso não cabe, encolha o `viewBox`, não aumente a fonte.** O que
+manda é a razão `font_px / W`, então re-desenhar o mesmo conteúdo num
+`viewBox` mais estreito sobe o tamanho aparente sem tocar em nenhuma fonte.
+Foi o que resolveu o `pll_control_loop.svg` em 2026-08-23: 920×340 → 680×350
+levou os rótulos de 4,9 pt para 7,6 pt. Subir a fonte no layout largo teria
+estourado as caixas — num diagrama denso, +30% de fonte é colisão garantida.
 
 **Piso de fonte**: em figura destinada ao DOCX, nenhum texto abaixo de ~13 px
 (para W≈920). Se o piso não couber sem colisão, o problema é densidade — reduza
@@ -97,7 +132,24 @@ renderiza como texto cru, não como notação de engenharia. Sempre use `<tspan>
 <text font-style="italic">u<tspan baseline-shift="sub" font-size="75%">abc</tspan>(PAC)</text>
 ```
 
-## Armadilha 2 — Setas que não "entram" no destino
+## Armadilha 2 — Acento circunflexo de estimativa (`ω̂`, `φ̂`)
+
+O chapéu de "valor estimado" é um **diacrítico combinante** (U+0302). O
+navegador não o centraliza sobre a letra: ele sai deslocado para a direita e
+lido como erro de digitação. Não use em figura que vá para o TCC.
+
+Troque pela notação com subscrito, que ainda diz "estimado pelo PLL" e casa
+com as outras figuras:
+
+```xml
+<text font-style="italic">θ<tspan baseline-shift="sub" font-size="75%">PLL</tspan>(t)</text>
+```
+
+Regra geral: **símbolo tem que bater entre figuras do mesmo capítulo.** Se o
+esquemático do circuito rotula a saída do PLL como `θ_PLL`, o diagrama de
+blocos que detalha esse mesmo PLL não pode chamá-la de `φ̂`.
+
+## Armadilha 3 — Setas que não "entram" no destino
 
 As setas usam marcador com `orient="auto-start-reverse"`, que orienta a ponta pela
 direção do **último segmento do path**. Isso significa que o segmento final precisa
@@ -116,70 +168,10 @@ Defina um marcador por cor usada (a ponta da seta deve casar com a cor da linha)
 
 ## Workflow de Exportação para PNG
 
-Não há rasterizador de SVG por CLI neste ambiente (sem inkscape, rsvg-convert,
-cairosvg ou imagemagick). O caminho que funciona é renderizar no Chrome via
-`mcp__Claude_Browser__*` e extrair o PNG por `canvas.toDataURL`.
-
-> **Namespace atual**: `mcp__Claude_Browser__*` — o antigo `mcp__Claude_Preview__*`
-> não existe mais. **Toda** chamada exige `tabId`: capture o `tabId` devolvido pelo
-> `preview_start` e repasse em `resize_window`, `javascript_tool` e `computer`.
->
-> **Custo**: desenhar e decidir o layout é trabalho de modelo premium; o loop
-> mecânico abaixo (rodar o gerador, rasterizar, conferir, reajustar) é simples e
-> pode rodar em modelo mais barato.
-
-1. **Abra o SVG numa aba** — mais robusto que subir server por `name`:
-   `mcp__Claude_Browser__preview_start` com
-   `{url: "http://localhost:8744/<arquivo>.svg"}`. Funciona mesmo se a porta 8744 já
-   estiver tomada por outro chat (o config `assets-static` do `.claude/launch.json`
-   serve `assets/diagrams`; para `assets/` ajuste o `--directory`). Guarde o `tabId`.
-2. **Ajuste o viewport ao viewBox exato**: `mcp__Claude_Browser__resize_window` com
-   `tabId`, `width`/`height` = viewBox e `colorScheme: "light"` (sem isso o fundo fora
-   do SVG some no dark mode do navegador).
-3. **Rasterize em canvas** via `mcp__Claude_Browser__javascript_tool`
-   (`action: "javascript_exec"`, `tabId`) — devolva só o tamanho, senão estoura o
-   limite de tokens:
-
-```js
-(async () => {
-  const xml = new XMLSerializer().serializeToString(document.documentElement);
-  const url = URL.createObjectURL(new Blob([xml], {type: 'image/svg+xml;charset=utf-8'}));
-  const img = new Image();
-  await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = url; });
-  // document.createElement falha aqui: o documento de um SVG standalone não é HTML.
-  const canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
-  const scale = 3; // 3× p/ nitidez em impressão/DOCX (2× ainda serve p/ tela)
-  canvas.width = <VIEWBOX_W> * scale; canvas.height = <VIEWBOX_H> * scale;
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  window.__pngData = canvas.toDataURL('image/png');
-  return window.__pngData.length;
-})()
-```
-
-4. **Recupere o PNG** com outra chamada `javascript_tool` retornando `window.__pngData`.
-   ⚠️ **`window` é zerado por reload/navegação** — nunca rasterize e recupere através de
-   um `window.location.reload()`. Ao regenerar o SVG a ordem é: reload → (chamada nova)
-   rasterizar → (chamada nova) recuperar. O retorno estoura o limite e é salvo num
-   `.txt` de tool-results, no formato **JSON array `[{type, text}]`** (não string crua):
-
-```python
-import json, base64
-d = json.load(open(TOOL_RESULT_TXT, encoding='utf-8'))
-b64 = d[0]['text'].split('base64,', 1)[1]
-open(OUT_PNG, 'wb').write(base64.b64decode(b64))
-```
-
-5. **Confira o resultado** lendo o PNG com `Read` antes de considerar pronto —
-   subscrito/seta/contraste só aparecem no raster.
-
-### Se a aba travar
-
-`mcp__Claude_Browser__computer {action:"screenshot"}` pode dar timeout (30s), às vezes
-logo após um reload. Não insista: o caminho de canvas acima **não precisa de
-screenshot**. Se a aba travar de fato, `preview_stop` no `serverId` + `preview_start`
-de novo cria aba limpa — mais rápido que depurar a trava.
+Não há rasterizador de SVG por CLI neste ambiente (sem inkscape,
+rsvg-convert, cairosvg ou imagemagick). O caminho que funciona é renderizar
+no Chrome via `mcp__Claude_Browser__*` e extrair o PNG por `canvas.toDataURL`.
+Passo a passo, armadilhas e o snippet de rasterização em `export_png.md`.
 
 ## Depois de Criar a Figura
 

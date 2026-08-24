@@ -30,23 +30,43 @@ OOXML-surgery abaixo é overkill. Usar **python-docx direto**:
 - **Inserir figura no meio do documento** preservando a formatação das
   existentes: `copy.deepcopy` do `w:p` de uma figura já pronta, depois
   `rId, _ = d.part.get_or_add_image(png)`, `blip.set(qn('r:embed'), rId)` e
-  `docPr.set('id', ...)`/`set('name', ...)` com valores únicos. Inserir com
-  `ancora._p.addnext(node)` — em ordem **inversa** à desejada, porque cada
-  `addnext` empurra os anteriores para baixo.
+  `docPr.set('id', ...)`/`set('name', ...)` com valores únicos.
+  - **Reescale nos dois lugares.** O clone traz as dimensões da figura de
+    origem. Se a nova imagem tem outra proporção, é preciso setar `cx`/`cy`
+    em **`wp:extent` E em `a:ext`** (dentro do `pic:spPr/a:xfrm`) — mexer só
+    no primeiro entrega a figura esticada. Calcular `cy` a partir do PNG:
+    `w_px, h_px = struct.unpack(">II", blob[16:24])`, `cy = cx * h_px / w_px`.
+  - **Para colocar a imagem acima de uma legenda que já existe, use
+    `legenda._p.addprevious(node)`** em vez de `addnext` no parágrafo
+    anterior: dispensa raciocinar sobre ordem inversa. Processando as âncoras
+    em ordem **decrescente** de índice, os índices menores continuam válidos e
+    dá para usar a lista `d.paragraphs` original o tempo todo.
 - **Renumerar figuras:** nunca dar `replace("5.3", "5.4")` solto no texto —
   isso acerta também os títulos de seção (`5.3 Faltas assimétricas`) e as
   referências cruzadas. Renumerar em ordem **decrescente** (5.8→5.9 antes de
   5.7→5.8) e conferir depois se algum título `X.Y` foi arrastado junto.
 - **Conferir sempre ao final:** MD5 de cada `word/media/*` contra
-  `assets/charts/*.png`, ordem das imagens na sequência do documento,
-  legenda × chamada no corpo, títulos de seção, e varredura de em-dash e de
-  artefatos de código. Ver [[tcc-revisao-fragmento-cap5]].
+  `assets/charts/*.png` e `assets/diagrams/*.png`, ordem das imagens na
+  sequência do documento, legenda × chamada no corpo, títulos de seção,
+  numeração de figura sem buraco, **unicidade dos `docPr`**, e varredura de
+  em-dash e de artefatos de código. Ver [[tcc-revisao-fragmento-cap5]].
+- **`docPr` duplicado é silencioso.** `copy.deepcopy` sem reatribuir o `id`
+  gera desenhos com identificador repetido; o Word abre assim mesmo e
+  renumera ao salvar, então nada denuncia o problema até outra ferramenta
+  reclamar. Só se descobriu em 2026-08-23, uma sessão depois de ter sido
+  introduzido. Vale rodar uma varredura de `wp:docPr`/`pic:cNvPr`
+  reatribuindo todos sequencialmente ao fim de qualquer inserção de figura.
 - **Regenerou gráfico em `assets/`? Todo blob do documento fica suspeito.**
   Mexer no gerador muda o PNG de figuras que você nem pretendia tocar (uma
   escala compartilhada nova redesenha o par inteiro). O MD5 do item anterior é
   o que pega isso: qualquer `word/media/*` sem correspondência em `assets/` é
   figura desatualizada, não erro de conferência. Reescrever o blob e rodar a
   conferência de novo.
+- **Legenda sem imagem deixa rastro no texto ao redor.** Frases como "A
+  Figura 4.1 *pode ser utilizada para* representar" / "*pode ser empregada
+  para* situar o leitor" são andaime de quem escreveu a legenda sem ter a
+  figura. Ao inserir a imagem, converter em afirmação direta — e conferir
+  no final que nenhum "pode ser utilizad/empregad" sobrou.
 - **Número no texto exige receita no KB.** Toda métrica escrita no documento
   precisa ter a definição registrada (janela, sinal, estatística) junto do
   valor. Métrica sem receita não é reproduzível e não sobrevive à próxima

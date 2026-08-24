@@ -101,6 +101,13 @@ grupo. Confirmado na auditoria de 2026-08-23: os 4 pares do Cap. 5 cruzam a
 fronteira (nominal pré, `_bad_pll` pós) e ainda assim os estados pré-falta
 ficam a 0,7% um do outro em `v_d` e em P.
 
+**`bus7/3phase_bad_pll` é o único cenário que não reaquisita o sincronismo.**
+Após a eliminação, o erro de fase gira continuamente (19,2 voltas em 300 ms,
+escorregamento de ~70 Hz), P se inverte para −0,30 pu e a tensão no PAC pulsa
+entre 0,14 e 1,11 pu até o fim da janela. Virou a Seção 5.4 do fragmento em
+2026-08-23; números em [[tcc-revisao-fragmento-cap5-metricas]]. É safra de
+julho, e a seção inteira depende dele — se for re-simulado, reconferir.
+
 Anomalia à parte: `line7_8/3phase_bad_pll` tem retenção de 65,5% (nominal:
 11,3%) e 0,416 pu de 120 Hz numa falta **trifásica equilibrada** (nominal:
 0,0002 pu). Esse run não corresponde à falta que o nome indica, não usar.

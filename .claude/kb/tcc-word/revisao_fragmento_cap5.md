@@ -1,6 +1,6 @@
 ---
 name: tcc-revisao-fragmento-cap5
-description: Reescrita do Cap.5 do fragmento capitulos_4_5_revisados.docx — duas safras de modelo nos cenários bad_pll, tese trocada para compromisso de banda passante, estrutura 5.1-5.5
+description: Reescrita do Cap.5 do fragmento capitulos_4_5_revisados.docx — duas safras de modelo nos cenários bad_pll, tese de compromisso de banda passante com o caso-limite de perda de sincronismo, estrutura 5.1-5.6
 metadata:
   type: project
 ---
@@ -79,6 +79,13 @@ O laço subdimensionado **não** é uniformemente pior, é um compromisso:
   0,808 pu). O erro de fase estático é **igual** nos dois modelos (rms 0,442°
   contra 0,444°); o "~2× maior" registrado antes era falso.
 
+**O compromisso tem um limite** (Seção 5.4, acrescentada em 2026-08-23): sob a
+trifásica no próprio PAC, com retenção de 8,2%, o laço subdimensionado não
+troca imunidade por velocidade — ele **perde o sincronismo** e não reaquisita
+dentro da janela simulada. Nem a profundidade nem a sintonia produzem isso
+isoladamente; só a combinação. Números em
+[[tcc-revisao-fragmento-cap5-metricas]].
+
 **Resultado mais sólido do capítulo** (independe de sintonia): a componente de
 120 Hz em `v_d` vale 0,0001–0,0013 pu nas faltas trifásicas contra 0,29–0,71 pu
 nas assimétricas, mais de duas ordens de grandeza. É a confirmação empírica do
@@ -112,79 +119,24 @@ excluir o transitório de comutação, ver
   atingido: a ondulação residual é de ~2,0° (nominal) e ~3,1° (inadequada).
   O capítulo usa ±2° para erro de fase e ±5% para `v_d`.
 
-## Estrutura aplicada (41 parágrafos, índices 36-76, substituição 1:1)
+## Estrutura, figuras e geração dos gráficos
 
-```
-5.1 Validação da operação em regime permanente        Fig 5.1, 5.2, 5.3
-5.2 Faltas simétricas: severidade e localização        Fig 5.4, 5.5, 5.6
-5.3 Faltas assimétricas: sequência negativa e sintonia Fig 5.7 a 5.10
-5.4 Conformidade com o código de rede   (promovido do antigo 5.3.1 órfão)
-5.5 Resumo e conclusões do capítulo
-```
-
-Títulos X.X em 18 pt negrito, legendas em 11 pt itálico centralizado, corpo
-herda o estilo Normal — conforme já praticado no Cap. 4 do fragmento.
-
-## Figuras (só dq e potência; sem abc, por decisão do usuário)
-
-| Fig | Arquivo em `assets/charts/` |
-|---|---|
-| 5.1 | `regime_tensao_dq_rede` |
-| 5.2 | `regime_bad_pll_tensao_dq_rede` |
-| 5.3 | `regime_bad_pll_potencia_pq` |
-| 5.4 | `bus7_3phase_tensao_dq_rede` |
-| 5.5 | `bus6_3phase_tensao_dq_rede` |
-| 5.6 | `bus7_3phase_potencia_pq` |
-| 5.7 | `bus7_2phase_tensao_dq_rede` |
-| 5.8 | `bus6_2phase_tensao_dq_rede` |
-| 5.9 | `bus6_2phase_bad_pll_tensao_dq_rede` |
-| 5.10 | `bus6_2phase_bad_pll_potencia_pq` |
-
-As Figuras 5.8 e 5.9 substituíram o par `bus7/2phase`, que satura em 180° nas
-duas sintonias e por isso não ilustrava o efeito da parametrização. Motivo e
-escalas compartilhadas em [[tcc-revisao-fragmento-cap5-metricas]].
-
-As imagens ficam empilhadas verticalmente no Word (pouco espaço horizontal),
-não lado a lado. **Inseridas no fragmento em 2026-08-22**: parágrafo de imagem
-(centralizado, 5,5" de largura — página Letter, margens 1", 6,5" úteis)
-logo acima de cada legenda "Figura 5.X - ...". Documento passou de 77 para
-85 parágrafos, para 88 com a Figura 5.3 e para 91 com a Figura 5.9
-(2026-08-23). Cap. 4 não foi tocado (legendas de Fig. 4.1/4.2 continuam sem
-imagem, fora de escopo).
-
-### `regime_bad_pll_v2` — criado e removido
-
-Existiu entre 22 e 23/08 como regime da sintonia inadequada da safra de
-agosto, construído a partir da **janela pré-falta** de `bus6/1phase_bad_pll`
-truncada em 0,6 s (campo `t_max` no gerador).
-
-**Removido em 2026-08-23**, por regra do usuário: *"tudo que está em assets é
-o resultado a ser usado, são os dados reais, nada de manipulações"*. Cenário
-sintético não entra em `assets/`. O campo `t_max` saiu junto de
-`gen_regime_waveforms.py` (não era usado por mais nada), e entrou
-`ylim_dq`/`YLIM_DQ_REGIME`, que fixa a escala dq comum a `regime` e
-`regime_bad_pll` para as Figuras 5.1 e 5.2 poderem ser lidas na mesma escala.
-
-### SVGs gerados nesta sessão
-
-`bus7_2phase`, `bus7_2phase_bad_pll`, `bus6_1phase`, `bus6_1phase_bad_pll`
-(6 gráficos cada) — completam a matriz assimétrica 2 barras × 2 tipos ×
-2 sintonias. Dados já existiam, só faltava gerar.
+Movido para [[tcc-revisao-fragmento-cap5-figuras]]: mapa das seções 5.1 a 5.6,
+tabela das 13 figuras, decisão de empilhar as imagens no Word e histórico do
+`regime_bad_pll_v2` (criado e removido).
 
 ## Pendências
 
-- **Cap. 4 cita "*cycle slipping*"** no parágrafo do painel interativo (índice
-  28) como fenômeno visualizável. O Cap. 5 não afirma mais esse fenômeno —
-  conferir se o Cap. 4 deve ser ajustado (o Cap. 4 estava fechado).
-- **Cap. 6/Conclusões do canônico** afirmam *cycle slipping* como resultado
-  observado; precisam do mesmo alinhamento quando a mesclagem acontecer.
+- ~~Cap. 4 cita "*cycle slipping*"~~ **resolvida em 2026-08-23**: a Seção 5.4
+  passou a caracterizar o fenômeno com dado medido, então a menção do Cap. 4
+  (índice 28) e a do Cap. 6/Conclusões do canônico ficaram coerentes. Nenhum
+  ajuste necessário nos dois.
 - **Aberta:** por que os mesmos ganhos dão 563 ms de acomodação no
   `regime_bad_pll` e 79 ms nos cenários de agosto, se a teoria de segunda
   ordem do Cap. 4 prevê ~5×? Usuário optou por seguir sem resolver.
-- Se o Bruno re-simular os 4 cenários de julho no modelo atual, vale reavaliar
-  se a perda de sincronismo do `bus7/3phase_bad_pll` (erro pós-falta de 180°,
-  excursão de 359,8°) sobrevive — seria a tese *afundamento profundo + laço
-  lento*, mais forte que a atual.
+- ~~Perda de sincronismo do `bus7/3phase_bad_pll`~~ **virou a Seção 5.4** em
+  2026-08-23. Se o Bruno re-simular os 4 cenários de julho no modelo atual,
+  conferir se o fenômeno sobrevive — a seção inteira depende dele.
 - Toda métrica nova do capítulo precisa entrar em
   [[tcc-revisao-fragmento-cap5-metricas]] com a receita junto. Números sem
   receita foi exatamente o que a auditoria de 2026-08-23 teve de desfazer.

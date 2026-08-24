@@ -132,6 +132,61 @@ dos extremos dq do grupo:
 Mesmo motivo do `YLIM_DQ_REGIME` em `gen_regime_waveforms.py`. O script passou
 a aceitar prefixos em `argv` para regenerar só um subconjunto.
 
+## 5.4 — perda de sincronismo (`bus7/3phase_bad_pll`)
+
+Seção acrescentada em 2026-08-23 (noite). O cenário é o **único dos 16** que
+não reaquisita o sincronismo depois da eliminação da falta.
+
+### Métricas próprias desta seção
+
+| Métrica | Definição | Valor |
+|---|---|---|
+| Rotação acumulada | `unwrap(atan2(vq_rede, vd_rede))` em graus, de `t_clear` ao fim | 6 916° = 19,2 voltas em 300 ms |
+| Escorregamento em regime | `polyfit` de grau 1 no ângulo desenrolado, janelas de 20 ms | ~70 Hz (66 a 80 Hz de 0,78 s em diante) |
+| Retenção de `v_d` | mesma receita das demais seções | 8,2% (nominal: 9,2%) |
+| P pós-falta | média de `P_ufv_pu` em `[t_clear, t_end]` | −0,30 pu (mín. −1,07) |
+| Q pós-falta | mín/máx em `[0,85, 1,0]` s | −0,94 a 1,97 pu |
+| Pulsação de `\|v\|` no PAC | `hypot(vd_ufv, vq_ufv)` em `[0,85, 1,0]` s | 0,14 a 1,11 pu, média 0,70 |
+| Divergência ref × medido | médias e extremos em `[0,85, 1,0]` s | `i_d` ref 0,92 / med. −0,66 a 1,34; `i_q` ref −0,24 / med. até −1,76 |
+
+**O escorregamento não é artefato de amostragem.** O passo do CSV é 5 µs, então
+70 Hz são amostrados a ~0,085° por ponto: as amostras brutas de `v_d`/`v_q`
+percorrem a volta suavemente. Conferido linha a linha antes de escrever a seção.
+
+**Sinal do escorregamento:** o erro `atan2(vq, vd)` é o ângulo do vetor da rede
+**no referencial do PLL**. Ele decresce, logo o referencial estimado gira mais
+rápido que a rede (~130 Hz absolutos). O texto afirma "70 Hz acima da frequência
+da rede", que é o que a medição sustenta sem depender de convenção de sinal.
+
+### Argumento 2×2 (o que a seção realmente prova)
+
+Nem a profundidade nem a sintonia, isoladas, produzem o fenômeno:
+
+| | Retenção | t_s pós-falta |
+|---|---|---|
+| Barra 7, sintonia nominal | 9,2% | 98 ms |
+| Barra 6, sintonia inadequada | 58,4% | 106 ms |
+| **Barra 7, sintonia inadequada** | **8,2%** | **não reaquisita** |
+
+`line7_8/3phase_bad_pll` **não** entra nessa comparação, apesar de caber nela:
+é o run anômalo descartado em [[cenarios-simulados]].
+
+### Ressalvas registradas no próprio texto
+
+- A janela termina 300 ms após a eliminação, então a afirmação é "não reaquisita
+  dentro da janela simulada", nunca "jamais reaquisita".
+- O cenário parte do ponto de operação degradado da safra de julho
+  (`v_d` pré-falta 0,823 pu), o mesmo das Figuras 5.2 e 5.3, e é comparado com
+  um nominal que parte de 0,989 pu. A retenção quase idêntica (8,2% × 9,2%) é
+  o que autoriza atribuir a diferença à sintonia, e isso está dito no texto.
+
+### Escala Y
+
+`bus7/3phase_bad_pll` entrou no grupo `sim_localizacao`. A faixa dq dele
+(−1,075 a 1,112) já cabia na união existente, então as Figuras 5.4 e 5.5 saíram
+**byte a byte idênticas** da regeneração (MD5 conferido) e a 5.11 passou a
+dividir o eixo com elas.
+
 ## Efeito no texto
 
 A tese do capítulo **não muda**: segue o compromisso entre imunidade durante a

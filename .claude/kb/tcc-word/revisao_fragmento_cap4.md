@@ -119,8 +119,19 @@ usuário:
 
 - Cap. 4 do fragmento está fechado (grupos A e B completos).
 - Cap. 5 reescrito em 2026-08-22 — ver [[tcc-revisao-fragmento-cap5]].
-- ⚠️ **Pendência aberta no Cap. 4:** o parágrafo do painel interativo (índice
-  28) cita "*cycle slipping*" como fenômeno visualizável, mas o Cap. 5 deixou
-  de afirmar esse fenômeno (os dados consistentes não o sustentam). Conferir
-  com o usuário se esse parágrafo do Cap. 4 deve ser ajustado.
+- ✅ **Pendência do "*cycle slipping*" fechada em 2026-08-23 (noite).** A
+  Seção 5.4 nova caracterizou o fenômeno com dado medido
+  ([[tcc-revisao-fragmento-cap5-metricas]]), então o Cap. 4 passou a remeter
+  a ela em quatro pontos, todos com uma frase acrescentada ao fim do
+  parágrafo existente:
+
+| Índice | Parágrafo | O que a remissão faz |
+|---|---|---|
+| 5 | §4.1 Foco do estudo | dá destino a "mecanismos de perda de sincronismo", que estava solto |
+| 22 | §4.3.2.3 SRF-PLL | aponta o caso-limite da sintonia inadequada, onde ela é apresentada |
+| 28 | §4.3.3 painel | "cycle slipping" virou "escorregamento de ciclo, ou cycle slipping, caracterizado na Seção 5.4" |
+| 33 | §4.3.4 protocolos | liga a janela até 1,0 s à ressalva dos 300 ms da Seção 5.4 |
+
+  Junto foi corrigida a introdução do Cap. 5 (índice 38), que anunciava
+  "três eixos" e passou a quatro. Contagem de parágrafos inalterada (105).
 - Mesclagem no canônico é etapa posterior, ainda não decidida.

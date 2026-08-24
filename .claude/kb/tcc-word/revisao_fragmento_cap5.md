@@ -128,9 +128,12 @@ tabela das 13 figuras, decisão de empilhar as imagens no Word e histórico do
 ## Pendências
 
 - ~~Cap. 4 cita "*cycle slipping*"~~ **resolvida em 2026-08-23**: a Seção 5.4
-  passou a caracterizar o fenômeno com dado medido, então a menção do Cap. 4
-  (índice 28) e a do Cap. 6/Conclusões do canônico ficaram coerentes. Nenhum
-  ajuste necessário nos dois.
+  caracterizou o fenômeno com dado medido e o Cap. 4 passou a remetê-la em
+  4 pontos (índices 5, 22, 28 e 33) — detalhe em
+  [[tcc-revisao-fragmento-cap4]]. A introdução do Cap. 5 (índice 38) foi de
+  "três eixos" para quatro na mesma passagem.
+- **Cap. 6/Conclusões do canônico** também afirmam *cycle slipping*; agora
+  ficaram coerentes com o Cap. 5, mas conferir a redação na mesclagem.
 - **Aberta:** por que os mesmos ganhos dão 563 ms de acomodação no
   `regime_bad_pll` e 79 ms nos cenários de agosto, se a teoria de segunda
   ordem do Cap. 4 prevê ~5×? Usuário optou por seguir sem resolver.

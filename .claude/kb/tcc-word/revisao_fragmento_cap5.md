@@ -122,14 +122,15 @@ excluir o transitório de comutação, ver
 - O critério de ±1,15° (`TOL_RAD`, `src/config/settings.py`) **nunca** é
   atingido: a ondulação residual é de ~2,0° (nominal) e ~3,1° (inadequada).
   O capítulo usa ±2° para erro de fase e ±5% para `v_d`.
-- **2026-08-31:** duas correções ao parágrafo 95 do §5.4. (1) Retirada a frase
-  do "ângulo acumulado pelo erro de fase" (6 916° / 19,2 voltas em 300 ms):
-  métrica integrada sem critério de classificação, mesma objeção que tirou o
-  ISE do dashboard, e redundante com o escorregamento de ~70 Hz, que fica. (2) A
-  frase seguinte deixou de afirmar estabilização da taxa e "regime permanente"
-  de escorregamento: a janela de 300 ms não caracteriza regime estabelecido, a
-  taxa oscila entre 65 e 81 Hz e o erro de fase cresce continuamente até o fim
-  da simulação. Receita e motivo em [[tcc-revisao-fragmento-cap5-metricas-54]].
+- **2026-08-31:** o parágrafo 95 do §5.4 perdeu **todas as métricas de
+  escorregamento** e ficou puramente qualitativo. Saíram, em três passadas: o
+  ângulo acumulado (6 916° / 19,2 voltas em 300 ms), a alegação de estabilização
+  / "regime permanente", e a frequência de escorregamento (~70 Hz). Motivo comum:
+  são números que não sustentam a conclusão da seção e abrem flanco a
+  questionamento (o acumulado é do mesmo tipo do ISE tirado do dashboard). Fica
+  a descrição: erro de fase cresce sem retornar a valor estável, referencial
+  gira de forma persistente, sem reaquisição na janela. Detalhe em
+  [[tcc-revisao-fragmento-cap5-metricas-54]].
 
 ## Estrutura, figuras e geração dos gráficos
 

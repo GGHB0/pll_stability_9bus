@@ -72,6 +72,32 @@ Para comparar dois cenários lado a lado, ver as regras de eixo compartilhado em
 compartilhado, e eixo X em tempo relativo ao evento quando o instante do evento
 difere entre os cenários.
 
+### Validar a legibilidade no tamanho da página, sempre
+
+Toda figura didática acumula rótulo, caixa e anotação — e é exatamente esse
+texto que morre quando a figura encolhe para a largura útil do DOCX. **O PNG em
+tamanho natural nunca revela o problema.**
+
+Fonte efetiva = `font_pt × largura_na_pagina / largura_figsize`. Largura útil do
+fragmento: 6,5 in. O padrão do Cap. 5 é escala ~0,79 (~7,9 pt efetivos).
+
+Procedimento, antes de dar a figura por pronta:
+
+1. Conferir a largura útil no próprio DOCX
+   (`section.page_width − left_margin − right_margin`).
+2. Escolher `figsize` para que `largura_na_pagina / figsize ≈ 0,79`.
+   **Encolher o `figsize`, nunca subir a fonte** — subir fonte deixa o PNG
+   isolado desproporcional e não muda a razão texto/figura na página.
+3. Garantir que nenhuma anotação seja menor que a fonte-base (`font.size`).
+4. Reescalar o PNG para `6,5 in × 150 dpi = 975 px` e olhar **ao lado de uma
+   linha em 12 pt**, que é o corpo do TCC.
+
+Em 2026-09-01 as duas figuras novas nasceram com `figsize` 10,2 e 10,4 in: a
+6,5 in na página davam escala 0,64, com anotações de 8,8 pt caindo para 6,9 pt.
+Corrigidas para 8,3 in com anotações em 9,5 pt. Foi o usuário que levantou
+("vale validar se o texto pode estar ficando ruim de enxergar"), não a
+conferência visual do PNG.
+
 ### Variante: trocar o eixo do tempo por um plano de estado
 
 Quando o que se quer mostrar é **mudança de regime**, e não a construção de uma

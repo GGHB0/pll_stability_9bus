@@ -159,7 +159,10 @@ def main():
     xlim = (min(todos_P) - mx, max(todos_P) + mx)
     ylim = (min(todos_Q) - my, max(todos_Q) + my)
 
-    fig, axes = plt.subplots(1, 2, figsize=(10.4, 4.7), sharey=True)
+    # figsize pela LEGIBILIDADE NO DOCX: fonte efetiva = font_pt * 6,5/largura.
+    # 8,3 in inserido a 6,5 in da a escala ~0,79 padrao do Cap. 5 (ver o mesmo
+    # comentario em gen_retencao_didatica.py). Encolher o figsize, nunca subir a fonte.
+    fig, axes = plt.subplots(1, 2, figsize=(8.3, 3.9), sharey=True)
     for ax, (d, lbl) in zip(axes, dados):
         desenhar(ax, d, lbl, xlim, ylim)
     axes[0].set_ylabel("Potência reativa Q (pu)")

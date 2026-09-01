@@ -152,6 +152,56 @@ documentadas aqui:
 A barra vermelha superior marca a **duração real da falta** (0,1 s), distinta da
 janela de medição em laranja, que começa 2 ciclos depois.
 
+## Potência anotada (série temporal didática)
+
+Gerado por `scripts/gen_potencia_didatica.py` → `potencia_didatica.svg` / `.png`.
+Dois painéis empilhados (P em cima, Q embaixo) para `bus7/3phase_bad_pll`.
+
+É o **mesmo oscilograma** de `bus7_3phase_bad_pll_potencia_pq`, com anotação por
+cima, em vez de um gráfico novo. Quatro camadas:
+
+1. **Área preenchida onde a potência é negativa.** "O inversor absorve energia"
+   deixa de ser afirmação do texto e vira área visível.
+2. **Patamar pré-falta** tracejado em verde: o valor ao qual a potência deveria
+   ter retornado.
+3. **Média pós-falta** tracejada em vermelho: o valor que ela de fato assumiu.
+   A distância entre as duas tracejadas é o resultado da seção.
+4. **Fração do tempo com potência negativa**, em caixa (63,8% para P, 39,4%
+   para Q).
+
+Estatísticas na janela `[t_clear, fim]` — a mesma região sombreada, para que
+número e desenho não divirjam. A **escala vertical** de cada painel ignora os
+20 ms seguintes à eliminação: o transitório de comutação leva P a −2,4 pu por
+~1 ms e esconderia a oscilação. O traço continua desenhado, só sai do recorte.
+
+**Inserir a 6,5 in, não a 5,5 in.** Esta figura e o plano P-Q usam `figsize`
+8,3 in justamente para dar a escala 0,79 quando colocadas na largura útil cheia.
+A 5,5 in (largura dos oscilogramas comuns) a escala cai para 0,66 e as
+anotações despencam para ~6,3 pt. Ver "Legibilidade no DOCX" abaixo.
+
+## Legibilidade no DOCX (regra medida)
+
+Fonte efetiva na página = `font_pt × largura_na_pagina / largura_figsize`.
+A largura útil do fragmento é **6,5 in** (Carta, margens de 1 in).
+
+| Figura | `figsize` | Inserida a | Escala | Fonte-base efetiva |
+|---|---|---|---|---|
+| Oscilogramas (`gen_fault_waveforms`) | 7,0 in | 5,5 in | 0,79 | ~7,9 pt |
+| Retenção (`gen_retencao_didatica`) | 8,3 in | 6,5 in | 0,78 | ~7,8 pt |
+| Potência anotada / plano P-Q | 8,3 in | **6,5 in** | 0,78 | ~7,8 pt |
+
+Duas armadilhas já pagas:
+
+- **Encolher o `figsize`, nunca aumentar a fonte.** Aumentar `fontsize` deixa o
+  PNG isolado feio e não muda a proporção texto/figura na página.
+- **Anotação não pode ser menor que a fonte-base.** As primeiras versões usavam
+  8,8 pt para os rótulos de valor, que viravam 6,9 pt na página. Passaram para
+  9,5 pt (~7,4 pt efetivos).
+
+**Como validar:** reescalar o PNG para `6,5 in × 150 dpi = 975 px` de largura e
+olhar ao lado de uma linha em 12 pt (corpo do TCC). É o único teste que pega o
+problema; no PNG em tamanho natural tudo parece legível.
+
 ## Plano P-Q pós-falta
 
 Gerado por `scripts/gen_plano_pq.py` → `plano_pq_comparacao.svg` / `.png`.

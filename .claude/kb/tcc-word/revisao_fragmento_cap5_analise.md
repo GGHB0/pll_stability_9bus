@@ -113,3 +113,50 @@ pico porque é **razão adimensional que não depende do comprimento da janela**
 exatamente a objeção que derrubou a rotação acumulada em
 [[tcc-revisao-fragmento-cap5-metricas-54]]. Separa os dois cenários por quase
 duas ordens de grandeza.
+
+## Figura da potência anotada (2026-09-01)
+
+Usuário, depois de ver o plano P-Q: *"acho que vale fazer algo em cima dos
+gráficos que já existe em série temporal"*. Em vez de um gráfico novo que o
+leitor precisa aprender a ler, **anotar o oscilograma que já é a Figura 5.13**.
+
+Gerador `scripts/gen_potencia_didatica.py` → `assets/charts/potencia_didatica`.
+Dois painéis (P em cima, Q embaixo), só `bus7/3phase_bad_pll`. Quatro camadas
+sobre o traço bruto: área preenchida onde a potência é negativa; patamar
+pré-falta tracejado; média pós-falta tracejada; e a fração do tempo em caixa.
+
+O contraste aqui é **temporal** (antes × depois no mesmo cenário), não entre
+cenários — por isso dispensa o painel do nominal e cabe como substituição direta
+da imagem da Figura 5.13, **sem renumerar nada**.
+
+| | P | Q |
+|---|---|---|
+| antes da falta | 0,84 pu | 0,01 pu |
+| média pós-falta | **−0,26 pu** | 0,45 pu |
+| tempo com valor negativo | **63,8%** | 39,4% |
+
+Janela `[t_clear, fim]`, a mesma região sombreada, para número e desenho não
+divergirem. A escala vertical ignora os 20 ms seguintes à eliminação (o
+transitório de comutação levaria P a −2,4 pu e esconderia a oscilação).
+
+### Legibilidade na página — validação pedida pelo usuário
+
+*"Vale validar se o texto pode estar ficando ruim de enxergar por conta dos
+gráficos"*. Estava mesmo: as duas figuras novas nasceram com `figsize` 10,2 e
+10,4 in, o que a 6,5 in na página dava escala 0,64 e derrubava as anotações de
+8,8 pt para 6,9 pt. Corrigidas para `figsize` 8,3 in com anotações em 9,5 pt,
+chegando à escala 0,78 (~7,8 pt efetivos), que é o padrão do capítulo.
+
+**As duas precisam entrar a 6,5 in**, como a Figura 5.11, e não a 5,5 in dos
+oscilogramas comuns. Regra completa e procedimento de validação em
+`assets/charts/README.md` ("Legibilidade no DOCX") e no `data_charts.md` da
+skill `svg-diagrams`.
+
+### Escolha pendente
+
+Duas figuras geradas para o mesmo parágrafo, **nenhuma inserida ainda**:
+
+| Figura | Contraste | Custo no documento |
+|---|---|---|
+| `potencia_didatica` | antes × depois, mesmo cenário | substitui a imagem da 5.13, sem renumerar |
+| `plano_pq_comparacao` | nominal × inadequada, plano de estado | figura nova, renumera da 5.14 em diante |

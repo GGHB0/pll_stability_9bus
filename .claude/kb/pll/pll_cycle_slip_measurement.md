@@ -16,6 +16,17 @@ Nota técnica completa, com dados reais e gráficos, em
 `output/medicao_escorregamento_srf_pll.pdf` (gerador:
 `scripts/notas/gen_medicao_escorregamento.py`).
 
+**Status no texto do TCC (2026-08-31):** a rotação acumulada (6 916° / 19,2
+voltas em 300 ms) **saiu do texto** do §5.4 — grandeza integrada sem critério de
+classificação e redundante com a taxa, mesma objeção que tirou o ISE do
+dashboard. O texto também deixou de dizer que a taxa *estabiliza* em 70 Hz: a
+janela de 300 ms não caracteriza regime, a taxa oscila entre 65 e 81 Hz e o erro
+de fase cresce continuamente. O que o fragmento cita é o **escorregamento em
+torno de 70 Hz** como valor medido na janela. Esta nota e o PDF seguem
+documentando a cadeia inteira como registro de método; a etapa de rotação
+acumulada ficou órfã em relação ao texto. Detalhe em
+[[tcc-revisao-fragmento-cap5-metricas-54]].
+
 ## A cadeia
 
 1. **Fonte:** `vd_rede_pu`/`vq_rede_pu` de `output/results/bus7/3phase_bad_pll/sim_data.csv`, passo 5 µs.

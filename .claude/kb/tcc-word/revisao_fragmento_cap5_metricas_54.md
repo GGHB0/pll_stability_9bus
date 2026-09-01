@@ -20,13 +20,55 @@ não reaquisita o sincronismo depois da eliminação da falta.
 
 | Métrica | Definição | Valor |
 |---|---|---|
-| Rotação acumulada | `unwrap(atan2(vq_rede, vd_rede))` em graus, de `t_clear` ao fim | 6 916° = 19,2 voltas em 300 ms |
+| Rotação acumulada | `unwrap(atan2(vq_rede, vd_rede))` em graus, de `t_clear` ao fim | 6 916° = 19,2 voltas em 300 ms — **medida, mas fora do texto do TCC, ver abaixo** |
 | Escorregamento em regime | `polyfit` de grau 1 no ângulo desenrolado, janelas de 20 ms | ~70 Hz (65 a 81 Hz de 0,76 s em diante) |
 | Retenção de `v_d` | mesma receita das demais seções | 8,2% (nominal: 9,2%) |
 | P pós-falta | média de `P_ufv_pu` em `[t_clear, t_end]` | −0,30 pu (mín. −1,07) |
 | Q pós-falta | mín/máx em `[0,85, 1,0]` s | −0,94 a 1,97 pu |
 | Pulsação de `\|v\|` no PAC | `hypot(vd_ufv, vq_ufv)` em `[0,85, 1,0]` s | 0,14 a 1,11 pu, média 0,70 |
 | Divergência ref × medido | médias e extremos em `[0,85, 1,0]` s | `i_d` ref 0,92 / med. −0,66 a 1,34; `i_q` ref −0,24 / med. até −1,76 |
+
+### Rotação acumulada retirada do texto (2026-08-31)
+
+A linha "Rotação acumulada" da tabela acima **continua valendo como medição**,
+mas **saiu do texto do TCC**. O parágrafo 95 do fragmento (§5.4, Figura 5.12)
+trazia a frase:
+
+> O ângulo acumulado pelo erro de fase após a eliminação do curto-circuito é de
+> 6 916°, equivalentes a 19,2 voltas completas em 300 ms.
+
+Removida. Motivo, alinhado com o usuário: é grandeza **integrada/acumulada, sem
+critério de classificação** ("quantas voltas é demais?"), a mesma objeção que
+tirou o ISE do dashboard (ver [[cards-metricas]]). É ainda redundante com o
+**escorregamento de ~70 Hz**, que é a forma defensável: uma *taxa*, com
+significado físico direto (o referencial estimado gira ~70 Hz acima da rede) e
+sem depender do comprimento da janela (os 300 ms são só o tempo de parada da
+simulação). Havia também contradição aparente para uma banca: 6 916° / 0,3 s ≈
+64 Hz de média contra os "70 Hz" da frase seguinte (a diferença é a rampa dos
+primeiros 100 ms). A notação `6.916°` (ponto de milhar colado no `°`) também
+era ambígua.
+
+Fica no texto: a assinatura qualitativa (vetor girando continuamente no
+referencial estimado) e a taxa de ~70 Hz. Edição via python-docx — o parágrafo
+95 passou de 5 para 4 runs: o run realçado em amarelo com a frase (anotação do
+usuário delimitando o trecho em discussão) foi apagado e o ponto final recolado
+ao run anterior. Backup em
+`Downloads/capitulos_4_5_revisados_backup_20260831_231950.docx`.
+
+`output/medicao_escorregamento_srf_pll.pdf` e [[pll-cycle-slip-measurement]]
+seguem documentando a cadeia completa (6 916° → 19,2 voltas → 70 Hz) como
+registro de método; a etapa de rotação acumulada ficou órfã em relação ao
+texto, mas a nota é documento de apoio, não vai no TCC.
+
+**Segunda passada no mesmo parágrafo (2026-08-31):** a frase seguinte deixou de
+afirmar que a taxa de escorregamento *estabiliza* em 70 Hz e que há *regime
+permanente* de escorregamento. A janela de 300 ms não basta para caracterizar
+regime estabelecido: a taxa oscila entre 65 e 81 Hz (média ~70 Hz) e o erro de
+fase cresce continuamente até o fim da simulação. O texto passou a dizer isso,
+mantendo os ~70 Hz como valor central medido na janela, não como estado
+estacionário. Foram reescritos os textos de dois runs (o da taxa, que segue
+com o realce amarelo da anotação do usuário, e o da frase final, sem realce);
+nenhum run foi criado ou removido nesta segunda passada.
 
 ### Retenção de `v_d` — valores brutos (numerador/denominador)
 

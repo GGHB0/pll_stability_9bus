@@ -112,9 +112,11 @@ fronteira (nominal pré, `_bad_pll` pós) e ainda assim os estados pré-falta
 ficam a 0,7% um do outro em `v_d` e em P.
 
 **`bus7/3phase_bad_pll` é o único cenário que não reaquisita o sincronismo.**
-Após a eliminação, o erro de fase gira continuamente (19,2 voltas em 300 ms,
-escorregamento de ~70 Hz), P se inverte para −0,30 pu e a tensão no PAC pulsa
-entre 0,14 e 1,11 pu até o fim da janela. Virou a Seção 5.4 do fragmento em
+Após a eliminação, o erro de fase gira continuamente (escorregamento de regime
+~70 Hz; a rotação acumulada de 19,2 voltas em 300 ms foi medida mas retirada do
+texto do TCC em 2026-08-31, ver [[tcc-revisao-fragmento-cap5-metricas-54]]), P se
+inverte para −0,30 pu e a tensão no PAC pulsa entre 0,14 e 1,11 pu até o fim da
+janela. Virou a Seção 5.4 do fragmento em
 2026-08-23; números em [[tcc-revisao-fragmento-cap5-metricas]]. É safra de
 julho, e a seção inteira depende dele — se for re-simulado, reconferir.
 

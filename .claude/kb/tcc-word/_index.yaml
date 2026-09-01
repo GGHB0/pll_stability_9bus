@@ -4,6 +4,18 @@ files:
   - file: docx_structure.md
     name: tcc-docx-structure
     description: Estrutura OOXML, padrões XML tracked-change, registro de IDs (pós-aceite 19/07 — próx bm 76, ins 27, paraId 0x1FB00057) e armadilhas de edição XML
+  - file: armadilhas_xml.md
+    name: tcc-armadilhas-xml
+    description: Armadilhas de edição direta do OOXML do TCC aprendidas na prática — corrupção por ET.write, proofErr, sectPr, falso positivo de w:p
+  - file: historico_entregas.md
+    name: tcc-historico-entregas
+    description: Histórico de entregas do Claude no DOCX canônico, mais recente primeiro (entregas antigas nos arquivos _2026_07 e _v8)
+  - file: historico_entregas_2026_07.md
+    name: tcc-historico-entregas-2026-07
+    description: Histórico de entregas de julho/2026 no DOCX canônico, fragmentado do arquivo principal
+  - file: historico_entregas_v8.md
+    name: tcc-historico-entregas-v8
+    description: Histórico de entregas na versão V8 do DOCX, arquivado
   - file: pendencias.md
     name: tcc-docx-pendencias
     description: Pendências priorizadas P1/P2/P3 do documento — figuras, seções vazias, REFERÊNCIAS sem estilo, limpezas
@@ -31,3 +43,24 @@ files:
   - file: full_cap4.md
     name: tcc-full-cap4
     description: Texto completo do Cap.4 — Análise e Discussão de Resultados (quase vazio, só títulos), Conclusão (placeholder) e Referências finais
+
+  # Revisão do fragmento externo capitulos_4_5_revisados.docx (Downloads),
+  # ainda NÃO mesclado no canônico. Ver tcc-revisao-fragmento-cap4 para o contexto.
+  - file: revisao_fragmento_cap4.md
+    name: tcc-revisao-fragmento-cap4
+    description: Revisão colaborativa do fragmento externo capitulos_4_5_revisados.docx — Cap.4 fechado (terminologia do dashboard, ganhos do PLL, filtro LCL, tempos de falta), ainda não mesclado no canônico
+  - file: revisao_fragmento_cap4_figuras.md
+    name: tcc-revisao-fragmento-cap4-figuras
+    description: As 4 figuras inseridas no Cap.4 do fragmento capitulos_4_5_revisados.docx — mapa, renumeração, decisões de redação e as duas pendências de legibilidade
+  - file: revisao_fragmento_cap5.md
+    name: tcc-revisao-fragmento-cap5
+    description: Reescrita do Cap.5 do fragmento capitulos_4_5_revisados.docx — duas safras de modelo nos cenários bad_pll, tese de compromisso de banda passante com o caso-limite de perda de sincronismo, estrutura 5.1-5.6
+  - file: revisao_fragmento_cap5_figuras.md
+    name: tcc-revisao-fragmento-cap5-figuras
+    description: Estrutura de seções, mapa das figuras e histórico de geração dos gráficos do Cap.5 do fragmento capitulos_4_5_revisados.docx
+  - file: revisao_fragmento_cap5_metricas.md
+    name: tcc-revisao-fragmento-cap5-metricas
+    description: Definições fechadas e valores medidos das métricas de falta do Cap.5 do fragmento, após a auditoria de 2026-08-23 que reprovou vários números do texto anterior
+  - file: revisao_fragmento_cap5_metricas_54.md
+    name: tcc-revisao-fragmento-cap5-metricas-54
+    description: Métricas da Seção 5.4 do fragmento (perda de sincronismo em bus7/3phase_bad_pll) — rotação acumulada, escorregamento, retenção com valores brutos, figura didática, argumento 2x2 e ressalvas

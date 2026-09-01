@@ -115,6 +115,43 @@ Título com sufixo "(sintonia inadequada)" fica mais longo que os demais —
 `set_title()` reduz a fonte automaticamente acima de 62/78 caracteres pra não
 cortar na borda da figura.
 
+## Figuras didáticas da retenção
+
+Gerados por `scripts/gen_retencao_didatica.py`. Diferente dos demais, não são
+oscilogramas de um cenário: mostram **como a métrica de retenção é construída**
+sobre os dados reais, para o texto do TCC não precisar definir a razão só em
+prosa. As faixas sombreadas e as linhas de média são anotação sobre o dado, não
+alteração dele — os dois valores saem calculados do CSV a cada geração.
+
+| Arquivo | Conteúdo |
+|---|---|
+| `retencao_construcao.svg` / `.png` | Painel único, `bus7/3phase` (nominal): janela pré-falta, 2 ciclos descartados, janela de medição e a razão fechada |
+| `retencao_comparacao.svg` / `.png` | Painel duplo `bus7/3phase` × `bus7/3phase_bad_pll`, para a Seção 5.4 do TCC |
+
+Receita (a mesma de `src/pipeline` e da KB de métricas):
+
+```
+retencao = média(v_d) em [t_fault + 2 ciclos, t_clear]
+         / média(v_d) em [t_fault − 50 ms, t_fault)
+```
+
+Os 2 ciclos descartados (33,3 ms a 60 Hz) removem o transitório de comutação da
+aplicação da falta, que domina o trecho inicial e não representa o afundamento.
+
+Duas convenções que **só** valem para o painel duplo, e por isso ficam
+documentadas aqui:
+
+- **Eixo X em tempo relativo ao início da falta.** É a única figura da pasta que
+  não usa tempo absoluto. Necessário porque `t_fault` difere entre os cenários
+  (0,3 s no nominal, 0,6 s na sintonia inadequada) e sem o deslocamento os dois
+  painéis não alinham.
+- **Eixo Y compartilhado** (`sharey`), mesmo princípio do `YLIM_GROUPS` de
+  `gen_fault_waveforms.py`: a diferença das bases pré-falta (0,989 contra
+  0,823 pu) é justamente o que a figura precisa deixar visível.
+
+A barra vermelha superior marca a **duração real da falta** (0,1 s), distinta da
+janela de medição em laranja, que começa 2 ciclos depois.
+
 ## Convenções de série (todos os gráficos)
 
 Corrente dq segue `src/pipeline/chart.py` (`kind="dq_combined"`): medido
@@ -154,6 +191,7 @@ picos; em trechos suaves degrada pro mesmo efeito de 1 amostra por bin.
 .venv\Scripts\pip install matplotlib   # não está no requirements.txt do pipeline principal
 .venv\Scripts\python.exe scripts\gen_regime_waveforms.py   # regime / regime_bad_pll (12 arquivos)
 .venv\Scripts\python.exe scripts\gen_fault_waveforms.py    # cenários de falta (6 arquivos por cenário em SCENARIOS)
+.venv\Scripts\python.exe scripts\gen_retencao_didatica.py  # figuras didáticas da retenção (4 arquivos)
 ```
 
 Reproduzível sempre que os dados de simulação forem atualizados. Novos

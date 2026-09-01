@@ -52,6 +52,49 @@ As Figuras 5.8 e 5.9 substituíram o par `bus7/2phase`, que satura em 180° nas
 duas sintonias e por isso não ilustrava o efeito da parametrização. Motivo e
 escalas compartilhadas em [[tcc-revisao-fragmento-cap5-metricas]].
 
+### Figura 5.11 nova: `retencao_comparacao` (inserida em 2026-08-26)
+
+Entrou na abertura do §5.4 para mostrar de onde sai a razão da retenção, que
+antes aparecia no texto só com o valor fechado. Racional e decisões de desenho
+em [[tcc-revisao-fragmento-cap5-metricas-54]].
+
+Renumeração aplicada em ordem **decrescente** (5.13→5.14 antes de 5.12→5.13),
+2 ocorrências por figura (legenda + chamada no corpo):
+
+| Antes | Depois | Arquivo |
+|---|---|---|
+| (nova) | 5.11 | `retencao_comparacao` |
+| 5.11 | 5.12 | `bus7_3phase_bad_pll_tensao_dq_rede` |
+| 5.12 | 5.13 | `bus7_3phase_bad_pll_potencia_pq` |
+| 5.13 | 5.14 | `bus7_3phase_bad_pll_corrente_dq` |
+
+Documento passou de **111 para 113 parágrafos e de 17 para 18 imagens**. Ao
+parágrafo de abertura (índice 90) foi acrescentada a frase que chama a figura
+e define a retenção em palavras.
+
+**Largura da figura: 6,5 in, não 5,5 in como as demais.** O figsize do
+matplotlib também mudou, de 10,4 para 8,3 in, e o motivo é a fonte efetiva no
+documento, que vale `font_pt × largura_na_pagina / figsize`. As demais figuras
+do Cap. 5 usam figsize 7,0 a 5,5 in na página (escala 0,79, ~7,9 pt efetivos);
+8,3 a 6,5 in dá a mesma escala. A 10,4 in de figsize a fonte cairia para
+5,6 pt. Regra do projeto: **encolher o viewBox, nunca aumentar a fonte**.
+
+**Não viola a regra de `assets/`** (*"tudo que está em assets é o resultado a
+ser usado, são os dados reais, nada de manipulações"*, registrada abaixo no
+caso do `regime_bad_pll_v2`): a figura plota `bus7/3phase` e
+`bus7/3phase_bad_pll` sem truncar nem sintetizar nada. As faixas e as linhas
+de média são anotação sobre o dado real, não alteração dele, e saem calculadas
+do CSV em tempo de geração.
+
+**Defeito encontrado e corrigido na mesma sessão:** a frase nova foi anexada a
+`p.runs[-1]`, que por acaso era um trecho marcado com **marca-texto amarelo
+pelo usuário** (a própria frase da retenção, que ele tinha destacado ao
+perguntar sobre ela). O run passou de 284 para 781 caracteres e o realce
+vazou para o texto novo. Nenhuma conferência textual pegou isso, só a
+renderização da página em PDF. Corrigido separando em dois runs, o amarelo de
+volta aos 284 caracteres originais e a frase nova em run próprio sem
+`w:highlight`. Lição registrada em `fragmento_externo.md` da skill.
+
 As imagens ficam empilhadas verticalmente no Word (pouco espaço horizontal),
 não lado a lado. **Inseridas no fragmento em 2026-08-22**: parágrafo de imagem
 (centralizado, 5,5" de largura — página Letter, margens 1", 6,5" úteis)

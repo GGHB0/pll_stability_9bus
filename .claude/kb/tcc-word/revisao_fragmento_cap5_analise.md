@@ -76,8 +76,40 @@ divergência.
   parágrafo **87** (§5.3) tem dez valores de `t_s` e ondulação de Q em prosa;
   parágrafo **66** (§5.2) tem oito valores de retenção e pico, embora ali a
   progressão monotônica seja o argumento e a última frase dê o mecanismo.
-- **Figura que carrega o conceito:** usuário quer discutir uma imagem que
-  embuta os conceitos no próprio gráfico (na linha da figura didática da
-  retenção, ver [[tcc-revisao-fragmento-cap5-metricas-54]]). Não iniciado.
-  Nota: `bus7_3phase_bad_pll_tensao_dq_inversor` já existe em `assets/charts/`
-  e nunca foi inserido — é a tensão no PAC, hoje só descrita em prosa.
+- **Inserção da figura do plano P-Q no DOCX** (ver abaixo): gerada e aprovada
+  visualmente, mas **ainda não inserida** — entra como figura da §5.4 e empurra
+  a numeração seguinte. Aguardando decisão do usuário.
+- `bus7_3phase_bad_pll_tensao_dq_inversor` já existe em `assets/charts/` e
+  nunca foi inserido — é a tensão no PAC, hoje só descrita em prosa. Alternativa
+  ou complemento ao plano P-Q.
+
+## Figura do plano P-Q (2026-09-01)
+
+Pedido do usuário: *"vamos fazer que nem fizemos no gráfico 5.11 [...] um svg
+que consiga gerar valor dos gráficos, destacar algo do texto, faça algo que
+fique bem visual"*.
+
+Gerador `scripts/gen_plano_pq.py` → `assets/charts/plano_pq_comparacao.svg/.png`.
+Painel duplo `bus7/3phase` × `bus7/3phase_bad_pll`. Detalhes de desenho no
+`assets/charts/README.md` e a regra generalizada em `data_charts.md` da skill
+`svg-diagrams` ("trocar o eixo do tempo por um plano de estado").
+
+**A ideia:** abandonar o eixo do tempo e plotar a trajetória no plano P-Q. O
+ponto pré-falta vira o marcador "antes", a média da janela pós-falta vira
+"depois". No nominal os dois coincidem; na sintonia inadequada o "depois" está
+do outro lado da linha `P = 0`. É a tradução visual direta do eixo 1 ("sentido,
+não magnitude") do parágrafo 98.
+
+**Métrica nova que a figura trouxe — fração do tempo com `P < 0`:**
+
+| Cenário | Janela | P média | Tempo com P<0 |
+|---|---|---|---|
+| `bus7/3phase` (nominal) | [0,45; 0,60] s | +0,799 pu | **1,1%** |
+| `bus7/3phase_bad_pll` | [0,75; 1,00] s | **−0,288 pu** | **64,6%** |
+
+Janela = `[t_clear + 50 ms, fim]`; os 50 ms removem o transitório de eliminação
+(no nominal P chega a −3,4 pu por poucos ms). Vale mais que qualquer valor de
+pico porque é **razão adimensional que não depende do comprimento da janela** —
+exatamente a objeção que derrubou a rotação acumulada em
+[[tcc-revisao-fragmento-cap5-metricas-54]]. Separa os dois cenários por quase
+duas ordens de grandeza.

@@ -152,6 +152,30 @@ documentadas aqui:
 A barra vermelha superior marca a **duração real da falta** (0,1 s), distinta da
 janela de medição em laranja, que começa 2 ciclos depois.
 
+## Plano P-Q pós-falta
+
+Gerado por `scripts/gen_plano_pq.py` → `plano_pq_comparacao.svg` / `.png`.
+Painel duplo `bus7/3phase` × `bus7/3phase_bad_pll`, mesma família didática da
+retenção: mostra sobre o dado real o que a série temporal não mostra.
+
+Em vez de P(t) e Q(t), plota a **trajetória no plano P-Q**. O ponto de operação
+pré-falta vira um marcador ("antes") e a média da janela pós-falta vira outro
+("depois"). No nominal os dois praticamente coincidem; na sintonia inadequada o
+"depois" está **do outro lado da linha P = 0**, ou seja, o inversor passou a
+absorver energia. O semiplano `P < 0` fica sombreado em vermelho.
+
+**Métrica destacada: fração do tempo com `P < 0`** (1,1% no nominal contra 64,6%
+na sintonia inadequada). Escolhida por ser adimensional e **não depender do
+comprimento da janela** — é uma razão, ao contrário dos valores de pico, que
+mudam com o recorte. Foi o que substituiu a enumeração de picos no texto, ver
+`.claude/kb/tcc-word/revisao_fragmento_cap5_analise.md`.
+
+Janela: `[t_clear + 50 ms, fim]`. Os 50 ms descartados removem o transitório de
+comutação da **eliminação** da falta, que no nominal leva P a −3,4 pu por poucos
+milissegundos e falsearia a comparação — mesmo racional do descarte de 2 ciclos
+na figura da retenção. Eixos compartilhados entre os painéis, porque a diferença
+de extensão da órbita é justamente o que a figura precisa mostrar.
+
 ## Convenções de série (todos os gráficos)
 
 Corrente dq segue `src/pipeline/chart.py` (`kind="dq_combined"`): medido
@@ -192,6 +216,7 @@ picos; em trechos suaves degrada pro mesmo efeito de 1 amostra por bin.
 .venv\Scripts\python.exe scripts\gen_regime_waveforms.py   # regime / regime_bad_pll (12 arquivos)
 .venv\Scripts\python.exe scripts\gen_fault_waveforms.py    # cenários de falta (6 arquivos por cenário em SCENARIOS)
 .venv\Scripts\python.exe scripts\gen_retencao_didatica.py  # figuras didáticas da retenção (4 arquivos)
+.venv\Scripts\python.exe scripts\gen_plano_pq.py           # plano P-Q pós-falta (2 arquivos)
 ```
 
 Reproduzível sempre que os dados de simulação forem atualizados. Novos

@@ -72,6 +72,33 @@ Para comparar dois cenários lado a lado, ver as regras de eixo compartilhado em
 compartilhado, e eixo X em tempo relativo ao evento quando o instante do evento
 difere entre os cenários.
 
+### Variante: trocar o eixo do tempo por um plano de estado
+
+Quando o que se quer mostrar é **mudança de regime**, e não a construção de uma
+conta, às vezes a série temporal é o gráfico errado. `scripts/gen_plano_pq.py`
+(2026-09-01) abandona o eixo do tempo e plota a trajetória no **plano P-Q**: o
+ponto de operação pré-falta vira um marcador ("antes"), a média da janela
+pós-falta vira outro ("depois"), e o semiplano `P < 0` fica sombreado. No caso
+sadio os dois marcadores coincidem; no caso com perda de sincronismo o "depois"
+está do outro lado da linha de potência nula. Nenhuma série temporal comunica
+isso tão rápido.
+
+Regras que essa variante acrescenta:
+
+- **Par "antes / depois" em vez de valores de pico.** Dois marcadores fazem o
+  trabalho que dez números em prosa faziam mal.
+- **Sombrear a região que carrega o significado** (aqui, `P < 0` = o inversor
+  absorve), com uma linha forte na fronteira. É a fronteira que conta a
+  história, não os extremos.
+- **Preferir métrica adimensional que não dependa da janela.** A caixa da
+  figura mostra *fração do tempo* com `P < 0` (1,1% × 64,6%), não valores de
+  pico — razão sobrevive a mudança de recorte, pico não. Ver
+  [[tcc-revisao-fragmento-cap5-analise]] para por que isso importa no TCC.
+- **Descartar o transitório do evento também aqui.** A janela começa 50 ms após
+  a eliminação da falta; sem isso o pico de comutação (P a −3,4 pu no nominal)
+  domina a escala e falseia a comparação. Mesmo racional dos 2 ciclos da
+  retenção.
+
 **Anotar não é manipular.** Faixas e linhas de média sobre o traço real não
 ferem a regra de `assets/` (*"são os dados reais, nada de manipulações"*), que
 proíbe cenário sintético ou série truncada, não anotação.

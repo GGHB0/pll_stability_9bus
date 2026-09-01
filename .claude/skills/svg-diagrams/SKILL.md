@@ -1,7 +1,7 @@
 ---
 name: svg-diagrams
 description: Cria qualquer SVG do projeto (diagramas, esquemáticos, curvas de norma, banners, ilustrações para README/KB/TCC) e exporta para PNG. Ativar sempre que o usuário pedir para criar/desenhar/gerar/ajustar um SVG, PNG, diagrama, esquemático, figura, banner ou ilustração — mesmo sem mencionar o formato (ex.: "precisa de uma figura do circuito do filtro LCL", "desenha o esquemático do VSI", "cria a curva do ONS", "atualiza o banner"). Também cobre gráficos com dados reais de simulação (waveforms, séries temporais do dashboard) e figuras didáticas que mostram como uma métrica é calculada — ver `data_charts.md`. Também usar para converter um SVG existente do repositório em PNG.
-version: 1.6.0
+version: 1.7.0
 ---
 
 # SVG Diagrams — Skill de Criação de Figuras e Exportação PNG
@@ -21,19 +21,27 @@ não só a tabela abaixo.
 ## Figuras Orientadas a Dado — ver `data_charts.md`
 
 Quando o conteúdo da figura vem do repositório e muda a cada re-simulação, ela
-**não** é escrita à mão. Três casos, todos detalhados em `data_charts.md`
-(ler antes de começar qualquer um deles):
+**não** é escrita à mão. Os casos abaixo estão todos detalhados em
+`data_charts.md` (ler antes de começar qualquer um deles); os dois últimos são
+variantes do caso didático:
 
 | Caso | Ferramenta | Destino | Referência |
 |---|---|---|---|
 | Gráfico de dados reais (waveform, série temporal) | matplotlib direto do CSV | `assets/charts/` | `scripts/gen_regime_waveforms.py` |
 | Layout desenhado, conteúdo lido do disco (matriz, inventário) | gerador que emite SVG | `assets/diagrams/` | `scripts/gen_matriz_cenarios.py` |
 | Gráfico didático de métrica (mostrar de onde sai um número) | matplotlib + anotação | `assets/charts/` | `scripts/gen_retencao_didatica.py` |
+| Anotar um oscilograma que já existe (área, patamar, média) | matplotlib + anotação | `assets/charts/` | `scripts/gen_potencia_didatica.py` |
+| Plano de estado, quando o eixo do tempo é o gráfico errado | matplotlib | `assets/charts/` | `scripts/gen_plano_pq.py` |
 
-Nos três, o script gerador é versionado em `scripts/gen_<nome>.py` e os números
+Em todos, o script gerador é versionado em `scripts/gen_<nome>.py` e os números
 saem calculados na hora, nunca digitados. O `savefig` do matplotlib gera SVG
 **e** PNG direto, dispensando o workflow de rasterização via browser mais
 abaixo, que é só para SVG desenhado à mão.
+
+> **Antes de dar qualquer uma delas por pronta, validar a legibilidade no
+> tamanho da página** (`figsize` × largura de inserção). É o erro mais caro e
+> mais invisível: o PNG em tamanho natural nunca denuncia. Procedimento em
+> `data_charts.md`, seção "Validar a legibilidade no tamanho da página".
 
 Para diagrama conceitual estável (circuito, laço de controle), nada disso se
 aplica: continua sendo SVG escrito à mão, seguindo as convenções abaixo.
@@ -80,7 +88,14 @@ devolvia 0,041 — ~12× baixo, contradizendo a própria tabela abaixo. Corrigid
 em 2026-08-23.)
 
 Largura de inserção usual no fragmento do TCC: 5,5" = 13,97 cm; a largura útil
-da página Letter com margens de 1" é 6,5" = 16,51 cm.
+da página Letter com margens de 1" é 6,5" = 16,51 cm (medido no próprio DOCX em
+2026-09-01; os oscilogramas entram a 5,5" e as figuras didáticas a 6,5").
+
+> Esta seção vale para **SVG desenhado à mão**, onde a escala vem do `viewBox`
+> em px. Para figura de **matplotlib** a conta é outra —
+> `font_pt × largura_na_pagina / largura_figsize`, com `figsize` em polegadas.
+> Ver `data_charts.md`, "Validar a legibilidade no tamanho da página". O
+> princípio é o mesmo: encolher o canvas, nunca aumentar a fonte.
 
 | Fonte no SVG (W≈920) | ~pt no DOCX | Veredito |
 |---|---|---|

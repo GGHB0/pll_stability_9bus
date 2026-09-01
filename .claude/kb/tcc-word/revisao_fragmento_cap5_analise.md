@@ -90,8 +90,8 @@ que consiga gerar valor dos gráficos, destacar algo do texto, faça algo que
 fique bem visual"*.
 
 Gerador `scripts/gen_plano_pq.py` → `assets/charts/plano_pq_comparacao.svg/.png`.
-Painel duplo `bus7/3phase` × `bus7/3phase_bad_pll`. Detalhes de desenho no
-`assets/charts/README.md` e a regra generalizada em `data_charts.md` da skill
+Painel duplo `bus7/3phase` × `bus7/3phase_bad_pll`. Detalhes de desenho em
+`assets/charts/figuras_didaticas.md` e a regra generalizada em `data_charts.md` da skill
 `svg-diagrams` ("trocar o eixo do tempo por um plano de estado").
 
 **A ideia:** abandonar o eixo do tempo e plotar a trajetória no plano P-Q. O
@@ -149,8 +149,8 @@ chegando à escala 0,78 (~7,8 pt efetivos), que é o padrão do capítulo.
 
 **As duas precisam entrar a 6,5 in**, como a Figura 5.11, e não a 5,5 in dos
 oscilogramas comuns. Regra completa e procedimento de validação em
-`assets/charts/README.md` ("Legibilidade no DOCX") e no `data_charts.md` da
-skill `svg-diagrams`.
+`assets/charts/figuras_didaticas.md` ("Legibilidade no DOCX"), no `data_charts.md`
+da skill `svg-diagrams` e em `fragmento_externo.md` da skill `tcc-docx-editor`.
 
 ### Escolha pendente
 

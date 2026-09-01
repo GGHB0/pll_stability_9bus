@@ -26,6 +26,16 @@ explícito no script.
 - Inserir imagem: `paragraph.add_run().add_picture(path, width=Inches(...))`;
   conferir `section.page_width - left_margin - right_margin` antes de escolher
   a largura (não há tracked changes/OOXML a ajustar para caber).
+  - **Medido no fragmento (2026-09-01):** página Carta 8,5", margens de 1",
+    **largura útil = 6,5"**. As figuras já inseridas usam **5,5"** (os
+    oscilogramas comuns) ou **6,5"** (unifilar, circuito LCL e as didáticas).
+  - A largura não é só estética: ela define o tamanho da fonte na página. Uma
+    figura de matplotlib com `figsize` de 8,3" inserida a 6,5" dá escala 0,78;
+    a mesma figura a 5,5" cai para 0,66 e as anotações ficam ilegíveis. As
+    figuras didáticas (`gen_retencao_didatica`, `gen_potencia_didatica`,
+    `gen_plano_pq`) **têm que entrar a 6,5"**. Regra completa em
+    `assets/charts/figuras_didaticas.md` e na skill `svg-diagrams`
+    (`data_charts.md`).
 - **Trocar a imagem de uma figura sem mexer no parágrafo:** sobrescrever o
   blob da parte, não o desenho — `rel.target_part._blob = open(png,'rb').read()`
   para o `rel` de `d.part.rels.values()` cujo `target_part.partname` termina

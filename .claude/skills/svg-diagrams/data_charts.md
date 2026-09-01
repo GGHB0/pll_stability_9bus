@@ -68,7 +68,7 @@ Receita do desenho:
   ali. Virou uma barra própria marcando a duração real do evento.
 
 Para comparar dois cenários lado a lado, ver as regras de eixo compartilhado em
-`assets/charts/README.md` (seção "Figuras didáticas da retenção"): eixo Y sempre
+`assets/charts/figuras_didaticas.md` (seção "Figuras didáticas da retenção"): eixo Y sempre
 compartilhado, e eixo X em tempo relativo ao evento quando o instante do evento
 difere entre os cenários.
 

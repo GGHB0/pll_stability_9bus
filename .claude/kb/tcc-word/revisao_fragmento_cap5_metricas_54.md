@@ -53,7 +53,8 @@ o sincronismo dentro da janela simulada. A tese da seção (perda de sincronismo
 só na combinação afundamento profundo + sintonia inadequada) não depende de
 nenhum dos três números.
 
-Edições via python-docx (backups em `Downloads/`, sufixo `_backup_20260831_*`):
+Edições via python-docx (backups na pasta `Fragmentos/` do TCC no OneDrive,
+sufixo `_backup_20260831_*`):
 a 1ª passada apagou o run realçado da frase das voltas e recolou o ponto ao run
 anterior (5 → 4 runs); a 2ª e a 3ª só reescreveram texto de dois runs. O run
 realçado em amarelo (anotação do usuário) segue amarelo.

@@ -7,10 +7,11 @@ Modo aceito pelo Victor: **edições diretas no XML, sem tracked changes**
 
 ## Fragmento externo (não o canônico) — ver `fragmento_externo.md`
 
-Quando o alvo é um rascunho externo isolado (ex.: `capitulos_4_5_revisados.docx`
-em Downloads, plain-Normal-style, sem tracked changes/comentários/tabelas), o
-OOXML-surgery deste arquivo é overkill: usa-se **python-docx direto**, sem
-staging, sem `repack.py`, sem IDs a rastrear.
+Quando o alvo é um rascunho externo isolado (ex.: `capitulos_4_5_revisados.docx`,
+na pasta `Fragmentos/` do TCC no OneDrive, plain-Normal-style, sem tracked
+changes/comentários/tabelas), o OOXML-surgery deste arquivo é overkill: usa-se
+**python-docx direto**, sem staging, sem `repack.py`, sem IDs a rastrear. Caminho
+completo em `fragmento_externo.md`.
 
 Todo o workflow, as armadilhas (inserção de figura, renumeração, troca de termo,
 `docPr` duplicado, conferência de MD5) e as lições de redação estão em

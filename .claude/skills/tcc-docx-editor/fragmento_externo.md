@@ -4,9 +4,15 @@ Workflow simplificado para rascunho externo isolado, extraído de `SKILL.md`
 em 2026-08-26 pelo limite de 200 linhas. O `SKILL.md` cobre o **canônico**
 (OOXML direto, staging, repack); este arquivo cobre o fragmento.
 
-Quando o alvo é um rascunho externo isolado (ex.: `capitulos_4_5_revisados.docx`
-em Downloads, plain-Normal-style, sem tracked changes/comentários/tabelas), o
+Quando o alvo é um rascunho externo isolado (ex.: `capitulos_4_5_revisados.docx`,
+plain-Normal-style, sem tracked changes/comentários/tabelas), o
 OOXML-surgery do `SKILL.md` é overkill. Usar **python-docx direto**:
+
+**Localização de `capitulos_4_5_revisados.docx` (desde 2026-08-31):**
+`C:\Users\victo\OneDrive\Meus Bagulhos\Arquivos\UERJ\TCC - Victor e Bruno\Template Modelo TCC\Fragmentos\capitulos_4_5_revisados.docx`
+(antes ficava em `Downloads`). Os backups `_backup_YYYYMMDD_HHMMSS.docx` ficam
+na mesma pasta `Fragmentos/`. Não há entrada em `config.py` — passar o caminho
+explícito no script.
 
 - `docx.Document(path)` → editar `d.paragraphs[i].runs`/`insert_paragraph_before()`
   → `d.save(path)`. Sem staging, sem `repack.py`, sem IDs a rastrear.

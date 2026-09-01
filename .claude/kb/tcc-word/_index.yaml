@@ -44,8 +44,9 @@ files:
     name: tcc-full-cap4
     description: Texto completo do Cap.4 — Análise e Discussão de Resultados (quase vazio, só títulos), Conclusão (placeholder) e Referências finais
 
-  # Revisão do fragmento externo capitulos_4_5_revisados.docx (Downloads),
-  # ainda NÃO mesclado no canônico. Ver tcc-revisao-fragmento-cap4 para o contexto.
+  # Revisão do fragmento externo capitulos_4_5_revisados.docx (desde 2026-08-31
+  # na pasta Fragmentos/ do TCC no OneDrive; antes em Downloads), ainda NÃO
+  # mesclado no canônico. Ver tcc-revisao-fragmento-cap4 para o contexto.
   - file: revisao_fragmento_cap4.md
     name: tcc-revisao-fragmento-cap4
     description: Revisão colaborativa do fragmento externo capitulos_4_5_revisados.docx — Cap.4 fechado (terminologia do dashboard, ganhos do PLL, filtro LCL, tempos de falta), ainda não mesclado no canônico

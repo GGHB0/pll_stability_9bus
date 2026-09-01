@@ -9,7 +9,8 @@ metadata:
 
 ## Contexto
 
-O usuário compartilhou `capitulos_4_5_revisados.docx` (Downloads), uma versão
+O usuário compartilhou `capitulos_4_5_revisados.docx` (desde 2026-08-31 na pasta
+`Fragmentos/` do TCC no OneDrive; antes em Downloads), uma versão
 revisada dos capítulos 4 e 5, distinta do canônico
 (`TCC_Victor_Bruno_V9_novo_indice_2.docx`, ver `docx_structure.md`/
 `content_map.md`). Esse fragmento vai eventualmente substituir/atualizar o

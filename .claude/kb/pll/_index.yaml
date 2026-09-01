@@ -25,3 +25,9 @@ files:
   - file: pll_notch_implementation.md
     name: pll-notch-implementation
     description: Notch de 120 Hz no SRF-PLL testado em 2026-05 e removido do modelo final (2026-07) — registro histórico, não estado atual
+  - file: pll_reactive_inertia.md
+    name: pll-reactive-inertia
+    description: PLL como "inércia reativa" e dualidade Q-δi (GFL) vs P-δv (síncronos/GFM) — framework estendido de estabilidade de sistemas com alta penetração de IBR
+  - file: pll_cycle_slip_measurement.md
+    name: pll-cycle-slip-measurement
+    description: Receita de medição do escorregamento de ciclo (cycle slipping) do SRF-PLL — arctan2+unwrap sobre vd/vq, com verificação cruzada via ângulos gravados pelo modelo

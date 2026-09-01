@@ -132,6 +132,13 @@ excluir o transitório de comutação, ver
   gira de forma persistente, sem reaquisição na janela. Detalhe em
   [[tcc-revisao-fragmento-cap5-metricas-54]].
 
+## Regra editorial: descrição de figura não é análise
+
+Movido para [[tcc-revisao-fragmento-cap5-analise]] em 2026-09-01 (limite de 200
+linhas): o diagnóstico do usuário, os três eixos que contam como análise, a
+aplicação nos parágrafos 98 e 101, o que ficou de fora e por quê, e as
+pendências (parágrafo 107, candidatos em §5.2/§5.3, figura conceitual).
+
 ## Estrutura, figuras e geração dos gráficos
 
 Movido para [[tcc-revisao-fragmento-cap5-figuras]]: mapa das seções 5.1 a 5.6,

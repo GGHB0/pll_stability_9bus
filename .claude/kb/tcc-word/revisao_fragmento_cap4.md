@@ -65,6 +65,33 @@ reescrita — mesmo tipo de vazamento de artefato de código já corrigido no
 **canônico** ainda cita "logsout" e deveria ser corrigido lá também — fora do
 escopo desta revisão pontual, só sinalizado aqui.
 
+## Nomenclatura do PLL — "laço" eliminado do fragmento (2026-08-24)
+
+O fragmento usava **"laço"** 26 vezes como sinônimo de SRF-PLL (8 no Cap. 4,
+18 no Cap. 5), sem nenhuma ocorrência que se referisse à malha de corrente ou
+a outro laço de controle. Termo estrangeiro ao resto do TCC: `full_cap2.md`,
+`full_cap3.md` e `full_cap4.md` têm **zero** ocorrências de "laço" e chamam a
+mesma coisa de "malha" — as legendas das equações 2.9/2.10 são "Função de
+malha aberta/fechada do SRF-PLL".
+
+Levantado pelo usuário ("esse fragmento de laço é esquisito"). Decisão dele:
+trocar **no fragmento inteiro** por **"o SRF-PLL"**, e não por "malha de
+sincronismo". Vantagem prática: mesmo gênero de "laço", então a substituição
+não arrasta artigo nem concordância de adjetivo.
+
+Regra aplicada, nesta ordem: `laço de sincronismo` → `SRF-PLL`, depois
+`laço` → `SRF-PLL`. Cobre os três padrões do texto ("ganhos do laço", "o laço
+subdimensionado"/"laço nominal", "arquitetura do laço de sincronismo") sem
+gerar "SRF-PLL de sincronismo".
+
+- 26/26 substituídas, 0 "laço" restantes; 111 parágrafos e 17 imagens intactos
+- Ocorrências de "SRF-PLL" no fragmento: 12 → 38; quatro parágrafos ficaram
+  com 3 cada (26, 46, 83, 90), densidade aceita pelo usuário
+- "malha" **preservada** onde não é o PLL ("malha de corrente", "malha de
+  suporte de reativo") e nos 4 pontos em que já nomeava o PLL por extenso
+- Feito com `python-docx` a nível de `run` (todas as 26 estavam contidas em um
+  único run), backup antes de gravar
+
 ## Verificação de conteúdo (não só vocabulário)
 
 Confirmado contra `src/pipeline/loader.py:159-171`: os sinais de geradores

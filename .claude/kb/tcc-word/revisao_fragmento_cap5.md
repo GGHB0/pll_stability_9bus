@@ -11,6 +11,10 @@ Continuação de [[tcc-revisao-fragmento-cap4]]. Mesmo arquivo externo
 (`capitulos_4_5_revisados.docx` em Downloads), ainda **não** mesclado no
 canônico.
 
+**Nomenclatura (2026-08-24):** as 18 ocorrências de "laço" deste capítulo
+foram trocadas por "o SRF-PLL" junto com as 8 do Cap. 4. Racional e regra de
+substituição em [[tcc-revisao-fragmento-cap4]].
+
 ## Achado crítico: duas safras de modelo nos cenários `_bad_pll`
 
 Levantado pela impressão digital do transitório de **energização** (independe

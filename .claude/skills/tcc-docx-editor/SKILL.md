@@ -5,83 +5,16 @@ Edita o TCC DOCX (arquivo atual definido em `config.py` — hoje
 Modo aceito pelo Victor: **edições diretas no XML, sem tracked changes**
 (`helpers.py` mantém os geradores com `w:ins` caso volte a ser necessário).
 
-## Fragmento externo (não o canônico) — workflow mais simples
+## Fragmento externo (não o canônico) — ver `fragmento_externo.md`
 
 Quando o alvo é um rascunho externo isolado (ex.: `capitulos_4_5_revisados.docx`
 em Downloads, plain-Normal-style, sem tracked changes/comentários/tabelas), o
-OOXML-surgery abaixo é overkill. Usar **python-docx direto**:
+OOXML-surgery deste arquivo é overkill: usa-se **python-docx direto**, sem
+staging, sem `repack.py`, sem IDs a rastrear.
 
-- `docx.Document(path)` → editar `d.paragraphs[i].runs`/`insert_paragraph_before()`
-  → `d.save(path)`. Sem staging, sem `repack.py`, sem IDs a rastrear.
-- Reescrever texto de um parágrafo: remover todos os `w:r` (`for r in
-  list(p.runs): r._element.getparent().remove(r._element)`) e recriar com
-  `p.add_run(...)`, setando `bold`/`italic`/`font.name`/`font.size` (`Pt(...)`).
-- Inserir parágrafo novo: `paragraph.insert_paragraph_before()` — desloca em
-  +1 o índice de **todo** parágrafo seguinte; se for inserir vários, ou
-  buscar cada alvo por texto (`p.text.startswith(...)`) em vez de índice fixo,
-  ou processar em ordem que não invalide os índices já usados.
-- Inserir imagem: `paragraph.add_run().add_picture(path, width=Inches(...))`;
-  conferir `section.page_width - left_margin - right_margin` antes de escolher
-  a largura (não há tracked changes/OOXML a ajustar para caber).
-- **Trocar a imagem de uma figura sem mexer no parágrafo:** sobrescrever o
-  blob da parte, não o desenho — `rel.target_part._blob = open(png,'rb').read()`
-  para o `rel` de `d.part.rels.values()` cujo `target_part.partname` termina
-  no `imageN.png` desejado. Preserva extent, alinhamento e legenda.
-- **Inserir figura no meio do documento** preservando a formatação das
-  existentes: `copy.deepcopy` do `w:p` de uma figura já pronta, depois
-  `rId, _ = d.part.get_or_add_image(png)`, `blip.set(qn('r:embed'), rId)` e
-  `docPr.set('id', ...)`/`set('name', ...)` com valores únicos.
-  - **Reescale nos dois lugares.** O clone traz as dimensões da figura de
-    origem. Se a nova imagem tem outra proporção, é preciso setar `cx`/`cy`
-    em **`wp:extent` E em `a:ext`** (dentro do `pic:spPr/a:xfrm`) — mexer só
-    no primeiro entrega a figura esticada. Calcular `cy` a partir do PNG:
-    `w_px, h_px = struct.unpack(">II", blob[16:24])`, `cy = cx * h_px / w_px`.
-  - **Para colocar a imagem acima de uma legenda que já existe, use
-    `legenda._p.addprevious(node)`** em vez de `addnext` no parágrafo
-    anterior: dispensa raciocinar sobre ordem inversa. Processando as âncoras
-    em ordem **decrescente** de índice, os índices menores continuam válidos e
-    dá para usar a lista `d.paragraphs` original o tempo todo.
-- **Renumerar figuras:** nunca dar `replace("5.3", "5.4")` solto no texto —
-  isso acerta também os títulos de seção (`5.3 Faltas assimétricas`) e as
-  referências cruzadas. Renumerar em ordem **decrescente** (5.8→5.9 antes de
-  5.7→5.8) e conferir depois se algum título `X.Y` foi arrastado junto.
-- **Conferir sempre ao final:** MD5 de cada `word/media/*` contra
-  `assets/charts/*.png` e `assets/diagrams/*.png`, ordem das imagens na
-  sequência do documento, legenda × chamada no corpo, títulos de seção,
-  numeração de figura sem buraco, **unicidade dos `docPr`**, e varredura de
-  em-dash e de artefatos de código. Ver [[tcc-revisao-fragmento-cap5]].
-- **`docPr` duplicado é silencioso.** `copy.deepcopy` sem reatribuir o `id`
-  gera desenhos com identificador repetido; o Word abre assim mesmo e
-  renumera ao salvar, então nada denuncia o problema até outra ferramenta
-  reclamar. Só se descobriu em 2026-08-23, uma sessão depois de ter sido
-  introduzido. Vale rodar uma varredura de `wp:docPr`/`pic:cNvPr`
-  reatribuindo todos sequencialmente ao fim de qualquer inserção de figura.
-- **Regenerou gráfico em `assets/`? Todo blob do documento fica suspeito.**
-  Mexer no gerador muda o PNG de figuras que você nem pretendia tocar (uma
-  escala compartilhada nova redesenha o par inteiro). O MD5 do item anterior é
-  o que pega isso: qualquer `word/media/*` sem correspondência em `assets/` é
-  figura desatualizada, não erro de conferência. Reescrever o blob e rodar a
-  conferência de novo.
-- **Legenda sem imagem deixa rastro no texto ao redor.** Frases como "A
-  Figura 4.1 *pode ser utilizada para* representar" / "*pode ser empregada
-  para* situar o leitor" são andaime de quem escreveu a legenda sem ter a
-  figura. Ao inserir a imagem, converter em afirmação direta — e conferir
-  no final que nenhum "pode ser utilizad/empregad" sobrou.
-- **Número no texto exige receita no KB.** Toda métrica escrita no documento
-  precisa ter a definição registrada (janela, sinal, estatística) junto do
-  valor. Métrica sem receita não é reproduzível e não sobrevive à próxima
-  auditoria — foi assim que meia dúzia de valores do Cap. 5 caiu em
-  2026-08-23. Ver [[tcc-revisao-fragmento-cap5-metricas]].
-- **Entrega pode falhar com o arquivo aberto no Word:** `Copy-Item` devolve
-  `IOException ... sendo usado por outro processo`. Não renomear o destino
-  para contornar (gera arquivo canônico duplicado): pedir para fechar o Word e
-  repetir a cópia.
-- Verificar acentuação: nunca confiar no stdout do terminal (mojibake mesmo
-  com conteúdo correto) — escrever um dump UTF-8 (`io.open(..., 'w',
-  encoding='utf-8')`) e reler com a ferramenta de leitura de arquivo.
-- KB desse workflow fica em `kb/tcc-word/revisao_fragmento_cap4.md` e
-  `revisao_fragmento_cap5.md`, não em `docx_structure.md`/`historico_entregas.md`
-  (que são só do canônico).
+Todo o workflow, as armadilhas (inserção de figura, renumeração, troca de termo,
+`docPr` duplicado, conferência de MD5) e as lições de redação estão em
+**`fragmento_externo.md`**. Ler antes de tocar num fragmento.
 
 ## Convenções de escrita
 

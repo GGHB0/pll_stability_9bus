@@ -165,8 +165,16 @@ imagens no Word e histórico do `regime_bad_pll_v2` (criado e removido).
 - Toda métrica nova do capítulo precisa entrar em
   [[tcc-revisao-fragmento-cap5-metricas]] com a receita junto. Números sem
   receita foi exatamente o que a auditoria de 2026-08-23 teve de desfazer.
-- **Parágrafo 106 (§5.4), aberta desde 2026-09-02:** o usuário marcou de verde
-  (sinal de "muito grande") e, ao tirar dele os valores de retenção, deixou uma
-  frase quebrada — "submetida à falta trifásica na Barra 6, **onde** recupera em
-  106 ms", com o "onde" órfão da oração que citava os 58,4%. Aguardando decisão.
-- Mesclagem no canônico segue sem data definida.
+- ~~Parágrafo 106 (§5.4)~~ **resolvida em 2026-09-02**: o "onde" órfão, deixado
+  quando o usuário tirou os 58,4% do parágrafo, foi consertado no enxugamento
+  geral (ver abaixo). O contraste de profundidade ficou qualitativo, "sob a
+  falta trifásica mais branda da Barra 6", sem devolver o número.
+- ~~Mesclagem no canônico~~ **feita em 2026-09-02**: Cap. 4 e Cap. 5 do
+  canônico substituídos por inteiro. Receita, IDs e inventário do que foi
+  descartado em [[tcc-mesclagem-cap45-canonico]].
+
+## Enxugamento analítico do capítulo
+
+Movido para [[tcc-revisao-fragmento-cap5-enxugamento]] em 2026-09-02 (limite de
+200 linhas): critério do corte, tabela dos nove parágrafos que mais mudaram e os
+dois casos em que o texto cresceu de propósito.

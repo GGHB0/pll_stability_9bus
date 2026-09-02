@@ -9,13 +9,11 @@ metadata:
 
 > Estado de cada seção do `TCC_Victor_Bruno_V9_novo_indice_2.docx` (arquivo
 > canônico desde 2026-07-22, ver `tcc-docx-canonical-file` na memória e
-> `historico_entregas.md`). Numeração confirmada via `dump_headings.py`
-> em 2026-07-22 (tarde): retém a estrutura da reestruturação de 2026-07-19
-> (4.1/4.2/4.3.1–4.3.4/4.4) — **diferente** da numeração do arquivo sem
-> sufixo (obsoleto), que o usuário reestruturou mais uma vez por conta
-> própria. Sempre rodar `dump_headings.py` antes de confiar em números de
-> seção — o Word renumera e o usuário edita os dois arquivos de formas
-> diferentes entre sessões.
+> `historico_entregas.md`). Cap. 1 a 3 conforme `dump_headings.py` de
+> 2026-07-22; **Cap. 4 e 5 substituídos em 2026-09-02** pelo fragmento
+> revisado (ver [[tcc-mesclagem-cap45-canonico]]). Sempre rodar
+> `dump_headings.py` antes de confiar em números de seção — o Word renumera e
+> o usuário edita entre sessões.
 > Padrões de edição OOXML e IDs: ver `docx_structure.md`.
 
 ## Legenda
@@ -79,95 +77,55 @@ metadata:
   Cap. 3 antes de serem aplicadas — ver `historico_entregas.md`
 - ⬜ **3.6** Resumo ou Conclusões do Capítulo (renumerado de 3.5 → 3.6)
 
-## Cap. 4 — Metodologia de Análise (numeração confirmada 2026-07-22, tarde)
+## Cap. 4 — Metodologia de Análise
 
-- ✅ **4.1** Foco do Estudo
-- ✅ **4.2** Plataformas de Simulação – Características Individuais
-  - ⚠️ Refs MATLAB/PSIM pendentes (Oscar comentário #9)
-- ✅ **4.3** Modelagem e Dimensionamento do Sistema de Estudo
-  - ✅ **4.3.1** Modelo da Rede Elétrica: Sistema IEEE 9 Barras Modificado
-    (G2→VSI; Thevenin Z22 p/ PSIM)
-  - ✅ **4.3.2** Projeto do Conversor Fonte de Tensão e dos Controladores
-    - **4.3.2.1** Dimensionamento do Filtro de Acoplamento (LCL) — eqs 4.1/4.2;
-      inclui validação no bloco PSIM `PlantaLCL1` (ω_res = 9068,9968 rad/s) e
-      amortecimento com valores de R_d1/R_d2/R_d3 (adicionado 2026-07-22)
-    - **4.3.2** abre (desde 2026-08-04) declarando as **duas etapas de
-      modelagem**: PSIM contra equivalente de Thévenin (`Rth` = 0,0100 Ω,
-      `Lth` = 1,16 mH) e depois Simulink sobre o IEEE 9 barras, com o `.slx`
-      como plataforma oficial dos resultados (ver [[psim-modeling]])
-    - **4.3.2.2** Sintonia da Estratégia de Controle de Corrente — inclui
-      parágrafo sobre a malha PSIM (I_d,ref/I_q,ref → m_a, portadora VTRI2,
-      5 kHz) adicionado 2026-07-22. Fórmula `Kp = 8·f_g·(L1+L2+Lest)` /
-      `Ki = 32·f_g²·(...)` = 29,48 / 7075,6, com o escalamento para pu
-      (7,37 / 1768,9). **Desde 2026-08-05**: não deduz mais a fórmula — cita
-      "Equação (3.23)" da nova §3.5 e aplica os parâmetros do projeto
-      diretamente (estratégia teoria-Cap.3/aplicação-Cap.4)
-    - **4.3.2.3 Modelagem do Sistema de Sincronismo (SRF-PLL)** — descreve
-      implementação no **PSIM** (subcircuitos `.SUB Clarke`/`.SUB Park`, Loop
-      Filter PI, VCO via bloco `RESETI_I1`); sem menção a arquivo/script de
-      parâmetros nem ao notch 120 Hz (nunca existiu no PSIM, ver
-      [[psim-modeling]]) — linguagem de código removida 2026-07-22
-      (ver `feedback_docx_no_code_artifacts` na memória). **Corrigido
-      2026-08-04**: passa a citar `Kp,PLL` = 460 / `Ki,PLL` = 105 820.
-      **Desde 2026-08-05**: cita explicitamente "Equações (3.19) e (3.20)"
-      em vez de só remeter ao §3.4 genericamente, e aponta para "Seção
-      4.3.2.2 (Equação 3.23)" ao distinguir dos ganhos do controlador de
-      corrente
-    - ⚠️ Referencia [FIGURA 3.1] mas **placeholder não existe** → P1
-  - ✅ **4.3.3** Configuração da Simulação e Modelagem Dinâmica dos Geradores
-    — **desde 2026-08-04** apresenta os **dois cenários de sintonia**: Modelo
-      Nominal (460 / 105 820, `ω_n` = 325,3, ξ = 0,707) e Modelo com Sintonia
-      Inadequada (92 / 21 164, `ω_n` = 145,5, ξ = 0,316), com a sintonia do
-      PLL como única variável independente. **Desde 2026-08-05**: o Modelo
-      Nominal não reescreve mais os 4 números por extenso — remete a
-      "Seção 4.3.2.3" entre parênteses, cortando a 3ª repetição do mesmo
-      dado (Cap.3 → §4.3.2.3 → §4.3.3)
-    - 4.3.3.1 Modelagem Dinâmica dos Geradores Síncronos (G1/G3) — fecha
-      ligando a baixa inércia (`H₁`, `H₃`) à sensibilidade ao PLL
-    - **4.3.3.2** Topologia da Falta e Configuração do Bloco de Contingência —
-      Simulink (bloco `Fault Three-Phase` + chaves SPST), 4 tipos;
-      "parâmetros configuráveis do modelo de simulação" (sem citar
-      variáveis/script — corrigido 2026-07-22). **Desde 2026-08-04** traz as
-      **duas configurações temporais**: Nominal 0,3→0,4 s com janela até
-      0,6 s; Sintonia Inadequada 0,6→0,7 s com janela até 1,0 s, duração de
-      0,1 s (6 ciclos) nos dois. Confere com os `fault_info.json` exportados
-      (ver [[cenarios-simulados]])
-    - 4.3.3.3 Configuração do Sistema de Monitoramento, Variáveis Relevantes e
-      Tratamento de Dados — **em revisão colaborativa (2026-08-22)** num
-      fragmento externo (`capitulos_4_5_revisados.docx`), ainda não mesclada
-      aqui; ver [[tcc-revisao-fragmento-cap4]]
-  - ✏️ **4.3.4** Protocolos de Contingência e Análise de Cenários
-    - 4.3.4.1 Afundamento de Tensão Simétrico · 4.3.4.2 Afundamento de Tensão
-      Assimétrico. **Corrigido 2026-08-05**: `2ω0` estava em pseudocódigo
-      ASCII com valor errado (`753 rad/s`); agora `2ω0 = 754 rad/s` em
-      Unicode, consistente com §3.4, com remissão explícita à Seção 3.4 em
-      vez de recalcular
-    - ⚠️ Texto original sem acentuação — corrigir em edição futura
-- ⬜ **4.4** Resumo do Capítulo
+> **Substituído por inteiro em 2026-09-02** pelo Cap. 4 do fragmento
+> `capitulos_4_5_revisados.docx`. O mapa detalhado do texto antigo saiu daqui
+> junto com o texto; o inventário do que foi descartado está em
+> [[tcc-mesclagem-cap45-canonico]] e o texto integral, no backup
+> `..._backup_20260902_004347.docx`.
 
-## Cap. 5 — Análise e Discussão de Resultados (PRIORIDADE)
+- ✅ **4.1** Foco do estudo
+- ✅ **4.2** Plataformas de simulação e características individuais
+  (Python analítico · PSIM em nível de circuito · Simulink sistêmico)
+- ✅ **4.3** Modelagem e dimensionamento do sistema de estudo
+  - **4.3.1** Modelo da rede elétrica e equivalente de Thévenin — Figura 4.1
+    (unifilar IEEE 9 barras com a UFV na Barra 2)
+  - **4.3.2** Projeto do conversor e dos controladores — 4.3.2.1 filtro LCL
+    (Figura 4.2; `ω_res` = 9068,99 rad/s, R_d1/R_d2/R_d3), 4.3.2.2 controle de
+    corrente, 4.3.2.3 SRF-PLL (Figura 4.3; `Kp,PLL` = 460 / `Ki,PLL` = 105 820,
+    sintonia inadequada a 20% → `ω_n` = 145,5, ξ = 0,316)
+  - **4.3.3** Configuração do sistema de monitoramento e tratamento de dados —
+    Figura 4.4 (organização dos cenários por falta e sintonia)
+  - **4.3.4** Protocolos de contingência — falta de 0,1 s (6 ciclos); nominal
+    0,3→0,4 s com janela até 0,6 s, inadequada 0,6→0,7 s com janela até 1,0 s
+- ✅ **4.4** Síntese da metodologia
 
-> **Já redigido no fragmento externo** `capitulos_4_5_revisados.docx`
-> (2026-08-22), com números medidos e 8 figuras inseridas — ver
-> [[tcc-revisao-fragmento-cap5]]. Estrutura do fragmento (5.1 regime
-> permanente · 5.2 simétricas por localização · 5.3 assimétricas por sintonia
-> · 5.4 conformidade · 5.5 resumo) diverge da numeração canônica abaixo; não
-> mesclado ainda. Tese aplicada: sintonia inadequada como compromisso de
-> banda passante, sem *cycle slipping* observado nos dados consistentes.
+> ⚠️ O Cap. 4 ficou **mais raso** que o anterior: saíram a modelagem dinâmica
+> dos geradores (H₁/H₃, AVR/PSS/Governor), a topologia do bloco de falta, o
+> parágrafo de solver e taxas e três tabelas. Conferir
+> [[tcc-mesclagem-cap45-canonico]] antes de concluir que algo "nunca foi
+> escrito".
 
-- ⬜ **5.1** Desempenho sob Afundamentos Simétricos
-  - ✏️ **5.1.1** Resposta Dinâmica e Tempo de Acomodação — contém apenas "."
-  - ⬜ **5.1.2** Impacto na Injeção de P e Q — vazio
-- ✏️ **5.2** Limites de Robustez sob Contingências Assimétricas e Saltos de Fase
-  - ✏️ **5.2.1** Instabilidade sob Faltas Assimétricas — cycle slipping descrito
-  - **Salto de fase NÃO implementar** (instrução do Oscar)
-- ✏️ **5.3** Impacto dos Ganhos do Controlador do SRF-PLL
-  - ✏️ **5.3.1** Influência dos Ganhos do PI — texto + [RESULTADOS A INSERIR];
-    referência à divisão adicional por 4 no Simulink limpa de "params.m"/
-    "bloco de controle" 2026-07-22 (mantém atribuição a Simulink, que é
-    correta aqui — ver `feedback_docx_no_code_artifacts`)
-  - ✏️ **5.3.2** Conformidade com LVRT — texto + [A COMPLEMENTAR: curva ONS]
-- ⬜ **5.4** (Resumo/fechamento)
+## Cap. 5 — Análise e Discussão de Resultados
+
+> **Substituído por inteiro em 2026-09-02**, na mesma operação. Números
+> auditados (ver [[tcc-revisao-fragmento-cap5-metricas]] e o `_54`), 15 figuras.
+
+- ✅ **5.1** Validação da operação em regime permanente — Figuras 5.1 a 5.3
+- ✅ **5.2** Faltas simétricas: severidade e localização — Figuras 5.4 a 5.6
+- ✅ **5.3** Faltas assimétricas: sequência negativa e efeito da sintonia —
+  Figuras 5.7 a 5.10
+- ✅ **5.4** Perda de sincronismo sob falta simétrica no ponto de conexão —
+  Figuras 5.11 a 5.15, o caso-limite `bus7/3phase_bad_pll`
+- ✅ **5.5** Conformidade com o código de rede
+- ✅ **5.6** Resumo e conclusões do capítulo
+
+> Tese: a sintonia inadequada é um **compromisso** entre imunidade durante a
+> falta e velocidade na recuperação, com um caso-limite em que o compromisso
+> deixa de valer e o SRF-PLL não reaquisita o sincronismo dentro da janela
+> simulada. Instrução do Oscar de **não** implementar salto de fase segue
+> valendo.
 
 ## Cap. 6 — Conclusões · Cap. 7 — Trabalhos Futuros
 
@@ -194,5 +152,8 @@ metadata:
 | 2.X (ONS) | Requisito de injeção de reativo — ONS Sub. 2.10 | placeholder texto OK |
 | **3.1** | **Circuito VSI trifásico com filtro LCL e blocos PWM** | ✅ virou a Fig. 4.2 do fragmento ([[tcc-revisao-fragmento-cap4]]) |
 
-> Numeração das figuras ainda é a herdada do V8 (2.1, 2.6, 3.1...) — não foi
-> renumerada junto com os capítulos; revisar quando as imagens forem inseridas.
+> Os placeholders acima são dos Cap. 2 e 3 e seguem com a numeração herdada
+> do V8 (2.1, 2.6...), não renumerada junto com os capítulos. Os Cap. 4 e 5 já
+> têm **19 figuras reais** (4.1 a 4.4 e 5.1 a 5.15), inseridas na mesclagem de
+> 2026-09-02 com legenda acima, "Fonte: Os autores (2026)." abaixo e largura
+> ajustada à área útil A4 de 6,30 in.

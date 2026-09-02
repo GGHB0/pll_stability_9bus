@@ -1,4 +1,12 @@
-# TCC Word — Estrutura OOXML e Estado do Documento
+# TCC Word — Estrutura OOXML
+
+> **2026-09-02**: os Cap. 4 e 5 foram substituídos por inteiro (blocos 591–734
+> → 117 parágrafos do fragmento). Faixas de ID novas em uso: `rId101`–`rId119`
+> (imagens), `wp:docPr` a partir de `900000001`, `pic:cNvPr` a partir de
+> `910000000`, mídia em `word/media/pll_imageN.png`. O documento passou de 759
+> para 751 blocos, então **qualquer índice de bloco registrado abaixo para os
+> Cap. 4/5 está obsoleto** — rodar `dump_headings.py` antes de usar. Receita da
+> operação em [[tcc-mesclagem-cap45-canonico]]. e Estado do Documento
 
 ## Arquivo alvo
 

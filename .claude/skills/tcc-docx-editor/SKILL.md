@@ -17,6 +17,13 @@ Todo o workflow, as armadilhas (inserção de figura, renumeração, troca de te
 `docPr` duplicado, conferência de MD5) e as lições de redação estão em
 **`fragmento_externo.md`**. Ler antes de tocar num fragmento.
 
+Para levar um fragmento **para dentro** do canônico, ver
+**`mesclagem_no_canonico.md`**: comparar as árvores de seção antes de trocar
+(o fragmento pode ser mais raso que o capítulo que substitui), mapear os
+títulos para `Ttulo1`–`Ttulo4` ou eles somem do sumário, inverter a convenção
+de legenda, e **reescalar as figuras da largura útil de origem para a de
+destino** (o fragmento é Carta, 6,50 in; o TCC é A4, 6,30 in).
+
 ## Convenções de escrita
 
 - **Nunca usar travessão/em-dash ("—") no texto do TCC.** Reescrever a

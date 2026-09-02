@@ -93,10 +93,26 @@ explícito no script.
   (`copy.deepcopy` do vizinho, remover `w:highlight` do `rPr`, setar o `w:t` com
   `xml:space="preserve"`) e inseri-lo com `addnext`. Vale para qualquer
   formatação de anotação: realce, cor de fonte, tachado.
-- **Renderizar a página antes de dar por pronto.** Exportar para PDF via Word
-  (`win32com`, `ExportAsFixedFormat(caminho, 17)`) e rasterizar a página com
-  `fitz` (PyMuPDF). Foi o único passo que revelou o vazamento de marca-texto
-  acima, e é o que confere de fato a legibilidade da figura no tamanho impresso.
+- **Renderizar a página antes de dar por pronto.** Foi o único passo que
+  revelou o vazamento de marca-texto acima, e é o que confere de fato a
+  legibilidade da figura no tamanho impresso.
+  - **`pywin32` e `fitz` NÃO estão instalados** em nenhum interpretador desta
+    máquina (conferido 2026-09-02, inclusive na `.venv` do projeto), e o
+    `convert` do PATH é o utilitário do Windows, não o ImageMagick. Não
+    instalar nada na `.venv` do usuário sem perguntar.
+  - **Caminho que funciona, sem instalar nada:** PowerShell faz COM direto.
+    `$w = New-Object -ComObject Word.Application`; `$w.Visible=$false`;
+    `$d.Fields.Update()`; `foreach ($t in $d.TablesOfContents) { $t.Update() }`;
+    `$d.ExportAsFixedFormat($pdf, 17)`. `$d.ComputeStatistics(2)` dá o número
+    de páginas, e percorrer `TablesOfContents[1].Range.Paragraphs` confirma que
+    o sumário reconstruiu com as seções novas.
+  - Para rasterizar, o Windows tem `Windows.Data.Pdf` (WinRT) acessível do
+    PowerShell: `PdfDocument.LoadFromFileAsync` → `GetPage(i)` →
+    `RenderToStreamAsync` com `PdfPageRenderOptions.DestinationWidth`. As
+    chamadas assíncronas precisam de `AsTask` via reflexão sobre
+    `[System.WindowsRuntimeSystemExtensions]` (há duas sobrecargas: uma para
+    `IAsyncOperation` de um argumento, outra para `IAsyncAction`). `$pg.Close()` não existe
+    e o erro é inofensivo, o PNG já saiu.
 - **Troca de termo no fragmento inteiro:** iterar `d.paragraphs` → `p.runs`
   e aplicar `r.text.replace(...)` só nos runs que contêm o termo (não
   reescrever o parágrafo inteiro — perderia negrito/itálico de runs vizinhos
@@ -131,6 +147,12 @@ explícito no script.
   com conteúdo correto) — escrever um dump UTF-8 (`io.open(..., 'w',
   encoding='utf-8')`) e reler com a ferramenta de leitura de arquivo.
 - KB desse workflow fica em `kb/tcc-word/revisao_fragmento_cap4.md` e
-  `revisao_fragmento_cap5.md`, não em `docx_structure.md`/`historico_entregas.md`
+  `revisao_fragmento_cap5*.md`, não em `docx_structure.md`/`historico_entregas.md`
   (que são só do canônico).
 
+## Mesclar o fragmento no canônico
+
+Ver `mesclagem_no_canonico.md` (nesta pasta): comparação das árvores de seção
+antes de trocar, mapeamento de estilos de título, convenção de figura invertida,
+reescalonamento Carta→A4 e limpeza das partes de comentário. Ler antes de
+levar qualquer fragmento para dentro do TCC.

@@ -79,6 +79,11 @@ número e desenho não divirjam. A **escala vertical** de cada painel ignora os
 20 ms seguintes à eliminação: o transitório de comutação leva P a −2,4 pu por
 ~1 ms e esconderia a oscilação. O traço continua desenhado, só sai do recorte.
 
+**No TCC é a Figura 5.14** (§5.4), acrescentada *depois* da 5.13 crua em vez de
+substituí-la: a 5.13 mantém o recorte cheio e mostra o transitório de
+eliminação, a 5.14 fecha a escala e expõe a alternância de sentido. Ver
+`.claude/kb/tcc-word/revisao_fragmento_cap5_figuras.md`.
+
 **Inserir a 6,5 in, não a 5,5 in.** Esta figura e o plano P-Q usam `figsize`
 8,3 in justamente para dar a escala 0,79 quando colocadas na largura útil cheia.
 A 5,5 in (largura dos oscilogramas comuns) a escala cai para 0,66 e as

@@ -1,6 +1,6 @@
 ---
 name: tcc-revisao-fragmento-cap5-analise
-description: Regra editorial do Cap.5 do fragmento — descrição de figura não é análise; o que substituiu a enumeração de valores nos parágrafos 98 e 101, e o que ficou de fora
+description: Regra editorial do Cap.5 do fragmento — descrição de figura não é análise; o que substituiu a enumeração de valores nos parágrafos 98 e 101, a Figura 5.14 acrescentada à 5.13, o descarte do plano P-Q e o que ficou de fora
 metadata:
   type: project
 ---
@@ -47,28 +47,32 @@ Usados na reescrita do 98, e o modelo para os próximos:
 | Par. | Figura | O que mudou |
 |---|---|---|
 | 98 | 5.13 (P e Q) | Saíram os 9 valores; entraram os três eixos acima |
-| 101 | 5.14 (correntes) | Saiu a enumeração (0,92 / −0,66 / 1,34 / −1,76 / −0,24); o mecanismo já era bom |
+| 101 → hoje **104** | 5.14 → hoje **5.15** (correntes) | Saiu a enumeração (0,92 / −0,66 / 1,34 / −1,76 / −0,24); o mecanismo já era bom |
 
-No **101** o mecanismo já existia e valia (projeção sobre eixos errados).
+Os índices mudaram depois: a inserção da Figura 5.14 (adiante) empurrou em +3
+todo parágrafo a partir do 99. Abaixo, quando há duas numerações, a segunda é a
+de hoje.
+
+No **101** (hoje 104) o mecanismo já existia e valia (projeção sobre eixos errados).
 Entrou a atribuição de causa — a separação entre comando e corrente entregue
 **não é falha da malha de corrente, é do referencial em que ela opera** — mais
-o fecho explícito da cadeia 5.12 → 5.13 → 5.14. Cuidado tomado: não afirmar que
+o fecho explícito da cadeia 5.12 → 5.13 → 5.15. Cuidado tomado: não afirmar que
 a malha de corrente "rastreia corretamente", porque a figura mostra ref e medido
 divergindo no mesmo referencial; a redação atribui a causa sem negar a
 divergência.
 
 ## Não mexidos, e por quê
 
-- **102** — comparação 2×2 (9,2% / 98 ms contra 58,4% / 106 ms). Os números
+- **102** (hoje 105) — comparação 2×2 (9,2% / 98 ms contra 58,4% / 106 ms). Os números
   *são* o argumento (nem profundidade nem sintonia isoladas produzem o
   fenômeno), não descrição de figura.
-- **103** — ressalva da janela de 300 ms mais a implicação operacional
+- **103** (hoje 106) — ressalva da janela de 300 ms mais a implicação operacional
   (proteção atuaria antes). Análise.
-- **111** — síntese do capítulo; os números são os resultados de topo.
+- **111** (hoje 114) — síntese do capítulo; os números são os resultados de topo.
 
 ## Pendências
 
-- **Parágrafo 107 (§5.5)** ainda repete "pulsando entre 0,14 pu e 1,11 pu",
+- **Parágrafo 110 (§5.5, era 107)** ainda repete "pulsando entre 0,14 pu e 1,11 pu",
   agora o único lugar do texto com esses valores. Como a §5.5 não tem figura, é
   o único apoio quantitativo da afirmação normativa ali. Deixado como estava, à
   espera de decisão do usuário.
@@ -76,27 +80,21 @@ divergência.
   parágrafo **87** (§5.3) tem dez valores de `t_s` e ondulação de Q em prosa;
   parágrafo **66** (§5.2) tem oito valores de retenção e pico, embora ali a
   progressão monotônica seja o argumento e a última frase dê o mecanismo.
-- **Inserção da figura do plano P-Q no DOCX** (ver abaixo): gerada e aprovada
-  visualmente, mas **ainda não inserida** — entra como figura da §5.4 e empurra
-  a numeração seguinte. Aguardando decisão do usuário.
 - `bus7_3phase_bad_pll_tensao_dq_inversor` já existe em `assets/charts/` e
-  nunca foi inserido — é a tensão no PAC, hoje só descrita em prosa. Alternativa
-  ou complemento ao plano P-Q.
+  nunca foi inserido — é a tensão no PAC, hoje só descrita em prosa. Seria a
+  Figura 5.16; nada depois dela para renumerar.
 
 ## Figura do plano P-Q (2026-09-01) — gerada e descartada
 
-Primeira resposta ao pedido *"vamos fazer que nem fizemos no gráfico 5.11 [...]
-algo que fique bem visual"*: `scripts/gen_plano_pq.py` abandona o eixo do tempo
-e plota a trajetória no plano P-Q, com marcadores "antes" e "depois". **Não
-entrou no TCC** (ver "Escolha resolvida" abaixo); registro completo do desenho e
-do motivo do descarte em `assets/charts/figuras_didaticas.md`.
+`scripts/gen_plano_pq.py`, primeira resposta ao pedido de *"algo que fique bem
+visual"*: troca o eixo do tempo pela trajetória no plano P-Q. **Não entrou no
+TCC** (ver "Escolha resolvida"); desenho e motivo do descarte em
+`assets/charts/figuras_didaticas.md`.
 
-**O que ela deixou:** a métrica de *fração do tempo com `P < 0`* (1,1% no
-nominal contra 64,6% na sintonia inadequada, janela `[t_clear + 50 ms, fim]`).
-Razão adimensional, não depende do comprimento da janela — exatamente a objeção
-que derrubou a rotação acumulada em [[tcc-revisao-fragmento-cap5-metricas-54]].
-A figura foi descartada, a métrica sobreviveu e entrou no texto pela figura da
-potência anotada.
+**O que ela deixou:** a métrica de *fração do tempo com `P < 0`* — razão
+adimensional, independente do comprimento da janela, exatamente a objeção que
+derrubou a rotação acumulada em [[tcc-revisao-fragmento-cap5-metricas-54]]. A
+figura morreu, a métrica entrou no texto pela figura da potência anotada.
 
 ## Figura da potência anotada (2026-09-01)
 
@@ -110,8 +108,10 @@ sobre o traço bruto: área preenchida onde a potência é negativa; patamar
 pré-falta tracejado; média pós-falta tracejada; e a fração do tempo em caixa.
 
 O contraste aqui é **temporal** (antes × depois no mesmo cenário), não entre
-cenários — por isso dispensa o painel do nominal e cabe como substituição direta
-da imagem da Figura 5.13, **sem renumerar nada**.
+cenários — por isso dispensa o painel do nominal e cabe numa figura só. A
+intuição inicial era usá-la como substituição direta da imagem da Figura 5.13
+(custo zero de renumeração); o usuário pediu o contrário, ver "Escolha
+resolvida" abaixo.
 
 | | P | Q |
 |---|---|---|

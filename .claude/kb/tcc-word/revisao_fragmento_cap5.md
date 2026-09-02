@@ -137,13 +137,15 @@ excluir o transitório de comutação, ver
 Movido para [[tcc-revisao-fragmento-cap5-analise]] em 2026-09-01 (limite de 200
 linhas): o diagnóstico do usuário, os três eixos que contam como análise, a
 aplicação nos parágrafos 98 e 101, o que ficou de fora e por quê, e as
-pendências (parágrafo 107, candidatos em §5.2/§5.3, figura conceitual).
+pendências (parágrafo 110, candidatos em §5.2/§5.3). Lá também: a figura da
+potência anotada, acrescentada como **Figura 5.14** em 2026-09-01, e o descarte
+do plano P-Q.
 
 ## Estrutura, figuras e geração dos gráficos
 
 Movido para [[tcc-revisao-fragmento-cap5-figuras]]: mapa das seções 5.1 a 5.6,
-tabela das 13 figuras, decisão de empilhar as imagens no Word e histórico do
-`regime_bad_pll_v2` (criado e removido).
+tabela das figuras (13 na criação, **5.1 a 5.15** hoje), decisão de empilhar as
+imagens no Word e histórico do `regime_bad_pll_v2` (criado e removido).
 
 ## Pendências
 

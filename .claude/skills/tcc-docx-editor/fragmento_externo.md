@@ -32,8 +32,10 @@ explícito no script.
   - A largura não é só estética: ela define o tamanho da fonte na página. Uma
     figura de matplotlib com `figsize` de 8,3" inserida a 6,5" dá escala 0,78;
     a mesma figura a 5,5" cai para 0,66 e as anotações ficam ilegíveis. As
-    figuras didáticas (`gen_retencao_didatica`, `gen_potencia_didatica`,
-    `gen_plano_pq`) **têm que entrar a 6,5"**. Regra completa em
+    figuras didáticas (`gen_retencao_didatica`, `gen_potencia_didatica`)
+    **têm que entrar a 6,5"**. Corolário mecânico: ao clonar um `w:p` para
+    inserir uma figura didática, clonar o de **outra didática** (6,5") e não o
+    de um oscilograma (5,5") — poupa reescrever o `extent`. Regra completa em
     `assets/charts/figuras_didaticas.md` e na skill `svg-diagrams`
     (`data_charts.md`).
 - **Trocar a imagem de uma figura sem mexer no parágrafo:** sobrescrever o

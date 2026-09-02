@@ -58,7 +58,7 @@ files:
     description: Reescrita do Cap.5 do fragmento capitulos_4_5_revisados.docx — duas safras de modelo nos cenários bad_pll, tese de compromisso de banda passante com o caso-limite de perda de sincronismo, estrutura 5.1-5.6
   - file: revisao_fragmento_cap5_figuras.md
     name: tcc-revisao-fragmento-cap5-figuras
-    description: Estrutura de seções, mapa das figuras e histórico de geração dos gráficos do Cap.5 do fragmento capitulos_4_5_revisados.docx
+    description: Estrutura de seções, mapa das figuras (5.1 a 5.15) e histórico de geração dos gráficos do Cap.5 do fragmento capitulos_4_5_revisados.docx
   - file: revisao_fragmento_cap5_metricas.md
     name: tcc-revisao-fragmento-cap5-metricas
     description: Definições fechadas e valores medidos das métricas de falta do Cap.5 do fragmento, após a auditoria de 2026-08-23 que reprovou vários números do texto anterior
@@ -67,4 +67,4 @@ files:
     description: Métricas da Seção 5.4 do fragmento (perda de sincronismo em bus7/3phase_bad_pll) — rotação acumulada, escorregamento, retenção com valores brutos, figura didática, argumento 2x2 e ressalvas
   - file: revisao_fragmento_cap5_analise.md
     name: tcc-revisao-fragmento-cap5-analise
-    description: Regra editorial do Cap.5 do fragmento — descrição de figura não é análise; reescrita dos parágrafos 98 e 101, o que ficou de fora e as pendências
+    description: Regra editorial do Cap.5 do fragmento — descrição de figura não é análise; reescrita dos parágrafos 98 e 101, a Figura 5.14 da potência anotada acrescentada à 5.13, o descarte do plano P-Q e as pendências

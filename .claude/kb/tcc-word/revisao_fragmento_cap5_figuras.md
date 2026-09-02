@@ -11,6 +11,10 @@ Desmembrado de [[tcc-revisao-fragmento-cap5]] em 2026-08-23 pelo limite de
 200 linhas. Números e receitas de métrica ficam em
 [[tcc-revisao-fragmento-cap5-metricas]].
 
+**Leia por último a seção mais recente.** O arquivo é cronológico: as tabelas
+das seções antigas são o estado *daquela* edição, não o de hoje. Estado atual
+(2026-09-01): **116 parágrafos, 19 imagens, Figuras 5.1 a 5.15**.
+
 ## Estrutura aplicada (41 parágrafos, índices 36-76, substituição 1:1)
 
 ```
@@ -122,3 +126,43 @@ sintético não entra em `assets/`. O campo `t_max` saiu junto de
 (6 gráficos cada) — completam a matriz assimétrica 2 barras × 2 tipos ×
 2 sintonias. Dados já existiam, só faltava gerar.
 
+### Figura 5.14 nova: `potencia_didatica` (inserida em 2026-09-01)
+
+Entrou **depois** da Figura 5.13 crua, sem substituí-la — pedido do usuário:
+*"sem retirar o que já temos, porém complementando"*. As duas mostram as mesmas
+séries, mas em escalas verticais diferentes, e é isso que impede a redundância:
+a 5.13 mantém o recorte cheio e mostra o transitório de eliminação; a 5.14 fecha
+a escala (ignora os 20 ms seguintes) e expõe a alternância de sentido, que na
+5.13 fica comprimida contra o eixo. Racional completo em
+[[tcc-revisao-fragmento-cap5-analise]].
+
+| Antes | Depois | Arquivo |
+|---|---|---|
+| (nova) | 5.14 | `potencia_didatica` |
+| 5.14 | 5.15 | `bus7_3phase_bad_pll_corrente_dq` |
+
+**Renumeração barata porque a 5.14 era a última figura do fragmento**: uma
+legenda e duas citações, todas no mesmo parágrafo. Conferir isso *antes* de
+decidir entre substituir e acrescentar — o custo da inserção depende de quantas
+figuras vêm depois, não da técnica.
+
+Documento passou de **113 para 116 parágrafos e de 18 para 19 imagens**: a
+imagem, a legenda e um parágrafo de análise novo (o apoio quantitativo que a
+reescrita do antigo par. 98 tinha removido).
+
+Largura **6,5 in**, como a 5.11 e pelo mesmo motivo. Por isso o clone do `w:p`
+saiu da Figura 5.11 e não da 5.13, que está a 5,5 in.
+
+### Estado atual do §5.4 (2026-09-01)
+
+| Fig | Arquivo em `assets/charts/` |
+|---|---|
+| 5.11 | `retencao_comparacao` |
+| 5.12 | `bus7_3phase_bad_pll_tensao_dq_rede` |
+| 5.13 | `bus7_3phase_bad_pll_potencia_pq` |
+| 5.14 | `potencia_didatica` |
+| 5.15 | `bus7_3phase_bad_pll_corrente_dq` |
+
+Ainda **não inserido**: `bus7_3phase_bad_pll_tensao_dq_inversor` (tensão no PAC,
+hoje só descrita em prosa). `plano_pq_comparacao` foi gerado e **descartado**,
+não entra.

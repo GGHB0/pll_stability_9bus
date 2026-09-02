@@ -165,4 +165,8 @@ imagens no Word e histórico do `regime_bad_pll_v2` (criado e removido).
 - Toda métrica nova do capítulo precisa entrar em
   [[tcc-revisao-fragmento-cap5-metricas]] com a receita junto. Números sem
   receita foi exatamente o que a auditoria de 2026-08-23 teve de desfazer.
+- **Parágrafo 106 (§5.4), aberta desde 2026-09-02:** o usuário marcou de verde
+  (sinal de "muito grande") e, ao tirar dele os valores de retenção, deixou uma
+  frase quebrada — "submetida à falta trifásica na Barra 6, **onde** recupera em
+  106 ms", com o "onde" órfão da oração que citava os 58,4%. Aguardando decisão.
 - Mesclagem no canônico segue sem data definida.

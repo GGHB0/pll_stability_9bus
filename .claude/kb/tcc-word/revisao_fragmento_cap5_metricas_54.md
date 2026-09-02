@@ -118,12 +118,8 @@ Decisões de desenho do painel duplo:
 imagens. Detalhes da inserção, largura escolhida e o defeito de marca-texto
 encontrado na revisão visual em [[tcc-revisao-fragmento-cap5-figuras]].
 
-O parágrafo de abertura do §5.4 ganhou, depois da frase da retenção, a chamada
-da figura com a definição em palavras: razão entre o valor médio da componente
-de eixo direto durante a falta, descartados os dois primeiros ciclos, e o valor
-médio nos 50 ms anteriores; mais a observação de que os dois cenários partem de
-patamares distintos (0,989 e 0,823 pu) e ainda assim dão razões praticamente
-iguais.
+O parágrafo de abertura do §5.4 ganhou então a chamada da figura com a definição
+da razão em palavras — texto retirado depois, ver o enxugamento de 2026-09-02.
 
 ### Origem da métrica explicitada no texto (2026-08-28)
 
@@ -141,13 +137,24 @@ pré-falta, sem descarte de ciclos, sobre `vbus2`) nem de citação.
 Correção registrada: numa fala anterior eu disse que a receita era "idêntica à
 de `src/pipeline`" — está errado e foi retratado.
 
-O run[2] (minha adição não realçada) do parágrafo 90 foi reescrito para deixar
-isso no próprio texto: a tensão retida é a grandeza dos códigos de rede
-(§2.5.2, ali como fração da nominal); normalizar pela média pré-falta medida é
-adaptação deste trabalho, feita para descontar o ponto de operação degradado da
-Seção 5.1 e isolar o efeito da sintonia. Só o run[2] mudou (497 → 962 chars); o
-run[1], anotação amarela do usuário (284 chars), ficou intacto, conferido na
-renderização da página em PDF.
+### Enxugamento do parágrafo de abertura (2026-09-02)
+
+O parágrafo foi reescrito duas vezes. Em 2026-08-28 ganhou a origem da métrica
+acima. Em 2026-09-02 o usuário marcou de **verde** esse mesmo trecho ("está
+muito grande") e de **vermelho sobre preto** a frase da profundidade ("não ficou
+muito bom"): 961 → 446 e 146 → 160 chars, parágrafo de 1746 → 1245.
+
+**Critério do corte: o texto guarda o porquê, a figura guarda a construção.**
+Saíram a definição verbal da razão, o descarte dos 2 ciclos e o "as razões
+resultam praticamente iguais" — a Figura 5.11 já traz isso na legenda e na conta
+fechada de cada painel, e o parágrafo 67 (§5.2) já define retenção como "% do
+valor pré-falta" e já justifica o descarte pelo transitório de comutação. Ficou
+só o que nenhum dos dois diz: a origem normativa e por que o denominador é a
+média medida. A frase da profundidade **não** encurtou — o defeito ali era
+concordância ("a mesma dos dois casos") e ordem invertida dos números.
+
+Realce preto e verde saem junto com o texto que marcavam; os amarelos, que são
+anotação do usuário, ficam intactos.
 
 **O escorregamento não é artefato de amostragem.** O passo do CSV é 5 µs, então
 70 Hz são amostrados a ~0,085° por ponto: as amostras brutas de `v_d`/`v_q`

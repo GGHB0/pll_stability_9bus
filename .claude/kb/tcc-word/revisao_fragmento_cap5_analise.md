@@ -136,13 +136,23 @@ da imagem da Figura 5.13, **sem renumerar nada**.
 | tempo **entregando** | 36,2% | 60,6% |
 | tempo **absorvendo** | **63,8%** | 39,4% |
 
-**Revisão de 2026-09-01 (2ª passada na figura).** Usuário: *"você consegue
-mostrar se a gente está consumindo ou entregando potência ativa"*. A primeira
-versão preenchia só o lado negativo, o que dizia "absorve" mas deixava
-"entrega" implícito. Passou a preencher **os dois lados** (verde acima do zero,
-vermelho abaixo) e a caixa passou a dar **as duas frações**. É o que torna
-visível a alternância de sentido a cada ciclo — o fenômeno que o parágrafo 98
-descreve como "deixa de ter sinal definido".
+**Duas revisões da figura em 2026-09-01.**
+
+1. *"Você consegue mostrar se a gente está consumindo ou entregando potência
+   ativa"*. A 1ª versão preenchia só o lado negativo: dizia "absorve" e deixava
+   "entrega" implícito. Passou a preencher **os dois lados**, e a caixa a dar
+   **as duas frações**.
+2. *"Não precisa sombrear nem vermelho e nem verde, pois dá indício que um tem
+   efeito positivo e o outro negativo; a ideia é justamente mostrar que está
+   entregando e absorvendo de forma desordenada"*. Correção certeira: os picos
+   positivos pós-falta **não** são o inversor se comportando bem, são a mesma
+   oscilação descontrolada. O preenchimento passou a ser **neutro** (cor do
+   próprio traço), e as linhas de referência de verde/vermelho para NAVY,
+   diferenciadas por padrão de traço. A separação de sentidos ficou por conta da
+   linha do zero reforçada e dos rótulos `▲ entrega` / `▼ absorve`.
+
+É o que torna visível a alternância de sentido a cada ciclo — o fenômeno que o
+parágrafo 98 descreve como "deixa de ter sinal definido" — sem editorializar.
 
 Janela `[t_clear, fim]`, a mesma região sombreada, para número e desenho não
 divergirem. A escala vertical ignora os 20 ms seguintes à eliminação (o

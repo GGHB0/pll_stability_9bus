@@ -133,14 +133,23 @@ def painel(ax, d, nome, cor, rotulo, caixa):
     ax.axvline(d["t_fault"], color=VERMELHO, lw=1.2, ls="--", alpha=0.8, zorder=2)
     ax.axvline(d["t_clear"], color=VERDE, lw=1.2, ls="--", alpha=0.8, zorder=2)
 
-    # 1. a area que carrega o conceito: o SINAL da potencia diz o sentido do
-    # fluxo. Preencher os dois lados, e nao so o negativo, e o que deixa o
-    # leitor ver a alternancia entre entregar e absorver a cada ciclo.
-    ax.fill_between(t, y, 0, where=(y >= 0), interpolate=True,
-                    color=VERDE, alpha=0.16, zorder=3, linewidth=0)
-    ax.fill_between(t, y, 0, where=(y < 0), interpolate=True,
-                    color=VERMELHO, alpha=0.30, zorder=3, linewidth=0)
-    ax.axhline(0.0, color="#334155", lw=1.3, zorder=4)
+    # 1. area entre a potencia e o zero, NEUTRA e na cor do proprio traco.
+    # Deliberadamente sem verde/vermelho: o par carrega juizo de valor (bom/mau)
+    # e aqui os dois sentidos sao igualmente sintomaticos -- os picos positivos
+    # pos-falta nao sao "o inversor funcionando", sao a mesma oscilacao
+    # descontrolada. Quem separa os sentidos e a linha do zero, reforcada, mais
+    # os rotulos de direcao no eixo.
+    ax.fill_between(t, y, 0, color=cor, alpha=0.18, zorder=3, linewidth=0)
+    ax.axhline(0.0, color="#334155", lw=1.4, zorder=4)
+
+    # rotulos de direcao, em cinza neutro, junto ao eixo do zero
+    tr = ax.get_yaxis_transform()
+    # fora da borda direita (clip_on=False + bbox_inches="tight" no savefig),
+    # para nao cobrir o traco
+    seta = dict(transform=tr, ha="left", fontsize=8.8, color="#475569",
+                zorder=9, clip_on=False)
+    ax.text(1.012, 0.0, "▲ entrega", va="bottom", **seta)
+    ax.text(1.012, 0.0, "▼ absorve", va="top", **seta)
 
     ax.plot(t, y, color=cor, lw=0.9, zorder=5)
 
@@ -148,16 +157,16 @@ def painel(ax, d, nome, cor, rotulo, caixa):
     cx = dict(fontsize=9.5, fontweight="bold", zorder=9,
               bbox=dict(boxstyle="round,pad=0.28", facecolor="white",
                         edgecolor="none", alpha=0.85))
-    ax.hlines(d[f"{nome}_pre"], T_INI_PLOT, d["t_fault"], color=VERDE,
+    ax.hlines(d[f"{nome}_pre"], T_INI_PLOT, d["t_fault"], color=NAVY,
               lw=1.8, ls=(0, (5, 2)), zorder=6)
     ax.text(T_INI_PLOT + 0.004, d[f"{nome}_pre"],
             f"antes: {br(d[f'{nome}_pre'])} pu",
-            va="bottom", ha="left", color=VERDE, **cx)
-    ax.hlines(d[f"{nome}_pos"], d["t_clear"], d["t_fim"], color=VERMELHO,
-              lw=1.8, ls=(0, (5, 2)), zorder=6)
+            va="bottom", ha="left", color=NAVY, **cx)
+    ax.hlines(d[f"{nome}_pos"], d["t_clear"], d["t_fim"], color=NAVY,
+              lw=1.8, ls=(0, (1.5, 1.5)), zorder=6)
     ax.text(d["t_clear"] + 0.004, d[f"{nome}_pos"],
             f"média pós-falta: {br(d[f'{nome}_pos'])} pu",
-            va="bottom", ha="left", color=VERMELHO, **cx)
+            va="bottom", ha="left", color=NAVY, **cx)
 
     # 4. quanto do tempo em cada sentido de fluxo
     ax.text(0.985, 0.965, caixa, transform=ax.transAxes, va="top", ha="right",
@@ -201,17 +210,15 @@ def main():
     ax2.set_xlabel("Tempo (s)")
 
     handles = [
-        Patch(facecolor=VERDE, alpha=0.16,
-              label="Potência > 0: o inversor ENTREGA energia à rede"),
-        Patch(facecolor=VERMELHO, alpha=0.30,
-              label="Potência < 0: o inversor ABSORVE energia da rede"),
-        Line2D([], [], color=VERDE, lw=1.8, ls=(0, (5, 2)),
+        Patch(facecolor="#64748b", alpha=0.30,
+              label="Área entre a potência e o zero (acima: entrega; abaixo: absorve)"),
+        Line2D([], [], color=NAVY, lw=1.8, ls=(0, (5, 2)),
                label="Patamar pré-falta"),
-        Line2D([], [], color=VERMELHO, lw=1.8, ls=(0, (5, 2)),
+        Line2D([], [], color=NAVY, lw=1.8, ls=(0, (1.5, 1.5)),
                label="Média após a eliminação da falta"),
     ]
-    fig.legend(handles=handles, loc="lower center", ncol=2, frameon=False,
-               bbox_to_anchor=(0.5, -0.075), fontsize=9)
+    fig.legend(handles=handles, loc="lower center", ncol=3, frameon=False,
+               bbox_to_anchor=(0.5, -0.06), fontsize=8.8)
 
     fig.suptitle("Potência injetada pelo inversor: falta trifásica na Barra 7 "
                  "com sintonia inadequada", fontsize=11.5, fontweight="bold",

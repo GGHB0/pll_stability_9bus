@@ -110,11 +110,25 @@ Regras que essa variante acrescenta:
 
 - **Preencher os dois lados de uma fronteira, não só o lado "ruim".** A primeira
   versão sombreava só `P < 0` ("absorve"): dizia metade da história e deixava o
-  "entrega" implícito. Com verde acima do zero e vermelho abaixo, a
-  **alternância** entre os dois estados vira o assunto da figura. O usuário
-  pediu isso explicitamente — *"você consegue mostrar se a gente está consumindo
-  ou entregando"* — e vale como regra geral: se o sinal de uma grandeza é o
-  resultado, mostre os dois sinais.
+  "entrega" implícito. Regra geral: se o **sinal** de uma grandeza é o resultado,
+  mostre os dois sinais.
+- **Mas preencher com cor NEUTRA, não com verde/vermelho.** Foi a correção
+  seguinte do usuário: *"não precisa sombrear nem vermelho e nem verde, pois dá
+  indício que um tem efeito positivo e o outro negativo; a ideia é justamente
+  mostrar que está entregando e absorvendo de forma desordenada"*. O par
+  verde/vermelho é lido como bom/mau, e aqui os dois sentidos são igualmente
+  sintomáticos — os picos positivos pós-falta não são "o inversor funcionando",
+  são a mesma oscilação descontrolada. Usar **a cor do próprio traço** em alpha
+  baixo, dos dois lados, e deixar a separação por conta da **linha do zero
+  reforçada** mais rótulos de direção neutros (`▲ entrega` / `▼ absorve`) fora
+  da borda do eixo.
+  - Vale para as linhas de referência também: "antes" e "depois" passaram de
+    verde/vermelho para NAVY nos dois, diferenciadas por **padrão de traço**
+    (tracejado longo × pontilhado) e pelo próprio rótulo.
+  - **Exceção mantida:** os marcadores de evento (`falta aplicada` vermelho /
+    `falta eliminada` verde) continuam coloridos — são convenção de todo o
+    capítulo (`gen_fault_waveforms.py`) e marcam *instantes*, não valores, então
+    não carregam juízo sobre a grandeza.
 - **Dar as duas frações**, não só a que interessa ao argumento (entrega 36,2% ·
   absorve 63,8%). Somam 100% e o leitor confere sozinho.
 - **Contraste temporal dispensa painel de comparação.** Como o "antes" e o

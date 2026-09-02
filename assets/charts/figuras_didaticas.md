@@ -93,7 +93,8 @@ A largura útil do fragmento é **6,5 in** (Carta, margens de 1 in).
 |---|---|---|---|---|
 | Oscilogramas (`gen_fault_waveforms`) | 7,0 in | 5,5 in | 0,79 | ~7,9 pt |
 | Retenção (`gen_retencao_didatica`) | 8,3 in | 6,5 in | 0,78 | ~7,8 pt |
-| Potência anotada / plano P-Q | 8,3 in | **6,5 in** | 0,78 | ~7,8 pt |
+| Potência anotada (`gen_potencia_didatica`) | 8,3 in | **6,5 in** | 0,78 | ~7,8 pt |
+| Plano P-Q (`gen_plano_pq`, não usado no TCC) | 8,3 in | — | — | — |
 
 Duas armadilhas já pagas:
 
@@ -107,7 +108,15 @@ Duas armadilhas já pagas:
 olhar ao lado de uma linha em 12 pt (corpo do TCC). É o único teste que pega o
 problema; no PNG em tamanho natural tudo parece legível.
 
-## Plano P-Q pós-falta
+## Plano P-Q pós-falta — gerado, **não usado no TCC**
+
+Descartado em 2026-09-01, a pedido do usuário: *"não quero o plano P-Q, vai ser
+um tipo de análise nova que não precisamos"*. O motivo não é a figura, é o
+**custo de leitura**: o plano de estado obriga a banca a aprender um gráfico
+novo no meio do capítulo, e o §5.4 já entrega a mesma conclusão pela figura da
+potência anotada, que reaproveita um gráfico que o leitor já viu. Script e
+arquivos ficam no repositório como referência da técnica; a variante segue
+documentada em `data_charts.md` da skill `svg-diagrams`.
 
 Gerado por `scripts/gen_plano_pq.py` → `plano_pq_comparacao.svg` / `.png`.
 Painel duplo `bus7/3phase` × `bus7/3phase_bad_pll`, mesma família didática da
@@ -122,7 +131,9 @@ absorver energia. O semiplano `P < 0` fica sombreado em vermelho.
 **Métrica destacada: fração do tempo com `P < 0`** (1,1% no nominal contra 64,6%
 na sintonia inadequada). Escolhida por ser adimensional e **não depender do
 comprimento da janela** — é uma razão, ao contrário dos valores de pico, que
-mudam com o recorte. Foi o que substituiu a enumeração de picos no texto, ver
+mudam com o recorte. Essa métrica **sobreviveu ao descarte da figura**: entrou
+no texto do §5.4 pela figura da potência anotada, com os valores medidos naquela
+janela (P absorve 63,8% do tempo). Ver
 `.claude/kb/tcc-word/revisao_fragmento_cap5_analise.md`.
 
 Janela: `[t_clear + 50 ms, fim]`. Os 50 ms descartados removem o transitório de

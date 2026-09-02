@@ -132,13 +132,27 @@ Regras que essa variante acrescenta:
 - **Dar as duas frações**, não só a que interessa ao argumento (entrega 36,2% ·
   absorve 63,8%). Somam 100% e o leitor confere sozinho.
 - **Contraste temporal dispensa painel de comparação.** Como o "antes" e o
-  "depois" estão na mesma série, a figura substitui a imagem existente sem
-  renumerar nada no documento — vantagem prática grande sobre criar figura nova.
+  "depois" estão na mesma série, uma figura só basta: não precisa do painel do
+  cenário sadio ao lado.
+- **Substituir ou acrescentar é decisão do autor, não da técnica.** A intuição
+  era substituir o oscilograma cru (custo zero de renumeração). O usuário pediu
+  o contrário: *"sem retirar o que já temos, porém complementando"*. Funcionou
+  porque **as duas escalas dizem coisas diferentes** — a crua mantém o recorte
+  cheio e mostra o transitório do evento; a anotada fecha a escala e por isso
+  consegue expor o fenômeno, que na crua fica comprimido contra o eixo. Se as
+  duas tivessem a mesma escala, seriam a mesma figura duas vezes e aí substituir
+  seria o certo. Antes de propor a troca, olhar se o recorte mudou.
 - **Caixa de anotação nunca em cima do traço.** Reservar folga no `ylim`
   (assimétrica, se preciso) e ancorar a caixa nela, em vez de deixá-la cobrir
   dados com fundo branco.
 
 ### Variante: trocar o eixo do tempo por um plano de estado
+
+> Técnica válida, mas **rejeitada no TCC em 2026-09-01**: *"não quero o plano
+> P-Q, vai ser um tipo de análise nova que não precisamos"*. O custo não é
+> desenhar, é obrigar a banca a aprender um gráfico novo no meio do capítulo.
+> Só proponha quando a série temporal realmente não der conta — se um
+> oscilograma anotado entrega a mesma conclusão, ele ganha.
 
 Quando o que se quer mostrar é **mudança de regime**, e não a construção de uma
 conta, às vezes a série temporal é o gráfico errado. `scripts/gen_plano_pq.py`

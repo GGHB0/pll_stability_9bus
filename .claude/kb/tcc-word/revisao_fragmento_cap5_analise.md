@@ -83,36 +83,20 @@ divergência.
   nunca foi inserido — é a tensão no PAC, hoje só descrita em prosa. Alternativa
   ou complemento ao plano P-Q.
 
-## Figura do plano P-Q (2026-09-01)
+## Figura do plano P-Q (2026-09-01) — gerada e descartada
 
-Pedido do usuário: *"vamos fazer que nem fizemos no gráfico 5.11 [...] um svg
-que consiga gerar valor dos gráficos, destacar algo do texto, faça algo que
-fique bem visual"*.
+Primeira resposta ao pedido *"vamos fazer que nem fizemos no gráfico 5.11 [...]
+algo que fique bem visual"*: `scripts/gen_plano_pq.py` abandona o eixo do tempo
+e plota a trajetória no plano P-Q, com marcadores "antes" e "depois". **Não
+entrou no TCC** (ver "Escolha resolvida" abaixo); registro completo do desenho e
+do motivo do descarte em `assets/charts/figuras_didaticas.md`.
 
-Gerador `scripts/gen_plano_pq.py` → `assets/charts/plano_pq_comparacao.svg/.png`.
-Painel duplo `bus7/3phase` × `bus7/3phase_bad_pll`. Detalhes de desenho em
-`assets/charts/figuras_didaticas.md` e a regra generalizada em `data_charts.md` da skill
-`svg-diagrams` ("trocar o eixo do tempo por um plano de estado").
-
-**A ideia:** abandonar o eixo do tempo e plotar a trajetória no plano P-Q. O
-ponto pré-falta vira o marcador "antes", a média da janela pós-falta vira
-"depois". No nominal os dois coincidem; na sintonia inadequada o "depois" está
-do outro lado da linha `P = 0`. É a tradução visual direta do eixo 1 ("sentido,
-não magnitude") do parágrafo 98.
-
-**Métrica nova que a figura trouxe — fração do tempo com `P < 0`:**
-
-| Cenário | Janela | P média | Tempo com P<0 |
-|---|---|---|---|
-| `bus7/3phase` (nominal) | [0,45; 0,60] s | +0,799 pu | **1,1%** |
-| `bus7/3phase_bad_pll` | [0,75; 1,00] s | **−0,288 pu** | **64,6%** |
-
-Janela = `[t_clear + 50 ms, fim]`; os 50 ms removem o transitório de eliminação
-(no nominal P chega a −3,4 pu por poucos ms). Vale mais que qualquer valor de
-pico porque é **razão adimensional que não depende do comprimento da janela** —
-exatamente a objeção que derrubou a rotação acumulada em
-[[tcc-revisao-fragmento-cap5-metricas-54]]. Separa os dois cenários por quase
-duas ordens de grandeza.
+**O que ela deixou:** a métrica de *fração do tempo com `P < 0`* (1,1% no
+nominal contra 64,6% na sintonia inadequada, janela `[t_clear + 50 ms, fim]`).
+Razão adimensional, não depende do comprimento da janela — exatamente a objeção
+que derrubou a rotação acumulada em [[tcc-revisao-fragmento-cap5-metricas-54]].
+A figura foi descartada, a métrica sobreviveu e entrou no texto pela figura da
+potência anotada.
 
 ## Figura da potência anotada (2026-09-01)
 
@@ -171,11 +155,43 @@ oscilogramas comuns. Regra completa e procedimento de validação em
 `assets/charts/figuras_didaticas.md` ("Legibilidade no DOCX"), no `data_charts.md`
 da skill `svg-diagrams` e em `fragmento_externo.md` da skill `tcc-docx-editor`.
 
-### Escolha pendente
+### Escolha resolvida — inserida como Figura 5.14 (2026-09-01)
 
-Duas figuras geradas para o mesmo parágrafo, **nenhuma inserida ainda**:
+Das duas figuras geradas, entrou só a `potencia_didatica`. O plano P-Q foi
+descartado pelo usuário: *"não quero o plano P-Q, vai ser um tipo de análise
+nova que não precisamos"*. Três figuras da mesma grandeza no mesmo cenário em
+sequência viram redundância, e o plano de estado ainda cobra do leitor um
+gráfico novo no meio do capítulo. Registro do descarte em
+`assets/charts/figuras_didaticas.md`.
 
-| Figura | Contraste | Custo no documento |
-|---|---|---|
-| `potencia_didatica` | antes × depois, mesmo cenário | substitui a imagem da 5.13, sem renumerar |
-| `plano_pq_comparacao` | nominal × inadequada, plano de estado | figura nova, renumera da 5.14 em diante |
+**Ela não substituiu a 5.13, foi acrescentada depois dela** — pedido do usuário:
+*"sem retirar o que já temos, porém complementando"*. O par se sustenta porque
+as duas escalas dizem coisas diferentes: a 5.13 mantém o recorte cheio e mostra
+o transitório de eliminação; a 5.14 fecha a escala vertical (ignora os 20 ms
+seguintes) e por isso consegue expor a alternância de sentido, que na 5.13 fica
+comprimida contra o eixo.
+
+O custo foi baixo porque **a 5.14 era a última figura do fragmento**: renumerar
+5.14 → 5.15 tocou uma legenda e duas citações, todas no mesmo parágrafo.
+
+| Antes | Depois |
+|---|---|
+| 5.13 potências (crua) | 5.13 potências (crua), inalterada |
+| — | **5.14 potência anotada** + legenda + parágrafo novo |
+| 5.14 correntes | 5.15 correntes |
+
+**O parágrafo novo não é ornamento.** Ao tirar os nove valores enumerados do
+par. 98, a afirmação central ("média negativa", "alterna entre absorção e
+injeção") ficou sem nenhum apoio quantitativo. O parágrafo da 5.14 devolve o
+número na forma que sobrevive a questionamento: fração do tempo em cada sentido
+(P absorve 63,8% contra 36,2% de entrega; Q injeta 60,6% contra 39,4%), que é
+razão adimensional e não depende do comprimento da janela. É a mesma objeção que
+derrubou a rotação acumulada em [[tcc-revisao-fragmento-cap5-metricas-54]],
+agora respondida em vez de contornada.
+
+Mecânica da inserção: clone do `w:p` da **Figura 5.11** (já a 6,5 in) e não do
+da 5.13 (5,5 in), reescala de `cx`/`cy` nos dois lugares, `addprevious` na
+imagem das correntes. Conferido ao final: 19 legendas sequenciais, todo
+`word/media/*` com correspondência em `assets/`, 38 `docPr` únicos, zero
+em-dash, e render em PDF confirmando a legibilidade e o marca-texto do usuário
+no par. 95 preservado.

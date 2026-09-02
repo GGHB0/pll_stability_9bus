@@ -133,7 +133,16 @@ da imagem da Figura 5.13, **sem renumerar nada**.
 |---|---|---|
 | antes da falta | 0,84 pu | 0,01 pu |
 | média pós-falta | **−0,26 pu** | 0,45 pu |
-| tempo com valor negativo | **63,8%** | 39,4% |
+| tempo **entregando** | 36,2% | 60,6% |
+| tempo **absorvendo** | **63,8%** | 39,4% |
+
+**Revisão de 2026-09-01 (2ª passada na figura).** Usuário: *"você consegue
+mostrar se a gente está consumindo ou entregando potência ativa"*. A primeira
+versão preenchia só o lado negativo, o que dizia "absorve" mas deixava
+"entrega" implícito. Passou a preencher **os dois lados** (verde acima do zero,
+vermelho abaixo) e a caixa passou a dar **as duas frações**. É o que torna
+visível a alternância de sentido a cada ciclo — o fenômeno que o parágrafo 98
+descreve como "deixa de ter sinal definido".
 
 Janela `[t_clear, fim]`, a mesma região sombreada, para número e desenho não
 divergirem. A escala vertical ignora os 20 ms seguintes à eliminação (o

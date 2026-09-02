@@ -54,14 +54,20 @@ Dois painéis empilhados (P em cima, Q embaixo) para `bus7/3phase_bad_pll`.
 É o **mesmo oscilograma** de `bus7_3phase_bad_pll_potencia_pq`, com anotação por
 cima, em vez de um gráfico novo. Quatro camadas:
 
-1. **Área preenchida onde a potência é negativa.** "O inversor absorve energia"
-   deixa de ser afirmação do texto e vira área visível.
+1. **Área preenchida dos dois lados do zero** — verde onde a potência é
+   positiva (o inversor **entrega** à rede), vermelho onde é negativa
+   (**absorve**). A primeira versão preenchia só o lado negativo, o que deixava
+   o "entrega" implícito; com os dois lados o leitor vê a **alternância de
+   sentido a cada ciclo** do escorregamento, que é o fenômeno em si. Pedido do
+   usuário: *"você consegue mostrar se a gente está consumindo ou entregando
+   potência ativa"*.
 2. **Patamar pré-falta** tracejado em verde: o valor ao qual a potência deveria
    ter retornado.
 3. **Média pós-falta** tracejada em vermelho: o valor que ela de fato assumiu.
    A distância entre as duas tracejadas é o resultado da seção.
-4. **Fração do tempo com potência negativa**, em caixa (63,8% para P, 39,4%
-   para Q).
+4. **Fração do tempo em cada sentido**, em caixa: P entrega 36,2% / absorve
+   63,8%; Q entrega 60,6% / absorve 39,4%. Razão adimensional, não depende do
+   comprimento da janela — ao contrário dos valores de pico.
 
 Estatísticas na janela `[t_clear, fim]` — a mesma região sombreada, para que
 número e desenho não divirjam. A **escala vertical** de cada painel ignora os

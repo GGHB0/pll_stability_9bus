@@ -14,14 +14,17 @@ gen_retencao_didatica.py (Figura 5.11).
 
 O que a anotacao acrescenta ao tracado bruto:
 
-  1. AREA PREENCHIDA onde a potencia e negativa. "O inversor absorve energia"
-     deixa de ser afirmacao do texto e vira area visivel no grafico.
+  1. AREA PREENCHIDA DOS DOIS LADOS do zero: verde onde a potencia e positiva
+     (o inversor ENTREGA a rede), vermelho onde e negativa (ABSORVE). Preencher
+     so o lado negativo deixava o "entrega" implicito; com os dois lados o
+     leitor ve a alternancia de sentido a cada ciclo do escorregamento.
   2. PATAMAR PRE-FALTA em linha tracejada, que e o valor ao qual a potencia
      deveria ter retornado apos a eliminacao.
   3. MEDIA POS-FALTA em linha tracejada, que e o valor que ela de fato assumiu.
      A distancia entre as duas tracejadas E o resultado da secao.
-  4. FRACAO DO TEMPO com potencia negativa, em caixa. Razao adimensional, nao
-     depende do comprimento da janela -- ao contrario dos valores de pico.
+  4. FRACAO DO TEMPO em cada sentido, em caixa (entrega x absorve). Razao
+     adimensional, nao depende do comprimento da janela -- ao contrario dos
+     valores de pico.
 
 Janela das estatisticas: [t_clear, fim da simulacao], a mesma regiao que aparece
 sombreada, para que numero e desenho nao divirjam.
@@ -112,6 +115,7 @@ def carregar():
         out[f"{nome}_pre"] = float(s[pre].mean())
         out[f"{nome}_pos"] = float(s[pos].mean())
         out[f"{nome}_frac"] = float((s[pos] < 0).mean()) * 100.0
+        out[f"{nome}_frac_pos"] = float((s[pos] >= 0).mean()) * 100.0
         lo, hi = float(s[escala].min()), float(s[escala].max())
         # folga assimetrica: o topo abriga os rotulos de evento ("falta
         # aplicada"/"falta eliminada") e o patamar pre-falta, que em P fica
@@ -129,10 +133,14 @@ def painel(ax, d, nome, cor, rotulo, caixa):
     ax.axvline(d["t_fault"], color=VERMELHO, lw=1.2, ls="--", alpha=0.8, zorder=2)
     ax.axvline(d["t_clear"], color=VERDE, lw=1.2, ls="--", alpha=0.8, zorder=2)
 
-    # 1. a area que carrega o conceito: potencia negativa = absorve da rede
+    # 1. a area que carrega o conceito: o SINAL da potencia diz o sentido do
+    # fluxo. Preencher os dois lados, e nao so o negativo, e o que deixa o
+    # leitor ver a alternancia entre entregar e absorver a cada ciclo.
+    ax.fill_between(t, y, 0, where=(y >= 0), interpolate=True,
+                    color=VERDE, alpha=0.16, zorder=3, linewidth=0)
     ax.fill_between(t, y, 0, where=(y < 0), interpolate=True,
                     color=VERMELHO, alpha=0.30, zorder=3, linewidth=0)
-    ax.axhline(0.0, color="#64748b", lw=0.9, zorder=4)
+    ax.axhline(0.0, color="#334155", lw=1.3, zorder=4)
 
     ax.plot(t, y, color=cor, lw=0.9, zorder=5)
 
@@ -151,9 +159,9 @@ def painel(ax, d, nome, cor, rotulo, caixa):
             f"média pós-falta: {br(d[f'{nome}_pos'])} pu",
             va="bottom", ha="left", color=VERMELHO, **cx)
 
-    # 4. fracao do tempo com potencia negativa
-    ax.text(0.985, 0.05, caixa, transform=ax.transAxes, va="bottom", ha="right",
-            fontsize=9.5, fontweight="bold", color=NAVY, zorder=9,
+    # 4. quanto do tempo em cada sentido de fluxo
+    ax.text(0.985, 0.965, caixa, transform=ax.transAxes, va="top", ha="right",
+            fontsize=9.5, fontweight="bold", color=NAVY, zorder=9, linespacing=1.45,
             bbox=dict(boxstyle="round,pad=0.4", facecolor="white",
                       edgecolor="#cbd5e1", alpha=0.94))
 
@@ -178,9 +186,11 @@ def main():
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8.3, 5.4), sharex=True)
 
     painel(ax1, d, "P", AZUL, "Potência ativa P (pu)",
-           f"P < 0 em {br(d['P_frac'], 1)}% do tempo")
+           f"após a eliminação da falta:\n"
+           f"entrega {br(d['P_frac_pos'], 1)}% do tempo · absorve {br(d['P_frac'], 1)}%")
     painel(ax2, d, "Q", LARANJA, "Potência reativa Q (pu)",
-           f"Q < 0 em {br(d['Q_frac'], 1)}% do tempo")
+           f"após a eliminação da falta:\n"
+           f"entrega {br(d['Q_frac_pos'], 1)}% do tempo · absorve {br(d['Q_frac'], 1)}%")
 
     ax1.annotate("falta aplicada", xy=(d["t_fault"], 1.0), xycoords=("data", "axes fraction"),
                  xytext=(4, -12), textcoords="offset points", fontsize=9,
@@ -191,20 +201,22 @@ def main():
     ax2.set_xlabel("Tempo (s)")
 
     handles = [
+        Patch(facecolor=VERDE, alpha=0.16,
+              label="Potência > 0: o inversor ENTREGA energia à rede"),
         Patch(facecolor=VERMELHO, alpha=0.30,
-              label="Potência negativa: o inversor absorve energia da rede"),
+              label="Potência < 0: o inversor ABSORVE energia da rede"),
         Line2D([], [], color=VERDE, lw=1.8, ls=(0, (5, 2)),
                label="Patamar pré-falta"),
         Line2D([], [], color=VERMELHO, lw=1.8, ls=(0, (5, 2)),
                label="Média após a eliminação da falta"),
     ]
-    fig.legend(handles=handles, loc="lower center", ncol=3, frameon=False,
-               bbox_to_anchor=(0.5, -0.028), fontsize=9)
+    fig.legend(handles=handles, loc="lower center", ncol=2, frameon=False,
+               bbox_to_anchor=(0.5, -0.075), fontsize=9)
 
     fig.suptitle("Potência injetada pelo inversor: falta trifásica na Barra 7 "
                  "com sintonia inadequada", fontsize=11.5, fontweight="bold",
                  y=0.995)
-    fig.tight_layout(rect=(0, 0.045, 1, 0.98))
+    fig.tight_layout(rect=(0, 0.085, 1, 0.98))
 
     for ext in ("svg", "png"):
         p = OUT_DIR / f"potencia_didatica.{ext}"

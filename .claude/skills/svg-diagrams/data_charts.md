@@ -98,6 +98,32 @@ Corrigidas para 8,3 in com anotações em 9,5 pt. Foi o usuário que levantou
 ("vale validar se o texto pode estar ficando ruim de enxergar"), não a
 conferência visual do PNG.
 
+### Variante: anotar um oscilograma que já existe
+
+Quando o gráfico já está no documento e o problema é que o texto ao lado
+precisa enumerar valores para explicá-lo, não faça gráfico novo: **anote o que
+já existe**. `scripts/gen_potencia_didatica.py` (2026-09-01) sobrepõe quatro
+camadas ao traço bruto — área preenchida, patamar de referência, média
+resultante e fração do tempo em caixa.
+
+Regras que essa variante acrescenta:
+
+- **Preencher os dois lados de uma fronteira, não só o lado "ruim".** A primeira
+  versão sombreava só `P < 0` ("absorve"): dizia metade da história e deixava o
+  "entrega" implícito. Com verde acima do zero e vermelho abaixo, a
+  **alternância** entre os dois estados vira o assunto da figura. O usuário
+  pediu isso explicitamente — *"você consegue mostrar se a gente está consumindo
+  ou entregando"* — e vale como regra geral: se o sinal de uma grandeza é o
+  resultado, mostre os dois sinais.
+- **Dar as duas frações**, não só a que interessa ao argumento (entrega 36,2% ·
+  absorve 63,8%). Somam 100% e o leitor confere sozinho.
+- **Contraste temporal dispensa painel de comparação.** Como o "antes" e o
+  "depois" estão na mesma série, a figura substitui a imagem existente sem
+  renumerar nada no documento — vantagem prática grande sobre criar figura nova.
+- **Caixa de anotação nunca em cima do traço.** Reservar folga no `ylim`
+  (assimétrica, se preciso) e ancorar a caixa nela, em vez de deixá-la cobrir
+  dados com fundo branco.
+
 ### Variante: trocar o eixo do tempo por um plano de estado
 
 Quando o que se quer mostrar é **mudança de regime**, e não a construção de uma

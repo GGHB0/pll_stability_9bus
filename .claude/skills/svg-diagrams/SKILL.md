@@ -129,7 +129,7 @@ renderiza como texto cru, não como notação de engenharia. Sempre use `<tspan>
 
 ```xml
 <text font-style="italic">V<tspan baseline-shift="sub" font-size="75%">dc</tspan></text>
-<text font-style="italic">u<tspan baseline-shift="sub" font-size="75%">abc</tspan>(PAC)</text>
+<text font-style="italic">u<tspan baseline-shift="sub" font-size="75%">abc</tspan>(PCC)</text>
 ```
 
 ## Armadilha 2 — Acento circunflexo de estimativa (`ω̂`, `φ̂`)

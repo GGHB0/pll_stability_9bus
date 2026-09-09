@@ -67,7 +67,7 @@ Analisar o desempenho dinamico e a robustez do SRF-PLL de inversores conectados 
 
 ### SRF-PLL
 
-1. **Detector de Fase** — baseado na componente dq da tensao no PAC
+1. **Detector de Fase** — baseado na componente dq da tensao no PCC
 2. **Filtro de Loop** — controlador PI (ganhos `Kp` e `Ki`)
 3. **VCO** — Oscilador Controlado por Tensao
 

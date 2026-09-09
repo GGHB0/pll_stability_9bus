@@ -36,7 +36,7 @@ Usados na reescrita do 98, e o modelo para os próximos:
 2. **Inversão, não degradação.** Q alterna entre absorção e injeção dentro de
    cada ciclo: o suporte de reativo não fica pior, trabalha contra parte do
    tempo. Gancho direto para a §5.5.
-3. **Inversão de causalidade.** Falta eliminada, rede restabelecida, e o PAC
+3. **Inversão de causalidade.** Falta eliminada, rede restabelecida, e o PCC
    continua perturbado: a perturbação virou endógena. Durante a falta a rede
    perturbava o inversor; depois é o inversor que impõe a oscilação. É a
    afirmação mais forte da seção e era a única já presente no texto antigo,
@@ -81,7 +81,7 @@ divergência.
   parágrafo **66** (§5.2) tem oito valores de retenção e pico, embora ali a
   progressão monotônica seja o argumento e a última frase dê o mecanismo.
 - `bus7_3phase_bad_pll_tensao_dq_inversor` já existe em `assets/charts/` e
-  nunca foi inserido — é a tensão no PAC, hoje só descrita em prosa. Seria a
+  nunca foi inserido — é a tensão no PCC, hoje só descrita em prosa. Seria a
   Figura 5.16; nada depois dela para renumerar.
 
 ## Figura do plano P-Q (2026-09-01) — gerada e descartada

@@ -7,7 +7,7 @@ description: Cálculo de Ybarra/Zbarra, Thevenin Z22 na Barra 2, Rth/Lth para PL
 
 ## Objetivo
 
-Calcular a impedância equivalente de Thévenin vista pelo inversor no PAC (Barra 2).
+Calcular a impedância equivalente de Thévenin vista pelo inversor no PCC (Barra 2).
 Resultado usado para dimensionar Kp/Ki do PLL SRF e alimentar o InitFcn do .slx.
 
 ## Construção da Ybarra

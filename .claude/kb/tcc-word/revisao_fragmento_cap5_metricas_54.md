@@ -25,7 +25,7 @@ não reaquisita o sincronismo depois da eliminação da falta.
 | Retenção de `v_d` | mesma receita das demais seções | 8,2% (nominal: 9,2%) |
 | P pós-falta | média de `P_ufv_pu` em `[t_clear, t_end]` | −0,30 pu (mín. −1,07) |
 | Q pós-falta | mín/máx em `[0,85, 1,0]` s | −0,94 a 1,97 pu |
-| Pulsação de `\|v\|` no PAC | `hypot(vd_ufv, vq_ufv)` em `[0,85, 1,0]` s | 0,14 a 1,11 pu, média 0,70 |
+| Pulsação de `\|v\|` no PCC | `hypot(vd_ufv, vq_ufv)` em `[0,85, 1,0]` s | 0,14 a 1,11 pu, média 0,70 |
 | Divergência ref × medido | médias e extremos em `[0,85, 1,0]` s | `i_d` ref 0,92 / med. −0,66 a 1,34; `i_q` ref −0,24 / med. até −1,76 |
 
 ### §5.4 sem métricas de escorregamento no texto (2026-08-31)

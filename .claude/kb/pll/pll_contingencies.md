@@ -76,7 +76,7 @@ o cenário 3, não como dado já levantado.
   oscilação/loop de erro derivativo e perder sua função de referência.
 - **Sintoma em dq:** `Id` e `Iq` deixam de seguir uma trajetória organizada; em
   colapsos grandes e com pouca inércia próxima, as correntes se desalinham porque
-  o ângulo estimado `theta_hat` já não representa a tensão real do PAC.
+  o ângulo estimado `theta_hat` já não representa a tensão real do PCC.
 
 Leitura para o Cap. 4: a falha não é apenas "baixa tensão durante o curto". O ponto
 crítico é a recuperação pós-falta em baixa inércia: o sistema elétrico tenta voltar,

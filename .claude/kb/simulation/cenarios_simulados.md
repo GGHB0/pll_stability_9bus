@@ -116,7 +116,7 @@ Após a eliminação, o erro de fase gira continuamente (rotação acumulada ~19
 voltas em 300 ms, escorregamento de regime ~70 Hz — ambos medidos, mas o §5.4
 do fragmento ficou qualitativo e não cita nenhum dos dois, ver
 [[tcc-revisao-fragmento-cap5-metricas-54]]), P se inverte para −0,30 pu e a
-tensão no PAC pulsa entre 0,14 e 1,11 pu até o fim da janela. Virou a Seção 5.4 do fragmento em
+tensão no PCC pulsa entre 0,14 e 1,11 pu até o fim da janela. Virou a Seção 5.4 do fragmento em
 2026-08-23; números em [[tcc-revisao-fragmento-cap5-metricas]]. É safra de
 julho, e a seção inteira depende dele — se for re-simulado, reconferir.
 

@@ -65,7 +65,7 @@ Convenções do diagrama:
 **G2 (Barra 2) substituído pelo inversor VSI grid-tied** com PLL SRF.
 Sistema híbrido resultante:
 - G1, G3 → máquinas síncronas com AVR + Governor
-- Barra 2 → ponto de conexão (PAC) do VSI — inversor conecta via filtro LCL
+- Barra 2 → ponto de conexão (PCC) do VSI — inversor conecta via filtro LCL
 
 No .slx: subsistema `Gen2@Bus2 PV 1.025 pu 163 MW` está **comentado** (Commented: on)
 e substituído pelo subsistema `UFV Model` (SID=3896).

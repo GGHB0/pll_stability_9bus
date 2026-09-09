@@ -27,7 +27,7 @@ causa direta da divergência: sem receita, o número não é reprodutível.
 
 | Métrica | Definição |
 |---|---|
-| Erro de fase | `atan2(vq_rede_pu, vd_rede_pu)` em graus, no PAC |
+| Erro de fase | `atan2(vq_rede_pu, vd_rede_pu)` em graus, no PCC |
 | Pico durante a falta | `max\|erro\|` em `[t_fault + 1 ciclo, t_clear]` |
 | Retenção de `v_d` | média em `[t_fault + 2 ciclos, t_clear]` ÷ média em `[t_fault − 50 ms, t_fault)` |
 | t_s pós-falta | último instante com `\|erro\| > 2°`, contado a partir de `t_clear` |
@@ -49,7 +49,7 @@ cai no fim e o recorte inicial pouco importa.
 
 | Local | Retenção `v_d` | Pico (>1 ciclo) | `i_q,ref` | P durante | t_s pós |
 |---|---|---|---|---|---|
-| Barra 7 (PAC) | 9,2% | 37,3° | 1,000 | 0,00 pu | 98 ms |
+| Barra 7 (PCC) | 9,2% | 37,3° | 1,000 | 0,00 pu | 98 ms |
 | Linha 7-8 | 11,3% | 32,5° | 1,000 | 0,01 pu | 98 ms |
 | Linha 8-9 | 47,1% | 29,8° | 1,000 | 0,00 pu | 112 ms |
 | Barra 6 | 58,4% | 7,3° | 0,776 | 0,34 pu | 76 ms |

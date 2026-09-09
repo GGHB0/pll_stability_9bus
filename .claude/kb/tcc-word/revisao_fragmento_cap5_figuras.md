@@ -21,7 +21,7 @@ das seções antigas são o estado *daquela* edição, não o de hoje. Estado at
 5.1 Validação da operação em regime permanente        Fig 5.1, 5.2, 5.3
 5.2 Faltas simétricas: severidade e localização        Fig 5.4, 5.5, 5.6
 5.3 Faltas assimétricas: sequência negativa e sintonia Fig 5.7 a 5.10
-5.4 Perda de sincronismo sob falta simétrica no PAC     Fig 5.11 a 5.13
+5.4 Perda de sincronismo sob falta simétrica no PCC     Fig 5.11 a 5.13
 5.5 Conformidade com o código de rede   (promovido do antigo 5.3.1 órfão)
 5.6 Resumo e conclusões do capítulo
 ```
@@ -163,6 +163,6 @@ saiu da Figura 5.11 e não da 5.13, que está a 5,5 in.
 | 5.14 | `potencia_didatica` |
 | 5.15 | `bus7_3phase_bad_pll_corrente_dq` |
 
-Ainda **não inserido**: `bus7_3phase_bad_pll_tensao_dq_inversor` (tensão no PAC,
+Ainda **não inserido**: `bus7_3phase_bad_pll_tensao_dq_inversor` (tensão no PCC,
 hoje só descrita em prosa). `plano_pq_comparacao` foi gerado e **descartado**,
 não entra.

@@ -29,7 +29,7 @@
 | LVRT | Low Voltage Ride-Through |
 | MPPT | Maximum Power Point Tracking |
 | ONS | Operador Nacional do Sistema Elétrico |
-| PAC | Ponto de Acoplamento Comum |
+| PCC | Ponto de Conexão Comum |
 | PD | Phase Detector (Detector de Fase) |
 | PI | Proporcional-Integral |
 | PLL | Phase-Locked Loop |

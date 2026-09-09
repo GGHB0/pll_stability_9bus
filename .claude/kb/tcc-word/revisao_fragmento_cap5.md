@@ -84,7 +84,7 @@ O laço subdimensionado **não** é uniformemente pior, é um compromisso:
   contra 0,444°); o "~2× maior" registrado antes era falso.
 
 **O compromisso tem um limite** (Seção 5.4, acrescentada em 2026-08-23): sob a
-trifásica no próprio PAC, com retenção de 8,2%, o laço subdimensionado não
+trifásica no próprio PCC, com retenção de 8,2%, o laço subdimensionado não
 troca imunidade por velocidade — ele **perde o sincronismo** e não reaquisita
 dentro da janela simulada. Nem a profundidade nem a sintonia produzem isso
 isoladamente; só a combinação. Números em
@@ -102,7 +102,7 @@ eletricamente mais distante (3 linhas). Ver [[ieee9bus-topology]].
 
 | Local | Retenção `v_d` | Pico erro de fase | P durante | `i_q,ref` |
 |---|---|---|---|---|
-| Barra 7 (PAC) | 9,2% | 37,3° | 0,00 pu | 1,000 |
+| Barra 7 (PCC) | 9,2% | 37,3° | 0,00 pu | 1,000 |
 | Linha 7-8 | 11,3% | 32,5° | 0,01 pu | 1,000 |
 | Linha 8-9 | 47,1% | 29,8° | 0,00 pu | 1,000 |
 | Barra 6 (remota) | 58,4% | 7,3° | 0,34 pu | 0,776 |

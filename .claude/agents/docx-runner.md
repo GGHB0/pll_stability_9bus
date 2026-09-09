@@ -23,7 +23,8 @@ modelo principal.
 - Utilitários fixos da skill:
   `C:\projetos\pll_stability_9bus\.claude\skills\tcc-docx-editor\scripts\`
   (`dump_headings.py`, `dump_blocks.py`, `find_text.py`, `check_ids.py`,
-  `repack.py` — todos com uso documentado no docstring).
+  `repack.py`, `audit_docx.py`, `word_finalize.ps1` — todos com uso
+  documentado no cabeçalho do próprio arquivo).
 - Área de trabalho: `C:\Temp\`. Paths do DOCX fonte: ver `config.py` da skill.
 - Nunca despejar o XML inteiro no terminal — usar os scripts de dump com
   intervalos, ou redirecionar para arquivo em `C:\Temp\` e reportar o caminho.
@@ -37,8 +38,9 @@ modelo principal.
    unzip -o -j /c/Temp/tcc_edit.docx word/document.xml -d /c/Temp/  # ou python zipfile
    mv /c/Temp/document.xml /c/Temp/doc_tcc_edit.xml
    ```
-   Reportar: `ls -la` do DOCX no OneDrive (timestamp + bytes — o modelo
-   principal usa isso no pré-check da entrega) e tamanho do XML extraído.
+   Reportar: `ls -la` **e `md5sum`** do DOCX no OneDrive (o modelo principal
+   usa o MD5 no pré-check da entrega; timestamp e bytes não bastam, porque uma
+   edição do usuário no Word pode manter o tamanho) e tamanho do XML extraído.
 
 2. **Inspeção** — rodar `dump_headings.py` / `dump_blocks.py` / `find_text.py`
    / `check_ids.py` com os argumentos pedidos e devolver a saída completa,
@@ -49,12 +51,28 @@ modelo principal.
    exception ou qualquer contagem inesperada, PARAR e reportar — não tentar
    corrigir o script.
 
-4. **Entrega** — só quando o modelo principal mandar explicitamente:
-   a. `ls -la` do DOCX no OneDrive e comparar timestamp/bytes com os valores
-      do staging informados no prompt. **Divergiu → ABORTAR e reportar**
-      (o usuário salvou pelo Word; a edição precisa ser refeita).
-   b. `python.exe .../scripts/repack.py <template> <xml editado> <saida>`
-   c. `cp` da saída para o path do OneDrive; `ls -la` de confirmação.
+4. **Finalização** — antes de qualquer entrega, sobre o DOCX montado:
+   a. `python.exe .../scripts/repack.py <template> <xml editado> <saida>`
+   b. `powershell -ExecutionPolicy Bypass -File .../scripts/word_finalize.ps1
+      -In <saida> -Out <final>` — passa pelo Word (reconstrói o sumário, zera
+      `w:dirty`, prova que o Word salva). Se ele disser que o Word está aberto,
+      ABORTAR e reportar.
+   c. `python.exe .../scripts/audit_docx.py <final>` — **qualquer FALHOU,
+      ABORTAR e reportar a saída inteira.** Só seguir com 0 falhas.
+
+5. **Entrega** — só quando o modelo principal mandar explicitamente:
+   a. `tasklist | grep -i winword` e `ls "<pasta>"/~\$*` — Word aberto ou lock
+      presente → **ABORTAR** (trocar os bytes por baixo de uma sessão viva
+      quebra o sincronismo do OneDrive e o Word passa a mostrar
+      "CARREGAMENTO BLOQUEADO").
+   b. `md5sum` do DOCX no OneDrive e comparar com o valor do staging informado
+      no prompt. **Divergiu → ABORTAR e reportar** (o usuário salvou pelo Word;
+      a edição precisa ser refeita sobre a versão nova, ou o trabalho dele
+      seria apagado em silêncio).
+   c. `cp` do arquivo atual para `<nome>_backup_YYYYMMDD_HHMMSS.docx` na mesma
+      pasta — **backup sempre, antes de sobrescrever**.
+   d. `cp` do finalizado para o path do OneDrive; `ls -la` + `md5sum` de
+      confirmação.
    "Device or resource busy" → o Word está com o arquivo aberto: ABORTAR e
    reportar (o modelo principal pede ao usuário para fechar).
 
@@ -62,15 +80,17 @@ modelo principal.
 
 - Exception em qualquer script → parar, reportar traceback completo.
 - Saída de script diferente do esperado descrito no prompt → parar, reportar.
-- Timestamp/bytes do OneDrive divergentes no pré-check → parar, reportar.
+- MD5 do OneDrive divergente do staging no pré-check → parar, reportar.
+- `audit_docx.py` com qualquer FALHOU → parar, reportar a saída inteira.
+- Word aberto ou lock `~$` presente na hora da entrega → parar, reportar.
 - Nunca deletar arquivos, nunca sobrescrever o DOCX do OneDrive fora da
-  tarefa 4, nunca rodar scripts que não estejam em `C:\Temp\` ou na pasta
-  `scripts/` da skill.
+  tarefa 5, nunca entregar sem o backup datado da tarefa 5c, nunca rodar
+  scripts que não estejam em `C:\Temp\` ou na pasta `scripts/` da skill.
 
 ## Formato da resposta final
 
 ```
-Tarefa: <staging | inspeção | execução | entrega>
+Tarefa: <staging | inspeção | execução | finalização | entrega>
 Comandos: <lista curta do que rodou>
 Saída:
 <verbatim, ou caminho do arquivo se >100 linhas>

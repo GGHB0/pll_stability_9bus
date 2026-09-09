@@ -73,13 +73,20 @@ esperada" (para o agente saber quando abortar/perguntar).
   - `find_text.py <xml> <padrão> [--regex]` — ocorrências com bloco + contexto
   - `check_ids.py <xml>` — máximos de bookmark/ins/paraId + flag dirty do TOC
   - `repack.py <template.docx> <xml> <saida.docx>` — injeta document.xml no ZIP
+  - `audit_docx.py <arquivo.docx> [--util-in N]` — auditoria estrutural
+    pré-entrega (comentários, bookmarks, campos, `PAGEREF` órfão, imagens,
+    content-types, em-dash); sai com código 1 se algo falhou
+  - `word_finalize.ps1 -In <montado> -Out <final> [-Pdf <pdf>]` — passa o DOCX
+    pelo próprio Word: reconstrói o sumário, zera `w:dirty` e **prova que o
+    Word consegue salvar**, não só abrir
 
 ## Workflow padrão
 
 ```
 1. STAGING (docx-runner): OneDrive → C:\Temp\tcc_edit.docx →
    extrair word/document.xml → C:\Temp\doc_tcc_edit.xml
-   (guardar timestamp/bytes do DOCX no OneDrive p/ pré-check da entrega)
+   (guardar o **MD5** do DOCX no OneDrive p/ pré-check da entrega;
+   timestamp e bytes não bastam, ver "Entrega" abaixo)
 2. INSPEÇÃO (docx-runner): dump_headings / dump_blocks / find_text / check_ids
 3. PLANO (principal): mapear blocos, redigir conteúdo, apresentar ao usuário
    e AGUARDAR APROVAÇÃO antes de editar
@@ -89,11 +96,33 @@ esperada" (para o agente saber quando abortar/perguntar).
    via spec (o scripter também roda o script e a verificação, cobrindo o 5)
 5. EXECUÇÃO (docx-runner): rodar o gen + dumps de verificação sobre a saída
 6. REVISÃO (principal): conferir a saída dos checks
-7. ENTREGA (docx-runner): pré-check timestamp OneDrive → repack.py →
-   cp ao OneDrive → ls -la de confirmação
-8. KB (principal): atualizar docx_structure.md / historico_entregas.md /
+7. FINALIZAÇÃO: word_finalize.ps1 → audit_docx.py (tem que dar 0 falhas)
+8. ENTREGA (docx-runner): Word fechado + sem lock `~$` → **MD5 do
+   OneDrive igual ao do staging** → backup datado → cp → ls -la
+9. KB (principal): atualizar docx_structure.md / historico_entregas.md /
    content_map.md / pendencias.md conforme o caso
 ```
+
+## Entrega (aprendido em 2026-09-02, na marra)
+
+- **Pré-check por MD5, não por timestamp/bytes.** Uma edição do usuário no Word
+  pode manter o tamanho. Foi o MD5 que pegou, numa entrega do fragmento, que ele
+  havia salvo o arquivo 8 minutos depois da minha cópia; entregar teria apagado
+  o trabalho dele em silêncio.
+- **Backup datado antes de sobrescrever, sempre**
+  (`<nome>_backup_YYYYMMDD_HHMMSS.docx`, na mesma pasta).
+- **Conferir que o Word está fechado** (`tasklist | grep -i winword`) e que não
+  há arquivo de lock `~$*` na pasta. Trocar os bytes por baixo de uma sessão
+  viva quebra o sincronismo do OneDrive: o Word passa a mostrar
+  **"CARREGAMENTO BLOQUEADO"** e a recusar o upload.
+- **Nunca entregar um zip montado à mão direto.** Rodar `word_finalize.ps1`
+  antes. O arquivo montado abre e até exporta PDF, mas o `w:dirty` do sumário
+  deixa o documento modificado no instante em que abre, o que dispara o mesmo
+  bloqueio de upload. E os `PAGEREF` de seções removidas ficariam como
+  "Erro! Indicador não definido" até alguém atualizar na mão.
+- **`audit_docx.py` é o que distingue "arquivo corrompido" de "problema de
+  sincronismo".** Quando o Word reclamar, rodar antes de mexer em qualquer
+  coisa: se der 0 falhas, o conteúdo está são e o problema é de upload.
 
 ## Notas críticas
 

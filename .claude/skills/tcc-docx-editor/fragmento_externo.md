@@ -143,6 +143,12 @@ explícito no script.
   `IOException ... sendo usado por outro processo`. Não renomear o destino
   para contornar (gera arquivo canônico duplicado): pedir para fechar o Word e
   repetir a cópia.
+- **O fragmento também passa por `word_finalize.ps1` + `audit_docx.py`**
+  (`scripts/` da skill) antes de ir para o OneDrive, pelas mesmas razões do
+  canônico. E o pré-check da origem é por **MD5**, não por timestamp: numa
+  entrega de 2026-09-02 foi o MD5 que revelou que o usuário havia salvo o
+  fragmento no Word 8 minutos depois da minha cópia. Entregar teria descartado
+  o trabalho dele sem aviso.
 - Verificar acentuação: nunca confiar no stdout do terminal (mojibake mesmo
   com conteúdo correto) — escrever um dump UTF-8 (`io.open(..., 'w',
   encoding='utf-8')`) e reler com a ferramenta de leitura de arquivo.

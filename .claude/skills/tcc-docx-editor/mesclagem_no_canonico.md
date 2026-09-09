@@ -49,3 +49,48 @@ está errada:
 - Marcar o campo TOC com `w:dirty="true"` e confirmar, no PDF exportado, que o
   sumário reconstruído lista as seções novas.
 
+## Fechar sempre passando o arquivo pelo Word (2026-09-02)
+
+O DOCX montado à mão abriu, exportou PDF e passou em toda a auditoria
+estrutural, mas ao ser aberto pelo usuário o Word mostrou a faixa
+**"CARREGAMENTO BLOQUEADO — Detectamos um problema neste arquivo e não é
+possível salvar todas as novas alterações. Salve uma cópia..."**, e o OneDrive
+parou de sincronizar.
+
+**Não era corrupção.** A auditoria do arquivo entregue deu tudo limpo:
+comentários pareados, 44 `bookmarkStart` para 44 `bookmarkEnd` sem órfão nem
+id duplicado, `fldChar` 49/49/49, toda parte com content-type, todo
+relationship com alvo no zip. O problema era de **upload**, não de conteúdo.
+
+Duas causas somadas:
+
+1. **O `w:dirty="true"` no campo TOC.** Ao abrir, o Word pergunta se atualiza os
+   campos; dizendo Sim, o documento fica *modificado no mesmo instante* e o
+   Word tenta subir a alteração antes de a sessão do OneDrive assentar.
+2. **Substituir os bytes do arquivo por baixo de uma sessão viva.** Trocar o
+   arquivo no caminho do OneDrive enquanto o Word/OneDrive tem estado sobre ele
+   quebra a sessão de sincronismo. Já tinha mordido antes, com o fragmento.
+
+**Procedimento que resolve as duas, e que passa a ser o padrão de entrega:**
+
+```powershell
+$w = New-Object -ComObject Word.Application; $w.Visible = $false; $w.DisplayAlerts = 0
+$d = $w.Documents.Open($temp, $false, $false)
+$d.Fields.Update(); foreach ($t in $d.TablesOfContents) { $t.Update() }
+$d.SaveAs2($final, 12)          # 12 = wdFormatXMLDocument
+$d.Close(0); $w.Quit()
+```
+
+O que isso entrega: o sumário **já reconstruído** (some o prompt de campos e
+somem os 19 `PAGEREF` apontando para bookmarks dos capítulos removidos, que
+virariam "Erro! Indicador não definido"), `w:dirty` zerado, mídia órfã dos
+blocos apagados descartada pelo próprio Word, e o OOXML regravado no formato
+canônico dele em vez do zip montado à mão.
+
+**Conferir depois:** diff do texto contra a versão pré-Word — a única diferença
+legítima é o bloco do sumário. E provar que o Word **salva**, não só abre:
+`$d.Saved = $false; $d.Save()`. Foi essa chamada que confirmou que a condição
+de "não é possível salvar" tinha ido embora.
+
+**Antes de copiar para o OneDrive:** conferir que o Word está fechado
+(`tasklist | grep -i winword`) e que não há arquivo de lock `~$*` na pasta.

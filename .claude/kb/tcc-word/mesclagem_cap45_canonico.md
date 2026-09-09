@@ -128,6 +128,22 @@ imagem acima da área útil, sem em-dash. Word abriu sem prompt de reparo,
 exportou 75 páginas e reconstruiu o sumário. Páginas 43, 55, 57 e 61
 rasterizadas e conferidas visualmente.
 
+## Correção da entrega: "CARREGAMENTO BLOQUEADO"
+
+A primeira entrega (4 049 514 bytes, zip montado à mão) abriu no Word mas
+disparou a faixa de upload bloqueado e travou o sincronismo do OneDrive. A
+auditoria estrutural do arquivo deu tudo limpo, então **não era corrupção**:
+era o `w:dirty` do sumário marcando o documento como modificado assim que
+abria, somado à troca dos bytes por baixo da sessão do OneDrive.
+
+Refeita passando o arquivo **pelo próprio Word** (`Fields.Update` +
+`TablesOfContents.Update` + `SaveAs2` formato 12) antes de entregar. Resultado:
+3 695 752 bytes, sumário já reconstruído, `w:dirty` zerado, os 19 `PAGEREF`
+órfãos resolvidos e as 3 mídias órfãs dos capítulos removidos descartadas pelo
+Word (30 → 27 partes de mídia). Diff de texto contra a versão anterior: só o
+bloco do sumário. Confirmado que o Word **salva** o arquivo, não só abre.
+Procedimento agora é padrão em `mesclagem_no_canonico.md` da skill.
+
 ## Efeito no restante do KB
 
 `content_map.md` foi reescrito nos Cap. 4 e 5: o mapa antigo descrevia texto

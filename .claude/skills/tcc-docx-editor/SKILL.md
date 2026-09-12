@@ -24,6 +24,17 @@ títulos para `Ttulo1`–`Ttulo4` ou eles somem do sumário, inverter a convenç
 de legenda, e **reescalar as figuras da largura útil de origem para a de
 destino** (o fragmento é Carta, 6,50 in; o TCC é A4, 6,30 in).
 
+## Revisão de português — ver `revisao_pt.md`
+
+Passagem linguística separada das edições de conteúdo. `scripts/check_pt.py`
+varre o `document.xml` atrás das classes que já apareceram neste documento
+(regência `capacidade … em`, `onde` não locativo, `através de`, vírgula entre
+relativo e verbo, resíduo de LaTeX, duplo espaço, placeholder, em-dash). Ele
+**não** pega concordância, coesão nem frase sem verbo principal: isso só sai
+lendo o `dump_blocks.py` do corpo inteiro. `revisao_pt.md` diz o que é erro, o
+que é falso positivo e quais armadilhas de execução a rodada de 2026-09-12
+encontrou.
+
 ## Convenções de escrita
 
 - **Nunca usar travessão/em-dash ("—") no texto do TCC.** Reescrever a
@@ -81,6 +92,8 @@ esperada" (para o agente saber quando abortar/perguntar).
   - `dump_blocks.py <xml> <ini> <fim> [--raw]` — texto/XML de intervalo de blocos
   - `find_text.py <xml> <padrão> [--regex]` — ocorrências com bloco + contexto
   - `check_ids.py <xml>` — máximos de bookmark/ins/paraId + flag dirty do TOC
+  - `check_pt.py <xml> [--corpo N]` — varredura de português (ver
+    `revisao_pt.md`); rodar também sobre o XML de saída, antes do repack
   - `repack.py <template.docx> <xml> <saida.docx>` — injeta document.xml no ZIP
   - `audit_docx.py <arquivo.docx> [--util-in N]` — auditoria estrutural
     pré-entrega (comentários, bookmarks, campos, `PAGEREF` órfão, imagens,

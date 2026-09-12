@@ -4,6 +4,49 @@
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-09-12 — Revisão de português do documento inteiro
+
+- **Pedido**: "revise todos os erros de português e concordância, atualize a
+  skill se necessário". Leitura integral dos 750 blocos, da capa às referências.
+- **Escopo aprovado pelo usuário**: grupos A (22 erros de gramática, regência e
+  concordância) e B (6 padronizações). **38 replaces**, todos com count
+  verificado, em `C:\Temp\gen_revisao_pt.py`.
+- **Amostra do que estava errado**: `implicando em uma redução` (implicar é
+  transitivo direto); `capacidade do inversor **em** atender` (3 ocorrências,
+  inclusive no Resumo); `serviços anancilares`; `acomplamento`; `onde` com
+  antecedente não locativo (2×); duas frases **sem verbo principal** ("A
+  Transformada de Park, aplicando uma rotação…", "Apresentar os conceitos…");
+  vírgula entre verbo e objeto e entre relativo e verbo; `($d$ e $q$)` resíduo
+  de LaTeX; `(Yazdani).` fora do padrão ABNT.
+- **Padronizações**: `através de` → `por meio de`; eixos `D`/`Q` → `d`/`q`;
+  `105 820`/`21 164` → `105.820`/`21.164`; `Switch On To Fault` → `Switch Onto
+  Fault`; PCC em minúsculas no corpo; títulos **2.6 e 3.6** de "Resumo **ou**
+  Conclusões do Capítulo" (resto do template UERJ) para "Resumo e conclusões do
+  capítulo", casando com o 5.6 — 4 replaces, porque o cache do sumário conta.
+- **Decisões do usuário**: manter `reaquisitar` (5 ocorrências, formação
+  irregular mas consistente e em parágrafos já fechados); não mexer no
+  pré-textual nem nos placeholders.
+- **Dois ajustes de acompanhamento**, feitos junto: no bloco 396 o parêntese
+  aninhado virou período próprio e o itálico dos runs foi removido (frase
+  inteira em itálico ficaria pior que o parêntese); no 474, "análise de
+  resultados **desenvolvidos**" → "desenvolvidas".
+- **Pipeline**: repack → `word_finalize.ps1` (78 páginas, 16.093 palavras,
+  91 campos, 25 figuras, 0 campo com erro, SALVOU sem erro) → `audit_docx.py`
+  **0 falhas / 0 avisos** → backup `_backup_20260912_005943` → entrega, MD5
+  `db8d1e1c…` conferido nos dois lados. Word estava aberto no canônico no
+  início; esperei o usuário fechar e reconferi o MD5 antes de entregar.
+- **Skill**: `revisao_pt.md` e `scripts/check_pt.py` novos, ponteiros no
+  `SKILL.md` (193 linhas). `content_map.md` atualizado nos títulos 2.6 e 3.6.
+- **Pendências levantadas e NÃO corrigidas** (decisão do usuário): Cap. 1 diz
+  22.547 MW / 31% e Cap. 2 diz 23.368 MW / 34,5% para o mesmo evento de 2023
+  (a KB registra o segundo par); ficha do Resumo com ano 2025 contra 2026 na
+  capa, "XXf." e vírgula onde ABNT pede ponto; `[ANO A CONFIRMAR]` no corpo
+  (bloco 424); 4 placeholders de figura no Cap. 2 e 3; 6 referências com
+  `[A CONFIRMAR]`; restos de template no pré-textual; siglas GFM, SOTF, COI,
+  FFR, BESS, TSO, DSO e SCR usadas no texto e ausentes da lista; bloco 451 com
+  4 parágrafos fundidos num só e 471 com um parágrafo de frase única; Cap. 7
+  vazio; títulos do Cap. 4/5 em caixa baixa contra Title Case no Cap. 2/3.
+
 ## 2026-09-12 — Capítulo 6 (Conclusões) redigido e inserido
 
 - **Pedido**: "`Capitulo6.docx` add no TCC" (arquivo vindo da pasta Downloads).

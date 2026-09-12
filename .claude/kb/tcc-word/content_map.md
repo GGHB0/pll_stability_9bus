@@ -44,7 +44,8 @@ metadata:
   causa, suporte de reativo dos IBR é o fator determinante)
 - ✅ **2.5** Contingências e Requisitos Normativos (migrado do antigo Cap.2):
   2.5.1 LVRT/FRT · 2.5.2 ONS Submódulo 2.10 · 2.5.3 natureza das contingências
-- ⬜ **2.6** Resumo do capítulo — vazio (título com tracked change não aceito)
+- ✅ **2.6** Resumo e conclusões do capítulo (título padronizado em 2026-09-12;
+  antes era "Resumo ou Conclusões do Capítulo", resto do template UERJ)
 
 > 2.1-2.4.3 redigidos em sessão Opus (2026-07-19), fontes preparadas em sessão
 > Sonnet anterior — ver `kb/power-system/energy_transition_iea2026.md`,
@@ -75,7 +76,8 @@ metadata:
   efetivamente usadas em §4.3.2.2. Motivação: pedido do usuário de que
   "todas as formulações do capítulo 4" tenham contrapartida simbólica no
   Cap. 3 antes de serem aplicadas — ver `historico_entregas.md`
-- ⬜ **3.6** Resumo ou Conclusões do Capítulo (renumerado de 3.5 → 3.6)
+- ✅ **3.6** Resumo e conclusões do capítulo (renumerado de 3.5 → 3.6; título
+  padronizado em 2026-09-12, antes "Resumo ou Conclusões do Capítulo")
 
 ## Cap. 4 — Metodologia de Análise
 

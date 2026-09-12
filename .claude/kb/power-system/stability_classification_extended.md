@@ -3,6 +3,7 @@ name: stability-classification-extended
 description: Classificação ESTENDIDA de estabilidade para redes dominadas por IBR (IEEE TR77 + German System Stability Roadmap) — nova categoria converter-driven/resonance stability com interação PLL-rede
 source: Strauss-Mincu et al., "Inverter-Dominated Future Power Systems: A Roadmap for System Stability", IEEE Power & Energy Magazine, jan/2026, DOI 10.1109/MPE.2025.3617895, p.1–11
 references:
+  - "LINDNER, Marco; ABELE, Hans; JOHN, Christoph; LEHNER, Joachim; VENNEMANN, Klaus; HENNIG, Tobias; DIMITROVSKI, Robert; KLÖTZL, Nico; JUST, Hendrik; STORNOWSKI, Reinhard. Suitable Classification of Power System Stability Phenomena. CIGRE Science & Engineering, n. 37, jun. 2025."
   - "STRAUSS-MINCU, Diana; DEGNER, Thomas; HACHMANN, Christian; BECKER, Holger; MENDE, Denis; BRAUN, Martin; HENNIG, Tobias; STRAUSS, Philipp. Inverter-Dominated Future Power Systems: A Roadmap for System Stability. IEEE Power and Energy Magazine, v. 24, p. 93-107, 2026. DOI: 10.1109/MPE.2025.3617895."
 ---
 
@@ -110,7 +111,9 @@ Isso dá enquadramento teórico para a seção 2.3 e conecta diretamente com:
 - **IEEE TR77** — referência primária de todas as categorias.
 - **CIGRE CSE N037**, "Suitable Classification of Power System Stability
   Phenomena" — publicação recente que propõe classificação nova alternativa
-  (citada, mas TR77 foi a base do roadmap alemão).
+  (citada, mas TR77 foi a base do roadmap alemão). Edição de **junho de 2025**,
+  elaborada por M. Lindner et al.; citação completa no `references:` acima
+  (confirmado em cse.cigre.org/cse-n037, 2026-09-12).
 - ENTSO-E R&D Innovation Roadmap 2024–2034; NREL Grid-Forming Inverters
   Roadmap; G-PST Consortium; AEMO NEM Engineering Roadmap FY2024 — roadmaps
   internacionais análogos citados para contexto comparativo.

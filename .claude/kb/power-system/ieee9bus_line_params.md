@@ -1,6 +1,8 @@
 ---
 name: ieee9bus-line-params
-description: Parâmetros de linhas e transformadores — fonte artigo IEEE 2024, comparação A&F, divergência .slx
+description: Parâmetros de linhas e transformadores — fonte artigo IEEE (Xiong et al., 2025), comparação A&F, divergência .slx
+references:
+  - "XIONG, Yongxin; WU, Heng; LI, Yifei; WANG, Xiongfei. Comparison of Power Swing Characteristics and Efficacy Analysis of Impedance-based Detections in Synchronous Generators and Grid-following Systems. IEEE Transactions on Power Systems, v. 40, n. 3, p. 2545-2556, maio 2025. DOI 10.1109/TPWRS.2024.3469235."
 ---
 
 # IEEE 9-bus — Parâmetros de Rede
@@ -11,7 +13,8 @@ Os valores usados no notebook são do sistema **modificado** da Figura 19 de:
 
 > "Comparison of Power Swing Characteristics and Efficacy Analysis of
 > Impedance-based Detections in Synchronous Generators and Grid-following Systems"
-> IEEE Transactions on Power Systems, DOI 10.1109/TPWRS.2024.3469235
+> XIONG, Y. et al. IEEE Transactions on Power Systems, v. 40, n. 3,
+> p. 2545-2556, maio 2025. DOI 10.1109/TPWRS.2024.3469235
 
 Não usar o Anderson & Fouad como referência de linha — os X diferem em 3 ramos.
 

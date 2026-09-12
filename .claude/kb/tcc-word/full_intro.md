@@ -52,7 +52,7 @@ Diante do exposto, o objetivo geral deste trabalho é analisar, de forma crític
 
 [1] MOW, N. Power Electronics: Converters, Applications, and Design. 3. ed. John Wiley & Sons, 2003.
 
-[2] XIONG, Y. et al. Comparison of Power Swing Characteristics and Efficacy Analysis of Impedance-based Detections in Synchronous Generators and Grid-following Systems. IEEE Transactions on Power Systems, 2024.
+[2] XIONG, Y. et al. Comparison of Power Swing Characteristics and Efficacy Analysis of Impedance-based Detections in Synchronous Generators and Grid-following Systems. IEEE Transactions on Power Systems, v. 40, n. 3, p. 2545-2556, maio 2025. DOI 10.1109/TPWRS.2024.3469235.
 
 [3] YAZDANI, A.; IRAVANI, R. Voltage-Sourced Converters in Power Systems: Modeling, Control, and Applications. John Wiley & Sons, 2010.
 
@@ -60,10 +60,10 @@ Diante do exposto, o objetivo geral deste trabalho é analisar, de forma crític
 
 [5] ENHANCED_PHASE-LOCKED_LOOP_STRUCTURES_FOR_POWER_AND_ENERGY_APPLICATIONS. IEEE Transactions on Power Electronics, 2024.
 
-[6] WU, H.; WANG, X. Design-Oriented Transient Stability Analysis of PLL-Synchronized Voltage-Source Converters. IEEE Transactions on Power Systems, 2024.
+[6] WU, H.; WANG, X. Design-Oriented Transient Stability Analysis of PLL-Synchronized Voltage-Source Converters. IEEE Transactions on Power Electronics, v. 35, n. 4, p. 3573-3589, abr. 2020. DOI 10.1109/TPEL.2019.2937942.
 
 [7] RELATÓRIO DE ANÁLISE DE PERTURBAÇÃO - RAP. ANÁLISE DA PERTURBAÇÃO DO DIA 15/08/2023 ÀS 08H30MIN. ONS, 2023.
 
-[8] WU, H.; WANG, X. Design-Oriented Transient Stability Analysis of PLL-Synchronized Voltage-Source Converters. IEEE Transactions on Power Systems, 2024.
+[8] WU, H.; WANG, X. Design-Oriented Transient Stability Analysis of PLL-Synchronized Voltage-Source Converters. IEEE Transactions on Power Electronics, v. 35, n. 4, p. 3573-3589, abr. 2020. DOI 10.1109/TPEL.2019.2937942.
 
-[9] XIONG, Y. et al. Comparison of Power Swing Characteristics and Efficacy Analysis of Impedance-based Detections in Synchronous Generators and Grid-following Systems. IEEE Transactions on Power Systems, 2024.
+[9] XIONG, Y. et al. Comparison of Power Swing Characteristics and Efficacy Analysis of Impedance-based Detections in Synchronous Generators and Grid-following Systems. IEEE Transactions on Power Systems, v. 40, n. 3, p. 2545-2556, maio 2025. DOI 10.1109/TPWRS.2024.3469235.

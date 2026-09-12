@@ -36,6 +36,15 @@ destino** (o fragmento é Carta, 6,50 in; o TCC é A4, 6,30 in).
   Nomes de bloco/subcircuito de esquemático (`RESETI_I1`, `.SUB Clarke`,
   `Sinusoidal Measurement`) são exceção e podem ficar. Ver
   `feedback_docx_no_code_artifacts` na memória.
+- **Conclusão (Cap. 6) sobe de altitude, não de profundidade.** É uma
+  consolidação genérica do trabalho inteiro: nem parafrasear o "Resumo e
+  conclusões" do capítulo de resultados, nem aprofundar além dele com
+  números e cruzamentos novos. Percorrer o arco (contexto → teoria →
+  método → síntese qualitativa dos resultados) e fechar com contribuição,
+  limites de validade e implicação prática. Medir sobreposição literal com
+  o resumo do capítulo é teste mecânico útil, mas insuficiente: dá para ter
+  sobreposição zero e ainda estar dizendo a mesma coisa. Ver
+  `tcc-conclusion-altitude` na memória (2 versões recusadas em 2026-09-12).
 
 ## Divisão de trabalho por modelo (3 níveis)
 
@@ -88,6 +97,8 @@ esperada" (para o agente saber quando abortar/perguntar).
    (guardar o **MD5** do DOCX no OneDrive p/ pré-check da entrega;
    timestamp e bytes não bastam, ver "Entrega" abaixo)
 2. INSPEÇÃO (docx-runner): dump_headings / dump_blocks / find_text / check_ids
+   (o estado real é o do XML recém-extraído; `content_map.md` pode estar
+   desatualizado — ver "Notas críticas")
 3. PLANO (principal): mapear blocos, redigir conteúdo, apresentar ao usuário
    e AGUARDAR APROVAÇÃO antes de editar
 4. SCRIPT: escrever C:\Temp\gen_<tema>.py — ler doc_tcc_edit.xml, aplicar
@@ -142,6 +153,20 @@ esperada" (para o agente saber quando abortar/perguntar).
 - **Sumário (TOC)**: texto das entradas fica em cache no XML — um replace de
   título deve esperar 2 ocorrências (título real + cache), e o campo deve
   estar com `w:dirty="true"` para o Word reconstruir ao abrir.
+- **Delta de contagem em substituição**: trocar 1 bloco por N parágrafos
+  dá `<w:p` **+(N-1)**, não +N. Errar isso na spec faz o `docx-scripter`
+  abortar (corretamente) em vez de entregar. Conferir a aritmética antes de
+  mandar a spec.
+- **Grep com classe de caracteres acentuada não casa**: `invers[ãa]o`,
+  `imped[âa]ncia` retornam **zero** em locale C, porque o multibyte é
+  quebrado dentro do `[...]`. Zero resultado aqui é falso negativo, não
+  ausência — repetir com padrão literal. E `grep -c` casa substring:
+  "ISE" deu 12 ocorrências que eram todas "LISERRE"; usar `-w` ou olhar o
+  contexto antes de concluir que um termo é usado no texto.
+- **KB de conteúdo pode mentir sobre o que já foi escrito.** O
+  `content_map.md` dava o Cap. 6 como "conclusão redigida" e o capítulo
+  estava vazio no arquivo vivo. Antes de julgar/editar uma seção, confirmar
+  o estado no XML recém-extraído e corrigir o KB no passo 9.
 - **gen_*.py**: todo replace com count esperado explícito (falhar se
   divergir); `ET.fromstring` no resultado antes de gravar; wrapper UTF-8 no
   stdout (`io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8',

@@ -145,17 +145,17 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
 ## Registro de IDs usados até agora
 
 > Registro válido para `TCC_Victor_Bruno_V9_novo_indice_2.docx` (arquivo
-> canônico), medido com `check_ids.py` em 04/08/2026 sobre o XML recém-extraído.
+> canônico), medido com `check_ids.py` em 12/09/2026 sobre o XML recém-extraído.
 > O Word renumera IDs a cada save do usuário — **sempre rodar `check_ids.py` no
 > XML recém-extraído** antes de inserir qualquer elemento novo; registros de
 > sessões anteriores não valem.
 
 | Recurso | Estado observado (04/08, pós-edições PLL) | Próximo disponível |
 |---|---|---|
-| Bookmark IDs | máximo em uso = 74 (68 bookmarks) | **75** |
+| Bookmark IDs | máximo em uso = 59 (60 bookmarks) | **60** |
 | Bookmarks `_Toc235351NNN` | máximo NNN = 739 | **740** |
-| `w:ins` IDs | só restam ids 25–26 (título 2.6 não aceito); sem `w:del` | **27** |
-| `paraId` novos (prefixo `1FB.....`) | 0x1FB00000–0x1FB00200 de sessões anteriores; **0x1FB00201–0x1FB00214** usados nas edições PLL de 04/08 (§2.3, §3.4, §4.3.2, §4.3.3, referências) + `1FB3A4B3` do Word (sempre grepar antes) | **0x1FB00215** |
+| `w:ins` IDs | **nenhum** — o documento não tem mais tracked change (sem `w:ins`, sem `w:del`) | **1** |
+| `paraId` novos (prefixo `1FB.....`) | até 0x1FB00220 de sessões anteriores (edições PLL de 04/08, mesclagem Cap. 4/5, PAC→PCC); **0x1FB00221–0x1FB00226** no Cap. 6 de 12/09 + `1FB3A4B3` do Word (sempre grepar antes) | **0x1FB00227** |
 | `paraId` prefixo `16xxxxxx` | 16000001–16000003, 16100001–16100008, 16200001–16200009 (bloco 4.3.3; 1620000A–C liberados na reescrita do monitoramento — não reusar) | — |
 
 > Antes de inserir novos elementos, sempre buscar o maior ID existente no XML
@@ -169,15 +169,14 @@ Ler **antes** de escrever qualquer `gen_*.py`: corrupção por `ET.write`,
 
 ## Estado atual
 
-Última entrega: **edições PLL** (2026-08-04, 01:41), 729 → 746 blocos.
-Metodologia dos ganhos do PLL no §3.4 (equações 3.18–3.20), separação
-`Kp,PLL`/`Ki,PLL` contra `Kp`/`Ki` do controlador de corrente, CIGRE e
-mecanismo de cycle slipping no §2.3, dois cenários de sintonia no §4.3.3,
-duas etapas de modelagem no §4.3.2, e 4 referências novas.
+Última entrega: **Cap. 6 (Conclusões)** (2026-09-12), 772 → 777 parágrafos,
+78 páginas. O capítulo estava vazio no canônico e recebeu 5 parágrafos de
+consolidação do trabalho inteiro (blocos 721-725), mais uma quebra de página
+antes do título do Cap. 7, que **segue vazio**. Ver `historico_entregas.md`.
 
-Estado do XML de trabalho: `C:\Temp\doc_tcc_pll.xml` (662 981 bytes);
-template ZIP para repack: `C:\Temp\tcc_edit.docx`; script gerador:
-`C:\Temp\gen_pll_edits.py`; spec: `C:\Temp\spec_pll_edits.md`.
+Estado do XML de trabalho: `C:\Temp\doc_tcc_cap6.xml`; template ZIP para
+repack: `C:\Temp\tcc_edit.docx`; script gerador: `C:\Temp\gen_cap6.py`;
+texto aprovado: `C:\Temp\cap6_rev\cap6_v3.txt`.
 
 > Histórico completo de entregas (ANEXOS, siglas, equações, Cap.4, Oscar):
 > `historico_entregas.md`

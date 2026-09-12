@@ -129,8 +129,18 @@ metadata:
 
 ## Cap. 6 — Conclusões · Cap. 7 — Trabalhos Futuros
 
-- ✏️ Conclusão redigida (cycle slipping, LVRT formal vs. efetivo);
-  Trabalhos Futuros separado como capítulo próprio (índice novo)
+- ✅ **Cap. 6** redigido e inserido em 2026-09-12 (5 parágrafos, 619 palavras,
+  blocos 721–725). Consolidação **genérica** do trabalho inteiro, sem números
+  e sem refazer a análise do Cap. 5: percorre o contexto de transição e os
+  blecautes do Cap. 2, a razão teórica da fragilidade (Cap. 3), o desenho do
+  estudo (Cap. 4) e a síntese qualitativa dos resultados (Cap. 5); fecha com
+  o critério dinâmico de robustez, os limites de validade e a implicação de
+  projeto. Traz duas ressalvas honestas sobre os objetivos específicos da
+  introdução: as sobrecorrentes não se materializam (o controle por corrente
+  limita a referência antes disso) e a impedância da rede foi observada pela
+  localização da falta, não por varredura de SCR.
+- ⬜ **Cap. 7** (Trabalhos Futuros) — só o título, sem corpo. O Cap. 6 foi
+  escrito para não prometer o capítulo seguinte. Ver `pendencias.md` item 19
 
 ## Referências (seção final)
 

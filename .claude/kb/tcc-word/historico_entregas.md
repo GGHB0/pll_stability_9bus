@@ -4,6 +4,47 @@
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-09-12 — Capítulo 6 (Conclusões) redigido e inserido
+
+- **Pedido**: "`Capitulo6.docx` add no TCC" (arquivo vindo da pasta Downloads).
+  Era o **template completo do TCC** com quase tudo em placeholder; o único
+  conteúdo real eram 4 parágrafos de Cap. 6 e o título vazio do Cap. 7.
+- **Estado encontrado no canônico**: Cap. 6 completamente **vazio** (bloco 720
+  título + 721 parágrafo em branco), Cap. 7 só título, REFERÊNCIAS logo depois.
+  A nota do `content_map.md` dizendo "Conclusão redigida (cycle slipping, LVRT
+  formal vs. efetivo)" estava **desatualizada** — não havia texto nenhum.
+- **Julgamento do texto recebido** (o usuário pediu explicitamente antes de
+  inserir), em 3 rodadas:
+  - v1, correção pontual: consertava a promessa do Cap. 7 vazio, a troca
+    silenciosa dos objetivos específicos 3 e 5 e a falta da citação
+    (ONS, 2023). Recusada: era **o 5.6 reescrito com sinônimos**.
+  - v2, análise quantificada: cruzava 5.2 com 5.3 e trazia 16 números.
+    Recusada: "virou uma análise ... isso já foi feito no capítulo cinco".
+  - v3, **aceita**: consolidação **genérica** do trabalho inteiro, do contexto
+    de transição e dos blecautes do Cap. 2 à teoria do Cap. 3, ao desenho do
+    estudo do Cap. 4 e à síntese qualitativa do Cap. 5. Cinco parágrafos,
+    619 palavras, **zero números**, 0 sequências de 6 palavras em comum com o
+    5.6 e com o 5.5.
+- **Lição**: a conclusão sobe de **altitude**, não de profundidade. Nem
+  repetir o resumo do capítulo (v1) nem aprofundar além dele (v2).
+- **DOCX** (`C:\Temp\gen_cap6.py`): bloco 721 (parágrafo vazio `093CA689`)
+  substituído por 6 parágrafos, os 5 de corpo (`1FB00221`–`1FB00225`, molde do
+  bloco 716) mais a quebra de página (`1FB00226`, molde do bloco 719) antes do
+  título do Cap. 7. Campo TOC marcado `w:dirty` (o Cap. 6 ganhou ~2 páginas).
+  772 → 777 parágrafos.
+- **Armadilha de spec**: a checagem "delta de `<w:p>` == 6" estava errada —
+  trocar 1 parágrafo por 6 dá saldo **+5**. O `docx-scripter` travou e pediu
+  confirmação em vez de chutar, que é o comportamento correto.
+- **Verificado**: texto inserido **byte-idêntico** ao aprovado (comparação
+  programática contra o `.txt` de origem, não inspeção visual);
+  `word_finalize.ps1` (78 págs, 16 089 palavras, 0 campo com erro, Word
+  salvou); `audit_docx.py --util-in 6.30` = **0 falhas / 0 avisos**.
+- **Entregue**: 3 693 622 bytes, MD5 `bc33cc4f...` (pré-check do destino
+  `0d10057c...` conferido antes de sobrescrever). Backup
+  `..._backup_20260912_002951.docx`.
+- **Cap. 7 segue vazio** por decisão do usuário; o Cap. 6 foi redigido para
+  fechar sem depender dele.
+
 ## 2026-09-09 — Troca de terminologia PAC → PCC (todo o TCC + repositório)
 
 - **Pedido**: "troque todas as referências dos termos usados como PAC para

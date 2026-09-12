@@ -64,6 +64,12 @@
     tese aplicada (compromisso de banda passante, sem *cycle slipping*
     observado); mesclagem no canônico ainda não tem data.
 
+19. **Cap. 7 (Trabalhos Futuros) vazio** — só o título, sem corpo (confirmado
+    em 2026-09-12; o `Capitulo6.docx` recebido também não trazia texto para
+    ele). O Cap. 6 foi redigido para fechar sem referência pendurada ao
+    capítulo seguinte, então não há erro no texto, mas o capítulo precisa ser
+    escrito antes da entrega final.
+
 ## P3 — Limpeza
 
 11. **Figuras Cap. 2/3** — [FIGURA 2.1], [FIGURA 2.6] e 2 figuras ONS já têm
@@ -73,8 +79,9 @@
     Remover entradas do template.
 13. **Cor legada `1B1C1D`** (cinza quase preto do template) ainda presente em
     títulos herdados do V8 — limpar para preto/auto na próxima edição.
-14. **Tracked change restante**: título "2.6. Resumo ou Conclusões do Capítulo"
-    ficou sem aceite no Word (w:ins ids 23–26) — aceitar na próxima revisão.
+14. ~~**Tracked change restante** no título "2.6. Resumo ou Conclusões do
+    Capítulo"~~ — ✅ RESOLVIDO: `check_ids.py` em 2026-09-12 mostra o documento
+    sem nenhum `w:ins` e sem nenhum `w:del`.
 
 ## Fora de escopo (instrução do Oscar)
 

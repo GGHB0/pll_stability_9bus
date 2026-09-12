@@ -10,6 +10,12 @@ files:
   - file: historico_entregas.md
     name: tcc-historico-entregas
     description: Histórico de entregas do Claude no DOCX canônico, mais recente primeiro (entregas antigas nos arquivos _2026_07 e _v8)
+  - file: historico_entregas_2026_09_inicio.md
+    name: tcc-historico-entregas-2026-09-inicio
+    description: Histórico de entregas de setembro/2026 até o dia 09 (PAC→PCC, mesclagem Cap.4/5, enxugamento Cap.5), fragmentado do arquivo principal
+  - file: historico_entregas_2026_08.md
+    name: tcc-historico-entregas-2026-08
+    description: Histórico de entregas de agosto/2026 no DOCX canônico, fragmentado do arquivo principal
   - file: historico_entregas_2026_07.md
     name: tcc-historico-entregas-2026-07
     description: Histórico de entregas de julho/2026 no DOCX canônico, fragmentado do arquivo principal
@@ -68,3 +74,6 @@ files:
   - file: revisao_fragmento_cap5_analise.md
     name: tcc-revisao-fragmento-cap5-analise
     description: Regra editorial do Cap.5 do fragmento — descrição de figura não é análise; reescrita dos parágrafos 98 e 101, a Figura 5.14 da potência anotada acrescentada à 5.13, o descarte do plano P-Q e as pendências
+  - file: trabalhos_futuros.md
+    name: tcc-trabalhos-futuros
+    description: Eixos definidos para o Cap.7 (Trabalhos Futuros) — capítulo REDIGIDO e entregue em 2026-09-12 (2 parágrafos, sem subseções): Eixo 1 (estrutura de sincronismo) e Eixo 3 (varredura de SCR/múltiplos IBR); Eixos 2 (normalização) e 4 (K-factor) descartados

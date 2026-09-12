@@ -141,18 +141,31 @@ metadata:
   introdução: as sobrecorrentes não se materializam (o controle por corrente
   limita a referência antes disso) e a impedância da rede foi observada pela
   localização da falta, não por varredura de SCR.
-- ⬜ **Cap. 7** (Trabalhos Futuros) — só o título, sem corpo. O Cap. 6 foi
-  escrito para não prometer o capítulo seguinte. Ver `pendencias.md` item 19
+- ✅ **Cap. 7** (Trabalhos Futuros) redigido e inserido em 2026-09-12 (noite):
+  **2 parágrafos, 311 palavras**, blocos 728-729, mais a quebra de página
+  (bloco 730) antes do REFERÊNCIAS. Parágrafo 1 = Eixo 1 (trocar a estrutura
+  de sincronismo: DDSRF-PLL e integradores generalizados de segunda ordem
+  duplos); parágrafo 2 = Eixo 3 (varredura de SCR, impedância em pequenos
+  sinais, múltiplos IBR). Sem subseções numeradas e **sem referência nova**:
+  RODRIGUEZ et al. (2007), TEODORESCU; LISERRE; RODRIGUEZ (2011), WU; WANG
+  (2020) e STRAUSS-MINCU et al. (2026) já estavam na lista e no corpo. Ver
+  [[tcc-trabalhos-futuros]]
 
 ## Referências (seção final)
 
 - ⚠️ Mistura template UERJ (refs fictícias) com refs reais — limpar
 - ⚠️ Parágrafo "REFERÊNCIAS" sem estilo de título (fora do Sumário)
 - **+4 entradas em 2026-08-04**: ALVES; DIAS; ROLIM (2020, DOI
-  10.1007/s40313-020-00576-x), CIGRE (CSE N037, **ano a confirmar**, ver
-  `pendencias.md` item 16), OGATA (2009) e STRAUSS-MINCU et al. (2026, DOI
+  10.1007/s40313-020-00576-x), CIGRE (CSE N037, ✅ **jun. 2025**, fechado em
+  2026-09-12), OGATA (2009) e STRAUSS-MINCU et al. (2026, DOI
   10.1109/MPE.2025.3617895). As três últimas já eram citadas no texto sem
   constar da lista
+- **2026-09-12**: as 6 marcas amarelas da lista foram fechadas. ALVES (2022)
+  com o título da tese; WU; WANG corrigida para *IEEE Trans. on Power
+  Electronics*, v. 35, n. 4, p. 3573-3589, **2020** (era "Power Systems,
+  2024"); XIONG et al. para v. 40, n. 3, p. 2545-2556, **2025**; as duas
+  entradas órfãs (ALVES 2021 e SOUSA et al. 2021) foram removidas. Sobrou
+  só o `XX` da ficha catalográfica (`pendencias.md` item 20)
 
 ## Inventário de Figuras
 

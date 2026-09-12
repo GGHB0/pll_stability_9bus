@@ -27,7 +27,10 @@
    estado atual: já redigido no fragmento externo, falta mesclar.
    **Salto de fase NÃO implementar** — instrução do Oscar.
 7. **Referências MATLAB/PSIM** — Oscar comentário #9, seção 4.2 (Plataformas).
-   Citar MathWorks (MATLAB) e Powersim Inc. ou artigo (PSIM).
+   Citar MathWorks (MATLAB) e Powersim Inc. ou artigo (PSIM). **Ficou mais
+   urgente em 2026-09-12**: a entrada `SOUSA, et al. 2021 [PSIM]` foi removida
+   da lista por ser órfã (o §4.2 reescrito não cita mais ninguém), então hoje
+   o PSIM aparece no texto sem nenhuma referência.
 8. **Acentuação da seção 4.3.4** (ex-3.3, Protocolos) — texto adicionado sem
    acentos; corrigir em futura edição.
 9. **~~Typo em referência MOW→MOHAN~~** — ✅ FEITO (2026-07-19), corrigido nos 2 lugares.
@@ -40,14 +43,12 @@
     Referências ainda. Ver `content_map.md` (Cap.2) para o detalhe de cada
     citação e o KB-fonte correspondente.
 
-16. **Ano da CIGRE CSE N037** — a entrada inserida em 2026-08-04 na lista de
-    Referências está como `CIGRE. Suitable Classification of Power System
-    Stability Phenomena. CIGRE Science & Engineering, n. 37 [AUTORES E ANO A
-    CONFIRMAR]`, e a citação no §2.3 usa `(CIGRE, [ANO A CONFIRMAR])`. O ano
-    e os autores não foram confirmados em nenhuma fonte do projeto; a KB só
-    registra o título e o número da edição (via `stability_classification_
-    extended.md`, que a cita a partir do roadmap alemão). **Não inventar** —
-    localizar o documento antes de fechar.
+16. ~~**Ano da CIGRE CSE N037**~~ — ✅ RESOLVIDO (2026-09-12): a edição N°37
+    da CIGRE Science & Engineering é de **junho de 2025**, e o artigo foi
+    elaborado por M. Lindner, H. Abele, C. John, J. Lehner, K. Vennemann,
+    T. Hennig, R. Dimitrovski, N. Klötzl, H. Just e R. Stornowski (fonte:
+    cse.cigre.org/cse-n037). A entrada foi fechada como `… n. 37, jun. 2025.
+    Elaborado por M. Lindner et al.` e o §2.3 passou a `(CIGRE, 2025)`.
 17. ~~**Tempos de falta a re-simular**~~ — ✅ RESOLVIDO (2026-08-11/12): a
     lacuna de falta assimétrica com sintonia inadequada foi preenchida
     (`bus6`/`bus7` × 1phase/2phase_bad_pll). **Mas ver achado novo em
@@ -64,11 +65,19 @@
     tese aplicada (compromisso de banda passante, sem *cycle slipping*
     observado); mesclagem no canônico ainda não tem data.
 
-19. **Cap. 7 (Trabalhos Futuros) vazio** — só o título, sem corpo (confirmado
-    em 2026-09-12; o `Capitulo6.docx` recebido também não trazia texto para
-    ele). O Cap. 6 foi redigido para fechar sem referência pendurada ao
-    capítulo seguinte, então não há erro no texto, mas o capítulo precisa ser
-    escrito antes da entrega final.
+19. ~~**Cap. 7 (Trabalhos Futuros) vazio**~~ — ✅ **RESOLVIDO (2026-09-12,
+    noite)**: dois parágrafos inseridos (311 palavras, blocos 728-729), mais a
+    quebra de página antes do REFERÊNCIAS, que não existia (o título do Cap. 7
+    e o início das referências dividiam a mesma página). Eixo 1 (estrutura de
+    sincronismo) e Eixo 3 (varredura de SCR/múltiplos IBR), conforme
+    [[tcc-trabalhos-futuros]]. **Zero referência nova**: as 4 citações já
+    constavam da lista e já eram citadas no corpo.
+
+20. **`XX` f. na ficha catalográfica** — o número de folhas do Projeto Final
+    é o único realce amarelo que sobrou no documento (2026-09-12). O Word
+    **Destravado**: com o Cap. 7 escrito, o Word conta **79 páginas**
+    (16 390 palavras). Falta confirmar com o Oscar se a ficha usa o total de
+    páginas ou a última folha numerada, e então substituir o `XX`.
 
 ## P3 — Limpeza
 

@@ -31,3 +31,6 @@ files:
   - file: pll_cycle_slip_measurement.md
     name: pll-cycle-slip-measurement
     description: Receita de medição do escorregamento de ciclo (cycle slipping) do SRF-PLL — arctan2+unwrap sobre vd/vq, com verificação cruzada via ângulos gravados pelo modelo
+  - file: pll_gain_voltage_dependence.md
+    name: pll-gain-voltage-dependence
+    description: Sintonia do SRF-PLL degrada com o afundamento (ωn e ξ ∝ √U) — equivalência exata entre o cenário BAD_PLL e o PLL nominal sob U = 0,2 pu

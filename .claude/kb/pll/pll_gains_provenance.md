@@ -46,6 +46,11 @@ Cadeia até hoje, toda por transcrição:
 
 ## Normalização: por que `U = 1 pu`
 
+> A normalização descrita abaixo é por **constante** (pico de fase nominal),
+> não pela amplitude medida — logo `U = 1` vale só no nominal e a sintonia
+> degrada durante o afundamento. Consequências em
+> [[pll-gain-voltage-dependence]].
+
 A eq. (6.4) do Karimi é `s² + h0·U·s + h1·U = 0`, com `U` = magnitude da tensão
 de entrada. Para `Kp = 2ξωn` valer sem o `/U`, o laço precisa estar normalizado.
 Está — rastreando o netlist:

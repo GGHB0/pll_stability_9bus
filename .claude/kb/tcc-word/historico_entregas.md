@@ -4,6 +4,32 @@
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-09-12 (noite) — Referências em amarelo fechadas
+
+- **Pedido**: "adicionamos o capítulo 7, porém deixamos de amarelo textos que
+  vc pode preencher". O Cap. 7 continua **só com o título**; as 6 marcas
+  amarelas estavam todas na lista de REFERÊNCIAS (mais o `XX` da ficha
+  catalográfica, que é o número de folhas e fica para o fim).
+- **Resolvidas com fonte**: ALVES (2022) ganhou o título completo da tese
+  (folha de rosto do `TeseAGP.pdf`); CIGRE CSE N°37 é de **junho de 2025**,
+  elaborado por M. Lindner et al. (fechado em cse.cigre.org, ver
+  `pendencias.md` item 16, agora ✅).
+- **Dois erros que o amarelo escondia**: WU; WANG não é *Power Systems*/2024
+  e sim **IEEE Trans. on Power Electronics, v. 35, n. 4, p. 3573-3589, abr.
+  2020** (DOI 10.1109/TPEL.2019.2937942, conferido no PDF e no Crossref);
+  XIONG et al. saiu da publicação antecipada e virou **v. 40, n. 3, p.
+  2545-2556, maio 2025**. Levou 7 citações no corpo junto: 1× CIGRE,
+  3× (WU; WANG, 2024→2020), 3× (XIONG et al., 2024→2025).
+- **Duas entradas órfãs removidas**: `ALVES … 2021` (critérios de LCL) e
+  `SOUSA, et al. 2021` (PSIM). Nenhuma das duas é citada no corpo — a §4.2
+  foi reescrita e não cita mais o PSIM, e os critérios de LCL vêm da tese de
+  2022. A pendência 7 (citar MATLAB/PSIM no §4.2) **continua aberta**.
+- **Pipeline**: `gen_refs_fill.py` (11 replaces com count + remoção de 2
+  parágrafos) → repack → `word_finalize.ps1` (78 páginas, 91 campos, 0 campo
+  com erro, SALVOU sem erro) → `audit_docx.py` **0 falhas / 0 avisos** →
+  backup `..._backup_20260912_191732.docx` → entrega, MD5 `3ecb43eb…`
+  conferido nos dois lados.
+
 ## 2026-09-12 — Revisão de português do documento inteiro
 
 - **Pedido**: "revise todos os erros de português e concordância, atualize a
@@ -47,6 +73,37 @@
   4 parágrafos fundidos num só e 471 com um parágrafo de frase única; Cap. 7
   vazio; títulos do Cap. 4/5 em caixa baixa contra Title Case no Cap. 2/3.
 
+## 2026-09-12 (noite) — Capítulo 7 (Trabalhos Futuros) redigido e inserido
+
+- **Conteúdo**: 2 parágrafos, 311 palavras, sem subseções. Eixo 1 (trocar a
+  estrutura de sincronismo) e Eixo 3 (ampliar as condições de rede), conforme
+  [[tcc-trabalhos-futuros]]. Texto e histórico dos cortes naquele arquivo.
+- **Achado no arquivo vivo**: o REFERÊNCIAS vinha **colado** no título do
+  Cap. 7, sem quebra de página, então os dois dividiam a mesma página. A
+  quebra entrou junto com o texto.
+- **Sigla órfã resolvida**: `DDSRF-PLL` constava da Lista de Abreviaturas
+  (bloco 279) e não aparecia em nenhum outro ponto do corpo. O Eixo 1 passou
+  a usá-la.
+- **Zero referência nova** (decisão, não acaso): as 4 citações escolhidas já
+  estavam na lista final e já eram citadas no corpo, o que manteve a
+  pendência 15 do mesmo tamanho.
+- **DOCX** (`C:\Temp\gen_cap7.py`): inserção após o bloco 727 (título,
+  `paraId 1FB0000F`, âncora única), 2 parágrafos de corpo
+  (`1FB00227`–`1FB00228`, molde do bloco 725) mais a quebra de página
+  (`1FB00229`, molde do 726). 775 → 778 parágrafos (delta +3). TOC marcado
+  `w:dirty`.
+- **Verificado**: `check_pt.py` sem nenhum flag nos blocos novos (todos os
+  achados são pré-existentes: lista de siglas, placeholders, `onde` do
+  Cap. 4); texto reconstruído a partir do XML final e conferido contra o
+  aprovado; `word_finalize.ps1` (**79 páginas**, 16 390 palavras, 0 campo com
+  erro, Word salvou); `audit_docx.py --util-in 6.30` = **0 falhas / 0 avisos**.
+- **Entregue**: 3 694 150 bytes, MD5 `91c13b5c...` (pré-check do destino
+  `3ecb43eb...` conferido contra o staging antes de sobrescrever). Backup
+  `..._backup_20260912_203154.docx`.
+- **Destrava a pendência 20**: com o capítulo escrito, o Word conta 79
+  páginas, então o `XX` f. da ficha catalográfica pode ser fechado (falta só
+  confirmar com o Oscar qual contagem a ficha usa).
+
 ## 2026-09-12 — Capítulo 6 (Conclusões) redigido e inserido
 
 - **Pedido**: "`Capitulo6.docx` add no TCC" (arquivo vindo da pasta Downloads).
@@ -88,70 +145,11 @@
 - **Cap. 7 segue vazio** por decisão do usuário; o Cap. 6 foi redigido para
   fechar sem depender dele.
 
-## 2026-09-09 — Troca de terminologia PAC → PCC (todo o TCC + repositório)
+## Entregas de setembro/2026 até o dia 09
 
-- **Pedido**: "troque todas as referências dos termos usados como PAC para
-  PCC, pois é a forma correta" + "faça isso no TCC". Confirmado com o usuário:
-  a sigla vira **PCC** e a forma por extenso vira **"Ponto de Conexão Comum"**
-  (antes "Ponto de Acoplamento Comum"), preservando a caixa; escopo = TCC
-  canônico **e** repositório inteiro.
-- **DOCX** (`gen_pac_to_pcc.py`, 8 substrings, todas dentro de um único
-  `<w:t>` — sem `w:proofErr` no meio das âncoras):
-  - Lista de siglas [bloco 295]: `PAC` → `PCC`, `Ponto de Acoplamento Comum`
-    → `Ponto de Conexão Comum` (ordem alfabética mantida: PCC entre ONS e PD).
-  - Texto corrido: [389] `ponto de acoplamento comum (PAC)`, [451] `tensão no
-    PAC (YAZDANI...)`, [462] `tensão no PAC pelo SRF-PLL`, [465] `Ponto de
-    Acoplamento Comum (PAC)`, [531] `no ponto de acoplamento comum`, [590]
-    `no Ponto de Acoplamento Comum`.
-  - Pós-troca: 0 ocorrência de "PAC" / "Acoplamento Comum"; 5×"PCC" +
-    5×"Ponto de Conexão Comum". Nenhum ID alterado. Nenhuma legenda de figura
-    continha "PAC", então a Lista de Ilustrações não muda de conteúdo (os
-    campos foram atualizados por `word_finalize.ps1` via `Fields.Update()`).
-- **Verificado**: `word_finalize.ps1` (75 págs, 15 471 palavras, 0 campo com
-  erro, Word salvou), `audit_docx.py --util-in 6.30` = 0 falhas / 0 avisos.
-- **Entregue**: `TCC_Victor_Bruno_V9_novo_indice_2.docx`, 3 696 018 bytes
-  (antes: 3 695 723 bytes, MD5 `DB9215FB...` conferido no pré-check). Backup
-  `..._backup_20260909_001700.docx`. MD5 entregue `51273bed...`.
-- **Repositório** (mesmo dia, `sed` em 17 arquivos): KB `pll/`, `power-system/`,
-  `simulation/`, `standards/ons_2_11.md` (`V_PAC` → `V_PCC`; `Vpcc_pu` já era
-  a coluna correta), `tcc-word/` (siglas_inventory + full_cap2/3 + full_intro +
-  revisao_fragmento_cap5*), `skills/svg-diagrams/SKILL.md`, `README.md`,
-  `notebooks/pll_stability_9bus_analysis.ipynb` (`v_PAC` → `v_PCC`; JSON
-  revalidado). `.claude/worktrees/` intocado de propósito.
-
-## 2026-09-02 — Mesclagem dos Cap. 4 e 5 do fragmento no canônico
-
-- **Pedido**: "quero que vc adicione no tcc original agora", logo depois do
-  enxugamento analítico do Cap. 5 no fragmento (entregue no mesmo dia).
-- **Achado apresentado antes de editar**: o Cap. 4 do fragmento é **mais raso**
-  que o do canônico (43 parágrafos contra ~144 blocos) e a troca apagaria a
-  modelagem dos geradores, a topologia da falta, três tabelas e quatro
-  comentários do Bruno. Ofereci três caminhos; o usuário escolheu substituir os
-  **dois capítulos por inteiro**, ciente da perda.
-- **Blocos 591–734 substituídos** pelos 117 parágrafos do fragmento. Receita
-  completa (mapeamento de estilos, convenção de figura invertida, reescalonamento
-  Carta→A4, IDs, limpeza das partes de comentário) em
-  [[tcc-mesclagem-cap45-canonico]].
-- **Defeito que só a conferência numérica pegou**: quatro figuras vinham com
-  6,50 in de largura (Carta) contra 6,30 in de área útil do TCC (A4), estourando
-  a margem direita. Reescaladas em `wp:extent` **e** `a:ext`.
-- **Verificado**: XML bem formado, 19 mídias novas sem colisão de nome, todos os
-  `r:embed` com relationship e alvo no zip, 28 `docPr` únicos, nenhuma imagem
-  acima da área útil, 0 em-dash. Word abriu sem prompt de reparo, exportou
-  75 páginas e reconstruiu o sumário com as seis subseções de 5.1 a 5.6.
-  Páginas 43, 55, 57 e 61 rasterizadas e conferidas.
-- **Entregue**: `TCC_Victor_Bruno_V9_novo_indice_2.docx`, 4 049 514 bytes
-  (antes: 1 235 426 bytes). Backup `..._backup_20260902_004347.docx`.
-
-## 2026-09-02 — Enxugamento analítico do Cap. 5 (fragmento)
-
-- 20 edições no `capitulos_4_5_revisados.docx`, poupando a §5.2 a pedido do
-  usuário. Critério e antes/depois em
-  [[tcc-revisao-fragmento-cap5-enxugamento]].
-- Dois parágrafos **cresceram** de propósito: o 111, que trocou um mínimo/máximo
-  dependente de janela pela remissão à Figura 5.12, e o 115, que dizia "perde o
-  sincronismo de forma permanente" contra a ressalva do parágrafo 107.
-- **Entregue**: 3 102 724 bytes; backup `..._backup_20260902_002611.docx`.
+Ver `historico_entregas_2026_09_inicio.md` — troca de terminologia
+PAC → PCC (2026-09-09), mesclagem dos Cap. 4 e 5 do fragmento no
+canônico e enxugamento analítico do Cap. 5 (ambas de 2026-09-02).
 
 ## Entregas de agosto/2026
 

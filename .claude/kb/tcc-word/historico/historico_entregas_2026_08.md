@@ -112,7 +112,7 @@ aliases: [tcc-historico-entregas-2026-08]
   rotulada como ganho do PLL, exatamente a confusão a evitar. Correção
   aprovada pelo Victor antes da edição.
 - **Achados que mudaram o conteúdo** (detalhe em
-  `kb/pll/pll_gains_methodology.md` § Armadilhas de leitura):
+  `kb/pll/sintonia/pll_gains_methodology.md` § Armadilhas de leitura):
   1. os ganhos reais do laço são `kp_pll = 460` / `ki_pll = 105 820`,
      projetados por 2ª ordem (ξ = 0,707, `ts` = 20 ms pelo critério de 1%);
   2. a fórmula usa `fg` em hertz, não `ω0` em rad/s;

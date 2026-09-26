@@ -54,9 +54,9 @@ Esses estudos demonstram em escala de sistema real (não simulação de um
 o tempo de trip mandatório** determina se o DER contribui para a recuperação
 pós-falta ou se agrava o colapso por desconexão em massa — o mesmo padrão
 observado no apagão brasileiro de 15/08/2023 (ver
-[brasil_2023_root_causes.md](../../events/brasil_2023_root_causes.md)) e no
+[brasil_2023_root_causes.md](../../events/brasil-2023/brasil_2023_root_causes.md)) e no
 incidente ibérico de 28/04/2025 (ver
-[iberia_2025_ibr_lessons.md](../../events/iberia_2025_ibr_lessons.md)).
+[iberia_2025_ibr_lessons.md](../../events/iberia-2025/iberia_2025_ibr_lessons.md)).
 
 A diferença central: aqui o "trip" é uma decisão de proteção baseada em tempo
 de exposição a subtensão (UV2 = 0,16 s), enquanto no TCC a falha de PLL é uma

@@ -1,0 +1,40 @@
+folder: events
+description: Blecautes reais que motivam o TCC (Cap.2): Brasil 15/08/2023, Chile 25/02/2025, Península Ibérica 28/04/2025 — cada um com visão geral e causa raiz
+files: []
+subfolders:
+  - folder: brasil-2023
+    description: Blecaute do SIN 15/08/2023 (RAP-ONS) — linha do tempo, ilhas e causa raiz oficial
+    files:
+      - file: brasil_2023_overview.md
+        name: brasil-2023-overview
+        description: "Blecaute do SIN em 15/08/2023 — linha do tempo, condições pré-evento e formação de ilhas elétricas (relatório RAP-ONS 00012/2023)"
+      - file: brasil_2023_root_causes.md
+        name: brasil-2023-root-causes
+        description: "Conclusões oficiais do ONS sobre o blecaute de 15/08/2023 — cadeia de causa raiz e descarte de inércia/potência de curto-circuito como fator determinante"
+  - folder: chile-2025
+    description: Apagão do SEN chileno 25/02/2025 — causa raiz, ilhamento e comportamento de proteção de PFV/eólicas
+    files:
+      - file: chile_2025_overview.md
+        name: chile-2025-overview
+        description: "Apagão total do SEN chileno em 25/fev/2025 — causa raiz (intervenção não autorizada em proteção diferencial), formação de duas ilhas elétricas e colapso, medidas corretivas incl. nova norma GFM/GFL"
+      - file: chile_2025_ibr_protections.md
+        name: chile-2025-ibr-protections
+        description: "Comportamento real de proteção de PFV/eólicas/hídricas no apagão chileno de 25/fev/2025 — baixa frequência, salto de vetor, sobretensão por efeito Ferranti, conformidade com NTSyCS Art. 3-10"
+  - folder: iberia-2025
+    description: Apagão ibérico 28/04/2025 (ENTSO-E) — linha do tempo, causa raiz, controle de tensão, oscilações 0,63/0,2 Hz e lições para IBR
+    files:
+      - file: iberia_2025_overview.md
+        name: iberia-2025-overview
+        description: "Apagão ibérico de 28/abr/2025 — linha do tempo, números-chave e condições pré-evento (relatório final ENTSO-E)"
+      - file: iberia_2025_root_causes.md
+        name: iberia-2025-root-causes
+        description: "Árvore de causa raiz do apagão ibérico de 28/abr/2025 — falha de controle de tensão, oscilações 0,63 Hz (converter-driven) e 0,2 Hz (inter-área)"
+      - file: iberia_2025_voltage_control.md
+        name: iberia-2025-voltage-control
+        description: "Análise do controle de tensão do apagão ibérico (§4.1) — falha dos recursos de reativo, mecanismo P↓→Q↓→V↑ dos inversores em fator de potência fixo, e o achado de que modelos estáticos subestimam a subida real de tensão"
+      - file: iberia_2025_oscillations.md
+        name: iberia-2025-oscillations
+        description: "Análise modal das oscilações do apagão ibérico (§4.2) — classificação da 0,63 Hz como forçada converter-driven, ressonância com o modo inter-área 0,2 Hz e sensibilidades de amortecimento"
+      - file: iberia_2025_ibr_lessons.md
+        name: iberia-2025-ibr-lessons
+        description: "Lições do apagão ibérico 2025 para recursos inversorizados (IBR) — converter-driven instability, trips de inversores, recomendações e paralelo com o TCC"

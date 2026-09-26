@@ -51,7 +51,7 @@ metadata:
 > 2.1-2.4.3 redigidos em sessão Opus (2026-07-19), fontes preparadas em sessão
 > Sonnet anterior — ver `kb/power-system/energy_transition_iea2026.md`,
 > `stability_classification_classic.md`, `stability_classification_extended.md`,
-> `kb/events/brasil_2023_overview.md` + `brasil_2023_root_causes.md`. Novas
+> `kb/events/brasil-2023/brasil_2023_overview.md` + `brasil_2023_root_causes.md`. Novas
 > referências que passam a ser citadas no texto e ainda **não estão** na lista
 > de Referências do documento: IEA (2026), KUNDUR et al. (2004) [distinta de
 > KUNDUR (1994) já citada em 2.5.3], GU; GREEN (2023), STRAUSS-MINCU et al.

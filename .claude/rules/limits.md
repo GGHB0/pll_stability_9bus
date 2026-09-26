@@ -24,12 +24,12 @@ Subpastas criadas sob demanda, quando o primeiro conteúdo chegar:
 
 | Pasta | Conteúdo |
 |---|---|
-| `kb/pll/` | Teoria SRF-PLL + implementação Simulink do PLL |
+| `kb/pll/` | SRF-PLL, com subpastas `teoria/`, `sintonia/` (ganhos do PI), `contingencias/`, `notch/` (histórico) |
 | `kb/inverter/` | VSI, filtro LCL, controle de corrente |
 | `kb/power-system/` | IEEE 9 barras, Ybarra, Thevenin |
 | `kb/simulation/` | Workflow notebook↔params.m, Vcc override, runtime (Ts/fsw/Tsc) |
 | `kb/standards/` | Normas, com subpastas `qualidade-energia/` (harmônicos, IEEE 519, 1547 Cl.7) e `ride-through/` (LVRT, ONS) |
-| `kb/events/` | Apagão BR agosto 2023 |
+| `kb/events/` | Blecautes reais, uma subpasta por evento: `brasil-2023/`, `chile-2025/`, `iberia-2025/` |
 | `kb/dashboard/` | Relatório HTML, com subpastas `dados/`, `graficos/`, `cards/`, `layout/` |
 | `kb/tcc-word/` | TCC DOCX: `content_map`/`pendencias` na raiz; subpastas `conteudo/`, `docx/`, `revisao-fragmento/`, `historico/` |
 | `kb/psim/` | Fase inicial de modelagem no PSIM (Altair), anterior ao Simulink — registro histórico |

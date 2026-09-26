@@ -144,7 +144,7 @@ Remus Teodorescu; Marco Liserre; Pedro Rodríguez, -- ( WeLib.org ).pdf`.
 
 Confirmado por leitura direta da cópia WeLib em 2026-08-04 (rosto/copyright na
 p.1-3 do PDF batem com o ISBN acima). Sintetizado em
-`.claude/kb/pll/pll_loop_filter_gains.md` e `.claude/kb/pll/pll_ts_criterion_rationale.md`.
+`.claude/kb/pll/sintonia/pll_loop_filter_gains.md` e `.claude/kb/pll/sintonia/pll_ts_criterion_rationale.md`.
 
 ## Hu, Meng, Bu, Ren — *Test and Analysis of LVRT Characteristic of Wind Farm* (6 p.)
 

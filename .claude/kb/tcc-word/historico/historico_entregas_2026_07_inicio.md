@@ -43,7 +43,7 @@ aliases: [tcc-historico-entregas-2026-07-inicio]
 
 - **Limpeza do notch 120 Hz do PLL na KB** (texto/documentação apenas — o
   bloco já havia sido removido do `.slx` anteriormente, foi um teste
-  descartado): `kb/pll/pll_notch_implementation.md` marcado como histórico
+  descartado): `kb/pll/notch/pll_notch_implementation.md` marcado como histórico
   (status no topo, título "(HISTORICO - removido do modelo)"),
   `kb/pll/_index.yaml` e `kb/simulation/params_workflow.md` ajustados para
   não descrever o notch como recurso atual. Não tocado: o notch de

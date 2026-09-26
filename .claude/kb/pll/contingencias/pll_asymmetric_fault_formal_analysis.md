@@ -57,7 +57,7 @@ Soluções alternativas: notch externo em 2ω₀, DSOGI-PLL, DDSRF-PLL (ver [[sr
 
 Dado de campo real (turbina eólica PMSG) mostrando desequilíbrio de corrente entre
 fases sob falta assimétrica — manifestação física deste mesmo efeito — em
-[china_lvrt_windfarm_test.md](../standards/ride-through/china_lvrt_windfarm_test.md).
+[china_lvrt_windfarm_test.md](../../standards/ride-through/china_lvrt_windfarm_test.md).
 
 ## Feed-forward de Tensão no Controle de Corrente (§12.5.3)
 
@@ -81,5 +81,5 @@ falta linha-terra em um PCC (`a=2/3, b=1/3`) → sobretensão CC `Vov≈0,6-0,9 
 (**1,7-2,6%** de `VDCref=35kV`) e ripple de potência ativa de **até ±50% do
 valor médio** (±8MW em torno de 16MW). Mostra que a severidade do harmônico
 gerado escala com `b` (fração de sequência negativa vista nos terminais), não
-com um limiar fixo — ver [harmonic_significance_criteria.md](../standards/qualidade-energia/harmonic_significance_criteria.md)
+com um limiar fixo — ver [harmonic_significance_criteria.md](../../standards/qualidade-energia/harmonic_significance_criteria.md)
 para como isso se compara a critérios normativos de conformidade.

@@ -153,7 +153,7 @@ Yazdani & Iravani não definem um valor fixo — mostram que a magnitude do
 distúrbio de 2ω₀ no PLL e do harmônico de 3ª ordem gerado é **proporcional**
 à fração de sequência negativa `b` (adimensional, 0 a 1 pu de V̂s), não um
 degrau discreto. Ver desenvolvimento completo em
-[pll_asymmetric_fault_formal_analysis.md](../../pll/pll_asymmetric_fault_formal_analysis.md).
+[pll_asymmetric_fault_formal_analysis.md](../../pll/contingencias/pll_asymmetric_fault_formal_analysis.md).
 
 Exemplo extremo (falta linha-terra no próprio PCC, Yazdani Example 12.2):
 `a=2/3, b=1/3` → ripple de potência ativa de **até ±50% do valor médio**

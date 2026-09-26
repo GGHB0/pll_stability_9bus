@@ -55,7 +55,7 @@ abaixo).
   2ª ordem já estabelecida para o PLL (Equação 3.18)**, não como a derivação
   de cancelamento polo-zero por `Ki/Kp=R/L` (fator 4) documentada em
   `kb/inverter/agp_current_control_theory.md` — ver nota lá e em
-  `kb/pll/pll_gains_methodology.md`. §4.3.2.2 do Cap. 4 passou a citar
+  `kb/pll/sintonia/pll_gains_methodology.md`. §4.3.2.2 do Cap. 4 passou a citar
   "Equação (3.23)" e aplicar os parâmetros do projeto, sem rededuzir.
 
 - Os rótulos antigos "EQUAÇÃO 2.N — descrição" (2.5–2.12) viraram texto

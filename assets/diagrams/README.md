@@ -17,6 +17,7 @@ Diagramas usados no README principal (secoes "Motivacao", "Arquitetura do SRF-PL
 | `ieee9bus_unifilar.svg` / `.png` | SVG (unifilar) | Diagrama unifilar autoral do sistema IEEE 9 barras completo (G1/G2→inversor/G3, transformadores, 6 linhas), usado como filtro interativo de cenarios no dashboard e ilustracao da rede no README | `.claude/kb/power-system/ieee9bus_topology.md` |
 | `ons_voltage_ridethrough_envelope.svg` / `.png` | SVG (curva V×t) | Envelope de trip mandatorio e regioes de operacao continua/mandatoria/permissiva por tensao no PCC — valores reais da Table 8 do IEEE 1547.2-2023 (UV1/UV2/OV1/OV2 por categoria) | `.claude/kb/standards/ieee1547_ride_through.md` |
 | `ons_reactive_current_curve.svg` / `.png` | SVG (curva V×iq) | Curva de 3 zonas (subtensao/normal/sobretensao) da funcao `ONS_2_11` (Submodulo 2.10 §5.8): rampas k_low/k_high, saturacao ±I_max | `.claude/kb/standards/ons_2_11.md` |
+| `srf_pll_blocos_funcionais.svg` / `.png` | SVG (controle) | Figura 3.2 do TCC — SRF-PLL decomposto nos tres blocos funcionais da Secao 3.4 (Detector de Fase/Park, Controlador PI, VCO com feed-forward de omega_n e integrador), com os mesmos simbolos da Figura 4.3 (`pll_control_loop.svg`). Sem titulo interno: na ABNT o titulo vai na legenda. Criado em 2026-09-13 para substituir duas imagens sem fonte (uma copiada de outro trabalho academico, outra com erros de ingles gravados no bitmap). PNG exportado pelo Edge headless, ver `export_png.md` da skill | `.claude/kb/pll/srf_pll_theory.md` |
 
 ## Convencoes visuais
 

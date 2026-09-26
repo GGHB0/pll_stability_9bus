@@ -79,3 +79,26 @@ open(OUT_PNG, 'wb').write(base64.b64decode(b64))
 logo após um reload. Não insista: o caminho de canvas acima **não precisa de
 screenshot**. Se a aba travar de fato, `preview_stop` no `serverId` + `preview_start`
 de novo cria aba limpa — mais rápido que depurar a trava.
+
+## Alternativa sem o navegador do MCP: Edge headless
+
+Quando `mcp__Claude_Browser__*` não está disponível na sessão, o Microsoft
+Edge do próprio Windows rasteriza o SVG direto por linha de comando, com as
+fontes do sistema. Validado em 2026-09-13 na Figura 3.2 do TCC
+(`srf_pll_blocos_funcionais.svg`):
+
+```bash
+msedge="/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
+"$msedge" --headless=new --disable-gpu --hide-scrollbars \
+  --force-device-scale-factor=3 --default-background-color=ffffffff \
+  --window-size=<VIEWBOX_W>,<VIEWBOX_H> \
+  --screenshot='C:/Temp/saida.png' 'file:///C:/Temp/figura.svg'
+```
+
+- `--window-size` = **largura e altura do `viewBox`**, em px CSS; o fator 3
+  multiplica a resolução (760×250 saiu 2280×750), não o tamanho aparente.
+- `viewBox` com origem deslocada (`0 36 760 250`) funciona: o SVG sem
+  `width`/`height` preenche a janela.
+- Copiar o SVG para `C:\Temp` antes: caminho de repositório com espaço ou
+  acento complica a URL `file:///`.
+- Conferir o PNG com `Read` do mesmo jeito que no fluxo do navegador.

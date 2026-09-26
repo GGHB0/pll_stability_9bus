@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 36 760 250" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <!-- Figura 3.2 do TCC: SRF-PLL decomposto nos tres blocos funcionais descritos
+       na Secao 3.4 (Detector de Fase, Controlador PI, VCO). Mesmos simbolos e
+       cores da Figura 4.3 (pll_control_loop.svg). Sem titulo interno: na ABNT o
+       titulo vai na legenda do documento. -->
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937"/>
+    </marker>
+    <marker id="arrP" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="36" width="760" height="250" fill="#ffffff"/>
+
+  <!-- ============= Grupos funcionais ============= -->
+  <g fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4,3">
+    <rect x="84" y="68" width="170" height="146" rx="8"/>
+    <rect x="300" y="68" width="150" height="146" rx="8"/>
+    <rect x="470" y="68" width="276" height="146" rx="8"/>
+  </g>
+  <g font-size="13" font-weight="600" fill="#0B132B" text-anchor="middle">
+    <text x="169" y="58">Detector de Fase (PD)</text>
+    <text x="375" y="58">Controlador PI</text>
+    <text x="608" y="58">Oscilador Controlado por Tensão (VCO)</text>
+  </g>
+
+  <!-- ============= Entrada: tensoes trifasicas ============= -->
+  <g transform="translate(26,150)">
+    <path d="M 0 -20 q 5 -8 10 0 q 5 8 10 0 q 5 -8 10 0 q 5 8 10 0" fill="none" stroke="#c92a2a" stroke-width="1.5"/>
+    <path d="M 0 0   q 5 -8 10 0 q 5 8 10 0 q 5 -8 10 0 q 5 8 10 0" fill="none" stroke="#2f9e44" stroke-width="1.5"/>
+    <path d="M 0 20  q 5 -8 10 0 q 5 8 10 0 q 5 -8 10 0 q 5 8 10 0" fill="none" stroke="#1971c2" stroke-width="1.5"/>
+    <text x="20" y="48" text-anchor="middle" font-size="14" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">abc</tspan>(t)</text>
+  </g>
+  <line x1="70" y1="150" x2="96" y2="150" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ============= Transformada de Park (detector de fase) ============= -->
+  <rect x="98" y="118" width="104" height="64" fill="#e7f5ff" stroke="#1971c2" stroke-width="2" rx="5"/>
+  <text x="150" y="140" text-anchor="middle" font-size="14" font-weight="700" fill="#0B132B">Transformada</text>
+  <text x="150" y="157" text-anchor="middle" font-size="14" font-weight="700" fill="#0B132B">de Park</text>
+  <text x="150" y="175" text-anchor="middle" font-size="13" fill="#0B132B">abc → dq</text>
+
+  <line x1="202" y1="131" x2="240" y2="131" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="220" y="124" text-anchor="middle" font-size="14" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">d</tspan></text>
+
+  <line x1="202" y1="169" x2="317" y2="169" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="277" y="160" text-anchor="middle" font-size="14" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">q</tspan></text>
+
+  <!-- ============= Controlador PI ============= -->
+  <rect x="319" y="147" width="112" height="44" fill="#e6fcf5" stroke="#0ca678" stroke-width="2" rx="5"/>
+  <text x="375" y="175" text-anchor="middle" font-size="17" font-weight="700" fill="#0B132B">K<tspan baseline-shift="sub" font-size="75%">p</tspan> + K<tspan baseline-shift="sub" font-size="75%">i</tspan> / s</text>
+
+  <line x1="431" y1="169" x2="513" y2="169" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ============= VCO: feed-forward, somador e integrador ============= -->
+  <rect x="482" y="82" width="92" height="28" fill="white" stroke="#1f2937" stroke-width="1.5" rx="4"/>
+  <text x="528" y="101" text-anchor="middle" font-size="14" font-style="italic" fill="#0B132B">ω<tspan baseline-shift="sub" font-size="75%">n</tspan> = 2π·60</text>
+  <line x1="528" y1="110" x2="528" y2="154" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="584" y="100" font-size="13" font-style="italic" fill="#6b7280">feed-forward</text>
+
+  <circle cx="528" cy="169" r="13" fill="white" stroke="#1f2937" stroke-width="2"/>
+  <line x1="518" y1="169" x2="538" y2="169" stroke="#1f2937" stroke-width="1"/>
+  <line x1="528" y1="159" x2="528" y2="179" stroke="#1f2937" stroke-width="1"/>
+  <text x="503" y="163" font-size="13" font-weight="700" fill="#0B132B">+</text>
+  <text x="536" y="152" font-size="13" font-weight="700" fill="#0B132B">+</text>
+
+  <line x1="541" y1="169" x2="618" y2="169" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="580" y="160" text-anchor="middle" font-size="14" font-style="italic" fill="#0B132B">ω<tspan baseline-shift="sub" font-size="75%">PLL</tspan></text>
+
+  <rect x="620" y="147" width="58" height="44" fill="#fff3bf" stroke="#c79c00" stroke-width="2" rx="5"/>
+  <text x="649" y="176" text-anchor="middle" font-size="18" font-weight="700" fill="#0B132B">1 / s</text>
+
+  <line x1="678" y1="169" x2="738" y2="169" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="708" y="141" text-anchor="middle" font-size="15" font-weight="700" font-style="italic" fill="#7c3aed">θ<tspan baseline-shift="sub" font-size="75%">PLL</tspan>(t)</text>
+
+  <!-- ============= Realimentacao de fase ============= -->
+  <path d="M 738 169 L 752 169 L 752 250 L 150 250 L 150 184"
+        fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrP)"/>
+  <text x="450" y="270" text-anchor="middle" font-size="13" font-style="italic" fill="#7c3aed">realimentação de fase (θ<tspan baseline-shift="sub" font-size="75%">PLL</tspan> → Park)</text>
+</svg>

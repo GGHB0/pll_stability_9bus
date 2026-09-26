@@ -34,7 +34,7 @@ re-simulação. Aí não se escreve o SVG à mão nem se usa matplotlib: escreve
 um gerador que lê a fonte e emite o SVG.
 
 Referência: `scripts/gen_matriz_cenarios.py`, que varre `output/results/` e
-gera `assets/diagrams/matriz_cenarios.svg` (a Figura 4.4 do TCC). Ganho real:
+gera `assets/diagrams/matriz_cenarios.svg` (o Quadro 4.1 do TCC, que foi Figura 4.4 até 2026-09-13). Ganho real:
 a figura não pode divergir do que foi simulado, e a contagem impressa no
 rodapé é contada, não digitada — foi assim que se descobriu que a KB dizia 32
 cenários onde havia 30.

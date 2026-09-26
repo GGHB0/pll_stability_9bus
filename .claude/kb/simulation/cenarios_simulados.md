@@ -66,7 +66,7 @@ dashboard encontra equivalente em ambas as direções.
 
 > A matriz é desenhada por `scripts/gen_matriz_cenarios.py`, que lê
 > `output/results/` direto e gera `assets/diagrams/matriz_cenarios.svg` (a
-> Figura 4.4 do fragmento, ver [[tcc-revisao-fragmento-cap4]]). Rodar de novo
+> Figura 4.4 do fragmento, hoje Quadro 4.1 no canônico; ver [[tcc-revisao-fragmento-cap4]]). Rodar de novo
 > depois de qualquer re-simulação: a figura se atualiza sozinha.
 
 ## ⚠️ Duas safras de modelo nos cenários `_bad_pll`

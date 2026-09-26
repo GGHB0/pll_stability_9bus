@@ -7,6 +7,10 @@ metadata:
 
 # TCC — Páginas Pré-Textuais
 
+> **Retrato antigo (2025), anterior ao novo índice e à passagem ABNT de
+> 2026-09-13.** Ano, `XXf.`, sumário e listas mudaram. Estado atual:
+> `content_map.md` e `abnt_layout.md`, sempre conferido no XML extraído.
+
 ## Capa / Folha de Rosto
 
 **Instituição:** Universidade do Estado do Rio de Janeiro · Centro de Tecnologia e Ciências · Faculdade de Engenharia

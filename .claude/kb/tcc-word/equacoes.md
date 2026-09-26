@@ -2,7 +2,8 @@
 
 > Reformatação aplicada em 2026-07-19 (edição direta, sem tracked changes),
 > aprovada pelo Victor: texto explicativo em cima, equação centralizada,
-> número "EQUAÇÃO N.M" no fim da linha.
+> número no fim da linha. **Desde 2026-09-13 o rótulo é `(N.M)`** (NBR 14724;
+> decisão D7 da skill `tcc-abnt-layout`); até então era "EQUAÇÃO N.M".
 
 ## Formato padrão (tabela invisível)
 
@@ -13,7 +14,8 @@ Cada equação de destaque vive numa **tabela de 2 colunas sem bordas**
   preserva o estilo *display* (frações grandes), que se perderia no método
   de tabulações (math inline encolhe).
 - Coluna 2 (1985 twips): parágrafo `jc=right`, `vAlign=center` na célula,
-  run normal `szCs=24` com o rótulo `EQUAÇÃO N.M`.
+  run normal `szCs=24` com o rótulo `(N.M)`. Equação nova usa esse
+  formato, não o antigo `EQUAÇÃO N.M`.
 
 Armadilha: **duas tabelas adjacentes se fundem no Word** — sempre deixar um
 `<w:p>` (pode ser vazio) entre tabelas consecutivas (feito entre 3.2 e 3.3).

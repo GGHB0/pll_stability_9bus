@@ -16,10 +16,11 @@
    antes de 2.1, sem numeração. Renumerar como "2.0" ou rebaixar a corpo.
    **NÃO alterar sem confirmação do Oscar/Victor.**
 4. **~~Lista de Abreviaturas vazia~~** — ✅ FEITO (2026-07-19): 31 siglas inseridas
-   no lugar das sobras do template; RBI/ICR padronizados em IBR. Ver `siglas_inventory.md`.
-5. **REFERÊNCIAS sem estilo de título** — o parágrafo "REFERÊNCIAS" (§663) não
-   tem `pStyle` de heading, então fica fora do Sumário. ABNT pede no sumário.
-   Aplicar Ttulo1 (ou estilo próprio sem numeração de capítulo) em edição futura.
+   no lugar das sobras do template; RBI/ICR padronizados em IBR. Revisada em
+   2026-09-13: 36 siglas, só as usadas no texto (GFM, SOTF, COI, FFR, BESS, TSO,
+   DSO, SCR agora na lista). Ver `siglas_inventory.md`.
+5. **~~REFERÊNCIAS sem estilo de título~~** — ✅ FEITO (2026-09-13): virou
+   `Ttulo1` centralizado e entra no sumário, junto com ANEXOS. Ver `abnt_layout.md`.
 
 ## P2 — Conteúdo pendente
 
@@ -73,17 +74,18 @@
     [[tcc-trabalhos-futuros]]. **Zero referência nova**: as 4 citações já
     constavam da lista e já eram citadas no corpo.
 
-20. **`XX` f. na ficha catalográfica** — o número de folhas do Projeto Final
-    é o único realce amarelo que sobrou no documento (2026-09-12). O Word
-    **Destravado**: com o Cap. 7 escrito, o Word conta **79 páginas**
-    (16 390 palavras). Falta confirmar com o Oscar se a ficha usa o total de
-    páginas ou a última folha numerada, e então substituir o `XX`.
+20. **`XX` f. na referência do resumo** — ✅ preenchido com **74 f.** em
+    2026-09-13, o total de folhas do PDF depois da passagem ABNT. O `XX`
+    estava na referência bibliográfica do RESUMO, não na ficha (que a
+    biblioteca emite). **Ainda confirmar com o Oscar** se conta o total de
+    folhas ou a última folha numerada (hoje 73), e atualizar se o documento
+    mudar de tamanho.
 
 ## P3 — Limpeza
 
-11. **Figuras Cap. 2/3** — [FIGURA 2.1], [FIGURA 2.6] e 2 figuras ONS já têm
-    placeholder de texto; substituir por imagens quando disponíveis (e
-    renumerar figuras para os capítulos novos).
+11. **~~Figuras Cap. 2/3~~** — ✅ FEITO (2026-09-13): as imagens já estavam
+    no documento; os placeholders viraram Gráficos 2.1-2.3 e Figura 3.1, com
+    fonte, e o SRF-PLL virou a Figura 3.2 autoral. Ver `abnt_layout.md`.
 12. **Lista de referências final** — mistura template UERJ + refs reais.
     Remover entradas do template.
 13. **Cor legada `1B1C1D`** (cinza quase preto do template) ainda presente em
@@ -91,6 +93,18 @@
 14. ~~**Tracked change restante** no título "2.6. Resumo ou Conclusões do
     Capítulo"~~ — ✅ RESOLVIDO: `check_ids.py` em 2026-09-12 mostra o documento
     sem nenhum `w:ins` e sem nenhum `w:del`.
+21. **ANEXOS sem conteúdo** — título sozinho na última folha e no sumário.
+    Escrever os anexos ou remover a seção (decisão dos autores).
+22. **Dedicatória e epígrafe** — marcadores "Dedicatória opcional." e "Frase
+    opcional. / Autor" nas folhas 5 e 7, à espera do texto dos autores.
+23. **Subseções do Cap. 1 fora do sumário** — "Contextualização", "Motivação
+    e Justificativa" e "Objetivos do Trabalho" são itens de lista numerada
+    ("1.", "2."), não `Ttulo2`: não aparecem no sumário e fogem da NBR 6024
+    ("1.1"). Mexe na estrutura, então só com aval.
+24. **Título gravado dentro da imagem** — pelo menos Figura 3.1, Figura 4.3,
+    Quadro 4.1 e Gráfico 2.3 repetem a legenda como título no próprio bitmap;
+    a ABNT põe o título só na legenda. Reexportar dos SVGs de
+    `assets/diagrams/` sem o `<text>` do título.
 
 ## Fora de escopo (instrução do Oscar)
 

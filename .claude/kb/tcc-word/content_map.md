@@ -61,7 +61,7 @@ metadata:
 
 - ✅ **3.1** Transformadas de referência (3.1.1 Clarke · 3.1.2 Park ·
   3.1.3 controle P/Q desacoplado · 3.1.4 arquitetura em cascata)
-- ✅ **3.2** Geração Distribuída e Inversores Conectados à Rede ([FIGURA 2.1])
+- ✅ **3.2** Geração Distribuída e Inversores Conectados à Rede (Figura 3.1)
 - ✅ **3.3** Controle de Inversores (3.3.1 PWM — funcional, escopo delimitado)
 - ✅ **3.4** O Sistema de Sincronismo SRF-PLL — PD/PI/VCO, linearização,
   equações 3.10–3.17 em tabela invisível (ver `equacoes.md`). **Ampliado
@@ -98,7 +98,7 @@ metadata:
     corrente, 4.3.2.3 SRF-PLL (Figura 4.3; `Kp,PLL` = 460 / `Ki,PLL` = 105 820,
     sintonia inadequada a 20% → `ω_n` = 145,5, ξ = 0,316)
   - **4.3.3** Configuração do sistema de monitoramento e tratamento de dados —
-    Figura 4.4 (organização dos cenários por falta e sintonia)
+    Quadro 4.1 (organização dos cenários por falta e sintonia; era a Figura 4.4)
   - **4.3.4** Protocolos de contingência — falta de 0,1 s (6 ciclos); nominal
     0,3→0,4 s com janela até 0,6 s, inadequada 0,6→0,7 s com janela até 1,0 s
 - ✅ **4.4** Síntese da metodologia
@@ -114,12 +114,12 @@ metadata:
 > **Substituído por inteiro em 2026-09-02**, na mesma operação. Números
 > auditados (ver [[tcc-revisao-fragmento-cap5-metricas]] e o `_54`), 15 figuras.
 
-- ✅ **5.1** Validação da operação em regime permanente — Figuras 5.1 a 5.3
-- ✅ **5.2** Faltas simétricas: severidade e localização — Figuras 5.4 a 5.6
+- ✅ **5.1** Validação da operação em regime permanente — Gráficos 5.1 a 5.3
+- ✅ **5.2** Faltas simétricas: severidade e localização — Gráficos 5.4 a 5.6
 - ✅ **5.3** Faltas assimétricas: sequência negativa e efeito da sintonia —
-  Figuras 5.7 a 5.10
+  Gráficos 5.7 a 5.10
 - ✅ **5.4** Perda de sincronismo sob falta simétrica no ponto de conexão —
-  Figuras 5.11 a 5.15, o caso-limite `bus7/3phase_bad_pll`
+  Gráficos 5.11 a 5.15, o caso-limite `bus7/3phase_bad_pll`
 - ✅ **5.5** Conformidade com o código de rede
 - ✅ **5.6** Resumo e conclusões do capítulo
 
@@ -154,7 +154,7 @@ metadata:
 ## Referências (seção final)
 
 - ⚠️ Mistura template UERJ (refs fictícias) com refs reais — limpar
-- ⚠️ Parágrafo "REFERÊNCIAS" sem estilo de título (fora do Sumário)
+- ✅ "REFERÊNCIAS" e "ANEXOS" são `Ttulo1` centralizados e entram no sumário (2026-09-13)
 - **+4 entradas em 2026-08-04**: ALVES; DIAS; ROLIM (2020, DOI
   10.1007/s40313-020-00576-x), CIGRE (CSE N037, ✅ **jun. 2025**, fechado em
   2026-09-12), OGATA (2009) e STRAUSS-MINCU et al. (2026, DOI
@@ -167,18 +167,21 @@ metadata:
   entradas órfãs (ALVES 2021 e SOUSA et al. 2021) foram removidas. Sobrou
   só o `XX` da ficha catalográfica (`pendencias.md` item 20)
 
-## Inventário de Figuras
+## Inventário de ilustrações (2026-09-13)
 
-| Figura | Descrição | Estado |
+24 ilustrações numeradas por capítulo com campo `SEQ` (ver `abnt_layout.md`
+e a D2 de `tcc-abnt-layout/decisoes.md`):
+
+| Nº | Conteúdo | Fonte |
 |---|---|---|
-| 2.1 | Diagrama esquemático de VSI conectado à rede | placeholder texto OK |
-| 2.6 | Perfil característico de afundamento de tensão | placeholder texto OK |
-| 2.X (ONS) | Curva de suportabilidade LVRT — ONS Sub. 2.10 | placeholder texto OK |
-| 2.X (ONS) | Requisito de injeção de reativo — ONS Sub. 2.10 | placeholder texto OK |
-| **3.1** | **Circuito VSI trifásico com filtro LCL e blocos PWM** | ✅ virou a Fig. 4.2 do fragmento ([[tcc-revisao-fragmento-cap4]]) |
+| Gráfico 2.1 | Curva de suportabilidade a subtensões (LVRT), ONS | Adaptado de ONS (2022) |
+| Gráfico 2.2 | Requisito de injeção de corrente reativa, ONS | Adaptado de ONS (2022) |
+| Gráfico 2.3 | Perfil de afundamento de tensão (`voltage_sag_profile.svg`) | Os autores (2026) |
+| Figura 3.1 | VSI conectado à rede (`vsi_grid_schematic.svg`) | Os autores (2026) |
+| Figura 3.2 | SRF-PLL em três blocos funcionais (`srf_pll_blocos_funcionais.svg`) | Os autores (2026) |
+| Figuras 4.1-4.3 | Unifilar IEEE 9 barras, inversor com LCL, laço do SRF-PLL | Os autores (2026) |
+| Quadro 4.1 | Matriz de cenários (`matriz_cenarios.svg`) | Os autores (2026) |
+| Gráficos 5.1-5.15 | Séries de simulação e figuras didáticas das métricas | Os autores (2026) |
 
-> Os placeholders acima são dos Cap. 2 e 3 e seguem com a numeração herdada
-> do V8 (2.1, 2.6...), não renumerada junto com os capítulos. Os Cap. 4 e 5 já
-> têm **19 figuras reais** (4.1 a 4.4 e 5.1 a 5.15), inseridas na mesclagem de
-> 2026-09-02 com legenda acima, "Fonte: Os autores (2026)." abaixo e largura
-> ajustada à área útil A4 de 6,30 in.
+O corpo cita o Cap. 5 como "o Gráfico 5.x": 23 trechos reescritos com
+concordância em 2026-09-13.

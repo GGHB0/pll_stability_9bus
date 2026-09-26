@@ -41,6 +41,14 @@ description: Armadilhas de edição direta do OOXML do TCC aprendidas na prátic
   O teste `'<w:p' in trecho` dá falso positivo com `<w:pgSz`/`<w:pgMar` do sectPr.
 - **Duas tabelas adjacentes se fundem no Word** — sempre deixar um `<w:p>`
   entre tabelas consecutivas. Conferir com `xml.count('</w:tbl><w:tbl>') == 0`.
+- **Split de run (subscrito, itálico parcial)**: o run pode ter
+  `<w:lastRenderedPageBreak/>` antes do `<w:t>`. Aceitá-lo e manter só no
+  primeiro pedaço gerado. `w:vertAlign` entra no rPr **antes** de
+  `w:rtl/cs/em/lang/eastAsianLayout` (ordem do schema CT_RPr).
+- **Contar símbolo com `(?![\w])` erra**: em Python `\w` casa `²` e dígitos
+  Unicode, então "fg²" some da contagem. Usar classe explícita
+  (`[A-Za-zÀ-ÿ0-9_]`). A contagem esperada de 58 que virou 59 em
+  2026-09-13 veio daí.
 
 ## Processo
 

@@ -1,64 +1,91 @@
 # TCC Word — Inventário de Siglas e Abreviaturas
 
-> Levantamento por varredura do XML (Cap.1 em diante) em 2026-07-19, sobre
-> `TCC_Victor_Bruno_V9_novo_indice.docx`. ✅ **INSERIDO em 2026-07-19**: as 31
-> siglas abaixo substituíram as sobras do template (CTC/B, UERJ) na lista
-> pré-textual, como edição direta (sem tracked change), formato
-> `SIGLA<tab><tab>Significado` clonando o parágrafo do template.
+> **Revisão de 2026-09-13** sobre `TCC_Victor_Bruno_V9_novo_indice_2.docx`
+> (decisão do Victor): a lista pré-textual passa a ter **só siglas usadas no
+> texto**. Das 31 inseridas em 2026-07-19, 9 não apareciam mais em lugar
+> nenhum e saíram; 14 usadas no corpo (quase todas do Cap. 2) entraram. Total: **36**.
+> Varredura: todo o documento, incluindo tabelas, legendas e caixas de texto,
+> excluindo a própria lista.
 
-## Siglas usadas no texto (31, após padronização IBR)
+## Lista atual (36, ordem alfabética)
 
 | Sigla | Significado |
 |---|---|
-| AVR | Automatic Voltage Regulator (Regulador Automático de Tensão) |
+| BESS | Battery Energy Storage System (Sistema de Armazenamento de Energia em Baterias) |
 | CA | Corrente Alternada |
 | CC | Corrente Contínua |
-| DDSRF-PLL | Decoupled Double Synchronous Reference Frame PLL |
+| CIGRE | Conseil International des Grands Réseaux Électriques |
+| COI | Center of Inertia (Centro de Inércia) |
+| DDSRF-PLL | Decoupled Double Synchronous Reference Frame Phase-Locked Loop |
+| DSO | Distribution System Operator (Operador do Sistema de Distribuição) |
 | EMT | Electromagnetic Transients (Transitórios Eletromagnéticos) |
+| ENTSO-E | European Network of Transmission System Operators for Electricity |
+| FFR | Fast Frequency Response (Resposta Rápida de Frequência) |
 | FRT | Fault Ride-Through |
 | GD | Geração Distribuída |
-| GFL | Grid-Following (seguidor de rede) |
-| IAE | Integral of Absolute Error |
+| GFL | Grid-Following (Seguidor de Rede) |
+| GFM | Grid-Forming (Formador de Rede) |
 | IBR | Inverter-Based Resources (Recursos Baseados em Inversores) |
+| IEA | International Energy Agency (Agência Internacional de Energia) |
 | IEEE | Institute of Electrical and Electronics Engineers |
-| ISE | Integral of Squared Error |
-| ITAE | Integral of Time-weighted Absolute Error |
-| LCL | filtro Indutivo–Capacitivo–Indutivo |
-| LG | falta monofásica à terra (Line-to-Ground) |
-| LLG | falta bifásica à terra (Line-to-Line-to-Ground) |
-| LVRT | Low Voltage Ride-Through |
-| MPPT | Maximum Power Point Tracking |
+| LCL | Filtro Indutivo–Capacitivo–Indutivo |
+| LVRT | Low Voltage Ride-Through (Suportabilidade a Afundamentos de Tensão) |
 | ONS | Operador Nacional do Sistema Elétrico |
 | PCC | Ponto de Conexão Comum |
 | PD | Phase Detector (Detector de Fase) |
 | PI | Proporcional-Integral |
-| PLL | Phase-Locked Loop |
-| PSS | Power System Stabilizer (Estabilizador de Potência) |
+| PLL | Phase-Locked Loop (Malha de Captura de Fase) |
 | PWM | Pulse Width Modulation (Modulação por Largura de Pulso) |
 | RAP | Relatório de Análise de Perturbação |
+| SCR | Short-Circuit Ratio (Relação de Curto-Circuito) |
+| SEN | Sistema Eléctrico Nacional (Chile) |
+| SEP | Sistema Elétrico de Potência |
 | SIN | Sistema Interligado Nacional |
-| SPWM | Sinusoidal Pulse Width Modulation |
-| SRF-PLL | Synchronous Reference Frame Phase-Locked Loop |
+| SOTF | Switch Onto Fault (Fechamento sob Falta) |
+| SRF-PLL | Synchronous Reference Frame Phase-Locked Loop (65 ocorrências, a mais usada) |
+| TSO | Transmission System Operator (Operador do Sistema de Transmissão) |
+| UFV | Usina Fotovoltaica (só na legenda da Figura 4.1) |
 | VCO | Voltage-Controlled Oscillator (Oscilador Controlado por Tensão) |
 | VSI | Voltage Source Inverter (Inversor Fonte de Tensão) |
 
-## Excluídas de propósito
+Instituições com nome próprio (IEEE, CIGRE, ENTSO-E) ficam sem tradução,
+também para não quebrar linha.
 
-- **MATLAB, PSIM** — nomes de software, não siglas
-- **AC1C, PSS1A, SM** — nomes de modelos de excitatriz/estabilizador (Simulink)
-- **SPST** — nome do bloco de chave no PSIM (aparece 1×, descrição de circuito)
-- **PV** — tipo de barra (aparece 1×, "Barra 3, PV a 1,025 pu")
-- **SRF-EPLL** — só aparece no título de uma referência (Escobar 2021)
-- Nomes de autores em citações (KUNDUR, LISERRE, RODRIGUEZ etc.)
+## Removidas em 2026-09-13 (zero ocorrências fora da lista)
 
-## Achados de revisão (resolvidos em 2026-07-19)
+AVR, IAE, ISE, ITAE, LG, LLG, MPPT, PSS, SPWM. Vieram do inventário de
+julho e deixaram de aparecer no texto em alguma edição posterior (não
+rastreado qual).
 
-1. ✅ **IBR / RBI / ICR padronizados em IBR** (decisão do Victor): 2 ocorrências
-   de RBI (Cap.4) e 2 de ICR (Introdução) reescritas como "Recurso(s) Baseado(s)
-   em Inversor(es) (IBR/IBRs)". O título "3.2. Geração Distribuída e Inversores
-   Conectados à Rede" ficou como está (prosa, sem sigla).
-2. ✅ **Typo de referência corrigido**: "MOW, N." → **MOHAN, N.** nos 2 lugares
-   (citação "(MOW, 2003)" na Introdução + entrada nas REFERÊNCIAS).
-3. Ferramenta: o script de varredura vive em `C:\Temp\scan_siglas.py`
-   (regex `\b[A-Z][A-Z0-9]{1,}(?:[-/][A-Z0-9]+)*\b` sobre o texto dos `<w:t>`,
-   a partir do Ttulo1 "Capítulo 1" para pular pré-textual e cache do Sumário).
+## Fora da lista de propósito
+
+- **CSV**: aparece 1× (4.3.3); o Victor pediu para não listar.
+- **Unidades**: MW, GW, TWh, MVA.
+- **Software**: MATLAB, PSIM, NumPy.
+- **TR77**: nome de relatório (IEEE TR77), não sigla.
+- **CC-CA**: composição de CC e CA, já listadas.
+- **Plurais**: IBRs, SEPs.
+- Nomes de modelo/bloco do Simulink/PSIM (AC1C, PSS1A, SM, SPST), tipo de
+  barra (PV), SRF-EPLL (só em título de referência) e sobrenomes de autores.
+
+## Formatação da lista
+
+36 linhas cabem numa folha (folha 13) com: `spacing after=60`, `line=240`;
+**uma** parada de tab em 1701 twips (3 cm) + `ind left=1701 hanging=1701` +
+`jc=left`; **um** `<w:tab/>` entre sigla e significado. O formato antigo (dois
+tabs padrão, justificado) desalinhava toda sigla com mais de ~6 caracteres
+(CIGRE, DDSRF-PLL, ENTSO-E, SRF-PLL) e jogava a 2ª linha do BESS na margem.
+Sigla nova entra clonando qualquer parágrafo da lista e trocando só os textos.
+
+## Ferramenta
+
+Varredura: regex `(?<![\w-])[A-Z][A-Z0-9]{1,}(?:[-/][A-Z0-9]+)*(?![\w-])`
+sobre o texto dos `<w:t>`, do título "Capítulo 1" até REFERÊNCIAS, mais uma
+segunda passada para sigla com minúscula (`IBRs`, `RoCoF`). Contagem por
+sigla com lookaround, nunca substring (ISE casa LISERRE).
+
+## Histórico (2026-07-19)
+
+31 siglas inseridas no lugar das sobras do template (CTC/B, UERJ);
+padronização RBI/ICR → IBR; typo MOW → MOHAN. Detalhe em
+`historico_entregas_2026_07.md`.

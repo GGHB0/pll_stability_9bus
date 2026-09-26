@@ -59,8 +59,8 @@ Convenção de links `[[slug]]`: [rules/kb-links.md](.claude/rules/kb-links.md).
 ## Armadilhas que valem para toda sessão
 
 - **Ganhos de corrente ≠ ganhos do PLL.** `Kp = 8·fg·Lest` (TeseAGP) é do controlador
-  de corrente ([pll_gains_methodology.md](.claude/kb/pll/pll_gains_methodology.md)).
-  O PI do PLL tem projeto próprio ([pll_loop_filter_gains.md](.claude/kb/pll/pll_loop_filter_gains.md)).
+  de corrente ([pll_gains_methodology.md](.claude/kb/pll/sintonia/pll_gains_methodology.md)).
+  O PI do PLL tem projeto próprio ([pll_loop_filter_gains.md](.claude/kb/pll/sintonia/pll_loop_filter_gains.md)).
 - **Ganhos de corrente divididos por 4 duas vezes** (notebook + blocos Gain), de
   propósito: [simulink_model.md](.claude/kb/inverter/simulink_model.md).
 - **Vcc diverge de propósito:** `params.m` usa ×1,5 do valor do notebook:

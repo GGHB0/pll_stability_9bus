@@ -103,9 +103,9 @@ arquivo.
   `ieee1547_annexI_casestudies.txt`
 - `ieee1547_73_power_quality.txt` (p.138–149, gerado 2026-07-29)
 
-Sintetizado em `.claude/kb/standards/ieee1547_ride_through.md`,
-`.claude/kb/standards/ieee1547_case_studies.md` e (§7.3) em
-`.claude/kb/standards/harmonic_significance_criteria.md`.
+Sintetizado em `.claude/kb/standards/ride-through/ieee1547_ride_through.md`,
+`.claude/kb/standards/ride-through/ieee1547_case_studies.md` e (§7.3) em
+`.claude/kb/standards/qualidade-energia/harmonic_significance_criteria.md`.
 
 ## IEEE Std 519-2014 — Harmonic Control in Electric Power Systems (29 p. — preview)
 
@@ -121,7 +121,7 @@ recomendados).
 | §5.5 | 21-22 | Table 5 — multiplicadores para relaxar limites ao mitigar harmônicos de baixa ordem |
 
 **Arquivo .txt em ~/pdfext/ (2026-07-29):** `ieee519_5_limits.txt` (p.13-22).
-Sintetizado em `.claude/kb/standards/harmonic_significance_criteria.md`.
+Sintetizado em `.claude/kb/standards/qualidade-energia/harmonic_significance_criteria.md`.
 
 ## Teodorescu, Liserre & Rodríguez — *Grid Converters for PV and Wind Power Systems* (407 p.)
 
@@ -153,4 +153,4 @@ Artigo curto (IJAPE Vol.2 Issue 4, 2013), sem outline — extraído por inteiro 
 PMSG 850 kW, norma chinesa Q/GDW392-2009. Conteúdo: fórmula de corrente reativa
 dinâmica, dados de teste simétrico vs. assimétrico (desequilíbrio de corrente
 entre fases). Sintetizado em
-`.claude/kb/standards/china_lvrt_windfarm_test.md`.
+`.claude/kb/standards/ride-through/china_lvrt_windfarm_test.md`.

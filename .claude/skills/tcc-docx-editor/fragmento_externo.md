@@ -152,7 +152,7 @@ explícito no script.
 - Verificar acentuação: nunca confiar no stdout do terminal (mojibake mesmo
   com conteúdo correto) — escrever um dump UTF-8 (`io.open(..., 'w',
   encoding='utf-8')`) e reler com a ferramenta de leitura de arquivo.
-- KB desse workflow fica em `kb/tcc-word/revisao_fragmento_cap4.md` e
+- KB desse workflow fica em `kb/tcc-word/revisao-fragmento/revisao_fragmento_cap4.md` e
   `revisao_fragmento_cap5*.md`, não em `docx_structure.md`/`historico_entregas.md`
   (que são só do canônico).
 

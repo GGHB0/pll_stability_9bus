@@ -36,7 +36,7 @@ def _measure_f1(t: np.ndarray, y: np.ndarray,
     """Frequência real do segmento por cruzamento de zero ascendente, em vez
     de assumir F_FUND_HZ fixo. A rede simulada raramente fecha em 60,000 Hz
     exatos (resposta de droop dos geradores síncronos ainda em curso — ver
-    kb/standards/harmonic_frequency_leakage.md); truncar a janela da FFT pela
+    kb/standards/qualidade-energia/harmonic_frequency_leakage.md); truncar a janela da FFT pela
     frequência nominal em vez da real desalinha a janela do ciclo do sinal e
     vaza energia da fundamental para os bins vizinhos, inflando "harmônicas"
     que não existem. Cai no `fallback` (nominal) se o sinal não tiver
@@ -75,7 +75,7 @@ def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
     `_mode_fig` passa a frequência REAL medida por `_measure_f1`: a rede
     simulada raramente fecha em 60,000 Hz exatos, e truncar pelo nominal
     vaza a fundamental para os bins vizinhos (ver
-    kb/standards/harmonic_frequency_leakage.md).
+    kb/standards/qualidade-energia/harmonic_frequency_leakage.md).
 
     `window="hann"` é o espectro EXIBIDO: contém vazamento em janela curta,
     ao custo de espalhar cada tom em 3 bins. `window="rect"` é o espectro
@@ -84,7 +84,7 @@ def _amplitude_spectrum(t: np.ndarray, y: np.ndarray,
     única compatível com o agrupamento de 3 bins do IEEE 519-2014 §4.1 —
     aplicar aquele agrupamento sobre Hann superestimaria em 22,5% (a própria
     Hann distribui um tom bin-centrado como [A/2, A, A/2], então a soma
-    quadrática dá √1,5·A). Ver kb/standards/harmonic_measurement_conditions.md."""
+    quadrática dá √1,5·A). Ver kb/standards/qualidade-energia/harmonic_measurement_conditions.md."""
     if len(t) < _MIN_SAMPLES or (t[-1] - t[0]) < _MIN_DUR_S:
         return None
     dt = float(np.median(np.diff(t)))
@@ -127,14 +127,14 @@ def _harmonics(f: np.ndarray, amp: np.ndarray, dc: float,
     `_measure_f1` em modo abc), não pela nominal — mas o ÍNDICE `k` da lista
     de saída continua a ORDEM nominal (a tabela do relatório rotula "120 Hz"
     pela 2ª ordem independente de f1 ter sido 59,7 ou 60,0 Hz; ver
-    kb/standards/harmonic_frequency_leakage.md). Sem isso, buscar em k·60 Hz
+    kb/standards/qualidade-energia/harmonic_frequency_leakage.md). Sem isso, buscar em k·60 Hz
     quando a fundamental real está em 59,7 Hz erra o bin e conta vazamento
     como se fosse harmônico.
 
     O índice 0 (0 Hz) é |dc|, o valor médio removido antes da FFT — em abc é
     só o offset de medição (perto de zero); em dq é a própria fundamental
     representada no referencial síncrono (Yazdani §4.3, ver
-    kb/standards/harmonic_dq_frame_mapping.md), por isso entra na tabela dq
+    kb/standards/qualidade-energia/harmonic_dq_frame_mapping.md), por isso entra na tabela dq
     do relatório como linha de referência de escala."""
     out: list[float | None] = [abs(dc)]
     if len(f) < 2:
@@ -234,7 +234,7 @@ class SpectrumBuilder:
 
         # Frequência real medida por cruzamento de zero, só em abc — em dq a
         # fundamental vira DC e cruzamento de zero não se aplica (ver
-        # _measure_f1 e kb/standards/harmonic_frequency_leakage.md).
+        # _measure_f1 e kb/standards/qualidade-energia/harmonic_frequency_leakage.md).
         is_abc = mode in ("a", "b", "c")
 
         for ri, (kind, label, t, y) in enumerate(sigs, 1):

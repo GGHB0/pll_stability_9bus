@@ -116,7 +116,7 @@ na seção 6.1 da nota `output/normas_harmonicos.pdf`.
 
 Arquivo: `src/pipeline/spectrum.py`
 
-Achado de 2026-08-10 (`kb/standards/harmonic_frequency_leakage.md`): a "2ª
+Achado de 2026-08-10 (`kb/standards/qualidade-energia/harmonic_frequency_leakage.md`): a "2ª
 harmônica" de 1,3-2,1% na coluna pré-falta de todo cenário era vazamento
 espectral, não distorção real — a rede simulada nunca fecha em 60,000 Hz
 exatos (resposta de droop dos geradores síncronos ainda em curso) e a janela
@@ -137,7 +137,7 @@ da FFT truncava por `F_FUND_HZ` fixo, desalinhada do ciclo real do sinal.
   contínuo** (frequência ainda caindo ao longo da janela de 0,5 s), e uma
   única `f1` média por janela não cancela o alargamento espectral desse
   chirp — mais pronunciado perto da fundamental. Residual documentado em
-  `kb/standards/harmonic_frequency_leakage.md`, não é bug.
+  `kb/standards/qualidade-energia/harmonic_frequency_leakage.md`, não é bug.
 
 ## Entradas anteriores
 

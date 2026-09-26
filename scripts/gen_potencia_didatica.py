@@ -5,7 +5,7 @@ Motivacao (2026-09-01): o grafico de P/Q da falta trifasica na Barra 7 com
 sintonia inadequada (bus7_3phase_bad_pll_potencia_pq, Figura 5.13 do fragmento)
 mostra o fenomeno mas nao carrega nenhum conceito -- o paragrafo ao lado tinha
 que enumerar nove valores em prosa para dizer o que estava acontecendo (ver
-.claude/kb/tcc-word/revisao_fragmento_cap5_analise.md).
+.claude/kb/tcc-word/revisao-fragmento/revisao_fragmento_cap5_analise.md).
 
 Em vez de trocar por um plano de estado (gen_plano_pq.py), esta figura ANOTA a
 propria serie temporal que ja existe -- pedido do usuario: "vale fazer algo em

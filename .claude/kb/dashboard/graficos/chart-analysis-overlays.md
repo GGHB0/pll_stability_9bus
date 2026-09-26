@@ -82,7 +82,7 @@ Os degraus originais (0,30/0,45/0,65 pu) foram escritos (commit `bc428d7`,
 05/07/2026) com atribuição genérica ao IEEE 1547-2018 Cat II, sem citar
 tabela/página, antes de qualquer PDF da norma ter sido processado pela
 skill `pdf-kb-updater`. Corrigido para os 2 degraus reais de Table 8 (ver
-[ieee1547_ride_through.md](../../standards/ieee1547_ride_through.md)):
+[ieee1547_ride_through.md](../../standards/ride-through/ieee1547_ride_through.md)):
 UV2 = 0,45 pu/0,16 s e UV1 = 0,70 pu/10 s.
 
 **Ressalva semântica que permanece:** Table 8 é a curva de **trip
@@ -99,7 +99,7 @@ verificada) → "V mín. trip 1547 Cat II" (após a correção de valores, mas c
 mistura de idiomas e abreviação pouco clara) → **"IEEE 1547"** (simplificado
 a pedido do usuário). A ressalva semântica trip-vs-ride-through acima
 continua valendo mesmo com o nome curto; fica documentada aqui e em
-[ieee1547_ride_through.md](../../standards/ieee1547_ride_through.md) para
+[ieee1547_ride_through.md](../../standards/ride-through/ieee1547_ride_through.md) para
 quem for interpretar o gráfico.
 
 ### Correção 2026-07-27 — recorte não avança degrau que a janela não alcança

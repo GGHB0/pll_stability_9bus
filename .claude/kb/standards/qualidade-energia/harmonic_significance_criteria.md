@@ -54,7 +54,7 @@ isso traduz direto para pu de corrente do dashboard: **0,04 pu** (h<11
 IEEE 1547.2-2023, Application Guide, págs. impressas 144-146 = PDF 145-147 —
 arquivo `805035543-Ieee-Standard-1547-2018.pdf`; cláusula distinta da de
 ride-through já documentada em
-[ieee1547_ride_through.md](ieee1547_ride_through.md)). **Mapa da Cláusula 7
+[ieee1547_ride_through.md](../ride-through/ieee1547_ride_through.md)). **Mapa da Cláusula 7
 inteira — §7.1 a §7.5, Tabelas 15/16, notas de rodapé 118/119 e a
 condicionante do transformador — em
 [ieee1547_power_quality_clause7.md](ieee1547_power_quality_clause7.md)**: com
@@ -153,7 +153,7 @@ Yazdani & Iravani não definem um valor fixo — mostram que a magnitude do
 distúrbio de 2ω₀ no PLL e do harmônico de 3ª ordem gerado é **proporcional**
 à fração de sequência negativa `b` (adimensional, 0 a 1 pu de V̂s), não um
 degrau discreto. Ver desenvolvimento completo em
-[pll_asymmetric_fault_formal_analysis.md](../pll/pll_asymmetric_fault_formal_analysis.md).
+[pll_asymmetric_fault_formal_analysis.md](../../pll/pll_asymmetric_fault_formal_analysis.md).
 
 Exemplo extremo (falta linha-terra no próprio PCC, Yazdani Example 12.2):
 `a=2/3, b=1/3` → ripple de potência ativa de **até ±50% do valor médio**
@@ -170,7 +170,7 @@ descritos acima, em vez do destaque puramente estético que existia antes
 (`_HARM_HI_PU`/`_HARM_LO_PU` só sobrevive como fallback de "valor quase-zero
 apagado", sem mais o `harm-top` genérico). Detalhes de implementação
 (constantes, classes CSS, JS) em
-[espectro-fourier.md](../dashboard/graficos/espectro-fourier.md); domínio
+[espectro-fourier.md](../../dashboard/graficos/espectro-fourier.md); domínio
 abc vs dq, achado sobre a isenção por segmento e a notação normalizada das
 variáveis de corrente (Isc/IL/I_rated — por que TDD não é usado neste
 projeto) em

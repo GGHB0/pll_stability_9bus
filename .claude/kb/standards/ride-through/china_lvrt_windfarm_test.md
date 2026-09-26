@@ -67,7 +67,7 @@ estruturalmente mais próximos do `ONS_2_11` do que do DVS do IEEE (que usa
 
 O caso assimétrico produz **desequilíbrio de corrente entre fases** — manifestação
 física, em dado de campo, do mesmo fenômeno que a análise formal de
-[pll_contingencies.md](../pll/pll_contingencies.md) (Yazdani-Iravani §12.5.2) descreve
+[pll_contingencies.md](../../pll/pll_contingencies.md) (Yazdani-Iravani §12.5.2) descreve
 para o SRF-PLL: a componente de sequência negativa introduzida por faltas
 desbalanceadas. Lá o efeito é derivado como oscilação de 2ª harmônica (120 Hz) em
 `Vsq` e ripple em P/Q; aqui aparece como corrente de fase desigual num conversor de
@@ -87,4 +87,4 @@ corrente do conversor), similar ao trade-off de Q-priority discutido em
 - [lvrt.md](lvrt.md) — definição geral de LVRT
 - [ieee1547_ride_through.md](ieee1547_ride_through.md) — categorias, Table 8, DVS, comparação com `ONS_2_11`
 - [ons_2_11.md](ons_2_11.md) — implementação real no modelo Simulink do TCC
-- [pll_contingencies.md](../pll/pll_contingencies.md) — análise formal de falta assimétrica no SRF-PLL (Yazdani-Iravani §12.5.2)
+- [pll_contingencies.md](../../pll/pll_contingencies.md) — análise formal de falta assimétrica no SRF-PLL (Yazdani-Iravani §12.5.2)

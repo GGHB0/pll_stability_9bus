@@ -28,9 +28,10 @@ Subpastas criadas sob demanda, quando o primeiro conteúdo chegar:
 | `kb/inverter/` | VSI, filtro LCL, controle de corrente |
 | `kb/power-system/` | IEEE 9 barras, Ybarra, Thevenin |
 | `kb/simulation/` | Workflow notebook↔params.m, Vcc override, runtime (Ts/fsw/Tsc) |
-| `kb/standards/` | IEEE 1547-2018, ONS, LVRT |
+| `kb/standards/` | Normas, com subpastas `qualidade-energia/` (harmônicos, IEEE 519, 1547 Cl.7) e `ride-through/` (LVRT, ONS) |
 | `kb/events/` | Apagão BR agosto 2023 |
 | `kb/dashboard/` | Relatório HTML, com subpastas `dados/`, `graficos/`, `cards/`, `layout/` |
+| `kb/tcc-word/` | TCC DOCX: `content_map`/`pendencias` na raiz; subpastas `conteudo/`, `docx/`, `revisao-fragmento/`, `historico/` |
 | `kb/psim/` | Fase inicial de modelagem no PSIM (Altair), anterior ao Simulink — registro histórico |
 
 MATLAB/Simulink é ferramenta — conhecimento sobre implementação vai na pasta do tema, não em pasta separada.

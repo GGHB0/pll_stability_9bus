@@ -2,7 +2,7 @@
 
 Extraído de `fragmento_externo.md` em 2026-09-02 pelo limite de 200 linhas.
 Primeira aplicação: Cap. 4 e 5 em 2026-09-02, registrada em
-`kb/tcc-word/mesclagem_cap45_canonico.md`.
+`kb/tcc-word/revisao-fragmento/mesclagem_cap45_canonico.md`.
 
 Feito pela primeira vez em 2026-09-02 (ver [[tcc-mesclagem-cap45-canonico]]).
 **Não é copiar e colar**, e nenhuma das três incompatibilidades avisa quando

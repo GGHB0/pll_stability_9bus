@@ -5,7 +5,7 @@ FFT de harmonicas, achado em 2026-08-10 e corrigido em 2026-08-11.
 Os dois graficos (Figura 1/2) e o f1 medido no exemplo numerico sao
 recalculados a partir do cenario Regime real a cada geracao — nao sao
 numeros colados a mao — para que a nota nunca fique dessincronizada do
-codigo em spectrum.py. Ver .claude/kb/standards/harmonic_frequency_leakage.md."""
+codigo em spectrum.py. Ver .claude/kb/standards/qualidade-energia/harmonic_frequency_leakage.md."""
 import sys
 import tempfile
 from pathlib import Path

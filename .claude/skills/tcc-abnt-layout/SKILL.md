@@ -109,7 +109,7 @@ nele, senão a próxima passagem tem de desfazer:
 - **Remissão** concorda com o tipo ("o Gráfico 5.16", "a Figura 3.3").
   Inserir no meio do capítulo desloca as seguintes: varrer com `find_text.py`.
 - **Equação**: rótulo `(N.M)` na coluna direita da tabela invisível
-  (`kb/tcc-word/equacoes.md`), nunca `EQUAÇÃO N.M`.
+  (`kb/tcc-word/docx/equacoes.md`), nunca `EQUAÇÃO N.M`.
 - **Parágrafo de corpo**: recuo 708, justificado, sem espaço antes e
   depois (D6), via `ppr_edit`.
 - **Documento mudou de tamanho**: atualizar o `74 f.` da referência do resumo.
@@ -153,10 +153,10 @@ nele, senão a próxima passagem tem de desfazer:
 - **Olhar o PDF renderizado, não só o `pagecheck.py`.** Ele não viu a
   dedicatória no topo nem os parágrafos sem justificar; o render viu.
 - As armadilhas gerais de OOXML (`ET.write` que corrompe, `proofErr`,
-  `sectPr` por `rindex`) continuam valendo — `kb/tcc-word/armadilhas_xml.md`.
+  `sectPr` por `rindex`) continuam valendo — `kb/tcc-word/docx/armadilhas_xml.md`.
 
 ## KB
 
 Estado ABNT do documento e histórico das passagens de formatação:
-`kb/tcc-word/abnt_layout.md`. Atualizar junto com a entrega, como manda
+`kb/tcc-word/docx/abnt_layout.md`. Atualizar junto com a entrega, como manda
 `feedback_document_everything`.

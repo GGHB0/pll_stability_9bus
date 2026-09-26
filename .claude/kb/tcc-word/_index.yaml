@@ -1,94 +1,107 @@
 folder: tcc-word
-description: Estrutura OOXML, mapa de conteúdo e texto completo de todas as seções do TCC DOCX (arquivo atual em config.py da skill tcc-docx-editor)
+description: Tudo sobre o TCC DOCX — mapa de conteúdo e pendências na raiz; texto das seções, técnica OOXML, revisão do fragmento Cap.4/5 e histórico de entregas em subpastas
 files:
-  - file: docx_structure.md
-    name: tcc-docx-structure
-    description: Estrutura OOXML, padrões XML tracked-change, registro de IDs (pós-aceite 19/07 — próx bm 76, ins 27, paraId 0x1FB00057) e armadilhas de edição XML
-  - file: armadilhas_xml.md
-    name: tcc-armadilhas-xml
-    description: Armadilhas de edição direta do OOXML do TCC aprendidas na prática — corrupção por ET.write, proofErr, sectPr, falso positivo de w:p
-  - file: historico_entregas.md
-    name: tcc-historico-entregas
-    description: Histórico de entregas do Claude no DOCX canônico, mais recente primeiro (entregas antigas nos arquivos _2026_07 e _v8)
-  - file: historico_entregas_2026_09_12.md
-    name: tcc-historico-entregas-2026-09-12
-    description: Histórico de entregas de 2026-09-12 (referências em amarelo, revisão de português, Cap.7 e Cap.6 redigidos), fragmentado do arquivo principal
-  - file: historico_entregas_2026_09_inicio.md
-    name: tcc-historico-entregas-2026-09-inicio
-    description: Histórico de entregas de setembro/2026 até o dia 09 (PAC→PCC, mesclagem Cap.4/5, enxugamento Cap.5), fragmentado do arquivo principal
-  - file: historico_entregas_2026_08.md
-    name: tcc-historico-entregas-2026-08
-    description: Histórico de entregas de agosto/2026 no DOCX canônico, fragmentado do arquivo principal
-  - file: historico_entregas_2026_07.md
-    name: tcc-historico-entregas-2026-07
-    description: Histórico de entregas de julho/2026 no DOCX canônico, fragmentado do arquivo principal
-  - file: historico_entregas_2026_07_inicio.md
-    name: tcc-historico-entregas-2026-07-inicio
-    description: Histórico de entregas de 2026-07-19 e 2026-07-22 (arquivo obsoleto sem sufixo), fragmentado do _2026_07
-  - file: historico_entregas_v8.md
-    name: tcc-historico-entregas-v8
-    description: Histórico de entregas na versão V8 do DOCX, arquivado
-  - file: abnt_layout.md
-    name: tcc-abnt-layout-estado
-    description: Estado ABNT e paginação do DOCX canônico — diagnóstico 2026-09-12 e passagem completa entregue 2026-09-13 (79→74 folhas, 24 ilustrações com SEQ), antes/depois medido e o que ficou aberto; decisões D1-D8 na skill tcc-abnt-layout
   - file: pendencias.md
     name: tcc-docx-pendencias
     description: Pendências priorizadas P1/P2/P3 do documento — figuras, seções vazias, REFERÊNCIAS sem estilo, limpezas
-  - file: siglas_inventory.md
-    name: tcc-siglas-inventory
-    description: 36 siglas da lista pré-textual, só as usadas no texto (revisão 2026-09-13) + exclusões deliberadas (CSV, unidades, software) + formatação de tab único
-  - file: equacoes.md
-    name: tcc-equacoes
-    description: Formato das equações (tabela invisível, número à direita), numeração 3.1–3.17 e 4.1–4.2, refs cruzadas atualizadas (2026-07-19)
   - file: content_map.md
     name: tcc-docx-content-map
     description: Mapa seção a seção — estado atual, problemas estruturais e inventário de figuras; revisão completa jun/2026 (307 parágrafos)
-  - file: full_prefacio.md
-    name: tcc-full-prefacio
-    description: Texto completo das páginas pré-textuais — capa, folha de rosto, resumo, abstract, listas e sumário
-  - file: full_intro.md
-    name: tcc-full-intro
-    description: Texto completo da Introdução — contextualização, motivação (apagão 08/2023), objetivos e referências [1]–[9]
-  - file: full_cap2.md
-    name: tcc-full-cap2
-    description: Texto completo do Cap.2 — Fundamentação Teórica: transformadas Clarke/Park, controle P/Q, SRF-PLL, contingências e requisitos LVRT/ONS
-  - file: full_cap3.md
-    name: tcc-full-cap3
-    description: Texto completo do Cap.3 — Metodologia: plataforma híbrida (Python/PSIM/MATLAB), IEEE 9 barras, filtro LCL, PI corrente, SRF-PLL, protocolos de contingência
-  - file: full_cap4.md
-    name: tcc-full-cap4
-    description: Texto completo do Cap.4 — Análise e Discussão de Resultados (quase vazio, só títulos), Conclusão (placeholder) e Referências finais
-
-  # Revisão do fragmento externo capitulos_4_5_revisados.docx (desde 2026-08-31
-  # na pasta Fragmentos/ do TCC no OneDrive; antes em Downloads), ainda NÃO
-  # mesclado no canônico. Ver tcc-revisao-fragmento-cap4 para o contexto.
-  - file: revisao_fragmento_cap4.md
-    name: tcc-revisao-fragmento-cap4
-    description: Revisão colaborativa do fragmento externo capitulos_4_5_revisados.docx — Cap.4 fechado (terminologia do dashboard, ganhos do PLL, filtro LCL, tempos de falta), ainda não mesclado no canônico
-  - file: revisao_fragmento_cap4_figuras.md
-    name: tcc-revisao-fragmento-cap4-figuras
-    description: As 4 figuras inseridas no Cap.4 do fragmento capitulos_4_5_revisados.docx — mapa, renumeração, decisões de redação e as duas pendências de legibilidade
-  - file: revisao_fragmento_cap5.md
-    name: tcc-revisao-fragmento-cap5
-    description: Reescrita do Cap.5 do fragmento capitulos_4_5_revisados.docx — duas safras de modelo nos cenários bad_pll, tese de compromisso de banda passante com o caso-limite de perda de sincronismo, estrutura 5.1-5.6
-  - file: revisao_fragmento_cap5_figuras.md
-    name: tcc-revisao-fragmento-cap5-figuras
-    description: Estrutura de seções, mapa das figuras (5.1 a 5.15) e histórico de geração dos gráficos do Cap.5 do fragmento capitulos_4_5_revisados.docx
-  - file: revisao_fragmento_cap5_metricas.md
-    name: tcc-revisao-fragmento-cap5-metricas
-    description: Definições fechadas e valores medidos das métricas de falta do Cap.5 do fragmento, após a auditoria de 2026-08-23 que reprovou vários números do texto anterior
-  - file: revisao_fragmento_cap5_metricas_54.md
-    name: tcc-revisao-fragmento-cap5-metricas-54
-    description: Métricas da Seção 5.4 do fragmento (perda de sincronismo em bus7/3phase_bad_pll) — rotação acumulada, escorregamento, retenção com valores brutos, figura didática, argumento 2x2 e ressalvas
-  - file: revisao_fragmento_cap5_analise.md
-    name: tcc-revisao-fragmento-cap5-analise
-    description: Regra editorial do Cap.5 do fragmento — descrição de figura não é análise; reescrita dos parágrafos 98 e 101, a Figura 5.14 da potência anotada acrescentada à 5.13, o descarte do plano P-Q e as pendências
-  - file: trabalhos_futuros.md
-    name: tcc-trabalhos-futuros
-    description: Eixos definidos para o Cap.7 (Trabalhos Futuros) — capítulo REDIGIDO e entregue em 2026-09-12 (2 parágrafos, sem subseções): Eixo 1 (estrutura de sincronismo) e Eixo 3 (varredura de SCR/múltiplos IBR); Eixos 2 (normalização) e 4 (K-factor) descartados
-  - file: mesclagem_cap45_canonico.md
-    name: tcc-mesclagem-cap45-canonico
-    description: "Mesclagem dos Capítulos 4 e 5 do fragmento revisado para dentro do TCC canônico em 2026-09-02, com a receita técnica e o inventário do que foi descartado"
-  - file: revisao_fragmento_cap5_enxugamento.md
-    name: tcc-revisao-fragmento-cap5-enxugamento
-    description: "Passe de enxugamento analítico do Cap.5 do fragmento em 2026-09-02, com o critério do corte e o antes/depois parágrafo a parágrafo"
+subfolders:
+  - folder: conteudo
+    description: Texto completo de cada seção do TCC (prefácio, introdução, Cap.2-4, trabalhos futuros) e inventário de siglas
+    files:
+      - file: siglas_inventory.md
+        name: tcc-siglas-inventory
+        description: 36 siglas da lista pré-textual, só as usadas no texto (revisão 2026-09-13) + exclusões deliberadas (CSV, unidades, software) + formatação de tab único
+      - file: full_prefacio.md
+        name: tcc-full-prefacio
+        description: Texto completo das páginas pré-textuais — capa, folha de rosto, resumo, abstract, listas e sumário
+      - file: full_intro.md
+        name: tcc-full-intro
+        description: Texto completo da Introdução — contextualização, motivação (apagão 08/2023), objetivos e referências [1]–[9]
+      - file: full_cap2.md
+        name: tcc-full-cap2
+        description: Texto completo do Cap.2 — Fundamentação Teórica: transformadas Clarke/Park, controle P/Q, SRF-PLL, contingências e requisitos LVRT/ONS
+      - file: full_cap3.md
+        name: tcc-full-cap3
+        description: Texto completo do Cap.3 — Metodologia: plataforma híbrida (Python/PSIM/MATLAB), IEEE 9 barras, filtro LCL, PI corrente, SRF-PLL, protocolos de contingência
+      - file: full_cap4.md
+        name: tcc-full-cap4
+        description: Texto completo do Cap.4 — Análise e Discussão de Resultados (quase vazio, só títulos), Conclusão (placeholder) e Referências finais
+    
+      # Revisão do fragmento externo capitulos_4_5_revisados.docx (desde 2026-08-31
+      # na pasta Fragmentos/ do TCC no OneDrive; antes em Downloads), ainda NÃO
+      # mesclado no canônico. Ver tcc-revisao-fragmento-cap4 para o contexto.
+      - file: trabalhos_futuros.md
+        name: tcc-trabalhos-futuros
+        description: Eixos definidos para o Cap.7 (Trabalhos Futuros) — capítulo REDIGIDO e entregue em 2026-09-12 (2 parágrafos, sem subseções): Eixo 1 (estrutura de sincronismo) e Eixo 3 (varredura de SCR/múltiplos IBR); Eixos 2 (normalização) e 4 (K-factor) descartados
+  - folder: docx
+    description: Técnica de edição do DOCX — estrutura OOXML, registro de IDs, armadilhas XML, layout ABNT e formato/inventário de equações
+    files:
+      - file: docx_structure.md
+        name: tcc-docx-structure
+        description: Estrutura OOXML, padrões XML tracked-change, registro de IDs (pós-aceite 19/07 — próx bm 76, ins 27, paraId 0x1FB00057) e armadilhas de edição XML
+      - file: armadilhas_xml.md
+        name: tcc-armadilhas-xml
+        description: Armadilhas de edição direta do OOXML do TCC aprendidas na prática — corrupção por ET.write, proofErr, sectPr, falso positivo de w:p
+      - file: abnt_layout.md
+        name: tcc-abnt-layout-estado
+        description: Estado ABNT e paginação do DOCX canônico — diagnóstico 2026-09-12 e passagem completa entregue 2026-09-13 (79→74 folhas, 24 ilustrações com SEQ), antes/depois medido e o que ficou aberto; decisões D1-D8 na skill tcc-abnt-layout
+      - file: equacoes.md
+        name: tcc-equacoes
+        description: Formato das equações (tabela invisível, número à direita), numeração 3.1–3.17 e 4.1–4.2, refs cruzadas atualizadas (2026-07-19)
+  - folder: revisao-fragmento
+    description: Revisão do fragmento externo Cap.4/5 (figuras, métricas, análise, enxugamento) e sua mesclagem no canônico
+    files:
+      - file: revisao_fragmento_cap4.md
+        name: tcc-revisao-fragmento-cap4
+        description: Revisão colaborativa do fragmento externo capitulos_4_5_revisados.docx — Cap.4 fechado (terminologia do dashboard, ganhos do PLL, filtro LCL, tempos de falta), ainda não mesclado no canônico
+      - file: revisao_fragmento_cap4_figuras.md
+        name: tcc-revisao-fragmento-cap4-figuras
+        description: As 4 figuras inseridas no Cap.4 do fragmento capitulos_4_5_revisados.docx — mapa, renumeração, decisões de redação e as duas pendências de legibilidade
+      - file: revisao_fragmento_cap5.md
+        name: tcc-revisao-fragmento-cap5
+        description: Reescrita do Cap.5 do fragmento capitulos_4_5_revisados.docx — duas safras de modelo nos cenários bad_pll, tese de compromisso de banda passante com o caso-limite de perda de sincronismo, estrutura 5.1-5.6
+      - file: revisao_fragmento_cap5_figuras.md
+        name: tcc-revisao-fragmento-cap5-figuras
+        description: Estrutura de seções, mapa das figuras (5.1 a 5.15) e histórico de geração dos gráficos do Cap.5 do fragmento capitulos_4_5_revisados.docx
+      - file: revisao_fragmento_cap5_metricas.md
+        name: tcc-revisao-fragmento-cap5-metricas
+        description: Definições fechadas e valores medidos das métricas de falta do Cap.5 do fragmento, após a auditoria de 2026-08-23 que reprovou vários números do texto anterior
+      - file: revisao_fragmento_cap5_metricas_54.md
+        name: tcc-revisao-fragmento-cap5-metricas-54
+        description: Métricas da Seção 5.4 do fragmento (perda de sincronismo em bus7/3phase_bad_pll) — rotação acumulada, escorregamento, retenção com valores brutos, figura didática, argumento 2x2 e ressalvas
+      - file: revisao_fragmento_cap5_analise.md
+        name: tcc-revisao-fragmento-cap5-analise
+        description: Regra editorial do Cap.5 do fragmento — descrição de figura não é análise; reescrita dos parágrafos 98 e 101, a Figura 5.14 da potência anotada acrescentada à 5.13, o descarte do plano P-Q e as pendências
+      - file: mesclagem_cap45_canonico.md
+        name: tcc-mesclagem-cap45-canonico
+        description: "Mesclagem dos Capítulos 4 e 5 do fragmento revisado para dentro do TCC canônico em 2026-09-02, com a receita técnica e o inventário do que foi descartado"
+      - file: revisao_fragmento_cap5_enxugamento.md
+        name: tcc-revisao-fragmento-cap5-enxugamento
+        description: "Passe de enxugamento analítico do Cap.5 do fragmento em 2026-09-02, com o critério do corte e o antes/depois parágrafo a parágrafo"
+  - folder: historico
+    description: Histórico de entregas do Claude no DOCX, mais recente primeiro em historico_entregas.md; meses anteriores fragmentados
+    files:
+      - file: historico_entregas.md
+        name: tcc-historico-entregas
+        description: Histórico de entregas do Claude no DOCX canônico, mais recente primeiro (entregas antigas nos arquivos _2026_07 e _v8)
+      - file: historico_entregas_2026_09_12.md
+        name: tcc-historico-entregas-2026-09-12
+        description: Histórico de entregas de 2026-09-12 (referências em amarelo, revisão de português, Cap.7 e Cap.6 redigidos), fragmentado do arquivo principal
+      - file: historico_entregas_2026_09_inicio.md
+        name: tcc-historico-entregas-2026-09-inicio
+        description: Histórico de entregas de setembro/2026 até o dia 09 (PAC→PCC, mesclagem Cap.4/5, enxugamento Cap.5), fragmentado do arquivo principal
+      - file: historico_entregas_2026_08.md
+        name: tcc-historico-entregas-2026-08
+        description: Histórico de entregas de agosto/2026 no DOCX canônico, fragmentado do arquivo principal
+      - file: historico_entregas_2026_07.md
+        name: tcc-historico-entregas-2026-07
+        description: Histórico de entregas de julho/2026 no DOCX canônico, fragmentado do arquivo principal
+      - file: historico_entregas_2026_07_inicio.md
+        name: tcc-historico-entregas-2026-07-inicio
+        description: Histórico de entregas de 2026-07-19 e 2026-07-22 (arquivo obsoleto sem sufixo), fragmentado do _2026_07
+      - file: historico_entregas_v8.md
+        name: tcc-historico-entregas-v8
+        description: Histórico de entregas na versão V8 do DOCX, arquivado

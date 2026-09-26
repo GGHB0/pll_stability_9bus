@@ -14,10 +14,10 @@ layout dos gráficos). Aqui fica só a **tabela** abaixo dos gráficos: como é
 montada, como cada célula é comparada a limite normativo e como a legenda
 explica isso ao leitor.
 
-Origem de cada limite em `kb/standards/harmonic_significance_criteria.md`;
+Origem de cada limite em `kb/standards/qualidade-energia/harmonic_significance_criteria.md`;
 por que abc e dq usam critérios diferentes em
-`kb/standards/harmonic_norm_application.md`; condições de medição e pendências
-em `kb/standards/harmonic_measurement_conditions.md`.
+`kb/standards/qualidade-energia/harmonic_norm_application.md`; condições de medição e pendências
+em `kb/standards/qualidade-energia/harmonic_measurement_conditions.md`.
 
 ## Construção e destaque
 
@@ -59,8 +59,8 @@ em `kb/standards/harmonic_measurement_conditions.md`.
   dq, só a linha 120 Hz (k=2) comparada a `DQ_UNBALANCE_WARN_PU`/`_HIGH_PU`
   (2%/3%, TeseAGP) → `.harm-warn`/`.harm-unb`. `_HARM_LO_PU=0.02` continua
   como fallback de "apagado" (`.harm-lo`) quando nenhum critério normativo
-  se aplica. Ver `kb/standards/harmonic_significance_criteria.md` para a
-  origem de cada limite, e `kb/standards/harmonic_norm_application.md` para
+  se aplica. Ver `kb/standards/qualidade-energia/harmonic_significance_criteria.md` para a
+  origem de cada limite, e `kb/standards/qualidade-energia/harmonic_norm_application.md` para
   por que abc/dq usam critérios diferentes e a notação normalizada das
   variáveis de corrente (Isc/IL/I_rated — TDD não é usado).
 - **Exceção do âmbar na 2ª harmônica de corrente** (`_harm_cell_tier`, ramo
@@ -71,7 +71,7 @@ em `kb/standards/harmonic_measurement_conditions.md`.
   de medição, não distorção real do inversor (a rede simulada ainda está em
   resposta de droop quando a janela é capturada). Achado, evidência e a
   correção parcial por `_measure_f1` em
-  `kb/standards/harmonic_frequency_leakage.md`. Atenção ao segmento
+  `kb/standards/qualidade-energia/harmonic_frequency_leakage.md`. Atenção ao segmento
   **"Regime"**: é o segmento único dos cenários **sem falta**, não "antes de
   uma falta" — a condição do código lista os dois nomes justamente por isso.
 - **Segmento "Durante a falta" com limite abc RELAXADO ×1,5**, não isento
@@ -118,5 +118,5 @@ em `kb/standards/harmonic_measurement_conditions.md`.
 - **Regra editorial da legenda**: a tela carrega só **a regra aplicada**
   (qual limite, de qual norma). A *genealogia* do número — razão Isc/IL,
   nota "c" da Tab.2 do IEEE 519-2014, por que `IL` foi descartado — fica no
-  KB (`kb/standards/harmonic_norm_application.md`), não no HTML. Ver a seção
+  KB (`kb/standards/qualidade-energia/harmonic_norm_application.md`), não no HTML. Ver a seção
   "O que vai na tela vs. o que fica no KB" lá.

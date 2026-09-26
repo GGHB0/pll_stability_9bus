@@ -35,7 +35,7 @@ Origem das constantes 8 e 32: cancelamento polo-zero do controlador de corrente 
 > (`ωn≈339,4 rad/s, ξ=0,707`) — é a explicação mais bem verificada das três,
 > mas nenhuma citação de página específica da TeseAGP foi feita no TCC para
 > esta fórmula (decisão explícita do usuário, ver
-> `kb/tcc-word/historico_entregas.md`).
+> `kb/tcc-word/historico/historico_entregas.md`).
 
 ## Implementação no Notebook (`notebooks/pll_stability_9bus_analysis.ipynb`)
 

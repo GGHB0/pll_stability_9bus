@@ -76,7 +76,7 @@ aterramento adequado.
 
 **Não confundir com a `ONS_2_11`:** o valor 1,2 pu daqui é vizinho do
 `V > 1,1 pu` que dispara a zona de absorção de reativo em
-[ons_2_11.md](ons_2_11.md), mas os contextos são distintos — coordenação de
+[ons_2_11.md](../ride-through/ons_2_11.md), mas os contextos são distintos — coordenação de
 isolamento × suporte de tensão sob defeito.
 
 ## §7.5 — Roteiro de um estudo de QEE, pág. impressa 148

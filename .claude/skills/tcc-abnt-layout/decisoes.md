@@ -9,7 +9,7 @@ conflitar com uma decisão registrada, **perguntar** — e atualizar este
 arquivo quando a resposta mudar a decisão.
 
 Todas as decisões abaixo foram **implementadas na entrega de 2026-09-13**
-(ver `kb/tcc-word/abnt_layout.md`).
+(ver `kb/tcc-word/docx/abnt_layout.md`).
 
 ---
 
@@ -148,7 +148,7 @@ do corpo; o rótulo em caixa alta não é forma prevista na norma.
 - **Siglas em espaço simples**: em 1,5 a última caía sozinha numa folha.
   Com 36 siglas (revisão da noite), `after=60`, tab único em 3 cm, recuo
   deslocado de 3 cm e `jc=left`: dois tabs padrão desalinhavam sigla longa
-  (SRF-PLL, DDSRF-PLL). Detalhe em `kb/tcc-word/siglas_inventory.md`.
+  (SRF-PLL, DDSRF-PLL). Detalhe em `kb/tcc-word/conteudo/siglas_inventory.md`.
 - **REFERÊNCIAS e ANEXOS** são `Ttulo1` **centralizados** (NBR 14724:
   título sem indicativo numérico é centralizado) e entram no sumário.
 - **Capítulo abre folha** por `pageBreakBefore` no título, nunca por

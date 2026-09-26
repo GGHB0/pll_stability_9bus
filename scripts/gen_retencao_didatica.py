@@ -7,7 +7,7 @@ razao. Estas figuras exibem a construcao sobre os dados reais, em vez de definir
 a metrica so em prosa.
 
 Receita (identica a de src/pipeline e a registrada em
-.claude/kb/tcc-word/revisao_fragmento_cap5_metricas.md, secao "Definicoes
+.claude/kb/tcc-word/revisao-fragmento/revisao_fragmento_cap5_metricas.md, secao "Definicoes
 fechadas"):
 
     retencao = media(v_d) em [t_fault + 2 ciclos, t_clear]

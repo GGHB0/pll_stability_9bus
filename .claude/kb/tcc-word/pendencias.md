@@ -63,12 +63,12 @@ aliases: [tcc-pendencias]
     `_bad_pll` trifásicos/regime de julho (`v_d` pré-falta 0,99 vs. 0,80 pu) —
     só a safra de agosto é pareável com os nominais. Detalhe completo em
     `kb/simulation/cenarios_simulados.md` § Duas safras de modelo e em
-    `kb/tcc-word/revisao_fragmento_cap5.md`.
+    `kb/tcc-word/revisao-fragmento/revisao_fragmento_cap5.md`.
 
 18. **Cap. 5 canônico segue vazio** (5.1.1 só tem "."; 5.1.2, 5.3.1, 5.3.2
     com placeholders) — o fragmento `capitulos_4_5_revisados.docx` já tem
     esse capítulo redigido por completo, com números medidos e figuras
-    inseridas. Ver `kb/tcc-word/revisao_fragmento_cap5.md` para o texto e a
+    inseridas. Ver `kb/tcc-word/revisao-fragmento/revisao_fragmento_cap5.md` para o texto e a
     tese aplicada (compromisso de banda passante, sem *cycle slipping*
     observado); mesclagem no canônico ainda não tem data.
 

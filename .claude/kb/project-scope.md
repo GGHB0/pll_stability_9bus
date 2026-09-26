@@ -127,4 +127,4 @@ Levantados na revisão completa do `TCCs Victor e Bruno_V8_revisado.docx` (307 p
 4. Seção 3.3 (adicionada por Claude) sem acentuação correta em todo o texto.
 5. Lista de referências final mistura template UERJ com refs reais do TCC.
 
-Tratamento e priorização: `.claude/kb/tcc-word/docx_structure.md` → "Pendências Priorizadas".
+Tratamento e priorização: `.claude/kb/tcc-word/docx/docx_structure.md` → "Pendências Priorizadas".

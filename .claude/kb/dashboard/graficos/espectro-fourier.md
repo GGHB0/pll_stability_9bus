@@ -78,12 +78,12 @@ no índice 0. **Lê o espectro de janela RETANGULAR**
 tabela — o gráfico continua com Hann. Fazer o agrupamento sobre Hann
 superestimaria em 22,5% (a Hann distribui um tom como `[A/2, A, A/2]`, soma
 quadrática = √1,5·A); a retangular é válida porque a janela já é truncada a
-ciclos inteiros. Ver `kb/standards/harmonic_measurement_conditions.md`. **Componente DC
+ciclos inteiros. Ver `kb/standards/qualidade-energia/harmonic_measurement_conditions.md`. **Componente DC
 (2026-08-05)**: antes descartado (`_amplitude_spectrum` removia a média para
 não vazar energia no bin de 60 Hz, sem guardar o valor); agora `dc` é
 retornado e vira `|dc|` no índice 0. Em **abc** é só o offset de medição
 (perto de zero, não exibido); em **dq**, pela derivação de fasor espacial do
-Yazdani (`kb/standards/harmonic_dq_frame_mapping.md` §4.3), é a própria
+Yazdani (`kb/standards/qualidade-energia/harmonic_dq_frame_mapping.md` §4.3), é a própria
 **fundamental representada em DC** — id/iq no ponto de operação — por isso
 entra na tabela dq (linha "0 Hz / fund. (DC)") como referência de escala
 para o pico de 120 Hz.

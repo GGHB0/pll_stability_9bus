@@ -138,7 +138,7 @@ de **corrente** dos segmentos `("Pré-falta", "Regime")` em **âmbar**
 (`.harm-warn`) em vez de vermelho quando ela excede o limite de 1%. O valor
 exibido **não muda** — só a cor deixa de imputar ao inversor um excesso que se
 sabe ser majoritariamente resíduo de medição. Detalhe de implementação em
-[espectro-tabela-harmonicas.md](../dashboard/graficos/espectro-tabela-harmonicas.md);
+[espectro-tabela-harmonicas.md](../../dashboard/graficos/espectro-tabela-harmonicas.md);
 explicação ao leitor na seção 6.4 de `output/normas_harmonicos.pdf`.
 
 ## Em aberto

@@ -20,7 +20,7 @@ Duas armadilhas que ele resolve:
    span sem tratar isso abre uma tag sem fechar. `partes` preserva os vazios
    da frente como prefixo e edita o paragrafo real.
 
-Nunca faz ET.parse no documento inteiro (ver kb/tcc-word/armadilhas_xml.md).
+Nunca faz ET.parse no documento inteiro (ver kb/tcc-word/docx/armadilhas_xml.md).
 """
 import re
 

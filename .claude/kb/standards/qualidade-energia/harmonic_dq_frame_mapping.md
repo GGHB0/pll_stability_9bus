@@ -13,7 +13,7 @@ metadata:
 # Mapeamento ordem harmônica → bin do espectro dq
 
 Complementa [harmonic_norm_application.md](harmonic_norm_application.md) (aplicação
-no dashboard) e [vsc_topology_and_transforms.md](../inverter/vsc_topology_and_transforms.md)
+no dashboard) e [vsc_topology_and_transforms.md](../../inverter/vsc_topology_and_transforms.md)
 (fasor espacial e rotação dq, já no KB). Este arquivo é a derivação formal de por que
 o espectro dq não serve para checagem por ordem: a fundamental cai em DC, e as
 demais ordens colidem em bins compartilhados. **Não é limite novo** — só fundamenta
@@ -99,7 +99,7 @@ n = 1, sequência negativa → −(n+1)f₁ = −2f₁
 O pico em 2f₁ = 120 Hz do espectro dq não é uma harmônica: é a **fundamental
 refletida em sequência negativa**, que só ganha amplitude quando o sinal deixa
 de ser equilibrado (falta assimétrica — ver
-[pll_asymmetric_fault_formal_analysis.md](../pll/pll_asymmetric_fault_formal_analysis.md)).
+[pll_asymmetric_fault_formal_analysis.md](../../pll/pll_asymmetric_fault_formal_analysis.md)).
 Isso fundamenta formalmente o uso do pico em 120 Hz como proxy de fração de
 sequência negativa, já usado como critério de desequilíbrio em
 `harmonic_norm_application.md` — o valor numérico do limiar continua vindo da

@@ -6,7 +6,7 @@ em vez de só exibir a forma de onda, mais a regra de legibilidade que vale para
 todas elas. Os oscilogramas comuns continuam no `README.md`.
 
 Racional de por que essas figuras existem (o texto do TCC descrevia a figura em
-vez de analisá-la) em `.claude/kb/tcc-word/revisao_fragmento_cap5_analise.md`.
+vez de analisá-la) em `.claude/kb/tcc-word/revisao-fragmento/revisao_fragmento_cap5_analise.md`.
 Como desenhá-las, na skill `svg-diagrams` (`data_charts.md`).
 
 ## Figuras didáticas da retenção
@@ -82,7 +82,7 @@ número e desenho não divirjam. A **escala vertical** de cada painel ignora os
 **No TCC é a Figura 5.14** (§5.4), acrescentada *depois* da 5.13 crua em vez de
 substituí-la: a 5.13 mantém o recorte cheio e mostra o transitório de
 eliminação, a 5.14 fecha a escala e expõe a alternância de sentido. Ver
-`.claude/kb/tcc-word/revisao_fragmento_cap5_figuras.md`.
+`.claude/kb/tcc-word/revisao-fragmento/revisao_fragmento_cap5_figuras.md`.
 
 **Inserir a 6,5 in, não a 5,5 in.** Esta figura e o plano P-Q usam `figsize`
 8,3 in justamente para dar a escala 0,79 quando colocadas na largura útil cheia.
@@ -139,7 +139,7 @@ comprimento da janela** — é uma razão, ao contrário dos valores de pico, qu
 mudam com o recorte. Essa métrica **sobreviveu ao descarte da figura**: entrou
 no texto do §5.4 pela figura da potência anotada, com os valores medidos naquela
 janela (P absorve 63,8% do tempo). Ver
-`.claude/kb/tcc-word/revisao_fragmento_cap5_analise.md`.
+`.claude/kb/tcc-word/revisao-fragmento/revisao_fragmento_cap5_analise.md`.
 
 Janela: `[t_clear + 50 ms, fim]`. Os 50 ms descartados removem o transitório de
 comutação da **eliminação** da falta, que no nominal leva P a −3,4 pu por poucos

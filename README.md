@@ -203,7 +203,7 @@ e tensao×corrente reativa.
 A conformidade normativa, porem, **depende do PLL manter o angulo estimado correto**:
 se o referencial dq esta corrompido por perda de lock, a corrente reativa e injetada na
 direcao errada mesmo que a logica de suporte esteja ativa — ver
-[`ons_2_11.md`](.claude/kb/standards/ons_2_11.md).
+[`ons_2_11.md`](.claude/kb/standards/ride-through/ons_2_11.md).
 
 ---
 

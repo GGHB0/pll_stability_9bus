@@ -52,9 +52,9 @@ Fontes de verdade, nesta ordem: `.claude/kb/` (tema correspondente),
 `.venv\Scripts\python.exe -c "..."` em vez de conferir de cabeça.
 
 Atenção especial a: limites do IEEE 519-2014/1547-2018, bases de normalização
-(`I_rated` vs `IL` — ver `kb/standards/harmonic_norm_application.md`),
+(`I_rated` vs `IL` — ver `kb/standards/qualidade-energia/harmonic_norm_application.md`),
 mapeamento ordem harmônica ↔ frequência no dq
-(`kb/standards/harmonic_dq_frame_mapping.md`), ganhos do PLL e a convenção de
+(`kb/standards/qualidade-energia/harmonic_dq_frame_mapping.md`), ganhos do PLL e a convenção de
 Vcc (notebook 90,9 kV vs `params.m` 136,4 kV, divergência proposital).
 
 ### 2. Regressão no que já funcionava
@@ -104,7 +104,7 @@ e diga no relatório que a verificação foi só sintática.
 
 ### 6. Texto que vai para a tela
 
-Regra editorial do projeto (`kb/standards/harmonic_norm_application.md`, seção
+Regra editorial do projeto (`kb/standards/qualidade-energia/harmonic_norm_application.md`, seção
 "O que vai na tela vs. o que fica no KB"): **a tela carrega a regra aplicada;
 o KB carrega o percurso até ela.** Legenda de gráfico, tooltip e título levam
 o limite, a base do percentual e a norma em forma curta — não a derivação, a

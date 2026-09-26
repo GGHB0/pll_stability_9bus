@@ -2,7 +2,7 @@
 Funções auxiliares para gerar parágrafos OOXML com tracked changes (w:ins).
 Usar em scripts de edição do TCC DOCX.
 
-IDs de referência: ver .claude/kb/tcc-word/docx_structure.md
+IDs de referência: ver .claude/kb/tcc-word/docx/docx_structure.md
 """
 
 import sys

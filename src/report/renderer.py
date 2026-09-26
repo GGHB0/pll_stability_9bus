@@ -918,11 +918,11 @@ setPllMode(pllMode);
         Limites por ordem harmônica (IEEE 519-2014/1547-2018) só valem no
         domínio abc; em dq só o bin de 120 Hz (fundamental de sequência
         negativa, não 2ª harmônica) tem critério (patamar empírico da TeseAGP) —
-        ver kb/standards/harmonic_dq_frame_mapping.md e
-        kb/standards/harmonic_significance_criteria.md. A faixa ímpar 11≤h<17
+        ver kb/standards/qualidade-energia/harmonic_dq_frame_mapping.md e
+        kb/standards/qualidade-energia/harmonic_significance_criteria.md. A faixa ímpar 11≤h<17
         (11ª/13ª) usa valor interino herdado da IEEE 519-2014 (Tabela 17 do
         guia 1547-2018 é imagem no PDF, não extraível) — ver
-        kb/standards/harmonic_significance_criteria.md. O segmento "Durante a
+        kb/standards/qualidade-energia/harmonic_significance_criteria.md. O segmento "Durante a
         falta" tem o limite abc RELAXADO em 50% (SPEC_SEG_LIMIT_FACTOR), não
         suprimido: a nota 118 do IEEE 1547.2-2023 admite exceder os limites em
         50% em "startups or unusual conditions", já que são valores de projeto
@@ -960,7 +960,7 @@ setPllMode(pllMode);
                 # majoritariamente vazamento espectral de medição (chirp de
                 # frequência dentro da janela, rede ainda em resposta de
                 # droop), não distorção real do inversor — achado e correção
-                # em kb/standards/harmonic_frequency_leakage.md. Âmbar em vez
+                # em kb/standards/qualidade-energia/harmonic_frequency_leakage.md. Âmbar em vez
                 # de vermelho aqui não afrouxa o limite (o número mostrado
                 # continua o mesmo, sem viés) — só evita marcar como defeito
                 # do inversor algo que já se sabe ser majoritariamente
@@ -991,7 +991,7 @@ setPllMode(pllMode);
         sempre visível + `<details>` "Como ler esta tabela" com um bloco por
         critério e as referências em forma curta.
 
-        Regra editorial (kb/standards/harmonic_norm_application.md, seção "O
+        Regra editorial (kb/standards/qualidade-energia/harmonic_norm_application.md, seção "O
         que vai na tela vs. o que fica no KB"): aqui entra só a REGRA aplicada
         — o limite, a base do percentual e a norma citada. A genealogia do
         número (razão Isc/IL, nota "c" da Tab.2 do IEEE 519-2014, por que IL
@@ -1123,7 +1123,7 @@ setPllMode(pllMode);
         linha tem critério normativo. `rows_k` já vem filtrado pelo chamador
         (`range(1,13)` em abc; `_DQ_TABLE_ROWS` em dq, que descarta os bins
         sem ordem correspondente — mostrariam só ruído sem destaque). Ver
-        kb/standards/harmonic_dq_frame_mapping.md."""
+        kb/standards/qualidade-energia/harmonic_dq_frame_mapping.md."""
         if not any((per_seg.get(s) or {}).get(mo) for s in segs for mo in modes):
             return ""
         n_modes = len(modes)
@@ -1172,7 +1172,7 @@ setPllMode(pllMode);
         (linhas h=1ª...12ª, checagem por ordem) e uma dq (linhas só nos bins
         fisicamente significativos — ver `_DQ_TABLE_ROWS`), separadas porque
         misturar as duas na mesma linha (mesma frequência k·60 Hz) confundia
-        o significado de cada coluna — ver kb/standards/harmonic_dq_frame_mapping.md
+        o significado de cada coluna — ver kb/standards/qualidade-energia/harmonic_dq_frame_mapping.md
         e `_harm_subtable_html`. Valores vêm do SpectrumBuilder (combinação RMS
         de 3 bins do espectro de janela retangular, IEEE 519-2014 §4.1);
         células comparadas a limites

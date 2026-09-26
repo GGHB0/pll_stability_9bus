@@ -195,6 +195,6 @@ esperada" (para o agente saber quando abortar/perguntar).
 
 ## Referência de IDs e armadilhas XML
 
-Ver `.claude/kb/tcc-word/docx_structure.md` — registro de IDs usados/próximos
+Ver `.claude/kb/tcc-word/docx/docx_structure.md` — registro de IDs usados/próximos
 e "Armadilhas de edição XML" (sectPr final via `rindex`, falso positivo
 `<w:p` vs `<w:pgSz`, etc.). Histórico de entregas: `historico_entregas.md`.

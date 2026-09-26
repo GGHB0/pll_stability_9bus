@@ -27,7 +27,7 @@ do docx-runner, após revisão do principal).
 - IDs a usar (paraId/bookmark/ins) — conferir contra `check_ids.py` antes
 - Checks finais esperados (strings que devem zerar, contagens de títulos etc.)
 
-## Regras de código (invioláveis — vêm do KB `tcc-word/docx_structure.md`)
+## Regras de código (invioláveis — vêm do KB `tcc-word/docx/docx_structure.md`)
 
 - Script em `C:\Temp\gen_<tema>.py`, rodado com `python.exe` por path real
   (nunca `python -c` inline; nunca paths do VFS `/c/Users/...AppData/Roaming/Claude`).

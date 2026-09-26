@@ -49,7 +49,7 @@ SPEC_MARKERS = (
 # Frequências marcadas no espectro dq: a fundamental (n=1 positiva) vira DC e sai
 # com a média; a fundamental de seq. negativa da falta reflete em 2f₁; as ordens
 # 5ª/7ª colidem em 6f₁ e 11ª/13ª em 12f₁ — ver
-# kb/standards/harmonic_dq_frame_mapping.md.
+# kb/standards/qualidade-energia/harmonic_dq_frame_mapping.md.
 SPEC_MARKERS_DQ = (
     (F_2H_HZ,        "2f<sub>1</sub>"),
     (6 * F_FUND_HZ,  "6f<sub>1</sub>"),
@@ -80,13 +80,13 @@ SPEC_SEG_LIMIT_FACTOR = {"Durante a falta": 1.5}
 # ── Limites normativos de harmônico — IEEE 519-2014 / IEEE 1547-2018 ────────
 # Unidade geradora conectada à Barra 2 (20 kV, classe 1 kV<V≤69 kV), linha
 # Isc/IL<20 obrigatória para geração (IEEE 519-2014 Tab.2, nota "c"); ver
-# kb/standards/harmonic_significance_criteria.md.
+# kb/standards/qualidade-energia/harmonic_significance_criteria.md.
 # Corrente, harmônicos ímpares h<11 (mesmo valor no IEEE 1547-2018 §7.3):
 CURR_ODD_LIMIT_PU   = 0.04
 # Corrente, ímpares 11≤h<17 — a Tabela 17 do guia 1547.2-2023 é imagem no
 # PDF (não extraível por texto); valor herdado por inferência da IEEE
 # 519-2014 Tab.2 linha <20. A CONFIRMAR — ver
-# kb/standards/harmonic_significance_criteria.md:
+# kb/standards/qualidade-energia/harmonic_significance_criteria.md:
 CURR_ODD_LIMIT_11_16_PU = 0.02
 # Corrente, pares h<11 — escala progressiva "Relaxed Evens" do IEEE 1547-2018
 # (Tabela 15; o 519-2014 usa 25% flat do ímpar em vez disso, ver KB). 8ª

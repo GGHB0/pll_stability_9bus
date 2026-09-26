@@ -35,7 +35,7 @@ aliases: [tcc-historico-entregas-2026-09-inicio]
   (antes: 3 695 723 bytes, MD5 `DB9215FB...` conferido no pré-check). Backup
   `..._backup_20260909_001700.docx`. MD5 entregue `51273bed...`.
 - **Repositório** (mesmo dia, `sed` em 17 arquivos): KB `pll/`, `power-system/`,
-  `simulation/`, `standards/ons_2_11.md` (`V_PAC` → `V_PCC`; `Vpcc_pu` já era
+  `simulation/`, `standards/ride-through/ons_2_11.md` (`V_PAC` → `V_PCC`; `Vpcc_pu` já era
   a coluna correta), `tcc-word/` (siglas_inventory + full_cap2/3 + full_intro +
   revisao_fragmento_cap5*), `skills/svg-diagrams/SKILL.md`, `README.md`,
   `notebooks/pll_stability_9bus_analysis.ipynb` (`v_PAC` → `v_PCC`; JSON

@@ -52,7 +52,7 @@ exatamente quando o laço mais precisa dele.
 | 0,20 | 145,5 | 0,316 |
 | 0,10 | 102,9 | 0,224 |
 
-(`Kp,PLL = 460`, `Ki,PLL = 105.820`.)
+(`K_pPLL = 460`, `K_iPLL = 105.820`; notação em [[tcc-equacoes]].)
 
 ## A equivalência com o cenário BAD_PLL
 

@@ -34,7 +34,7 @@ metadata:
   (Gu & Green/JPROC: definição IEEE/CIGRE 2004, 3 dimensões, GFL vs. GFM)
 - ✅ **2.3** Classificação Estendida da Estabilidade — redigido 2026-07-19
   (Strauss-Mincu et al./Roadmap alemão: IEEE TR77, converter-driven stability
-  ~10 Hz, mitigação = sintonia `Kp,PLL`/`Ki,PLL` do PLL). **Ampliado
+  ~10 Hz, mitigação = sintonia `K_pPLL`/`K_iPLL` do PLL). **Ampliado
   2026-08-04**: CIGRE CSE N037 citada como classificação alternativa (TR77
   segue como base) e parágrafo novo com o mecanismo físico completo
   (sequência negativa → 120 Hz em `v_q` → perda de travamento → cycle
@@ -67,7 +67,7 @@ metadata:
 - ✅ **3.4** O Sistema de Sincronismo SRF-PLL — PD/PI/VCO, linearização,
   equações 3.10–3.17 em tabela invisível (ver `equacoes.md`). **Ampliado
   2026-08-04**: metodologia de projeto dos ganhos do laço (equações
-  3.18–3.20), `Kp,PLL = 460` e `Ki,PLL = 105 820` por 2ª ordem com ξ = 0,707
+  3.18–3.20), `K_pPLL = 460` e `K_iPLL = 105 820` por 2ª ordem com ξ = 0,707
   e `t_s` = 20 ms, fechando com `2ω_0` = 754 rad/s a 2,32·`ω_n`. É aqui que a
   distinção contra os ganhos do controlador de corrente é estabelecida
 - ✅ **3.5** Sintonia do Controlador de Corrente por Forma Canônica de
@@ -96,7 +96,7 @@ metadata:
     (unifilar IEEE 9 barras com a UFV na Barra 2)
   - **4.3.2** Projeto do conversor e dos controladores — 4.3.2.1 filtro LCL
     (Figura 4.2; `ω_res` = 9068,99 rad/s, R_d1/R_d2/R_d3), 4.3.2.2 controle de
-    corrente, 4.3.2.3 SRF-PLL (Figura 4.3; `Kp,PLL` = 460 / `Ki,PLL` = 105 820,
+    corrente, 4.3.2.3 SRF-PLL (Figura 4.3; `K_pPLL` = 460 / `K_iPLL` = 105 820,
     sintonia inadequada a 20% → `ω_n` = 145,5, ξ = 0,316)
   - **4.3.3** Configuração do sistema de monitoramento e tratamento de dados —
     Quadro 4.1 (organização dos cenários por falta e sintonia; era a Figura 4.4)

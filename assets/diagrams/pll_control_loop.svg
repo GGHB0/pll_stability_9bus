@@ -34,15 +34,15 @@
   <text x="230" y="110" font-size="13" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">d</tspan> ≈ U (amplitude)</text>
 
   <!-- Output u_q (main signal) -->
-  <line x1="196" y1="169" x2="306" y2="169" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="196" y1="169" x2="296" y2="169" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
   <text x="250" y="158" text-anchor="middle" font-size="14" font-style="italic" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">q</tspan></text>
 
   <!-- ============= PI controller (transfer function) ============= -->
-  <rect x="310" y="147" width="112" height="44" fill="#e6fcf5" stroke="#0ca678" stroke-width="2" rx="5"/>
-  <text x="366" y="175" text-anchor="middle" font-size="17" font-weight="700" fill="#0B132B">K<tspan baseline-shift="sub" font-size="75%">p</tspan> + K<tspan baseline-shift="sub" font-size="75%">i</tspan> / s</text>
+  <rect x="300" y="147" width="132" height="44" fill="#e6fcf5" stroke="#0ca678" stroke-width="2" rx="5"/>
+  <text x="366" y="175" text-anchor="middle" font-size="16" font-weight="700" fill="#0B132B">K<tspan baseline-shift="sub" font-size="75%">pPLL</tspan> + K<tspan baseline-shift="sub" font-size="75%">iPLL</tspan> / s</text>
   <text x="366" y="209" text-anchor="middle" font-size="13" fill="#6b7280">controlador PI</text>
 
-  <line x1="422" y1="169" x2="470" y2="169" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="432" y1="169" x2="470" y2="169" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
 
   <!-- ============= Summing junction ============= -->
   <circle cx="482" cy="169" r="13" fill="white" stroke="#1f2937" stroke-width="2"/>
@@ -51,9 +51,9 @@
   <text x="462" y="164" font-size="13" font-weight="700" fill="#0B132B">+</text>
   <text x="474" y="196" font-size="13" font-weight="700" fill="#0B132B">+</text>
 
-  <!-- ============= omega_n feed-forward ============= -->
+  <!-- ============= omega_0 feed-forward ============= -->
   <rect x="434" y="70" width="96" height="30" fill="white" stroke="#1f2937" stroke-width="1.5" rx="4"/>
-  <text x="482" y="90" text-anchor="middle" font-size="14" font-style="italic" fill="#0B132B">ω<tspan baseline-shift="sub" font-size="75%">n</tspan> = 2π·60</text>
+  <text x="482" y="90" text-anchor="middle" font-size="14" font-style="italic" fill="#0B132B">ω<tspan baseline-shift="sub" font-size="75%">0</tspan> = 2π·60</text>
   <line x1="482" y1="100" x2="482" y2="155" stroke="#1f2937" stroke-width="1.5" marker-end="url(#arr)"/>
   <text x="540" y="110" font-size="13" font-style="italic" fill="#6b7280">feed-forward</text>
 
@@ -77,9 +77,9 @@
   <!-- Bottom note: gains + characteristic equation -->
   <line x1="30" y1="289" x2="650" y2="289" stroke="#e5e7eb" stroke-width="1"/>
   <text x="340" y="310" text-anchor="middle" font-size="13" font-style="italic" fill="#0B132B">
-    K<tspan baseline-shift="sub" font-size="75%">p</tspan> = 8·f<tspan baseline-shift="sub" font-size="75%">g</tspan>·(L₁+L₂+L<tspan baseline-shift="sub" font-size="75%">est</tspan>)   ·   K<tspan baseline-shift="sub" font-size="75%">i</tspan> = 32·f<tspan baseline-shift="sub" font-size="75%">g</tspan>²·(L₁+L₂+L<tspan baseline-shift="sub" font-size="75%">est</tspan>)
+    K<tspan baseline-shift="sub" font-size="75%">pPLL</tspan> = 2ξω<tspan baseline-shift="sub" font-size="75%">n</tspan>&#8195;&#8195;&#8195;K<tspan baseline-shift="sub" font-size="75%">iPLL</tspan> = ω<tspan baseline-shift="sub" font-size="75%">n</tspan>²
   </text>
   <text x="340" y="336" text-anchor="middle" font-size="13" font-style="italic" fill="#0B132B">
-    equação característica:  s² + K<tspan baseline-shift="sub" font-size="75%">p</tspan>·U·s + K<tspan baseline-shift="sub" font-size="75%">i</tspan>·U = 0
+    equação característica:  s² + K<tspan baseline-shift="sub" font-size="75%">pPLL</tspan>·U·s + K<tspan baseline-shift="sub" font-size="75%">iPLL</tspan>·U = 0
   </text>
 </svg>

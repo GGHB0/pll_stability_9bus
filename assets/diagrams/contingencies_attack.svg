@@ -67,7 +67,7 @@
   <!-- PLL box -->
   <rect x="660" y="115" width="190" height="60" fill="#fff7ed" stroke="#F97316" stroke-width="2" rx="5"/>
   <text x="755" y="138" text-anchor="middle" font-size="12" font-weight="700" fill="#0B132B">SRF-PLL</text>
-  <text x="755" y="156" text-anchor="middle" font-size="10" fill="#0B132B">Park · PI(K<tspan baseline-shift="sub" font-size="75%">p</tspan>,K<tspan baseline-shift="sub" font-size="75%">i</tspan>) · 1/s</text>
+  <text x="755" y="156" text-anchor="middle" font-size="10" fill="#0B132B">Park · PI(K<tspan baseline-shift="sub" font-size="75%">pPLL</tspan>, K<tspan baseline-shift="sub" font-size="75%">iPLL</tspan>) · 1/s</text>
   <text x="755" y="170" text-anchor="middle" font-size="10" fill="#0B132B">→ φ̂ ao controlador dq</text>
   <line x1="289" y1="86" x2="660" y2="86" stroke="#1971c2" stroke-width="1.5"/>
   <path d="M 660 86 L 660 115" stroke="#1971c2" stroke-width="1.5" marker-end="url(#aD)"/>

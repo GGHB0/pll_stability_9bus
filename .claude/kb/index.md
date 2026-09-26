@@ -36,7 +36,7 @@ Mapa de relações entre pastas: [grafo.md](grafo.md)
 - [slx-runner](../skills/slx-runner/SKILL.md)
 - [svg-diagrams](../skills/svg-diagrams/SKILL.md) — [data_charts](../skills/svg-diagrams/data_charts.md) · [export_png](../skills/svg-diagrams/export_png.md)
 - [tcc-abnt-layout](../skills/tcc-abnt-layout/SKILL.md) — [decisoes](../skills/tcc-abnt-layout/decisoes.md) · [regras_abnt](../skills/tcc-abnt-layout/regras_abnt.md)
-- [tcc-docx-editor](../skills/tcc-docx-editor/SKILL.md) — [fragmento_externo](../skills/tcc-docx-editor/fragmento_externo.md) · [mesclagem_no_canonico](../skills/tcc-docx-editor/mesclagem_no_canonico.md) · [revisao_pt](../skills/tcc-docx-editor/revisao_pt.md)
+- [tcc-docx-editor](../skills/tcc-docx-editor/SKILL.md) — [fragmento_externo](../skills/tcc-docx-editor/fragmento_externo.md) · [mesclagem_no_canonico](../skills/tcc-docx-editor/mesclagem_no_canonico.md) · [padroes_revisao](../skills/tcc-docx-editor/padroes_revisao.md) · [revisao_pt](../skills/tcc-docx-editor/revisao_pt.md)
 - [tcc-pdf-notes](../skills/tcc-pdf-notes/SKILL.md)
 
 ## Agentes

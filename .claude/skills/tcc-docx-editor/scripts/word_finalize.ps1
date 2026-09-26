@@ -20,10 +20,20 @@
 # que confirmou que a condicao de "nao e possivel salvar" tinha ido embora.
 # Rodar audit_docx.py no -Out depois disso. Ver mesclagem_no_canonico.md.
 
+#
+# -Comments <arquivo.json> (opcional): lista [{"anchor": "...", "text": "..."}].
+# O Word ancora um comentario no trecho exato "anchor" (<= 255 caracteres, uma
+# ocorrencia so), com o texto prefixado por "[Claude] ". Usado para trecho que o usuario ainda vai
+# aprovar no Word (ex.: espelho em ingles do Resumo). Feito pelo Word e nao a mao
+# porque comentario mexe em 4 partes do pacote (comments, commentsIds,
+# commentsExtended, commentsExtensible). O autor sai como a conta logada no
+# Office (o Word ignora Application.UserName), dai o prefixo no texto.
+
 param(
   [Parameter(Mandatory=$true)][string]$In,
   [Parameter(Mandatory=$true)][string]$Out,
-  [string]$Pdf = ""
+  [string]$Pdf = "",
+  [string]$Comments = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -39,6 +49,17 @@ $w.Visible = $false
 $w.DisplayAlerts = 0
 try {
   $d = $w.Documents.Open($In, $false, $false)
+
+  if ($Comments -ne "") {
+    $lista = Get-Content $Comments -Raw -Encoding UTF8 | ConvertFrom-Json
+    foreach ($c in $lista) {
+      $r = $d.Content
+      $r.Find.ClearFormatting()
+      if (-not $r.Find.Execute($c.anchor, $true)) { throw "ancora nao encontrada: $($c.anchor)" }
+      $d.Comments.Add($r, "[Claude] " + $c.text) | Out-Null
+      "comentario   : +1 em '" + $c.anchor.Substring(0, [Math]::Min(50, $c.anchor.Length)) + "...'"
+    }
+  }
 
   $d.Fields.Update() | Out-Null
   # listas de figuras/quadros/graficos (TOC \c) e sumario, duas voltas: a lista

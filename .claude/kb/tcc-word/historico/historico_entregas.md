@@ -10,6 +10,26 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-09-26 — Sintonia inadequada no Resumo e no Abstract (V10)
+
+- **Canônico passou a ser `TCC_Victor_Bruno_V10.docx`**, com os comentários
+  do Oscar (e respostas do Bruno). O `_2` saiu da pasta; `config.py` foi atualizado.
+- **Pedido**: incluir o caso da sintonia inadequada no Resumo, atendendo ao
+  comentário 1 do Oscar. A primeira versão trazia o desfecho (perda de
+  sincronismo) e foi recusada, porque o Resumo apresenta e não conclui.
+- **Aplicado** (bloco 116, antes de "O trabalho conclui avaliando"):
+  "Analisa-se também um cenário de sintonia inadequada, com os ganhos do
+  controlador PI do PLL reduzidos em relação ao projeto nominal, comparando
+  sua resposta dinâmica à do caso nominal."
+- **Abstract** (bloco 123, espelho, atendendo ao comentário 2): "An
+  inadequate-tuning scenario is also analyzed, …". A tradução não foi
+  aprovada no chat: leva um comentário `[Claude]` no Word para o Victor dar
+  o ok lá. Comentários do Oscar intactos (92 → 93).
+- **Pipeline**: `gen_resumo_sintonia.py` → `word_finalize.ps1 -Comments`
+  (parâmetro novo; 75 págs, 0 campo com erro) → `audit_docx.py` 0 falhas →
+  MD5 conferido → backup `V10_backup_20260926_195650` → entregue e reaberto
+  no Word. Os padrões que ficaram estão em `padroes_revisao.md` da skill.
+
 ## 2026-09-13 (noite, 2) — Subscrito nos símbolos do texto corrido
 
 - **Pedido**: símbolos como "vq" estavam com o índice na mesma linha. A

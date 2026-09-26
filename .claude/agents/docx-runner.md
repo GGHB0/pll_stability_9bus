@@ -74,7 +74,9 @@ modelo principal.
    d. `cp` do finalizado para o path do OneDrive; `ls -la` + `md5sum` de
       confirmação.
    "Device or resource busy" → o Word está com o arquivo aberto: ABORTAR e
-   reportar (o modelo principal pede ao usuário para fechar).
+   reportar. O modelo principal fecha o Word pelo COM (salvando antes), como
+   descrito em `padroes_revisao.md` da skill; o runner nunca mata o processo.
+   e. Se o prompt pedir, reabrir o canônico: `Start-Process "<path>"`.
 
 ## Regras de aborto (invioláveis)
 

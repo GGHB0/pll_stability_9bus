@@ -106,7 +106,7 @@ esperada" (para o agente saber quando abortar/perguntar).
   - `audit_docx.py <arquivo.docx> [--util-in N]` — auditoria estrutural
     pré-entrega (comentários, bookmarks, campos, `PAGEREF` órfão, imagens,
     content-types, em-dash); sai com código 1 se algo falhou
-  - `word_finalize.ps1 -In <montado> -Out <final> [-Pdf <pdf>]` — passa o DOCX
+  - `word_finalize.ps1 -In <montado> -Out <final> [-Pdf <pdf>] [-Comments <json>] [-Replies <json>]` — passa o DOCX
     pelo próprio Word: reconstrói o sumário, zera `w:dirty` e **prova que o
     Word consegue salvar**, não só abrir
 

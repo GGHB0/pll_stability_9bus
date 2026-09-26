@@ -52,3 +52,20 @@ finalização e a entrega).
 `TCC_Victor_Bruno_V10.docx` (desde 2026-09-26; o `_2` saiu da pasta). A fonte
 da verdade é `config.py`. Se o arquivo de `config.py` sumir, listar a pasta,
 propor o mais recente e **confirmar com o Victor** antes de editar.
+
+## 5. Comentário do Oscar atendido: responder "Feito." na thread
+
+Definido pelo Victor em 2026-09-26. Quando uma edição atende a um comentário
+do Oscar, a entrega **responde dentro da thread** daquele comentário com
+`Feito.`, sem marcar como resolvido e sem explicar a mudança (o Oscar confere
+no texto).
+
+- Pelo Word: `word_finalize.ps1 -Replies <json>`, com
+  `[{"match": "<início do texto do comentário do Oscar>", "text": "Feito."}]`.
+  O `match` tem que casar exatamente um comentário de nível superior; o
+  script aborta se casar zero ou mais de um.
+- Sem prefixo `[Claude]`: a resposta sai pela conta do Victor no Office, e é
+  ele quem responde ao Oscar. O prefixo continua só nos comentários do item 1.
+- Casar pelo texto, nunca pelo ID: o Word renumera os IDs ao salvar.
+- Conferir depois no `commentsExtended.xml` que cada `Feito.` tem
+  `paraIdParent` apontando para o comentário certo.

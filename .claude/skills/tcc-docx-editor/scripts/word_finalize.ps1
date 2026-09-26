@@ -28,12 +28,19 @@
 # porque comentario mexe em 4 partes do pacote (comments, commentsIds,
 # commentsExtended, commentsExtensible). O autor sai como a conta logada no
 # Office (o Word ignora Application.UserName), dai o prefixo no texto.
+#
+# -Replies <arquivo.json> (opcional): lista [{"match": "...", "text": "..."}].
+# Responde DENTRO da thread do comentario de nivel superior cujo texto comeca
+# com "match" (tem que casar exatamente um). Usado para responder ao Oscar que
+# o pedido foi atendido ("Feito."), sem marcar o comentario como resolvido.
+# Sem prefixo "[Claude]": quem responde e o Victor, pela conta dele no Office.
 
 param(
   [Parameter(Mandatory=$true)][string]$In,
   [Parameter(Mandatory=$true)][string]$Out,
   [string]$Pdf = "",
-  [string]$Comments = ""
+  [string]$Comments = "",
+  [string]$Replies = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -58,6 +65,19 @@ try {
       if (-not $r.Find.Execute($c.anchor, $true)) { throw "ancora nao encontrada: $($c.anchor)" }
       $d.Comments.Add($r, "[Claude] " + $c.text) | Out-Null
       "comentario   : +1 em '" + $c.anchor.Substring(0, [Math]::Min(50, $c.anchor.Length)) + "...'"
+    }
+  }
+
+  if ($Replies -ne "") {
+    $lista = Get-Content $Replies -Raw -Encoding UTF8 | ConvertFrom-Json
+    foreach ($rp in $lista) {
+      $alvo = @()
+      foreach ($c in $d.Comments) {
+        if ($c.Ancestor -eq $null -and $c.Range.Text.StartsWith($rp.match)) { $alvo += $c }
+      }
+      if ($alvo.Count -ne 1) { throw "resposta: '$($rp.match)' casou $($alvo.Count) comentarios (esperado 1)" }
+      $alvo[0].Replies.Add($alvo[0].Scope, $rp.text) | Out-Null
+      "resposta     : +1 em '" + $rp.match.Substring(0, [Math]::Min(50, $rp.match.Length)) + "...'"
     }
   }
 

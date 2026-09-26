@@ -26,6 +26,10 @@ aliases: [tcc-historico-entregas]
   comentário 138 virou 141 após o D9: casar pelo texto, não pelo ID) →
   `word_finalize.ps1` (75 págs, 0 campo com erro) → `audit_docx` 0 falhas →
   MD5 conferido → backup `_backups/V10/…_backup_20260926_204006` → entregue.
+- **Respostas "Feito."** (entrega seguinte, só comentários): 6 respostas na
+  thread do Oscar (#107, #110, #112, #118, #138, #142) via `word_finalize.ps1
+  -Replies` (opção nova; 92 → 98 comentários, `audit_docx` 0 falhas) → backup
+  `_backup_20260926_204700` → entregue e reaberto. Regra no item 5 de `padroes_revisao.md`.
 
 ## 2026-09-26 — Tudo Figura, Quadro vira Tabela (V10, comentários 3-5 do Oscar)
 

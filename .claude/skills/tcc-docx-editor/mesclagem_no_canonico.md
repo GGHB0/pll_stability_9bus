@@ -21,8 +21,11 @@ está errada:
   pontuação (`Capítulo 5:` → `Capítulo 5 – `, `5.1` → `5.1.`).
 - **A convenção de figura pode estar invertida.** No fragmento a legenda fica
   **abaixo** da imagem, em itálico 11 pt, com hífen; no canônico fica **acima**,
-  12 pt, com travessão curto, e há um parágrafo "Fonte: Os autores (2026)."
-  depois da imagem. Reordenar `[IMG][legenda]` → `[legenda][IMG][Fonte]`.
+  10 pt, à esquerda, número em campo `SEQ` e travessão curto, com um parágrafo
+  `Fonte:` em 10 pt depois da imagem (D3/D7 da skill `tcc-abnt-layout`, desde
+  2026-09-13). Reordenar `[IMG][legenda]` → `[legenda][IMG][Fonte]` montando o
+  trio com `tcc-abnt-layout/scripts/campos.py`; legenda em texto corrido fica
+  fora das listas.
 - **⚠️ Tamanho de página: o fragmento é Carta e o TCC é A4.** Área útil de
   6,50 in contra **6,30 in**. As figuras montadas em largura cheia estouram a
   margem direita, e nada denuncia isso a não ser medir. Derivar a largura do

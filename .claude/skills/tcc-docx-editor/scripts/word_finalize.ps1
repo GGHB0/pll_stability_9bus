@@ -41,7 +41,12 @@ try {
   $d = $w.Documents.Open($In, $false, $false)
 
   $d.Fields.Update() | Out-Null
-  foreach ($t in $d.TablesOfContents) { $t.Update() | Out-Null }
+  # listas de figuras/quadros/graficos (TOC \c) e sumario, duas voltas: a lista
+  # pode crescer uma folha e empurrar os numeros de pagina do sumario
+  for ($k = 0; $k -lt 2; $k++) {
+    foreach ($t in $d.TablesOfFigures)  { $t.Update() | Out-Null }
+    foreach ($t in $d.TablesOfContents) { $t.Update() | Out-Null }
+  }
 
   $d.SaveAs2($Out, 12)          # 12 = wdFormatXMLDocument
   if ($Pdf -ne "") { $d.ExportAsFixedFormat($Pdf, 17) }

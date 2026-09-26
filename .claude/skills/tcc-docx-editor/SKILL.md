@@ -35,6 +35,14 @@ lendo o `dump_blocks.py` do corpo inteiro. `revisao_pt.md` diz o que é erro, o
 que é falso positivo e quais armadilhas de execução a rodada de 2026-09-12
 encontrou.
 
+## Formatação ABNT e paginação — skill `tcc-abnt-layout`
+
+Passagem de **forma** (paginação, legendas, recuo, listas, equações), com
+verificadores e `decisoes.md`; o pipeline é o deste arquivo. **Ilustração ou
+equação nova no canônico** segue o padrão aplicado: legenda `SEQ` por
+`tcc-abnt-layout/scripts/campos.py`, tipo certo (Figura/Gráfico/Quadro) na
+legenda e na remissão, rótulo `(N.M)`.
+
 ## Convenções de escrita
 
 - **Nunca usar travessão/em-dash ("—") no texto do TCC.** Reescrever a

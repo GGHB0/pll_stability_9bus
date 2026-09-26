@@ -14,6 +14,8 @@ env/
 *.asv
 *.autosave
 *.slxc
+*.slx.r20*
+*.mdl.r20*
 *.mex*
 *.mexa64
 *.mexw64
@@ -61,6 +63,9 @@ desktop.ini
 capitulos_4_5_revisados*.docx
 Capitulo*.docx
 Capítulo*.docx
+
+# Arquivos de lock do Office (Word aberto sobre um .docx/.pptx do repo)
+~$*
 
 # Staging do workflow DOCX, caso algum script grave no repo em vez de C:\Temp
 doc_tcc_*.xml

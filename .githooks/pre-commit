@@ -1,0 +1,22 @@
+#!/bin/sh
+# Pre-commit do projeto: audita os .md (KB, CLAUDE.md, limite de linhas) quando
+# o commit mexe em markdown, _index.yaml ou no próprio script.
+# Ativar uma vez por clone:  git config core.hooksPath .githooks
+# Regras: .claude/rules/kb-links.md e .claude/rules/limits.md
+
+git diff --cached --name-only --diff-filter=ACMRD \
+    | grep -qE '\.md$|_index\.yaml$|scripts/kb_links\.py$' || exit 0
+
+root=$(git rev-parse --show-toplevel)
+py="$root/.venv/Scripts/python.exe"
+[ -x "$py" ] || py="$root/.venv/bin/python"
+[ -x "$py" ] || py=python
+
+if ! "$py" "$root/scripts/kb_links.py" check; then
+    echo
+    echo "pre-commit: auditoria do KB falhou."
+    echo "  1. rode: .venv\\Scripts\\python.exe scripts\\kb_links.py all"
+    echo "  2. corrija o que sobrar (fragmentar .md longo, frontmatter, link)"
+    echo "  3. git add nos arquivos regenerados e commite de novo"
+    exit 1
+fi

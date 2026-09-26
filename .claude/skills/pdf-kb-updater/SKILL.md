@@ -1,7 +1,7 @@
 ---
 name: pdf-kb-updater
 description: Extrai conteúdo de qualquer PDF (livro ou artigo) e atualiza os arquivos KB em .claude/kb/. Ativar quando o usuário pedir para "buscar referência", "checar no [autor/título]", "atualizar KB com PDF", mencionar um artigo ou livro pelo nome, ou pedir para explorar um PDF novo e ver o que vale extrair.
-version: 2.3.0
+version: 2.5.0
 ---
 
 # PDF → KB Updater
@@ -99,21 +99,10 @@ vez, um `.txt` por seção em `~/pdfext/`. Atenção ao limite de ~25k tokens po
 
 ## Passo 3 — Identificar o que Atualizar
 
-Verificar os KBs existentes antes de criar arquivos novos:
-
-```
-.claude/kb/
-├── project-scope.md
-├── pll/          — srf_pll_theory, pll_gains_methodology, pll_contingencies
-├── inverter/     — lcl_filter, simulink_model, vsc_reference
-├── power-system/ — ieee9bus_topology, ieee9bus_thevenin, machine_inertia,
-│                   inertia_estimation, virtual_inertia
-├── standards/    — lvrt (IEEE 1547-2018), ONS
-├── events/       — apagões e distúrbios (BR ago/2023, Ibéria abr/2025)
-├── simulation/   — workflow de export, Vcc override, runtime
-├── dashboard/    — relatório HTML (dados/, graficos/, cards/, layout/)
-└── tcc-word/     — estrutura OOXML e mapa de conteúdo do DOCX
-```
+Verificar os KBs existentes antes de criar arquivos novos, pelo índice gerado
+[kb/index.md](../../kb/index.md) (pastas) e pelo `index.md` da pasta
+candidata (docs e o que cada um cobre). A pasta certa para cada tema está em
+[limits.md](../../rules/limits.md).
 
 Relatórios de eventos/incidentes vão em `kb/events/`, com prefixo do evento
 no nome do arquivo (ex.: `iberia_2025_*.md`).
@@ -121,8 +110,8 @@ no nome do arquivo (ex.: `iberia_2025_*.md`).
 Regras:
 - **Máx 200 linhas** por arquivo de KB
 - Conteúdo que não cabe: criar novo arquivo na subpasta temática correta
-- Arquivo novo: adicionar entrada em `MEMORY.md`:
-  `C:\Users\victo\.claude\projects\C--projetos-pll-stability-9bus\memory\MEMORY.md`
+- Índices e `_index.yaml` não se editam à mão: o `kb_links.py all` do Passo 4
+  registra o doc novo
 
 ## Passo 4 — Atualizar KB
 

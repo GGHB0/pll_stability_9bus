@@ -44,7 +44,8 @@ relatório que trabalhou sem spec — não adivinhe em silêncio.
 Este é um projeto de engenharia elétrica: constante errada não dá erro de
 execução, dá gráfico plausível e errado. Confira todo valor físico, limite
 normativo e mapeamento de frequência contra a **KB em `.claude/kb/`** — o
-índice de cada pasta está em `_index.yaml`.
+índice de cada pasta está em `index.md` (gerado; porta de entrada em
+`.claude/kb/index.md`).
 
 Fontes de verdade, nesta ordem: `.claude/kb/` (tema correspondente),
 `params.m` na raiz, o notebook em `notebooks/`. Refaça a aritmética com

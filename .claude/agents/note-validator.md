@@ -23,7 +23,7 @@ do projeto, e defeito visual que só aparece na página renderizada.
 Caminho do gerador (`scripts/notas/gen_*.py`), do PDF em `output/`, dos PNGs
 renderizados no scratchpad, e o(s) arquivo(s) de KB relacionados.
 Se algum não for informado, localize: geradores em `scripts/notas/`, KB em
-`.claude/kb/`, e o índice de cada pasta em `_index.yaml`.
+`.claude/kb/`, e o índice de cada pasta em `index.md` (gerado).
 
 ## As cinco verificações
 

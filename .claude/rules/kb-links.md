@@ -15,9 +15,9 @@ solto, nenhum doc fica sem ninguém apontando para ele.
    evento em `events/`, capítulo em `tcc-word/` ↔ base técnica).
 3. Se o doc for fragmento de outro, os dois se apontam:
    `Continuação de [[origem]]` no novo, `... em [[fragmento]]` no original.
-4. Registrar no `_index.yaml` da pasta.
-5. Rodar `.venv\Scripts\python.exe scripts\kb_links.py all` e conferir
-   `0 links quebrados · 0 órfãos · 0 sem referência`.
+4. Rodar `.venv\Scripts\python.exe scripts\kb_links.py all`: acrescenta o doc
+   ao `_index.yaml` da pasta, regenera índices e grafo, e audita. Conferir
+   `0 links quebrados · 0 órfãos · 0 sem referência` e zero nas demais linhas.
 
 ## Ao editar um doc
 
@@ -26,6 +26,17 @@ solto, nenhum doc fica sem ninguém apontando para ele.
   `[[pll-loop-filter-gains]]`.
 - Ao renomear ou remover um doc, rodar o script: o `check` lista quem ficou
   com link quebrado.
+
+## Antes do commit
+
+O hook `.githooks/pre-commit` roda o `check` sempre que o commit mexe em
+`.md`, `_index.yaml` ou no script, e **bloqueia** se houver: link quebrado (KB
+ou CLAUDE.md), slug duplicado, `.md` acima de 200 linhas no repo (README fora),
+frontmatter sem `name`/`description`/`aliases`, doc fora do `_index.yaml` ou
+índice gerado desatualizado. Órfão e doc sem referência só avisam. Bloqueou →
+rodar o `all`, corrigir o resto, `git add` nos regenerados. Nunca
+`--no-verify`. O que o script não julga (KB acompanhou o código? CHANGELOG?)
+está no checklist de [git.yaml](../commands/git.yaml).
 
 ## Convenções
 
@@ -37,6 +48,14 @@ solto, nenhum doc fica sem ninguém apontando para ele.
 - `index.md` de cada pasta, `kb/index.md` e `kb/grafo.md` são **gerados**: não
   editar entre os marcadores `kb-links:begin/end`. Índice sem marcadores
   (`dashboard/`, `python/`) é manual: acrescentar a linha à mão.
+- `_index.yaml`: o `all` só **acrescenta** entradas que faltam (do
+  frontmatter); descrição de pasta e ordem são manuais e preservadas. Doc
+  removido: apagar a entrada à mão (o `check` acusa `ENTRADA SEM ARQUIVO`).
+- **CLAUDE.md** guarda só o estável (projeto, mapa de pastas de topo, fluxo,
+  armadilhas) e aponta para o KB por link markdown relativo. Nunca listar
+  arquivos do KB nem copiar detalhe que muda (sinais, cenários, ganhos), nunca
+  `@import` (carregaria o doc inteiro em toda sessão), nunca `[[slug]]` (fica
+  fora do vault). O `check` também confere os links dele.
 - Links para skills, agentes e regras usam link markdown relativo
   (`[svg-diagrams](../skills/svg-diagrams/SKILL.md)`), não `[[...]]`.
 

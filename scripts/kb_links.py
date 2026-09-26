@@ -8,10 +8,16 @@ nome do arquivo (pll_contingencies.md) difere do slug (pll-contingencies).
 
 Uso:
     python scripts/kb_links.py aliases   # insere aliases: [name] onde falta
+    python scripts/kb_links.py yaml      # acrescenta ao _index.yaml os docs que faltam
     python scripts/kb_links.py index     # (re)gera index.md de cada pasta + raiz
     python scripts/kb_links.py graph     # (re)gera .claude/kb/grafo.md (Mermaid)
-    python scripts/kb_links.py check     # links quebrados e órfãos (exit 1 se quebrado)
-    python scripts/kb_links.py all       # aliases + index + graph + check
+    python scripts/kb_links.py check     # auditoria completa (exit 1 se houver erro)
+    python scripts/kb_links.py all       # aliases + yaml + index + graph + check
+
+O `check` é o que o pre-commit hook (.githooks/pre-commit) roda. Bloqueiam:
+link quebrado (KB e CLAUDE.md), slug duplicado, .md com mais de 200 linhas,
+frontmatter incompleto, doc fora do _index.yaml e índice gerado desatualizado.
+Órfãos e docs sem referência só avisam.
 """
 
 import re
@@ -28,6 +34,10 @@ KB = CLAUDE / "kb"
 MAX_LINES = 200
 BEGIN, END = "<!-- kb-links:begin -->", "<!-- kb-links:end -->"
 GENERATED = {"index.md", "grafo.md"}
+LINE_EXEMPT = {"README.md"}
+SKIP_DIRS = {".git", ".venv", "node_modules", "output", "worktrees"}
+# modo simulação (usado pelo check): write_managed só compara e anota aqui
+STALE: list[str] | None = None
 
 FM_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---\r?\n", re.S)
 WIKI_RE = re.compile(r"\[\[([^\]|#\n]+)(?:[#|][^\]\n]*)?\]\]")
@@ -107,20 +117,55 @@ def cmd_aliases(docs: list[Doc]) -> None:
         print(f"  pulado (passaria de {MAX_LINES} linhas): {s}")
 
 
+# ── _index.yaml ────────────────────────────────────────────────────────────────
+def yaml_listed(idx: Path) -> set[str]:
+    text = idx.read_text(encoding="utf-8")
+    return {Path(f).name for f in re.findall(r"^\s*-?\s*file:\s*(\S+)", text, re.M)}
+
+
+def cmd_yaml(docs: list[Doc]) -> None:
+    """Acrescenta ao _index.yaml os docs que faltam (file/name/description do
+    frontmatter). Entradas existentes e texto manual não são tocados."""
+    added = 0
+    for idx in sorted(KB.glob("*/_index.yaml")):
+        # sem name: o check de frontmatter acusa; não registra lixo no yaml
+        missing = [d for d in docs if d.path.is_relative_to(idx.parent) and d.name and
+                   d.path.name not in GENERATED and d.path.name not in yaml_listed(idx)]
+        if not missing:
+            continue
+        q = lambda s: '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
+        entries = "".join(f"  - file: {d.path.relative_to(idx.parent).as_posix()}\n"
+                          f"    name: {d.name}\n"
+                          f"    description: {q(d.description)}\n" for d in missing)
+        text = idx.read_text(encoding="utf-8").rstrip("\n") + "\n"
+        if "\nsubfolders:" in text:  # entra no fim da lista files:, antes de subfolders:
+            text = text.replace("\nsubfolders:", "\n" + entries.rstrip("\n") + "\nsubfolders:", 1)
+        else:
+            text += entries
+        idx.write_text(text, encoding="utf-8")
+        added += len(missing)
+    print(f"yaml: {added} entradas acrescentadas aos _index.yaml")
+
+
 # ── índices ────────────────────────────────────────────────────────────────────
 def write_managed(path: Path, header: str, body: str) -> bool:
     """Grava o bloco entre marcadores; preserva texto manual fora dele.
     Índice escrito à mão (sem marcadores) não é tocado."""
     block = f"{BEGIN}\n{body.rstrip()}\n{END}\n"
-    if path.exists():
-        old = path.read_text(encoding="utf-8")
+    old = path.read_text(encoding="utf-8") if path.exists() else None
+    if old is not None:
         if BEGIN not in old:
-            print(f"  mantido (índice manual): {path.relative_to(CLAUDE).as_posix()}")
+            if STALE is None:
+                print(f"  mantido (índice manual): {path.relative_to(CLAUDE).as_posix()}")
             return False
         new = re.sub(re.escape(BEGIN) + r".*?" + re.escape(END) + r"\n?",
                      lambda _: block, old, flags=re.S)
     else:
         new = header + "\n" + block
+    if STALE is not None:
+        if new != old:
+            STALE.append(path.relative_to(CLAUDE).as_posix())
+        return False
     lines = len(new.splitlines())
     if lines > MAX_LINES:
         print(f"  AVISO: {path.name} com {lines} linhas (> {MAX_LINES})")
@@ -179,7 +224,8 @@ def cmd_index(docs: list[Doc]) -> None:
                   f"marcadores é preservado.\n")
         write_managed(KB / folder / "index.md", header, "\n".join(body))
     write_root_index(docs, folders)
-    print(f"index: {len(folders)} pastas + raiz")
+    if STALE is None:
+        print(f"index: {len(folders)} pastas + raiz")
 
 
 def first_heading(doc: Doc) -> str:
@@ -231,7 +277,8 @@ def cmd_graph(docs: list[Doc]) -> None:
               "(gerado por scripts/kb_links.py)\naliases: [kb-grafo]\n---\n\n"
               "# KB — grafo de relações entre pastas\n\nVoltar: [índice do KB](index.md)\n")
     write_managed(KB / "grafo.md", header, "\n".join(body))
-    print(f"graph: {len(edges)} arestas entre {len(folders)} pastas")
+    if STALE is None:
+        print(f"graph: {len(edges)} arestas entre {len(folders)} pastas")
 
 
 # ── auditoria ──────────────────────────────────────────────────────────────────
@@ -266,16 +313,93 @@ def cmd_check(docs: list[Doc]) -> int:
         print(f"  órfão {o}")
     for u in unlinked:
         print(f"  sem referência (não aponta para nenhum tema) {u}")
-    return 1 if broken or dup else 0
+    root_broken = check_root_links()
+    errors = [check_line_limits(), check_frontmatter(docs), check_index_yaml(docs),
+              check_stale_indexes(docs)]
+    return 1 if broken or dup or root_broken or any(errors) else 0
+
+
+def check_root_links() -> int:
+    """CLAUDE.md fica fora de .claude/: confere só se os links relativos existem."""
+    path = PROJ_ROOT / "CLAUDE.md"
+    body = CODE_RE.sub("", path.read_text(encoding="utf-8"))
+    targets = re.findall(r"\]\(([^)#\s]+)(?:#[^)]*)?\)", body)
+    missing = [t for t in targets if "://" not in t and not (PROJ_ROOT / t).exists()]
+    print(f"check CLAUDE.md: {len(targets)} links · {len(missing)} quebrados")
+    for t in missing:
+        print(f"  QUEBRADO CLAUDE.md → {t}")
+    return len(missing)
+
+
+def report(title: str, items: list[str]) -> int:
+    print(f"check {title}: {len(items)}")
+    for i in items:
+        print(f"  {i}")
+    return len(items)
+
+
+def check_line_limits() -> int:
+    """Regra de limits.md: nenhum .md do repo passa de 200 linhas (README fora)."""
+    over = []
+    for p in sorted(PROJ_ROOT.rglob("*.md")):
+        rel = p.relative_to(PROJ_ROOT)
+        if SKIP_DIRS & set(rel.parts) or p.name in LINE_EXEMPT:
+            continue
+        n = len(p.read_text(encoding="utf-8", errors="replace").splitlines())
+        if n > MAX_LINES:
+            over.append(f"LONGO {rel.as_posix()} ({n} linhas) → fragmentar")
+    return report(f".md acima de {MAX_LINES} linhas", over)
+
+
+def check_frontmatter(docs: list[Doc]) -> int:
+    """Docs do KB precisam de name, description e aliases (índice manual fica fora)."""
+    bad = []
+    for d in docs:
+        if not d.path.is_relative_to(KB) or (d.path.name == "index.md" and BEGIN not in d.text):
+            continue
+        miss = [k for k, v in (("name", d.name), ("description", d.description),
+                               ("aliases", d.aliases)) if not v]
+        if miss:
+            bad.append(f"FRONTMATTER {d.rel} sem {', '.join(miss)}")
+    return report("frontmatter incompleto", bad)
+
+
+def check_index_yaml(docs: list[Doc]) -> int:
+    """Pasta com _index.yaml: todo doc listado, toda entrada com arquivo."""
+    bad = []
+    for idx in sorted(KB.glob("*/_index.yaml")):
+        listed = yaml_listed(idx)
+        # doc sem name já aparece no check de frontmatter
+        present = {d.path.name for d in docs if d.path.is_relative_to(idx.parent) and d.name}
+        folder = idx.parent.name
+        bad += [f"FORA DO _index.yaml {folder}/{f} → rodar kb_links.py all"
+                for f in sorted(present - listed - GENERATED)]
+        bad += [f"ENTRADA SEM ARQUIVO {folder}/_index.yaml → {f}"
+                for f in sorted(listed - present - GENERATED) if f.endswith(".md")]
+    return report("_index.yaml divergente", bad)
+
+
+def check_stale_indexes(docs: list[Doc]) -> int:
+    """Simula index + graph sem gravar: diferença = alguém esqueceu o `all`."""
+    global STALE
+    STALE = []
+    try:
+        cmd_index(docs)
+        cmd_graph(docs)
+        stale = [f"DESATUALIZADO {s} → rodar kb_links.py all" for s in STALE]
+    finally:
+        STALE = None
+    return report("índices gerados desatualizados", stale)
 
 
 def main() -> int:
     cmd = sys.argv[1] if len(sys.argv) > 1 else "check"
-    steps = ["aliases", "index", "graph", "check"] if cmd == "all" else [cmd]
+    steps = ["aliases", "yaml", "index", "graph", "check"] if cmd == "all" else [cmd]
     rc = 0
     for step in steps:
         docs = load_docs()  # recarrega: passos anteriores mudam os arquivos
-        fn = {"aliases": cmd_aliases, "index": cmd_index, "graph": cmd_graph, "check": cmd_check}[step]
+        fn = {"aliases": cmd_aliases, "yaml": cmd_yaml, "index": cmd_index,
+              "graph": cmd_graph, "check": cmd_check}[step]
         rc = fn(docs) or rc
     return rc
 

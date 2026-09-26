@@ -86,3 +86,9 @@ files:
   - file: trabalhos_futuros.md
     name: tcc-trabalhos-futuros
     description: Eixos definidos para o Cap.7 (Trabalhos Futuros) — capítulo REDIGIDO e entregue em 2026-09-12 (2 parágrafos, sem subseções): Eixo 1 (estrutura de sincronismo) e Eixo 3 (varredura de SCR/múltiplos IBR); Eixos 2 (normalização) e 4 (K-factor) descartados
+  - file: mesclagem_cap45_canonico.md
+    name: tcc-mesclagem-cap45-canonico
+    description: "Mesclagem dos Capítulos 4 e 5 do fragmento revisado para dentro do TCC canônico em 2026-09-02, com a receita técnica e o inventário do que foi descartado"
+  - file: revisao_fragmento_cap5_enxugamento.md
+    name: tcc-revisao-fragmento-cap5-enxugamento
+    description: "Passe de enxugamento analítico do Cap.5 do fragmento em 2026-09-02, com o critério do corte e o antes/depois parágrafo a parágrafo"

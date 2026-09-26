@@ -5,9 +5,24 @@ commands:
       - git status
       - git diff --staged
       - git log --oneline -5
+      - pre-commit (checklist abaixo)
       - git commit -m "<mensagem>"
+    pre_commit:
+      # Julgamento: o script não sabe responder. Conferir antes de commitar.
+      judgment:
+        - Diff em src/, app.py ou scripts/ → doc do KB do tema foi atualizado?
+          (dashboard → kb/dashboard/, export → kb/simulation/export_workflow.md)
+        - Diff no dashboard (src/, app.py) → entrada nova no CHANGELOG.md?
+        - Doc novo no KB → referencia ≥1 tema com [[slug]] (rules/kb-links.md)?
+        - Literatura externa citada → references: completo (rules/references.md)?
+        - Diff em src/, app.py ou scripts/ → agente code-reviewer rodou?
+      # Mecânico: o hook .githooks/pre-commit roda o check e bloqueia o commit.
+      mechanical:
+        - .venv\Scripts\python.exe scripts\kb_links.py all
+        - git add nos arquivos que o all regenerou (index.md, grafo.md, _index.yaml)
     rules:
-      - Nunca usar --no-verify
+      - Nunca usar --no-verify (o hook é a trava do KB)
+      - Hook bloqueou → rodar kb_links.py all, corrigir o resto e commitar de novo
       - Mensagem em inglês, imperativo, sem ponto final
       - Co-authored-by quando gerado pelo Claude
 
@@ -24,3 +39,8 @@ commands:
     steps:
       - git checkout -b <nome>
     convention: "feat/<slug> | fix/<slug> | chore/<slug>"
+
+  setup:
+    description: Uma vez por clone, ativa o pre-commit versionado
+    steps:
+      - git config core.hooksPath .githooks

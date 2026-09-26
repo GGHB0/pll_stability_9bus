@@ -16,3 +16,33 @@ files:
   - file: harmonic_frequency_leakage.md
     name: harmonic-frequency-leakage
     description: Achado 2026-08-10, corrigido 2026-08-11 — 2ª harmônica elevada na coluna pré-falta era vazamento espectral (rede não fecha em 60,000 Hz + FFT truncada com F_FUND_HZ fixo); _measure_f1 (cruzamento de zero, modo abc) implementado em spectrum.py, elimina quase todo vazamento na 3ª/4ª mas deixa residual físico na 2ª por chirp contínuo de frequência
+  - file: china_lvrt_windfarm_test.md
+    name: china-lvrt-windfarm-test
+    description: "Norma chinesa Q/GDW392-2009 de LVRT e teste de campo em turbina eólica PMSG (Mongólia Interior) — dados empíricos de falta simétrica vs. assimétrica"
+  - file: harmonic_measurement_conditions.md
+    name: harmonic-measurement-conditions
+    description: "Condições de medição de harmônico (IEEE 519-2014 Cl.4 + nota 118 do IEEE 1547.2-2023) confrontadas com a FFT implementada em spectrum.py — o que coincide, o que é inaplicável a uma simulação EMT e o que é divergência corrigível"
+  - file: harmonic_norm_application.md
+    name: harmonic-norm-application
+    description: "Como os critérios de significância de harmônico (ver harmonic-significance-criteria) se aplicam aos dados deste projeto — checagem por ordem em abc vs dq, isenção por segmento, e notação única para as variáveis de base de corrente (Isc/IL/I_rated), evitando invocar TDD"
+  - file: harmonic_physical_origin_teodorescu.md
+    name: harmonic-physical-origin-teodorescu
+    description: "Fundamentação bibliográfica (Teodorescu, Liserre & Rodríguez 2011) para a origem física de harmônicos pares vs ímpares em inversores e a genealogia do limite de 1% na 2ª harmônica — não altera nenhum limite aplicado no dashboard"
+  - file: harmonic_significance_criteria.md
+    name: harmonic-significance-criteria
+    description: "Critérios da literatura para o que conta como harmônico de tensão/corrente \"significativo\" em pu — normas de conformidade (IEEE 519/1547) vs. rejeição a distúrbio (TeseAGP) vs. criério funcional de PLL (Yazdani)"
+  - file: ieee1547_case_studies.md
+    name: ieee1547-case-studies
+    description: "Estudos de caso reais (CAISO, Entergy) sobre o impacto de ride-through/DVS de DER na recuperação de tensão do sistema — Annex I do IEEE Std 1547.2-2023"
+  - file: ieee1547_power_quality_clause7.md
+    name: ieee1547-power-quality-clause7
+    description: "Mapa da Cláusula 7 (Power quality) do guia IEEE 1547.2-2023 — Tabelas 15-18, notas 118/119, a condição de ensaio de laboratório do §7.3.1, a condicionante do trafo no §7.3.3 e o roteiro EMTP do §7.5"
+  - file: ieee1547_pq_other_clauses.md
+    name: ieee1547-pq-other-clauses
+    description: "Requisitos de QEE do IEEE 1547-2018 que NÃO são de harmônico — RVC (Tabela 16), flicker, sobretensão (§7.4) e o roteiro de estudo de QEE do §7.5, que endossa a metodologia EMT do TCC"
+  - file: ieee1547_ride_through.md
+    name: ieee1547-ride-through
+    description: "Requisitos detalhados de LVRT/HVRT do IEEE Std 1547-2018 (categorias I/II/III, trip mandatório, Dynamic Voltage Support) extraídos do IEEE Std 1547.2-2023"
+  - file: ieee519_structure.md
+    name: ieee519-structure
+    description: "Mapa de cláusulas e das cinco tabelas do IEEE 519-2014 — valores, páginas (PDF vs impressa), notas de rodapé e o que se aplica ou não à Barra 2"

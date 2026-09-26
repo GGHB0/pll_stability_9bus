@@ -1,0 +1,2 @@
+# hooks rodam em sh: CRLF quebra o shebang
+.githooks/* text eol=lf

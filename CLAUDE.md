@@ -2,158 +2,81 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+> Este arquivo guarda só o que é estável e vale para toda sessão. Detalhe que
+> muda (sinais, cenários, ganhos, arquivos de cada pasta) mora no KB e é
+> referenciado por link: nunca copiar listas de arquivos para cá.
 
-TCC (Trabalho de Conclusão de Curso) em Engenharia Elétrica — UERJ 2025. Investigates the dynamic behavior of the **SRF-PLL** (Synchronous Reference Frame Phase-Locked Loop) algorithm in grid-tied inverters under severe network contingencies, motivated by the August 15, 2023 Brazilian grid disturbance that disconnected 23,368 MW (~34.5% of SIN load).
+## Projeto
 
-## Repository Layout
+TCC (Trabalho de Conclusão de Curso) em Engenharia Elétrica — UERJ 2025. Investiga o
+comportamento dinâmico do **SRF-PLL** (Synchronous Reference Frame Phase-Locked Loop)
+em inversores conectados à rede sob contingências severas, motivado pela perturbação de
+15/08/2023 no SIN (23 368 MW desligados, ~34,5% da carga).
 
-```
-pll_stability_9bus/
-├── app.py                              ← entry point Python (python app.py)
-├── CHANGELOG.md                        ← histórico de alterações do dashboard (por commit)
-├── params.m                            ← MATLAB workspace setup (rodar antes de simular)
-├── pll_stability_9bus.slx              ← modelo Simulink principal (raiz)
-├── pll_stability_9bus_faultInfo.xml    ← metadados do Fault Analyzer
-├── requirements.txt                    ← numpy, pandas, plotly
-├── src/                                ← pacote Python de análise
-│   ├── __init__.py                     ← expõe SimData, ChartBuilder, SpectrumBuilder, HTMLRenderer
-│   ├── config/settings.py              ← T_FAULT, TOL_RAD, paletas, caminhos
-│   ├── pipeline/loader.py              ← SimData: lê CSV, calcula IAE/ISE/ts/ΔP/ΔQ
-│   ├── pipeline/chart.py               ← ChartBuilder: monta subplots Plotly
-│   ├── pipeline/spectrum.py            ← SpectrumBuilder: FFT segmentada pré/falta/pós (dq)
-│   └── report/renderer.py              ← HTMLRenderer: gera relatório HTML
-├── scripts/
-│   ├── export_sim_data.m               ← exporta logsout → output/sim_data.csv
-│   └── analyze_sim_data.py             ← script legado (substituído por app.py)
-├── notebooks/
-│   └── pll_stability_9bus_analysis.ipynb   ← cálculo analítico de parâmetros
-├── simulink/                           ← modelos Simulink auxiliares
-│   ├── pll_stability_9bus_FaultModel.slx
-│   ├── GridTiedInverterOptimalI2.slx   ← referência MathWorks
-│   ├── GridTiedInverterOptimalIData.m
-│   ├── teste_isolado.slx
-│   └── archive/
-│       └── pll_stability_9bus.slx.original
-├── output/                             ← gerado em runtime (não versionado)
-│   ├── sim_data.csv                    ← exportado pelo MATLAB
-│   └── pll_metrics.html                ← relatório gerado pelo Python
-├── assets/                             ← diagramas, figuras, banner
-└── .claude/                            ← base de conhecimento + skills
+- Rede IEEE 9 barras, base 20 kV / 100 MVA / 60 Hz; o G2 foi substituído pelo inversor
+  UFV na Barra 2.
+- Escopo, capítulos e status: [project-scope.md](.claude/kb/project-scope.md).
+
+## Onde está cada coisa
+
+| Caminho | Conteúdo |
+|---|---|
+| [pll_stability_9bus.slx](pll_stability_9bus.slx) + [params.m](params.m) | Modelo Simulink principal e parâmetros de runtime |
+| [simulink/](simulink/) | Modelos auxiliares standalone (não referenciados pelo principal) |
+| [PSim/](PSim/) | Fase inicial de modelagem no PSIM (legado) — [kb/psim/](.claude/kb/psim/index.md) |
+| [notebooks/](notebooks/) | Cálculo analítico dos parâmetros (rodar células de cima para baixo) |
+| [src/](src/) + [app.py](app.py) | Pacote Python do dashboard: `SimData → ChartBuilder/SpectrumBuilder → HTMLRenderer` |
+| [scripts/](scripts/) | Export MATLAB, geradores de figuras e notas, [kb_links.py](scripts/kb_links.py) |
+| `output/` | Gerado em runtime, não versionado (`results/`, `pll_metrics.html`) |
+| [assets/](assets/) | Diagramas, gráficos, banner |
+| [CHANGELOG.md](CHANGELOG.md), [docs/changelog/](docs/changelog/) | Histórico de mudanças do dashboard |
+| [.claude/](.claude/INDEX.md) | Base de conhecimento, skills, agentes, regras |
+
+## Fluxo de trabalho
+
+```text
+1. MATLAB: >> params   → simular pll_stability_9bus.slx
+   (o StopFcn exporta sozinho para output/results/<barra ou linha>/<falta>/)
+2. Python: .venv\Scripts\python.exe app.py   → output/pll_metrics.html
 ```
 
-## Workflow de Simulação → Relatório
+Setup (uma vez por clone): `python -m venv .venv`,
+`.venv\Scripts\pip install -r requirements.txt` e
+`git config core.hooksPath .githooks` (ativa o pre-commit que audita o KB).
 
-```
-1. MATLAB: abrir pll_stability_9bus.slx → rodar params.m → simular
-2. MATLAB: >> export_sim_data          (gera output/sim_data.csv)
-3. Python: .venv\Scripts\python app.py (gera output/pll_metrics.html)
-```
+- Export, sinais do `logsout` e taxas de amostragem: [export_workflow.md](.claude/kb/simulation/export_workflow.md)
+- Cenários simulados (nominais e sintonia inadequada): [cenarios_simulados.md](.claude/kb/simulation/cenarios_simulados.md)
+- Re-simulação: [resimulacao-abc.md](.claude/kb/simulation/resimulacao-abc.md)
+- Pipeline do dashboard e métricas: [kb/dashboard/](.claude/kb/dashboard/index.md)
 
-## Rodando o Pacote Python
+## Base de conhecimento
 
-```powershell
-# Configuração do ambiente (uma vez)
-python -m venv .venv
-.venv\Scripts\pip install -r requirements.txt
+Ponto de entrada: **[.claude/kb/index.md](.claude/kb/index.md)**, que aponta para o
+índice de cada pasta. Relações entre temas: [grafo.md](.claude/kb/grafo.md). Os
+índices são gerados por `scripts/kb_links.py`, então doc novo aparece sozinho.
+Convenção de links `[[slug]]`: [rules/kb-links.md](.claude/rules/kb-links.md).
 
-# Gerar relatório (após exportar CSV do MATLAB)
-.venv\Scripts\python.exe app.py
+## Armadilhas que valem para toda sessão
 
-# Caminhos customizados
-.venv\Scripts\python.exe app.py --csv output/sim_data.csv --out output/relatorio.html
-```
+- **Ganhos de corrente ≠ ganhos do PLL.** `Kp = 8·fg·Lest` (TeseAGP) é do controlador
+  de corrente ([pll_gains_methodology.md](.claude/kb/pll/pll_gains_methodology.md)).
+  O PI do PLL tem projeto próprio ([pll_loop_filter_gains.md](.claude/kb/pll/pll_loop_filter_gains.md)).
+- **Ganhos de corrente divididos por 4 duas vezes** (notebook + blocos Gain), de
+  propósito: [simulink_model.md](.claude/kb/inverter/simulink_model.md).
+- **Vcc diverge de propósito:** `params.m` usa ×1,5 do valor do notebook:
+  [params_workflow.md](.claude/kb/simulation/params_workflow.md).
+- **Sinais em duas taxas** (rápida e lenta), interpolar sobre o eixo lento; **não
+  existe abc do lado da rede**: [export_workflow.md](.claude/kb/simulation/export_workflow.md).
+- **Cenário de sintonia inadequada (BAD_PLL):** `kp_pll` e `ki_pll` ×0,2, com instante
+  de falta diferente do nominal: [cenarios_simulados.md](.claude/kb/simulation/cenarios_simulados.md).
+- **`.slx` é um ZIP de XML:** inspecionar sem MATLAB pela skill `slx-explorer`; mapa
+  de subsistemas e SIDs em [simulink_model.md](.claude/kb/inverter/simulink_model.md).
 
-`app.py` instancia `SimData → ChartBuilder → HTMLRenderer` e salva o HTML com
-toggle de tema light/dark, 5 cards de métricas e subplots Plotly interativos.
+## Regras
 
-## Rodando o Notebook
-
-```bash
-jupyter notebook notebooks/pll_stability_9bus_analysis.ipynb
-```
-
-Dependências: `numpy`, `pandas`, `math` (stdlib). Rodar células de cima para baixo
-— variáveis de células anteriores são reutilizadas ao longo do notebook.
-
-## Modelos Simulink
-
-Abrir `.slx` no **MATLAB/Simulink R202x**. O modelo simula cenários EMT para
-4 tipos de contingência: afundamento simétrico, afundamento assimétrico (introduz
-sequência negativa → oscilações de 2ª harmônica no PLL), salto de ângulo e alto RoCoF.
-
-Antes de simular: `>> params.m` no Command Window. Modelos em `simulink/` são
-standalone — não referenciados pelo modelo principal.
-
-## Parâmetros do Sistema
-
-- Base: 20 kV / 100 MVA / 60 Hz
-- Rede IEEE 9 barras; inversor conectado na Barra 2
-- Impedância de Thevenin: diagonal `Z_ii` de `inv(Ybarra)` na barra de conexão
-- Ressonância do filtro LCL: `ω_res = 9068.99 rad/s`, `ξ = 0.707`, `fs = 5 kHz`
-- Ganhos do PLL: `Kp = 8·60·(L1+L2+Lest)`, `Ki = 32·60²·(L1+L2+Lest)`
-- Vcc no modelo: 136.364 kV (×1.5 override proposital vs 90.9 kV do notebook)
-
-## Sinais Logados (logsout_IEEE9BusLoadflow)
-
-| Sinal | Conteúdo | Colunas |
-|---|---|---|
-| `Pinverter`, `Qinverter` | Potência ativa/reativa (pu) | 1 |
-| `Ang_pll`, `Ang_Rede` | Ângulos PLL e rede (rad) | 1 |
-| `id` | **Mux [id_ref, id_medido]** (pu) | 2 |
-| `Iq` | **Mux [iq_ref, iq_medido]** (pu) | 2 |
-| `iabc_inverter`, `iabc_grid` | Correntes trifásicas (pu) | 3 |
-
-`Ang_pll` e `iabc` correm a Ts=5 µs; demais a Tsc=200 µs → interpolar sobre t de `Pinverter`.
-
-## Métricas de Desempenho
-
-IAE, ISE, tempo de acomodação ts (critério ±1.15° = 0.02 rad), ΔP_ufv, ΔQ_ufv pós-falta.
-Calculados por `SimData` em `src/pipeline/loader.py`. Conformidade LVRT per IEEE 1547-2018.
-
-Atributos `SimData`: `P_ufv`, `Q_ufv`, `id_ufv_meas`, `iq_ufv_meas`, `id_ufv_ref`, `iq_ufv_ref`.
-Flags: `has_dq_ufv`, `has_ref_ufv`. Colunas CSV: `P_ufv_pu`, `Q_ufv_pu`, `id_ufv_pu`, `iq_ufv_pu`, `id_ufv_ref_pu`, `iq_ufv_ref_pu`.
-Quando variáveis dos geradores forem adicionadas, usar sufixo `_gen1`, `_gen2` etc.
-
-## Knowledge Base (.claude/)
-
-```
-.claude/
-├── kb/
-│   ├── index.md, grafo.md     ← gerados por scripts/kb_links.py (ver rules/kb-links.md)
-│   ├── project-scope.md       ← escopo TCC, status dos capítulos, tabela de contingências
-│   ├── dashboard/             ← relatório HTML: dados/, graficos/, cards/, layout/ (ver index.md)
-│   ├── pll/                   ← teoria SRF-PLL, metodologia Kp/Ki, cenários de contingência
-│   ├── inverter/              ← filtro LCL, arquitetura Simulink, referência VSC
-│   ├── power-system/          ← IEEE 9 barras, Thevenin, inércia, VSG
-│   ├── simulation/            ← workflow export, override Vcc, runtime (Ts/fsw/Tsc)
-│   ├── standards/             ← LVRT, IEEE 1547-2018, ONS
-│   └── python/                ← padrões Python clean code + pipeline NumPy/Pandas/Plotly
-├── commands/
-│   └── git.yaml               ← convenções de git do projeto
-├── rules/
-│   └── limits.md              ← limite 200 linhas/arquivo, mapa de pastas do kb
-└── skills/
-    └── slx-explorer/          ← inspeção de .slx via Python/XML (sem MATLAB)
-```
-
-## Inspecionando o Modelo Simulink Sem MATLAB
-
-Arquivos `.slx` são ZIPs com XML internamente:
-
-```python
-import zipfile, xml.etree.ElementTree as ET
-with zipfile.ZipFile('pll_stability_9bus.slx', 'r') as z:
-    xml = z.read('simulink/blockdiagram.xml').decode('utf-8', errors='replace')
-```
-
-SIDs principais: rede raiz (`system_root`), UFV Model/VSI (`3896`), Optimal Controller
-(`3963`), PWM Control/PI+Notch (`3974`), PWM comparator (`3997`), Measurement (`4021`).
-Ver `kb/inverter/simulink_model.md` para o mapa completo.
-
-## Nota sobre os Ganhos Kp/Ki
-
-Os ganhos são divididos por 4 **duas vezes**: uma no notebook (conversão pu,
-Z_base = 4 Ω) e outra dentro dos blocos Gain do Simulink. A dupla divisão compensa
-um mismatch de ~6× entre V_base_LN e Vcc/2 na normalização do SPWM, combinado
-com fator ×2 por usar `(L1+L2+Lest)` ao invés de `Lest` na fórmula.
+- [limits.md](.claude/rules/limits.md): máx. 200 linhas por `.md`, estrutura de pastas do KB
+- [references.md](.claude/rules/references.md): referência bibliográfica completa no KB
+- [kb-links.md](.claude/rules/kb-links.md): todo doc do KB referencia ao menos um tema
+- [git.yaml](.claude/commands/git.yaml): commit, push e checklist de pré-commit
+  (o hook bloqueia KB inconsistente; nunca `--no-verify`)
+- Variáveis de geradores no pipeline Python levam sufixo `_gen1`, `_gen2` etc.

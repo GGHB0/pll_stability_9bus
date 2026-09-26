@@ -103,10 +103,11 @@ O documento já está no padrão (entrega de 2026-09-13). Conteúdo novo entra
 nele, senão a próxima passagem tem de desfazer:
 
 - **Ilustração**: trio `legenda()` + `imagem()` + `fonte()` de
-  `scripts/campos.py`. Tipo pelo critério de D2: esquema é Figura, curva
-  quantitativa é Gráfico, texto em grade é Quadro. O número passado é só o
-  cache; o `word_finalize.ps1` renumera e reconstrói as três listas.
-- **Remissão** concorda com o tipo ("o Gráfico 5.16", "a Figura 3.3").
+  `scripts/campos.py`. Tipo por D9: toda ilustração é **Figura** (esquema
+  ou curva); grade de texto/dados é **Tabela**. Não existe mais Gráfico nem
+  Quadro. O número passado é só o cache; o `word_finalize.ps1` renumera e
+  reconstrói as listas.
+- **Remissão** concorda com o tipo ("a Figura 5.16", "a Tabela 4.1").
   Inserir no meio do capítulo desloca as seguintes: varrer com `find_text.py`.
 - **Equação**: rótulo `(N.M)` na coluna direita da tabela invisível
   (`kb/tcc-word/docx/equacoes.md`), nunca `EQUAÇÃO N.M`.
@@ -148,7 +149,7 @@ nele, senão a próxima passagem tem de desfazer:
   cai numa folha que já acabou cheia. Capítulo abre por `pageBreakBefore`
   no título.
 - **O heredoc do Bash neste ambiente reduz barra dupla a simples.** Gerador
-  com regex ou instrução de campo (`SEQ Grafico \* ARABIC \s 1`) vai para
+  com regex ou instrução de campo (`SEQ Figura \* ARABIC \s 1`) vai para
   arquivo pela ferramenta Write, nunca por `cat <<EOF`.
 - **Olhar o PDF renderizado, não só o `pagecheck.py`.** Ele não viu a
   dedicatória no topo nem os parágrafos sem justificar; o render viu.

@@ -38,10 +38,10 @@ não prevê, e o sumário conviveria com dois sistemas de numeração.
 
 ## D2 — Os quatro elementos opcionais do pré-texto ficam · 2026-09-12
 
-Dedicatória, epígrafe, Lista de Quadros e Lista de Gráficos **permanecem**.
-Dedicatória e epígrafe são texto pessoal que os autores vão escrever.
+Dedicatória e epígrafe **permanecem**: são texto pessoal que os autores
+vão escrever. As listas de Quadros e de Gráficos caíram em 2026-09-26 (D9).
 
-**Resolvido em 2026-09-13 — reclassificação das ilustrações.** Todas eram
+**Histórico (superado por D9) — reclassificação de 2026-09-13.** Todas eram
 "Figura", e as duas listas ficariam vazias. Pelo conteúdo de cada imagem:
 
 | Tipo | Qtd. | Quais |
@@ -66,7 +66,7 @@ epígrafe.
 
 As 24 legendas são campo: rótulo e capítulo em texto literal, número em
 `SEQ <id> \* ARABIC \s 1`, que reinicia a cada Título 1. Identificadores em
-ASCII: `Figura`, `Grafico`, `Quadro`. As três listas são campos
+ASCII: desde D9, só `Figura` e `Tabela`. As listas são campos
 `TOC \h \z \c "<id>"`, reconstruídas pelo `word_finalize.ps1`.
 
 Com uma lista por tipo, a antiga "LISTA DE ILUSTRAÇÕES" ficou só com
@@ -156,6 +156,23 @@ do corpo; o rótulo em caixa alta não é forma prevista na norma.
   folha em branco. Sem quebra no meio de capítulo.
 - **"A ser elaborada pela Biblioteca"** na ficha **não é resíduo**: é a
   instrução real da UERJ e fica até a biblioteca emitir a ficha.
+
+## D9 — Tudo é Figura; o antigo Quadro é Tabela · 2026-09-26
+
+Comentários 3, 4 e 5 do Oscar no V10 ("Porque tem uma lista de Figs e outra
+de gráficos?", "Quadros ou tabela?", "Não tem uma lista de tabelas??"). O
+Victor mandou fazer como o Oscar pediu.
+
+- **Figura** para toda ilustração: as 18 ex-Gráfico (2.1-2.3, 5.1-5.15)
+  mantiveram o número, porque os Caps. 2 e 5 não tinham Figura.
+- **Tabela 4.1** para a matriz de cenários (ex-Quadro 4.1).
+- Pré-texto: Lista de Figuras (23) e **Lista de Tabelas** (1); a Lista de
+  Gráficos foi removida. Remissões com concordância ("A Figura 5.4").
+
+**Ressalva conhecida, aceita:** pelo IBGE (citado pela NBR 14724), texto em
+grade sem dado numérico seria quadro. O Victor preferiu seguir o avaliador.
+A NBR 14724 só **recomenda** lista por tipo de ilustração, então a lista
+única de Figuras está dentro da norma. Não reabrir.
 
 ---
 

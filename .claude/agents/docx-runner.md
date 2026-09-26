@@ -69,13 +69,16 @@ modelo principal.
       no prompt. **Divergiu → ABORTAR e reportar** (o usuário salvou pelo Word;
       a edição precisa ser refeita sobre a versão nova, ou o trabalho dele
       seria apagado em silêncio).
-   c. `cp` do arquivo atual para `<nome>_backup_YYYYMMDD_HHMMSS.docx` na mesma
-      pasta — **backup sempre, antes de sobrescrever**.
+   c. `cp` do arquivo atual para `_backups/<versão>/<nome>_backup_YYYYMMDD_HHMMSS.docx`
+      ao lado dele (ex.: `comentado/_backups/V10/`; `mkdir -p` se não existir)
+      — **backup sempre, antes de sobrescrever**.
    d. `cp` do finalizado para o path do OneDrive; `ls -la` + `md5sum` de
       confirmação.
    "Device or resource busy" → o Word está com o arquivo aberto: ABORTAR e
    reportar. O modelo principal fecha o Word pelo COM (salvando antes), como
    descrito em `padroes_revisao.md` da skill; o runner nunca mata o processo.
+   Com o Word fechado, o mesmo erro no `mv` do bash vem de arquivo só na
+   nuvem do OneDrive: usar `Move-Item` do PowerShell, que baixa e move.
    e. Se o prompt pedir, reabrir o canônico: `Start-Process "<path>"`.
 
 ## Regras de aborto (invioláveis)

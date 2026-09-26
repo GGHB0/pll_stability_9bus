@@ -40,7 +40,7 @@ encontrou.
 Passagem de **forma** (paginação, legendas, recuo, listas, equações), com
 verificadores e `decisoes.md`; o pipeline é o deste arquivo. **Ilustração ou
 equação nova no canônico** segue o padrão aplicado: legenda `SEQ` por
-`tcc-abnt-layout/scripts/campos.py`, tipo certo (Figura/Gráfico/Quadro) na
+`tcc-abnt-layout/scripts/campos.py`, tipo certo (Figura ou Tabela, D9) na
 legenda e na remissão, rótulo `(N.M)`.
 
 ## Convenções de escrita
@@ -141,8 +141,8 @@ esperada" (para o agente saber quando abortar/perguntar).
   pode manter o tamanho. Foi o MD5 que pegou, numa entrega do fragmento, que ele
   havia salvo o arquivo 8 minutos depois da minha cópia; entregar teria apagado
   o trabalho dele em silêncio.
-- **Backup datado antes de sobrescrever, sempre**
-  (`<nome>_backup_YYYYMMDD_HHMMSS.docx`, na mesma pasta).
+- **Backup datado antes de sobrescrever, sempre**: `<nome>_backup_YYYYMMDD_HHMMSS.docx`
+  em `_backups/<versão>/` ao lado do arquivo (`comentado/_backups/V10/`).
 - **Conferir que o Word está fechado** (`tasklist | grep -i winword`) e que não
   há arquivo de lock `~$*` na pasta. Trocar os bytes por baixo de uma sessão
   viva quebra o sincronismo do OneDrive: o Word passa a mostrar

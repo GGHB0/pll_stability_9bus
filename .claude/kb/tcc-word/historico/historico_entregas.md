@@ -10,6 +10,15 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-09-26 — Tudo Figura, Quadro vira Tabela (V10, comentários 3-5 do Oscar)
+
+- 18 legendas Gráfico → Figura (`SEQ Figura`, mesma numeração), Quadro 4.1 →
+  Tabela 4.1 (`SEQ Tabela`); Lista de Gráficos removida (21 parágrafos),
+  Lista de Quadros → Lista de Tabelas; 23 remissões com concordância; resumo
+  `74 f.` → `75 f.` (o run "74" era separado do " f."). Decisão D9.
+- `audit_docx` 0 falhas, `check_abnt` 0 falhas; `pagecheck` só acusa a folha
+  de ANEXOS (pendência antiga). Backup `_backup_20260926_202622`.
+
 ## 2026-09-26 — Sintonia inadequada no Resumo e no Abstract (V10)
 
 - **Canônico passou a ser `TCC_Victor_Bruno_V10.docx`**, com os comentários

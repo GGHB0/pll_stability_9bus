@@ -84,6 +84,9 @@ imprime 15; a última folha imprime 73.
 - SRF-PLL: Figura 3.2 autoral (D4). A imagem antiga foi copiada de outro
   trabalho acadêmico, sem citação.
 - Remissões do Cap. 5 e do Quadro 4.1 reescritas com concordância.
+- **2026-09-26 (D9, pedido do Oscar):** tudo virou Figura (23) e o Quadro
+  virou Tabela 4.1; Lista de Gráficos removida, Lista de Quadros → Lista de
+  Tabelas; numeração inalterada. Documento com 75 folhas, resumo `75 f.`
 
 ### Corpo (D5, D6)
 
@@ -103,12 +106,12 @@ entradas à esquerda em espaço simples; ANEXOS centralizado; `XXf.` e ano
 
 - **ANEXOS sem conteúdo** — título sozinho na última folha e no sumário.
 - **Dedicatória e epígrafe** — marcadores à espera do texto dos autores.
-- **`74 f.`** — confirmar com o Oscar se conta o total de folhas ou a
+- **`75 f.`** (desde 2026-09-26) — confirmar com o Oscar se conta o total de folhas ou a
   última numerada (73); atualizar se o documento mudar de tamanho.
 - **Subseções do Cap. 1** são itens de lista numerada ("1. Contextualização"),
   não `Ttulo2`: ficam fora do sumário e fogem da NBR 6024 ("1.1").
 - **Título gravado dentro da imagem** em pelo menos Figura 3.1, Figura 4.3,
-  Quadro 4.1 e Gráfico 2.3, repetindo a legenda.
+  Tabela 4.1 e Figura 2.3, repetindo a legenda.
 
 ## Como reconferir
 

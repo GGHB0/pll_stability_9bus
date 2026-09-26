@@ -7,13 +7,13 @@ automaticas e o trio quebra entre folhas. Uso num gen_*.py:
     import sys
     sys.path.insert(0, r'C:/projetos/pll_stability_9bus/.claude/skills/tcc-abnt-layout/scripts')
     from campos import legenda, imagem, fonte
-    trio = (legenda('Grafico', 5, 16, 'Erro de fase do PLL sob falta bifasica')
+    trio = (legenda('Figura', 5, 16, 'Erro de fase do PLL sob falta bifasica')
             + imagem(paragrafo_com_o_drawing)
             + fonte('Os autores (2026).'))
 
-`ident` e o identificador do SEQ, em ASCII (Figura, Grafico, Quadro); o
-rotulo impresso sai acentuado. `n` e so o cache do campo: o
-word_finalize.ps1 renumera tudo e reconstroi as tres listas.
+`ident` e o identificador do SEQ, em ASCII: Figura ou Tabela (D9: nao ha
+mais Grafico nem Quadro). `n` e so o cache do campo: o
+word_finalize.ps1 renumera tudo e reconstroi as listas.
 
 Comparado com as legendas entregues em 2026-09-13: mesma estrutura. O Word,
 ao salvar, tira `jc=left` e `szCs` (redundantes) e poe `noProof` no numero;
@@ -28,7 +28,7 @@ from ppr import ppr_edit
 
 BS = '\\'
 SZ10 = '<w:sz w:val="20"/><w:szCs w:val="20"/>'
-ROTULO = {'Figura': 'Figura', 'Grafico': 'Gráfico', 'Quadro': 'Quadro'}
+ROTULO = {'Figura': 'Figura', 'Tabela': 'Tabela'}
 
 
 def run(t, rpr=SZ10):
@@ -36,7 +36,7 @@ def run(t, rpr=SZ10):
 
 
 def legenda(ident, cap, n, titulo, tag='<w:p>'):
-    """Acima da ilustracao: 'Gráfico 5.16 – titulo', 10 pt, simples, a esquerda, keepNext."""
+    """Acima da ilustracao: 'Figura 5.16 – titulo', 10 pt, simples, a esquerda, keepNext."""
     if ident not in ROTULO:
         raise ValueError(f'ident deve ser um de {sorted(ROTULO)}: {ident!r}')
     r = lambda inner: f'<w:r><w:rPr>{SZ10}</w:rPr>{inner}</w:r>'

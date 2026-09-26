@@ -17,7 +17,7 @@
 0. Usuário fornece caminho ou listar bibliografia
 1. Sem sumário → extrair p.1-4 para estrutura
 2. Buscar seção "Center of Inertia" → extrair páginas relevantes
-3. Checar kb/power-system/inertia_estimation.md → existe, verificar linhas
+3. Checar kb/power-system/inercia/inertia_estimation.md → existe, verificar linhas
 4. Append ou criar inertia_estimation_2.md se >200 linhas
 ```
 

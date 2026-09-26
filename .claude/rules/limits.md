@@ -26,7 +26,7 @@ Subpastas criadas sob demanda, quando o primeiro conteúdo chegar:
 |---|---|
 | `kb/pll/` | SRF-PLL, com subpastas `teoria/`, `sintonia/` (ganhos do PI), `contingencias/`, `notch/` (histórico) |
 | `kb/inverter/` | VSI, filtro LCL, controle de corrente |
-| `kb/power-system/` | IEEE 9 barras, Ybarra, Thevenin |
+| `kb/power-system/` | Rede e estabilidade, com subpastas `ieee9bus/` (topologia, linhas, Thevenin), `inercia/` (H, estimação, virtual), `estabilidade/` (classificação, panorama IEA) |
 | `kb/simulation/` | Workflow notebook↔params.m, Vcc override, runtime (Ts/fsw/Tsc) |
 | `kb/standards/` | Normas, com subpastas `qualidade-energia/` (harmônicos, IEEE 519, 1547 Cl.7) e `ride-through/` (LVRT, ONS) |
 | `kb/events/` | Blecautes reais, uma subpasta por evento: `brasil-2023/`, `chile-2025/`, `iberia-2025/` |

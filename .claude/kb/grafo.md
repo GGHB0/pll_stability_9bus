@@ -25,6 +25,7 @@ graph LR
     dashboard -->|1| power_system
     dashboard -->|3| simulation
     dashboard -->|1| standards
+    events -->|1| power_system
     events -->|1| standards
     inverter -->|6| pll
     inverter -->|1| power_system

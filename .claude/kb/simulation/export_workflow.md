@@ -84,7 +84,7 @@ Exporta **três CSVs separados** (preserva a taxa nativa de cada grupo). Caminho
 `add_power_col(T, ds, t, sig_name, col_name, S_base_mva)` extrai a coluna (1) do
 Mux e divide por `S_base_mva` antes de interpolar — mesma base de 100 MVA usada
 em todo o pipeline Python (ver `V_base = 20 kV, S_base = 100 MVA` em
-`kb/power-system/ieee9bus_topology.md`).
+`kb/power-system/ieee9bus/ieee9bus_topology.md`).
 
 > ⚠️ **Gotcha unidade**: `P_bus1/3`, `Q_bus1/3` saem do Busbar (Simscape) já em
 > **MW/MVAr**, não em W/VAr — confirmado pelo usuário (2026-07). Dividir por

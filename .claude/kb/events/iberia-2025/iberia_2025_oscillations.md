@@ -124,5 +124,5 @@ quando teria sido valioso — recomendação de alarme/reativação automática.
   inversor GFL com sintonia inadequada (cenário BAD_PLL) injetando
   oscilação sustentada em rede com modo pouco amortecido.
 - O achado "inércia não resolve" reforça a motivação de estudar o PLL
-  (controle), não apenas inércia — ver kb/power-system/virtual_inertia.
+  (controle), não apenas inércia — ver [[virtual-inertia]].
 - Ver também [[iberia-2025-ibr-lessons]] para as recomendações gerais.

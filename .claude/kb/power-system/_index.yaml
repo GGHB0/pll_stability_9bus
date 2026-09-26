@@ -1,30 +1,40 @@
 folder: power-system
-description: IEEE 9 barras (topologia, parâmetros, Thevenin), inércia de máquinas, estimação de H e inércia virtual
-files:
-  - file: ieee9bus_topology.md
-    name: ieee9bus-topology
-    description: Topologia do IEEE 9-bus modificado — base, adaptação TCC, cargas, geradores
-  - file: ieee9bus_line_params.md
-    name: ieee9bus-line-params
-    description: Parâmetros de linhas e transformadores — fonte artigo IEEE 2024, comparação A&F, divergência .slx
-  - file: ieee9bus_thevenin.md
-    name: ieee9bus-thevenin
-    description: Cálculo de Ybarra/Zbarra, Thevenin Z22 na Barra 2, Rth/Lth para PLL
-  - file: machine_inertia.md
-    name: machine-inertia
-    description: Constante H, swing equation, critério das áreas iguais e impacto direto na SRF-PLL — cadeia H↓ → RoCoF↑ → lock-loss observada no Simulink
-  - file: inertia_estimation.md
-    name: inertia-estimation
-    description: Centro de Inércia (CoI), tendência de queda sistêmica e 5 técnicas de estimação de H — revisão MDPI Energies 15/20/7767 com avaliação Monte Carlo no IEEE 9-bus
-  - file: virtual_inertia.md
-    name: virtual-inertia
-    description: Inércia virtual/sintética em IBRs — VSG/VSM, parâmetros J_virt e D, grid-forming vs grid-following e posição como trabalho futuro do TCC
-  - file: stability_classification_classic.md
-    name: stability-classification-classic
-    description: Classificação clássica de estabilidade (IEEE/CIGRE 2004) e limites diante de IBR/GFL — Gu & Green, JPROC 2023
-  - file: stability_classification_extended.md
-    name: stability-classification-extended
-    description: Classificação estendida de estabilidade (IEEE TR77 / German Roadmap) — converter-driven/resonance stability, interação PLL-rede fraca ~10 Hz
-  - file: energy_transition_iea2026.md
-    name: energy-transition-iea2026
-    description: Panorama da transição energética global 2025 — crescimento de renováveis variáveis e participação na matriz (IEA Global Energy Review 2026)
+description: IEEE 9 barras (topologia, parâmetros, Thevenin), inércia de máquinas, estimação de H e inércia virtual, classificação de estabilidade com IBR
+files: []
+subfolders:
+  - folder: ieee9bus
+    description: Rede IEEE 9 barras modificada: topologia, parâmetros de linhas/trafos e Thevenin na Barra 2 (Rth/Lth para o PLL)
+    files:
+      - file: ieee9bus_topology.md
+        name: ieee9bus-topology
+        description: "Topologia do IEEE 9-bus modificado — base, adaptação TCC, cargas, geradores"
+      - file: ieee9bus_line_params.md
+        name: ieee9bus-line-params
+        description: "Parâmetros de linhas e transformadores — fonte artigo IEEE (Xiong et al., 2025), comparação A&F, divergência .slx"
+      - file: ieee9bus_thevenin.md
+        name: ieee9bus-thevenin
+        description: "Cálculo de Ybarra/Zbarra, Thevenin Z22 na Barra 2, Rth/Lth para PLL"
+  - folder: inercia
+    description: Inércia: constante H e swing equation, estimação de H (CoI) e inércia virtual/sintética em IBR
+    files:
+      - file: machine_inertia.md
+        name: machine-inertia
+        description: "Constante H, swing equation, critério das áreas iguais e impacto direto na SRF-PLL — cadeia H↓ → RoCoF↑ → lock-loss observada no Simulink"
+      - file: inertia_estimation.md
+        name: inertia-estimation
+        description: "Centro de Inércia (CoI), tendência de queda sistêmica, e 5 técnicas de estimação de H — revisão MDPI Energies 15/20/7767 com avaliação Monte Carlo no IEEE 9-bus"
+      - file: virtual_inertia.md
+        name: virtual-inertia
+        description: "Inércia virtual/sintética em IBRs — VSG/VSM, parâmetros J_virt e D, grid-forming vs grid-following, e posição como trabalho futuro do TCC"
+  - folder: estabilidade
+    description: Classificação de estabilidade clássica (IEEE/CIGRE 2004) e estendida (TR77) com IBR, e panorama da transição energética (IEA 2026)
+    files:
+      - file: stability_classification_classic.md
+        name: stability-classification-classic
+        description: "Classificação CLÁSSICA de estabilidade de sistemas de potência (IEEE/CIGRE Joint Task Force 2004) e seus limites diante de recursos baseados em inversor (IBR)"
+      - file: stability_classification_extended.md
+        name: stability-classification-extended
+        description: "Classificação ESTENDIDA de estabilidade para redes dominadas por IBR (IEEE TR77 + German System Stability Roadmap) — nova categoria converter-driven/resonance stability com interação PLL-rede"
+      - file: energy_transition_iea2026.md
+        name: energy-transition-iea2026
+        description: "Panorama da transição energética global 2025 — crescimento de renováveis variáveis (solar+eólica), participação na matriz e destaques regionais (IEA Global Energy Review 2026)"

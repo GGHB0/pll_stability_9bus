@@ -49,7 +49,7 @@ metadata:
   antes era "Resumo ou Conclusões do Capítulo", resto do template UERJ)
 
 > 2.1-2.4.3 redigidos em sessão Opus (2026-07-19), fontes preparadas em sessão
-> Sonnet anterior — ver `kb/power-system/energy_transition_iea2026.md`,
+> Sonnet anterior — ver `kb/power-system/estabilidade/energy_transition_iea2026.md`,
 > `stability_classification_classic.md`, `stability_classification_extended.md`,
 > `kb/events/brasil-2023/brasil_2023_overview.md` + `brasil_2023_root_causes.md`. Novas
 > referências que passam a ser citadas no texto e ainda **não estão** na lista

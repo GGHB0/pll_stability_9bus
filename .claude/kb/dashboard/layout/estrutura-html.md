@@ -61,7 +61,7 @@ descreve a **próxima ação** — regra registrada em [[header-branding]].
 
 ## Mapa SVG clicável
 
-SVG unifilar embutido (autoral, ver `kb/power-system/ieee9bus_topology.md`).
+SVG unifilar embutido (autoral, ver `kb/power-system/ieee9bus/ieee9bus_topology.md`).
 Na carga, `svgLocMap` agrupa os keys de `SCENARIOS` por local
 (prefixo antes da `/`, ex. `bus7`, `line7_8`); elementos do SVG com
 `data-loc` correspondente ganham `.has-data` + listener de clique →

@@ -1,5 +1,6 @@
 ---
 name: params-workflow
+aliases: [params-workflow]
 description: Workflow notebook -> MATLAB/Simulink for separating theoretical AGP calculations from runtime params.m values, including the intentional Vcc divergence and notebook_params.m generation
 source: notebooks/pll_stability_9bus_analysis.ipynb (last cell); params.m; notebook_params.m (auto-generated)
 ---

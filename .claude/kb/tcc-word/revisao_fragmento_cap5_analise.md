@@ -1,5 +1,6 @@
 ---
 name: tcc-revisao-fragmento-cap5-analise
+aliases: [tcc-revisao-fragmento-cap5-analise]
 description: Regra editorial do Cap.5 do fragmento — descrição de figura não é análise; o que substituiu a enumeração de valores nos parágrafos 98 e 101, a Figura 5.14 acrescentada à 5.13, o descarte do plano P-Q e o que ficou de fora
 metadata:
   type: project

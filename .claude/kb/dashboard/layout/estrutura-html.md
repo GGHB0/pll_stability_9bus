@@ -1,5 +1,6 @@
 ---
 name: estrutura-html
+aliases: [estrutura-html]
 description: Esqueleto do relatório HTML — header, filter-bar, seções, objeto SCENARIOS, fluxo switchScenario e mapa SVG clicável
 ---
 

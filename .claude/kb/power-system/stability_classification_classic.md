@@ -1,5 +1,6 @@
 ---
 name: stability-classification-classic
+aliases: [stability-classification-classic]
 description: Classificação CLÁSSICA de estabilidade de sistemas de potência (IEEE/CIGRE Joint Task Force 2004) e seus limites diante de recursos baseados em inversor (IBR)
 source: Gu & Green, "Power System Stability With a High Penetration of Inverter-Based Resources", IEEE Proceedings, vol. 111, n.7, jul/2023, DOI 10.1109/JPROC.2022.3179826, §I–II (p.832–835)
 references:

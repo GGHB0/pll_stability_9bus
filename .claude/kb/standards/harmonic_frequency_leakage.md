@@ -1,5 +1,6 @@
 ---
 name: harmonic-frequency-leakage
+aliases: [harmonic-frequency-leakage]
 description: Achado 2026-08-10, corrigido 2026-08-11 — o "2º harmônico" elevado na tabela pré-falta de todo cenário era vazamento espectral por F_FUND_HZ fixo; _measure_f1 (cruzamento de zero, modo abc) elimina quase todo o vazamento nas ordens 3ª/4ª, mas deixa residual na 2ª porque a rede está em chirp contínuo, não só deslocada de 60 Hz — residual é físico, não bug
 source: investigação direta em output/results/*/sim_data*.csv (2026-08-10, 2026-08-11); Carvalho et al. 2014 p.74-76 (fundamento teórico, seção 2)
 references:
@@ -143,5 +144,5 @@ explicação ao leitor na seção 6.4 de `output/normas_harmonicos.pdf`.
 ## Em aberto
 
 Confirmar `f∞≈59,32 Hz` com uma rodada de Regime mais longa (Bruno, ver
-[[project_bruno_simulations]]) — o valor atual é extrapolação de uma janela
+[[resimulacao-abc]]) — o valor atual é extrapolação de uma janela
 de 0,6 s com resposta de 1ª ordem ainda em curso, não um dado observado.

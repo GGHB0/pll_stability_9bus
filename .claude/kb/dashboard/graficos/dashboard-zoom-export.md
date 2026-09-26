@@ -1,5 +1,6 @@
 ---
 name: dashboard-zoom-export
+aliases: [dashboard-zoom-export]
 description: Controles do dashboard — botão de zoom na janela de falta (sincronizado entre figuras) e export PNG hi-res do modebar
 ---
 

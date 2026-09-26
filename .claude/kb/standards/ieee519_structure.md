@@ -1,5 +1,6 @@
 ---
 name: ieee519-structure
+aliases: [ieee519-structure]
 description: Mapa de cláusulas e das cinco tabelas do IEEE 519-2014 — valores, páginas (PDF vs impressa), notas de rodapé e o que se aplica ou não à Barra 2
 source: IEEE 519-2014, Cl.3-5 e Anexos A-D (págs. impressas 3-11 = PDF 15-23)
 references:

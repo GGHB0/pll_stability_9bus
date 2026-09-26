@@ -1,5 +1,6 @@
 ---
-name: tcc-abnt-layout
+name: tcc-abnt-layout-estado
+aliases: [tcc-abnt-layout-estado]
 description: Estado da formatação ABNT e da paginação do TCC DOCX canônico — diagnóstico de 2026-09-12, passagem completa entregue em 2026-09-13, o que ainda está aberto
 source: TCC_Victor_Bruno_V9_novo_indice_2.docx (antes MD5 91c13b5c…, 79 folhas; depois MD5 17de36b4…, 74 folhas)
 references:
@@ -118,3 +119,8 @@ python.exe .claude/skills/tcc-abnt-layout/scripts/check_abnt.py <dir>/word/docum
 # sobre o PDF exportado pelo word_finalize.ps1 -Pdf
 python.exe .claude/skills/tcc-abnt-layout/scripts/pagecheck.py C:\Temp\tcc_check.pdf
 ```
+
+## Relacionados
+
+- [[tcc-docx-structure]] — padrões e convenções XML subjacentes
+- [[tcc-docx-content-map]] — mapa estrutural do documento que precisa estar conforme

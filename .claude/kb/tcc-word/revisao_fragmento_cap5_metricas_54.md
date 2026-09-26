@@ -1,5 +1,6 @@
 ---
 name: tcc-revisao-fragmento-cap5-metricas-54
+aliases: [tcc-revisao-fragmento-cap5-metricas-54]
 description: Métricas da Seção 5.4 do fragmento (perda de sincronismo em bus7/3phase_bad_pll) — rotação acumulada, escorregamento, retenção com valores brutos, argumento 2x2 e ressalvas
 metadata:
   type: project

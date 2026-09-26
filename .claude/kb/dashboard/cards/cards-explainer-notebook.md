@@ -1,5 +1,6 @@
 ---
 name: cards-explainer-notebook
+aliases: [cards-explainer-notebook]
 description: Notebook didático que reimplementa manualmente o cálculo de cada card do dashboard, com verificação cruzada contra o pipeline real
 ---
 

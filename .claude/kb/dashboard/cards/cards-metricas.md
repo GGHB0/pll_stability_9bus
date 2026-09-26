@@ -1,5 +1,6 @@
 ---
 name: cards-metricas
+aliases: [cards-metricas]
 description: Cards de severidade do distúrbio (V médio por barra, duração, topologia) com semáforo good/warn/bad e bloco de contexto em tópicos — grupo "Desempenho do PLL" e veredito removidos em 2026-08-09
 ---
 

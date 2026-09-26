@@ -1,5 +1,6 @@
 ---
 name: dark-mode-legend-title-fixes
+aliases: [dark-mode-legend-title-fixes]
 description: Continuação de dark-mode-theming — legenda invisível no dark (chaves dotted) e barra de título de painel re-temada por engano (cinza em vez de branco)
 ---
 

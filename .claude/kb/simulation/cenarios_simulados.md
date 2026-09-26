@@ -1,5 +1,6 @@
 ---
 name: cenarios-simulados
+aliases: [cenarios-simulados]
 description: Inventário dos cenários exportados em output/results — 22 nominais + 8 com sintonia inadequada, as duas configurações temporais de falta e as lacunas de cobertura
 source: output/results/*/fault_info.json (levantamento 2026-08-19); params.m linhas 13-17, 59-61
 ---

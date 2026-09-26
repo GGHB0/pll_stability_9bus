@@ -1,5 +1,6 @@
 ---
 name: bad-pll-dashboard-filter
+aliases: [bad-pll-dashboard-filter]
 description: Design do filtro BAD_PLL no dashboard HTML — app.py + renderer.py, toggle PLL, SVG e select
 ---
 

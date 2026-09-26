@@ -1,5 +1,6 @@
 ---
 name: reuniao-2026-05-inercia-pll
+aliases: [reuniao-2026-05-inercia-pll]
 description: Texto de apoio para reuniao sobre novos testes de inercia, reatancia de curto, colapso do PLL e tentativas de filtragem notch
 source: Testes Simulink do projeto, semana de 2026-05
 ---
@@ -63,3 +64,8 @@ tres blocos: primeiro, a varredura de inercia e reatancia de curto; segundo, a
 analise do mecanismo de colapso do PLL e das correntes dq; terceiro, a discussao
 das tentativas de notch, explicando por que elas ajudam no problema de 120 Hz mas
 nao resolvem o colapso estrutural por baixa inercia.
+
+## Relacionados
+
+- [[machine-inertia]] — H das máquinas síncronas, limite empírico observado
+- [[pll-loop-filter-gains]] — dimensionamento dos ganhos Kp/Ki do PLL testados

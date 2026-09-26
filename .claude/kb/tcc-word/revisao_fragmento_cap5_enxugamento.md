@@ -1,5 +1,6 @@
 ---
 name: tcc-revisao-fragmento-cap5-enxugamento
+aliases: [tcc-revisao-fragmento-cap5-enxugamento]
 description: Passe de enxugamento analítico do Cap.5 do fragmento em 2026-09-02, com o critério do corte e o antes/depois parágrafo a parágrafo
 metadata:
   type: project

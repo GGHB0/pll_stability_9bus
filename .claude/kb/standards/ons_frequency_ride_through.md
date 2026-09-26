@@ -1,5 +1,6 @@
 ---
 name: ons-frequency-ride-through
+aliases: [ons-frequency-ride-through]
 description: Faixas de operação em frequência não nominal (Submódulo 2.10 ONS) para centrais eólicas/fotovoltaicas — trip/ride-through, controle primário de frequência e limites de redução de potência
 source: ONS, Submódulo 2.10 — Requisitos técnicos mínimos para a conexão às instalações de transmissão, rev. 2025.02 (vigência 01/03/2025), itens 4.2.1, 5.2.1, 5.2.7-5.2.9, pp.10, 21-28
 references:

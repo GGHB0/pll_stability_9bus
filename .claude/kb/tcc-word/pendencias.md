@@ -1,3 +1,9 @@
+---
+name: tcc-pendencias
+description: Pendências do TCC priorizadas em P1/P2/P3: estruturais, conteúdo, limpeza, fora de escopo
+aliases: [tcc-pendencias]
+---
+
 # TCC Word — Pendências Priorizadas
 
 > Extraído de `docx_structure.md` (2026-07-19) para respeitar o limite de 200 linhas.

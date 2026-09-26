@@ -1,5 +1,6 @@
 ---
 name: construcao-graficos
+aliases: [construcao-graficos]
 description: ChartBuilder (chart.py) — subplots por seção, linhas single/pair, legendas por eixo, decimação, paletas e eixos X linkados
 ---
 

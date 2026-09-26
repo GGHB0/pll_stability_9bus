@@ -1,5 +1,6 @@
 ---
 name: bad-pll-select-init-bug
+aliases: [bad-pll-select-init-bug]
 description: Bug corrigido — filtro do select de cenário não era aplicado na carga inicial do HTML (mostrava casos _bad_pll com toggle em Nominal)
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: ieee9bus-line-params
+aliases: [ieee9bus-line-params]
 description: Parâmetros de linhas e transformadores — fonte artigo IEEE (Xiong et al., 2025), comparação A&F, divergência .slx
 references:
   - "XIONG, Yongxin; WU, Heng; LI, Yifei; WANG, Xiongfei. Comparison of Power Swing Characteristics and Efficacy Analysis of Impedance-based Detections in Synchronous Generators and Grid-following Systems. IEEE Transactions on Power Systems, v. 40, n. 3, p. 2545-2556, maio 2025. DOI 10.1109/TPWRS.2024.3469235."
@@ -86,3 +87,8 @@ dobrados (R×2, L×2, M×2) → X total ≈ 0.0576 pu. Coincide com o artigo. �
 
 **Linha 8-9 no .slx:** 2 segmentos em paralelo de 100 km com parâmetros dobrados
 → X total ≈ 0.1008 pu. ✓
+
+## Relacionados
+
+- [[ieee9bus-topology]] — topologia da rede que usa esses parâmetros
+- [[ieee9bus-thevenin]] — cálculo de impedância que depende desses valores

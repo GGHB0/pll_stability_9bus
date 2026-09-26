@@ -1,5 +1,6 @@
 ---
 name: tcc-full-cap4
+aliases: [tcc-full-cap4]
 description: Conteúdo completo do Capítulo 4 — Análise e Discussão de Resultados (quase vazio — só títulos), Conclusão (placeholder) e Referências finais do documento
 metadata:
   type: project
@@ -89,3 +90,8 @@ Com base em simulações realizadas:
 - `Id` e `Iq` deixam de seguir trajetória coerente quando `theta_hat` se perde
 - Tentativas de notch/filtro para remover componentes de 120 Hz não resolveram os casos severos; seguem relevantes para curtos assimétricos moderados, mas não substituem uma solução estrutural para baixa inércia e lock-loss
 - Varredura com H das máquinas e reatância de curto entre 2% e 20% de 529 ohms
+
+## Relacionados
+
+- [[tcc-full-cap3]] — metodologia que fornece os dados analisados
+- [[tcc-equacoes]] — numeração e referências de equações do capítulo

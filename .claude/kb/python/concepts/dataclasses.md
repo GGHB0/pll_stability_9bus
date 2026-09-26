@@ -1,3 +1,9 @@
+---
+name: python-dataclasses
+description: Dataclasses em Python 3.10+: slots, frozen, kw_only, pattern matching, post-init processing
+aliases: [python-dataclasses]
+---
+
 # Dataclasses
 
 > **Purpose**: @dataclass decorator patterns with slots, frozen, kw_only for Python 3.11+

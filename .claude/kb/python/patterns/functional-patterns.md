@@ -1,3 +1,9 @@
+---
+name: python-functional-patterns
+description: Padrões funcionais em Python: comprehensions, map/filter, functools, pipeline, immutability
+aliases: [python-functional-patterns]
+---
+
 # Functional Patterns
 
 > **Purpose**: Comprehensions, map, filter, reduce, functools for clean data transformations

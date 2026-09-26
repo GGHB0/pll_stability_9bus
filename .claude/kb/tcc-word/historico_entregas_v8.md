@@ -1,3 +1,9 @@
+---
+name: tcc-historico-entregas-v8
+description: Histórico de entregas da versão V8 do TCC: seção 3.3, correções dos comentários do Oscar
+aliases: [tcc-historico-entregas-v8]
+---
+
 # TCC Word — Histórico de Entregas (V8, arquivado)
 
 > Fragmentado de `historico_entregas.md` em 2026-07-22 para respeitar o
@@ -19,3 +25,8 @@
   - #14 Cap.2: "sistema de sincronismo " removido (SRF-PLL agora é a sigla direta)
   - #17/#21/#24/#29: Ttulo4 → Ttulo3 com pPrChange (Clarke, Park, Arq.Controle, PWM)
   - Arquivo: `C:\Temp\tcc_oscar_fixes.docx` → copiado para OneDrive como `V8_oscar_fixes.docx`
+
+## Relacionados
+
+- [[tcc-historico-entregas]] — índice geral de todas as entregas
+- [[tcc-historico-entregas-2026-08]] — versão mais recente (agosto)

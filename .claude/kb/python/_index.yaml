@@ -32,3 +32,5 @@ subfolders:
         description: Comprehensions, map, filter, reduce e functools para transformações de dados
       - file: numpy-pandas-plotly.md
         description: Pipeline de análise de sinais temporais com NumPy/Pandas/Plotly — padrões usados no src/
+      - file: svg-embedded-html.md
+        description: SVG interativo embutido no HTML gerado em Python — onclick e bug de aspas em f-string, fragmentado de numpy-pandas-plotly.md

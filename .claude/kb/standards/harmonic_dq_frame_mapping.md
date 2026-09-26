@@ -1,5 +1,6 @@
 ---
 name: harmonic-dq-frame-mapping
+aliases: [harmonic-dq-frame-mapping]
 description: Mapeamento formal ordem harmônica → bin do espectro dq (Yazdani & Iravani §4.2.4/4.3, fasor espacial + rotação dq) — por que a fundamental dq é DC, por que só sobra múltiplos de 3f₁, e a colisão 5ª/7ª→6ª (corroborado por Teodorescu §12.3.5.1)
 source: Yazdani & Iravani (2010) §4.2.4 p.81-83 (eq.4.13-4.15, Tab.4.1); §4.3/Eq.4.68-4.69 (rotação dq); Teodorescu, Liserre & Rodríguez (2011) §12.3.5.1 p.330-331
 references:

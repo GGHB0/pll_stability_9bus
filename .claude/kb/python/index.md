@@ -23,6 +23,7 @@
 | [patterns/error-handling.md](patterns/error-handling.md) | Exception hierarchy, custom errors, recovery patterns |
 | [patterns/functional-patterns.md](patterns/functional-patterns.md) | Comprehensions, map, filter, reduce, functools |
 | [patterns/numpy-pandas-plotly.md](patterns/numpy-pandas-plotly.md) | Pipeline de sinais temporais: NumPy/Pandas/Plotly — padrões do projeto |
+| [patterns/svg-embedded-html.md](patterns/svg-embedded-html.md) | SVG interativo embutido no HTML, bug de onclick em f-string |
 
 > Padrões específicos do dashboard HTML (gráficos, cards, dados, layout)
 > migraram para [../dashboard/index.md](../dashboard/index.md).

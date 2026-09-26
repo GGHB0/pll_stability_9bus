@@ -1,5 +1,6 @@
 ---
 name: project-scope
+aliases: [project-scope]
 description: Escopo completo do TCC — título, autores, estrutura de capítulos, status e conexões entre os artefatos do projeto
 source: TCCs Victor e Bruno_V8.docx (comentado)
 ---

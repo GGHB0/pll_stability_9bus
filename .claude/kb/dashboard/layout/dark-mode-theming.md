@@ -1,5 +1,6 @@
 ---
 name: dark-mode-theming
+aliases: [dark-mode-theming]
 description: Gotcha do tema escuro no dashboard HTML — annotations/shapes com cor fixa, bug de chave "eixo.propriedade" flat no axUpd, e plot_bgcolor sem contraste com o card
 ---
 

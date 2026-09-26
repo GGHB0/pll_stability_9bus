@@ -1,3 +1,9 @@
+---
+name: tcc-historico-entregas-2026-09-12
+description: Entregas de 2026-09-12: referências fechadas, revisão de português, Cap. 6-7 redigidos
+aliases: [tcc-historico-entregas-2026-09-12]
+---
+
 # TCC Word — Entregas de 2026-09-12
 
 > Fragmentado de `historico_entregas.md` em 2026-09-13 por limite de

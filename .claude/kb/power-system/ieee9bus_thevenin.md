@@ -1,5 +1,6 @@
 ---
 name: ieee9bus-thevenin
+aliases: [ieee9bus-thevenin]
 description: Cálculo de Ybarra/Zbarra, Thevenin Z22 na Barra 2, Rth/Lth para PLL
 ---
 
@@ -77,3 +78,8 @@ O Z22 representa a rigidez da rede vista pelo PLL. Quanto menor Z_th, mais rígi
 a rede e mais estável o PLL. Contingências que aumentam Z_th (perda de gerador,
 abertura de linha) degradam a estabilidade do PLL — esse é o fenômeno central
 investigado no TCC.
+
+## Relacionados
+
+- [[ieee9bus-line-params]] — parâmetros de linha que alimentam o cálculo
+- [[pll-loop-filter-gains]] — dimensionamento dos ganhos que usa Rth/Lth

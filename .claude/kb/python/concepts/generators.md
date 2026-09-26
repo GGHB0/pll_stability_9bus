@@ -1,3 +1,9 @@
+---
+name: python-generators
+description: Generators em Python: yield, send(), delegation com yield from, pipelines, lazy evaluation
+aliases: [python-generators]
+---
+
 # Generators
 
 > **Purpose**: Generator functions, yield, send, and generator expressions for lazy evaluation

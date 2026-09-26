@@ -1,5 +1,6 @@
 ---
 name: ieee9bus-topology
+aliases: [ieee9bus-topology]
 description: Topologia do IEEE 9-bus modificado — base, adaptação TCC, cargas, geradores
 ---
 
@@ -88,3 +89,8 @@ e substituído pelo subsistema `UFV Model` (SID=3896).
 
 Todos os reatâncias em p.u. na base própria da máquina.
 Fonte: Tabela 2.1 — Anderson & Fouad, "Power System Control and Stability".
+
+## Relacionados
+
+- [[ieee9bus-line-params]] — parâmetros das linhas e transformadores
+- [[ieee9bus-thevenin]] — equivalente de Thévenin derivado desta topologia

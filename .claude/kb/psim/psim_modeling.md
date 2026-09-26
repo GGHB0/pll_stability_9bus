@@ -1,5 +1,6 @@
 ---
 name: psim-modeling
+aliases: [psim-modeling]
 description: Fase inicial de modelagem do PLL no PSIM (Altair) — inventário, parâmetros e Vcc, antes da migração para Simulink
 source: pasta PSim/ (netlists .txt + parameters100MVA.txt, GGHB, 2026-07-22)
 ---
@@ -66,7 +67,7 @@ Consistências com o projeto atual (`CLAUDE.md`):
 - **Vcc — o override já existia no PSIM:** o arquivo base usa 90,9 kV, mas
   a netlist do circuito 01 referencia `parameters100MVA_VCCnovo.txt` e usa
   **VDC = 136,4 kV** (o `VDC4` da ponte). É a origem da divergência
-  registrada em [[project_vcc_convention]].
+  registrada em [[params-workflow]].
 
 > **Numeração arbitrária:** os prefixos `01`/`04` dos arquivos não indicam
 > ordem nem sequência — são só rótulos. São dois esquemáticos

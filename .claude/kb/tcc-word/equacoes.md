@@ -1,3 +1,9 @@
+---
+name: tcc-equacoes
+description: Equações do TCC: formato em tabela invisível, numeração por capítulo, lista completa 3.1-4.2
+aliases: [tcc-equacoes]
+---
+
 # TCC Word — Equações: Formato e Inventário
 
 > Reformatação aplicada em 2026-07-19 (edição direta, sem tracked changes),
@@ -74,3 +80,8 @@ abaixo).
   relações na mesma linha são separadas por 3 em-spaces (`\u2003`), mesmo
   recurso das equações 3.8/3.9. Conferir com `C:\Temp\check_new_eqs.py`, que
   extrai `<m:t>` e conta `m:f`/`m:sSub`/`m:sSubSup` por equação.
+
+## Relacionados
+
+- [[tcc-full-cap2]] — capítulo que contém as equações 3.1–3.9
+- [[tcc-full-cap3]] — capítulo que contém as equações 3.10–3.23

@@ -120,6 +120,7 @@ Quando variáveis dos geradores forem adicionadas, usar sufixo `_gen1`, `_gen2` 
 ```
 .claude/
 ├── kb/
+│   ├── index.md, grafo.md     ← gerados por scripts/kb_links.py (ver rules/kb-links.md)
 │   ├── project-scope.md       ← escopo TCC, status dos capítulos, tabela de contingências
 │   ├── dashboard/             ← relatório HTML: dados/, graficos/, cards/, layout/ (ver index.md)
 │   ├── pll/                   ← teoria SRF-PLL, metodologia Kp/Ki, cenários de contingência

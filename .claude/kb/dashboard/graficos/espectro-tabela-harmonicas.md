@@ -1,5 +1,6 @@
 ---
 name: espectro-tabela-harmonicas
+aliases: [espectro-tabela-harmonicas]
 description: Tabela de harmônicas do dashboard — duas tabelas por domínio (abc/dq), destaque normativo por célula, isenção do segmento de falta e a legenda em duas camadas
 metadata:
   type: project

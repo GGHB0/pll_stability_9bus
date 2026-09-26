@@ -1,3 +1,9 @@
+---
+name: python-type-hints
+description: Type hints em Python 3.10+: sintaxe moderna, Self, Never, generics 3.12, TypedDict, Protocols
+aliases: [python-type-hints]
+---
+
 # Type Hints
 
 > **Purpose**: Type annotations, generics, Self, and Python 3.12+ syntax for clean Python code

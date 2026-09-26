@@ -1,3 +1,9 @@
+---
+name: tcc-siglas-inventory
+description: Inventário de 36 siglas do TCC: lista ordenada, revisão 2026-09-13, formatação, ferramenta varredura
+aliases: [tcc-siglas-inventory]
+---
+
 # TCC Word — Inventário de Siglas e Abreviaturas
 
 > **Revisão de 2026-09-13** sobre `TCC_Victor_Bruno_V9_novo_indice_2.docx`
@@ -89,3 +95,8 @@ sigla com lookaround, nunca substring (ISE casa LISERRE).
 31 siglas inseridas no lugar das sobras do template (CTC/B, UERJ);
 padronização RBI/ICR → IBR; typo MOW → MOHAN. Detalhe em
 `historico_entregas_2026_07.md`.
+
+## Relacionados
+
+- [[tcc-docx-content-map]] — estrutura do documento que usa estas siglas
+- [[tcc-full-prefacio]] — localização da lista nas páginas pré-textuais

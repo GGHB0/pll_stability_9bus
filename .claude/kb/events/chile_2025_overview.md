@@ -1,5 +1,6 @@
 ---
 name: chile-2025-overview
+aliases: [chile-2025-overview]
 description: Apagão total do SEN chileno em 25/fev/2025 — causa raiz (intervenção não autorizada em proteção diferencial), formação de duas ilhas elétricas e colapso, medidas corretivas incl. nova norma GFM/GFL
 source: Coordinador Eléctrico Nacional (Chile), Resumen Ejecutivo EAF 089/2025 (19/mar/2025) e apresentação "Análisis del Apagón del 25 de Febrero de 2025" ao Congresso (16/abr/2025)
 references:

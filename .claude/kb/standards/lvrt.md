@@ -1,5 +1,6 @@
 ---
 name: lvrt-standards
+aliases: [lvrt-standards]
 description: Requisitos LVRT e IEEE 1547-2018 relevantes para avaliação do SRF-PLL
 source: TCCs V8 cap.2.4.2; IEEE Std 1547-2018 (requisitos detalhados extraídos via IEEE Std 1547.2-2023, ver ieee1547_ride_through.md)
 references:

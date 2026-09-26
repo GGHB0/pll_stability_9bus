@@ -1,5 +1,6 @@
 ---
 name: tcc-full-prefacio
+aliases: [tcc-full-prefacio]
 description: Conteúdo completo das páginas pré-textuais do TCC — capa, folha de rosto, resumo, abstract, listas e sumário
 metadata:
   type: project
@@ -63,3 +64,8 @@ This paper presents … . *(placeholder — a ser redigido)*
   - 4.3. Análise de Sensibilidade e Diretrizes de Projeto
     - 4.3.1. Influência dos Ganhos do Controlador PI do PLL
     - 4.3.2. Conformidade com o Código de Rede (LVRT)
+
+## Relacionados
+
+- [[tcc-full-intro]] — introdução que segue imediatamente após o prefácio
+- [[tcc-siglas-inventory]] — lista de siglas nas páginas pré-textuais

@@ -1,5 +1,6 @@
 ---
 name: vsc-reference
+aliases: [vsc-reference]
 description: Modelo e controle do VSC grid-imposed em dq-frame — referência Yazdani-Iravani Cap. 8 e Apêndice B
 source: Yazdani & Iravani, Voltage-Sourced Converters in Power Systems, 2010, Cap. 8 e Apêndice B
 references:

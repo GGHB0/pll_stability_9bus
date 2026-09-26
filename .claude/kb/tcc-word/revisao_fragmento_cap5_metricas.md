@@ -1,5 +1,6 @@
 ---
 name: tcc-revisao-fragmento-cap5-metricas
+aliases: [tcc-revisao-fragmento-cap5-metricas]
 description: Definições fechadas e valores medidos das métricas de falta do Cap.5 do fragmento, após a auditoria de 2026-08-23 que reprovou vários números do texto anterior
 metadata:
   type: project

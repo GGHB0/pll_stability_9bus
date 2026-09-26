@@ -1,5 +1,6 @@
 ---
 name: pipeline-dados
+aliases: [pipeline-dados]
 description: SimData (loader.py) — leitura dos CSVs do MATLAB, correção do erro de fase, métricas na janela pós-falta (tₛ de acomodação e V médio por barra) e frequência estimada do PLL
 ---
 

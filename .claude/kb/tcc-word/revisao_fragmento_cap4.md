@@ -1,5 +1,6 @@
 ---
 name: tcc-revisao-fragmento-cap4
+aliases: [tcc-revisao-fragmento-cap4]
 description: Revisão colaborativa do fragmento externo capitulos_4_5_revisados.docx — Cap.4 fechado (terminologia do dashboard, ganhos do PLL, filtro LCL, tempos de falta), ainda não mesclado no canônico
 metadata:
   type: project

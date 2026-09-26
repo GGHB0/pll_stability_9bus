@@ -1,5 +1,6 @@
 ---
 name: pll-cycle-slip-measurement
+aliases: [pll-cycle-slip-measurement]
 description: Receita de medição do escorregamento de ciclo (cycle slipping) do SRF-PLL — arctan2+unwrap sobre vd/vq, com verificação cruzada via ângulos gravados pelo modelo
 metadata:
   type: reference

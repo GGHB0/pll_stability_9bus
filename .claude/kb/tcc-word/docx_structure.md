@@ -1,3 +1,9 @@
+---
+name: tcc-docx-structure
+description: Estrutura OOXML do TCC: padrões XML, convenções de IDs, registro de recursos utilizados, armadilhas de edição
+aliases: [tcc-docx-structure]
+---
+
 # TCC Word — Estrutura OOXML
 
 > **2026-09-02**: os Cap. 4 e 5 foram substituídos por inteiro (blocos 591–734

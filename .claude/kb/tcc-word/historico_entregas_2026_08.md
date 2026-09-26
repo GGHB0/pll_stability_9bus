@@ -1,3 +1,9 @@
+---
+name: tcc-historico-entregas-2026-08
+description: Entregas de agosto/2026: passe de estilo fase 2, nova §3.5 controlador, ganhos do PLL, CIGRE
+aliases: [tcc-historico-entregas-2026-08]
+---
+
 # TCC Word — Histórico de Entregas de agosto/2026
 
 > Fragmentado de `historico_entregas.md` em 2026-09-09 por limite de 200 linhas.
@@ -41,6 +47,11 @@
 - **Entregue**: `TCC_Victor_Bruno_V9_novo_indice_2.docx`, hash
   `943f247d...` (antes: `9db47610...`, entrega da Fase 1 mais cedo no mesmo
   dia). Pré-check de hash bateu com o staging antes da entrega.
+
+## Relacionados
+
+- [[tcc-historico-entregas]] — índice geral de todas as entregas
+- [[tcc-equacoes]] — estrutura de equações que sofreu edições neste período
 
 ## 2026-08-05 — Nova §3.5 (controlador de corrente) + referências cruzadas Cap.3↔Cap.4
 

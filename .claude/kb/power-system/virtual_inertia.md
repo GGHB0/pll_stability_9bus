@@ -1,5 +1,6 @@
 ---
 name: virtual-inertia
+aliases: [virtual-inertia]
 description: Inércia virtual/sintética em IBRs — VSG/VSM, parâmetros J_virt e D, grid-forming vs grid-following, e posição como trabalho futuro do TCC
 source: MDPI Energies 15(20) 7767 (2022); MDPI Energies 15(22) 8406 (2022)
 references:

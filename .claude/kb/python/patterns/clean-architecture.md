@@ -1,3 +1,9 @@
+---
+name: python-clean-architecture
+description: Arquitetura limpa em Python: estrutura projeto, regra dependência, naming, padrão configuração
+aliases: [python-clean-architecture]
+---
+
 # Clean Architecture
 
 > **Purpose**: Clean code structure, naming conventions, module organization for Python projects

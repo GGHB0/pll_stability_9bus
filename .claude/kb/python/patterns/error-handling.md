@@ -1,3 +1,9 @@
+---
+name: python-error-handling
+description: Tratamento de erros em Python: hierarquia custom, exception chaining, retry pattern, Result type
+aliases: [python-error-handling]
+---
+
 # Error Handling
 
 > **Purpose**: Exception hierarchy, custom errors, and recovery patterns for robust Python code

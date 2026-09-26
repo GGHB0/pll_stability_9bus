@@ -1,5 +1,6 @@
 ---
 name: tabs-navegacao
+aliases: [tabs-navegacao]
 description: Abas de gráficos (Resumo/Inversor/Sistema/Espectro), render preguiçoso com flags dirty e cards clicáveis (goToChart)
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: pll-gain-voltage-dependence
+aliases: [pll-gain-voltage-dependence]
 description: A sintonia do SRF-PLL degrada com a profundidade do afundamento (ωn e ξ ∝ √U) porque o laço é normalizado por constante — equivalência algébrica exata entre o cenário BAD_PLL e o PLL nominal sob U = 0,2 pu
 source: Karimi-Ghartemani 2014 eq. (6.4) p.135; Teodorescu-Liserre-Rodríguez 2011 §4.2.2.3 p.56; params.m; PSim/01_Sistema PLL_vfinal_100MVA (backup)1.txt
 references:
@@ -56,7 +57,7 @@ exatamente quando o laço mais precisa dele.
 ## A equivalência com o cenário BAD_PLL
 
 O cenário de **sintonia inadequada** multiplica `kp_pll` **e** `ki_pll` por 0,2
-(ver [[project_bad_pll]] na memória), resultando em `ω_n = 145,5` e `ξ = 0,316`
+(ver [[cenarios-simulados]]), resultando em `ω_n = 145,5` e `ξ = 0,316`
 — registrados em §4.3.2.3 do TCC.
 
 São **exatamente** os valores da linha `U = 0,20` da tabela acima. Não é

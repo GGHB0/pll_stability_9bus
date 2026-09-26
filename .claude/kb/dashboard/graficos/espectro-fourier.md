@@ -1,5 +1,6 @@
 ---
 name: espectro-fourier
+aliases: [espectro-fourier]
 description: Aba de espectro FFT segmentado (pré/durante/pós-falta) — SpectrumBuilder multi-modo (fases a/b/c + eixos d/q), seletor de fase no HTML, truncamento a ciclos inteiros, componente DC; a tabela de harmônicas fica em espectro-tabela-harmonicas.md
 metadata:
   type: project

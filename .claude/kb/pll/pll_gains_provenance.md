@@ -1,5 +1,6 @@
 ---
 name: pll-gains-provenance
+aliases: [pll-gains-provenance]
 description: Procedência dos ganhos do SRF-PLL — literais hardcoded no netlist PSIM, cadeia PSIM→Simulink→params.m, e a dedução de que o laço está normalizado (U = 1 pu)
 source: PSim/01_Sistema PLL_vfinal_100MVA (backup)1.txt; PSim/parameters100MVA.txt; params.m (commit 219f6ee); Karimi-Ghartemani 2014 p.135; Teodorescu-Liserre-Rodríguez 2011 §4.2.2.3 p.56
 references:

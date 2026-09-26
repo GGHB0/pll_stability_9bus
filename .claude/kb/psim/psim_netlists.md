@@ -1,5 +1,6 @@
 ---
 name: psim-netlists
+aliases: [psim-netlists]
 description: Topologia dos circuitos PSIM 01 (sistema EMT completo) e 04 (bancada de projeto do controle de corrente), lida das netlists em texto
 source: PSim/01_...txt e PSim/04_...txt (netlists PSIM, GGHB, 2026-07-22)
 ---
@@ -33,7 +34,7 @@ SRF-PLL e SPWM. `.TIME`: passo 20 µs, total 1 s.
 
 **Conversor (VSC 2 níveis):**
 - `VDC4` — barramento CC = **136,4 kV** (Vcc "novo", ver override em
-  [[project_vcc_convention]]).
+  [[params-workflow]]).
 - `IGBT Q13…Q18` — ponte de 6 chaves (2 níveis).
 
 **Modulação (SPWM):**

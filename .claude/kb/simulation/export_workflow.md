@@ -1,5 +1,6 @@
 ---
 name: export-workflow
+aliases: [export-workflow]
 description: Workflow validado Simulink → MATLAB → Python para o modelo pll_stability_9bus (logsout, sinais de barra, sim_data.csv)
 ---
 
@@ -124,7 +125,7 @@ output/results/
 
 Linhas do IEEE 9 barras: **1-4, 4-5, 5-6, 3-6, 6-7, 7-8, 8-2, 8-9, 9-4**.
 `fault_type` ∈ `{3phase, 2phase_ground, 2phase, 1phase_ground}`; sufixo `_bad_pll`
-quando `BAD_PLL=true` (ver [[bad-pll-scenario]]).
+quando `BAD_PLL=true` (ver [[cenarios-simulados]]).
 
 Cada pasta recebe: `sim_data.csv`, `sim_data_angles.csv`, `sim_data_abc.csv`
 (se `iabc_inverter` logado com ≥2 amostras) e `fault_info.json`.

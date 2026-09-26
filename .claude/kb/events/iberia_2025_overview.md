@@ -1,5 +1,6 @@
 ---
 name: iberia-2025-overview
+aliases: [iberia-2025-overview]
 description: Apagão ibérico de 28/abr/2025 — linha do tempo, números-chave e condições pré-evento (relatório final ENTSO-E)
 source: ENTSO-E, Grid Incident in Spain and Portugal on 28 April 2025 — Final Report, mar/2026, §1–§3
 references:

@@ -1,5 +1,6 @@
 ---
 name: brasil-2023-overview
+aliases: [brasil-2023-overview]
 description: Blecaute do SIN em 15/08/2023 — linha do tempo, condições pré-evento e formação de ilhas elétricas (relatório RAP-ONS 00012/2023)
 source: ONS, RAP-ONS 00012/2023 — Análise da Perturbação do dia 15/08/2023 às 08h30min, §1–§2, §4, §5.6
 references:

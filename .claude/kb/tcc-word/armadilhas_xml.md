@@ -1,5 +1,6 @@
 ---
 name: tcc-armadilhas-xml
+aliases: [tcc-armadilhas-xml]
 description: Armadilhas de edição direta do OOXML do TCC aprendidas na prática — corrupção por ET.write, proofErr, sectPr, falso positivo de w:p
 ---
 
@@ -60,3 +61,8 @@ description: Armadilhas de edição direta do OOXML do TCC aprendidas na prátic
 - **Arquivo aberto no Word bloqueia a cópia de volta ao OneDrive** ("Device or
   resource busy") — pedir para fechar; se o usuário salvou mudanças, refazer a
   edição sobre a versão salva (o Word também renumera IDs ao salvar).
+
+## Relacionados
+
+- [[tcc-docx-structure]] — padrões XML, convenções de IDs e estrutura OOXML
+- [[tcc-abnt-layout-estado]] — aplicação prática das regras em formatação real

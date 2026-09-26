@@ -1,5 +1,6 @@
 ---
 name: tcc-full-intro
+aliases: [tcc-full-intro]
 description: Conteúdo completo da Introdução do TCC — contextualização, motivação (apagão 08/2023), objetivos e referências [1]–[9]
 metadata:
   type: project
@@ -67,3 +68,8 @@ Diante do exposto, o objetivo geral deste trabalho é analisar, de forma crític
 [8] WU, H.; WANG, X. Design-Oriented Transient Stability Analysis of PLL-Synchronized Voltage-Source Converters. IEEE Transactions on Power Electronics, v. 35, n. 4, p. 3573-3589, abr. 2020. DOI 10.1109/TPEL.2019.2937942.
 
 [9] XIONG, Y. et al. Comparison of Power Swing Characteristics and Efficacy Analysis of Impedance-based Detections in Synchronous Generators and Grid-following Systems. IEEE Transactions on Power Systems, v. 40, n. 3, p. 2545-2556, maio 2025. DOI 10.1109/TPWRS.2024.3469235.
+
+## Relacionados
+
+- [[brasil-2023-overview]] — o apagão de 15/08/2023 que motivou este trabalho
+- [[pll-contingencies]] — os cenários de contingência avaliados no TCC

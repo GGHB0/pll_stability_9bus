@@ -1,5 +1,6 @@
 ---
 name: ieee1547-case-studies
+aliases: [ieee1547-case-studies]
 description: Estudos de caso reais (CAISO, Entergy) sobre o impacto de ride-through/DVS de DER na recuperação de tensão do sistema — Annex I do IEEE Std 1547.2-2023
 source: IEEE Std 1547.2-2023, Annex I, pp.263-268
 references:

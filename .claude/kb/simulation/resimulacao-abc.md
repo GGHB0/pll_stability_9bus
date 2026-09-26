@@ -1,5 +1,6 @@
 ---
 name: resimulacao-abc
+aliases: [resimulacao-abc]
 description: Runbook de re-simulação (Bruno) — regenerar os 18 cenários para exportar sim_data_abc.csv (correntes e tensões trifásicas, painéis abc do espectro)
 ---
 
@@ -62,7 +63,7 @@ Variáveis em `params.m`: `FAULT_BUS`, `FAULT_LINE`, `FAULT_TYPE`, `BAD_PLL`.
 
 A pasta de saída é montada sozinha pelo export a partir dessas variáveis —
 não precisa criar pasta nem mover arquivo. Cenários `_bad_pll` usam o
-`kp_pll × 0.2` automático do `params.m` (ver [[bad-pll-scenario]]).
+`kp_pll × 0.2` automático do `params.m` (ver [[cenarios-simulados]]).
 
 > ⚠️ **Bug de tempo de falta nos CSVs `_bad_pll` atuais (2026-07-21).** Os
 > cenários `_bad_pll` foram exportados com a falta em `t_fault = 0.6 s` /

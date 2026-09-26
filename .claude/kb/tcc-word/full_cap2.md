@@ -1,5 +1,6 @@
 ---
 name: tcc-full-cap2
+aliases: [tcc-full-cap2]
 description: Conteúdo completo do Capítulo 2 — Fundamentação Teórica: transformadas Clarke/Park, controle P/Q, SRF-PLL, contingências e requisitos LVRT/ONS
 metadata:
   type: project
@@ -90,3 +91,8 @@ Além da permanência em operação, os Procedimentos de Rede também exigem o s
 [INSERIR FIGURA 2.X – Requisito de injeção de corrente reativa sob defeito, conforme Procedimentos de Rede do ONS.] Fonte: Adaptado de ONS (2022).
 
 A observância desses requisitos depende inteiramente da atuação coordenada das malhas de controle do inversor. Como o ONS impõe rampas e limites específicos para a resposta de corrente durante e logo após a eliminação da falta, a estimação correta do ângulo da tensão no PCC pelo SRF-PLL mostra-se indispensável. Falhas ou lentidão no sincronismo impossibilitam o correto direcionamento dos vetores de corrente nas coordenadas síncronas (d e q), comprometendo o atendimento aos critérios exigidos pelo operador nacional.
+
+## Relacionados
+
+- [[srf-pll-theory]] — teoria linearizada do SRF-PLL fundação de 2.3
+- [[ieee9bus-topology]] — sistema de estudo IEEE 9 barras modificado

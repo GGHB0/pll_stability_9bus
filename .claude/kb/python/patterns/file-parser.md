@@ -1,3 +1,9 @@
+---
+name: python-file-parser
+description: File parser em Python: processamento eficiente com generators, CSV/JSON Lines, pipelines ETL
+aliases: [python-file-parser]
+---
+
 # File Parser
 
 > **Purpose**: File parsing patterns using generators and context managers for memory-efficient processing

@@ -1,3 +1,9 @@
+---
+name: tcc-historico-entregas-2026-09-inicio
+description: Entregas de setembro até 2026-09-09: troca PAC→PCC, mesclagem Cap. 4-5, enxugamento Cap. 5
+aliases: [tcc-historico-entregas-2026-09-inicio]
+---
+
 # TCC Word — Entregas de setembro/2026 (até 2026-09-09)
 
 > Fragmentado de `historico_entregas.md` em 2026-09-12 por limite de

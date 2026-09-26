@@ -1,5 +1,6 @@
 ---
 name: inertia-estimation
+aliases: [inertia-estimation]
 description: Centro de Inércia (CoI), tendência de queda sistêmica, e 5 técnicas de estimação de H — revisão MDPI Energies 15/20/7767 com avaliação Monte Carlo no IEEE 9-bus
 source: MDPI Energies 15(20) 7767 (2022) — Inertia Estimation of Synchronous Devices
 references:
@@ -86,4 +87,4 @@ indisponível em tempo real para geradores de terceiros.
 
 Ver [[machine-inertia]] — definição de H, swing equation e cadeia de lock-loss.
 Ver [[virtual-inertia]] — como IBRs grid-forming contribuem com H_equiv para H_sys.
-Ver [[ieee9bus]] — rede onde as simulações Monte Carlo do artigo foram rodadas.
+Ver [[ieee9bus-topology]] — rede onde as simulações Monte Carlo do artigo foram rodadas.

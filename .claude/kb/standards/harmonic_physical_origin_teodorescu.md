@@ -1,5 +1,6 @@
 ---
 name: harmonic-physical-origin-teodorescu
+aliases: [harmonic-physical-origin-teodorescu]
 description: Fundamentação bibliográfica (Teodorescu, Liserre & Rodríguez 2011) para a origem física de harmônicos pares vs ímpares em inversores e a genealogia do limite de 1% na 2ª harmônica — não altera nenhum limite aplicado no dashboard
 source: Teodorescu, Liserre & Rodríguez (2011) §5.4.3 p.99; §12.3.5.1 p.330-331; Tab.3.6 p.37; Tab.12.1/12.2 p.315
 references:

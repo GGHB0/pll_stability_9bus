@@ -1,3 +1,9 @@
+---
+name: python-context-managers
+description: Context managers em Python: padrão with/yield, classes com __enter__/__exit__, contextlib utilities
+aliases: [python-context-managers]
+---
+
 # Context Managers
 
 > **Purpose**: with statement, __enter__/__exit__, and contextlib patterns for resource management

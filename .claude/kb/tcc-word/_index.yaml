@@ -22,11 +22,14 @@ files:
   - file: historico_entregas_2026_07.md
     name: tcc-historico-entregas-2026-07
     description: Histórico de entregas de julho/2026 no DOCX canônico, fragmentado do arquivo principal
+  - file: historico_entregas_2026_07_inicio.md
+    name: tcc-historico-entregas-2026-07-inicio
+    description: Histórico de entregas de 2026-07-19 e 2026-07-22 (arquivo obsoleto sem sufixo), fragmentado do _2026_07
   - file: historico_entregas_v8.md
     name: tcc-historico-entregas-v8
     description: Histórico de entregas na versão V8 do DOCX, arquivado
   - file: abnt_layout.md
-    name: tcc-abnt-layout
+    name: tcc-abnt-layout-estado
     description: Estado ABNT e paginação do DOCX canônico — diagnóstico 2026-09-12 e passagem completa entregue 2026-09-13 (79→74 folhas, 24 ilustrações com SEQ), antes/depois medido e o que ficou aberto; decisões D1-D8 na skill tcc-abnt-layout
   - file: pendencias.md
     name: tcc-docx-pendencias

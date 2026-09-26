@@ -1,3 +1,9 @@
+---
+name: python-quick-reference
+description: Referência rápida Python: tabelas de decisão para dataclasses, type hints, generators, context managers
+aliases: [python-quick-reference]
+---
+
 # Python Clean Code Quick Reference
 
 > Fast lookup tables. For code examples, see linked files.
@@ -78,3 +84,8 @@
 | Type hints guide | `concepts/type-hints.md` |
 | Error handling patterns | `patterns/error-handling.md` |
 | Full Index | `index.md` |
+
+## Relacionados
+
+- [[python-clean-architecture]] — padrões estruturais e organização
+- [[numpy-pandas-plotly-pipeline]] — pipeline específico para sinais temporais do projeto

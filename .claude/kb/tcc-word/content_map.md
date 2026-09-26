@@ -1,5 +1,6 @@
 ---
 name: tcc-docx-content-map
+aliases: [tcc-docx-content-map]
 description: Mapa de conteúdo seção a seção do TCC_Victor_Bruno_V9_novo_indice_2.docx — estado atual, problemas estruturais e inventário de figuras
 metadata:
   type: project

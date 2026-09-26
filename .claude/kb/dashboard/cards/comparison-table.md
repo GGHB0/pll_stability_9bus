@@ -1,5 +1,6 @@
 ---
 name: comparison-table
+aliases: [comparison-table]
 description: Tabela comparativa de cenários no dashboard HTML — coluna de métricas ordenável, filtrada por modo PLL
 ---
 

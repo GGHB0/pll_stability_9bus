@@ -1,5 +1,6 @@
 ---
 name: tcc-revisao-fragmento-cap5
+aliases: [tcc-revisao-fragmento-cap5]
 description: Reescrita do Cap.5 do fragmento capitulos_4_5_revisados.docx — duas safras de modelo nos cenários bad_pll, tese de compromisso de banda passante com o caso-limite de perda de sincronismo, estrutura 5.1-5.6
 metadata:
   type: project

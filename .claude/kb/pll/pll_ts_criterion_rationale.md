@@ -1,5 +1,6 @@
 ---
 name: pll-ts-criterion-rationale
+aliases: [pll-ts-criterion-rationale]
 description: Defesa da escolha do critério de 1% (numerador 4,6) na sintonia do SRF-PLL — argumento a favor, argumento contra (15% mais ripple de 2ω₀) e como redigir isso no TCC
 source: Franklin-Powell-Emami-Naeini 2002 (critério de 1%); Ogata 2009 (critérios de 2% e 5%); Teodorescu-Liserre-Rodríguez 2011 §4.2.2.3 p.56; Alves-Dias-Rolim 2020 §4.1; cálculo próprio de |G(j2ω₀)|
 references:

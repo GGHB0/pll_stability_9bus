@@ -44,7 +44,9 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
      `goToChart` (xref) foi achado em 2026-07-24, ver `tabs-navegacao.md`.
 6. **Atualizar o KB**: editar o doc correspondente em
    `.claude/kb/dashboard/` (fragmentar se passar 200 linhas — ver
-   `.claude/rules/limits.md`).
+   `.claude/rules/limits.md`). Doc novo: `[[slug]]` para pelo menos um tema,
+   linha no `kb/dashboard/index.md` e `scripts/kb_links.py all` (ver
+   `.claude/rules/kb-links.md`).
 7. **CHANGELOG**: nova entrada no topo de `CHANGELOG.md` (motivação, arquivos,
    o que mudou — mesmo formato das entradas existentes); se ultrapassar 200
    linhas, arquivar as entradas mais antigas em `docs/changelog/<data>.md`

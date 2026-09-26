@@ -1,5 +1,6 @@
 ---
 name: ieee1547-power-quality-clause7
+aliases: [ieee1547-power-quality-clause7]
 description: Mapa da Cláusula 7 (Power quality) do guia IEEE 1547.2-2023 — Tabelas 15-18, notas 118/119, a condição de ensaio de laboratório do §7.3.1, a condicionante do trafo no §7.3.3 e o roteiro EMTP do §7.5
 source: IEEE 1547.2-2023 Cl.7 (págs. impressas 137-148 = PDF 138-149); citações literais do IEEE 1547-2018 §7.1-7.4
 references:

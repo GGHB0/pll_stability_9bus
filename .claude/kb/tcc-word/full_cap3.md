@@ -1,5 +1,6 @@
 ---
 name: tcc-full-cap3
+aliases: [tcc-full-cap3]
 description: Conteúdo completo do Capítulo 3 — Metodologia: plataforma híbrida (Python/PSIM/MATLAB), IEEE 9 barras, filtro LCL, PI corrente, SRF-PLL, protocolos de contingência
 metadata:
   type: project
@@ -85,3 +86,8 @@ O afundamento de tensão assimétrico é produzido por faltas desequilibradas, c
 A presença de tensão de sequência negativa impõe um desafio crítico ao SRF-PLL convencional. No referencial síncrono dq, a componente de sequência negativa gira em sentido contrário ao referencial positivo, produzindo uma oscilação de frequência dupla (2·ω₀ ≈ 753 rad/s para ω₀ = 2π·60 rad/s) no sinal de erro de fase vq. Essa perturbação atravessa a malha de controle do PI e se manifesta como uma ondulação oscilatória no ângulo estimado e na frequência angular estimada, comprometendo a qualidade do sincronismo e deteriorando o controle desacoplado das potências.
 
 [TABELA 3.2 - Parâmetros dos cenários de afundamento de tensão assimétrico simulados.]
+
+## Relacionados
+
+- [[tcc-full-cap2]] — fundamentação teórica que precede esta metodologia
+- [[export-workflow]] — fluxo de exportação de dados do Simulink para análise Python

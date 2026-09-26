@@ -1,5 +1,6 @@
 ---
 name: machine-inertia
+aliases: [machine-inertia]
 description: Constante H, swing equation, critério das áreas iguais e impacto direto na SRF-PLL — cadeia H↓ → RoCoF↑ → lock-loss observada no Simulink
 source: Anderson-Fouad cap.2; teste Simulink TCC 2026-05
 references:
@@ -126,8 +127,8 @@ O teste com H reduzido reproduz exatamente o contexto do apagão:
 - Ciclo de realimentação: menos injeção → tensão cai → mais IBRs perdem lock → cascata
 
 Ver [[pll-contingencies]] — Cenário 4 (Alto RoCoF) para o trade-off Kp/Ki.
-Ver [[lvrt]] para requisitos durante o afundamento que precede o lock-loss.
-Ver [[ieee9bus]] para os parâmetros da rede onde o teste foi executado.
+Ver [[lvrt-standards]] para requisitos durante o afundamento que precede o lock-loss.
+Ver [[ieee9bus-topology]] para os parâmetros da rede onde o teste foi executado.
 Ver [[ons-2-11]] — paradoxo detecção vs. injeção: ONS_2_11 detecta a falta corretamente
 mas a injeção falha porque depende de θ̂ que está corrompido quando H é baixo.
 Ver [[inertia-estimation]] — como H_sys é medido e por que cai com IBRs.

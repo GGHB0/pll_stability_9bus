@@ -1,5 +1,6 @@
 ---
 name: tcc-trabalhos-futuros
+aliases: [tcc-trabalhos-futuros]
 description: Eixos definidos para o Cap. 7 (Trabalhos Futuros) do TCC — quais entraram, qual foi descartado e por quê
 source: Discussão com o usuário em 2026-09-12
 metadata:

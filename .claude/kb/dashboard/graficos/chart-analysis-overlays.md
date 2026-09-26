@@ -1,5 +1,6 @@
 ---
 name: chart-analysis-overlays
+aliases: [chart-analysis-overlays]
 description: Overlays de análise nos gráficos — janela de falta sombreada, hierarquia θ̂ PLL vs θ Rede, marcador tₛ e envelope LVRT 1547 Cat II
 ---
 

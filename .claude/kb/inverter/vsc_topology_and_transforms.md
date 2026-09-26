@@ -1,5 +1,6 @@
 ---
 name: vsc-topology-and-transforms
+aliases: [vsc-topology-and-transforms]
 description: Fundamentos de topologia VSC (half-bridge, full-bridge, dois níveis) e formalismo de fasor espacial para as transformadas Clarke/Park — Yazdani & Iravani, Cap. 1-2, 4
 source: Yazdani & Iravani, Voltage-Sourced Converters in Power Systems, 2010, Cap.1 (p.23-46), Cap.4 (p.69-125)
 references:

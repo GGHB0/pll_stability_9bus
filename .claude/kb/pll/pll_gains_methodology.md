@@ -1,5 +1,6 @@
 ---
 name: pll-gains-methodology
+aliases: [pll-gains-methodology]
 description: Metodologia TeseAGP (Kp=8·fg·Lest) dos ganhos do CONTROLADOR DE CORRENTE — não é o ganho do PLL, ver pll_loop_filter_gains.md
 source: TeseAGP p.107-109 (Figs. 4.4, 4.5); notebooks/pll_stability_9bus_analysis.ipynb células 30/39
 references:

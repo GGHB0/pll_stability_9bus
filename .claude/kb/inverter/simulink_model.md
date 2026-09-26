@@ -1,5 +1,6 @@
 ---
 name: simulink-model
+aliases: [simulink-model]
 description: Arquitetura completa do modelo pll_stability_9bus.slx — hierarquia de subsistemas, parâmetros do InitFcn e implementação do controle
 source: pll_stability_9bus.slx (extraído via XML interno)
 ---

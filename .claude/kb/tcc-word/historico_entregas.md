@@ -1,3 +1,9 @@
+---
+name: tcc-historico-entregas
+description: Histórico de entregas do Claude ao TCC: subscritos, siglas, ABNT, Cap. 6-7, português, mais recente
+aliases: [tcc-historico-entregas]
+---
+
 # TCC Word — Histórico de Entregas do Claude
 
 > Extraído de `docx_structure.md` (2026-07-19) para respeitar o limite de
@@ -102,3 +108,8 @@ incidente de corrupção que motivou a troca para `TCC_Victor_Bruno_V9_novo_indi
 ## Entregas anteriores (V8)
 
 Ver `historico_entregas_v8.md` (fragmentado em 2026-07-22 por limite de linhas).
+
+## Relacionados
+
+- [[tcc-historico-entregas-2026-08]] — histórico detalhado de agosto
+- [[tcc-historico-entregas-2026-09-12]] — histórico detalhado de setembro

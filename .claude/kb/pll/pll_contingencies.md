@@ -1,5 +1,6 @@
 ---
 name: pll-contingencies
+aliases: [pll-contingencies]
 description: Os 4 cenários de contingência simulados, efeitos no SRF-PLL e métricas de avaliação
 source: TCCs V8 cap.2.4, cap.4 (estrutura); pll_stability_9bus.slx
 ---

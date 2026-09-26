@@ -1,5 +1,6 @@
 ---
 name: python-pipeline
+aliases: [python-pipeline]
 description: Arquitetura Python (src/) que consome sim_data.csv — SimData, ChartBuilder, painéis, métricas
 ---
 

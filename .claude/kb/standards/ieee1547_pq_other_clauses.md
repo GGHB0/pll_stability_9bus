@@ -1,5 +1,6 @@
 ---
 name: ieee1547-pq-other-clauses
+aliases: [ieee1547-pq-other-clauses]
 description: Requisitos de QEE do IEEE 1547-2018 que NÃO são de harmônico — RVC (Tabela 16), flicker, sobretensão (§7.4) e o roteiro de estudo de QEE do §7.5, que endossa a metodologia EMT do TCC
 source: IEEE 1547.2-2023 §7.2, §7.4, §7.5 (págs. impressas 140-148 = PDF 141-149)
 references:

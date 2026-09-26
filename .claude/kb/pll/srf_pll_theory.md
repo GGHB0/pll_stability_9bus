@@ -1,5 +1,6 @@
 ---
 name: srf-pll-theory
+aliases: [srf-pll-theory]
 description: Teoria do SRF-PLL — estrutura, modelo linear, projeto de ganhos (Karimi-Ghartemani cap.6)
 source: Karimi-Ghartemani 2014, cap.6 p.133-139 (eq. 6.4 na p.135) e §1.4 p.9; Teodorescu-Liserre-Rodríguez 2011, §4.2.2.3 p.56 (eqs. 4.35-4.38); Yazdani & Iravani 2010, §8.3.4-8.3.5 p.210-217 (eq. 8.38 na p.215)
 references:

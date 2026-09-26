@@ -133,6 +133,7 @@ Frontmatter obrigatório em qualquer arquivo KB:
 ---
 name: slug-do-arquivo
 description: Uma linha descrevendo o conteúdo (usada para decidir relevância)
+aliases: [slug-do-arquivo]
 source: Sobrenome Autor, Título Abreviado, ano, §seção ou p.páginas
 references:
   - "Citação bibliográfica completa — ver .claude/rules/references.md"
@@ -142,6 +143,10 @@ references:
 artigo, norma, relatório) — regras completas em
 [references.md](../../rules/references.md). Os metadados extraídos no
 Passo 1 (`toc.txt`) normalmente já trazem autor/título/ano suficientes.
+
+Todo doc novo referencia pelo menos um tema existente com `[[slug]]` e, no
+fim, roda `scripts/kb_links.py all`. Regras em
+[kb-links.md](../../rules/kb-links.md).
 
 ## PDFs com Mapa de Seções Conhecido
 

@@ -1,5 +1,6 @@
 ---
 name: iberia-2025-voltage-control
+aliases: [iberia-2025-voltage-control]
 description: Análise do controle de tensão do apagão ibérico (§4.1) — falha dos recursos de reativo, mecanismo P↓→Q↓→V↑ dos inversores em fator de potência fixo, e o achado de que modelos estáticos subestimam a subida real de tensão
 source: ENTSO-E, Grid Incident in Spain and Portugal on 28 April 2025 — Final Report, mar/2026, §4.1 (p.206–231)
 references:

@@ -1,5 +1,6 @@
 ---
 name: harmonic-measurement-conditions
+aliases: [harmonic-measurement-conditions]
 description: Condições de medição de harmônico (IEEE 519-2014 Cl.4 + nota 118 do IEEE 1547.2-2023) confrontadas com a FFT implementada em spectrum.py — o que coincide, o que é inaplicável a uma simulação EMT e o que é divergência corrigível
 source: IEEE 519-2014 §4.1-4.4 (págs. impressas 4-5 = PDF 16-17); IEEE 1547.2-2023 nota de rodapé 118 (pág. impressa 144)
 references:

@@ -1,5 +1,6 @@
 ---
 name: harmonic-significance-criteria
+aliases: [harmonic-significance-criteria]
 description: Critérios da literatura para o que conta como harmônico de tensão/corrente "significativo" em pu — normas de conformidade (IEEE 519/1547) vs. rejeição a distúrbio (TeseAGP) vs. criério funcional de PLL (Yazdani)
 source: TeseAGP p.31-39,58-60,135-138,189-193; Yazdani & Iravani §4.2.4,4.3.3,12.5.1-12.5.7 (p.103-113,376-393); IEEE 1547.2-2023 §7.3 (p.144-147); IEEE 519-2014 §5 (p.17-21)
 references:

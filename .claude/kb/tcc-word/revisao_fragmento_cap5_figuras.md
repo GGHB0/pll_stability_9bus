@@ -1,5 +1,6 @@
 ---
 name: tcc-revisao-fragmento-cap5-figuras
+aliases: [tcc-revisao-fragmento-cap5-figuras]
 description: Estrutura de seções, mapa das 13 figuras e histórico de geração dos gráficos do Cap.5 do fragmento capitulos_4_5_revisados.docx
 metadata:
   type: project

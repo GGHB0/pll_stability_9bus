@@ -1,5 +1,6 @@
 ---
 name: harmonic-norm-application
+aliases: [harmonic-norm-application]
 description: Como os critérios de significância de harmônico (ver harmonic-significance-criteria) se aplicam aos dados deste projeto — checagem por ordem em abc vs dq, isenção por segmento, e notação única para as variáveis de base de corrente (Isc/IL/I_rated), evitando invocar TDD
 source: IEEE 519-2014 §5 Tabela 2 e nota "c" (p.18-19); IEEE 1547.2-2023 §7.3 Tabela 15 (p.144-147)
 references:

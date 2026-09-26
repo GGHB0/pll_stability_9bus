@@ -1,5 +1,6 @@
 ---
 name: pll-loop-filter-gains
+aliases: [pll-loop-filter-gains]
 description: Ganhos do PI do laço do SRF-PLL (kp_pll=460, ki_pll=105820) — projeto de 2ª ordem por tempo de acomodação, ts=20 ms pelo critério de 1% (Teodorescu eq. 4.38 / Alves 2020 eqs. 9-11), ωn=325,3 e ξ=0,707
 source: Alves-Dias-Rolim 2020 §4.1 eqs. (7)-(11); Teodorescu-Liserre-Rodríguez 2011 §4.2.2.3 p.56 eqs. (4.35)-(4.38); Karimi-Ghartemani 2014 eq. (6.4) p.135; params.m
 references:
@@ -194,5 +195,5 @@ kp' = 0,2·kp,  ki' = 0,2·ki
 
 Ou seja, o cenário degrada **banda e amortecimento simultaneamente**
 (`ωn` e `ξ` ambos por `√0,2`), não só a velocidade de rastreamento — leitura
-útil ao descrever a "sintonia inadequada" no TCC. Ver [[bad-pll-scenario]] e
+útil ao descrever a "sintonia inadequada" no TCC. Ver [[cenarios-simulados]] e
 [[pll-reactive-inertia]].

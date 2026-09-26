@@ -1,5 +1,6 @@
 ---
 name: tcc-revisao-fragmento-cap4-figuras
+aliases: [tcc-revisao-fragmento-cap4-figuras]
 description: As 4 figuras inseridas no Cap.4 do fragmento capitulos_4_5_revisados.docx — mapa, renumeração, decisões de redação e as duas pendências de legibilidade
 metadata:
   type: project

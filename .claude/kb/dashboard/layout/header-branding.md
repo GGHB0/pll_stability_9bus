@@ -1,5 +1,6 @@
 ---
 name: header-branding
+aliases: [header-branding]
 description: Logo UERJ embutido no header do dashboard HTML (base64) + fix do label invertido do toggle de mapa
 ---
 
@@ -65,3 +66,8 @@ quando `hidden === true` o clique acabou de reexibir o mapa, então o botão
 deve oferecer a ação oposta ("Ocultar mapa"). Vale o mesmo raciocínio para
 qualquer outro toggle símile no dashboard (`table-toggle`, `pll-btn`): o label
 do botão sempre descreve a **próxima ação disponível**, nunca o estado atual.
+
+## Relacionados
+
+- [[estrutura-html]] — esqueleto HTML e injeção de componentes
+- [[bad-pll-dashboard-filter]] — toggle de modo PLL (padrão similar)

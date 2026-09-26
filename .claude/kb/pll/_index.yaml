@@ -25,6 +25,9 @@ files:
   - file: pll_notch_implementation.md
     name: pll-notch-implementation
     description: Notch de 120 Hz no SRF-PLL testado em 2026-05 e removido do modelo final (2026-07) — registro histórico, não estado atual
+  - file: pll_notch_integration.md
+    name: pll-notch-integration
+    description: Notch de 120 Hz — posicionamento no laço, relação com o modelo e resultado das tentativas de 2026-05 (histórico), fragmentado de pll_notch_implementation.md
   - file: pll_reactive_inertia.md
     name: pll-reactive-inertia
     description: PLL como "inércia reativa" e dualidade Q-δi (GFL) vs P-δv (síncronos/GFM) — framework estendido de estabilidade de sistemas com alta penetração de IBR

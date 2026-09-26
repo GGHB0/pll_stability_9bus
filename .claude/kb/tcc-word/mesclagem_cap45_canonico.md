@@ -1,5 +1,6 @@
 ---
 name: tcc-mesclagem-cap45-canonico
+aliases: [tcc-mesclagem-cap45-canonico]
 description: Mesclagem dos Capítulos 4 e 5 do fragmento revisado para dentro do TCC canônico em 2026-09-02, com a receita técnica e o inventário do que foi descartado
 metadata:
   type: project

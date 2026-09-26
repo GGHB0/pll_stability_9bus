@@ -2,7 +2,7 @@
 name: tcc-equacoes
 description: Equações do TCC: formato em tabela invisível, numeração por capítulo, lista completa 3.1-4.2
 aliases: [tcc-equacoes]
-source: TeseAGP p.43 eqs. (3.21)-(3.22), p.84 Fig. 4.5
+source: TeseAGP p.42-43 eqs. (3.20)-(3.22) e (3.26), p.84 Fig. 4.5
 references:
   - "ALVES, André Gustavo Pereira. Metodologia para Auto-Ajuste de Controladores de Corrente em Conversores Fonte de Tensão Conectados a Redes Sujeitas a Distúrbios Harmônicos. Tese (Doutorado em Engenharia Elétrica) — COPPE/UFRJ, Rio de Janeiro, 2022."
 ---
@@ -80,7 +80,7 @@ Padrão aprovado pelo Victor, aplicado em texto, OMML e figuras:
   K_p/K_i. A frase "Adota-se a notação…" fica no parágrafo que abre o
   modelo linearizado (antes da Eq. 3.10), não depois da 3.17.
 - **PI de corrente (saída → moduladora do SPWM):** K_p / K_i **sem sufixo**,
-  como na TeseAGP (eqs. 3.21-3.22, p.43; Fig. 4.5, p.84). A tese chama o PI
+  como na TeseAGP (eqs. 3.21-3.22, p.42; Fig. 4.5, p.84). A tese chama o PI
   do PLL de PI_PLL e usa **PI_cc para o elo CC** (cc = corrente contínua):
   por isso não usar sufixo "c"/"cc" no controlador de corrente.
 - **Frequência da rede no feed-forward do PLL:** ω_0 (como na Fig. 4.5 da
@@ -88,6 +88,16 @@ Padrão aprovado pelo Victor, aplicado em texto, OMML e figuras:
   (`srf_pll_blocos_funcionais.svg`, `pll_control_loop.svg`) corrigidas; o
   rodapé da 4.3 trazia por engano as fórmulas do controlador de corrente
   (8·f_g…/32·f_g²…), trocadas por K_pPLL = 2ξω_n e K_iPLL = ω_n².
+- **Ângulo e frequência do PLL (comentário #107 do Oscar):** θ_PLL para o
+  ângulo estimado (as Eqs. 3.11, 3.13 e 3.15 usavam θ_est), ω_PLL para a
+  frequência estimada e ω_0 para a nominal (o parágrafo do VCO dizia ω_nom),
+  como na Fig. 3.2. θ_ref (ângulo da rede) fica.
+- **Fonte de ω_n = 4√2·f_g e K_p = 8·f_g·L_est / K_i = 32·f_g²·L_est (#110/#112):**
+  TeseAGP eqs. (3.20)-(3.22) p.42 e (3.26) p.43; t_ss = 4/(ξω_n) = 1/f_g
+  (critério 2%). O André cita ALVES; DIAS; ROLIM 2020 [61] (2ª ordem, ξ =
+  0,707), OGATA [62] e YAZDANI [27]; **Teodorescu [8] não é fonte dessas
+  equações** (na tese ele entra na estrutura dq e no PI_cc). No TCC, §3.5
+  cita (ALVES, 2022; YAZDANI; IRAVANI, 2010) e §4.3.2.2 remete à Eq. (3.23) (#138).
 - Pendente de decisão: a Eq. 3.19 (K_iPLL = ω_n²) só fecha com a Eq. 3.15
   se o laço for normalizado pela amplitude (K_pd absorvido), ver
   [[pll-gain-voltage-dependence]].

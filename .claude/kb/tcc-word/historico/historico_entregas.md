@@ -10,6 +10,23 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-09-26 (noite) — Notação dos ganhos e comentários 107/110/112/138/142 do Oscar (V10)
+
+- **Ganhos**: PLL = K_pPLL/K_iPLL sem vírgula (15 ocorrências + Eqs. 3.12,
+  3.14, 3.15, que estavam sem sufixo); corrente = K_p/K_i, padrão da TeseAGP.
+  Frase "Adota-se a notação…" subiu para antes da Eq. 3.10. Regra em [[tcc-equacoes]].
+- **Figuras 3.2 e 4.3** (image7/image10) re-exportadas: bloco PI com sufixo,
+  feed-forward ω_0; rodapé da 4.3 com as relações do PLL, no lugar das
+  fórmulas do controlador de corrente (#142).
+- **#107**: VCO com ω_PLL/ω_0/θ_PLL; θ_est → θ_PLL nas Eqs. 3.11/3.13/3.15.
+  **#110/#112**: §3.5 explica ω_n = 4√2·f_g e cita (ALVES, 2022; YAZDANI;
+  IRAVANI, 2010); Teodorescu não, por não ser fonte dessas equações na tese.
+  **#138**: §4.3.2.2 remete à Eq. (3.23). Comentários mantidos no Word.
+- **Pipeline**: `gen_ganhos_pll.py` + `gen_oscar_107_110_138.py` (o ID do
+  comentário 138 virou 141 após o D9: casar pelo texto, não pelo ID) →
+  `word_finalize.ps1` (75 págs, 0 campo com erro) → `audit_docx` 0 falhas →
+  MD5 conferido → backup `_backups/V10/…_backup_20260926_204006` → entregue.
+
 ## 2026-09-26 — Tudo Figura, Quadro vira Tabela (V10, comentários 3-5 do Oscar)
 
 - 18 legendas Gráfico → Figura (`SEQ Figura`, mesma numeração), Quadro 4.1 →

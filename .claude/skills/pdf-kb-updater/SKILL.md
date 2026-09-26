@@ -104,8 +104,10 @@ Verificar os KBs existentes antes de criar arquivos novos, pelo índice gerado
 candidata (docs e o que cada um cobre). A pasta certa para cada tema está em
 [limits.md](../../rules/limits.md).
 
-Relatórios de eventos/incidentes vão em `kb/events/`, com prefixo do evento
-no nome do arquivo (ex.: `iberia_2025_*.md`).
+Relatórios de eventos/incidentes vão em `kb/events/<evento-ano>/`, com
+prefixo do evento no nome do arquivo (ex.: `iberia-2025/iberia_2025_*.md`).
+Em pasta com subpastas, o doc novo entra na subpasta do tema, nunca na raiz
+(convenção em [limits.md](../../rules/limits.md)).
 
 Regras:
 - **Máx 200 linhas** por arquivo de KB

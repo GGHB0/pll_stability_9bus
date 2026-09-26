@@ -24,8 +24,9 @@ solto, nenhum doc fica sem ninguém apontando para ele.
 - Se o texto passa a citar um assunto que tem doc próprio, trocar a menção por
   `[[slug]]`. Menção por nome de arquivo (`ver pll_loop_filter_gains.md`) vira
   `[[pll-loop-filter-gains]]`.
-- Ao renomear ou remover um doc, rodar o script: o `check` lista quem ficou
-  com link quebrado.
+- Ao renomear, mover ou remover um doc, rodar o script: o `check` lista quem
+  ficou com link quebrado. Mover entre subpastas: passo a passo em
+  [limits.md](limits.md).
 
 ## Antes do commit
 

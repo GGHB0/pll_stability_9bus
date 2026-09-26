@@ -34,6 +34,25 @@ Subpastas criadas sob demanda, quando o primeiro conteúdo chegar:
 | `kb/tcc-word/` | TCC DOCX: `content_map`/`pendencias` na raiz; subpastas `conteudo/`, `docx/`, `revisao-fragmento/`, `historico/` |
 | `kb/psim/` | Fase inicial de modelagem no PSIM (Altair), anterior ao Simulink — registro histórico |
 
+## Subpastas temáticas
+
+- **Doc novo vai na subpasta do tema**, nunca solto na raiz de uma pasta que já
+  tem subpastas. Raiz só guarda doc transversal (ex.: `tcc-word/content_map.md`).
+  Nenhuma subpasta serve → criar uma nova e registrá-la na tabela acima.
+- **Dividir em subpastas** quando a pasta passar de ~8 docs: nomes em
+  português, kebab-case, por tema (`sintonia/`) ou por evento (`chile-2025/`).
+  Com ≤ 8 docs, fica plana (`inverter/`, `simulation/`).
+- **`_index.yaml` aninhado** (formato de `pll/_index.yaml`): `folder`,
+  `description`, `files:` da raiz, depois `subfolders:` com `folder`,
+  `description` e `files:` próprios. O `kb_links.py all` acrescenta o doc
+  novo no fim do `files:` da raiz: mover a entrada à mão para o bloco da
+  subpasta (subpasta nova também é entrada manual).
+- **Ao mover doc:** `git mv` (preserva histórico), corrigir links markdown
+  relativos e menções por caminho (`pll/x.md` → `pll/sintonia/x.md`) no repo
+  inteiro (skills, agentes, CLAUDE.md, README, `assets/`, `docs/`, notebooks).
+  Menção solta vira `[[slug]]`, que não quebra com move. Rodar o `all` e
+  atualizar a tabela acima.
+
 MATLAB/Simulink é ferramenta — conhecimento sobre implementação vai na pasta do tema, não em pasta separada.
 
 Exceção — `kb/psim/`: o PSIM foi o **ambiente legado** onde a modelagem começou,

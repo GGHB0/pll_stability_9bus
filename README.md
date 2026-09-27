@@ -193,11 +193,11 @@ modelo) e a norte-americana (IEEE 1547-2018) definem curvas equivalentes de tens
 e tensao×corrente reativa.
 
 <p align="center">
-  <img src="assets/diagrams/ons_voltage_ridethrough_envelope.svg" alt="Envelope de trip mandatorio e regioes de ride-through por tensao no PCC (IEEE 1547-2018 Table 8)" width="100%">
+  <img src="assets/diagrams/ons_voltage_ridethrough_envelope.svg" alt="Envelope de suportabilidade a sub e sobretensoes (ONS Submodulo 2.10, item 5.7): permanencia obrigatoria dentro, desconexao permitida fora" width="80%">
 </p>
 
 <p align="center">
-  <img src="assets/diagrams/ons_reactive_current_curve.svg" alt="Curva de injecao de corrente reativa iq versus tensao no PCC (ONS Submodulo 2.10, funcao ONS_2_11)" width="70%">
+  <img src="assets/diagrams/ons_reactive_current_curve.svg" alt="Injecao de corrente reativa sob defeito (ONS Submodulo 2.10, item 5.8): subtensao, banda morta e sobretensao" width="80%">
 </p>
 
 A conformidade normativa, porem, **depende do PLL manter o angulo estimado correto**:

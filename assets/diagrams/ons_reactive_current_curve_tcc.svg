@@ -1,13 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 660" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
-  <!-- Versão README: mesmo desenho de ons_reactive_current_curve_tcc.svg + título e notas de norma. Editar lá e regenerar. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 510" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <!-- Versão TCC (Figura 2.2): sem título nem legenda internos, que ficam no Word.
+       Escala: x = 80 + 380*V ; y = 250 - 150*(dIq/In). -->
   <defs>
     <marker id="arrAxisQ" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937"/>
     </marker>
   </defs>
-  <rect width="740" height="660" fill="#ffffff"/>
-  <text x="370" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#0B132B">Injeção de corrente reativa sob defeito: ONS Submódulo 2.10, item 5.8</text>
-  <g transform="translate(0,44)">
+
+  <rect width="740" height="510" fill="#ffffff"/>
 
   <!-- Zonas de tensão -->
   <rect x="80" y="45" width="323" height="395" fill="#e7f5ff"/>
@@ -66,9 +66,4 @@
   <!-- Definições -->
   <text x="20" y="478" font-size="13" font-style="italic" fill="#374151">ΔI<tspan baseline-shift="sub" font-size="75%">Q</tspan> = I<tspan baseline-shift="sub" font-size="75%">Q</tspan> − I<tspan baseline-shift="sub" font-size="75%">Q0</tspan>: corrente reativa adicional à de pré-distúrbio; I<tspan baseline-shift="sub" font-size="75%">n</tspan>: corrente nominal</text>
   <text x="20" y="498" font-size="13" font-style="italic" fill="#374151">V: tensão de sequência positiva nos terminais; V1 e V2 com os ajustes padrão do ONS</text>
-  </g>
-  <text x="20" y="572" font-size="13" fill="#374151">Resposta em até 30 ms após a detecção da falta (5.8.2).</text>
-  <text x="20" y="594" font-size="13" fill="#374151">A potência ativa só é reduzida se a injeção de reativo levar a corrente acima da nominal (5.8.4).</text>
-  <text x="20" y="616" font-size="13" fill="#374151">Sinal: convenção do ONS (+ = fornecimento). No Simulink (ONS_2_11), a referência de eixo q tem sinal oposto.</text>
-  <text x="20" y="638" font-size="13" fill="#374151">Fonte: adaptado de ONS, Procedimentos de Rede, Submódulo 2.10, rev. 2025.02, Figura 14.</text>
 </svg>

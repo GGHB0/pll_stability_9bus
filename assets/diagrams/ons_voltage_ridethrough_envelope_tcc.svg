@@ -1,13 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 614" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
-  <!-- Versão README: mesmo desenho de ons_voltage_ridethrough_envelope_tcc.svg + título e notas de norma. Editar lá e regenerar. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 490" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <!-- Versão TCC (Figura 2.1): sem título nem legenda internos, que ficam no Word.
+       Escala: V -> y = 430 - 300*V ; t esquemático (0->80, 0,5->170, 1->240, 2,5->400, 5->540). -->
   <defs>
     <marker id="arrAxisV" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937"/>
     </marker>
   </defs>
-  <rect width="740" height="614" fill="#ffffff"/>
-  <text x="370" y="28" text-anchor="middle" font-size="17" font-weight="700" fill="#0B132B">Suportabilidade a subtensões e sobretensões dinâmicas: ONS Submódulo 2.10, item 5.7</text>
-  <g transform="translate(0,44)">
+
+  <rect width="740" height="490" fill="#ffffff"/>
 
   <!-- Fora do envelope: desconexão permitida -->
   <rect x="80" y="40" width="580" height="390" fill="#fdecec"/>
@@ -61,8 +61,4 @@
     <text x="540" y="452">5</text>
   </g>
   <text x="80" y="474" font-size="13" font-style="italic" fill="#374151">↑ início do distúrbio</text>
-  </g>
-  <text x="20" y="552" font-size="13" fill="#374151">Vale para qualquer distúrbio (falta simétrica ou assimétrica, rejeição de carga), medido na fase com maior variação (5.7.1.1).</text>
-  <text x="20" y="574" font-size="13" fill="#374151">Após 5 s, a operação em tensão não nominal segue o item 5.2.4 (faixas do Submódulo 2.3).</text>
-  <text x="20" y="596" font-size="13" fill="#374151">Fonte: adaptado de ONS, Procedimentos de Rede, Submódulo 2.10, rev. 2025.02, Figura 13.</text>
 </svg>

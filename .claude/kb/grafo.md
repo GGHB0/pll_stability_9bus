@@ -55,12 +55,13 @@ graph LR
     standards -->|5| pll
     standards -->|3| power_system
     standards -->|2| simulation
+    standards -->|1| tcc_word
     tcc_word -->|1| dashboard
     tcc_word -->|2| events
     tcc_word -->|7| pll
     tcc_word -->|6| power_system
     tcc_word -->|4| simulation
-    tcc_word -->|2| standards
+    tcc_word -->|3| standards
 ```
 
 Número na seta = quantos docs da origem apontam para docs do destino.

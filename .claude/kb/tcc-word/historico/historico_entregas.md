@@ -10,6 +10,17 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-09-26 (noite, 9) — Figuras 2.1 e 2.2 (ONS) com áreas rotuladas (V10)
+
+- Victor: "não dá para saber o significado da área olhando o gráfico". Só
+  a mídia foi trocada (`image3.png`, `image4.png`), mais a remoção do
+  `srcRect` e o recálculo de `cy` para a proporção nova. Largura (16 cm),
+  legendas e fontes não mudaram. Continuam 74 páginas; `audit_docx` deu 0 falhas.
+- Leitura das áreas e sinal da Figura 2.2: [[ons-voltage-ride-through]].
+- Legenda da Figura 2.1 ("subtensões") mantida; a figura mostra também a
+  borda de sobretensão (§5.7). Em aberto, a critério do Victor.
+- Backup: `_backups/V10/TCC_Victor_Bruno_V10_backup_20260926_225822.docx`.
+
 ## 2026-09-26 (noite, 8) — Motivação restaurada ao original (V10)
 
 - Victor achou as alterações das entregas 6 e 7 ruins ("ficaram horríveis")

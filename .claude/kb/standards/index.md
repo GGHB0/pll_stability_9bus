@@ -35,6 +35,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 | [lvrt.md](ride-through/lvrt.md) | [[lvrt-standards]] | Requisitos LVRT e IEEE 1547-2018 relevantes para avaliação do SRF-PLL |
 | [ons_2_11.md](ride-through/ons_2_11.md) | [[ons-2-11]] | Função MATLAB ONS_2_11 — injeção de corrente reativa sob defeito (ONS Subm. 2.10 §5.8); código completo extraído do pll_stability_9bus.slx |
 | [ons_frequency_ride_through.md](ride-through/ons_frequency_ride_through.md) | [[ons-frequency-ride-through]] | Faixas de operação em frequência não nominal (Submódulo 2.10 ONS) para centrais eólicas/fotovoltaicas — trip/ride-through, controle primári… |
+| [ons_voltage_ride_through.md](ride-through/ons_voltage_ride_through.md) | [[ons-voltage-ride-through]] | Envelope de suportabilidade a subtensões e sobretensões dinâmicas (ONS Subm. 2.10 §5.7, Figura 13) e leitura das Figuras 2.1 e 2.2 do TCC |
 
 ## Pastas relacionadas
 
@@ -44,7 +45,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 - [pll/](../pll/index.md) — saem 5, chegam 3
 - [power-system/](../power-system/index.md) — saem 3, chegam 2
 - [simulation/](../simulation/index.md) — saem 2, chegam 1
-- [tcc-word/](../tcc-word/index.md) — saem 0, chegam 2
+- [tcc-word/](../tcc-word/index.md) — saem 1, chegam 3
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)
 <!-- kb-links:end -->

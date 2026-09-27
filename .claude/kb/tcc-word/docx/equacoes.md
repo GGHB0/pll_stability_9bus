@@ -98,9 +98,19 @@ Padrão aprovado pelo Victor, aplicado em texto, OMML e figuras:
   0,707), OGATA [62] e YAZDANI [27]; **Teodorescu [8] não é fonte dessas
   equações** (na tese ele entra na estrutura dq e no PI_cc). No TCC, §3.5
   cita (ALVES, 2022; YAZDANI; IRAVANI, 2010) e §4.3.2.2 remete à Eq. (3.23) (#138).
-- Pendente de decisão: a Eq. 3.19 (K_iPLL = ω_n²) só fecha com a Eq. 3.15
-  se o laço for normalizado pela amplitude (K_pd absorvido), ver
-  [[pll-gain-voltage-dependence]].
+- **K_pd e normalização (2026-09-26, resolvido):** a Eq. 3.10 dizia
+  K_pd = (3/2)·V_m, errado pela própria Park do TCC (Eqs. 3.5-3.7, fator
+  2/3, invariante em amplitude): virou **K_pd = V_m**; o 3/2 é das equações de
+  potência 3.8/3.9. A Eq. 3.10 mostra a derivação em duas linhas na mesma
+  célula (sem renumerar): v_q = (2/3)·(3/2)·V_m·sin(θ_ref − θ_PLL) =
+  V_m·sin(…) ≈ V_m·(θ_ref − θ_PLL) ⇒ K_pd = V_m; o parágrafo acima substitui
+  v_a, v_b, v_c na Eq. (3.7) e diz que a soma das fases dá (3/2)·V_m e o 2/3
+  da transformada cancela (pedido do Victor: deixar visível de onde vinha o
+  3/2). Antes da Eq.
+  3.19, parágrafo explícito: entrada do PLL dividida por 16.329,93 V → V_m = 1
+  pu → K_pd = 1, por isso some das relações; sem normalização, dividir os
+  ganhos por K_pd (TEODORESCU; LISERRE; RODRIGUEZ, 2011, §4.2.2.3 p.56). Ver
+  [[pll-gains-provenance]] e [[pll-gain-voltage-dependence]].
 
 ## Notas
 

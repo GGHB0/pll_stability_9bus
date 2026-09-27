@@ -10,6 +10,25 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-09-26 (noite, 3) — Derivação do K_pd = V_m na Eq. 3.10 (V10)
+
+- Rótulo da 3.10 virou parágrafo que substitui v_a, v_b, v_c na Eq. (3.7):
+  soma das fases = (3/2)·V_m, cancelada pelo 2/3. A 3.10 ganhou 2 linhas na
+  mesma célula (paraId novo `1FB0D101`), sem renumeração; 3.19 intocada.
+- **Pipeline**: `gen_kpd_deriv.py` → finalize (75 págs, 0 erro) → audit 0
+  falhas → MD5 `bf29ed81…` conferido → backup `_backup_20260926_212456` →
+  entregue (`d8078502…`) e reaberto.
+
+## 2026-09-26 (noite, 2) — K_pd = V_m e normalização explícita (V10)
+
+- **Eq. 3.10**: K_pd = (3/2)·V_m → K_pd = V_m (Park com 2/3); rótulo cita as
+  Eqs. (3.5)-(3.7). **Parágrafo antes da Eq. 3.19** reescrito: normalização
+  por 16.329,93 V, K_pd = 1, citação Teodorescu. Texto aprovado pelo Victor.
+  Regra em [[tcc-equacoes]]. Sem "Feito." (Oscar não comentou).
+- **Pipeline**: `gen_kpd_norm.py` → `word_finalize.ps1` (75 págs, 0 erro) →
+  `audit_docx` 0 falhas → MD5 conferido (`e572ee10…`) → backup
+  `_backup_20260926_211707` → entregue (`bf29ed81…`) e reaberto.
+
 ## 2026-09-26 (noite) — Notação dos ganhos e comentários 107/110/112/138/142 do Oscar (V10)
 
 - **Ganhos**: PLL = K_pPLL/K_iPLL sem vírgula (15 ocorrências + Eqs. 3.12,

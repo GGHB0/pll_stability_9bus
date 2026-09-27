@@ -57,6 +57,25 @@ aliases: [tcc-siglas-inventory]
 Instituições com nome próprio (IEEE, CIGRE, ENTSO-E) ficam sem tradução,
 também para não quebrar linha.
 
+## Regra de definição no texto (2026-09-26, aprovada pelo Victor)
+
+No corpo (Cap. 1 até Referências), a sigla aparece por extenso **só na 1ª
+ocorrência**, no padrão `Nome (SIGLA)`, e depois só como sigla. Termo em
+inglês com tradução: `tradução, ou *English Name* (SIGLA)`, com o nome inglês
+em itálico (SCR, FFR, SOTF). Ficam fora: Resumo/Abstract (textos
+independentes), títulos de seção (mudariam o sumário) e legendas (lista de
+figuras). Sigla citada uma vez só (DDSRF-PLL, UFV) e instituição (IEEE,
+CIGRE, ENTSO-E) não entram na regra.
+
+Aplicada no V10 (52 trocas, [[tcc-historico-entregas]]): redefinições
+removidas em PLL, SRF-PLL, PI, CC, SIN, LVRT, PCC, GFL, PWM, VSI, IBR, EMT e
+ONS; definição movida para a 1ª ocorrência em IBR (Intro), PI (objetivos,
+Cap. 1), CA (§3.1.2), PWM (§3.1.4) e ONS (Intro, RAP); LCL ganhou definição
+(§4.2). Formas soltas por extenso depois da definição também viraram sigla
+("ponto de conexão comum", "transitórios eletromagnéticos", "Recursos
+Baseados em Inversores"). Varredura: `C:\Temp\scan_siglas.py` (marca "DEF"
+em sigla seguida de parênteses; sigla seguida de citação dá falso positivo).
+
 ## Removidas em 2026-09-13 (zero ocorrências fora da lista)
 
 AVR, IAE, ISE, ITAE, LG, LLG, MPPT, PSS, SPWM. Vieram do inventário de

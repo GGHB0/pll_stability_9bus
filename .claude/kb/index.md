@@ -22,7 +22,7 @@ Gerado por `scripts/kb_links.py index`. Links `[[slug]]` abrem no Obsidian (vaul
 | python/ | 11 | [python/index.md](python/index.md) |
 | simulation/ | 6 | [simulation/index.md](simulation/index.md) |
 | standards/ | 15 | [standards/index.md](standards/index.md) |
-| tcc-word/ | 29 | [tcc-word/index.md](tcc-word/index.md) |
+| tcc-word/ | 30 | [tcc-word/index.md](tcc-word/index.md) |
 
 Soltos na raiz: [project-scope.md](project-scope.md)
 

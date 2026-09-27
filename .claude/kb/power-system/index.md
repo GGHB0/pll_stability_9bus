@@ -38,12 +38,12 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 ## Pastas relacionadas
 
 - [dashboard/](../dashboard/index.md) — saem 0, chegam 1
-- [events/](../events/index.md) — saem 0, chegam 1
+- [events/](../events/index.md) — saem 0, chegam 2
 - [inverter/](../inverter/index.md) — saem 0, chegam 1
 - [pll/](../pll/index.md) — saem 6, chegam 3
 - [simulation/](../simulation/index.md) — saem 0, chegam 1
 - [standards/](../standards/index.md) — saem 2, chegam 3
-- [tcc-word/](../tcc-word/index.md) — saem 0, chegam 4
+- [tcc-word/](../tcc-word/index.md) — saem 0, chegam 6
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)
 <!-- kb-links:end -->

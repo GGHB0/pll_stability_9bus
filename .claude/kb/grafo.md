@@ -25,7 +25,7 @@ graph LR
     dashboard -->|1| power_system
     dashboard -->|3| simulation
     dashboard -->|1| standards
-    events -->|1| power_system
+    events -->|2| power_system
     events -->|1| standards
     inverter -->|6| pll
     inverter -->|1| power_system
@@ -56,11 +56,11 @@ graph LR
     standards -->|3| power_system
     standards -->|2| simulation
     tcc_word -->|1| dashboard
-    tcc_word -->|1| events
+    tcc_word -->|2| events
     tcc_word -->|7| pll
-    tcc_word -->|4| power_system
+    tcc_word -->|6| power_system
     tcc_word -->|4| simulation
-    tcc_word -->|1| standards
+    tcc_word -->|2| standards
 ```
 
 Número na seta = quantos docs da origem apontam para docs do destino.

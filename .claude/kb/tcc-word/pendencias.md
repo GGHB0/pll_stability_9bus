@@ -86,6 +86,12 @@ aliases: [tcc-pendencias]
     biblioteca emite). **Ainda confirmar com o Oscar** se conta o total de
     folhas ou a última folha numerada (hoje 73), e atualizar se o documento
     mudar de tamanho.
+25. **Comentário 16 do Oscar (Motivação, Xiong et al. 2025) aberto** — duas
+    tentativas rejeitadas e revertidas em 2026-09-26 ([[tcc-historico-entregas]],
+    noite 6-8). Victor quer manter "modelagem identificada pelo ONS" e só
+    acrescentar a citação. Opções no chat, **aguardando escolha**: A) "...pelo
+    ONS (XIONG et al., 2025), explicando..."; B) "...pelo ONS e discutida por
+    Xiong et al. (2025), explicando...". Não tocar no Word sem o ok.
 
 ## P3 — Limpeza
 

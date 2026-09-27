@@ -87,6 +87,9 @@ subfolders:
       - file: historico_entregas.md
         name: tcc-historico-entregas
         description: Histórico de entregas do Claude no DOCX canônico, mais recente primeiro (entregas antigas nos arquivos _2026_07 e _v8)
+      - file: historico_entregas_2026_09_13.md
+        name: tcc-historico-entregas-2026-09-13
+        description: Histórico de entregas de 2026-09-13 (passagem ABNT, lista de siglas revisada, subscritos no texto corrido), fragmentado do arquivo principal
       - file: historico_entregas_2026_09_12.md
         name: tcc-historico-entregas-2026-09-12
         description: Histórico de entregas de 2026-09-12 (referências em amarelo, revisão de português, Cap.7 e Cap.6 redigidos), fragmentado do arquivo principal

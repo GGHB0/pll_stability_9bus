@@ -5,6 +5,7 @@ description: Blecaute do SIN em 15/08/2023 — linha do tempo, condições pré-
 source: ONS, RAP-ONS 00012/2023 — Análise da Perturbação do dia 15/08/2023 às 08h30min, §1–§2, §4, §5.6
 references:
   - "OPERADOR NACIONAL DO SISTEMA ELÉTRICO (ONS). RAP-ONS 00012/2023 — Análise da Perturbação do dia 15/08/2023 às 08h30min: Relatório de Análise de Perturbação. Rio de Janeiro: ONS, 2023."
+  - "XIONG, Yongxin; WU, Heng; LI, Yifei; WANG, Xiongfei. Comparison of Power Swing Characteristics and Efficacy Analysis of Impedance-based Detections in Synchronous Generators and Grid-following Systems. IEEE Transactions on Power Systems, v. 40, n. 3, p. 2545-2556, 2025. DOI 10.1109/TPWRS.2024.3469235."
 ---
 
 # Blecaute Brasil — 15 de Agosto de 2023
@@ -91,3 +92,10 @@ sem curto-circuito) que se tornou severo por causa do desempenho inadequado
 do suporte dinâmico de tensão dos IBR — não por falta de inércia ou de
 potência de curto-circuito (ver conclusões do ONS em
 [[brasil-2023-root-causes]]).
+
+Referência acadêmica sobre o evento (indicada pelo Oscar e citada na
+Motivação do TCC): Xiong et al. (2025), Introdução, aponta a falha das
+proteções de oscilação de potência (PSB/OST) baseadas em impedância como uma
+das causas raiz, numa área com alta penetração de GFL-VSC. O artigo cita o
+RAP e **não** traz MW nem % de carga perdida. É a mesma fonte dos dados da
+rede ([[ieee9bus-line-params]]).

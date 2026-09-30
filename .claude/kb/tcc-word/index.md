@@ -25,6 +25,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 | [full_cap4.md](conteudo/full_cap4.md) | [[tcc-full-cap4]] | Conteúdo completo do Capítulo 4 — Análise e Discussão de Resultados (quase vazio — só títulos), Conclusão (placeholder) e Referências finai… |
 | [full_intro.md](conteudo/full_intro.md) | [[tcc-full-intro]] | Conteúdo completo da Introdução do TCC — contextualização, motivação (apagão 08/2023), objetivos e referências [1]–[9] |
 | [full_prefacio.md](conteudo/full_prefacio.md) | [[tcc-full-prefacio]] | Conteúdo completo das páginas pré-textuais do TCC — capa, folha de rosto, resumo, abstract, listas e sumário |
+| [revisao_citacoes.md](conteudo/revisao_citacoes.md) | [[tcc-revisao-citacoes]] | Revisão de fidelidade das citações do TCC V10 (item 26): cada trecho × página da fonte × veredito |
 | [siglas_inventory.md](conteudo/siglas_inventory.md) | [[tcc-siglas-inventory]] | Inventário de 36 siglas do TCC: lista ordenada, revisão 2026-09-13, formatação, ferramenta varredura |
 | [trabalhos_futuros.md](conteudo/trabalhos_futuros.md) | [[tcc-trabalhos-futuros]] | Eixos definidos para o Cap. 7 (Trabalhos Futuros) do TCC — quais entraram, qual foi descartado e por quê |
 
@@ -47,6 +48,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 | [historico_entregas_2026_08.md](historico/historico_entregas_2026_08.md) | [[tcc-historico-entregas-2026-08]] | Entregas de agosto/2026: passe de estilo fase 2, nova §3.5 controlador, ganhos do PLL, CIGRE |
 | [historico_entregas_2026_09_12.md](historico/historico_entregas_2026_09_12.md) | [[tcc-historico-entregas-2026-09-12]] | Entregas de 2026-09-12: referências fechadas, revisão de português, Cap. 6-7 redigidos |
 | [historico_entregas_2026_09_13.md](historico/historico_entregas_2026_09_13.md) | [[tcc-historico-entregas-2026-09-13]] | Entregas de 2026-09-13: passagem ABNT, lista de siglas revisada, subscritos no texto corrido |
+| [historico_entregas_2026_09_26.md](historico/historico_entregas_2026_09_26.md) | [[tcc-historico-entregas-2026-09-26]] | Entregas de 2026-09-26 no V10 (comentários do Oscar, notação do PLL, comentário 16 e Xiong, figuras ONS) |
 | [historico_entregas_2026_09_inicio.md](historico/historico_entregas_2026_09_inicio.md) | [[tcc-historico-entregas-2026-09-inicio]] | Entregas de setembro até 2026-09-09: troca PAC→PCC, mesclagem Cap. 4-5, enxugamento Cap. 5 |
 | [historico_entregas_v8.md](historico/historico_entregas_v8.md) | [[tcc-historico-entregas-v8]] | Histórico de entregas da versão V8 do TCC: seção 3.3, correções dos comentários do Oscar |
 
@@ -68,7 +70,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 
 - [dashboard/](../dashboard/index.md) — saem 1, chegam 0
 - [events/](../events/index.md) — saem 2, chegam 0
-- [pll/](../pll/index.md) — saem 7, chegam 4
+- [pll/](../pll/index.md) — saem 8, chegam 4
 - [power-system/](../power-system/index.md) — saem 6, chegam 0
 - [simulation/](../simulation/index.md) — saem 4, chegam 4
 - [standards/](../standards/index.md) — saem 3, chegam 1

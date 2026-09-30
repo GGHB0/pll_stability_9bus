@@ -11,6 +11,9 @@ subfolders:
   - folder: conteudo
     description: Texto completo de cada seção do TCC (prefácio, introdução, Cap.2-4, trabalhos futuros) e inventário de siglas
     files:
+      - file: revisao_citacoes.md
+        name: tcc-revisao-citacoes
+        description: "Revisão de fidelidade das citações do TCC V10 (item 26): cada trecho × página da fonte × veredito"
       - file: siglas_inventory.md
         name: tcc-siglas-inventory
         description: 36 siglas da lista pré-textual, só as usadas no texto (revisão 2026-09-13) + exclusões deliberadas (CSV, unidades, software) + formatação de tab único
@@ -87,6 +90,9 @@ subfolders:
       - file: historico_entregas.md
         name: tcc-historico-entregas
         description: Histórico de entregas do Claude no DOCX canônico, mais recente primeiro (entregas antigas nos arquivos _2026_07 e _v8)
+      - file: historico_entregas_2026_09_26.md
+        name: tcc-historico-entregas-2026-09-26
+        description: Histórico de entregas de 2026-09-26 no V10 (comentários do Oscar, notação do PLL, comentário 16 e Xiong, figuras ONS), fragmentado do arquivo principal
       - file: historico_entregas_2026_09_13.md
         name: tcc-historico-entregas-2026-09-13
         description: Histórico de entregas de 2026-09-13 (passagem ABNT, lista de siglas revisada, subscritos no texto corrido), fragmentado do arquivo principal

@@ -10,10 +10,8 @@ Modo aceito pelo Victor: **edições diretas no XML, sem tracked changes**
 Quando o alvo é um rascunho externo isolado (ex.: `capitulos_4_5_revisados.docx`,
 na pasta `Fragmentos/` do TCC no OneDrive, plain-Normal-style, sem tracked
 changes/comentários/tabelas), o OOXML-surgery deste arquivo é overkill: usa-se
-**python-docx direto**, sem staging, sem `repack.py`, sem IDs a rastrear. Caminho
-completo em `fragmento_externo.md`.
-
-Todo o workflow, as armadilhas (inserção de figura, renumeração, troca de termo,
+**python-docx direto**, sem staging, sem `repack.py`, sem IDs a rastrear. Todo
+o workflow, as armadilhas (inserção de figura, renumeração, troca de termo,
 `docPr` duplicado, conferência de MD5) e as lições de redação estão em
 **`fragmento_externo.md`**. Ler antes de tocar num fragmento.
 
@@ -24,16 +22,25 @@ títulos para `Ttulo1`–`Ttulo4` ou eles somem do sumário, inverter a convenç
 de legenda, e **reescalar as figuras da largura útil de origem para a de
 destino** (o fragmento é Carta, 6,50 in; o TCC é A4, 6,30 in).
 
+## Cópia comentada externa (Oscar) — ver `mesclagem_comentarios.md`
+
+Cópia do TCC com comentários novos do Oscar (não um rascunho de texto — ver
+"Fragmento externo" acima): mesclar só os comentários, sem as edições de
+texto soltas que vierem junto. Achar os novos por diff de texto e confirmar
+por **data** (não por ID, que o Word renumera) contra o comentário mais
+recente já no canônico, para não duplicar o que já foi mesclado com redação
+levemente diferente. Detalhe da mesclagem cirúrgica nas 4 partes XML de
+comentário em `mesclagem_comentarios.md`.
+
 ## Revisão de português — ver `revisao_pt.md`
 
 Passagem linguística separada das edições de conteúdo. `scripts/check_pt.py`
-varre o `document.xml` atrás das classes que já apareceram neste documento
-(regência `capacidade … em`, `onde` não locativo, `através de`, vírgula entre
-relativo e verbo, resíduo de LaTeX, duplo espaço, placeholder, em-dash). Ele
-**não** pega concordância, coesão nem frase sem verbo principal: isso só sai
-lendo o `dump_blocks.py` do corpo inteiro. `revisao_pt.md` diz o que é erro, o
-que é falso positivo e quais armadilhas de execução a rodada de 2026-09-12
-encontrou.
+varre o `document.xml` atrás das classes já vistas (regência `capacidade …
+em`, `onde` não locativo, `através de`, vírgula entre relativo e verbo,
+resíduo de LaTeX, duplo espaço, placeholder, em-dash). **Não** pega
+concordância, coesão nem frase sem verbo principal: isso só sai lendo o
+`dump_blocks.py` do corpo inteiro. Detalhes e falsos positivos em
+`revisao_pt.md`.
 
 ## Formatação ABNT e paginação — skill `tcc-abnt-layout`
 
@@ -45,24 +52,19 @@ legenda e na remissão, rótulo `(N.M)`.
 
 ## Convenções de escrita
 
-- **Nunca usar travessão/em-dash ("—") no texto do TCC.** Reescrever a
-  frase com vírgula, ponto-e-vírgula, parênteses ou período em vez de
-  intercalar com "—". Vale para texto novo e para revisão de texto
-  existente — se um parágrafo editado tiver "—", removê-lo como parte da
-  mesma edição.
+- **Nunca usar travessão/em-dash ("—") no texto do TCC.** Reescrever com
+  vírgula, ponto-e-vírgula, parênteses ou período. Vale para texto novo e
+  para revisão: parágrafo editado com "—" perde o travessão na mesma edição.
 - Não citar arquivo/script/variável de código no texto (`params.m`,
   `nome.txt`, `VARIAVEL_MAIUSCULA`) — usar termos de engenharia/modelagem.
-  Nomes de bloco/subcircuito de esquemático (`RESETI_I1`, `.SUB Clarke`,
-  `Sinusoidal Measurement`) são exceção e podem ficar. Ver
-  `feedback_docx_no_code_artifacts` na memória.
-- **Conclusão (Cap. 6) sobe de altitude, não de profundidade.** É uma
-  consolidação genérica do trabalho inteiro: nem parafrasear o "Resumo e
-  conclusões" do capítulo de resultados, nem aprofundar além dele com
-  números e cruzamentos novos. Percorrer o arco (contexto → teoria →
-  método → síntese qualitativa dos resultados) e fechar com contribuição,
-  limites de validade e implicação prática. Medir sobreposição literal com
-  o resumo do capítulo é teste mecânico útil, mas insuficiente: dá para ter
-  sobreposição zero e ainda estar dizendo a mesma coisa. Ver
+  Nomes de bloco/subcircuito de esquemático (`RESETI_I1`, `.SUB Clarke`)
+  são exceção. Ver `feedback_docx_no_code_artifacts` na memória.
+- **Conclusão (Cap. 6) sobe de altitude, não de profundidade**: consolidação
+  genérica do trabalho inteiro, nem parafraseando o "Resumo e conclusões" do
+  capítulo de resultados nem aprofundando além dele. Percorrer o arco
+  (contexto → teoria → método → síntese qualitativa) e fechar com
+  contribuição, limites de validade e implicação prática — sobreposição
+  literal zero com o resumo não basta, dá para dizer a mesma coisa. Ver
   `tcc-conclusion-altitude` na memória (2 versões recusadas em 2026-09-12).
 
 ## Divisão de trabalho por modelo (3 níveis)
@@ -137,24 +139,22 @@ esperada" (para o agente saber quando abortar/perguntar).
 
 ## Entrega (aprendido em 2026-09-02, na marra)
 
-- **Pré-check por MD5, não por timestamp/bytes.** Uma edição do usuário no Word
-  pode manter o tamanho. Foi o MD5 que pegou, numa entrega do fragmento, que ele
-  havia salvo o arquivo 8 minutos depois da minha cópia; entregar teria apagado
-  o trabalho dele em silêncio.
+- **Pré-check por MD5, não por timestamp/bytes** (edição do usuário no Word
+  pode manter o tamanho — foi o MD5 que pegou, numa entrega do fragmento, um
+  save do Victor 8 min depois da minha cópia; entregar teria apagado o
+  trabalho dele em silêncio).
 - **Backup datado antes de sobrescrever, sempre**: `<nome>_backup_YYYYMMDD_HHMMSS.docx`
   em `_backups/<versão>/` ao lado do arquivo (`comentado/_backups/V10/`).
-- **Conferir que o Word está fechado** (`tasklist | grep -i winword`) e que não
-  há arquivo de lock `~$*` na pasta. Trocar os bytes por baixo de uma sessão
-  viva quebra o sincronismo do OneDrive: o Word passa a mostrar
-  **"CARREGAMENTO BLOQUEADO"** e a recusar o upload.
-- **Nunca entregar um zip montado à mão direto.** Rodar `word_finalize.ps1`
-  antes. O arquivo montado abre e até exporta PDF, mas o `w:dirty` do sumário
-  deixa o documento modificado no instante em que abre, o que dispara o mesmo
-  bloqueio de upload. E os `PAGEREF` de seções removidas ficariam como
-  "Erro! Indicador não definido" até alguém atualizar na mão.
-- **`audit_docx.py` é o que distingue "arquivo corrompido" de "problema de
-  sincronismo".** Quando o Word reclamar, rodar antes de mexer em qualquer
-  coisa: se der 0 falhas, o conteúdo está são e o problema é de upload.
+- **Conferir que o Word está fechado** (`tasklist | grep -i winword`) e sem
+  lock `~$*` na pasta — trocar os bytes por baixo de uma sessão viva quebra o
+  sincronismo do OneDrive ("CARREGAMENTO BLOQUEADO", upload recusado).
+- **Nunca entregar um zip montado à mão direto**: rodar `word_finalize.ps1`
+  antes — o zip à mão abre e até exporta PDF, mas o `w:dirty` do sumário
+  deixa o documento modificado ao abrir, disparando o mesmo bloqueio, e os
+  `PAGEREF` de seções removidas ficam "Erro! Indicador não definido".
+- **`audit_docx.py` distingue "arquivo corrompido" de "problema de
+  sincronismo"**: 0 falhas quando o Word reclamar = conteúdo são, problema é
+  de upload.
 
 ## Notas críticas
 
@@ -169,29 +169,28 @@ esperada" (para o agente saber quando abortar/perguntar).
   extraído antes de inserir qualquer elemento novo.
 - **paraId**: máximo `0x7FFFFFFF`; prefixos A–F estouram. Usar `1FB0xxxx`
   (sequência registrada no KB) e conferir colisão com grep antes.
-- **PowerShell + `python -c` inline quebra** com regex `[...]` — sempre
-  escrever script em arquivo e rodar o arquivo.
+- **PowerShell + `python -c` inline quebra** com regex `[...]` — escrever
+  script em arquivo e rodar o arquivo.
 - **Sumário (TOC)**: texto das entradas fica em cache no XML — um replace de
-  título deve esperar 2 ocorrências (título real + cache), e o campo deve
-  estar com `w:dirty="true"` para o Word reconstruir ao abrir.
-- **Delta de contagem em substituição**: trocar 1 bloco por N parágrafos
-  dá `<w:p` **+(N-1)**, não +N. Errar isso na spec faz o `docx-scripter`
-  abortar (corretamente) em vez de entregar. Conferir a aritmética antes de
-  mandar a spec.
-- **Grep com classe de caracteres acentuada não casa**: `invers[ãa]o`,
-  `imped[âa]ncia` retornam **zero** em locale C, porque o multibyte é
-  quebrado dentro do `[...]`. Zero resultado aqui é falso negativo, não
-  ausência — repetir com padrão literal. E `grep -c` casa substring:
-  "ISE" deu 12 ocorrências que eram todas "LISERRE"; usar `-w` ou olhar o
-  contexto antes de concluir que um termo é usado no texto.
-- **KB de conteúdo pode mentir sobre o que já foi escrito.** O
-  `content_map.md` dava o Cap. 6 como "conclusão redigida" e o capítulo
-  estava vazio no arquivo vivo. Antes de julgar/editar uma seção, confirmar
-  o estado no XML recém-extraído e corrigir o KB no passo 9.
+  título espera 2 ocorrências (título real + cache), e o campo precisa de
+  `w:dirty="true"` para o Word reconstruir ao abrir.
+- **Delta de contagem em substituição**: trocar 1 bloco por N parágrafos dá
+  `<w:p` **+(N-1)**, não +N — errar isso faz o `docx-scripter` abortar
+  (corretamente); conferir a aritmética antes de mandar a spec.
+- **Grep com classe de caracteres acentuada não casa** (`invers[ãa]o` etc.
+  retornam zero em locale C, multibyte quebrado dentro do `[...]`): repetir
+  com padrão literal antes de concluir ausência. `grep -c` casa substring
+  ("ISE" deu 12 ocorrências, todas "LISERRE"): usar `-w` ou ver o contexto.
+- **KB de conteúdo pode mentir sobre o que já foi escrito** (`content_map.md`
+  dava o Cap. 6 como redigido com o capítulo vazio no arquivo vivo): confirmar
+  no XML recém-extraído antes de julgar/editar, corrigir o KB no passo 9.
 - **gen_*.py**: todo replace com count esperado explícito (falhar se
-  divergir); `ET.fromstring` no resultado antes de gravar; wrapper UTF-8 no
-  stdout (`io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8',
-  errors='replace')`) ou o print quebra em cp1252.
+  divergir); `ET.fromstring` no resultado antes de gravar; UTF-8 no stdout
+  com `sys.stdout.reconfigure(encoding='utf-8', errors='replace')`, não
+  `io.TextIOWrapper(sys.stdout.buffer, ...)` — dois módulos que se importam
+  e fazem isso cada um por si fecham o buffer compartilhado ao ser coletado
+  o primeiro wrapper (`ValueError: I/O operation on closed file`), achado ao
+  escrever `build_plan.py` + `gen_oscar_cap5_comments.py` em 2026-09-29.
 
 ## Referência de IDs e armadilhas XML
 

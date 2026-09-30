@@ -10,6 +10,39 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-09-29 — 38 comentários novos do Oscar mesclados no Cap.5 (V10)
+
+- Victor recebeu do Oscar uma cópia comentada (`TCC_Victor_Bruno_V10 (1).docx`,
+  baixada em 2026-09-29) com comentários novos datados de 25 e 28/09, além de
+  edições de texto soltas (Figura→Gráfico, "EMT"→"transitórios
+  eletromagnéticos", "IBR"→"Recurso Baseado em Inversor") feitas por
+  cima. Pedido explícito: só os comentários do Cap. 5, sem as edições de
+  texto.
+- Diff por texto de comentário identificou 42 comentários novos (ausentes no
+  canônico); 4 eram do Cap. 1/2 (datados de 23/09) e ficaram de fora por
+  pedido — checagem por data confirmou que também já tinham sido mesclados
+  antes (o canônico não tem nenhum comentário do Oscar após
+  2026-09-24T17:02Z, então qualquer coisa datada de 23/09 já estava
+  capturada, só com pequena variação textual, ex.: uma vírgula). Os 38
+  restantes (todos ancorados no Cap. 5, ids 133-190 no arquivo baixado) foram
+  inseridos.
+- **Método**: sem tracked changes nem `d.Comments.Add` (que atribuiria a
+  conta do Office como autor). Correspondência de bloco por índice
+  (deslocamento constante entre os dois arquivos, +2 depois do heading da
+  §5.3 que veio partido em 3 blocos por um bug do Word) + `difflib` para
+  mapear os offsets do texto do âncora do arquivo baixado (com "Gráfico") de
+  volta para o texto do canônico (com "Figura"), preservando a redação atual.
+  Inserção cirúrgica de `commentRangeStart/End` + `commentReference` direto no
+  XML, reaproveitando `paraId`/`durableId`/data do comentário original do
+  Oscar (autoria preservada). Dois comentários (141, 182) ancoram imagem, não
+  texto; dois blocos (503, 526) tinham `<w:lastRenderedPageBreak/>` partindo o
+  parágrafo em duas runs, sem afetar a lógica de corte.
+- **Pipeline**: script Python próprio (não um `gen_*.py` de replace simples,
+  dado o volume) grava os 5 XMLs (`document.xml` + 4 partes de comentário) →
+  `word_finalize.ps1` (74 págs, 141 comentários, 0 erro) → `audit_docx.py` 0
+  falhas → MD5 do OneDrive conferido antes → backup
+  `_backup_20260929_234138` → entregue.
+
 ## 2026-09-27 (2) — Comentário 16 do Oscar resolvido: Xiong na Motivação (V10)
 
 - Motivação, último parágrafo: frase nova depois da frase ancorada ("…por que

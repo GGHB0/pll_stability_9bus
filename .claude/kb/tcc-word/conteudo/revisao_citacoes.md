@@ -42,11 +42,18 @@ fonte) · **SEM PDF** (não dá para conferir).
 | 258 | sequência negativa gera 2ω em vq e impede a convergência, levando à perda de sincronismo | WU; WANG (2020) | §V-D: falta assimétrica só para dizer que se usa pré-filtro. Teodorescu §8.3 (p. 182-186): sequência negativa gera oscilação em 2ω no dq e na fase detectada. Wu e Wang: perda de sincronismo em faltas severas (abstract) | FRASE + FONTE: 2ω → Teodorescu; perda de sincronismo → Wu e Wang |
 | 392 | inércia menor faz os síncronos remanescentes terem desvios angulares mais rápidos | WU; WANG (2020); XIONG et al. (2025) | nenhum dos dois trata disso. Strauss-Mincu p. 106: inércia menor → RoCoF maior; p. 101: requisitos de estabilidade transitória precisam ser reavaliados com a dominância de inversores | FRASE + FONTE: reescrever para o que o Roadmap diz |
 
+**RESOLVIDO em 2026-10-01**: os 5 trechos foram corrigidos no V10. O
+último (bloco 392, hoje 383) e o primeiro foram reescritos de forma mais
+estrita que a coluna acima: o primeiro com a IEA p. 12 (variabilidade →
+flexibilidade e capacidade despachável), o último só com Strauss-Mincu p. 95
+e 101, sem RoCoF (vetado pelo Victor). Texto final em
+[[tcc-historico-entregas]]. MOHAN removido da lista de referências.
+
 Já conferidos antes: bloco 259, "redes fracas" (WU; WANG, 2020), OK (p. 1 e
 3); bloco 260, Motivação (XIONG et al., 2025), OK (p. 1, evento de 2023).
 
-Consequência: sem o bloco 250, o MOHAN fica sem nenhuma citação no corpo
-(sair da lista ou citar em outro ponto).
+Consequência: sem o bloco 250, o MOHAN ficou sem nenhuma citação no corpo e
+saiu da lista em 2026-10-01.
 
 ## Sem PDF na pasta Bibliografia
 

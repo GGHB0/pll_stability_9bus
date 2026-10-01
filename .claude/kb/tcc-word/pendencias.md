@@ -103,7 +103,9 @@ aliases: [tcc-pendencias]
     PDF. Outros dois usos do Xiong ainda a checar: "…inércia física das máquinas
     rotativas (XIONG et al., 2025)" e "(WU; WANG, 2020; XIONG et al., 2025)"
     no fim do Cap. 2. **Em andamento (2026-09-27)**: tabela de verificação em
-    [[tcc-revisao-citacoes]]; alto risco conferido (5 trechos a corrigir).
+    [[tcc-revisao-citacoes]]. **Alto risco corrigido em 2026-10-01** (5
+    trechos; MOHAN saiu da lista). Faltam: sem PDF, médio e baixo risco. A
+    IEA (2026) segue sem entrada na lista (item 15).
 
 ## P3 — Limpeza
 

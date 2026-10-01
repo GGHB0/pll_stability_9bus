@@ -10,6 +10,21 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-01 (noite) — Referências pedidas pelo Oscar (V10)
+
+- **Comentários 88, 34, 118 e 140** (pedidos de referência), cada citação no
+  fim do trecho ancorado: Clarke 3.1.1 → (YAZDANI; IRAVANI, 2010); "IEEE
+  TR77" → (HATZIARGYRIOU et al., 2020); "ωn = 4√2·fg ≈ 339,4 rad/s" →
+  (ALVES, 2022); "IEEE 9 barras" → (ANDERSON; FOUAD, 2003; MATHWORKS, 2025).
+- **Lista**: entradas novas HATZIARGYRIOU (PES-TR77, maio 2020) e MATHWORKS
+  (página "IEEE 9-Bus System", R2025b, que cita Anderson & Fouad como fonte
+  dos dados), ambas conferidas na web; paraIds `1FB00310`/`1FB00311`.
+- Ficou aberto: "pequena descrição das equações" (2ª metade do 88) e o 44
+  (Bruno traz a referência). O 7 já estava atendido (Strauss-Mincu/Shadoul).
+- **Pipeline**: `gen_refs_oscar.py` → finalize (74 págs) → audit 0 falhas →
+  backup `V10_backup_20261001_204412`. Duas tentativas abortaram por MD5
+  (sync de outro aparelho em rajada); lição na seção Entrega da skill.
+
 ## 2026-10-01 — Citações de alto risco corrigidas (V10)
 
 - Os 4 trechos de alto risco de [[tcc-revisao-citacoes]], conferidos de novo

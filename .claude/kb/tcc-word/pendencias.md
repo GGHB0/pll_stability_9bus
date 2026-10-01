@@ -37,7 +37,8 @@ aliases: [tcc-pendencias]
    Citar MathWorks (MATLAB) e Powersim Inc. ou artigo (PSIM). **Ficou mais
    urgente em 2026-09-12**: a entrada `SOUSA, et al. 2021 [PSIM]` foi removida
    da lista por ser órfã (o §4.2 reescrito não cita mais ninguém), então hoje
-   o PSIM aparece no texto sem nenhuma referência.
+   o PSIM aparece no texto sem nenhuma referência. A entrada MATHWORKS (2025,
+   página do IEEE 9-Bus) entrou na lista em 2026-10-01 e pode ser reaproveitada.
 8. **Acentuação da seção 4.3.4** (ex-3.3, Protocolos) — texto adicionado sem
    acentos; corrigir em futura edição.
 9. **~~Typo em referência MOW→MOHAN~~** — ✅ FEITO (2026-07-19), corrigido nos 2 lugares.

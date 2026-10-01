@@ -161,7 +161,7 @@ Igual ao corpo, mas: `jc=center`, `<w:i/>` em ambos os `<w:rPr>`, `paraId` com p
 | Bookmark IDs | máximo em uso = 59 (60 bookmarks) | **60** |
 | Bookmarks `_Toc235351NNN` | máximo NNN = 739 | **740** |
 | `w:ins` IDs | **nenhum** — o documento não tem mais tracked change (sem `w:ins`, sem `w:del`) | **1** |
-| `paraId` novos (prefixo `1FB.....`) | até 0x1FB00220 de sessões anteriores (edições PLL de 04/08, mesclagem Cap. 4/5, PAC→PCC); **0x1FB00221–0x1FB00226** no Cap. 6 de 12/09 + `1FB3A4B3` do Word (sempre grepar antes) | **0x1FB00227** |
+| `paraId` novos (prefixo `1FB.....`) | até 0x1FB00220 de sessões anteriores (edições PLL de 04/08, mesclagem Cap. 4/5, PAC→PCC); **0x1FB00221–0x1FB00226** no Cap. 6 de 12/09 + `1FB3A4B3` do Word; no V10 de 2026-10-01 o maior já era `1FB0030F` (+ `1FB0D101`), usados `1FB00310`–`1FB00311` nas refs novas (sempre grepar antes) | **0x1FB00312** |
 | `paraId` prefixo `16xxxxxx` | 16000001–16000003, 16100001–16100008, 16200001–16200009 (bloco 4.3.3; 1620000A–C liberados na reescrita do monitoramento — não reusar) | — |
 
 > Antes de inserir novos elementos, sempre buscar o maior ID existente no XML

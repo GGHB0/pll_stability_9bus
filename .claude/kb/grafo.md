@@ -38,7 +38,7 @@ graph LR
     pll -->|1| psim
     pll -->|2| simulation
     pll -->|3| standards
-    pll -->|4| tcc_word
+    pll -->|5| tcc_word
     power_system -->|6| pll
     power_system -->|2| standards
     psim -->|3| pll

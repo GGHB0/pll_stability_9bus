@@ -4,6 +4,7 @@ aliases: [stability-classification-extended]
 description: Classificação ESTENDIDA de estabilidade para redes dominadas por IBR (IEEE TR77 + German System Stability Roadmap) — nova categoria converter-driven/resonance stability com interação PLL-rede
 source: Strauss-Mincu et al., "Inverter-Dominated Future Power Systems: A Roadmap for System Stability", IEEE Power & Energy Magazine, jan/2026, DOI 10.1109/MPE.2025.3617895, p.1–11
 references:
+  - "HATZIARGYRIOU, Nikos et al. Stability Definitions and Characterization of Dynamic Behavior in Systems with High Penetration of Power Electronic Interfaced Technologies. IEEE PES Technical Report PES-TR77. Piscataway: IEEE Power & Energy Society, maio 2020."
   - "LINDNER, Marco; ABELE, Hans; JOHN, Christoph; LEHNER, Joachim; VENNEMANN, Klaus; HENNIG, Tobias; DIMITROVSKI, Robert; KLÖTZL, Nico; JUST, Hendrik; STORNOWSKI, Reinhard. Suitable Classification of Power System Stability Phenomena. CIGRE Science & Engineering, n. 37, jun. 2025."
   - "STRAUSS-MINCU, Diana; DEGNER, Thomas; HACHMANN, Christian; BECKER, Holger; MENDE, Denis; BRAUN, Martin; HENNIG, Tobias; STRAUSS, Philipp. Inverter-Dominated Future Power Systems: A Roadmap for System Stability. IEEE Power and Energy Magazine, v. 24, p. 93-107, 2026. DOI: 10.1109/MPE.2025.3617895."
 ---
@@ -109,7 +110,9 @@ Isso dá enquadramento teórico para a seção 2.3 e conecta diretamente com:
 
 ## Referências normativas citadas no artigo
 
-- **IEEE TR77** — referência primária de todas as categorias.
+- **IEEE TR77** — referência primária de todas as categorias. Relatório
+  PES-TR77 (Hatziargyriou et al., maio 2020; citação completa no
+  `references:`), citado no TCC desde 2026-10-01.
 - **CIGRE CSE N037**, "Suitable Classification of Power System Stability
   Phenomena" — publicação recente que propõe classificação nova alternativa
   (citada, mas TR77 foi a base do roadmap alemão). Edição de **junho de 2025**,

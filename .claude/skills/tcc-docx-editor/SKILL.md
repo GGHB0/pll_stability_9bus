@@ -139,10 +139,10 @@ esperada" (para o agente saber quando abortar/perguntar).
 
 ## Entrega (aprendido em 2026-09-02, na marra)
 
-- **Pré-check por MD5, não por timestamp/bytes** (edição do usuário no Word
-  pode manter o tamanho — foi o MD5 que pegou, numa entrega do fragmento, um
-  save do Victor 8 min depois da minha cópia; entregar teria apagado o
-  trabalho dele em silêncio).
+- **Pré-check por MD5, não por timestamp/bytes** (o MD5 pegou um save do Victor
+  8 min depois da cópia). MD5 mudou → refazer staging e reaplicar o `gen_*.py`
+  (que só lê o XML do staging); sync de outro aparelho (Bruno) chega em rajadas,
+  até com mtime voltando: esperar parar de mudar antes de refazer (2026-10-01).
 - **Backup datado antes de sobrescrever, sempre**: `<nome>_backup_YYYYMMDD_HHMMSS.docx`
   em `_backups/<versão>/` ao lado do arquivo (`comentado/_backups/V10/`).
 - **Conferir que o Word está fechado** (`tasklist | grep -i winword`) e sem

@@ -34,8 +34,9 @@ Origem das constantes 8 e 32: cancelamento polo-zero do controlador de corrente 
 > contra `pll_stability_9bus_analysis.ipynb` célula 41
 > (`ωn≈339,4 rad/s, ξ=0,707`) — é a explicação mais bem verificada das três,
 > mas nenhuma citação de página específica da TeseAGP foi feita no TCC para
-> esta fórmula (decisão explícita do usuário, ver
-> `kb/tcc-word/historico/historico_entregas.md`).
+> esta fórmula (decisão explícita do usuário). Em 2026-10-01, pelo comentário
+> do Oscar ("a banca vai perguntar"), entrou `(ALVES, 2022)` logo após o ωn,
+> ainda sem página: ver [[tcc-historico-entregas]].
 
 ## Implementação no Notebook (`notebooks/pll_stability_9bus_analysis.ipynb`)
 

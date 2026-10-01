@@ -52,7 +52,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 - [psim/](../psim/index.md) — saem 1, chegam 3
 - [simulation/](../simulation/index.md) — saem 2, chegam 3
 - [standards/](../standards/index.md) — saem 3, chegam 5
-- [tcc-word/](../tcc-word/index.md) — saem 4, chegam 8
+- [tcc-word/](../tcc-word/index.md) — saem 5, chegam 8
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)
 <!-- kb-links:end -->

@@ -33,7 +33,7 @@ graph LR
     inverter -->|1| standards
     pll -->|2| dashboard
     pll -->|1| events
-    pll -->|2| inverter
+    pll -->|5| inverter
     pll -->|3| power_system
     pll -->|1| psim
     pll -->|2| simulation

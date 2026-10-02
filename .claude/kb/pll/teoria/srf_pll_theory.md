@@ -157,6 +157,7 @@ Transitório de partida: ~70 ms saturado em ωmin → acomodação em ~150 ms.
 | Ripple 120 Hz em ω, ρ | não atenuado | fortemente atenuado |
 | Complexidade | baixa | alta (4ª ordem) |
 
-O PLL do projeto usa bloco Simscape (`Sinusoidal Measurement (PLL, Three-Phase)`) com ganhos
-equivalentes a PI simples — ver [[pll-loop-filter-gains]]. Sem zeros em ±j2ω₀, o
+O PLL do projeto é um SRF-PLL montado com blocos (Park → v_q → PI → integrador; o bloco
+Simscape `Sinusoidal Measurement (PLL, Three-Phase)` está no diagrama, mas solto, ver
+[[simulink-model]]), com PI simples — ver [[pll-loop-filter-gains]]. Sem zeros em ±j2ω₀, o
 cenário de falta assimétrica é o mais crítico — ver [[pll-contingencies]].

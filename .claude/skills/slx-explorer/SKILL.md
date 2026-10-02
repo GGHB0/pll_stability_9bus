@@ -32,6 +32,14 @@ Imprime duas partes:
 que existe; só o grafo diz como está ligado. Em 2026-10-02 foi o grafo do
 PWM Control que mostrou PI → notch → `m_dq`, sem ramo ωL nem `v_g`.
 
+**Bloco na lista ≠ bloco em uso.** Antes de afirmar que um bloco atua,
+achar o nome dele no grafo. No `3963`, o `Sinusoidal Measurement (PLL,
+Three-Phase)` e o notch 120 Hz do PLL aparecem na lista, mas não têm
+nenhuma ligação; o PLL que atua é Park → `Selector2` (v_q) → `PI` →
+`Angle`. A KB descreveu o bloco solto como "o PLL do projeto" até
+2026-10-02. "Quem usa o sinal X?" se responde seguindo X no grafo, não
+pelo nome (`Vdq_rede` é só rótulo de scope).
+
 Nome ambíguo → o script lista os candidatos com SID; repetir com o SID.
 Subsistema dentro de subsistema: rodar no pai, pegar o SID do filho, rodar
 de novo.

@@ -42,7 +42,9 @@ Cadeia até hoje, toda por transcrição:
 
 1. PSIM — literais em `P8`/`P9`
 2. Simulink — hardcoded dentro do bloco `Sinusoidal Measurement (PLL,
-   Three-Phase)` como `Kp_LF`/`Ki_LF` (ver [[pll-notch-implementation]])
+   Three-Phase)` como `Kp_LF`/`Ki_LF` (ver [[pll-notch-implementation]]).
+   Hoje esse bloco está solto; o PLL ativo lê `kp_pll`/`ki_pll` nos Gains do
+   subsistema PI (SID 4614), ver [[simulink-model]]
 3. `params.m` — commit `219f6ee` (27/06/2026), 3 linhas, sem justificativa
 
 ## Normalização: por que `U = 1 pu`

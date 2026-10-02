@@ -47,7 +47,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 
 - [dashboard/](../dashboard/index.md) — saem 2, chegam 3
 - [events/](../events/index.md) — saem 1, chegam 0
-- [inverter/](../inverter/index.md) — saem 2, chegam 6
+- [inverter/](../inverter/index.md) — saem 5, chegam 6
 - [power-system/](../power-system/index.md) — saem 3, chegam 6
 - [psim/](../psim/index.md) — saem 1, chegam 3
 - [simulation/](../simulation/index.md) — saem 2, chegam 3

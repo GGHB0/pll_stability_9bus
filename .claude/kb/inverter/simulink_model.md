@@ -73,10 +73,18 @@ UFV Model
 ```
 Entradas: id_ref, Vabc_grid, Iabc (pu)
 │
-├── Sinusoidal Measurement (PLL, Three-Phase) ← bloco de biblioteca Simscape
-│     └── estima θ e ω da rede
+├── SRF-PLL montado com blocos (é o PLL que atua)
+│     Vabc_grid → Park Transform (θ_PLL) → Selector2 (só v_q)
+│     → PI (SID=4614: Gain kp_pll + ki_pll·∫, integrador parte de 2π·60) = ω
+│     → Angle (SID=4607: integrador com wrap) = θ → Goto AngPLL
+│     |v_dq| (Pythagorian Sum) só alimenta o Scope "PLL"
+├── Sinusoidal Measurement (PLL, Three-Phase) — bloco de biblioteca SOLTO:
+│     nenhuma ligação; o Kp_LF/Ki_LF dele não atua
+├── Discrete Transfer Fcn (notch 120 Hz do PLL) — comentado e solto (histórico)
 │
-├── Park Transform1 / Park Transform2 (abc → dq)
+├── Park Transform1 (Iabc, θ) → Selector/Demux → I_d, I_q → PWM Control
+├── Park Transform2 (Vabc_inverter, θ) → √(v_d²+v_q²) → 1/(0,005s+1)
+│     → MATLAB Function (in1: módulo filtrado da tensão do INVERSOR)
 │
 ├── MATLAB Function (SID=4439) — função ONS_2_11 (chart_14.xml)
 │     Implementa suporte reativo per ONS Subm. 2.10 §5.8
@@ -157,8 +165,9 @@ Ver `.claude/skills/slx-runner/SKILL.md` para uso completo.
 
 - **Kp e Ki são divididos por 4** tanto no notebook quanto no modelo — consistente.
 - **Notch implementado em ambos os eixos** (d e q) para amortecimento ativo da ressonância LCL.
-- **PLL usa bloco de biblioteca** (`Sinusoidal Measurement (PLL, Three-Phase)`) — não é implementação manual. Os ganhos internos são `Kp_LF = 460` / `Ki_LF = 105820` (= `kp_pll`/`ki_pll` do `params.m`), ver [[pll-loop-filter-gains]] — **não** são o `Kp`/`Ki` de [[pll-gains-methodology]], que é o controlador de corrente.
+- **PLL montado com blocos, não o de biblioteca:** Park → v_q → PI (`kp_pll`/`ki_pll` do `params.m`, Gains do SID 4614) → integrador com wrap. O `Sinusoidal Measurement (PLL, Three-Phase)` continua no diagrama, com `Kp_LF`/`Ki_LF` gravados, mas **sem nenhuma ligação** (conferido no grafo em 2026-10-02; a KB dizia o contrário até então). Ganhos: [[pll-loop-filter-gains]], **não** o `Kp`/`Ki` de [[pll-gains-methodology]], que é o controlador de corrente.
 - **PWM é SPWM** (comparador com portadora triangular), não SVPWM.
 - **Controle de corrente sem desacoplamento ωL nem feedforward de v_g:** PI → notch → `m_dq` direto, sem `/V_cc` (Mux com eixo 0 = 0). A teoria da TeseAGP prevê o desacoplamento; a implementação não ([[agp-current-control-theory]]).
+- **Onde entram v_gd e v_gq (tensão da rede em dq):** só no PLL, e só o v_q (o módulo vai para scope). O controle de corrente não recebe tensão nenhuma: as 4 entradas do PWM Control são I_d,ref, I_q,ref, I_d e I_q. A única tensão que chega às referências é o **módulo da tensão do inversor**, filtrado (τ = 5 ms), na MATLAB Function do ONS. Base da Figura 3.1 do TCC (`assets/diagrams/current_control_dq_blocos.svg`).
 - **Ts = 5 µs** (EMT), **Tsc = 200 µs** (controle) — razão de 40× entre passos.
 - `wres = 9068.99 rad/s` → `fres ≈ 1443 Hz` (não confundir rad/s com Hz).

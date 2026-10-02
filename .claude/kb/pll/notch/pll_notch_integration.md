@@ -55,7 +55,11 @@ O que **nao** e recomendado:
 
 ## Relacao com o modelo do projeto
 
-No projeto `pll_stability_9bus.slx`, o PLL atual esta no subsistema:
+> Atualizacao 2026-10-02: o bloco abaixo continua no diagrama, mas **solto**
+> (sem ligacoes). O PLL ativo e a mesma cadeia montada com blocos soltos no
+> Optimal Controller, ver [[simulink-model]]. O texto segue como registro.
+
+No projeto `pll_stability_9bus.slx`, o PLL estava no subsistema:
 
 ```text
 UFV Model / Optimal controller / Sinusoidal Measurement (PLL, Three-Phase)

@@ -26,6 +26,13 @@ re-simulação. Ver `assets/charts/README.md` e `scripts/gen_regime_waveforms.py
 como referência de estilo (legenda com fundo branco fora das curvas,
 `T_SETTLE` sombreado, título com `pad` quando a legenda fica acima do eixo).
 
+**Dado novo do Bruno → validar antes de plotar.** Rodar
+`scripts/validar_cenarios.py` depois do pull e, no gerador, importar
+`cenario_ok()`/`pasta_inadequada()` em vez de montar `folder + "_bad_pll"` à
+mão. Em 01/10/2026 duas pastas "monofásicas" eram cópias de trifásicas e só
+a assinatura abc denunciou. Nunca fixar instante de falta ou de corte: ler
+de `fault_info.json` (as safras mudam; ver `cenarios_simulados.md` no KB).
+
 ## 2. Figura Desenhada à Mão, Conteúdo Lido do Disco
 
 Caso intermediário: o **layout** é desenhado (uma matriz, um quadro-síntese,

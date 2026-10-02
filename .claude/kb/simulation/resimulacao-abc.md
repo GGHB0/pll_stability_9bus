@@ -65,7 +65,7 @@ A pasta de saída é montada sozinha pelo export a partir dessas variáveis —
 não precisa criar pasta nem mover arquivo. Cenários `_bad_pll` usam o
 `kp_pll × 0.2` automático do `params.m` (ver [[cenarios-simulados]]).
 
-> ⚠️ **Bug de tempo de falta nos CSVs `_bad_pll` atuais (2026-07-21).** Os
+> ✅ **Resolvido em 01/10/2026** (nenhuma pasta da safra antiga restou). Histórico: **bug de tempo de falta nos CSVs `_bad_pll` (2026-07-21).** Os
 > cenários `_bad_pll` foram exportados com a falta em `t_fault = 0.6 s` /
 > `t_clear = 0.7 s` (janela até 1.0 s), enquanto os nominais usam
 > `t_fault = 0.3 s` / `t_clear = 0.4 s`. Com esse timing errado o PLL parece
@@ -82,8 +82,16 @@ assimétrica com a assinatura de sequência negativa mais clara.
 ## Depois de simular
 
 ```powershell
+.venv\Scripts\python.exe scripts\validar_cenarios.py   # antes de qualquer figura
 .venv\Scripts\python.exe app.py
 ```
+
+O validador reprova pasta cujo `sim_data.csv` é cópia de outra rodada ou cuja
+falta não bate com o nome (ex.: monofásica com afundamento equilibrado). Em
+01/10/2026 ele pegou `bus7/1phase_bad_pll` e `bus7/1phase_ground_bad_pll`
+(cópias de trifásicas) e `line8_9/2phase` (trifásica). Antes de exportar,
+conferir no Simulink que a rodada terminou e que `FAULT_TYPE` foi trocado.
+Detalhe em [[cenarios-simulados]].
 
 Regenera `output/pll_metrics.html`; os painéis de corrente e tensão abc
 aparecem automaticamente em cada cenário que tiver as colunas correspondentes

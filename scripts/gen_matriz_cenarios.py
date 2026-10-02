@@ -30,12 +30,15 @@ TEXTO = '  <text x="%d" y="%d"%s font-size="%d"%s fill="%s">%s</text>'
 
 
 def levantar():
-    """Devolve {local: {tipo: (tem_nominal, tem_inadequada)}} e o par do regime."""
+    """Devolve {local: {tipo: (tem_nominal, tem_inadequada)}} e o par do regime.
+    So conta cenario aprovado em validar_cenarios.py (pasta duplicada ou com
+    assinatura de falta errada fica de fora; `1phase_ground_bad_pll` conta
+    como monofasica inadequada)."""
+    from validar_cenarios import cenario_ok, pasta_inadequada
     m = {}
     for local in ORDEM:
-        pasta = RESULTS / local
-        sub = {p.name for p in pasta.iterdir() if p.is_dir()} if pasta.is_dir() else set()
-        m[local] = {t: (t in sub, t + "_bad_pll" in sub) for t in TIPOS}
+        m[local] = {t: (cenario_ok(f"{local}/{t}"), pasta_inadequada(f"{local}/{t}") is not None)
+                    for t in TIPOS}
     regime = ((RESULTS / "regime").is_dir(), (RESULTS / "regime_bad_pll").is_dir())
     return m, regime
 

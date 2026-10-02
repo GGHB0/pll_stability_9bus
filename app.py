@@ -18,7 +18,7 @@ DEFAULT_OUT = Path("output/pll_metrics.html")
 FAULT_LABELS: dict[str, str] = {
     "3phase":        "Trifásica",
     "1phase":        "Monofásica",
-    "1phase_ground": "Monofásica-terra",
+    "1phase_ground": "Monofásica",  # toda monofásica do projeto é à terra
     "2phase":        "Bifásica",
     "2phase_ground": "Bifásica-terra",
 }

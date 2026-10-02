@@ -60,8 +60,9 @@ frase sem verbo principal **não são detectáveis por regex** e só saem lendo 
 - **Remover parêntese aninhado costuma deixar itálico órfão.** O trecho inteiro
   entre parênteses estava em `<w:i/>`; virar período próprio exige tirar o
   itálico dos runs, senão fica uma frase em itálico no meio do parágrafo.
-- **Não mexer no que o usuário já aprovou** sem perguntar. "reaquisitar"
-  (formação irregular, 5 ocorrências no Cap. 4 a 6) ficou como está por decisão
-  dele em 2026-09-12 — a troca mexeria em parágrafos já fechados.
+- **Não mexer no que o usuário já aprovou** sem perguntar.
+- **Nunca escrever "reaquisitar"/"reaquisição"**: a palavra não existe (Victor,
+  2026-10-01, revertendo a decisão de 2026-09-12 de mantê-la). Usar "recuperar o
+  sincronismo"; se "recuperação" já estiver na frase, "retomada do sincronismo".
 - Rodar `check_pt.py` de novo **sobre o XML de saída** antes do repack: as
   classes corrigidas têm que ir a zero.

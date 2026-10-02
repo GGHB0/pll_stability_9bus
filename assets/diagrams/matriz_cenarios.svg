@@ -36,10 +36,8 @@
   <text x="649" y="202" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">I</text>
   <rect x="50" y="216" width="660" height="38" fill="#f8fafc"/>
   <text x="64" y="241" font-size="15" fill="#0B132B">Barra 7</text>
-  <rect x="276" y="224" width="30" height="22" rx="5" fill="#0B132B"/>
-  <text x="291" y="240" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
-  <rect x="314" y="224" width="30" height="22" rx="5" fill="#F97316"/>
-  <text x="329" y="240" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">I</text>
+  <rect x="295" y="224" width="30" height="22" rx="5" fill="#0B132B"/>
+  <text x="310" y="240" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
   <rect x="436" y="224" width="30" height="22" rx="5" fill="#0B132B"/>
   <text x="451" y="240" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
   <rect x="474" y="224" width="30" height="22" rx="5" fill="#F97316"/>
@@ -73,8 +71,7 @@
   <rect x="50" y="368" width="660" height="38" fill="#f8fafc"/>
   <text x="64" y="393" font-size="15" fill="#0B132B">Linha 8-9</text>
   <text x="310" y="392" text-anchor="middle" font-size="16" fill="#94a3b8">–</text>
-  <rect x="455" y="376" width="30" height="22" rx="5" fill="#0B132B"/>
-  <text x="470" y="392" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
+  <text x="470" y="392" text-anchor="middle" font-size="16" fill="#94a3b8">–</text>
   <rect x="615" y="376" width="30" height="22" rx="5" fill="#0B132B"/>
   <text x="630" y="392" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">N</text>
   <rect x="50" y="406" width="660" height="50" fill="#eef2f7"/>
@@ -106,5 +103,5 @@
   <rect x="400" y="488" width="30" height="22" rx="5" fill="#F97316"/>
   <text x="415" y="504" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">I</text>
   <text x="438" y="504" font-size="15" fill="#0B132B">sintonia inadequada</text>
-  <text x="380" y="538" text-anchor="middle" font-size="14" fill="#6b7280">30 cenários exportados: 22 com sintonia nominal e 8 com sintonia inadequada.</text>
+  <text x="380" y="538" text-anchor="middle" font-size="14" fill="#6b7280">28 cenários exportados: 21 com sintonia nominal e 7 com sintonia inadequada.</text>
 </svg>

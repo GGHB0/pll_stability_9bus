@@ -55,8 +55,9 @@ aliases: [tcc-historico-entregas-2026-09-12]
   Fault`; PCC em minúsculas no corpo; títulos **2.6 e 3.6** de "Resumo **ou**
   Conclusões do Capítulo" (resto do template UERJ) para "Resumo e conclusões do
   capítulo", casando com o 5.6 — 4 replaces, porque o cache do sumário conta.
-- **Decisões do usuário**: manter `reaquisitar` (5 ocorrências, formação
-  irregular mas consistente e em parágrafos já fechados); não mexer no
+- **Decisões do usuário**: manter o verbo irregular de "aquisição" (5
+  ocorrências, em parágrafos já fechados; **revertida em 2026-10-01**: a
+  palavra não existe e sai do texto, ver [[tcc-pendencias]]); não mexer no
   pré-textual nem nos placeholders.
 - **Dois ajustes de acompanhamento**, feitos junto: no bloco 396 o parêntese
   aninhado virou período próprio e o itálico dos runs foi removido (frase

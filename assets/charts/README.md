@@ -34,21 +34,17 @@ Fonte: `output/results/regime/sim_data.csv` (P, Q, dq) e
 
 | Arquivo | Conteúdo | Janela |
 |---|---|---|
-| `regime_bad_pll_correntes_abc.svg` / `.png` | Correntes trifásicas do inversor | 0,95–1,00 s (3 ciclos) |
-| `regime_bad_pll_tensoes_abc.svg` / `.png` | Tensões trifásicas do inversor | 0,95–1,00 s (3 ciclos) |
-| `regime_bad_pll_potencia_pq.svg` / `.png` | Potência ativa e reativa (`P, Q`) | 0–1,0 s completo |
-| `regime_bad_pll_corrente_dq.svg` / `.png` | Corrente dq, medida + referência | 0–1,0 s completo |
-| `regime_bad_pll_tensao_dq_rede.svg` / `.png` | Tensão dq do lado da Rede | 0–1,0 s completo |
-| `regime_bad_pll_tensao_dq_inversor.svg` / `.png` | Tensão dq do lado do Inversor | 0–1,0 s completo |
+| `regime_bad_pll_correntes_abc.svg` / `.png` | Correntes trifásicas do inversor | 0,55–0,60 s (3 ciclos) |
+| `regime_bad_pll_tensoes_abc.svg` / `.png` | Tensões trifásicas do inversor | 0,55–0,60 s (3 ciclos) |
+| `regime_bad_pll_potencia_pq.svg` / `.png` | Potência ativa e reativa (`P, Q`) | 0–0,6 s completo |
+| `regime_bad_pll_corrente_dq.svg` / `.png` | Corrente dq, medida + referência | 0–0,6 s completo |
+| `regime_bad_pll_tensao_dq_rede.svg` / `.png` | Tensão dq do lado da Rede | 0–0,6 s completo |
+| `regime_bad_pll_tensao_dq_inversor.svg` / `.png` | Tensão dq do lado do Inversor | 0–0,6 s completo |
 
-Com ξ = 0,316 (vs. 0,707 nominal) o transitório de energização é muito mais
-lento e oscilatório — visível na P/Q e na corrente/tensão dq oscilando bem
-acima do valor final por ~0,5 s antes de convergir. Marcador de assentamento
-aqui é **empírico** (`≈ 0,55 s`, última vez que P/Q se afastam >0,08 pu do
-valor final), não o `T_SETTLE` global do dashboard — este último foi medido
-só para o caso nominal e não vale pra esta sintonia. Motivo do intervalo
-completo ir a 1,0 s (não 0,6 s como o nominal): mesma convenção temporal dos
-cenários com sintonia inadequada, ver `.claude/kb/simulation/cenarios_simulados.md`.
+Re-simulado em 01/10/2026 (v_d ~1,0 pu): a energização assenta em ~74 ms
+(nominal ~45 ms), então usa a mesma janela (0–0,6 s) e o mesmo
+T$_{settle}$ = 0,1 s do nominal. A safra antiga (0–1,0 s) assentava em
+≈0,55 s; ver `.claude/kb/simulation/cenarios_simulados.md`.
 
 Fonte: `output/results/regime_bad_pll/sim_data.csv` e `sim_data_abc.csv`.
 
@@ -78,23 +74,28 @@ corrente/tensão dq) **cortam** o trecho antes do assentamento em vez de só
 sombreá-lo — aqui o fenômeno de interesse é a falta, não o transitório de
 partida do PLL. O instante de corte depende do modelo (`bad_pll` no
 `fault_info.json`): T$_{settle}$ = 0,1 s (nominal, constante oficial do
-dashboard) ou ≈0,55 s empírico (sintonia inadequada, xi=0,316 assenta bem
-mais devagar — mesmo valor de `gen_regime_waveforms.py`).
+dashboard), também para a sintonia inadequada da safra de 01/10/2026; ≈0,55 s
+só para a safra antiga com falta em 0,6 s (`settle_de()`).
+
+Antes de gerar, cada pasta passa por `scripts/validar_cenarios.py`: pasta
+reprovada (cópia de outra rodada, assinatura de falta errada) é **pulada** e
+o PNG anterior fica em disco, desatualizado. O prefixo `_bad_pll` aponta para
+a pasta de `pasta_inadequada()` (a monofásica usa `1phase_ground_bad_pll`).
 
 | Prefixo | Barra | Tipo | Modelo | Falta | Fim |
 |---|---|---|---|---|---|
 | `bus7_3phase` | 7 | trifásica | nominal | 0,3–0,4 s | 0,6 s |
-| `bus7_3phase_bad_pll` | 7 | trifásica | sintonia inadequada | 0,6–0,7 s | 1,0 s |
+| `bus7_3phase_bad_pll` | 7 | trifásica | sintonia inadequada | 0,3–0,4 s | 0,6 s |
 | `bus6_3phase` | 6 | trifásica | nominal | 0,3–0,4 s | 0,6 s |
-| `bus6_3phase_bad_pll` | 6 | trifásica | sintonia inadequada | 0,6–0,7 s | 1,0 s |
+| `bus6_3phase_bad_pll` | 6 | trifásica | sintonia inadequada | 0,3–0,4 s | 0,6 s |
 | `bus7_1phase` | 7 | monofásica | nominal | 0,3–0,4 s | 0,6 s |
-| `bus7_1phase_bad_pll` | 7 | monofásica | sintonia inadequada | 0,6–0,7 s | 1,0 s |
+| `bus7_1phase_bad_pll` | 7 | monofásica | sintonia inadequada | **pulado: dado reprovado (01/10)** | — |
 | `bus6_2phase` | 6 | bifásica | nominal | 0,3–0,4 s | 0,6 s |
-| `bus6_2phase_bad_pll` | 6 | bifásica | sintonia inadequada | 0,6–0,7 s | 1,0 s |
+| `bus6_2phase_bad_pll` | 6 | bifásica | sintonia inadequada | 0,3–0,4 s | 0,6 s |
 | `line7_8_3phase` | Linha 7-8 | trifásica | nominal | 0,3–0,4 s | 0,6 s |
-| `line7_8_3phase_bad_pll` | Linha 7-8 | trifásica | sintonia inadequada | 0,6–0,7 s | 1,0 s |
+| `line7_8_3phase_bad_pll` | Linha 7-8 | trifásica | sintonia inadequada | 0,3–0,4 s | 0,6 s |
 | `line8_9_3phase` | Linha 8-9 | trifásica | nominal | 0,3–0,4 s | 0,6 s |
-| `line8_9_2phase` | Linha 8-9 | bifásica | nominal | 0,3–0,4 s | 0,6 s |
+| `line8_9_2phase` | Linha 8-9 | bifásica | nominal | **pulado: é trifásica (reprovado)** | — |
 
 Fonte de cada linha do inventário: `output/results/bus<N>/<tipo>[_bad_pll]/`
 ou `output/results/line<X>_<Y>/<tipo>[_bad_pll]/` (`sim_data.csv`,
@@ -172,3 +173,20 @@ Reproduzível sempre que os dados de simulação forem atualizados. Novos
 cenários de falta entram em `SCENARIOS` no topo de
 `scripts/gen_fault_waveforms.py` (72 arquivos hoje — 12 cenários × 6). Ver
 inventário completo em `.claude/kb/simulation/cenarios_simulados.md`.
+
+## Erro de fase — Cap. 5 (`scripts/gen_erro_fase.py`)
+
+Pedido do Oscar (comentários 173, 189, 195, 212 e 216 do V10). Erro de fase =
+`atan2(vq_rede, vd_rede)` em graus, **a mesma receita do texto do Cap. 5**, não o
+`theta_err` do dashboard; pico e `t_s` anotados saem calculados na hora.
+
+| Arquivo | Seção | Figura no V10 | Conteúdo |
+|---|---|---|---|
+| `erro_fase_regime` | 5.1 | 5.3 | Energização, nominal × inadequada, entrada na faixa de ±2° |
+| `erro_fase_simetricas` | 5.2 | 5.7 | Trifásica nominal nos 4 pontos (2×2, mesma escala) |
+| `erro_fase_assimetricas` | 5.3 | 5.12 | Pares nominal × inadequada (2×2); monofásica na Barra 7 só nominal |
+| `erro_fase_perda_sincronismo` | 5.4 | 5.16 | Trifásica na Barra 7, nominal × inadequada |
+
+Inseridas no V10 em 2026-10-01 (5,5 in as de painel único, 6,3 in as 2×2).
+
+Eixo x relativo à aplicação da falta; 1º ciclo sombreado em cinza (fora do pico).

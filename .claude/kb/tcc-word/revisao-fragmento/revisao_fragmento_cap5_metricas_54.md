@@ -15,7 +15,7 @@ componente de 120 Hz continuam no arquivo pai e valem também aqui.
 ## 5.4 — perda de sincronismo (`bus7/3phase_bad_pll`)
 
 Seção acrescentada em 2026-08-23 (noite). O cenário é o **único dos 16** que
-não reaquisita o sincronismo depois da eliminação da falta.
+não recupera o sincronismo depois da eliminação da falta.
 
 ### Métricas próprias desta seção
 
@@ -49,7 +49,7 @@ O parágrafo 95 (§5.4, Figura 5.12) trazia medições de escorregamento que
 
 O texto de §5.4 passou a ser **puramente qualitativo**: o erro de fase não
 retorna a um valor estável, cresce de forma contínua, o referencial estimado
-gira de forma persistente em relação ao vetor da rede e o SRF-PLL não reaquisita
+gira de forma persistente em relação ao vetor da rede e o SRF-PLL não recupera
 o sincronismo dentro da janela simulada. A tese da seção (perda de sincronismo
 só na combinação afundamento profundo + sintonia inadequada) não depende de
 nenhum dos três números.
@@ -177,15 +177,15 @@ Nem a profundidade nem a sintonia, isoladas, produzem o fenômeno:
 |---|---|---|
 | Barra 7, sintonia nominal | 9,2% | 98 ms |
 | Barra 6, sintonia inadequada | 58,4% | 106 ms |
-| **Barra 7, sintonia inadequada** | **8,2%** | **não reaquisita** |
+| **Barra 7, sintonia inadequada** | **8,2%** | **não recupera** |
 
 `line7_8/3phase_bad_pll` **não** entra nessa comparação, apesar de caber nela:
 é o run anômalo descartado em [[cenarios-simulados]].
 
 ### Ressalvas registradas no próprio texto
 
-- A janela termina 300 ms após a eliminação, então a afirmação é "não reaquisita
-  dentro da janela simulada", nunca "jamais reaquisita".
+- A janela termina 300 ms após a eliminação, então a afirmação é "não recupera
+  dentro da janela simulada", nunca "jamais recupera".
 - O cenário parte do ponto de operação degradado da safra de julho
   (`v_d` pré-falta 0,823 pu), o mesmo das Figuras 5.2 e 5.3, e é comparado com
   um nominal que parte de 0,989 pu. A retenção quase idêntica (8,2% × 9,2%) é

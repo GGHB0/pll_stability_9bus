@@ -23,7 +23,7 @@ da taxa, nem a frequência de escorregamento (~70 Hz). Decisão do usuário: sã
 parâmetros que não sustentam a conclusão da seção e abrem flanco a
 questionamento em banca (o acumulado é do mesmo tipo do ISE tirado do
 dashboard). O texto ficou qualitativo: erro de fase cresce sem retornar a valor
-estável, sem reaquisição na janela. Esta nota e o PDF seguem como **registro de
+estável, sem retomada do sincronismo na janela. Esta nota e o PDF seguem como **registro de
 método**, órfãos em relação ao texto. Detalhe em
 [[tcc-revisao-fragmento-cap5-metricas-54]].
 

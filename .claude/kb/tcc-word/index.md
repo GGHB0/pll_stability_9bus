@@ -49,6 +49,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 | [historico_entregas_2026_09_12.md](historico/historico_entregas_2026_09_12.md) | [[tcc-historico-entregas-2026-09-12]] | Entregas de 2026-09-12: referências fechadas, revisão de português, Cap. 6-7 redigidos |
 | [historico_entregas_2026_09_13.md](historico/historico_entregas_2026_09_13.md) | [[tcc-historico-entregas-2026-09-13]] | Entregas de 2026-09-13: passagem ABNT, lista de siglas revisada, subscritos no texto corrido |
 | [historico_entregas_2026_09_26.md](historico/historico_entregas_2026_09_26.md) | [[tcc-historico-entregas-2026-09-26]] | Entregas de 2026-09-26 no V10 (comentários do Oscar, notação do PLL, comentário 16 e Xiong, figuras ONS) |
+| [historico_entregas_2026_09_fim.md](historico/historico_entregas_2026_09_fim.md) | [[tcc-historico-entregas-2026-09-fim]] | Entregas de 2026-09-27 a 2026-09-29 no V10 (Wu e Wang em redes fracas, Xiong na Motivação, 38 comentários do Oscar no Cap.5), fragmentado d… |
 | [historico_entregas_2026_09_inicio.md](historico/historico_entregas_2026_09_inicio.md) | [[tcc-historico-entregas-2026-09-inicio]] | Entregas de setembro até 2026-09-09: troca PAC→PCC, mesclagem Cap. 4-5, enxugamento Cap. 5 |
 | [historico_entregas_v8.md](historico/historico_entregas_v8.md) | [[tcc-historico-entregas-v8]] | Histórico de entregas da versão V8 do TCC: seção 3.3, correções dos comentários do Oscar |
 
@@ -72,7 +73,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 - [events/](../events/index.md) — saem 2, chegam 0
 - [pll/](../pll/index.md) — saem 8, chegam 5
 - [power-system/](../power-system/index.md) — saem 6, chegam 0
-- [simulation/](../simulation/index.md) — saem 4, chegam 4
+- [simulation/](../simulation/index.md) — saem 5, chegam 5
 - [standards/](../standards/index.md) — saem 3, chegam 1
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)

@@ -13,7 +13,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 
 | Arquivo | Link | Cobre |
 |---|---|---|
-| [cenarios_simulados.md](cenarios_simulados.md) | [[cenarios-simulados]] | Inventário dos cenários exportados em output/results — 22 nominais + 8 com sintonia inadequada, as duas configurações temporais de falta e… |
+| [cenarios_simulados.md](cenarios_simulados.md) | [[cenarios-simulados]] | Inventário dos cenários exportados em output/results, validação depois de cada pull (validar_cenarios.py), as safras de modelo dos cenários… |
 | [export_workflow.md](export_workflow.md) | [[export-workflow]] | Workflow validado Simulink → MATLAB → Python para o modelo pll_stability_9bus (logsout, sinais de barra, sim_data.csv) |
 | [params_workflow.md](params_workflow.md) | [[params-workflow]] | Workflow notebook -> MATLAB/Simulink for separating theoretical AGP calculations from runtime params.m values, including the intentional Vc… |
 | [python_pipeline.md](python_pipeline.md) | [[python-pipeline]] | Arquitetura Python (src/) que consome sim_data.csv — SimData, ChartBuilder, painéis, métricas |
@@ -28,7 +28,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 - [power-system/](../power-system/index.md) — saem 1, chegam 0
 - [psim/](../psim/index.md) — saem 0, chegam 4
 - [standards/](../standards/index.md) — saem 1, chegam 2
-- [tcc-word/](../tcc-word/index.md) — saem 4, chegam 4
+- [tcc-word/](../tcc-word/index.md) — saem 5, chegam 5
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)
 <!-- kb-links:end -->

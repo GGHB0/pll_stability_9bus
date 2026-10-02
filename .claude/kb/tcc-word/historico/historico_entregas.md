@@ -10,6 +10,55 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-01 (23h) — Gráficos de erro de fase no Cap. 5 (V10)
+
+- 4 figuras novas (legenda SEQ + imagem + Fonte via `campos.py` + parágrafo
+  de chamada): 5.3 energização, 5.7 trifásicas nominais, 5.12 assimétricas,
+  5.16 perda de sincronismo. Cap. 5 passou a 19 figuras, documento a 77
+  págs. Mapa em [[tcc-revisao-fragmento-cap5-figuras]].
+- Citações em texto fixo renumeradas num passo único pelo mapa antigo→novo.
+  **Armadilha:** o Word partiu "A Figura " | `proofErr` | "5.9 mostra" em
+  runs separados; o regex por `<w:t>` não pegou e a chamada ficou errada até
+  a conferência legenda × chamada. Tratar o caso partido antes do passo geral.
+- "Feito." nos 4 pedidos de gráfico angular do Oscar; 4 comentários
+  `[Claude]`. Rótulo do painel vazio do gerador virou "fora da comparação".
+- 1ª entrega abortou por MD5 (OneDrive sincronizou o save do Word ao fechar;
+  texto idêntico). Refeito sobre a versão nova → backup
+  `V10_backup_20261001_230942`.
+
+## 2026-10-01 (22h30) — Texto do Cap. 5 para a safra de 01/10 (V10)
+
+- 26 trocas por paraId, segmento a segmento dentro de `<w:t>`, preservando
+  as âncoras do Oscar (`C:\Temp\figs\gen_texto_cap5.py`; métricas de
+  `medir_cap5.py`, receita de [[tcc-revisao-fragmento-cap5-metricas]]).
+- Muda a tese da §5.3: a sintonia inadequada recupera **mais rápido** nas
+  assimétricas da Barra 6 (30/31 ms × 48/39 ms; ondulação de Q 4,8→3,0 pu) e
+  mais devagar na bifásica da Barra 7 (51→96 ms) e na trifásica da Barra 6
+  (76→106 ms); o compromisso passa a depender da severidade. Saiu o "ponto
+  de operação degradado" (regime inadequado converge a 1,00 pu, 79 ms), saiu
+  o par monofásico da Barra 7 (reprovado), a Linha 7-8 entrou na perda de
+  sincronismo (§5.4) e a janela pós-falta passou a 200 ms (Cap. 4 bloco 487
+  e §5.4).
+- 15 comentários `[Claude]`, um por trecho; "Feito." nos do Oscar sobre
+  grandeza/ordem de grandeza, tensão degradada, ponto de operação, escala de
+  tempo e 0,823 pu. O "Não entendi." ficou sem resposta (dois comentários
+  com o mesmo início). Cap. 6 não foi tocado.
+- Finalize (74 págs) → audit 0 falhas → backup `V10_backup_20261001_223143`.
+
+## 2026-10-01 (22h) — Gráficos da safra de 01/10 no V10
+
+- Troca só da mídia (`word/media/imageN.png`) de 12 ilustrações pelos PNGs
+  regenerados: Tabela 4.1 (`image11`), Figuras 5.1-5.3 (`image12`-`14`) e
+  5.8-5.15 (`image19`-`26`). Proporções idênticas, `cy` inalterado. As
+  Figuras 5.4-5.7 já eram iguais a `assets/`. Mapa em
+  [[tcc-revisao-fragmento-cap5-figuras]].
+- **Texto não mexido**: comentário `[Claude]` na abertura do Cap. 5 avisa da
+  troca e dos números antigos (563→79 ms; 34,9°/78 ms→34,5°/30 ms; Linha 7-8
+  trifásica também perde sincronismo). Revisão dos números fica pendente,
+  com tabela em [[cenarios-simulados]]. Gráficos `erro_fase_*` não inseridos.
+- **Pipeline**: `C:\Temp\figs\gen_troca_figuras.py` → finalize com
+  `-Comments` (74 págs) → audit 0 falhas → backup `V10_backup_20261001_222015`.
+
 ## 2026-10-01 (noite) — Referências pedidas pelo Oscar (V10)
 
 - **Comentários 88, 34, 118 e 140** (pedidos de referência), cada citação no
@@ -52,74 +101,11 @@ aliases: [tcc-historico-entregas]
   finalize (74 págs, 0 erro) → audit 0 falhas → MD5 `284f6afc…` conferido →
   backup `_backup_20261001_193644` → entregue (`fd4b7f3c…`).
 
-## 2026-09-29 — 38 comentários novos do Oscar mesclados no Cap.5 (V10)
+## Entregas de 2026-09-27 a 2026-09-29
 
-- Victor recebeu do Oscar uma cópia comentada (`TCC_Victor_Bruno_V10 (1).docx`,
-  baixada em 2026-09-29) com comentários novos datados de 25 e 28/09, além de
-  edições de texto soltas (Figura→Gráfico, "EMT"→"transitórios
-  eletromagnéticos", "IBR"→"Recurso Baseado em Inversor") feitas por
-  cima. Pedido explícito: só os comentários do Cap. 5, sem as edições de
-  texto.
-- Diff por texto de comentário identificou 42 comentários novos (ausentes no
-  canônico); 4 eram do Cap. 1/2 (datados de 23/09) e ficaram de fora por
-  pedido — checagem por data confirmou que também já tinham sido mesclados
-  antes (o canônico não tem nenhum comentário do Oscar após
-  2026-09-24T17:02Z, então qualquer coisa datada de 23/09 já estava
-  capturada, só com pequena variação textual, ex.: uma vírgula). Os 38
-  restantes (todos ancorados no Cap. 5, ids 133-190 no arquivo baixado) foram
-  inseridos.
-- **Método**: sem tracked changes nem `d.Comments.Add` (que atribuiria a
-  conta do Office como autor). Correspondência de bloco por índice
-  (deslocamento constante entre os dois arquivos, +2 depois do heading da
-  §5.3 que veio partido em 3 blocos por um bug do Word) + `difflib` para
-  mapear os offsets do texto do âncora do arquivo baixado (com "Gráfico") de
-  volta para o texto do canônico (com "Figura"), preservando a redação atual.
-  Inserção cirúrgica de `commentRangeStart/End` + `commentReference` direto no
-  XML, reaproveitando `paraId`/`durableId`/data do comentário original do
-  Oscar (autoria preservada). Dois comentários (141, 182) ancoram imagem, não
-  texto; dois blocos (503, 526) tinham `<w:lastRenderedPageBreak/>` partindo o
-  parágrafo em duas runs, sem afetar a lógica de corte.
-- **Pipeline**: script Python próprio (não um `gen_*.py` de replace simples,
-  dado o volume) grava os 5 XMLs (`document.xml` + 4 partes de comentário) →
-  `word_finalize.ps1` (74 págs, 141 comentários, 0 erro) → `audit_docx.py` 0
-  falhas → MD5 do OneDrive conferido antes → backup
-  `_backup_20260929_234138` → entregue.
-
-## 2026-09-27 (2) — Comentário 16 do Oscar resolvido: Xiong na Motivação (V10)
-
-- Motivação, último parágrafo: frase nova depois da frase ancorada ("…por que
-  os equipamentos falharam."): "Estudos posteriores sobre o evento destacam
-  que a área afetada tinha alta penetração de inversores e que, nesses
-  equipamentos, a perda de sincronismo passa a ser governada pela dinâmica de
-  controle do PLL, e não pelo ângulo físico das máquinas síncronas (XIONG et
-  al., 2025)." A seguinte passou de "É imperativo investigar" a "Torna-se,
-  assim, imperativo investigar". O trecho ancorado ficou intacto.
-- Fidelidade: o Xiong (p. 1) liga o apagão de 2023 a uma área com alta
-  penetração de GFL e mostra que a perda de sincronismo do GFL é a divergência
-  do ângulo do PLL. A causa que o artigo aponta (falha das proteções PSB/OST)
-  ficou de fora de propósito. Aprovado pelo Victor depois de três tentativas
-  rejeitadas (09-26 ×2 e a primeira de 09-27).
-- "Feito." respondido na thread do comentário 16 (`replies_xiong.json`).
-- **Pipeline**: `gen_xiong_motivacao.py` (1 replace; XIONG 1→2) → finalize
-  (74 págs, 0 erro) → audit 0 falhas → MD5 `2fa47e24…` conferido → backup
-  `_backup_20260927_224244` → entregue (`66a817de…`) e reaberto.
-
-## 2026-09-27 — Citação de "redes fracas" trocada para Wu e Wang (V10)
-
-- Motivação, 4º parágrafo: "…especialmente em redes fracas (XIONG et al.,
-  2025)" virou "(WU; WANG, 2020)". O Xiong não trata de rede fraca (nenhuma
-  ocorrência de "weak"/SCR no PDF); o Wu e Wang (2020) trata (p. 1 e p. 3).
-- Origem rastreada nas versões antigas: a frase entrou na versão de
-  29/10/2025 (último a salvar: Bruno) como "[9]", uma entrada duplicada do
-  Xiong anotada "(Citação utilizada para a estabilidade em redes fracas)".
-  Seguiu assim até o V8; o V9 reescreveu o início do parágrafo e manteve o
-  final. Não veio do Claude. Revisão geral das citações: [[tcc-pendencias]]
-  item 26.
-- Não é comentário do Oscar: sem "Feito." O comentário 16 continua aberto.
-- **Pipeline**: `gen_wuwang_redes_fracas.py` (1 replace; XIONG 2→1, WU;WANG
-  3→4) → finalize (74 págs, 0 erro) → audit 0 falhas → MD5 `3ec671a0…`
-  conferido → backup `_backup_20260927_212300` → entregue (`2fa47e24…`) e
-  reaberto.
+Ver [[tcc-historico-entregas-2026-09-fim]]: citação de "redes fracas" para Wu
+e Wang, Xiong na Motivação (comentário 16) e 38 comentários novos do Oscar
+mesclados no Cap. 5.
 
 ## Entregas de 2026-09-26
 

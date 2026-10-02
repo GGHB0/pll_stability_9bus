@@ -77,7 +77,7 @@ O laço subdimensionado **não** é uniformemente pior, é um compromisso:
   (96,0°→34,9° na Barra 6 bifásica; 89,7°→72,2° na Barra 7 monofásica). No
   par mais brando (Barra 6 monofásica) empatam, 12,0° contra 13,2°. Na Barra
   7 bifásica os dois saturam em 180°.
-- **Na recuperação:** reaquisição ~2× mais lenta (51→99 ms; 46→98 ms;
+- **Na recuperação:** retomada do sincronismo ~2× mais lenta (51→99 ms; 46→98 ms;
   48→78 ms; 39→47 ms). Ondulação de Q pós-falta na Barra 6 bifásica vai de
   4,8 a 11,7 pu.
 - **Em regime:** o que degrada é o ponto de operação (`v_d` 0,983 contra
@@ -86,7 +86,7 @@ O laço subdimensionado **não** é uniformemente pior, é um compromisso:
 
 **O compromisso tem um limite** (Seção 5.4, acrescentada em 2026-08-23): sob a
 trifásica no próprio PCC, com retenção de 8,2%, o laço subdimensionado não
-troca imunidade por velocidade — ele **perde o sincronismo** e não reaquisita
+troca imunidade por velocidade — ele **perde o sincronismo** e não recupera
 dentro da janela simulada. Nem a profundidade nem a sintonia produzem isso
 isoladamente; só a combinação. Números em
 [[tcc-revisao-fragmento-cap5-metricas]].
@@ -130,7 +130,7 @@ excluir o transitório de comutação, ver
   são números que não sustentam a conclusão da seção e abrem flanco a
   questionamento (o acumulado é do mesmo tipo do ISE tirado do dashboard). Fica
   a descrição: erro de fase cresce sem retornar a valor estável, referencial
-  gira de forma persistente, sem reaquisição na janela. Detalhe em
+  gira de forma persistente, sem retomada do sincronismo na janela. Detalhe em
   [[tcc-revisao-fragmento-cap5-metricas-54]].
 
 ## Regra editorial: descrição de figura não é análise

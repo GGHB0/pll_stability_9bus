@@ -45,7 +45,7 @@ uma escolha e a leitura do dado. Número só permanece se sustenta o argumento.
 - **Parágrafo 115 (§5.6)** dizia que o SRF-PLL "perde o sincronismo **de forma
   permanente** dentro da janela simulada", contradizendo a ressalva cuidadosa
   do parágrafo 107 ("não permitem afirmar que o sincronismo jamais seria
-  recuperado"). Passou a "não reaquisita o sincronismo dentro da janela
+  recuperado"). Passou a "não recupera o sincronismo dentro da janela
   simulada". Defesa de banca, não estilo.
 
 **Não mexido:** §5.2 por pedido do usuário; parágrafos 89, 105 e 114, densos

@@ -164,6 +164,31 @@ saiu da Figura 5.11 e não da 5.13, que está a 5,5 in.
 | 5.14 | `potencia_didatica` |
 | 5.15 | `bus7_3phase_bad_pll_corrente_dq` |
 
+### No canônico V10 (2026-10-01): mídia trocada pela safra nova
+
+A Tabela 4.1 é `assets/diagrams/matriz_cenarios.png`. Para trocar figura,
+substituir o PNG da mídia e recalcular `cy` só se a proporção mudar (o nome
+da mídia muda quando o Word salva: achar pelo `r:embed` do drawing abaixo da
+legenda). Entrega em [[tcc-historico-entregas]].
+
+### No V10 desde 2026-10-01 (23h): 19 figuras, com erro de fase
+
+| Fig | Arquivo | Fig | Arquivo |
+|---|---|---|---|
+| 5.1 | `regime_tensao_dq_rede` | 5.11 | `bus6_2phase_bad_pll_tensao_dq_rede` |
+| 5.2 | `regime_bad_pll_tensao_dq_rede` | **5.12** | `erro_fase_assimetricas` |
+| **5.3** | `erro_fase_regime` | 5.13 | `bus6_2phase_bad_pll_potencia_pq` |
+| 5.4 | `regime_bad_pll_potencia_pq` | 5.14 | `retencao_comparacao` |
+| 5.5 | `bus7_3phase_tensao_dq_rede` | 5.15 | `bus7_3phase_bad_pll_tensao_dq_rede` |
+| 5.6 | `bus6_3phase_tensao_dq_rede` | **5.16** | `erro_fase_perda_sincronismo` |
+| **5.7** | `erro_fase_simetricas` | 5.17 | `bus7_3phase_bad_pll_potencia_pq` |
+| 5.8 | `bus7_3phase_potencia_pq` | 5.18 | `potencia_didatica` |
+| 5.9 | `bus7_2phase_tensao_dq_rede` | 5.19 | `bus7_3phase_bad_pll_corrente_dq` |
+| 5.10 | `bus6_2phase_tensao_dq_rede` | | |
+
+Em negrito, as de erro de fase (`scripts/gen_erro_fase.py`): 5,5 in as de
+painel único, 6,3 in as 2×2.
+
 Ainda **não inserido**: `bus7_3phase_bad_pll_tensao_dq_inversor` (tensão no PCC,
 hoje só descrita em prosa). `plano_pq_comparacao` foi gerado e **descartado**,
 não entra.

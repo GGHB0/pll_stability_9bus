@@ -48,7 +48,7 @@ graph LR
     simulation -->|3| pll
     simulation -->|1| power_system
     simulation -->|1| standards
-    simulation -->|4| tcc_word
+    simulation -->|5| tcc_word
     standards -->|3| dashboard
     standards -->|2| events
     standards -->|3| inverter
@@ -60,7 +60,7 @@ graph LR
     tcc_word -->|2| events
     tcc_word -->|8| pll
     tcc_word -->|6| power_system
-    tcc_word -->|4| simulation
+    tcc_word -->|5| simulation
     tcc_word -->|3| standards
 ```
 

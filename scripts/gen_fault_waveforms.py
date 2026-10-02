@@ -15,10 +15,13 @@ puro, paleta do projeto), mas com duas diferencas de estrutura:
    "bad_pll" do fault_info.json, ver cenarios_simulados.md):
      - Nominal: T_SETTLE = 0,1 s (constante oficial, src/config/settings.py).
        t_fault = 0,3 s cai sempre depois.
-     - Sintonia inadequada (Kp/Ki_pll x0,2): energizacao muito mais lenta e
-       oscilatoria (xi=0,316) -- mesmo instante empirico ~0,55 s usado em
-       gen_regime_waveforms.py, nao T_SETTLE global (medido so p/ o caso
-       nominal). t_fault = 0,6 s cai sempre depois.
+     - Sintonia inadequada (Kp/Ki_pll x0,2), safra de agosto/2026 (falta em
+       0,6 s): energizacao lenta e oscilatoria (xi=0,316) -- corta em ~0,55 s.
+       A safra de 01/10/2026 (falta em 0,3 s, v_d pre-falta ~1,0 pu) assenta
+       em < 0,1 s e usa T_SETTLE como o nominal (ver settle_de()).
+   Cenarios com sintonia inadequada passam por validar_cenarios.py: pasta
+   reprovada (duplicada, assinatura de falta errada) e pulada; o monofasico
+   usa a pasta nova `1phase_ground_bad_pll` quando valida (pasta_inadequada()).
 3. Escala Y compartilhada nos pares de figuras que o TCC compara lado a
    lado (YLIM_GROUPS): o ylim vira a uniao dos extremos dq do grupo, para
    que a comparacao visual nao seja falseada pela autoescala por figura.
@@ -61,9 +64,24 @@ GRID_COLOR = "#e2e8f0"
 T_SETTLE = 0.1
 # Sintonia inadequada assenta muito mais devagar (xi=0,316) -- mesmo valor
 # empirico usado em gen_regime_waveforms.py (regime_bad_pll), nao T_SETTLE
-# global. Cenarios de falta com sintonia inadequada aplicam a falta em
-# 0,6 s, sempre depois.
+# global. Vale so para a safra antiga (falta em 0,6 s); ver settle_de().
 BAD_PLL_SETTLE = 0.55
+
+
+def settle_de(fi):
+    """Inicio da janela de linha do tempo: BAD_PLL_SETTLE so se a falta cai
+    depois dele (safra de agosto); senao T_SETTLE, como o nominal."""
+    if fi.get("bad_pll") and fi["t_fault"] > BAD_PLL_SETTLE:
+        return BAD_PLL_SETTLE
+    return T_SETTLE
+
+
+def pasta_real(folder):
+    """Pasta de dados validada (validar_cenarios.py) ou None se reprovada."""
+    from validar_cenarios import cenario_ok, pasta_inadequada
+    if folder.endswith("_bad_pll"):
+        return pasta_inadequada(folder[: -len("_bad_pll")])
+    return folder if cenario_ok(folder) else None
 CICLO_S = 1 / 60  # 60 Hz
 
 plt.rcParams.update({
@@ -130,10 +148,12 @@ def build_group_ylims():
     for folders in YLIM_GROUPS.values():
         lo, hi = np.inf, -np.inf
         for f in folders:
-            base = ROOT / "output" / "results" / f
+            if pasta_real(f) is None:
+                continue
+            base = ROOT / "output" / "results" / pasta_real(f)
             fi = json.loads((base / "fault_info.json").read_text())
             d = pd.read_csv(base / "sim_data.csv")
-            settle = BAD_PLL_SETTLE if fi.get("bad_pll") else T_SETTLE
+            settle = settle_de(fi)
             sub = d[d.t_s >= settle]
             for c in ("vd_rede_pu", "vq_rede_pu", "vd_ufv_pu", "vq_ufv_pu"):
                 lo = min(lo, float(sub[c].min()))
@@ -228,7 +248,7 @@ def mark_fault(ax, t_fault, t_clear):
 
 
 def gen_scenario(sc):
-    folder = ROOT / "output" / "results" / sc["folder"]
+    folder = ROOT / "output" / "results" / pasta_real(sc["folder"])
     fault_info = json.loads((folder / "fault_info.json").read_text())
     t_fault, t_clear = fault_info["t_fault"], fault_info["t_clear"]
 
@@ -237,7 +257,7 @@ def gen_scenario(sc):
     t_end = float(d_pq_full.t_s.max())
     prefix = sc["prefix"]
     bad_pll = bool(fault_info.get("bad_pll", False))
-    settle_t = BAD_PLL_SETTLE if bad_pll else T_SETTLE
+    settle_t = settle_de(fault_info)
     suf = f" -- falta {FAULT_TYPE_LABEL[sc['fault_type']]} na {sc['bus']}"
     if bad_pll:
         suf += " (sintonia inadequada)"
@@ -356,5 +376,8 @@ if __name__ == "__main__":
     alvo = sys.argv[1:]  # opcional: regenera so os prefixos informados
     for sc in SCENARIOS:
         if alvo and sc["prefix"] not in alvo:
+            continue
+        if pasta_real(sc["folder"]) is None:
+            print(f"PULADO {sc['folder']}: reprovado em validar_cenarios.py")
             continue
         gen_scenario(sc)

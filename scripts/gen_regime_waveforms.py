@@ -18,11 +18,11 @@ Por cenario, 6 graficos (prefixo = SCENARIOS[i]["prefix"]):
   <prefixo>_tensao_dq_rede.svg      -- v_d/v_q do lado da Rede     (0-t_end completo)
   <prefixo>_tensao_dq_inversor.svg  -- v_d/v_q do lado do Inversor (0-t_end completo)
 
-O cenario 'regime_bad_pll' (Kp/Ki_pll x0,2, ver [[project_bad_pll]] na KB)
-assenta muito mais devagar que o nominal -- empiricamente ~0,55 s (ultima vez
-que P/Q se afastam >0,08 pu do valor final), nao os T_SETTLE=0,1 s do
-dashboard (medido p/ o caso nominal, ver src/config/settings.py). O marcador
-de assentamento de cada cenario e por isso especifico, nao o T_SETTLE global.
+O cenario 'regime_bad_pll' (Kp/Ki_pll x0,2, ver [[cenarios-simulados]] na KB)
+foi re-simulado em 01/10/2026 (v_d ~1,0 pu, 0-0,6 s): assenta em ~74 ms (ultima
+vez que P/Q se afastam >0,08 pu do valor final), contra ~45 ms do nominal, e
+por isso usa o mesmo T_SETTLE=0,1 s. A safra de agosto/2026 (0-1,0 s) levava
+~0,55 s; se ela voltar, refazer a medida antes de mexer em settle_t.
 
 Requer matplotlib (nao listado em requirements.txt -- so usado por este
 gerador de figura, nao pelo pipeline principal do dashboard).
@@ -75,18 +75,18 @@ fase_cores = [("Fase a", AZUL), ("Fase b", VERMELHO), ("Fase c", VERDE)]
 
 # Escala dq comum aos dois cenarios de regime, p/ as figuras 5.1 e 5.2 do TCC
 # poderem ser lidas lado a lado. Uniao dos extremos de vd/vq (rede e inversor)
-# das duas pastas (-0,970 a +1,451), com 5% de folga.
-YLIM_DQ_REGIME = (-1.091, 1.572)
+# das duas pastas (-1,130 a +1,496 em 01/10/2026), com 5% de folga.
+YLIM_DQ_REGIME = (-1.262, 1.627)
 
 SCENARIOS = [
     dict(folder="regime", prefix="regime", t_end=0.6, window=(0.55, 0.60),
          settle_t=0.1, title_suffix=" -- regime permanente",
          ylim_dq=YLIM_DQ_REGIME,
          settle_label="transitório de partida excluído dos cálculos\n(T$_{settle}$ = 0,1 s)"),
-    dict(folder="regime_bad_pll", prefix="regime_bad_pll", t_end=1.0, window=(0.95, 1.00),
-         settle_t=0.55, title_suffix=" -- sintonia inadequada",
+    dict(folder="regime_bad_pll", prefix="regime_bad_pll", t_end=0.6, window=(0.55, 0.60),
+         settle_t=0.1, title_suffix=" -- sintonia inadequada",
          ylim_dq=YLIM_DQ_REGIME,
-         settle_label="assentamento mais lento (sintonia inadequada)\n≈0,55 s vs 0,1 s no caso nominal"),
+         settle_label="transitório de partida excluído dos cálculos\n(T$_{settle}$ = 0,1 s)"),
 ]
 
 

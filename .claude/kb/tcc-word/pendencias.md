@@ -131,7 +131,21 @@ aliases: [tcc-pendencias]
 24. **Título gravado dentro da imagem** — pelo menos Figura 3.1, Figura 4.3,
     Quadro 4.1 e Gráfico 2.3 repetem a legenda como título no próprio bitmap;
     a ABNT põe o título só na legenda. Reexportar dos SVGs de
-    `assets/diagrams/` sem o `<text>` do título.
+    `assets/diagrams/` sem o `<text>` do título. Vale também para os
+    oscilogramas do Cap. 5 (título no matplotlib).
+27. **Revisão visual das figuras do Cap. 5 (2026-10-01)** — os valores batem
+    com o CSV atual (P pré-falta 0,875 pu nas duas sintonias; só a tensão
+    pré-falta da inadequada mudou, 0,82 → 1,00 pu). Defeitos de desenho:
+    - **5.18** (`gen_potencia_didatica.py`): "antes: −0,00 pu" em Q (sinal
+      de zero negativo) e caixa "antes: 0,87 pu" tapando o traço de P.
+    - **5.1 e 5.2** (`gen_regime_waveforms.py`): rótulo "transitório de
+      partida excluído dos cálculos" contradiz o §5.1, que mede 34/40/42/79 ms
+      dentro dessa faixa. Trocar por "transitório de partida".
+    - **5.14** (`gen_retencao_didatica.py`): traço de `v_d` sai pelo topo
+      após a eliminação no painel nominal e pelo pé no inadequado.
+    - **5.19** (`gen_fault_waveforms.py`): legenda tapa o `i_q` medido no
+      canto inferior direito.
+    Corrigir nos geradores e trocar só a mídia no V10.
 
 ## Fora de escopo (instrução do Oscar)
 

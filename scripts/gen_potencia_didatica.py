@@ -62,7 +62,7 @@ GRID_COLOR = "#e2e8f0"
 
 CENARIO = "bus7/3phase_bad_pll"
 JANELA_PRE_S = 0.05        # media pre-falta, mesma receita da figura da retencao
-T_INI_PLOT = 0.55          # mesmo recorte do oscilograma atual
+T_INI_PLOT = 0.1           # mesmo recorte do oscilograma (T_SETTLE desde a safra de 01/10/2026)
 ALVO_PONTOS = 6000
 
 plt.rcParams.update({
@@ -124,7 +124,7 @@ def carregar():
     return out
 
 
-def painel(ax, d, nome, cor, rotulo, caixa):
+def painel(ax, d, nome, cor, rotulo, caixa, pos_caixa):
     y = d[nome]
     t = d["t"]
 
@@ -168,8 +168,11 @@ def painel(ax, d, nome, cor, rotulo, caixa):
             f"média pós-falta: {br(d[f'{nome}_pos'])} pu",
             va="bottom", ha="left", color=NAVY, **cx)
 
-    # 4. quanto do tempo em cada sentido de fluxo
-    ax.text(0.985, 0.965, caixa, transform=ax.transAxes, va="top", ha="right",
+    # 4. quanto do tempo em cada sentido de fluxo. A caixa fica no trecho
+    # pre-falta, o unico vazio: desde a safra de 01/10/2026 a janela pos-falta
+    # tem so 0,2 s e a oscilacao ocupa a altura inteira
+    xc, yc, va = pos_caixa
+    ax.text(xc, yc, caixa, transform=ax.transAxes, va=va, ha="left",
             fontsize=9.5, fontweight="bold", color=NAVY, zorder=9, linespacing=1.45,
             bbox=dict(boxstyle="round,pad=0.4", facecolor="white",
                       edgecolor="#cbd5e1", alpha=0.94))
@@ -196,10 +199,12 @@ def main():
 
     painel(ax1, d, "P", AZUL, "Potência ativa P (pu)",
            f"após a eliminação da falta:\n"
-           f"entrega {br(d['P_frac_pos'], 1)}% do tempo · absorve {br(d['P_frac'], 1)}%")
+           f"entrega {br(d['P_frac_pos'], 1)}% do tempo · absorve {br(d['P_frac'], 1)}%",
+           (0.015, 0.05, "bottom"))
     painel(ax2, d, "Q", LARANJA, "Potência reativa Q (pu)",
            f"após a eliminação da falta:\n"
-           f"entrega {br(d['Q_frac_pos'], 1)}% do tempo · absorve {br(d['Q_frac'], 1)}%")
+           f"entrega {br(d['Q_frac_pos'], 1)}% do tempo · absorve {br(d['Q_frac'], 1)}%",
+           (0.015, 0.95, "top"))
 
     ax1.annotate("falta aplicada", xy=(d["t_fault"], 1.0), xycoords=("data", "axes fraction"),
                  xytext=(4, -12), textcoords="offset points", fontsize=9,

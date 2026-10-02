@@ -25,7 +25,7 @@ na mesma entrega**, sem esperar o Victor aprovar a tradução no chat.
 
 O Resumo diz o que o trabalho trata; resultado, número e desfecho de cenário
 ficam no Cap. 5 e na Conclusão. Uma primeira versão com o desfecho da
-sintonia inadequada ("perde o sincronismo sem reaquisição") foi recusada.
+sintonia inadequada ("perde o sincronismo e não o recupera") foi recusada.
 Ver `feedback_tcc_conclusion_altitude` na memória, que vai no sentido oposto
 (a Conclusão sobe de altitude; o Resumo fica na de abertura).
 

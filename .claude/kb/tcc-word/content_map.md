@@ -126,7 +126,7 @@ metadata:
 
 > Tese: a sintonia inadequada é um **compromisso** entre imunidade durante a
 > falta e velocidade na recuperação, com um caso-limite em que o compromisso
-> deixa de valer e o SRF-PLL não reaquisita o sincronismo dentro da janela
+> deixa de valer e o SRF-PLL não recupera o sincronismo dentro da janela
 > simulada. Instrução do Oscar de **não** implementar salto de fase segue
 > valendo.
 

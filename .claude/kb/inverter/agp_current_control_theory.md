@@ -53,6 +53,12 @@ Termos cruzados `ω(L1+L2)` — mesmo acoplamento discutido em [[vsc-reference]]
 (eqs. 8.45-8.46 do Yazdani) — removidos por técnica de desacoplamento
 (feedforward), deixando cada eixo como planta de 1ª ordem independente.
 
+> ⚠️ **No modelo simulado não há desacoplamento (conferido no .slx em
+> 2026-10-02).** O PWM Control (SID 3974) é só PI + notch por eixo: sem
+> termos `±ωL·i` nem feedforward de `v_g`. O acoplamento e a tensão da rede
+> ficam como perturbação que o integral do PI rejeita. Diagrama fiel em
+> `assets/diagrams/current_control_dq_blocos.svg`; ver [[simulink-model]].
+
 ### Projeto por cancelamento polo-zero (eqs. 3.10-3.14)
 
 Compensador PI, zero cancela o polo da planta:

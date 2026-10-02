@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 30 820 430" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <!-- Controle de corrente em dq, no estilo da Fig. 8.10 de Yazdani & Iravani (2010),
+       fiel ao subsistema PWM Control (SID 3974): PI (Kp/4, Ki/4) + notch por eixo,
+       sem desacoplamento ωL nem feedforward da tensão da rede. -->
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0B132B"/>
+    </marker>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1971c2"/>
+    </marker>
+    <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/>
+    </marker>
+    <g id="sum"><circle r="11" fill="#ffffff" stroke="#0B132B" stroke-width="1.8"/></g>
+  </defs>
+  <rect y="30" width="820" height="430" fill="#ffffff"/>
+
+  <g font-size="15" fill="#0B132B">
+    <!-- ===================== eixo d (y = 110) ===================== -->
+    <text x="12" y="104" font-style="italic">i<tspan baseline-shift="sub" font-size="75%">d,ref</tspan></text>
+    <line x1="58" y1="110" x2="87" y2="110" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <use href="#sum" x="100" y="110"/>
+    <text x="76" y="104" font-size="13" font-weight="700">+</text>
+    <text x="106" y="92" font-size="15" font-weight="700">−</text>
+    <line x1="111" y1="110" x2="139" y2="110" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="125" y="96" font-size="13" font-style="italic" text-anchor="middle">e<tspan baseline-shift="sub" font-size="75%">d</tspan></text>
+    <rect x="140" y="88" width="130" height="44" rx="5" fill="#fff4e6" stroke="#F97316" stroke-width="2"/>
+    <text x="205" y="116" text-anchor="middle" font-style="italic">K<tspan baseline-shift="sub" font-size="75%">p</tspan>/4 + K<tspan baseline-shift="sub" font-size="75%">i</tspan>/(4s)</text>
+    <line x1="270" y1="110" x2="291" y2="110" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <rect x="292" y="88" width="60" height="44" rx="5" fill="#fff4e6" stroke="#F97316" stroke-width="2"/>
+    <text x="322" y="116" text-anchor="middle" font-style="italic">N(s)</text>
+    <line x1="352" y1="110" x2="401" y2="110" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="377" y="101" text-anchor="middle" font-style="italic">m<tspan baseline-shift="sub" font-size="75%">d</tspan></text>
+    <rect x="402" y="88" width="66" height="44" rx="5" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+    <text x="435" y="116" text-anchor="middle" font-style="italic">V<tspan baseline-shift="sub" font-size="75%">cc</tspan>/2</text>
+    <line x1="468" y1="110" x2="532" y2="110" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="498" y="101" text-anchor="middle" font-style="italic">v<tspan baseline-shift="sub" font-size="75%">inv,d</tspan></text>
+    <use href="#sum" x="544" y="110"/>
+    <text x="520" y="126" font-size="13" font-weight="700">+</text>
+    <text x="550" y="137" font-size="13" font-weight="700">+</text>
+    <line x1="555" y1="110" x2="578" y2="110" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <use href="#sum" x="590" y="110"/>
+    <text x="566" y="126" font-size="13" font-weight="700">+</text>
+    <text x="574" y="94" font-size="15" font-weight="700">−</text>
+    <line x1="590" y1="64" x2="590" y2="98" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrR)"/>
+    <text x="598" y="74" font-style="italic" fill="#b45309">v<tspan baseline-shift="sub" font-size="75%">g,d</tspan></text>
+    <line x1="601" y1="110" x2="621" y2="110" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <rect x="622" y="88" width="100" height="44" rx="5" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+    <text x="672" y="116" text-anchor="middle" font-style="italic">1/(Ls + R)</text>
+    <line x1="722" y1="110" x2="806" y2="110" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="786" y="101" text-anchor="middle" font-style="italic">i<tspan baseline-shift="sub" font-size="75%">d</tspan></text>
+    <circle cx="752" cy="110" r="3" fill="#0B132B"/>
+
+    <!-- ===================== eixo q (y = 300) ===================== -->
+    <text x="12" y="294" font-style="italic">i<tspan baseline-shift="sub" font-size="75%">q,ref</tspan></text>
+    <line x1="58" y1="300" x2="87" y2="300" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <use href="#sum" x="100" y="300"/>
+    <text x="76" y="294" font-size="13" font-weight="700">+</text>
+    <text x="106" y="330" font-size="15" font-weight="700">−</text>
+    <line x1="111" y1="300" x2="139" y2="300" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="125" y="286" font-size="13" font-style="italic" text-anchor="middle">e<tspan baseline-shift="sub" font-size="75%">q</tspan></text>
+    <rect x="140" y="278" width="130" height="44" rx="5" fill="#fff4e6" stroke="#F97316" stroke-width="2"/>
+    <text x="205" y="306" text-anchor="middle" font-style="italic">K<tspan baseline-shift="sub" font-size="75%">p</tspan>/4 + K<tspan baseline-shift="sub" font-size="75%">i</tspan>/(4s)</text>
+    <line x1="270" y1="300" x2="291" y2="300" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <rect x="292" y="278" width="60" height="44" rx="5" fill="#fff4e6" stroke="#F97316" stroke-width="2"/>
+    <text x="322" y="306" text-anchor="middle" font-style="italic">N(s)</text>
+    <line x1="352" y1="300" x2="401" y2="300" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="377" y="291" text-anchor="middle" font-style="italic">m<tspan baseline-shift="sub" font-size="75%">q</tspan></text>
+    <rect x="402" y="278" width="66" height="44" rx="5" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+    <text x="435" y="306" text-anchor="middle" font-style="italic">V<tspan baseline-shift="sub" font-size="75%">cc</tspan>/2</text>
+    <line x1="468" y1="300" x2="532" y2="300" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="498" y="291" text-anchor="middle" font-style="italic">v<tspan baseline-shift="sub" font-size="75%">inv,q</tspan></text>
+    <use href="#sum" x="544" y="300"/>
+    <text x="520" y="294" font-size="13" font-weight="700">+</text>
+    <text x="550" y="330" font-size="15" font-weight="700">−</text>
+    <line x1="544" y1="346" x2="544" y2="312" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrR)"/>
+    <text x="552" y="350" font-style="italic" fill="#b45309">v<tspan baseline-shift="sub" font-size="75%">g,q</tspan></text>
+    <line x1="555" y1="300" x2="578" y2="300" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <use href="#sum" x="590" y="300"/>
+    <text x="566" y="294" font-size="13" font-weight="700">+</text>
+    <text x="596" y="282" font-size="15" font-weight="700">−</text>
+    <line x1="601" y1="300" x2="621" y2="300" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <rect x="622" y="278" width="100" height="44" rx="5" fill="#fef3c7" stroke="#b45309" stroke-width="2"/>
+    <text x="672" y="306" text-anchor="middle" font-style="italic">1/(Ls + R)</text>
+    <line x1="722" y1="300" x2="806" y2="300" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="790" y="291" text-anchor="middle" font-style="italic">i<tspan baseline-shift="sub" font-size="75%">q</tspan></text>
+    <circle cx="772" cy="300" r="3" fill="#0B132B"/>
+
+    <!-- ============ acoplamento cruzado ωL (planta, não compensado) ============ -->
+    <!-- i_q → ωL → somador 1 do eixo d (+) -->
+    <path d="M 772 300 L 772 180 L 701 180" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrR)"/>
+    <rect x="640" y="166" width="60" height="28" rx="4" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+    <text x="670" y="185" text-anchor="middle" font-style="italic">ωL</text>
+    <path d="M 640 180 L 544 180 L 544 122" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrR)"/>
+    <!-- i_d → ωL → somador 2 do eixo q (−); salto sobre a linha horizontal de y = 180 -->
+    <path d="M 752 110 L 752 174 A 6 6 0 0 1 752 186 L 752 230 L 701 230" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrR)"/>
+    <rect x="640" y="216" width="60" height="28" rx="4" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+    <text x="670" y="235" text-anchor="middle" font-style="italic">ωL</text>
+    <path d="M 640 230 L 590 230 L 590 288" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#arrR)"/>
+
+    <!-- ===================== realimentações ===================== -->
+    <path d="M 752 110 L 752 46 L 100 46 L 100 98" fill="none" stroke="#1971c2" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrB)"/>
+    <path d="M 772 300 L 772 372 L 100 372 L 100 312" fill="none" stroke="#1971c2" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrB)"/>
+
+    <!-- ===================== grupos (estilo Yazdani) ===================== -->
+    <g stroke="#6b7280" stroke-width="1.2" fill="none">
+      <path d="M 88 392 L 88 398 L 356 398 L 356 392"/>
+      <path d="M 400 392 L 400 398 L 470 398 L 470 392"/>
+      <path d="M 528 392 L 528 398 L 726 398 L 726 392"/>
+    </g>
+    <g font-size="13" fill="#4b5563" text-anchor="middle">
+      <text x="222" y="415">controlador de corrente dq</text>
+      <text x="435" y="415">VSI</text>
+      <text x="627" y="415">dinâmica do lado CA</text>
+    </g>
+    <text x="410" y="448" font-size="13" font-style="italic" fill="#4b5563" text-anchor="middle">L = L<tspan baseline-shift="sub" font-size="75%">1</tspan> + L<tspan baseline-shift="sub" font-size="75%">2</tspan>;&#8195;R = R<tspan baseline-shift="sub" font-size="75%">1</tspan> + R<tspan baseline-shift="sub" font-size="75%">2</tspan>;&#8195;N(s): filtro <tspan font-style="normal">notch</tspan></text>
+  </g>
+</svg>

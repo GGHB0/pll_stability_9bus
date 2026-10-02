@@ -101,6 +101,8 @@ esperada" (para o agente saber quando abortar/perguntar).
   - `dump_headings.py <xml>` — mapa de títulos com índice de bloco
   - `dump_blocks.py <xml> <ini> <fim> [--raw]` — texto/XML de intervalo de blocos
   - `find_text.py <xml> <padrão> [--regex]` — ocorrências com bloco + contexto
+  - `dump_comments.py <docx> [--grep re] [--autor x] [--abertos]` — comentários
+    com trecho ancorado, bloco e respostas; lê o DOCX mesmo com o Word aberto
   - `check_ids.py <xml>` — máximos de bookmark/ins/paraId + flag dirty do TOC
   - `check_pt.py <xml> [--corpo N]` — varredura de português (ver
     `revisao_pt.md`); rodar também sobre o XML de saída, antes do repack
@@ -158,12 +160,11 @@ esperada" (para o agente saber quando abortar/perguntar).
 
 ## Notas críticas
 
-- **VFS isolation**: o `python.exe` do Windows NÃO acessa
-  `/c/Users/victo/AppData/Roaming/Claude/...` (VFS do Claude Desktop).
-  Trabalhar sempre com arquivos em `C:\Temp\` ou no repositório.
-- **OneDrive lock**: nunca editar no path do OneDrive; copiar para C:\Temp.
-  A cópia de VOLTA falha se o documento estiver aberto no Word
-  ("Device or resource busy") — pedir para fechar antes da entrega.
+- **VFS isolation**: o `python.exe` do Windows não vê o VFS do Claude Desktop
+  (`AppData/Roaming/Claude/...`); trabalhar em `C:\Temp\` ou no repositório.
+- **OneDrive lock**: nunca editar no path do OneDrive; copiar para C:\Temp
+  (`Copy-Item`/CopyFileW leem com o Word aberto; `zipfile` direto, não). A
+  VOLTA falha com o Word aberto: pedir para fechar antes da entrega.
 - **Word renumera IDs ao salvar**: se o usuário salvou o DOCX no Word, o
   registro de IDs do KB fica obsoleto — rodar `check_ids.py` no XML recém-
   extraído antes de inserir qualquer elemento novo.

@@ -86,7 +86,7 @@ Entradas: id_ref, Vabc_grid, Iabc (pu)
 ├── PWM Control ─────────────────────────────────────
 │     Entradas: Idref, Iqref, Id, Iq
 │     ├── Gain Kp/4 (×2, eixos d e q)
-│     ├── Gain Ki/4 + Integrador (×2) — ação integral PI
+│     ├── Gain Ki/4 + Integrador (×2) — ação integral PI (integrador saturado em ±2)
 │     ├── Transfer Fcn (Notch) ×2:
 │     │     Num = [1, 0, wres²]
 │     │     Den = [1, 2·qsi·wres, wres²]
@@ -159,5 +159,6 @@ Ver `.claude/skills/slx-runner/SKILL.md` para uso completo.
 - **Notch implementado em ambos os eixos** (d e q) para amortecimento ativo da ressonância LCL.
 - **PLL usa bloco de biblioteca** (`Sinusoidal Measurement (PLL, Three-Phase)`) — não é implementação manual. Os ganhos internos são `Kp_LF = 460` / `Ki_LF = 105820` (= `kp_pll`/`ki_pll` do `params.m`), ver [[pll-loop-filter-gains]] — **não** são o `Kp`/`Ki` de [[pll-gains-methodology]], que é o controlador de corrente.
 - **PWM é SPWM** (comparador com portadora triangular), não SVPWM.
+- **Controle de corrente sem desacoplamento ωL nem feedforward de v_g:** PI → notch → `m_dq` direto, sem `/V_cc` (Mux com eixo 0 = 0). A teoria da TeseAGP prevê o desacoplamento; a implementação não ([[agp-current-control-theory]]).
 - **Ts = 5 µs** (EMT), **Tsc = 200 µs** (controle) — razão de 40× entre passos.
 - `wres = 9068.99 rad/s` → `fres ≈ 1443 Hz` (não confundir rad/s com Hz).

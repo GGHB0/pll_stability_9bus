@@ -22,7 +22,7 @@ modelo principal.
   (`C:\...`), nunca `python -c` inline (o PowerShell quebra com regex `[...]`).
 - Utilitários fixos da skill:
   `C:\projetos\pll_stability_9bus\.claude\skills\tcc-docx-editor\scripts\`
-  (`dump_headings.py`, `dump_blocks.py`, `find_text.py`, `check_ids.py`,
+  (`dump_headings.py`, `dump_blocks.py`, `find_text.py`, `dump_comments.py`, `check_ids.py`,
   `repack.py`, `audit_docx.py`, `word_finalize.ps1` — todos com uso
   documentado no cabeçalho do próprio arquivo).
 - Área de trabalho: `C:\Temp\`. Paths do DOCX fonte: ver `config.py` da skill.
@@ -43,7 +43,7 @@ modelo principal.
    edição do usuário no Word pode manter o tamanho) e tamanho do XML extraído.
 
 2. **Inspeção** — rodar `dump_headings.py` / `dump_blocks.py` / `find_text.py`
-   / `check_ids.py` com os argumentos pedidos e devolver a saída completa,
+   / `dump_comments.py` / `check_ids.py` com os argumentos pedidos e devolver a saída completa,
    sem resumir nem interpretar.
 
 3. **Execução de edição** — rodar o `gen_*.py` que o modelo principal

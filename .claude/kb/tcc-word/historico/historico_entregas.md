@@ -10,6 +10,16 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-02 (19h55) — Parágrafo que apresenta a Figura 2.3 + "Feito." no #83 (V10)
+
+- Oscar (#83): figura do afundamento sem conexão com o texto. Parágrafo novo
+  `1FB00315` entre o da assimetria (`4352E7EF`) e a legenda: V_res e Δt
+  (BOLLEN, 2000), limiar 0,9 pu, ligação com a curva da Figura 2.1 e com o
+  ganho da malha do PLL ([[pll-gain-voltage-dependence]]). A frase final
+  sobre faltas assimétricas foi cortada pelo Victor ("foi excesso").
+- `C:\Temp\tcc_fig23\gen_fig23.py` → finalize 80 págs → audit 0 →
+  entregue (`1335dfd7…`); backup `_20261002_195516`.
+
 ## 2026-10-02 (18h54) — Figura 3.1 só com o controlador (V10)
 
 - Victor: "só deixa o que realmente está no nosso controlador". Saíram v_g,d,

@@ -146,6 +146,11 @@ aliases: [tcc-pendencias]
     - **5.19** (`gen_fault_waveforms.py`): legenda tapa o `i_q` medido no
       canto inferior direito.
     Corrigir nos geradores e trocar só a mídia no V10.
+28. **~~Sigla GD sem uso~~** — ✅ FEITO (2026-10-02): saiu da lista de siglas
+    ([[tcc-siglas-inventory]]). "Geração distribuída" por extenso fica na 2.3
+    (TSO/DSO) e na 3.2 (como contexto, junto da centralizada): o fundamento
+    do VSI citado (TeseAGP, Teodorescu) vale para os dois portes, resposta
+    à dúvida do Bruno no comentário 96.
 
 ## Fora de escopo (instrução do Oscar)
 

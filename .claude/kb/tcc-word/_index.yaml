@@ -90,6 +90,9 @@ subfolders:
       - file: historico_entregas.md
         name: tcc-historico-entregas
         description: Histórico de entregas do Claude no DOCX canônico, mais recente primeiro (entregas antigas nos arquivos _2026_07 e _v8)
+      - file: historico_entregas_2026_10_01.md
+        name: tcc-historico-entregas-2026-10-01
+        description: "Entregas de 2026-10-01 (dia) no V10 — citações de alto risco corrigidas e referências pedidas pelo Oscar"
       - file: historico_entregas_2026_09_fim.md
         name: tcc-historico-entregas-2026-09-fim
         description: "Entregas de 2026-09-27 a 2026-09-29 no V10 (Wu e Wang em redes fracas, Xiong na Motivação, 38 comentários do Oscar no Cap.5), fragmentado do arquivo principal"

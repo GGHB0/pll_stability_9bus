@@ -2,11 +2,16 @@
 """Lista os comentários do DOCX com o trecho que cada um marca.
 
 Uso: python.exe dump_comments.py <arquivo.docx> [--grep padrão] [--autor nome] [--abertos]
+                                  [--blocos ini-fim]
 
   --grep   filtra por regex (sem diferenciar maiúsculas) no texto do
            comentário OU no trecho ancorado
   --autor  filtra pelo autor (parcial)
   --abertos  esconde comentários marcados como resolvidos
+  --blocos   só os comentários cuja âncora começa nesse intervalo de blocos
+             (inclusivo): é o mapa de comentários do passo 3 do workflow,
+             para decidir quais recebem "Feito." e reancorar os que caem
+             em parágrafo substituído
 
 Lê o .docx direto, inclusive com o Word aberto: se o lock impedir a leitura,
 copia pela API do Windows (CopyFileW, que o lock não bloqueia) para C:\\Temp.
@@ -36,7 +41,8 @@ def open_docx(path):
 
 
 def text_of(x):
-    return ''.join(re.findall(r'<w:t[^>]*>([^<]*)</w:t>', x))
+    return ''.join(m.group(1) if m.group(1) is not None else ' '
+                   for m in re.finditer(r'<w:t(?:\s[^>]*)?>([^<]*)</w:t>|<w:tab/>|<w:br/>', x))
 
 
 def main():
@@ -85,12 +91,15 @@ def main():
         c['bloco'] = next((i for i, (a, b) in enumerate(blocks) if s and a <= s.start() < b), '?')
 
     pat, autor, abertos = opt('--grep'), opt('--autor'), '--abertos' in sys.argv
+    faixa = tuple(int(v) for v in opt('--blocos').split('-')) if opt('--blocos') else None
 
     def keep(cid):
         c = comments[cid]
         if autor and autor.lower() not in c['autor'].lower():
             return False
         if abertos and done.get(cid):
+            return False
+        if faixa and not (isinstance(c['bloco'], int) and faixa[0] <= c['bloco'] <= faixa[1]):
             return False
         return not pat or re.search(pat, c['texto'] + ' ' + c['trecho'], re.I)
 

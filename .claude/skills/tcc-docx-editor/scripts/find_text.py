@@ -16,7 +16,10 @@ blocks = re.findall(r'<w:tbl>.*?</w:tbl>|<w:p\b[^>]*>.*?</w:p>|<w:p\b[^>]*/>', b
 
 
 def text_of(b):
-    return ''.join(re.findall(r'<w:t[^>]*>([^<]*)</w:t>', b))
+    # <w:tab/> e <w:br/> viram separador: sem isso a lista de siglas cola
+    # "GD" + tab + "Geração" em "GDGeração" e \bGD\b não casa
+    return ''.join(m.group(1) if m.group(1) is not None else (' ' if m.group(0) == '<w:br/>' else '	')
+                   for m in re.finditer(r'<w:t(?:\s[^>]*)?>([^<]*)</w:t>|<w:tab/>|<w:br/>', b))
 
 
 total = 0

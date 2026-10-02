@@ -61,8 +61,10 @@ metadata:
 ## Cap. 3 — Fundamentação Teórica
 
 - ✅ **3.1** Transformadas de referência (3.1.1 Clarke · 3.1.2 Park ·
-  3.1.3 controle P/Q desacoplado · 3.1.4 arquitetura em cascata)
-- ✅ **3.2** Geração Distribuída e Inversores Conectados à Rede (Figura 3.1)
+  3.1.3 controle P/Q desacoplado · 3.1.4 arquitetura em cascata). Texto
+  das 3.1.1-3.1.3 reescrito pelo Victor em 2026-10-02 (descrição das
+  equações pedida pelo Oscar)
+- ✅ **3.2** Geração Centralizada e Inversores Conectados à Rede (Figura 3.1)
 - ✅ **3.3** Controle de Inversores (3.3.1 PWM — funcional, escopo delimitado)
 - ✅ **3.4** O Sistema de Sincronismo SRF-PLL — PD/PI/VCO, linearização,
   equações 3.10–3.17 em tabela invisível (ver `equacoes.md`). **Ampliado

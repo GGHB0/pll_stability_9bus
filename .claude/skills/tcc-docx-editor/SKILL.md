@@ -1,7 +1,7 @@
 # Skill: tcc-docx-editor
 
 Edita o TCC DOCX (`config.py`; hoje `TCC_Victor_Bruno_V10.docx`) no OOXML.
-**Padrões fixos** (Resumo↔Abstract + comentário, fechar/reabrir Word): `padroes_revisao.md`.
+**Padrões fixos** (Resumo↔Abstract + comentário, fechar/reabrir Word, "Feito." ao Oscar, siglas): `padroes_revisao.md`.
 Modo aceito pelo Victor: **edições diretas no XML, sem tracked changes**
 (`helpers.py` mantém os geradores com `w:ins` caso volte a ser necessário).
 
@@ -71,130 +71,81 @@ legenda e na remissão, rótulo `(N.M)`.
 
 | Nível | Quem | Faz |
 |---|---|---|
-| **Síntese** | Opus — *só quando necessário* | Redigir conteúdo acadêmico novo (seções/parágrafos do zero), decisões estruturais com trade-offs (ex.: reestruturar capítulo) |
-| **Planejamento + scripting** | Sonnet — o default | Mapear blocos a partir dos dumps, redigir edições rotineiras (renumeração, refs cruzadas, typos, formatação), escrever os `gen_*.py`, revisar checks, atualizar KB |
-| **Execução** | Haiku (agente `docx-runner`) | Staging, dumps, rodar scripts, repack, entrega ao OneDrive |
+| **Síntese** | Opus, *só quando necessário* | Redigir conteúdo acadêmico novo, decisões estruturais com trade-offs |
+| **Planejamento + scripting** | Sonnet, o default | Mapear blocos, edições rotineiras, escrever os `gen_*.py`, revisar checks, KB |
+| **Execução** | Haiku (`docx-runner`) | Staging, dumps, rodar scripts, repack, entrega |
 
-### Regras de escalonamento
+O critério é **custo total**, não o nível do modelo: delegar só compensa
+quando a spec sai bem menor que o trabalho que ela descreve.
 
-- **Sessão rodando em Sonnet**: fazer planejamento, conteúdo e scripting
-  direto; delegar só o mecânico ao `docx-runner`. **Nunca** escalar para
-  Opus por conta própria — se a tarefa parecer exigir síntese pesada,
-  dizer isso ao usuário e deixar a troca de modelo com ele.
-- **Sessão rodando em Opus**: usar Opus apenas para interpretar o pedido,
-  redigir conteúdo novo e revisar/aprovar. O scripting desce para o agente
-  `docx-scripter` (Sonnet) com uma **spec precisa** (blocos-alvo, strings
-  old→new com counts esperados, conteúdo já redigido, IDs); o mecânico
-  desce para o `docx-runner` (Haiku).
-- **Edição trivial** (1–2 replaces óbvios): qualquer modelo faz direto,
-  sem agente — o overhead de delegar não compensa.
+- **Sessão em Sonnet**: planejamento, conteúdo e scripting direto; só o
+  mecânico vai ao `docx-runner`. **Nunca** escalar para Opus por conta
+  própria: dizer ao usuário e deixar a troca de modelo com ele.
+- **Sessão em Opus**: o Opus interpreta, redige e revisa. Scripting vai ao
+  `docx-scripter` (Sonnet) com **spec precisa** (blocos-alvo, old→new com
+  counts, conteúdo pronto, IDs e comentários a reancorar) quando a edição é
+  **grande ou repetitiva** (renumeração de capítulo, troca de termo em dezenas
+  de pontos, muitas figuras): aí a spec é curta e o script, longo.
+- **Faz direto, sem agente, em qualquer modelo**: (a) edição trivial, 1-2
+  replaces; (b) **texto pronto do Victor, até ~10 parágrafos**: a spec teria
+  o tamanho do próprio script (cada parágrafo inteiro, mais comentários a
+  reancorar) e o agente ainda reabriria os dumps. Confirmado com o Victor em
+  2026-10-02. Staging, finalize e entrega também podem ficar no principal
+  nesses casos, pois são 3-4 comandos.
 
 Delegar via Agent tool (`subagent_type: "docx-scripter"` / `"docx-runner"`),
-com prompt autocontido: paths exatos, o que rodar, e qual é a "saída
-esperada" (para o agente saber quando abortar/perguntar).
+com prompt autocontido: paths exatos, o que rodar e a "saída esperada".
 
 ## Dependências
 
-- `config.py` (nesta pasta) — paths pessoais (gitignored)
-- `helpers.py` (nesta pasta) — geradores de parágrafo OOXML com `w:ins`
-- `scripts/` (nesta pasta) — utilitários fixos, todos `python.exe <script> <args>`:
-  - `dump_headings.py <xml>` — mapa de títulos com índice de bloco
-  - `dump_blocks.py <xml> <ini> <fim> [--raw]` — texto/XML de intervalo de blocos
-  - `find_text.py <xml> <padrão> [--regex]` — ocorrências com bloco + contexto
-  - `dump_comments.py <docx> [--grep re] [--autor x] [--abertos]` — comentários
-    com trecho ancorado, bloco e respostas; lê o DOCX mesmo com o Word aberto
-  - `check_ids.py <xml>` — máximos de bookmark/ins/paraId + flag dirty do TOC
-  - `check_pt.py <xml> [--corpo N]` — varredura de português (ver
-    `revisao_pt.md`); rodar também sobre o XML de saída, antes do repack
-  - `repack.py <template.docx> <xml> <saida.docx>` — injeta document.xml no ZIP
-  - `audit_docx.py <arquivo.docx> [--util-in N]` — auditoria estrutural
-    pré-entrega (comentários, bookmarks, campos, `PAGEREF` órfão, imagens,
-    content-types, em-dash); sai com código 1 se algo falhou
-  - `word_finalize.ps1 -In <montado> -Out <final> [-Pdf <pdf>] [-Comments <json>] [-Replies <json>]` — passa o DOCX
-    pelo próprio Word: reconstrói o sumário, zera `w:dirty` e **prova que o
-    Word consegue salvar**, não só abrir
+- `config.py` (nesta pasta): paths pessoais (gitignored)
+- `helpers.py` (nesta pasta): geradores de parágrafo OOXML com `w:ins`
+- `scripts/` (nesta pasta), todos `python.exe <script> <args>`:
+  - `dump_headings.py <xml>`: mapa de títulos com índice de bloco
+  - `dump_blocks.py <xml> <ini> <fim> [--raw] [--math]`: texto/XML de um
+    intervalo; `--math` mostra o conteúdo de cada equação OMML
+  - `find_text.py <xml> <padrão> [--regex]`: ocorrências com bloco + contexto
+  - `dump_comments.py <docx> [--grep re] [--autor x] [--abertos] [--blocos ini-fim]`:
+    comentários com trecho, bloco e respostas; lê com o Word aberto
+  - `check_ids.py <xml>`: máximos de bookmark/ins/paraId + dirty do TOC
+  - `check_pt.py <xml> [--corpo N]`: varredura de português (`revisao_pt.md`)
+  - `repack.py <template.docx> <xml> <saida.docx>`: injeta o document.xml
+  - `audit_docx.py <docx> [--util-in N]`: auditoria pré-entrega; código 1 se falhou
+  - `word_finalize.ps1 -In <montado> -Out <final> [-Pdf] [-Comments <json>] [-Replies <json>]`:
+    passa pelo Word, reconstrói o sumário e **prova que o Word salva**
 
 ## Workflow padrão
 
 ```
-1. STAGING (docx-runner): OneDrive → C:\Temp\tcc_edit.docx →
-   extrair word/document.xml → C:\Temp\doc_tcc_edit.xml
-   (guardar o **MD5** do DOCX no OneDrive p/ pré-check da entrega;
-   timestamp e bytes não bastam, ver "Entrega" abaixo)
-2. INSPEÇÃO (docx-runner): dump_headings / dump_blocks / find_text / check_ids
-   (o estado real é o do XML recém-extraído; `content_map.md` pode estar
-   desatualizado — ver "Notas críticas")
-3. PLANO (principal): mapear blocos, redigir conteúdo, apresentar ao usuário
-   e AGUARDAR APROVAÇÃO antes de editar
-4. SCRIPT: escrever C:\Temp\gen_<tema>.py — ler doc_tcc_edit.xml, aplicar
-   edits com counts verificados, sanity checks, gravar doc_tcc_<tema>.xml.
-   Sessão em Sonnet → o próprio principal; sessão em Opus → docx-scripter
-   via spec (o scripter também roda o script e a verificação, cobrindo o 5)
-5. EXECUÇÃO (docx-runner): rodar o gen + dumps de verificação sobre a saída
-6. REVISÃO (principal): conferir a saída dos checks
-7. FINALIZAÇÃO: word_finalize.ps1 → audit_docx.py (tem que dar 0 falhas)
-8. ENTREGA (docx-runner): Word fechado + sem lock `~$` → **MD5 do
-   OneDrive igual ao do staging** → backup datado → cp → ls -la
-9. KB (principal): atualizar docx_structure.md / historico_entregas.md /
-   content_map.md / pendencias.md conforme o caso
+1. STAGING: OneDrive → C:\Temp\tcc_<tema>\ (ou o padrão de config.py, se
+   não houver outra sessão) → extrair word/document.xml; guardar o MD5
+2. INSPEÇÃO: dump_headings / dump_blocks (--math onde houver equação) /
+   find_text / check_ids. O estado real é o do XML recém-extraído
+3. MAPA DE COMENTÁRIOS: dump_comments.py --blocos <ini>-<fim> do trecho.
+   Para cada comentário: âncora some com a edição? (reancorar no texto
+   novo equivalente) · a edição o atende? (vai receber "Feito.")
+4. CONFERÊNCIA TÉCNICA: toda remissão do texto novo (equação, figura,
+   seção, sigla) contra o conteúdo real; termo com sigla que entra ou sai
+   → conferir a lista de siglas (padroes_revisao.md §7)
+5. PLANO (principal): blocos, texto, tabela de comentários (id curto,
+   pedido, atendido?, Feito?), correções técnicas. AGUARDAR APROVAÇÃO
+6. SCRIPT: C:\Temp\gen_<tema>.py com counts verificados, comentários
+   reancorados (Start/End/Reference = 1 cada), ET.fromstring, grava saída
+   (quem escreve: ver "Divisão de trabalho")
+7. REVISÃO: dump_blocks da saída + check_pt
+8. FINALIZAÇÃO: repack → word_finalize.ps1 -Replies <json com os Feito.>
+   → audit_docx.py (0 falhas) → conferir o delta de "Feito." no comments.xml
+9. ENTREGA: entrega.md (Word fechado, MD5, backup, cp, reabrir)
+10. KB: historico_entregas / content_map / pendencias / siglas, conforme o caso
 ```
 
-## Entrega (aprendido em 2026-09-02, na marra)
+Passos 3 e 4 entraram em 2026-10-02: na entrega daquele dia o "Feito." foi
+esquecido (o padrão existia, mas fora do workflow) e o texto pedido trocava
+o papel das equações (3.5)-(3.7).
 
-- **Pré-check por MD5, não por timestamp/bytes** (o MD5 pegou um save do Victor
-  8 min depois da cópia). MD5 mudou → refazer staging e reaplicar o `gen_*.py`
-  (que só lê o XML do staging); sync de outro aparelho (Bruno) chega em rajadas,
-  até com mtime voltando: esperar parar de mudar antes de refazer (2026-10-01).
-- **Backup datado antes de sobrescrever, sempre**: `<nome>_backup_YYYYMMDD_HHMMSS.docx`
-  em `_backups/<versão>/` ao lado do arquivo (`comentado/_backups/V10/`).
-- **Conferir que o Word está fechado** (`tasklist | grep -i winword`) e sem
-  lock `~$*` na pasta — trocar os bytes por baixo de uma sessão viva quebra o
-  sincronismo do OneDrive ("CARREGAMENTO BLOQUEADO", upload recusado).
-- **Nunca entregar um zip montado à mão direto**: rodar `word_finalize.ps1`
-  antes — o zip à mão abre e até exporta PDF, mas o `w:dirty` do sumário
-  deixa o documento modificado ao abrir, disparando o mesmo bloqueio, e os
-  `PAGEREF` de seções removidas ficam "Erro! Indicador não definido".
-- **`audit_docx.py` distingue "arquivo corrompido" de "problema de
-  sincronismo"**: 0 falhas quando o Word reclamar = conteúdo são, problema é
-  de upload.
+## Entrega e armadilhas
 
-## Notas críticas
-
-- **VFS isolation**: o `python.exe` do Windows não vê o VFS do Claude Desktop
-  (`AppData/Roaming/Claude/...`); trabalhar em `C:\Temp\` ou no repositório.
-- **OneDrive lock**: nunca editar no path do OneDrive; copiar para C:\Temp
-  (`Copy-Item`/CopyFileW leem com o Word aberto; `zipfile` direto, não). A
-  VOLTA falha com o Word aberto: pedir para fechar antes da entrega.
-- **Word renumera IDs ao salvar**: se o usuário salvou o DOCX no Word, o
-  registro de IDs do KB fica obsoleto — rodar `check_ids.py` no XML recém-
-  extraído antes de inserir qualquer elemento novo.
-- **paraId**: máximo `0x7FFFFFFF`; prefixos A–F estouram. Usar `1FB0xxxx`
-  (sequência registrada no KB) e conferir colisão com grep antes.
-- **PowerShell + `python -c` inline quebra** com regex `[...]` — escrever
-  script em arquivo e rodar o arquivo.
-- **Sumário (TOC)**: texto das entradas fica em cache no XML — um replace de
-  título espera 2 ocorrências (título real + cache), e o campo precisa de
-  `w:dirty="true"` para o Word reconstruir ao abrir.
-- **Delta de contagem em substituição**: trocar 1 bloco por N parágrafos dá
-  `<w:p` **+(N-1)**, não +N — errar isso faz o `docx-scripter` abortar
-  (corretamente); conferir a aritmética antes de mandar a spec.
-- **Grep com classe de caracteres acentuada não casa** (`invers[ãa]o` etc.
-  retornam zero em locale C, multibyte quebrado dentro do `[...]`): repetir
-  com padrão literal antes de concluir ausência. `grep -c` casa substring
-  ("ISE" deu 12 ocorrências, todas "LISERRE"): usar `-w` ou ver o contexto.
-- **KB de conteúdo pode mentir sobre o que já foi escrito** (`content_map.md`
-  dava o Cap. 6 como redigido com o capítulo vazio no arquivo vivo): confirmar
-  no XML recém-extraído antes de julgar/editar, corrigir o KB no passo 9.
-- **gen_*.py**: todo replace com count esperado explícito (falhar se
-  divergir); `ET.fromstring` no resultado antes de gravar; UTF-8 no stdout
-  com `sys.stdout.reconfigure(encoding='utf-8', errors='replace')`, não
-  `io.TextIOWrapper(sys.stdout.buffer, ...)` — dois módulos que se importam
-  e fazem isso cada um por si fecham o buffer compartilhado ao ser coletado
-  o primeiro wrapper (`ValueError: I/O operation on closed file`), achado ao
-  escrever `build_plan.py` + `gen_oscar_cap5_comments.py` em 2026-09-29.
-
-## Referência de IDs e armadilhas XML
-
-Ver `.claude/kb/tcc-word/docx/docx_structure.md` — registro de IDs usados/próximos
-e "Armadilhas de edição XML" (sectPr final via `rindex`, falso positivo
-`<w:p` vs `<w:pgSz`, etc.). Histórico de entregas: `historico_entregas.md`.
+- `entrega.md`: checklist, MD5 que muda antes/depois, sessões em paralelo.
+- `armadilhas.md`: ambiente, IDs e comentários, contagens e buscas, conteúdo.
+- KB: `.claude/kb/tcc-word/docx/docx_structure.md` (registro de IDs e
+  armadilhas XML) e `historico_entregas.md`.

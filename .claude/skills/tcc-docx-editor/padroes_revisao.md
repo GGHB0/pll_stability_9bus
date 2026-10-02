@@ -69,6 +69,11 @@ no texto).
 - Casar pelo texto, nunca pelo ID: o Word renumera os IDs ao salvar.
 - Conferir depois no `commentsExtended.xml` que cada `Feito.` tem
   `paraIdParent` apontando para o comentário certo.
+- **Atendido em parte, ou de outro jeito, não leva "Feito."**: em 2026-10-02
+  o Oscar pediu P logo após a definição de P e Q após a de Q; o texto do
+  Victor manteve a (3.8) inteira depois das duas. Ficou sem resposta, e a
+  entrega disse isso ao Victor. Quais comentários levam "Feito." sai do
+  mapa de comentários (passo 3 do workflow) e vai na tabela do plano.
 
 ## 6. O texto que apresenta a figura vem antes dela
 
@@ -78,3 +83,13 @@ Definido pelo Victor em 2026-10-01. O parágrafo "A Figura X mostra…" fica
 análise que não apresentam a figura continuam onde estão. Ilustração nova
 entra já assim; ao mover, levar o `w:p` inteiro (as âncoras de comentário
 precisam abrir e fechar no mesmo parágrafo).
+
+## 7. Termo com sigla entrou ou saiu: conferir a lista de siglas
+
+Definido pelo Victor em 2026-10-02. A lista pré-textual só tem siglas usadas
+no texto (regra de 2026-09-13, `tcc-siglas-inventory` no KB). Edição que
+apaga a última ocorrência de uma sigla tira a linha da lista **na mesma
+entrega**; edição que introduz sigla nova a define na 1ª ocorrência e a
+acrescenta. Em 2026-10-02 a reescrita da 3.2 tirou "GD" do texto e a lista só
+foi corrigida duas rodadas depois. Termo por extenso sem a sigla ("geração
+distribuída") não segura a sigla na lista.

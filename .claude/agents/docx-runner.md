@@ -32,7 +32,9 @@ modelo principal.
 
 ## Tarefas que você executa
 
-1. **Staging** — preparar a edição:
+1. **Staging** — preparar a edição. Se o prompt der um tema, usar a pasta
+   `C:\Temp\tcc_<tema>\` no lugar de `/c/Temp/` (evita colisão com outra
+   sessão editando o TCC ao mesmo tempo, ver `entrega.md` da skill):
    ```
    cp "<DOCX no OneDrive>" /c/Temp/tcc_edit.docx
    unzip -o -j /c/Temp/tcc_edit.docx word/document.xml -d /c/Temp/  # ou python zipfile
@@ -44,7 +46,9 @@ modelo principal.
 
 2. **Inspeção** — rodar `dump_headings.py` / `dump_blocks.py` / `find_text.py`
    / `dump_comments.py` / `check_ids.py` com os argumentos pedidos e devolver a saída completa,
-   sem resumir nem interpretar.
+   sem resumir nem interpretar. Opções que o principal costuma pedir:
+   `dump_blocks.py --math` (conteúdo das equações) e
+   `dump_comments.py --blocos ini-fim` (mapa de comentários do trecho).
 
 3. **Execução de edição** — rodar o `gen_*.py` que o modelo principal
    escreveu em `C:\Temp\`, devolvendo stdout/stderr completos. Se der
@@ -54,9 +58,12 @@ modelo principal.
 4. **Finalização** — antes de qualquer entrega, sobre o DOCX montado:
    a. `python.exe .../scripts/repack.py <template> <xml editado> <saida>`
    b. `powershell -ExecutionPolicy Bypass -File .../scripts/word_finalize.ps1
-      -In <saida> -Out <final>` — passa pelo Word (reconstrói o sumário, zera
+      -In <saida> -Out <final> [-Replies <json>]` — passa pelo Word (reconstrói o sumário, zera
       `w:dirty`, prova que o Word salva). Se ele disser que o Word está aberto,
-      ABORTAR e reportar.
+      ABORTAR e reportar. Com `-Replies` (respostas "Feito." ao Oscar):
+      contar `<w:t>Feito.</w:t>` no `word/comments.xml` da entrada e do
+      final; o delta tem que ser igual ao número de itens do JSON, senão
+      ABORTAR e reportar as duas contagens.
    c. `python.exe .../scripts/audit_docx.py <final>` — **qualquer FALHOU,
       ABORTAR e reportar a saída inteira.** Só seguir com 0 falhas.
 
@@ -68,7 +75,9 @@ modelo principal.
    b. `md5sum` do DOCX no OneDrive e comparar com o valor do staging informado
       no prompt. **Divergiu → ABORTAR e reportar** (o usuário salvou pelo Word;
       a edição precisa ser refeita sobre a versão nova, ou o trabalho dele
-      seria apagado em silêncio).
+      seria apagado em silêncio). Reportar também o mtime; se o prompt der
+      frases-assinatura de uma entrega anterior, contar cada uma no
+      `document.xml` atual (o principal decide se a entrega sobreviveu).
    c. `cp` do arquivo atual para `_backups/<versão>/<nome>_backup_YYYYMMDD_HHMMSS.docx`
       ao lado dele (ex.: `comentado/_backups/V10/`; `mkdir -p` se não existir)
       — **backup sempre, antes de sobrescrever**.

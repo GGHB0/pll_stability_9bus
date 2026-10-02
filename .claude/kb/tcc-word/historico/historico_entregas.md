@@ -10,6 +10,36 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-02 (16h39) — Figura 3.1 do controle de corrente dq no §3.1.4 (V10)
+
+- Comentário #95 do Oscar (figura como a 8.10 de Yazdani, adaptada ao modelo).
+  Figura nova `assets/diagrams/current_control_dq_blocos.png` (PI + notch por
+  eixo, sem desacoplamento ωL/feedforward, conferido no `.slx` e no PSIM),
+  trio por `campos.py`, 16 cm, fonte "Adaptado de Yazdani e Iravani (2010)".
+- Frase do bloco 379 que prometia desacoplamento/feedforward trocada: formulação
+  clássica citada, modelo sem esses termos, remissão "conforme a Figura 3.1". As
+  antigas 3.1/3.2 viraram 3.2/3.3 (sem remissão no texto). `C:\Temp\gen_ccdq.py`
+  (mídia `pll_ccdq.png`, `rId200`, docPr `900000100`, paraIds `1FB0D102-104`).
+- Finalize (79 folhas) → audit 0 falhas → backup `V10_backup_20261002_163927`.
+  Comentário #95 não marcado como feito.
+
+## 2026-10-02 (00h23) — Seções 3.1.1-3.1.3 e parágrafo da GD (3.2) (V10)
+
+- Redação do Victor; síntese da 3.1.2 corrigida: (3.5) é abc→dq e (3.6)/(3.7) são vd/vq, não há inversa. Comentários 81, 85-88, 95, 96 reancorados no texto novo; sigla GD saiu do texto.
+- `gen_cap3_transformadas.py` + `gen_cap3_gd.py` (C:\Temp) → backup `_002315`. 00h27: "Feito." em 81, 83, 95 e nos dois "depois de vq = 0" (`replies_cap3.json`), não nos que pediam P e Q logo após cada definição (backup `_002747`). 16h36: GD fora da lista de siglas (`gen_sigla_gd.py`, backup `_163604`).
+
+## 2026-10-02 (00h17) — Cap. 5 restaurado após save por cima (V10)
+
+- O save das 00h08-00h10 (Word aberto com versão anterior) desfez a entrega
+  das 23h59: sumiram as Figuras 5.8, 5.10, 5.11, 5.13, 5.16 e 5.18, as
+  chamadas voltaram para baixo das legendas e 5.17/5.19 ficaram com a legenda
+  em dobro. Sintoma relatado pelo Victor: "do 5.12 foi para o 5.14".
+- Base = entrega das 23h59 + os 7 parágrafos editados pelo Victor nos Caps.
+  1-2 (por paraId, ids de comentário remapeados) + remoção dos 7 comentários
+  que ele apagou ali (25-27, 36-39). `C:\Temp\gen_restaura.py`.
+- Finalize (78 págs, 19 figuras no Cap. 5) → audit 0 falhas → backup
+  `V10_backup_20261002_001733` (save em Word inglês, só ids de estilo).
+
 ## 2026-10-01 (23h30) — "Reaquisitar" fora do texto (V10)
 
 - 14 trocas por "recuperar/retomada do sincronismo" (Cap. 4 a 7), segmento a
@@ -90,47 +120,10 @@ aliases: [tcc-historico-entregas]
 - **Pipeline**: `C:\Temp\figs\gen_troca_figuras.py` → finalize com
   `-Comments` (74 págs) → audit 0 falhas → backup `V10_backup_20261001_222015`.
 
-## 2026-10-01 (noite) — Referências pedidas pelo Oscar (V10)
+## Entregas de 2026-10-01 (dia)
 
-- **Comentários 88, 34, 118 e 140** (pedidos de referência), cada citação no
-  fim do trecho ancorado: Clarke 3.1.1 → (YAZDANI; IRAVANI, 2010); "IEEE
-  TR77" → (HATZIARGYRIOU et al., 2020); "ωn = 4√2·fg ≈ 339,4 rad/s" →
-  (ALVES, 2022); "IEEE 9 barras" → (ANDERSON; FOUAD, 2003; MATHWORKS, 2025).
-- **Lista**: entradas novas HATZIARGYRIOU (PES-TR77, maio 2020) e MATHWORKS
-  (página "IEEE 9-Bus System", R2025b, que cita Anderson & Fouad como fonte
-  dos dados), ambas conferidas na web; paraIds `1FB00310`/`1FB00311`.
-- Ficou aberto: "pequena descrição das equações" (2ª metade do 88) e o 44
-  (Bruno traz a referência). O 7 já estava atendido (Strauss-Mincu/Shadoul).
-- **Pipeline**: `gen_refs_oscar.py` → finalize (74 págs) → audit 0 falhas →
-  backup `V10_backup_20261001_204412`. Duas tentativas abortaram por MD5
-  (sync de outro aparelho em rajada); lição na seção Entrega da skill.
-
-## 2026-10-01 — Citações de alto risco corrigidas (V10)
-
-- Os 4 trechos de alto risco de [[tcc-revisao-citacoes]], conferidos de novo
-  contra os PDFs antes de aplicar:
-  - **Cap. 1, flutuação/armazenamento:** a frase passou a "...como a
-    variabilidade da geração, que exige maior flexibilidade e capacidade
-    despachável do sistema elétrico para preservar sua confiabilidade (IEA,
-    2026)". Só trocar a fonte não bastava, porque a IEA p. 12 não fala de
-    armazenamento nem de estabilidade dinâmica.
-  - **Leis físicas:** "...cujo sincronismo é regido por leis físicas
-    inerentes à máquina rotativa (WU; WANG, 2020; XIONG et al., 2025)".
-  - **IBRs sem inércia:** a citação passou de Wu e Wang para (STRAUSS-MINCU
-    et al., 2026).
-  - **Cap. 2, inércia → desvios angulares:** "...a inércia total da rede
-    diminui, o que torna mais complexa a manutenção da estabilidade e exige
-    que os requisitos de estabilidade transitória do sistema elétrico sejam
-    reavaliados (STRAUSS-MINCU et al., 2026)" (p. 95 e 101). O início,
-    ancorado nos comentários 105/106, ficou intacto.
-- **Sem RoCoF:** a primeira versão do último trecho citava RoCoF (p. 106). O
-  Victor vetou, porque RoCoF não é assunto do TCC.
-- **MOHAN (2003) removido da lista**: ficou sem citação. O Victor confirmou
-  que a citação foi um engano dele.
-- **Pipeline**: `gen_citacoes_risco.py` (5 edits; a 1ª execução abortou no
-  trecho dos IBRs porque o padrão pulava o run do `commentReference` 12) →
-  finalize (74 págs, 0 erro) → audit 0 falhas → MD5 `284f6afc…` conferido →
-  backup `_backup_20261001_193644` → entregue (`fd4b7f3c…`).
+Ver [[tcc-historico-entregas-2026-10-01]]: citações de alto risco corrigidas e
+referências pedidas pelo Oscar.
 
 ## Entregas de 2026-09-27 a 2026-09-29
 

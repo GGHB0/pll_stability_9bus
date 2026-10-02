@@ -1,6 +1,6 @@
 ---
 name: tcc-siglas-inventory
-description: Inventário de 36 siglas do TCC: lista ordenada, revisão 2026-09-13, formatação, ferramenta varredura
+description: Inventário de 35 siglas do TCC: lista ordenada, revisão 2026-09-13, formatação, ferramenta varredura
 aliases: [tcc-siglas-inventory]
 ---
 
@@ -13,7 +13,7 @@ aliases: [tcc-siglas-inventory]
 > Varredura: todo o documento, incluindo tabelas, legendas e caixas de texto,
 > excluindo a própria lista.
 
-## Lista atual (36, ordem alfabética)
+## Lista atual (35, ordem alfabética; GD saiu em 2026-10-02)
 
 | Sigla | Significado |
 |---|---|
@@ -28,7 +28,6 @@ aliases: [tcc-siglas-inventory]
 | ENTSO-E | European Network of Transmission System Operators for Electricity |
 | FFR | Fast Frequency Response (Resposta Rápida de Frequência) |
 | FRT | Fault Ride-Through |
-| GD | Geração Distribuída |
 | GFL | Grid-Following (Seguidor de Rede) |
 | GFM | Grid-Forming (Formador de Rede) |
 | IBR | Inverter-Based Resources (Recursos Baseados em Inversores) |
@@ -75,8 +74,13 @@ Cap. 1), CA (§3.1.2), PWM (§3.1.4) e ONS (Intro, RAP); LCL ganhou definição
 ("ponto de conexão comum", "transitórios eletromagnéticos", "Recursos
 Baseados em Inversores"). Varredura: `C:\Temp\scan_siglas.py` (marca "DEF"
 em sigla seguida de parênteses; sigla seguida de citação dá falso positivo).
+`find_text.py "\bGD\b" --regex` não acha a entrada da lista (sigla e
+significado separados por `<w:tab/>`): conferir com `grep '>GD<'` no XML.
 
 ## Removidas em 2026-09-13 (zero ocorrências fora da lista)
+
+2026-10-02: GD. O texto só usa "geração distribuída" por extenso (2.3 e
+3.2), sem a abreviação, depois da reescrita da 3.2 ([[tcc-pendencias]] item 28).
 
 AVR, IAE, ISE, ITAE, LG, LLG, MPPT, PSS, SPWM. Vieram do inventário de
 julho e deixaram de aparecer no texto em alguma edição posterior (não

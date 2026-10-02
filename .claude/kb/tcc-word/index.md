@@ -26,7 +26,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 | [full_intro.md](conteudo/full_intro.md) | [[tcc-full-intro]] | Conteúdo completo da Introdução do TCC — contextualização, motivação (apagão 08/2023), objetivos e referências [1]–[9] |
 | [full_prefacio.md](conteudo/full_prefacio.md) | [[tcc-full-prefacio]] | Conteúdo completo das páginas pré-textuais do TCC — capa, folha de rosto, resumo, abstract, listas e sumário |
 | [revisao_citacoes.md](conteudo/revisao_citacoes.md) | [[tcc-revisao-citacoes]] | Revisão de fidelidade das citações do TCC V10 (item 26): cada trecho × página da fonte × veredito |
-| [siglas_inventory.md](conteudo/siglas_inventory.md) | [[tcc-siglas-inventory]] | Inventário de 36 siglas do TCC: lista ordenada, revisão 2026-09-13, formatação, ferramenta varredura |
+| [siglas_inventory.md](conteudo/siglas_inventory.md) | [[tcc-siglas-inventory]] | Inventário de 35 siglas do TCC: lista ordenada, revisão 2026-09-13, formatação, ferramenta varredura |
 | [trabalhos_futuros.md](conteudo/trabalhos_futuros.md) | [[tcc-trabalhos-futuros]] | Eixos definidos para o Cap. 7 (Trabalhos Futuros) do TCC — quais entraram, qual foi descartado e por quê |
 
 ### docx/
@@ -51,6 +51,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 | [historico_entregas_2026_09_26.md](historico/historico_entregas_2026_09_26.md) | [[tcc-historico-entregas-2026-09-26]] | Entregas de 2026-09-26 no V10 (comentários do Oscar, notação do PLL, comentário 16 e Xiong, figuras ONS) |
 | [historico_entregas_2026_09_fim.md](historico/historico_entregas_2026_09_fim.md) | [[tcc-historico-entregas-2026-09-fim]] | Entregas de 2026-09-27 a 2026-09-29 no V10 (Wu e Wang em redes fracas, Xiong na Motivação, 38 comentários do Oscar no Cap.5), fragmentado d… |
 | [historico_entregas_2026_09_inicio.md](historico/historico_entregas_2026_09_inicio.md) | [[tcc-historico-entregas-2026-09-inicio]] | Entregas de setembro até 2026-09-09: troca PAC→PCC, mesclagem Cap. 4-5, enxugamento Cap. 5 |
+| [historico_entregas_2026_10_01.md](historico/historico_entregas_2026_10_01.md) | [[tcc-historico-entregas-2026-10-01]] | Entregas de 2026-10-01 (dia) no V10 — citações de alto risco corrigidas e referências pedidas pelo Oscar |
 | [historico_entregas_v8.md](historico/historico_entregas_v8.md) | [[tcc-historico-entregas-v8]] | Histórico de entregas da versão V8 do TCC: seção 3.3, correções dos comentários do Oscar |
 
 ### revisao-fragmento/

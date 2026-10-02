@@ -67,8 +67,8 @@ Convenção de links `[[slug]]`: [rules/kb-links.md](.claude/rules/kb-links.md).
   [params_workflow.md](.claude/kb/simulation/params_workflow.md).
 - **Sinais em duas taxas** (rápida e lenta), interpolar sobre o eixo lento; **não
   existe abc do lado da rede**: [export_workflow.md](.claude/kb/simulation/export_workflow.md).
-- **Cenário de sintonia inadequada (BAD_PLL):** `kp_pll` e `ki_pll` ×0,2, com instante
-  de falta diferente do nominal: [cenarios_simulados.md](.claude/kb/simulation/cenarios_simulados.md).
+- **Cenário de sintonia inadequada (BAD_PLL):** `kp_pll` e `ki_pll` ×0,2; desde a rodada
+  de 01/10/2026 a janela de falta é a mesma do nominal: [cenarios_simulados.md](.claude/kb/simulation/cenarios_simulados.md).
 - **`.slx` é um ZIP de XML:** inspecionar sem MATLAB pela skill `slx-explorer`; mapa
   de subsistemas e SIDs em [simulink_model.md](.claude/kb/inverter/simulink_model.md).
 

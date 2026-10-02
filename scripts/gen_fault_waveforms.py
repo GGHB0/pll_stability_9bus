@@ -130,12 +130,12 @@ SCENARIOS = [
 # isso o matplotlib escala cada figura pelos proprios dados e a comparacao
 # fica falseada -- mesmo motivo de YLIM_DQ_REGIME em gen_regime_waveforms.py.
 YLIM_GROUPS = {
-    # Figuras 5.4, 5.5 e 5.11: trifasicas. As duas primeiras dao o gradiente de
-    # localizacao com sintonia nominal; a terceira e a mesma falta da 5.4 com
-    # sintonia inadequada (perda de sincronismo), que so e legivel contra a 5.4
+    # Figuras 5.5, 5.6 e 5.15: trifasicas. As duas primeiras dao o gradiente de
+    # localizacao com sintonia nominal; a terceira e a mesma falta da 5.5 com
+    # sintonia inadequada (perda de sincronismo), que so e legivel contra a 5.5
     # se as duas estiverem na mesma escala vertical.
     "sim_localizacao": ["bus7/3phase", "bus6/3phase", "bus7/3phase_bad_pll"],
-    # Figuras 5.8 e 5.9: efeito da sintonia, bifasica na Barra 6
+    # Figuras 5.10 e 5.11: efeito da sintonia, bifasica na Barra 6
     "assim_sintonia": ["bus6/2phase", "bus6/2phase_bad_pll"],
 }
 

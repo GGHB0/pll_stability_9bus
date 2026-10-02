@@ -69,3 +69,12 @@ no texto).
 - Casar pelo texto, nunca pelo ID: o Word renumera os IDs ao salvar.
 - Conferir depois no `commentsExtended.xml` que cada `Feito.` tem
   `paraIdParent` apontando para o comentário certo.
+
+## 6. O texto que apresenta a figura vem antes dela
+
+Definido pelo Victor em 2026-10-01. O parágrafo "A Figura X mostra…" fica
+**acima** da legenda, nunca depois do "Fonte". Figuras lidas lado a lado
+(ex.: nominal × inadequada) têm um texto só, acima do par. Parágrafos de
+análise que não apresentam a figura continuam onde estão. Ilustração nova
+entra já assim; ao mover, levar o `w:p` inteiro (as âncoras de comentário
+precisam abrir e fechar no mesmo parágrafo).

@@ -20,6 +20,27 @@ aliases: [tcc-historico-entregas]
   `revisao_pt.md` da skill. 1ª entrega abortou por MD5 (save sincronizado,
   texto idêntico) → backup `V10_backup_20261001_233613`.
 
+## 2026-10-01 (23h59) — Texto antes das figuras nos Caps. 4 e 5 (V10)
+
+- 19 parágrafos "A Figura X…" movidos (`w:p` inteiro, âncoras do Oscar
+  junto) para antes da legenda: Figuras 4.1-4.3, Tabela 4.1 e todo o Cap. 5;
+  pares 5.1/5.2, 5.5/5.6 e 5.10/5.11 com o texto acima do par. Regra nova no
+  item 6 de `padroes_revisao.md` da skill tcc-docx-editor.
+- Remissões com número antigo corrigidas: 5.5→5.6, 5.6→5.8, 5.12→5.15,
+  5.4→5.5, 5.13→5.17, 5.15→5.19 e o par 5.12/5.13→5.16/5.17.
+- Figuras 5.10/5.11 reescritas: mesmas escalas de tempo e de amplitude;
+  v_d de −0,02 a 1,35 pu (nominal) contra 0,30 a 1,32 pu (inadequada).
+- Números do Cap. 5 reconferidos com `medir_cap5.py`, todos batem (falta de
+  0,3 a 0,4 s nos 28 cenários). Duas ressalvas viraram texto: 120 Hz ≤
+  0,002 pu e "duas ordens de grandeza" só com sintonia nominal (a trifásica
+  da Barra 6 inadequada dá 0,006 pu); §5.5, prolongamento da recuperação
+  só "nas contingências mais severas".
+- 4 comentários `[Claude]` e resposta ao Oscar no "tensão em regime
+  permanente está em 1 p.u." (as duas sintonias partem de 1,00 pu).
+- **Pipeline**: `C:\Temp\figs\gen_figuras_antes.py` (refeito sobre o save do
+  Victor das 23h52) → finalize (78 págs) → audit 0 falhas → backup
+  `V10_backup_20261001_235907`.
+
 ## 2026-10-01 (23h) — Gráficos de erro de fase no Cap. 5 (V10)
 
 - 4 figuras novas (legenda SEQ + imagem + Fonte via `campos.py` + parágrafo

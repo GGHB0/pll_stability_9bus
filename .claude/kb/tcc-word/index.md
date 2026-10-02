@@ -51,7 +51,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 | [historico_entregas_2026_09_26.md](historico/historico_entregas_2026_09_26.md) | [[tcc-historico-entregas-2026-09-26]] | Entregas de 2026-09-26 no V10 (comentários do Oscar, notação do PLL, comentário 16 e Xiong, figuras ONS) |
 | [historico_entregas_2026_09_fim.md](historico/historico_entregas_2026_09_fim.md) | [[tcc-historico-entregas-2026-09-fim]] | Entregas de 2026-09-27 a 2026-09-29 no V10 (Wu e Wang em redes fracas, Xiong na Motivação, 38 comentários do Oscar no Cap.5), fragmentado d… |
 | [historico_entregas_2026_09_inicio.md](historico/historico_entregas_2026_09_inicio.md) | [[tcc-historico-entregas-2026-09-inicio]] | Entregas de setembro até 2026-09-09: troca PAC→PCC, mesclagem Cap. 4-5, enxugamento Cap. 5 |
-| [historico_entregas_2026_10_01.md](historico/historico_entregas_2026_10_01.md) | [[tcc-historico-entregas-2026-10-01]] | Entregas de 2026-10-01 (dia) no V10 — citações de alto risco corrigidas e referências pedidas pelo Oscar |
+| [historico_entregas_2026_10_01.md](historico/historico_entregas_2026_10_01.md) | [[tcc-historico-entregas-2026-10-01]] | Entregas de 2026-10-01 no V10 — safra de 01/10 no Cap. 5, texto antes das figuras, reaquisitar, citações e referências do Oscar |
 | [historico_entregas_v8.md](historico/historico_entregas_v8.md) | [[tcc-historico-entregas-v8]] | Histórico de entregas da versão V8 do TCC: seção 3.3, correções dos comentários do Oscar |
 
 ### revisao-fragmento/

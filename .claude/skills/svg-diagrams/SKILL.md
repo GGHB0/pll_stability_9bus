@@ -92,8 +92,9 @@ costuma vir de comentário do Oscar e pede adaptação ao modelo. Roteiro:
 3. **Modelo real:** `slx-explorer/scripts/slx_subsystem.py <SID|nome>` (o
    grafo de ligações mostra o que existe) e a netlist do PSIM (`PSim/*.txt`).
 4. **Desenhar** só o que o modelo tem. Bloco do livro ausente no modelo
-   (ex.: desacoplamento ωL e feedforward) fica fora ou vira perturbação da
-   planta. **Fonte: "Os autores (2026)."**: o livro deu só o estilo, o
+   (ex.: desacoplamento ωL e feedforward) fica **fora da figura, inclusive
+   da planta**: o Victor quer "só o que realmente está no nosso
+   controlador" (2026-10-02; v_g e ωL na planta foram recusados). **Fonte: "Os autores (2026)."**: o livro deu só o estilo, o
    conteúdo é do modelo (D10 em `tcc-abnt-layout/decisoes.md`). "Adaptado
    de Autor (ano)" só quando o conteúdo é o do livro.
 5. **Conferir o texto do TCC:** se o parágrafo promete o bloco ausente, avisar

@@ -10,6 +10,16 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-01 (23h30) — "Reaquisitar" fora do texto (V10)
+
+- 14 trocas por "recuperar/retomada do sincronismo" (Cap. 4 a 7), segmento a
+  segmento nos `<w:t>` (`C:\Temp\figs\gen_reaquisita.py`). Três já tinham
+  virado "requisitar" no Word, que também está errado. Comentário `[Claude]`
+  em cada trecho; "Feito." no do Oscar ("Acho que essa palavra não existe").
+- O Victor reverteu a decisão de 2026-09-12 de manter a palavra; regra em
+  `revisao_pt.md` da skill. 1ª entrega abortou por MD5 (save sincronizado,
+  texto idêntico) → backup `V10_backup_20261001_233613`.
+
 ## 2026-10-01 (23h) — Gráficos de erro de fase no Cap. 5 (V10)
 
 - 4 figuras novas (legenda SEQ + imagem + Fonte via `campos.py` + parágrafo

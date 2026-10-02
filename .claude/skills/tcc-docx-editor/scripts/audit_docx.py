@@ -9,7 +9,7 @@ margem). Sai com codigo 1 se algum item FALHOU.
 
 Motivado por 2026-09-02: um DOCX montado a mao abria e exportava PDF, mas o
 Word recusava o upload ("CARREGAMENTO BLOQUEADO"). Esta auditoria e o que
-provou que o problema nao era o conteudo. Ver mesclagem_no_canonico.md.
+provou que o problema nao era o conteudo. Ver casos/mesclagem_no_canonico.md.
 """
 import sys, re, io, zipfile, collections
 import xml.etree.ElementTree as ET

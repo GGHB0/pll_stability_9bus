@@ -9,7 +9,7 @@ Nao corrige nada: so lista candidatos com bloco e contexto, para triagem manual.
 Todo achado precisa de olho humano — "onde" locativo e legitimo, "o mesmo" as
 vezes e mesmo adjetivo, e placeholder pode ser pendencia consciente.
 
-Ver revisao_pt.md para o que cada classe significa e como decidir.
+Ver casos/revisao_pt.md para o que cada classe significa e como decidir.
 """
 import io
 import re

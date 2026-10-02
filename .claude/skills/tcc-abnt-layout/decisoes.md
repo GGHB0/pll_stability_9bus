@@ -179,7 +179,7 @@ A NBR 14724 só **recomenda** lista por tipo de ilustração, então a lista
 ## Onde isso não se aplica
 
 - **Fragmento externo** (`Fragmentos/*.docx`) — rascunho de trabalho, sem
-  compromisso de forma. Ver `tcc-docx-editor/fragmento_externo.md`.
+  compromisso de forma. Ver `tcc-docx-editor/casos/fragmento_externo.md`.
 - **Notas técnicas em PDF** (`output/*.pdf`) — layout próprio, feito com
   reportlab. Ver a skill `tcc-pdf-notes`.
 - **Relatório HTML** (`output/pll_metrics.html`) — nada a ver com ABNT.

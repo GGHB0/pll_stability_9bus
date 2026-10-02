@@ -158,7 +158,7 @@ explícito no script.
 
 ## Mesclar o fragmento no canônico
 
-Ver `mesclagem_no_canonico.md` (nesta pasta): comparação das árvores de seção
+Ver `casos/mesclagem_no_canonico.md`: comparação das árvores de seção
 antes de trocar, mapeamento de estilos de título, convenção de figura invertida,
 reescalonamento Carta→A4 e limpeza das partes de comentário. Ler antes de
 levar qualquer fragmento para dentro do TCC.

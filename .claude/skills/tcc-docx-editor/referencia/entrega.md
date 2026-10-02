@@ -6,7 +6,7 @@ desde então.
 ## Checklist
 
 1. Word fechado (`tasklist | grep -i winword`) e sem lock `~$*` na pasta.
-   Se estiver aberto: fechar pelo COM, salvando (`padroes_revisao.md` §3).
+   Se estiver aberto: fechar pelo COM, salvando (`referencia/padroes_revisao.md` §3).
 2. **MD5 do OneDrive igual ao do staging.** Timestamp e bytes não bastam (o
    MD5 pegou um save do Victor 8 min depois da cópia).
 3. Backup datado: `<nome>_backup_YYYYMMDD_HHMMSS.docx` em `_backups/<versão>/`

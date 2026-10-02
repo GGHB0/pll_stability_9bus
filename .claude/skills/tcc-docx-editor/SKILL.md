@@ -1,11 +1,16 @@
 # Skill: tcc-docx-editor
 
 Edita o TCC DOCX (`config.py`; hoje `TCC_Victor_Bruno_V10.docx`) no OOXML.
-**Padrões fixos** (Resumo↔Abstract + comentário, fechar/reabrir Word, "Feito." ao Oscar, siglas): `padroes_revisao.md`.
+**Padrões fixos** (Resumo↔Abstract + comentário, fechar/reabrir Word, "Feito." ao Oscar, siglas): `referencia/padroes_revisao.md`.
 Modo aceito pelo Victor: **edições diretas no XML, sem tracked changes**
 (`helpers.py` mantém os geradores com `w:ins` caso volte a ser necessário).
 
-## Fragmento externo (não o canônico) — ver `fragmento_externo.md`
+Pastas: `casos/` (fluxos de uso ocasional: fragmento, mesclagens, revisão de
+português), `referencia/` (lido em toda edição: padrões, entrega,
+armadilhas), `scripts/`. Guia novo vai na pasta do seu tipo; caminhos são
+citados a partir da raiz da skill.
+
+## Fragmento externo (não o canônico) — ver `casos/fragmento_externo.md`
 
 Quando o alvo é um rascunho externo isolado (ex.: `capitulos_4_5_revisados.docx`,
 na pasta `Fragmentos/` do TCC no OneDrive, plain-Normal-style, sem tracked
@@ -13,16 +18,16 @@ changes/comentários/tabelas), o OOXML-surgery deste arquivo é overkill: usa-se
 **python-docx direto**, sem staging, sem `repack.py`, sem IDs a rastrear. Todo
 o workflow, as armadilhas (inserção de figura, renumeração, troca de termo,
 `docPr` duplicado, conferência de MD5) e as lições de redação estão em
-**`fragmento_externo.md`**. Ler antes de tocar num fragmento.
+**`casos/fragmento_externo.md`**. Ler antes de tocar num fragmento.
 
 Para levar um fragmento **para dentro** do canônico, ver
-**`mesclagem_no_canonico.md`**: comparar as árvores de seção antes de trocar
+**`casos/mesclagem_no_canonico.md`**: comparar as árvores de seção antes de trocar
 (o fragmento pode ser mais raso que o capítulo que substitui), mapear os
 títulos para `Ttulo1`–`Ttulo4` ou eles somem do sumário, inverter a convenção
 de legenda, e **reescalar as figuras da largura útil de origem para a de
 destino** (o fragmento é Carta, 6,50 in; o TCC é A4, 6,30 in).
 
-## Cópia comentada externa (Oscar) — ver `mesclagem_comentarios.md`
+## Cópia comentada externa (Oscar) — ver `casos/mesclagem_comentarios.md`
 
 Cópia do TCC com comentários novos do Oscar (não um rascunho de texto — ver
 "Fragmento externo" acima): mesclar só os comentários, sem as edições de
@@ -30,9 +35,9 @@ texto soltas que vierem junto. Achar os novos por diff de texto e confirmar
 por **data** (não por ID, que o Word renumera) contra o comentário mais
 recente já no canônico, para não duplicar o que já foi mesclado com redação
 levemente diferente. Detalhe da mesclagem cirúrgica nas 4 partes XML de
-comentário em `mesclagem_comentarios.md`.
+comentário em `casos/mesclagem_comentarios.md`.
 
-## Revisão de português — ver `revisao_pt.md`
+## Revisão de português — ver `casos/revisao_pt.md`
 
 Passagem linguística separada das edições de conteúdo. `scripts/check_pt.py`
 varre o `document.xml` atrás das classes já vistas (regência `capacidade …
@@ -40,7 +45,7 @@ em`, `onde` não locativo, `através de`, vírgula entre relativo e verbo,
 resíduo de LaTeX, duplo espaço, placeholder, em-dash). **Não** pega
 concordância, coesão nem frase sem verbo principal: isso só sai lendo o
 `dump_blocks.py` do corpo inteiro. Detalhes e falsos positivos em
-`revisao_pt.md`.
+`casos/revisao_pt.md`.
 
 ## Formatação ABNT e paginação — skill `tcc-abnt-layout`
 
@@ -108,7 +113,7 @@ com prompt autocontido: paths exatos, o que rodar e a "saída esperada".
   - `dump_comments.py <docx> [--grep re] [--autor x] [--abertos] [--blocos ini-fim]`:
     comentários com trecho, bloco e respostas; lê com o Word aberto
   - `check_ids.py <xml>`: máximos de bookmark/ins/paraId + dirty do TOC
-  - `check_pt.py <xml> [--corpo N]`: varredura de português (`revisao_pt.md`)
+  - `check_pt.py <xml> [--corpo N]`: varredura de português (`casos/revisao_pt.md`)
   - `repack.py <template.docx> <xml> <saida.docx>`: injeta o document.xml
   - `audit_docx.py <docx> [--util-in N]`: auditoria pré-entrega; código 1 se falhou
   - `word_finalize.ps1 -In <montado> -Out <final> [-Pdf] [-Comments <json>] [-Replies <json>]`:
@@ -126,7 +131,7 @@ com prompt autocontido: paths exatos, o que rodar e a "saída esperada".
    novo equivalente) · a edição o atende? (vai receber "Feito.")
 4. CONFERÊNCIA TÉCNICA: toda remissão do texto novo (equação, figura,
    seção, sigla) contra o conteúdo real; termo com sigla que entra ou sai
-   → conferir a lista de siglas (padroes_revisao.md §7)
+   → conferir a lista de siglas (referencia/padroes_revisao.md §7)
 5. PLANO (principal): blocos, texto, tabela de comentários (id curto,
    pedido, atendido?, Feito?), correções técnicas. AGUARDAR APROVAÇÃO
 6. SCRIPT: C:\Temp\gen_<tema>.py com counts verificados, comentários
@@ -135,7 +140,7 @@ com prompt autocontido: paths exatos, o que rodar e a "saída esperada".
 7. REVISÃO: dump_blocks da saída + check_pt
 8. FINALIZAÇÃO: repack → word_finalize.ps1 -Replies <json com os Feito.>
    → audit_docx.py (0 falhas) → conferir o delta de "Feito." no comments.xml
-9. ENTREGA: entrega.md (Word fechado, MD5, backup, cp, reabrir)
+9. ENTREGA: referencia/entrega.md (Word fechado, MD5, backup, cp, reabrir)
 10. KB: historico_entregas / content_map / pendencias / siglas, conforme o caso
 ```
 
@@ -145,7 +150,7 @@ o papel das equações (3.5)-(3.7).
 
 ## Entrega e armadilhas
 
-- `entrega.md`: checklist, MD5 que muda antes/depois, sessões em paralelo.
-- `armadilhas.md`: ambiente, IDs e comentários, contagens e buscas, conteúdo.
+- `referencia/entrega.md`: checklist, MD5 que muda antes/depois, sessões em paralelo.
+- `referencia/armadilhas.md`: ambiente, IDs e comentários, contagens e buscas, conteúdo.
 - KB: `.claude/kb/tcc-word/docx/docx_structure.md` (registro de IDs e
   armadilhas XML) e `historico_entregas.md`.

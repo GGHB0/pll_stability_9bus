@@ -36,18 +36,18 @@ Mapa de relações entre pastas: [grafo.md](grafo.md)
 - [slx-runner](../skills/slx-runner/SKILL.md)
 - [svg-diagrams](../skills/svg-diagrams/SKILL.md) — [armadilhas](../skills/svg-diagrams/armadilhas.md) · [data_charts](../skills/svg-diagrams/data_charts.md) · [export_png](../skills/svg-diagrams/export_png.md) · [legibilidade](../skills/svg-diagrams/legibilidade.md)
 - [tcc-abnt-layout](../skills/tcc-abnt-layout/SKILL.md) — [decisoes](../skills/tcc-abnt-layout/decisoes.md) · [regras_abnt](../skills/tcc-abnt-layout/regras_abnt.md)
-- [tcc-docx-editor](../skills/tcc-docx-editor/SKILL.md) — [armadilhas](../skills/tcc-docx-editor/armadilhas.md) · [entrega](../skills/tcc-docx-editor/entrega.md) · [fragmento_externo](../skills/tcc-docx-editor/fragmento_externo.md) · [mesclagem_comentarios](../skills/tcc-docx-editor/mesclagem_comentarios.md) · [mesclagem_no_canonico](../skills/tcc-docx-editor/mesclagem_no_canonico.md) · [padroes_revisao](../skills/tcc-docx-editor/padroes_revisao.md) · [revisao_pt](../skills/tcc-docx-editor/revisao_pt.md)
+- [tcc-docx-editor](../skills/tcc-docx-editor/SKILL.md) — [fragmento_externo](../skills/tcc-docx-editor/casos/fragmento_externo.md) · [mesclagem_comentarios](../skills/tcc-docx-editor/casos/mesclagem_comentarios.md) · [mesclagem_no_canonico](../skills/tcc-docx-editor/casos/mesclagem_no_canonico.md) · [revisao_pt](../skills/tcc-docx-editor/casos/revisao_pt.md) · [armadilhas](../skills/tcc-docx-editor/referencia/armadilhas.md) · [entrega](../skills/tcc-docx-editor/referencia/entrega.md) · [padroes_revisao](../skills/tcc-docx-editor/referencia/padroes_revisao.md)
 - [tcc-pdf-notes](../skills/tcc-pdf-notes/SKILL.md)
 
 ## Agentes
 
-- [code-reviewer](../agents/code-reviewer.md) — /
-- [code-runner](../agents/code-runner.md) — /
-- [docx-runner](../agents/docx-runner.md) — /
-- [docx-scripter](../agents/docx-scripter.md) — /
-- [note-validator](../agents/note-validator.md) — /
-- [pdf-extractor](../agents/pdf-extractor.md) — /
-- [pdf-note-runner](../agents/pdf-note-runner.md) — /
+- [code-reviewer](../agents/codigo/code-reviewer.md) — /
+- [code-runner](../agents/codigo/code-runner.md) — /
+- [pdf-extractor](../agents/kb/pdf-extractor.md) — /
+- [note-validator](../agents/notas/note-validator.md) — /
+- [pdf-note-runner](../agents/notas/pdf-note-runner.md) — /
+- [docx-runner](../agents/tcc-docx/docx-runner.md) — /
+- [docx-scripter](../agents/tcc-docx/docx-scripter.md) — /
 
 ## Regras
 

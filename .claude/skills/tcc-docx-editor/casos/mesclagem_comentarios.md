@@ -83,7 +83,7 @@ controle total sobre o que muda.
 
 ## Relacionados
 
-- `fragmento_externo.md` / `mesclagem_no_canonico.md` — mesclar **texto**
+- `casos/fragmento_externo.md` / `casos/mesclagem_no_canonico.md` — mesclar **texto**
   (rascunho de capítulo), não comentários.
-- `padroes_revisao.md` — comentário que o Claude mesmo redige, via
+- `referencia/padroes_revisao.md` — comentário que o Claude mesmo redige, via
   `word_finalize.ps1 -Comments`.

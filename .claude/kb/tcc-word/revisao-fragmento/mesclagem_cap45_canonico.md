@@ -84,7 +84,7 @@ entravam estourando a margem direita em 0,20 in: as Figuras 4.1 (unifilar),
 4.2 (circuito LCL), 5.11 (retenção didática) e 5.14 (potência didática).
 
 Reescaladas para 6,30 in preservando a proporção, **mexendo em `wp:extent` E
-em `a:ext`** (a armadilha já registrada em `fragmento_externo.md`: mexer só no
+em `a:ext`** (a armadilha já registrada em `casos/fragmento_externo.md`: mexer só no
 primeiro entrega a figura esticada). Perda de 3% na escala, sem prejuízo de
 legibilidade — conferido no PDF renderizado.
 
@@ -143,7 +143,7 @@ Refeita passando o arquivo **pelo próprio Word** (`Fields.Update` +
 órfãos resolvidos e as 3 mídias órfãs dos capítulos removidos descartadas pelo
 Word (30 → 27 partes de mídia). Diff de texto contra a versão anterior: só o
 bloco do sumário. Confirmado que o Word **salva** o arquivo, não só abre.
-Procedimento agora é padrão em `mesclagem_no_canonico.md` da skill.
+Procedimento agora é padrão em `casos/mesclagem_no_canonico.md` da skill.
 
 ## Efeito no restante do KB
 

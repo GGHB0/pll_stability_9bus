@@ -154,7 +154,7 @@ chegando à escala 0,78 (~7,8 pt efetivos), que é o padrão do capítulo.
 **As duas precisam entrar a 6,5 in**, como a Figura 5.11, e não a 5,5 in dos
 oscilogramas comuns. Regra completa e procedimento de validação em
 `assets/charts/figuras_didaticas.md` ("Legibilidade no DOCX"), no `data_charts.md`
-da skill `svg-diagrams` e em `fragmento_externo.md` da skill `tcc-docx-editor`.
+da skill `svg-diagrams` e em `casos/fragmento_externo.md` da skill `tcc-docx-editor`.
 
 ### Escolha resolvida — inserida como Figura 5.14 (2026-09-01)
 

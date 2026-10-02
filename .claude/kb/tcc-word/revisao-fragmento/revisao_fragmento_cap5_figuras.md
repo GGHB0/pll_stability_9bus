@@ -98,7 +98,7 @@ perguntar sobre ela). O run passou de 284 para 781 caracteres e o realce
 vazou para o texto novo. Nenhuma conferência textual pegou isso, só a
 renderização da página em PDF. Corrigido separando em dois runs, o amarelo de
 volta aos 284 caracteres originais e a frase nova em run próprio sem
-`w:highlight`. Lição registrada em `fragmento_externo.md` da skill.
+`w:highlight`. Lição registrada em `casos/fragmento_externo.md` da skill.
 
 As imagens ficam empilhadas verticalmente no Word (pouco espaço horizontal),
 não lado a lado. **Inseridas no fragmento em 2026-08-22**: parágrafo de imagem

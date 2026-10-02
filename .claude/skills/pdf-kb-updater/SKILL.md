@@ -23,7 +23,7 @@ A extração é mecânica; a síntese exige julgamento. Separar:
 
 | Etapa | Quem executa |
 |---|---|
-| Passos 0–2 + varredura (localizar PDF, TOC, skim, extrair seções, triagem) | Subagente **`pdf-extractor`** (Haiku) — `.claude/agents/pdf-extractor.md` |
+| Passos 0–2 + varredura (localizar PDF, TOC, skim, extrair seções, triagem) | Subagente **`pdf-extractor`** (Haiku) — `.claude/agents/kb/pdf-extractor.md` |
 | Varredura: seleção do que propor + Passos 3–4 (síntese, escrita dos `.md`, MEMORY.md) | Modelo principal |
 
 Delegar via Agent tool com `subagent_type: "pdf-extractor"`, passando o

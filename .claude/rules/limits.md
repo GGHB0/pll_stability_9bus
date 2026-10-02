@@ -59,3 +59,19 @@ Exceção — `kb/psim/`: o PSIM foi o **ambiente legado** onde a modelagem come
 não a implementação atual. Por ser uma fase histórica distinta (não a ferramenta
 corrente), tem pasta própria. Isso **não** autoriza uma pasta `kb/simulink/`: o
 Simulink é a ferramenta atual e seu conhecimento continua por tema.
+
+# Subpastas em skills e agentes
+
+- **Skill** com mais de ~8 guias `.md` ganha subpastas por tipo de leitura,
+  no modelo da `tcc-docx-editor`: `casos/` (fluxo de uso ocasional) e
+  `referencia/` (lido em toda execução), mais `scripts/`. O `SKILL.md` fica
+  na raiz, lista as pastas e cita os guias pelo caminho a partir da raiz da
+  skill (`referencia/entrega.md`).
+- **Agentes** ficam em subpastas pela skill ou área a que servem:
+  `tcc-docx/`, `codigo/`, `notas/`, `kb/`. Agente novo vai na pasta da sua
+  área; área nova, pasta nova. O Claude Code acha agentes em subpastas de
+  `.claude/agents/` (testado em 2026-10-02 com `claude -p`: os 7 seguiram
+  listados), e o nome do agente é o `name:` do frontmatter, não o caminho.
+- Ao mover guia ou agente: `git mv`, corrigir menções por caminho no repo e
+  na memória (menção só pelo nome do arquivo também), rodar
+  `scripts/kb_links.py all`, que indexa as subpastas de skills e agentes.

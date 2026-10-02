@@ -34,7 +34,7 @@ modelo principal.
 
 1. **Staging** — preparar a edição. Se o prompt der um tema, usar a pasta
    `C:\Temp\tcc_<tema>\` no lugar de `/c/Temp/` (evita colisão com outra
-   sessão editando o TCC ao mesmo tempo, ver `entrega.md` da skill):
+   sessão editando o TCC ao mesmo tempo, ver `referencia/entrega.md` da skill):
    ```
    cp "<DOCX no OneDrive>" /c/Temp/tcc_edit.docx
    unzip -o -j /c/Temp/tcc_edit.docx word/document.xml -d /c/Temp/  # ou python zipfile
@@ -85,7 +85,7 @@ modelo principal.
       confirmação.
    "Device or resource busy" → o Word está com o arquivo aberto: ABORTAR e
    reportar. O modelo principal fecha o Word pelo COM (salvando antes), como
-   descrito em `padroes_revisao.md` da skill; o runner nunca mata o processo.
+   descrito em `referencia/padroes_revisao.md` da skill; o runner nunca mata o processo.
    Com o Word fechado, o mesmo erro no `mv` do bash vem de arquivo só na
    nuvem do OneDrive: usar `Move-Item` do PowerShell, que baixa e move.
    e. Se o prompt pedir, reabrir o canônico: `Start-Process "<path>"`.

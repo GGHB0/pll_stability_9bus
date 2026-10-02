@@ -1,6 +1,6 @@
 # Mesclar um Fragmento no TCC Canônico
 
-Extraído de `fragmento_externo.md` em 2026-09-02 pelo limite de 200 linhas.
+Extraído de `casos/fragmento_externo.md` em 2026-09-02 pelo limite de 200 linhas.
 Primeira aplicação: Cap. 4 e 5 em 2026-09-02, registrada em
 `kb/tcc-word/revisao-fragmento/mesclagem_cap45_canonico.md`.
 

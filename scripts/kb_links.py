@@ -242,14 +242,18 @@ def write_root_index(docs: list[Doc], folders: list[str]) -> None:
     body += ["", "Soltos na raiz: " + ", ".join(f"[{d.path.name}]({d.path.name})" for d in loose)]
     body += ["", "Mapa de relações entre pastas: [grafo.md](grafo.md)", "", "## Skills", ""]
     for skill in sorted((CLAUDE / "skills").glob("*/SKILL.md")):
-        aux = [d for d in docs if d.path.parent == skill.parent and d.path.name != "SKILL.md"]
-        extra = " · ".join(f"[{d.path.stem}](../skills/{skill.parent.name}/{d.path.name})" for d in aux)
+        # subpastas da skill entram também (tcc-docx-editor/casos/, referencia/)
+        aux = sorted((d for d in docs if d.path.is_relative_to(skill.parent) and d.path != skill),
+                     key=lambda d: d.path.relative_to(skill.parent).as_posix())
+        extra = " · ".join(f"[{d.path.stem}](../skills/{skill.parent.name}/"
+                           f"{d.path.relative_to(skill.parent).as_posix()})" for d in aux)
         body.append(f"- [{skill.parent.name}](../skills/{skill.parent.name}/SKILL.md)"
                     + (f" — {extra}" if extra else ""))
     body += ["", "## Agentes", ""]
     for d in docs:
-        if d.path.parent == CLAUDE / "agents":
-            body.append(f"- [{d.path.stem}](../agents/{d.path.name}) — {short(d.description, 110)}")
+        if d.path.is_relative_to(CLAUDE / "agents"):
+            sub = d.path.relative_to(CLAUDE / "agents").as_posix()
+            body.append(f"- [{d.path.stem}](../agents/{sub}) — {short(d.description, 110)}")
     body += ["", "## Regras", ""]
     for d in docs:
         if d.path.parent == CLAUDE / "rules":

@@ -65,7 +65,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 | [revisao_fragmento_cap5_analise.md](revisao-fragmento/revisao_fragmento_cap5_analise.md) | [[tcc-revisao-fragmento-cap5-analise]] | Regra editorial do Cap.5 do fragmento — descrição de figura não é análise; o que substituiu a enumeração de valores nos parágrafos 98 e 101… |
 | [revisao_fragmento_cap5_enxugamento.md](revisao-fragmento/revisao_fragmento_cap5_enxugamento.md) | [[tcc-revisao-fragmento-cap5-enxugamento]] | Passe de enxugamento analítico do Cap.5 do fragmento em 2026-09-02, com o critério do corte e o antes/depois parágrafo a parágrafo |
 | [revisao_fragmento_cap5_figuras.md](revisao-fragmento/revisao_fragmento_cap5_figuras.md) | [[tcc-revisao-fragmento-cap5-figuras]] | Estrutura de seções, mapa das 13 figuras e histórico de geração dos gráficos do Cap.5 do fragmento capitulos_4_5_revisados.docx |
-| [revisao_fragmento_cap5_metricas.md](revisao-fragmento/revisao_fragmento_cap5_metricas.md) | [[tcc-revisao-fragmento-cap5-metricas]] | Definições fechadas e valores medidos das métricas de falta do Cap.5 do fragmento, após a auditoria de 2026-08-23 que reprovou vários númer… |
+| [revisao_fragmento_cap5_metricas.md](revisao-fragmento/revisao_fragmento_cap5_metricas.md) | [[tcc-revisao-fragmento-cap5-metricas]] | Definições fechadas e valores medidos das métricas de falta do Cap.5 (auditoria de 2026-08-23, valores atualizados em 2026-10-03 com as Tab… |
 | [revisao_fragmento_cap5_metricas_54.md](revisao-fragmento/revisao_fragmento_cap5_metricas_54.md) | [[tcc-revisao-fragmento-cap5-metricas-54]] | Métricas da Seção 5.4 do fragmento (perda de sincronismo em bus7/3phase_bad_pll) — rotação acumulada, escorregamento, retenção com valores… |
 
 ## Pastas relacionadas
@@ -75,7 +75,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 - [pll/](../pll/index.md) — saem 9, chegam 5
 - [power-system/](../power-system/index.md) — saem 8, chegam 1
 - [simulation/](../simulation/index.md) — saem 5, chegam 5
-- [standards/](../standards/index.md) — saem 3, chegam 1
+- [standards/](../standards/index.md) — saem 4, chegam 2
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)
 <!-- kb-links:end -->

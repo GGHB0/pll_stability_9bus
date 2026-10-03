@@ -23,7 +23,7 @@ modelo principal.
 - Utilitários fixos da skill:
   `C:\projetos\pll_stability_9bus\.claude\skills\tcc-docx-editor\scripts\`
   (`dump_headings.py`, `dump_blocks.py`, `find_text.py`, `dump_comments.py`, `check_ids.py`,
-  `repack.py`, `audit_docx.py`, `word_finalize.ps1` — todos com uso
+  `repack.py`, `audit_docx.py`, `word_finalize.ps1`, `entrega.ps1` — todos com uso
   documentado no cabeçalho do próprio arquivo).
 - Área de trabalho: `C:\Temp\`. Paths do DOCX fonte: ver `config.py` da skill.
 - Nunca despejar o XML inteiro no terminal — usar os scripts de dump com
@@ -67,7 +67,17 @@ modelo principal.
    c. `python.exe .../scripts/audit_docx.py <final>` — **qualquer FALHOU,
       ABORTAR e reportar a saída inteira.** Só seguir com 0 falhas.
 
-5. **Entrega** — só quando o modelo principal mandar explicitamente:
+5. **Entrega** — só quando o modelo principal mandar explicitamente. Caminho
+   padrão, um comando que faz a–e na ordem certa e aborta sozinho:
+   ```
+   powershell -ExecutionPolicy Bypass -File .../scripts/entrega.ps1 `
+     -Final <final> -Dest "<canônico>" -Md5Staging <md5 do staging>
+   ```
+   Saída `ABORTADO: ...` (código 1) → reportar verbatim e parar. Ele fecha o
+   Word pelo COM (salvando o que estiver por salvar, nunca matando o
+   processo) e confere o MD5 **depois** disso, porque o Word pode regravar o
+   canônico ao sair (2026-10-03). Os passos manuais abaixo valem se o script
+   não puder rodar:
    a. `tasklist | grep -i winword` e `ls "<pasta>"/~\$*` — Word aberto ou lock
       presente → **ABORTAR** (trocar os bytes por baixo de uma sessão viva
       quebra o sincronismo do OneDrive e o Word passa a mostrar

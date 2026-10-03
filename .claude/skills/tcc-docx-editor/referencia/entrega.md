@@ -5,6 +5,19 @@ desde então.
 
 ## Checklist
 
+**Desde 2026-10-03, um comando só faz os passos 1-5, nesta ordem, e aborta
+sem tocar no canônico se algo divergir** (Word fechado pelo COM sem
+`Stop-Process`, lock, MD5 depois do Word fechado, backup conferido, cópia
+conferida, reabertura):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\entrega.ps1 `
+  -Final C:\Temp\tcc_<tema>\tcc_final.docx -Dest "<canônico>" -Md5Staging <md5>
+```
+
+O checklist abaixo é o que o script garante (e o caminho manual, se ele
+falhar):
+
 1. Word fechado (`tasklist | grep -i winword`) e sem lock `~$*` na pasta.
    Se estiver aberto: fechar pelo COM, salvando (`referencia/padroes_revisao.md` §3).
 2. **MD5 do OneDrive igual ao do staging.** Timestamp e bytes não bastam (o

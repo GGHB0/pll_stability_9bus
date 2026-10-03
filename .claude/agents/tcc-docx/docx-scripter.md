@@ -55,6 +55,21 @@ do docx-runner, após revisão do principal).
 - Regenerar a saída do zero a cada run (ler sempre o XML de ENTRADA da spec,
   nunca a saída de um run anterior).
 
+## Utilitários prontos (usar, não reescrever)
+
+Importar por `sys.path.insert(0, <pasta>)`; cada um tem o uso no docstring.
+
+- `.claude/skills/tcc-abnt-layout/scripts/campos.py`:
+  `legenda`/`imagem`/`fonte` (trio de ilustração), `figura_nova(doc, rels,
+  modelo_p, png, larg_in, k, cap, n, titulo)` (PNG que ainda não está no
+  pacote: rels, docPr, cNvPr, extent pela razão do PNG; devolve os bytes a
+  gravar em `word/media/`) e `tabela_completa(cap, n, titulo, larguras, cab,
+  linhas)` (Tabela Word IBGE, D11; larguras somam 9072 dxa).
+- `.claude/skills/tcc-docx-editor/scripts/renumera_figuras.py`:
+  `renumera(doc, cap, a_partir, delta[, 'Tabela'])` para as remissões no
+  texto. Rodar **antes** de inserir texto que já usa a numeração nova;
+  número citado em `comments.xml` é à parte.
+
 ## Workflow
 
 1. Rodar `check_ids.py` (em `.claude/skills/tcc-docx-editor/scripts/`) no XML

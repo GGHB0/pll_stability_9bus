@@ -118,6 +118,12 @@ com prompt autocontido: paths exatos, o que rodar e a "saída esperada".
   - `audit_docx.py <docx> [--util-in N]`: auditoria pré-entrega; código 1 se falhou
   - `word_finalize.ps1 -In <montado> -Out <final> [-Pdf] [-Comments <json>] [-Replies <json>]`:
     passa pelo Word, reconstrói o sumário e **prova que o Word salva**
+  - `renumera_figuras.py`: `renumera(doc, cap, a_partir, delta[, 'Tabela'])`
+    para as remissões no texto quando entra ilustração no meio do capítulo
+  - `entrega.ps1 -Final <final> -Dest <canônico> -Md5Staging <md5>`: passo 9
+    inteiro, com aborto (`referencia/entrega.md`)
+- Ilustração e tabela nova: `tcc-abnt-layout/scripts/campos.py`
+  (`figura_nova`, `tabela_completa`, `legenda`/`imagem`/`fonte`)
 
 ## Workflow padrão
 
@@ -133,14 +139,15 @@ com prompt autocontido: paths exatos, o que rodar e a "saída esperada".
    seção, sigla) contra o conteúdo real; termo com sigla que entra ou sai
    → conferir a lista de siglas (referencia/padroes_revisao.md §7)
 5. PLANO (principal): blocos, texto, tabela de comentários (id curto,
-   pedido, atendido?, Feito?), correções técnicas. AGUARDAR APROVAÇÃO
+   pedido, atendido?, Feito?), correções técnicas. 3+ valores por cenário
+   no texto → propor Tabela (D11). AGUARDAR APROVAÇÃO
 6. SCRIPT: C:\Temp\gen_<tema>.py com counts verificados, comentários
    reancorados (Start/End/Reference = 1 cada), ET.fromstring, grava saída
    (quem escreve: ver "Divisão de trabalho")
 7. REVISÃO: dump_blocks da saída + check_pt
 8. FINALIZAÇÃO: repack → word_finalize.ps1 -Replies <json com os Feito.>
    → audit_docx.py (0 falhas) → conferir o delta de "Feito." no comments.xml
-9. ENTREGA: referencia/entrega.md (Word fechado, MD5, backup, cp, reabrir)
+9. ENTREGA: scripts/entrega.ps1 (referencia/entrega.md)
 10. KB: historico_entregas / content_map / pendencias / siglas, conforme o caso
 ```
 

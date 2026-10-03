@@ -8,8 +8,8 @@ contraria uma decisão daqui é regressão, não melhoria. Se um pedido novo
 conflitar com uma decisão registrada, **perguntar** — e atualizar este
 arquivo quando a resposta mudar a decisão.
 
-Todas as decisões abaixo foram **implementadas na entrega de 2026-09-13**
-(ver `kb/tcc-word/docx/abnt_layout.md`).
+D1-D8 implementadas na entrega de 2026-09-13 (`kb/tcc-word/docx/abnt_layout.md`);
+D9 em diante, na data de cada uma. **D11 em diante: `decisoes_2.md`.**
 
 ---
 

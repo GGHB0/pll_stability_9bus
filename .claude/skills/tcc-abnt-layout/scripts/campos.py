@@ -11,6 +11,9 @@ automaticas e o trio quebra entre folhas. Uso num gen_*.py:
             + imagem(paragrafo_com_o_drawing)
             + fonte('Os autores (2026).'))
 
+Tabela Word (D11): tabela_completa(cap, n, titulo, larguras, cab, linhas).
+PNG que ainda nao esta no pacote: figura_nova(doc, rels, modelo_p, png, ...).
+
 `ident` e o identificador do SEQ, em ASCII: Figura ou Tabela (D9: nao ha
 mais Grafico nem Quadro). `n` e so o cache do campo: o
 word_finalize.ps1 renumera tudo e reconstroi as listas.
@@ -60,6 +63,95 @@ def fonte(texto, tag='<w:p>'):
         texto = 'Fonte: ' + texto
     return (tag + '<w:pPr><w:spacing w:before="60" w:after="240" w:line="240" w:lineRule="auto"/>'
             f'<w:jc w:val="left"/><w:rPr>{SZ10}</w:rPr></w:pPr>' + run(texto) + '</w:p>')
+
+
+# ── Tabela Word (D11): estilo IBGE ─────────────────────────────────────────
+# Sem bordas laterais nem internas; filete acima e abaixo do cabecalho e abaixo
+# da ultima linha. Cabecalho repete na quebra (tblHeader), linha nao parte
+# (cantSplit), keepNext em TODAS as linhas, inclusive a ultima, para o Fonte:
+# nao descolar. 10 pt, primeira coluna a esquerda, demais centralizadas.
+# Entregue assim nas Tabelas 5.1-5.3 (2026-10-03).
+LARGURA_UTIL = 9072  # dxa, A4 com margens 3/2 cm
+_FILETE = '<w:{0} w:val="single" w:sz="8" w:space="0" w:color="000000"/>'
+
+
+def _cel(texto, larg, jc, bordas):
+    b = ''.join(_FILETE.format(x) for x in bordas)
+    tcpr = f'<w:tcW w:w="{larg}" w:type="dxa"/>' + (f'<w:tcBorders>{b}</w:tcBorders>' if b else '') + '<w:vAlign w:val="center"/>'
+    return (f'<w:tc><w:tcPr>{tcpr}</w:tcPr><w:p><w:pPr><w:keepNext/>'
+            '<w:spacing w:before="20" w:after="20" w:line="240" w:lineRule="auto"/>'
+            f'<w:ind w:firstLine="0"/><w:jc w:val="{jc}"/><w:rPr>{SZ10}</w:rPr></w:pPr>{run(texto)}</w:p></w:tc>')
+
+
+def tabela(larguras, cab, linhas):
+    """<w:tbl> IBGE. larguras em dxa (soma = LARGURA_UTIL); cab e cada linha: listas de str.
+
+    Primeira coluna estreita quebra o rotulo ('Bifasica na Barra 7'): conferir no PDF.
+    """
+    if sum(larguras) != LARGURA_UTIL:
+        raise ValueError(f'larguras somam {sum(larguras)}, esperado {LARGURA_UTIL}')
+    if any(len(x) != len(larguras) for x in [cab, *linhas]):
+        raise ValueError('linha com numero de celulas diferente de larguras')
+    grid = ''.join(f'<w:gridCol w:w="{x}"/>' for x in larguras)
+    xml = (f'<w:tbl><w:tblPr><w:tblW w:w="{LARGURA_UTIL}" w:type="dxa"/><w:jc w:val="center"/><w:tblBorders>'
+           '<w:top w:val="nil"/><w:left w:val="nil"/><w:bottom w:val="nil"/><w:right w:val="nil"/>'
+           '<w:insideH w:val="nil"/><w:insideV w:val="nil"/></w:tblBorders><w:tblLayout w:type="fixed"/>'
+           '<w:tblCellMar><w:left w:w="57" w:type="dxa"/><w:right w:w="57" w:type="dxa"/></w:tblCellMar>'
+           '<w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/>'
+           f'</w:tblPr><w:tblGrid>{grid}</w:tblGrid>')
+    xml += '<w:tr><w:trPr><w:cantSplit/><w:tblHeader/></w:trPr>' + ''.join(
+        _cel(t, l, 'center', ('top', 'bottom')) for t, l in zip(cab, larguras)) + '</w:tr>'
+    for i, lin in enumerate(linhas):
+        bordas = ('bottom',) if i == len(linhas) - 1 else ()
+        xml += '<w:tr><w:trPr><w:cantSplit/></w:trPr>' + ''.join(
+            _cel(t, l, 'left' if j == 0 else 'center', bordas)
+            for j, (t, l) in enumerate(zip(lin, larguras))) + '</w:tr>'
+    return xml + '</w:tbl>'
+
+
+def tabela_completa(cap, n, titulo, larguras, cab, linhas, texto_fonte='Os autores (2026).'):
+    """Trio [legenda Tabela][tabela][Fonte]. A remissao no texto vem ANTES (texto antes da ilustracao)."""
+    return legenda('Tabela', cap, n, titulo) + tabela(larguras, cab, linhas) + fonte(texto_fonte)
+
+
+# ── Figura com midia nova ──────────────────────────────────────────────────
+EMU_IN = 914400
+REL_IMG = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image'
+
+
+def figura_nova(doc, rels, modelo_p, png, larg_in, k, cap, n, titulo,
+                texto_fonte='Os autores (2026).', prefixo='nova'):
+    """Trio [legenda Figura][imagem][Fonte] com um PNG que ainda nao esta no pacote.
+
+    modelo_p: XML de um paragrafo de imagem ja existente (inline), clonado.
+    k: 1, 2, ... distinto por figura na mesma rodada: docPr/cNvPr = max do doc + k,
+    sobre o doc ORIGINAL (gerar todas antes de inserir). rels: passar sempre o
+    devolvido pela chamada anterior (rId = max + 1).
+    Altura sai da razao do PNG. Devolve (xml, rels_novo, (caminho_no_zip, bytes)):
+    o gen grava os bytes em word/media/ ao montar o zip.
+    """
+    import re
+    import struct
+    b = open(png, 'rb').read()
+    w, h = struct.unpack('>II', b[16:24])
+    cx = int(round(larg_in * EMU_IN))
+    cy = int(round(cx * h / w))
+    rid = 'rId%d' % (max(int(x) for x in re.findall(r'Id="rId(\d+)"', rels)) + 1)  # rels ja traz as anteriores
+    doc_id = max(int(x) for x in re.findall(r'<wp:docPr id="(\d+)"', doc)) + k
+    cnv_id = max(int(x) for x in re.findall(r'<pic:cNvPr id="(\d+)"', doc)) + k
+    alvo = f'media/{prefixo}_{k}.png'
+    rels = rels.replace('</Relationships>', f'<Relationship Id="{rid}" Type="{REL_IMG}" Target="{alvo}"/></Relationships>')
+    img = re.sub(r'<w:p\b[^>]*>', '<w:p>', modelo_p, count=1)
+    img = re.sub(r' wp14:anchorId="[^"]*" wp14:editId="[^"]*"', '', img)
+    img, n_ext = re.subn(r'cx="\d+" cy="\d+"', f'cx="{cx}" cy="{cy}"', img)
+    img, n_emb = re.subn(r'r:embed="rId\d+"', f'r:embed="{rid}"', img)
+    if (n_ext, n_emb) != (2, 1):
+        raise ValueError(f'modelo inesperado: {n_ext} extents, {n_emb} r:embed (esperado 2 e 1)')
+    nome = png.replace('\\', '/').rsplit('/', 1)[-1]
+    img = re.sub(r'<wp:docPr id="\d+" name="[^"]*"', f'<wp:docPr id="{doc_id}" name="Picture {doc_id}"', img)
+    img = re.sub(r'<pic:cNvPr id="\d+" name="[^"]*"', f'<pic:cNvPr id="{cnv_id}" name="{nome}"', img)
+    xml = legenda('Figura', cap, n, titulo) + imagem(img) + fonte(texto_fonte)
+    return xml, rels, ('word/' + alvo, b)
 
 
 def lista(ident, tag='<w:p>'):

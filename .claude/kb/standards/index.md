@@ -45,7 +45,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 - [pll/](../pll/index.md) — saem 5, chegam 3
 - [power-system/](../power-system/index.md) — saem 3, chegam 2
 - [simulation/](../simulation/index.md) — saem 2, chegam 1
-- [tcc-word/](../tcc-word/index.md) — saem 1, chegam 3
+- [tcc-word/](../tcc-word/index.md) — saem 2, chegam 4
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)
 <!-- kb-links:end -->

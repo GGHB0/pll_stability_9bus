@@ -35,7 +35,7 @@ Mapa de relações entre pastas: [grafo.md](grafo.md)
 - [slx-explorer](../skills/slx-explorer/SKILL.md)
 - [slx-runner](../skills/slx-runner/SKILL.md)
 - [svg-diagrams](../skills/svg-diagrams/SKILL.md) — [armadilhas](../skills/svg-diagrams/armadilhas.md) · [data_charts](../skills/svg-diagrams/data_charts.md) · [export_png](../skills/svg-diagrams/export_png.md) · [legibilidade](../skills/svg-diagrams/legibilidade.md)
-- [tcc-abnt-layout](../skills/tcc-abnt-layout/SKILL.md) — [decisoes](../skills/tcc-abnt-layout/decisoes.md) · [regras_abnt](../skills/tcc-abnt-layout/regras_abnt.md)
+- [tcc-abnt-layout](../skills/tcc-abnt-layout/SKILL.md) — [decisoes](../skills/tcc-abnt-layout/decisoes.md) · [decisoes_2](../skills/tcc-abnt-layout/decisoes_2.md) · [regras_abnt](../skills/tcc-abnt-layout/regras_abnt.md)
 - [tcc-docx-editor](../skills/tcc-docx-editor/SKILL.md) — [fragmento_externo](../skills/tcc-docx-editor/casos/fragmento_externo.md) · [mesclagem_comentarios](../skills/tcc-docx-editor/casos/mesclagem_comentarios.md) · [mesclagem_no_canonico](../skills/tcc-docx-editor/casos/mesclagem_no_canonico.md) · [revisao_pt](../skills/tcc-docx-editor/casos/revisao_pt.md) · [armadilhas](../skills/tcc-docx-editor/referencia/armadilhas.md) · [entrega](../skills/tcc-docx-editor/referencia/entrega.md) · [padroes_revisao](../skills/tcc-docx-editor/referencia/padroes_revisao.md)
 - [tcc-pdf-notes](../skills/tcc-pdf-notes/SKILL.md)
 

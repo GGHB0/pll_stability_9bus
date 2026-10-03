@@ -1,7 +1,7 @@
 ---
 name: tcc-revisao-fragmento-cap5-metricas
 aliases: [tcc-revisao-fragmento-cap5-metricas]
-description: Definições fechadas e valores medidos das métricas de falta do Cap.5 do fragmento, após a auditoria de 2026-08-23 que reprovou vários números do texto anterior
+description: Definições fechadas e valores medidos das métricas de falta do Cap.5 (auditoria de 2026-08-23, valores atualizados em 2026-10-03 com as Tabelas 5.1-5.3)
 metadata:
   type: project
 ---
@@ -32,9 +32,21 @@ causa direta da divergência: sem receita, o número não é reprodutível.
 | Pico durante a falta | `max\|erro\|` em `[t_fault + 1 ciclo, t_clear]` |
 | Retenção de `v_d` | média em `[t_fault + 2 ciclos, t_clear]` ÷ média em `[t_fault − 50 ms, t_fault)` |
 | t_s pós-falta | último instante com `\|erro\| > 2°`, contado a partir de `t_clear` |
-| Componente de 120 Hz | FFT com janela de Hann de `vd_rede_pu` em `[t_fault + 2 ciclos, t_clear]` |
+| Componente de 120 Hz | FFT com janela de Hann de `vd_rede_pu` em `[t_fault + 2 ciclos, t_clear]`; na prática **3 ciclos** (df = 20 Hz), ver abaixo |
 | `i_q,ref` de pico | `max\|iq_ufv_ref_pu\|` na janela de falta |
 | P durante a falta | média na segunda metade da janela |
+| `v_d` médio, mín. e máx. | `vd_rede_pu` em `[t_fault + 1 ciclo, t_clear]` (Tabela 5.3) |
+| Rampa ONS × `i_q,ref` | rampa `(0,85 − V)/0,35` limitada a 1, com V = \|V\| do inversor filtrado (τ = 5 ms), média em `[t_fault + 1 ciclo, t_clear]`, contra a média de `−iq_ufv_ref_pu` (Tabela 5.2; ver [[ons-2-11]]) |
+
+**Script:** `scripts/medir_tabelas_cap5.py` aplica todas as definições e grava
+`output/tabelas_cap5.csv`; reproduz as Tabelas 5.1-5.3 do TCC (conferido em
+2026-10-03, diferença zero). Número novo do Cap. 5 sai dele, não de conta solta.
+
+**Janela do 120 Hz:** `[t_fault + 2 ciclos, t_clear]` tem ~67 ms, mas o 1º
+instante cai uma amostra depois de `t_fault + 2 ciclos`, então
+`_amplitude_spectrum` trunca para **3 ciclos inteiros**: df = 20 Hz, 120 Hz
+cai num bin exato, e os bins abaixo de 60 Hz são a variação lenta de `v_d`
+durante a falta, não harmônica (explicado em `gen_espectro_vd.py`).
 
 **Por que descartar o primeiro ciclo:** o transitório de comutação da
 aplicação domina o pico. Em `bus6/3phase` o máximo por ciclo cai
@@ -60,18 +72,22 @@ antigo era furado pela Linha 8-9 (112 ms); o texto agora diz 112 ms.
 
 ## 5.3 — pares nominal × sintonia inadequada
 
+Valores de 2026-10-03 (Tabela 5.3 do TCC). A sintonia inadequada foi
+re-simulada em 01/10 com a janela de falta do nominal; os números de 08-23
+(t_s 99 / 78 / 47 ms) eram da safra antiga, com falta em 0,6-0,7 s.
+`bus7/1phase_bad_pll` não existe na safra nova (sai da tabela).
+
 | Cenário | Pico (>1 ciclo) | t_s pós | 120 Hz em `v_d` |
 |---|---|---|---|
-| `bus7/2phase` | 180,0° | 51 ms | 0,715 |
-| `bus7/2phase_bad_pll` | 180,0° | 99 ms | 0,639 |
-| `bus7/1phase` | 89,7° | 46 ms | 0,590 |
-| `bus7/1phase_bad_pll` | 72,2° | 98 ms | 0,546 |
-| `bus6/2phase` | 96,0° | 48 ms | 0,401 |
-| `bus6/2phase_bad_pll` | 34,9° | 78 ms | 0,373 |
+| `bus7/2phase` | 180,0° | 51 ms | 0,719 |
+| `bus7/2phase_bad_pll` | 179,9° | 96 ms | 0,636 |
+| `bus7/1phase` | 89,7° | 46 ms | 0,591 |
+| `bus6/2phase` | 96,0° | 48 ms | 0,394 |
+| `bus6/2phase_bad_pll` | 34,5° | 30 ms | 0,375 |
 | `bus6/1phase` | 12,0° | 39 ms | 0,294 |
-| `bus6/1phase_bad_pll` | 13,2° | 47 ms | 0,300 |
+| `bus6/1phase_ground_bad_pll` | 12,8° | 31 ms | 0,300 |
 
-Trifásicas na mesma métrica de 120 Hz: 0,0001 a 0,0013 pu. O contraste com as
+Trifásicas nominais na mesma métrica de 120 Hz: 0,0002 a 0,0011 pu. O contraste com as
 assimétricas é de **mais de duas ordens de grandeza**.
 
 ### Barra 7 bifásica é caso à parte
@@ -86,7 +102,7 @@ texto, por causa da pendência do Cap. 4.
 
 ## Números do texto antigo que não se sustentaram
 
-| Afirmação antiga | Medido | Natureza |
+| Afirmação antiga | Medido (08-23) | Natureza |
 |---|---|---|
 | Picos 5.2: 53,9 / 44,3 / 23,5 / 21,0° | 37,3 / 32,5 / 29,8 / 7,3° | receita desconhecida |
 | `bus7/2phase`: 40,1° → 34,2° | 180° → 180° (satura) | contradiz a figura ao lado |
@@ -109,16 +125,17 @@ bifásica, e a faixa de 0,29 a 0,71 pu das assimétricas.
 ## Reorganização das figuras de 5.3
 
 Antes, as Figuras 5.7 e 5.8 eram o par `bus7/2phase`, justamente onde o efeito
-da sintonia **não** aparece (satura nos dois). Passou a:
+da sintonia **não** aparece (satura nos dois). Passou a (coluna "Fig" com a
+numeração de 08-23; "Hoje" após as inserções até 2026-10-03):
 
-| Fig | Arquivo | Papel |
-|---|---|---|
-| 5.7 | `bus7_2phase_tensao_dq_rede` | caso severo, perda de alinhamento |
-| 5.8 | `bus6_2phase_tensao_dq_rede` | nominal |
-| 5.9 | `bus6_2phase_bad_pll_tensao_dq_rede` | inadequada (figura nova) |
-| 5.10 | `bus6_2phase_bad_pll_potencia_pq` | era a 5.9 |
+| Fig | Hoje | Arquivo | Papel |
+|---|---|---|---|
+| 5.7 | 5.11 | `bus7_2phase_tensao_dq_rede` | caso severo, perda de alinhamento |
+| 5.8 | 5.12 | `bus6_2phase_tensao_dq_rede` | nominal |
+| 5.9 | 5.13 | `bus6_2phase_bad_pll_tensao_dq_rede` | inadequada (figura nova) |
+| 5.10 | 5.15 | `bus6_2phase_bad_pll_potencia_pq` | era a 5.9 |
 
-5.8 e 5.9 são comparação controlada: mesma barra, mesma falta, mesma escala
+As Figuras 5.12 e 5.13 (numeração atual) são comparação controlada: mesma barra, mesma falta, mesma escala
 vertical, variando só a sintonia.
 
 ### Escala Y compartilhada (`YLIM_GROUPS`)
@@ -127,8 +144,9 @@ vertical, variando só a sintonia.
 falseia leitura lado a lado. Entrou `YLIM_GROUPS`, que torna o ylim a união
 dos extremos dq do grupo:
 
-- `sim_localizacao`: `bus7/3phase` + `bus6/3phase` (Figuras 5.4 e 5.5)
-- `assim_sintonia`: `bus6/2phase` + `bus6/2phase_bad_pll` (Figuras 5.8 e 5.9)
+- `sim_localizacao`: `bus7/3phase` + `bus6/3phase` + `bus7/3phase_bad_pll`
+  (hoje Figuras 5.5, 5.6 e 5.17)
+- `assim_sintonia`: `bus6/2phase` + `bus6/2phase_bad_pll` (hoje 5.12 e 5.13)
 
 Mesmo motivo do `YLIM_DQ_REGIME` em `gen_regime_waveforms.py`. O script passou
 a aceitar prefixos em `argv` para regenerar só um subconjunto.

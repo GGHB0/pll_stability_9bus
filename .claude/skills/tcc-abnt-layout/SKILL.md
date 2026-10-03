@@ -72,7 +72,7 @@ não converge.
 
 A NBR deixa escolha em vários pontos (tamanho de título, recuo,
 alinhamento de legenda). O que o Victor decidiu para **este** TCC está em
-`decisoes.md`, com a data e o motivo. **Ler antes de propor qualquer
+`decisoes.md` (D1-D10) e `decisoes_2.md` (D11 em diante), com a data e o motivo. **Ler antes de propor qualquer
 mudança de formatação**: uma "correção" que contraria uma decisão
 registrada é regressão, não melhoria.
 
@@ -105,7 +105,8 @@ nele, senão a próxima passagem tem de desfazer:
 - **Ilustração**: trio `legenda()` + `imagem()` + `fonte()` de
   `scripts/campos.py`. Tipo por D9: toda ilustração é **Figura** (esquema
   ou curva); grade de texto/dados é **Tabela**. Não existe mais Gráfico nem
-  Quadro. O número passado é só o cache; o `word_finalize.ps1` renumera e
+  Quadro. PNG ainda fora do pacote: `figura_nova()`. Tabela de dados:
+  `tabela_completa()`, estilo IBGE (D11). O número passado é só o cache; o `word_finalize.ps1` renumera e
   reconstrói as listas.
 - **Remissão** concorda com o tipo ("a Figura 5.16", "a Tabela 4.1").
   Inserir no meio do capítulo desloca as seguintes: varrer com `find_text.py`.

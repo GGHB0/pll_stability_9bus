@@ -114,9 +114,10 @@ Regra diferente da de figura, e a troca é erro comum:
   conteúdo é texto ou o dado é acessório, é **quadro**, e quadro é fechado
   dos quatro lados.
 
-Neste documento as 23 `<w:tbl>` são **tabelas de diagramação de equação**,
-sem borda e sem título — não são tabelas no sentido da norma e não entram
-em lista nenhuma.
+Neste documento há dois tipos de `<w:tbl>`: as de **diagramação de
+equação** (sem borda e sem título; não entram em lista nenhuma) e, desde
+2026-10-03, as **Tabelas** de dados (4.1 e 5.1-5.3), no padrão da D11
+(`decisoes_2.md`), montadas por `scripts/campos.py`.
 
 ## Equações — NBR 14724
 

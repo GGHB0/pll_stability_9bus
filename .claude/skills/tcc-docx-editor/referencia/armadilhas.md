@@ -13,6 +13,9 @@ Continuação de `SKILL.md` (antes "Notas críticas"). Armadilhas do próprio XM
   volta falha com o Word aberto.
 - **PowerShell + `python -c` inline quebra** com regex `[...]`: escrever o
   script em arquivo e rodar o arquivo.
+- **`cat > arquivo` sem heredoc espera o stdin para sempre** (travou um
+  comando em segundo plano em 2026-10-03): usar `<<'EOF'` ou a ferramenta
+  Write.
 
 ## IDs e comentários
 
@@ -25,6 +28,10 @@ Continuação de `SKILL.md` (antes "Notas críticas"). Armadilhas do próprio XM
   nunca pelo ID que estava no staging.
 - **paraId**: máximo `0x7FFFFFFF`; prefixos A–F estouram. Usar `1FB0xxxx`
   (sequência registrada no KB) e conferir colisão com grep antes.
+- **`-Replies` casa por prefixo** do texto do comentário e exige um só:
+  "Não entendi" casou 3 comentários em 2026-10-03. Usar o trecho com a
+  pontuação e o espaço seguintes (`"Não entendi. "`) e conferir a unicidade
+  com `dump_comments.py --grep` antes do finalize.
 - **Parágrafo substituído leva os comentários ancorados nele**: o gen tem que
   recolocar `commentRangeStart`, `commentRangeEnd` e o run de
   `commentReference` de cada ID, e conferir que cada um aparece 1 vez.
@@ -47,6 +54,11 @@ Continuação de `SKILL.md` (antes "Notas críticas"). Armadilhas do próprio XM
   Para saber o que a equação é, `--math`.
 
 ## Conteúdo
+
+- **Ilustração no meio do capítulo renumera as seguintes**: rodar
+  `scripts/renumera_figuras.py` (Figura e Tabela, citação partida entre
+  runs) **antes** de inserir o texto novo, e procurar o número velho também
+  no `comments.xml` (comentário [Claude] que cita figura).
 
 - **KB de conteúdo pode mentir sobre o que já foi escrito** (`content_map.md`
   dava o Cap. 6 como redigido com o capítulo vazio): confirmar no XML

@@ -170,21 +170,27 @@ metadata:
   entradas órfãs (ALVES 2021 e SOUSA et al. 2021) foram removidas. Sobrou
   só o `XX` da ficha catalográfica (`pendencias.md` item 20)
 
-## Inventário de ilustrações (2026-09-13)
+## Inventário de ilustrações (2026-09-13, revisto 2026-10-02)
 
-24 ilustrações numeradas por capítulo com campo `SEQ` (ver `abnt_layout.md`
+29 ilustrações (V10) numeradas por capítulo com campo `SEQ` (ver `abnt_layout.md`
 e a D2 de `tcc-abnt-layout/decisoes.md`):
 
 | Nº | Conteúdo | Fonte |
 |---|---|---|
 | Figura 2.1 | Curva de suportabilidade a subtensões (LVRT), ONS | Adaptado de ONS (2022) |
 | Figura 2.2 | Requisito de injeção de corrente reativa, ONS | Adaptado de ONS (2022) |
-| Figura 2.3 | Perfil de afundamento de tensão (`voltage_sag_profile.svg`) | Os autores (2026) |
-| Figura 3.1 | VSI conectado à rede (`vsi_grid_schematic.svg`) | Os autores (2026) |
-| Figura 3.2 | SRF-PLL em três blocos funcionais (`srf_pll_blocos_funcionais.svg`) | Os autores (2026) |
-| Figuras 4.1-4.3 | Unifilar IEEE 9 barras, inversor com LCL, laço do SRF-PLL | Os autores (2026) |
+| Figura 2.3 | Perfil de afundamento de tensão (`voltage_sag_profile.svg`) | Adaptado de Bollen (2000) |
+| Figura 3.1 | Controle de corrente dq implementado | Adaptado de Yazdani e Iravani (2010) |
+| Figura 3.2 | VSI conectado à rede (`vsi_grid_schematic.svg`) | Adaptado de Yazdani e Iravani (2010) e Teodorescu, Liserre e Rodriguez (2011) |
+| Figura 3.3 | SRF-PLL em três blocos funcionais (`srf_pll_blocos_funcionais.svg`) | Adaptado de Teodorescu, Liserre e Rodriguez (2011) |
+| Figura 4.1 | Unifilar IEEE 9 barras | Adaptado de Anderson e Fouad (2003) e MathWorks (2025) |
+| Figura 4.2 | Inversor com LCL e malhas de controle | Adaptado de Alves (2022) |
+| Figura 4.3 | Laço do SRF-PLL | Adaptado de Teodorescu, Liserre e Rodriguez (2011) |
 | Tabela 4.1 | Matriz de cenários (`matriz_cenarios.svg`) | Os autores (2026) |
-| Figuras 5.1-5.15 | Séries de simulação e figuras didáticas das métricas | Os autores (2026) |
+| Figuras 5.1-5.19 | Séries de simulação | Os autores (2026) |
+
+Fontes revistas em 2026-10-02: figura apoiada em obra leva "Adaptado de",
+mesmo redesenhada sobre o modelo (D10 em `tcc-abnt-layout/decisoes.md`).
 
 O corpo cita o Cap. 5 como "a Figura 5.x" (era "o Gráfico 5.x" até a D9,
 2026-09-26).

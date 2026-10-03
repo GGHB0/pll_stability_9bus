@@ -10,6 +10,17 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-02 (21h55) — Fontes "Adaptado de" nas figuras conceituais + "Feito." no #182 (V10)
+
+- Oscar (#182, Fonte da Figura 4.1): "Poderiam colocar adaptado de [ref.]".
+  Victor estendeu a todas as figuras apoiadas em obra (D10 revisada em
+  `tcc-abnt-layout/decisoes.md`). Troca por paraId: 2.3 Bollen (2000); 3.1
+  Yazdani e Iravani (2010); 3.2 Yazdani e Iravani + Teodorescu et al.; 3.3 e
+  4.3 Teodorescu, Liserre e Rodriguez (2011); 4.1 Anderson e Fouad (2003) e
+  MathWorks (2025); 4.2 Alves (2022). Tabela 4.1 e Cap. 5 seguem "Os autores".
+- `C:\Temp\tcc_fontes\gen_fontes.py` → finalize 80 págs → audit 0 →
+  entregue (`78366896…`); backup `_20261002_215525`.
+
 ## 2026-10-02 (19h55) — Parágrafo que apresenta a Figura 2.3 + "Feito." no #83 (V10)
 
 - Oscar (#83): figura do afundamento sem conexão com o texto. Parágrafo novo

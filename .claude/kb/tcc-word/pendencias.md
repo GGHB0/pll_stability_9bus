@@ -107,6 +107,12 @@ aliases: [tcc-pendencias]
     [[tcc-revisao-citacoes]]. **Alto risco corrigido em 2026-10-01** (5
     trechos; MOHAN saiu da lista). Faltam: sem PDF, médio e baixo risco. A
     IEA (2026) segue sem entrada na lista (item 15).
+29. **Figura 4.1 (unifilar), comentário do Oscar sem resposta** — "O inversor
+    está injetando 163 MW?? Acho melhor deixar com a potência de 100 MW no
+    gráfico e para não causar confusão podem tirar o G2." Redesenhar o SVG
+    (100 MW na Barra 2, sem rótulo G2) e trocar a imagem. A Fonte já foi
+    feita em 2026-10-02 ("Adaptado de Anderson e Fouad (2003) e MathWorks
+    (2025)."). Deixado para outra sessão a pedido do Victor.
 
 ## P3 — Limpeza
 

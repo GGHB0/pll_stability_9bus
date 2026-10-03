@@ -174,20 +174,19 @@ grade sem dado numérico seria quadro. O Victor preferiu seguir o avaliador.
 A NBR 14724 só **recomenda** lista por tipo de ilustração, então a lista
 única de Figuras está dentro da norma. Não reabrir.
 
-## D10 — Figura redesenhada do livro sobre o nosso modelo é autoral · 2026-10-02
+## D10 — Figura própria apoiada em obra: "Adaptado de" · 2026-10-02
 
-Figura 3.1 (controle de corrente dq): o Oscar pediu algo "similar à Fig.
-8.10 do Yazdani"; o desenho segue o estilo do livro, mas os blocos são os do
-modelo (PI ÷4 + notch, sem desacoplamento nem feedforward).
+Revisada no mesmo dia. O Oscar pediu "adaptado de [ref.]" na Fonte da
+Figura 4.1, e o Victor estendeu a todas as figuras apoiadas em obra:
 
-- **Fonte: "Os autores (2026)."**, igual às demais figuras próprias.
-- "Adaptado de Autor (ano)" só quando o **conteúdo** é o da obra (ex.: as
-  duas curvas do ONS). Estilo emprestado não conta.
-- O crédito à obra fica no texto acima da figura ("Na formulação clássica
-  (YAZDANI; IRAVANI, 2010)...").
-
-**Por quê:** o Victor corrigiu a primeira entrega ("o exemplo é do Yazdani,
-mas é referente à nossa implementação").
+- **"Fonte: Adaptado de Autor (ano)."** em toda figura cujo desenho ou
+  fundamento vem de uma obra, mesmo redesenhada sobre o nosso modelo
+  (2.3 Bollen; 3.1 Yazdani e Iravani; 3.2 Yazdani e Iravani + Teodorescu
+  et al.; 3.3 e 4.3 Teodorescu et al.; 4.1 Anderson e Fouad + MathWorks;
+  4.2 Alves). Várias obras: "Adaptado de A (ano) e B (ano)."
+- **"Os autores (2026)."** só para o que não vem de obra: Tabela 4.1
+  (cenários) e os gráficos de resultado do Cap. 5.
+- A citação no texto acima da figura continua.
 
 ---
 

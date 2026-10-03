@@ -94,9 +94,9 @@ costuma vir de comentário do Oscar e pede adaptação ao modelo. Roteiro:
 4. **Desenhar** só o que o modelo tem. Bloco do livro ausente no modelo
    (ex.: desacoplamento ωL e feedforward) fica **fora da figura, inclusive
    da planta**: o Victor quer "só o que realmente está no nosso
-   controlador" (2026-10-02; v_g e ωL na planta foram recusados). **Fonte: "Os autores (2026)."**: o livro deu só o estilo, o
-   conteúdo é do modelo (D10 em `tcc-abnt-layout/decisoes.md`). "Adaptado
-   de Autor (ano)" só quando o conteúdo é o do livro.
+   controlador" (2026-10-02; v_g e ωL na planta foram recusados). **Fonte: "Adaptado de Autor (ano)."** sempre que a figura se
+   apoia numa obra, mesmo desenhada sobre o modelo (D10 em
+   `tcc-abnt-layout/decisoes.md`); "Os autores (2026)." só sem obra por trás.
 5. **Conferir o texto do TCC:** se o parágrafo promete o bloco ausente, avisar
    o usuário e propor a frase corrigida (não editar o DOCX daqui).
 

@@ -21,7 +21,7 @@ uma casa para abrir espaço para o unifilar.
 | Nova | Seção | Arquivo em `assets/diagrams/` | Largura |
 |---|---|---|---|
 | 4.1 | 4.3.1, rede | `ieee9bus_unifilar.png` | 6,5" |
-| 4.2 | 4.3.2.1, filtro LCL | `vsi_lcl_pwm_circuit.png` (era a "Fig. 3.1" do V8) | 6,5" |
+| 4.2 | 4.3.2.1, filtro LCL | `vsi_lcl_pwm_circuit.png` (era a "Fig. 3.1" do V8; fontes ampliadas em 2026-10-03, ver [[tcc-historico-entregas]]) | 6,5" |
 | 4.3 | 4.3.2.3, SRF-PLL | `pll_control_loop.png` | 5,5" |
 | 4.4 | 4.3.3, cenários | `matriz_cenarios.png` | 5,5" |
 

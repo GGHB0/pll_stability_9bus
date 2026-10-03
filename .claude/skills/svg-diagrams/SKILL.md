@@ -23,7 +23,7 @@ estilo real, não só a tabela abaixo.
 | Arquivo | Quando ler |
 |---|---|
 | `armadilhas.md` | **sempre**, antes do primeiro `<text>`/`<path>`: subscritos, chapéu `ω̂`, setas |
-| `legibilidade.md` | figura que vai para o TCC: fonte px → pt na página, piso de fonte |
+| `legibilidade.md` | figura que vai para o TCC: fonte px → pt na página, piso de fonte, roteiro "letra pequena" (recorte de viewBox, subscrito × seta) |
 | `data_charts.md` | figura cujo conteúdo vem de CSV/simulação (matplotlib, gerador de SVG) |
 | `export_png.md` | se `scripts/export_png.ps1` falhar ou para entender o que ele faz |
 | `scripts/export_png.ps1` | SVG → PNG (Edge headless, lê o viewBox sozinho) |

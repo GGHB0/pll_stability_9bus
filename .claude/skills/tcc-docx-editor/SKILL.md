@@ -118,6 +118,10 @@ com prompt autocontido: paths exatos, o que rodar e a "saída esperada".
   - `audit_docx.py <docx> [--util-in N]`: auditoria pré-entrega; código 1 se falhou
   - `word_finalize.ps1 -In <montado> -Out <final> [-Pdf] [-Comments <json>] [-Replies <json>]`:
     passa pelo Word, reconstrói o sumário e **prova que o Word salva**
+  - `troca_imagem.py <staging.docx> <novo.png> <saida.docx> --apos "Figura 4.2 – Circuito"`
+    (ou `--rid rIdN`): figura redesenhada no lugar da antiga, mesma largura,
+    cy pela proporção nova; acha a legenda pelo texto do parágrafo (o número
+    é campo `SEQ`) e ignora a Lista de Ilustrações. Saída vai ao finalize
   - `renumera_figuras.py`: `renumera(doc, cap, a_partir, delta[, 'Tabela'])`
     para as remissões no texto quando entra ilustração no meio do capítulo
   - `entrega.ps1 -Final <final> -Dest <canônico> -Md5Staging <md5>`: passo 9

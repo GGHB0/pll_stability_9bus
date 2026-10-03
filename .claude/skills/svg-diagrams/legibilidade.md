@@ -26,7 +26,8 @@ em 2026-08-23.)
 
 Largura de inserção usual no fragmento do TCC: 5,5" = 13,97 cm; a largura útil
 da página Letter com margens de 1" é 6,5" = 16,51 cm (medido no próprio DOCX em
-2026-09-01; os oscilogramas entram a 5,5" e as figuras didáticas a 6,5").
+2026-09-01; os oscilogramas entram a 5,5" e as figuras didáticas a 6,5"). Desde a
+mesclagem no canônico A4, a largura útil é 6,30" = 16 cm (ver o roteiro no fim).
 
 > Esta seção vale para **SVG desenhado à mão**, onde a escala vem do `viewBox`
 > em px. Para figura de **matplotlib** a conta é outra —
@@ -58,3 +59,24 @@ Ao **aumentar fontes de um SVG existente**, lembre que os grupos de texto empilh
 (ex.: R/X/B de linha, kV de trafo, MW/MVAr de carga) têm espaçamento de linha fixo —
 aumente o `font-size` **e** reposicione os `y` (espaçamento ≈ 1,15× a fonte) senão as
 linhas colidem. Confira sempre no PNG rasterizado antes de dar por pronto.
+
+## Roteiro: "a letra da figura está pequena" (Figura 4.2, 2026-10-03)
+
+O TCC hoje é **A4, largura útil 6,30 in = 16 cm** (não mais Carta 6,5"): com
+W = 900, dá 0,50 pt/px. O `vsi_lcl_pwm_circuit.svg` tinha 8-15 px (4-7,5 pt) e
+saiu com 14-18 px (7,6-9,8 pt), sem estourar caixa:
+
+1. **Tirar o título interno**: em figura do TCC ele repete a legenda (ABNT).
+2. **Recortar o `viewBox` ao conteúdo** (`40 45 840 730`, origem deslocada):
+   cada px de margem vazia cortado sobe todas as fontes de graça.
+3. **Subir as fontes por classe**: rótulos de sinal 16, blocos 16-18 bold,
+   notas 14; subscrito de 75% para 80%.
+4. **Afastar texto de linha**: no Edge o `baseline-shift="sub"` desce o
+   subscrito ~0,4 em, então o rótulo sobre uma seta horizontal precisa da
+   linha de base ≥ ~10 px acima dela. Rótulo perto de borda tracejada vai com
+   `text-anchor="end"` do lado de fora. Nota longa quebra em duas linhas
+   (e a zona cresce para baixo), em vez de ficar com fonte menor.
+5. Conferir no PNG e **na página do PDF** do finalize: o tamanho ali é o que
+   o professor vê, comparado à legenda de 10 pt.
+
+Para levar o PNG ao DOCX: `tcc-docx-editor/scripts/troca_imagem.py`.

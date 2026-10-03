@@ -10,6 +10,22 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-02 (23h36) — Figura 4.1 redesenhada + potência da UFV no §4.3.1 (V10)
+
+- Oscar (#181): "O inversor está injetando 163 MW?? ... tirar o G2". A figura
+  também trazia MVA nominal como MW (G1 "247", G3 "128"). Rótulos agora com o
+  imposto no modelo: UFV 100 MW, G3 85 MW, G1 slack ([[ieee9bus-topology]]).
+- PNG do TCC sai de cópia do `ieee9bus_unifilar.svg` sem as duas linhas de
+  título e com `viewBox="0 95 920 580"` (2760×1740); o SVG do repo mantém o
+  título porque serve o dashboard. Troca do `media/image9.png` (rId22) e
+  extent `cy` 4257923 → 3631758.
+- §467 dizia "máquina síncrona de 100 MVA ... inversor de mesma potência":
+  virou "da Barra 2, de 192 MVA e 163 MW despachados no caso original, foi
+  substituída por um inversor fotovoltaico de 100 MW (1 pu na base de 100 MVA
+  do sistema)", com comentário [Claude] pedindo o ok do Victor.
+- `C:\Temp	cc_fig41\gen_fig41.py` → finalize 80 págs, +1 comentário,
+  "Feito." no #181 → audit 0 → entregue (`0014ee96…`); backup `_20261002_233617`.
+
 ## 2026-10-02 (21h55) — Fontes "Adaptado de" nas figuras conceituais + "Feito." no #182 (V10)
 
 - Oscar (#182, Fonte da Figura 4.1): "Poderiam colocar adaptado de [ref.]".

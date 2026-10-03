@@ -107,17 +107,11 @@ aliases: [tcc-pendencias]
     [[tcc-revisao-citacoes]]. **Alto risco corrigido em 2026-10-01** (5
     trechos; MOHAN saiu da lista). Faltam: sem PDF, médio e baixo risco. A
     IEA (2026) segue sem entrada na lista (item 15).
-29. **Figura 4.1 (unifilar), comentário do Oscar sem resposta** — "O inversor
-    está injetando 163 MW?? Acho melhor deixar com a potência de 100 MW no
-    gráfico e para não causar confusão podem tirar o G2." Redesenhar o SVG
-    (100 MW na Barra 2, sem rótulo G2) e trocar a imagem. A Fonte já foi
-    feita em 2026-10-02 ("Adaptado de Anderson e Fouad (2003) e MathWorks
-    (2025)."). **SVG/PNG redesenhados em 2026-10-02** com os valores impostos
-    no modelo (UFV 100 MW, G3 85 MW, G1 slack sem número); a figura antiga
-    misturava MVA nominal com MW (G1 "247", G3 "128"). Ver
-    [[ieee9bus-topology]]. **Falta trocar a imagem no V10** e responder o
-    comentário. Título segue gravado na imagem (item 24): o SVG também
-    serve o dashboard.
+29. ~~**Figura 4.1 (unifilar), comentário do Oscar**~~ — ✅ FEITO
+    (2026-10-02, 23h36): imagem nova no V10 (UFV 100 MW, G3 85 MW, G1 slack,
+    sem título), §467 corrigido (G2 192 MVA / 163 MW → UFV 100 MW) com
+    comentário [Claude] aguardando o ok do Victor, "Feito." no comentário do
+    Oscar. Ver [[tcc-historico-entregas]] e [[ieee9bus-topology]].
 30. **Potência medida da UFV e regime das máquinas** — no regime simulado,
     `P_ufv` exportado dá 0,87 pu com `id = 1,0 pu` e `vd ≈ 0,98 pu`
     (vd·id ≈ 0,98): ~12% de diferença a investigar (escala da medição ou
@@ -144,7 +138,8 @@ aliases: [tcc-pendencias]
     e Justificativa" e "Objetivos do Trabalho" são itens de lista numerada
     ("1.", "2."), não `Ttulo2`: não aparecem no sumário e fogem da NBR 6024
     ("1.1"). Mexe na estrutura, então só com aval.
-24. **Título gravado dentro da imagem** — pelo menos Figura 3.1, Figura 4.3,
+24. **Título gravado dentro da imagem** — Figura 4.1 já resolvida (2026-10-02).
+    Pelo menos Figura 3.1, Figura 4.3,
     Quadro 4.1 e Gráfico 2.3 repetem a legenda como título no próprio bitmap;
     a ABNT põe o título só na legenda. Reexportar dos SVGs de
     `assets/diagrams/` sem o `<text>` do título. Vale também para os

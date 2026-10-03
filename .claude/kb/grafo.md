@@ -60,7 +60,7 @@ graph LR
     tcc_word -->|1| dashboard
     tcc_word -->|2| events
     tcc_word -->|9| pll
-    tcc_word -->|7| power_system
+    tcc_word -->|8| power_system
     tcc_word -->|5| simulation
     tcc_word -->|3| standards
 ```

@@ -141,7 +141,9 @@ com prompt autocontido: paths exatos, o que rodar e a "saída esperada".
    novo equivalente) · a edição o atende? (vai receber "Feito.")
 4. CONFERÊNCIA TÉCNICA: toda remissão do texto novo (equação, figura,
    seção, sigla) contra o conteúdo real; termo com sigla que entra ou sai
-   → conferir a lista de siglas (referencia/padroes_revisao.md §7)
+   → conferir a lista de siglas (referencia/padroes_revisao.md §7);
+   número de simulação → refazer pelo script e checar a física
+   (referencia/armadilhas.md, "Conteúdo")
 5. PLANO (principal): blocos, texto, tabela de comentários (id curto,
    pedido, atendido?, Feito?), correções técnicas. 3+ valores por cenário
    no texto → propor Tabela (D11). AGUARDAR APROVAÇÃO

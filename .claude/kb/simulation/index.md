@@ -22,13 +22,13 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 
 ## Pastas relacionadas
 
-- [dashboard/](../dashboard/index.md) — saem 6, chegam 3
-- [inverter/](../inverter/index.md) — saem 0, chegam 2
+- [dashboard/](../dashboard/index.md) — saem 6, chegam 4
+- [inverter/](../inverter/index.md) — saem 1, chegam 2
 - [pll/](../pll/index.md) — saem 3, chegam 2
 - [power-system/](../power-system/index.md) — saem 1, chegam 0
 - [psim/](../psim/index.md) — saem 0, chegam 4
 - [standards/](../standards/index.md) — saem 1, chegam 2
-- [tcc-word/](../tcc-word/index.md) — saem 5, chegam 5
+- [tcc-word/](../tcc-word/index.md) — saem 5, chegam 9
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)
 <!-- kb-links:end -->

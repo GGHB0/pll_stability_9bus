@@ -171,20 +171,26 @@ substituir o PNG da mídia e recalcular `cy` só se a proporção mudar (o nome
 da mídia muda quando o Word salva: achar pelo `r:embed` do drawing abaixo da
 legenda). Entrega em [[tcc-historico-entregas]].
 
-### No V10 desde 2026-10-01 (23h): 19 figuras, com erro de fase
+### No V10 em 2026-10-03: 21 figuras (Tabelas 5.1-5.3 e Figuras 5.9-5.10 novas)
 
 | Fig | Arquivo | Fig | Arquivo |
 |---|---|---|---|
-| 5.1 | `regime_tensao_dq_rede` | 5.11 | `bus6_2phase_bad_pll_tensao_dq_rede` |
-| 5.2 | `regime_bad_pll_tensao_dq_rede` | **5.12** | `erro_fase_assimetricas` |
-| **5.3** | `erro_fase_regime` | 5.13 | `bus6_2phase_bad_pll_potencia_pq` |
-| 5.4 | `regime_bad_pll_potencia_pq` | 5.14 | `retencao_comparacao` |
-| 5.5 | `bus7_3phase_tensao_dq_rede` | 5.15 | `bus7_3phase_bad_pll_tensao_dq_rede` |
-| 5.6 | `bus6_3phase_tensao_dq_rede` | **5.16** | `erro_fase_perda_sincronismo` |
-| **5.7** | `erro_fase_simetricas` | 5.17 | `bus7_3phase_bad_pll_potencia_pq` |
-| 5.8 | `bus7_3phase_potencia_pq` | 5.18 | `potencia_didatica` |
-| 5.9 | `bus7_2phase_tensao_dq_rede` | 5.19 | `bus7_3phase_bad_pll_corrente_dq` |
-| 5.10 | `bus6_2phase_tensao_dq_rede` | | |
+| 5.1 | `regime_tensao_dq_rede` | 5.12 | `bus6_2phase_tensao_dq_rede` |
+| 5.2 | `regime_bad_pll_tensao_dq_rede` | 5.13 | `bus6_2phase_bad_pll_tensao_dq_rede` |
+| **5.3** | `erro_fase_regime` | **5.14** | `erro_fase_assimetricas` |
+| 5.4 | `regime_bad_pll_potencia_pq` (rId29) | 5.15 | `bus6_2phase_bad_pll_potencia_pq` (rId40) |
+| 5.5 | `bus7_3phase_tensao_dq_rede` | 5.16 | `retencao_comparacao` |
+| 5.6 | `bus6_3phase_tensao_dq_rede` | 5.17 | `bus7_3phase_bad_pll_tensao_dq_rede` |
+| **5.7** | `erro_fase_simetricas` | **5.18** | `erro_fase_perda_sincronismo` |
+| 5.8 | `bus7_3phase_potencia_pq` (rId33) | 5.19 | `bus7_3phase_bad_pll_potencia_pq` (rId44) |
+| 5.9 | `bus7_3phase_corrente_dq` | 5.20 | `potencia_didatica` (rId45) |
+| 5.10 | `espectro_vd_falta` | 5.21 | `bus7_3phase_bad_pll_corrente_dq` |
+| 5.11 | `bus7_2phase_tensao_dq_rede` | | |
+
+As 5 de potência (rId entre parênteses) foram regeneradas em 2026-10-03 com
+a escala de P e Q corrigida ([[export-workflow]]). O MD5 da mídia no DOCX
+**não** bate com o PNG de `assets/charts` (o Word recomprime): achar a figura
+pela legenda (`troca_imagem.py --apos`) e conferir a imagem, não o hash.
 
 Em negrito, as de erro de fase (`scripts/gen_erro_fase.py`): 5,5 in as de
 painel único, 6,3 in as 2×2.

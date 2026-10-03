@@ -135,6 +135,12 @@ Entradas: id_ref, Vabc_grid, Iabc (pu)
 > que recebe `Vabc`/`Iabc` já em pu. O export MATLAB (`add_power_col`, ver
 > `kb/simulation/export_workflow.md`) divide `P_bus{N}`/`Q_bus{N}` por
 > `S_base = 100 MVA` para corrigir isso.
+>
+> **Ganhos do SID 4055 corrigidos em 2026-10-03.** Com `Vabc`/`Iabc` em pu de
+> pico, o pu é P = (2/3)·Σv·i e Q = (2/(3√3))·Σi·v_ff. O bloco tinha 1/√3
+> nos dois (Gain1 SID 4060 → P, Gain SID 4059 → Q): P saía ×√3/2 (pré-falta
+> 0,87 pu com id = 1) e Q ×1,5. Hoje 2/3 e 2/(3*sqrt(3)); rodadas antigas são
+> reescaladas na leitura, ver [[export-workflow]].
 
 ### Cadeia Fourier → Ângulo Absoluto (subsistema UFV, SID 3896)
 

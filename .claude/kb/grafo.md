@@ -23,7 +23,7 @@ graph LR
     tcc_word["tcc-word/"]
     dashboard -->|3| pll
     dashboard -->|1| power_system
-    dashboard -->|3| simulation
+    dashboard -->|4| simulation
     dashboard -->|1| standards
     events -->|2| power_system
     events -->|1| standards
@@ -46,6 +46,7 @@ graph LR
     psim -->|4| simulation
     python -->|1| dashboard
     simulation -->|6| dashboard
+    simulation -->|1| inverter
     simulation -->|3| pll
     simulation -->|1| power_system
     simulation -->|1| standards
@@ -61,7 +62,7 @@ graph LR
     tcc_word -->|2| events
     tcc_word -->|9| pll
     tcc_word -->|8| power_system
-    tcc_word -->|5| simulation
+    tcc_word -->|9| simulation
     tcc_word -->|4| standards
 ```
 

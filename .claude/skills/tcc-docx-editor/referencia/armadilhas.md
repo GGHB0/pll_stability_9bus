@@ -50,6 +50,10 @@ Continuação de `SKILL.md` (antes "Notas críticas"). Armadilhas do próprio XM
 - **Lista de siglas usa tabulação** entre sigla e significado: até 2026-10-02
   o `find_text.py` colava "GD" + "Geração" e `\bGD\b` dava zero. Corrigido
   (tab e quebra viram separador); em grep cru, procurar `'>GD<'`.
+- **Número e unidade partidos por `proofErr`**: "0,60 pu" é run "…0,60 " +
+  `<w:proofErr spellStart/>` + run "pu" + `spellEnd`; o grep do texto
+  corrido dá zero. Montar o old com esse padrão como constante (`PU` no
+  `gen_pmed.py` de 2026-10-03) e trocar só o número, que fica no run anterior.
 - **Equação é tabela com OMML**: `dump_blocks.py` mostra só "(TBL) (3.5)".
   Para saber o que a equação é, `--math`.
 
@@ -59,6 +63,15 @@ Continuação de `SKILL.md` (antes "Notas críticas"). Armadilhas do próprio XM
   `scripts/renumera_figuras.py` (Figura e Tabela, citação partida entre
   runs) **antes** de inserir o texto novo, e procurar o número velho também
   no `comments.xml` (comentário [Claude] que cita figura).
+
+- **Figura do DOCX ↔ PNG de `assets/`: o MD5 nunca bate** (o Word
+  recomprime a mídia). Mapear pela legenda (`troca_imagem.py --apos`, que
+  imprime o rId) e pela imagem; o mapa do Cap. 5 com rId está em
+  `kb/tcc-word/revisao-fragmento/revisao_fragmento_cap5_figuras.md`.
+- **Número de simulação no texto se refaz pela fonte**, não pelo KB: rodar o
+  script de medição e conferir coerência física (Q ≈ V·i_q em falta
+  simétrica, P pré-falta ≈ v_d·i_d). Em 2026-10-03 o "0,60 pu" conferia com o
+  CSV, mas o CSV estava na escala errada do `.slx`.
 
 - **KB de conteúdo pode mentir sobre o que já foi escrito** (`content_map.md`
   dava o Cap. 6 como redigido com o capítulo vazio): confirmar no XML

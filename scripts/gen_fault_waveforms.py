@@ -49,6 +49,9 @@ import pandas as pd
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+import sys  # noqa: E402
+sys.path.insert(0, str(ROOT))
+from src.pipeline.pq import le_sim_data  # noqa: E402
 OUT_DIR = ROOT / "assets" / "charts"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -152,7 +155,7 @@ def build_group_ylims():
                 continue
             base = ROOT / "output" / "results" / pasta_real(f)
             fi = json.loads((base / "fault_info.json").read_text())
-            d = pd.read_csv(base / "sim_data.csv")
+            d = le_sim_data(base)
             settle = settle_de(fi)
             sub = d[d.t_s >= settle]
             for c in ("vd_rede_pu", "vq_rede_pu", "vd_ufv_pu", "vq_ufv_pu"):
@@ -252,7 +255,7 @@ def gen_scenario(sc):
     fault_info = json.loads((folder / "fault_info.json").read_text())
     t_fault, t_clear = fault_info["t_fault"], fault_info["t_clear"]
 
-    d_pq_full = pd.read_csv(folder / "sim_data.csv")
+    d_pq_full = le_sim_data(folder)
     d_abc_full = pd.read_csv(folder / "sim_data_abc.csv")
     t_end = float(d_pq_full.t_s.max())
     prefix = sc["prefix"]

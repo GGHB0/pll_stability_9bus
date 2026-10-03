@@ -48,12 +48,12 @@ description: Workflow validado Simulink → MATLAB → Python para o modelo pll_
 > quebra (interpola pelo tempo real), mas conferir no Simulink qual taxa cada
 > sinal logado usa hoje. Ver nota em [[pipeline-dados]].
 
-### Origem estrutural: por que P_bus/Q_bus não são pu mas Pinverter/Qinverter são
+### Origem estrutural: P_bus/Q_bus em unidade física, Pinverter/Qinverter em pu
 
 Ver `.claude/kb/inverter/simulink_model.md` (seção Scopes/Bus monitor, SID 4396).
 `Pinverter`/`Qinverter` vêm do subsistema "Inverter Active & Reactive Power" (SID 4055),
 que computa `P/Q` a partir de `Vabc_inverter`/`Iabc_inverter` — sinais **já em pu**
-desde a etapa de medição upstream. `P_bus1/Q_bus1/P_bus3/Q_bus3` são taps `Goto`/`From`
+desde a etapa de medição upstream (escala de P/Q certa só desde 2026-10-03, ver abaixo). `P_bus1/Q_bus1/P_bus3/Q_bus3` são taps `Goto`/`From`
 diretos das Busbars Simscape (SID 1887 "Bus1 16.5kV", SID 3494 "Bus3 13.8kV") via
 blocos `PS-Simulink Converter` **sem nenhum Gain/Product de normalização** — saem em
 unidades físicas (W, VAr). Por isso o script de export precisa dividir por `S_base`
@@ -139,6 +139,14 @@ t_s, P_ufv_pu, Q_ufv_pu, id_ufv_ref_pu, id_ufv_pu, iq_ufv_ref_pu, iq_ufv_pu
 [, ang_g1_rad, pe_g1_pu, ang_g3_rad, pe_g3_pu]
 [, p_bus1_pu, q_bus1_pu, p_bus3_pu, q_bus3_pu]
 ```
+
+**Escala de P e Q.** Rodadas exportadas antes de 2026-10-03 têm `P_ufv_pu`
+×√3/2 e `Q_ufv_pu` ×1,5 (ganho 1/√3 no SID 4055, ver [[simulink-model]]). O CSV
+fica como saiu; quem lê usa `src/pipeline/pq.py` (`le_sim_data`/`corrige_pq`,
+já no `SimData` e nos `gen_*.py`), que reescala quando o `fault_info.json` não
+tem `pq_ganho_p` ou o tem igual a `1/sqrt(3)`. O export grava os dois ganhos
+(`pq_ganho_p`, `pq_ganho_q`) lidos do modelo. Script novo que leia
+`sim_data.csv` direto precisa passar por esse helper.
 
 Todas as colunas entre `[...]` são opcionais — Python detecta via `"col" in df.columns`
 e o formato legado (sem essas colunas) continua carregando sem erro.

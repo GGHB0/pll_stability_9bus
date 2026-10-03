@@ -80,5 +80,24 @@ Componentes e nós já mapeados em [psim_netlists.md](../../kb/psim/psim_netlist
 
 - Saída com acento quebra no console do Windows: o script já força UTF-8;
   em código avulso, `PYTHONIOENCODING=utf-8`.
-- Modificar o `.slx` por XML é possível mas arriscado: preferir o MATLAB
-  (`slx-runner`) para escrita; esta skill é para leitura.
+- Modificar o `.slx` por XML é possível mas arriscado: esta skill é para
+  leitura. Escrita pontual (parâmetro de bloco) vai pelo MATLAB, por SID,
+  porque nome de bloco pode ter quebra de linha (`Inverter
+Active &
+  Reactive Power `) e quebra o caminho em `set_param`:
+
+  ```bash
+  cp pll_stability_9bus.slx "$TEMP/antes.slx"
+  matlab -batch "load_system('pll_stability_9bus'); h=Simulink.ID.getHandle('pll_stability_9bus:4060'); set_param(h,'Gain','2/3'); save_system('pll_stability_9bus')"
+  ```
+
+  Depois, extrair os dois ZIPs e conferir com `diff` que o
+  `system_<SID>.xml` do pai mudou só no parâmetro. O resto do diff é
+  reserialização do save (`ModelVersionFormat`, `Open=on`, ordem de opções
+  no `configSet0.xml`, `visible` do Stateflow). O `.slx` pode ter
+  alterações locais de outra pessoa: `save_system` as mantém, nunca
+  `git checkout` antes.
+- **Bloco de medição também se confere pela física.** O SID 4055 calculava
+  P e Q com ganho 1/√3 nos dois (P saía ×√3/2, Q ×1,5) até 2026-10-03, e
+  passou meses despercebido. Sinal derivado: refazer a conta a partir dos
+  abc exportados e comparar com o valor logado ([simulink_model.md](../../kb/inverter/simulink_model.md)).

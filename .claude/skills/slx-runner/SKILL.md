@@ -64,8 +64,8 @@ plot_pll(data['t'], data['ang_pll'], fault_time=0.1)
 
 | Nome | Descrição |
 |---|---|
-| `p_inv` | Potência ativa do inversor (pu) |
-| `q_inv` | Potência reativa do inversor (pu) |
+| `p_inv` | Potência ativa do inversor (pu; certa só com o `.slx` de 2026-10-03+) |
+| `q_inv` | Potência reativa do inversor (pu; idem, antes saía ×1,5) |
 | `id_ref_meas` | id referência + medido (pu) |
 | `iq_ref_meas` | iq referência + medido (pu) |
 | `iabc_inv` | Correntes do inversor Iabc (pu) |

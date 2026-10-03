@@ -16,7 +16,7 @@ Descoberta de cenários e roteamento BAD_PLL: ver `kb/simulation/export_workflow
 | `sim_data.csv` | Tsc = 200 µs (eixo `t`) | P/Q UFV, correntes dq, tensões de barra, P/Q de barra, geradores |
 | `sim_data_angles.csv` | Ts = 5 µs (eixo `t_fast`) | `theta_pll_rad`, `theta_ref_rad`, `theta_err_rad` |
 | `sim_data_abc.csv` | nativa de `iabc_inverter` (eixo `t_abc`) | `ia/ib/ic_ufv_pu` + `va/vb/vc_ufv_pu` (+ `_grid_pu` de ambos se logado) — flags `has_iabc_ufv`/`has_vabc_ufv`/`_grid`; opcional, paineis abc do espectro |
-| `fault_info.json` | — | `fault_type`, `t_fault`, `t_clear` reais do cenário |
+| `fault_info.json` | — | `fault_type`, `t_fault`, `t_clear` reais do cenário; `pq_ganho_p/q` desde 2026-10-03 |
 
 > ⚠️ **Taxas invertidas nos CSVs atuais** (medido 2026-07-12): `sim_data.csv`
 > está com dt = 5 µs (120.001 amostras/0,6 s) e `sim_data_angles.csv` com
@@ -26,6 +26,9 @@ Descoberta de cenários e roteamento BAD_PLL: ver `kb/simulation/export_workflow
 > troca de decimação no logging foi intencional antes de confiar em análises
 > que dependam da resolução de θ (ripple de chaveamento, por ex.).
 
+- **P e Q**: o `SimData` aplica `corrige_pq` (`src/pipeline/pq.py`) logo após
+  ler o CSV; sem `pq_ganho_p` no JSON, a rodada é da escala antiga do `.slx`
+  e é reescalada (P ×2/√3, Q ×2/3). Ver [[export-workflow]].
 - `fault_type == "regime"` → `t_fault = t_clear = None` (sem linhas de falta,
   botão de zoom desabilitado no HTML).
 - Sem `fault_info.json` → fallback `T_FAULT` de `config/settings.py`.

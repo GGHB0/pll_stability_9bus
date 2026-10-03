@@ -75,7 +75,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 - [events/](../events/index.md) — saem 2, chegam 0
 - [pll/](../pll/index.md) — saem 9, chegam 5
 - [power-system/](../power-system/index.md) — saem 8, chegam 1
-- [simulation/](../simulation/index.md) — saem 5, chegam 5
+- [simulation/](../simulation/index.md) — saem 9, chegam 5
 - [standards/](../standards/index.md) — saem 4, chegam 2
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)

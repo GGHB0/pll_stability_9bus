@@ -52,6 +52,8 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="repla
 
 ROOT = Path(__file__).resolve().parent.parent
 RESULTS_DIR = ROOT / "output" / "results"
+sys.path.insert(0, str(ROOT))
+from src.pipeline.pq import le_sim_data  # noqa: E402
 OUT_DIR = ROOT / "assets" / "charts"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -97,7 +99,7 @@ def br(x, casas=2):
 def carregar():
     base = RESULTS_DIR / CENARIO
     fi = json.loads((base / "fault_info.json").read_text())
-    df = pd.read_csv(base / "sim_data.csv")
+    df = le_sim_data(base)
     t_fault, t_clear = fi["t_fault"], fi["t_clear"]
     t = df.t_s
 

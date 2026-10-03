@@ -116,7 +116,7 @@ excluir o transitório de comutação, ver
 
 ## Correções de fato no texto anterior
 
-- "despacha a potência ativa de **1 p.u.**" → medido **0,87 pu**.
+- "despacha a potência ativa de **1 p.u.**" → medido **0,87 pu** (escala errada do `.slx`; em pu, 1,01: [[export-workflow]]).
 - "os dois modelos convergem para o mesmo ponto de operação" → **falso** com
   o `regime_bad_pll`: 0,983 pu (nominal) contra 0,808 pu, ainda subindo ao
   final da janela. Texto reescrito em 2026-08-23.

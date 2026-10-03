@@ -222,6 +222,11 @@ function save_fault_info(out_dir, bus, fault_line, ftype, t_fault, t_clear, bad_
     info.bad_pll    = bad_pll;
     info.timestamp  = datestr(now, 'yyyy-mm-ddTHH:MM:SS');
     info.model      = get_param(bdroot, 'Name');
+    % Ganhos do cálculo de P e Q (subsistema "Inverter Active & Reactive
+    % Power"). Rodadas anteriores à correção de 03/10/2026 usavam 1/sqrt(3)
+    % nos dois e não têm estes campos: o Python reescala (src/pipeline/pq.py).
+    info.pq_ganho_p = get_param(Simulink.ID.getHandle([bdroot ':4060']), 'Gain');
+    info.pq_ganho_q = get_param(Simulink.ID.getHandle([bdroot ':4059']), 'Gain');
 
     fid = fopen(fullfile(out_dir, 'fault_info.json'), 'w');
     fprintf(fid, '%s\n', jsonencode(info, 'PrettyPrint', true));

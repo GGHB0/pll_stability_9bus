@@ -35,6 +35,9 @@ import pandas as pd
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+import sys
+sys.path.insert(0, str(ROOT))
+from src.pipeline.pq import le_sim_data  # noqa: E402
 OUT_DIR = ROOT / "assets" / "charts"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -162,7 +165,7 @@ def mark_settle(ax, settle_t, label):
 
 
 def gen_scenario(sc):
-    d_pq_full = pd.read_csv(ROOT / f"output/results/{sc['folder']}/sim_data.csv")
+    d_pq_full = le_sim_data(ROOT / f"output/results/{sc['folder']}")
     d_abc = pd.read_csv(ROOT / f"output/results/{sc['folder']}/sim_data_abc.csv")
     t0, t1 = sc["window"]
     win = d_abc[(d_abc.t_s >= t0) & (d_abc.t_s <= t1)].iloc[::8].copy()

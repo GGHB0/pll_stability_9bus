@@ -57,6 +57,13 @@ mapeamento ordem harmônica ↔ frequência no dq
 (`kb/standards/qualidade-energia/harmonic_dq_frame_mapping.md`), ganhos do PLL e a convenção de
 Vcc (notebook 90,9 kV vs `params.m` 136,4 kV, divergência proposital).
 
+**P e Q do UFV**: rodadas exportadas antes de 2026-10-03 têm escala errada
+(P ×√3/2, Q ×1,5; `kb/simulation/export_workflow.md`). Todo código que lê
+`sim_data.csv` e usa `P_ufv_pu`/`Q_ufv_pu` tem de passar por
+`src/pipeline/pq.py` (`le_sim_data` ou `corrige_pq`); `pd.read_csv` direto
+é defeito. Número de potência novo: conferir pela física (Q ≈ V·i_q em
+falta simétrica, P pré-falta ≈ v_d·i_d ≈ 1,0 pu), não só pela execução.
+
 ### 2. Regressão no que já funcionava
 
 Para cada ramo de lógica que o diff **não** deveria mudar, confirme no diff

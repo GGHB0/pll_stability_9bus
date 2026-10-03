@@ -26,6 +26,7 @@ import numpy as np
 import pandas as pd
 
 from ..config import T_FAULT, T_SETTLE, TOL_RAD
+from .pq import corrige_pq
 
 
 class SimData:
@@ -42,6 +43,7 @@ class SimData:
         self.t_fault: float | None = T_FAULT
         self.t_clear: float | None = None
         info_path = self._path.with_name("fault_info.json")
+        info = {}
         if info_path.exists():
             info = json.loads(info_path.read_text(encoding="utf-8"))
             if info.get("fault_type") == "regime":
@@ -49,6 +51,9 @@ class SimData:
             else:
                 self.t_fault = info.get("t_fault", T_FAULT)
                 self.t_clear = info.get("t_clear")
+
+        # P e Q das rodadas antigas saíram com ganho errado no .slx (pq.py)
+        self._df = corrige_pq(self._df, info)
 
         # ── flags ────────────────────────────────────────────────────────────
         self.has_ang      = {"theta_pll_rad", "theta_ref_rad"} <= self._cols  # formato legado

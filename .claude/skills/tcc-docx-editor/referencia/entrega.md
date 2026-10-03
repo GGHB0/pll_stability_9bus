@@ -43,6 +43,14 @@ falhar):
   arquivo atual. Sumiram → restaurar por paraId, como em 2026-10-02 00h17
   (`historico_entregas.md`).
 
+## Versão irmã na pasta (achado em 2026-10-03)
+
+O Victor criou um `V11.docx` ao lado do V10 (mesmo texto, status de
+comentários diferente) enquanto o Bruno salvava o V10. O `entrega.ps1`
+avisa quando há outro `.docx` na pasta modificado nos últimos 2 dias; **não
+escolher sozinho**: perguntar qual é o canônico (naquele dia, seguiu o V10)
+e, se mudar, atualizar `config.py` e a memória.
+
 ## Sessões em paralelo (achado em 2026-10-02)
 
 Duas sessões do Claude editaram o V10 no mesmo dia, as duas com o staging

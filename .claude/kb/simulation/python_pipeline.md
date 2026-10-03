@@ -93,6 +93,8 @@ para `_apply_layout`, que aumenta a margem superior da figura (`t=34` vs `t=16`)
 ## Lógica de leitura em `SimData`
 
 1. Lê `sim_data.csv` → `self.t`, `self.P_ufv`, `self.Q_ufv`, correntes dq UFV.
+   P e Q passam por `corrige_pq` (`src/pipeline/pq.py`): rodada anterior a
+   2026-10-03 vem com escala errada do `.slx` ([[export-workflow]]).
 2. Procura `sim_data_angles.csv` na mesma pasta:
    - **Se existe**: carrega `t_fast`, `theta_pll_fast`, `theta_ref_fast`; aplica
      baseline correction (remove drift pré-falta); interpola `theta_err` para `self.t`.

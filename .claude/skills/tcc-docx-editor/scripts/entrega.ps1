@@ -62,6 +62,13 @@ $nome = Split-Path -Leaf $Dest
 $lock = Join-Path $pasta ('~$' + $nome.Substring(2))
 if (Test-Path -LiteralPath $lock) { Aborta "lock presente: $lock" }
 
+# 2b. versao irma: outro .docx na pasta mais novo que o canonico (2026-10-03,
+# V11 criado ao lado do V10). So avisa; quem decide o canonico e o Victor.
+$irmas = Get-ChildItem -LiteralPath $pasta -Filter '*.docx' |
+  Where-Object { $_.Name -ne $nome -and -not $_.Name.StartsWith('~$') -and
+                 $_.LastWriteTime -gt (Get-Date).AddDays(-2) }
+foreach ($i in $irmas) { Write-Output "AVISO: versao irma recente na pasta: $($i.Name) ($($i.LastWriteTime))" }
+
 # 3. MD5 depois do Word fechado
 $atual = Md5 $Dest
 $mtime = (Get-Item -LiteralPath $Dest).LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss')

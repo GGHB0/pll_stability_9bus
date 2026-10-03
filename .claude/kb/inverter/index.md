@@ -23,7 +23,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 
 - [pll/](../pll/index.md) — saem 6, chegam 5
 - [power-system/](../power-system/index.md) — saem 1, chegam 0
-- [simulation/](../simulation/index.md) — saem 2, chegam 0
+- [simulation/](../simulation/index.md) — saem 2, chegam 1
 - [standards/](../standards/index.md) — saem 1, chegam 3
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)

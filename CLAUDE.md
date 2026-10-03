@@ -65,6 +65,9 @@ Convenção de links `[[slug]]`: [rules/kb-links.md](.claude/rules/kb-links.md).
   propósito: [simulink_model.md](.claude/kb/inverter/simulink_model.md).
 - **Vcc diverge de propósito:** `params.m` usa ×1,5 do valor do notebook:
   [params_workflow.md](.claude/kb/simulation/params_workflow.md).
+- **P e Q do UFV em escala errada nas rodadas antigas** (ganho do `.slx` corrigido
+  em 03/10/2026, sem re-simular): ler `sim_data.csv` sempre por
+  `src/pipeline/pq.py`, nunca `pd.read_csv` direto: [export_workflow.md](.claude/kb/simulation/export_workflow.md).
 - **Sinais em duas taxas** (rápida e lenta), interpolar sobre o eixo lento; **não
   existe abc do lado da rede**: [export_workflow.md](.claude/kb/simulation/export_workflow.md).
 - **Cenário de sintonia inadequada (BAD_PLL):** `kp_pll` e `ki_pll` ×0,2; desde a rodada

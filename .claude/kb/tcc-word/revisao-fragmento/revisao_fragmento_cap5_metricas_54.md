@@ -24,8 +24,8 @@ não recupera o sincronismo depois da eliminação da falta.
 | Rotação acumulada | `unwrap(atan2(vq_rede, vd_rede))` em graus, de `t_clear` ao fim | 6 916° = 19,2 voltas em 300 ms — **medida, fora do texto (ver abaixo)** |
 | Escorregamento em regime | `polyfit` de grau 1 no ângulo desenrolado, janelas de 20 ms | ~70 Hz (65 a 81 Hz de 0,76 s em diante) — **medido, fora do texto (ver abaixo)** |
 | Retenção de `v_d` | mesma receita das demais seções | 8,2% (nominal: 9,2%) |
-| P pós-falta | média de `P_ufv_pu` em `[t_clear, t_end]` | −0,30 pu (mín. −1,07) |
-| Q pós-falta | mín/máx em `[0,85, 1,0]` s | −0,94 a 1,97 pu |
+| P pós-falta | média de `P_ufv_pu` em `[t_clear, t_end]` | −0,30 pu (mín. −1,07), escala antiga ×√3/2 |
+| Q pós-falta | mín/máx em `[0,85, 1,0]` s | −0,94 a 1,97 pu, escala antiga ×1,5 |
 | Pulsação de `\|v\|` no PCC | `hypot(vd_ufv, vq_ufv)` em `[0,85, 1,0]` s | 0,14 a 1,11 pu, média 0,70 |
 | Divergência ref × medido | médias e extremos em `[0,85, 1,0]` s | `i_d` ref 0,92 / med. −0,66 a 1,34; `i_q` ref −0,24 / med. até −1,76 |
 

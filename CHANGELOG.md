@@ -5,6 +5,18 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-03 — Fix: escala de P e Q do UFV
+
+Arquivos: `src/pipeline/pq.py` (novo), `src/pipeline/loader.py`
+
+O subsistema do `.slx` que calcula P e Q (SID 4055) usava ganho 1/√3 nos
+dois: P saía ×√3/2 (0,87 pu pré-falta com i_d = 1) e Q ×1,5. O `.slx` foi
+corrigido, mas as rodadas existentes não foram re-simuladas: o `SimData`
+passa o CSV por `corrige_pq`, que reescala quando o `fault_info.json` não
+traz `pq_ganho_p` (P ×2/√3, Q ×2/3). Os gráficos e métricas de potência do
+dashboard mudam de valor, não de forma. Detalhe em
+`.claude/kb/simulation/export_workflow.md`.
+
 ## 2026-08-18 — Fix: filtro do toggle PLL não aplicado na carga inicial do HTML
 
 Arquivos: `src/report/renderer.py`

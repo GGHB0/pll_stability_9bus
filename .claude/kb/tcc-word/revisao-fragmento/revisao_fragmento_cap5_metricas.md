@@ -119,7 +119,7 @@ pastas certas. Os poucos acertos numéricos caem em pastas erradas, ou seja,
 são coincidência. O valor 15,0° existe, mas na pasta `_bad_pll`, e 9,1°
 existe na nominal — pares trocados de lado.
 
-**Conferem e ficaram como estavam:** ondulação de Q 4,8 → 11,7 pu na Barra 6
+**Conferem e ficaram como estavam:** ondulação de Q 4,8 → 11,7 pu (Q ×1,5, escala antiga) na Barra 6
 bifásica, e a faixa de 0,29 a 0,71 pu das assimétricas.
 
 ## Reorganização das figuras de 5.3

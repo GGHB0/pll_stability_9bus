@@ -28,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from gen_erro_fase import metrics  # noqa: E402
 from validar_cenarios import pasta_inadequada  # noqa: E402
 from src.pipeline.spectrum import _amplitude_spectrum  # noqa: E402
+from src.pipeline.pq import corrige_pq  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent / "output" / "results"
 SAIDA = ROOT.parent / "tabelas_cap5.csv"
@@ -53,7 +54,7 @@ def filtra(t, x, tau):
 
 def calc(folder):
     fi = json.load(open(ROOT / folder / 'fault_info.json'))
-    d = pd.read_csv(ROOT / folder / 'sim_data.csv', usecols=COLS)
+    d = corrige_pq(pd.read_csv(ROOT / folder / 'sim_data.csv', usecols=COLS), fi)
     t = d.t_s.to_numpy()
     tf, tc = fi['t_fault'], fi['t_clear']
     e = np.degrees(np.arctan2(d.vq_rede_pu.to_numpy(), d.vd_rede_pu.to_numpy()))

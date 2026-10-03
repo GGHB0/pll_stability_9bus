@@ -10,6 +10,23 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-03 (15h23) — Escala de P e Q corrigida + potências médias (#315) (V10)
+
+- Oscar (#315): médias de potência na falta comparadas com a rampa. Ao
+  validar, achado: o `.slx` (SID 4055) usava ganho 1/√3 em P e Q, então P
+  saía ×√3/2 (pré-falta 0,87 pu) e Q ×1,5. `.slx` corrigido, rodadas antigas
+  reescaladas na leitura (`src/pipeline/pq.py`, ver [[export-workflow]]).
+- Figuras 5.4, 5.8, 5.15, 5.19 e 5.20 regeneradas e trocadas
+  (`troca_imagem.py`, rId29/33/40/44/45). Texto: 0,14 → 0,09 pu (Fig. 5.8),
+  0,34 → 0,41 pu (Barra 6, texto e Tabela 5.2), coluna de P da Tabela 5.2
+  −0,01/−0,01/0,02/0,41, ondulação de Q 4,8 → 3,0 virou 3,2 → 2,0 pu.
+  Bloco 585 ganhou P = 0,70 pu (1,01 pré-falta) e Q = 0,22 pu; "Feito." no
+  #315 (40 → 41). Percentuais de sentido do fluxo (§5.4) não mudam.
+- 1ª entrega abortou: o Bruno salvou o V10 às 14h56 (só estilos renomeados,
+  texto e comentários iguais); reaplicado sobre ele. Há um V11 (Victor,
+  14h49) com o mesmo texto: o Victor confirmou que o canônico segue o V10.
+  Entregue `cf77f1ac…`, backup `_20261003_152345`.
+
 ## 2026-10-03 (14h16) — Figura 4.2 com letras maiores (V10)
 
 - Oscar (#190, 1ª parte): "gostaria que as letras tivessem um tamanho maior".

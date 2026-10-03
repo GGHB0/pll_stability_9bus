@@ -29,6 +29,9 @@ pipeline e valida o resultado — **você não precisa fazer isso**.
 - **Não toque em arquivo que a spec não nomeia.** Se notar algo errado fora
   do escopo, reporte no final; não conserte.
 - **String que não bate → PARE, não adivinhe.** Ver seção abaixo.
+- **`sim_data.csv` com P/Q se lê por `src/pipeline/pq.py`** (`le_sim_data`
+  ou `corrige_pq`), nunca `pd.read_csv` direto: rodada antiga tem escala
+  errada de P e Q. Se a spec mandar ler direto, aplique e aponte no relatório.
 - `Write` só para criar arquivo **novo** que a spec nomeia. Nunca para
   sobrescrever arquivo existente — nesses use `Edit`.
 

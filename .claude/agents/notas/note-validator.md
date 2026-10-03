@@ -34,6 +34,10 @@ usando `.venv\Scripts\python.exe -c "..."` — não confie na aritmética escrit
 Fontes de verdade, nesta ordem: `params.m` na raiz, o arquivo de KB do tema,
 o netlist em `PSim/`.
 
+Potência do UFV (P, Q) em nota anterior a 2026-10-03 pode estar na escala
+errada do `.slx` (P ×√3/2, ex.: 0,87 pu pré-falta; Q ×1,5): conferir contra
+`kb/simulation/export_workflow.md` e marcar como divergência.
+
 Atenção especial a valores derivados (`ωn = √Ki`, `ξ = Kp/2ωn`, magnitudes de
 função de transferência, conversões rad/s ↔ Hz) e a arredondamentos que o texto
 apresenta como exatos.

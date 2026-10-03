@@ -112,7 +112,17 @@ aliases: [tcc-pendencias]
     gráfico e para não causar confusão podem tirar o G2." Redesenhar o SVG
     (100 MW na Barra 2, sem rótulo G2) e trocar a imagem. A Fonte já foi
     feita em 2026-10-02 ("Adaptado de Anderson e Fouad (2003) e MathWorks
-    (2025)."). Deixado para outra sessão a pedido do Victor.
+    (2025)."). **SVG/PNG redesenhados em 2026-10-02** com os valores impostos
+    no modelo (UFV 100 MW, G3 85 MW, G1 slack sem número); a figura antiga
+    misturava MVA nominal com MW (G1 "247", G3 "128"). Ver
+    [[ieee9bus-topology]]. **Falta trocar a imagem no V10** e responder o
+    comentário. Título segue gravado na imagem (item 24): o SVG também
+    serve o dashboard.
+30. **Potência medida da UFV e regime das máquinas** — no regime simulado,
+    `P_ufv` exportado dá 0,87 pu com `id = 1,0 pu` e `vd ≈ 0,98 pu`
+    (vd·id ≈ 0,98): ~12% de diferença a investigar (escala da medição ou
+    perda no LCL). G1/G3 ainda oscilam em 0,6 s (G1 107 a 133 MW). Banca
+    pode perguntar; ter resposta antes da defesa.
 
 ## P3 — Limpeza
 

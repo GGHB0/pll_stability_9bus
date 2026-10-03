@@ -71,6 +71,21 @@ Sistema híbrido resultante:
 No .slx: subsistema `Gen2@Bus2 PV 1.025 pu 163 MW` está **comentado** (Commented: on)
 e substituído pelo subsistema `UFV Model` (SID=3896).
 
+## Despacho: nominal (MVA) ≠ despachado (MW)
+
+| Máquina | Nominal | Caso clássico (Anderson e Fouad) | No modelo do TCC |
+|---|---|---|---|
+| G1 (Barra 1) | 247,5 MVA | 71,6 MW, slack | slack (cobre o resto) |
+| G2 → UFV (Barra 2) | 192 MVA | 163 MW | UFV: `id_ref = 1 pu` = 100 MW |
+| G3 (Barra 3) | 128 MVA | 85 MW | 85 MW (bloco PV `Gen3@Bus3 ... 85 MW`) |
+
+A Figura 4.1 / `ieee9bus_unifilar.svg` mostra a coluna "no modelo" desde
+2026-10-02. Antes trazia G1 "247 MW" e G3 "128 MW" (eram MVA) e UFV
+"163 MW" (despacho do G2): 538 MW de geração para 315 MW de carga. A UFV
+**não** mantém a potência do G2: foi dimensionada em 1 pu da base.
+Regime simulado (P medida ≠ referência, máquinas oscilando): pendência 30
+em [[tcc-pendencias]].
+
 ## Cargas
 
 | Carga   | Barra | P (MW) | Q (MVAr) | V_rated |

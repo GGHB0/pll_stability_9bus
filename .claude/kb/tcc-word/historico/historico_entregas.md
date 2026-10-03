@@ -23,7 +23,7 @@ aliases: [tcc-historico-entregas]
   virou "da Barra 2, de 192 MVA e 163 MW despachados no caso original, foi
   substituída por um inversor fotovoltaico de 100 MW (1 pu na base de 100 MVA
   do sistema)", com comentário [Claude] pedindo o ok do Victor.
-- `C:\Temp	cc_fig41\gen_fig41.py` → finalize 80 págs, +1 comentário,
+- `C:\Temp\tcc_fig41\gen_fig41.py` → finalize 80 págs, +1 comentário,
   "Feito." no #181 → audit 0 → entregue (`0014ee96…`); backup `_20261002_233617`.
 
 ## 2026-10-02 (21h55) — Fontes "Adaptado de" nas figuras conceituais + "Feito." no #182 (V10)

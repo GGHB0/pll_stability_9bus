@@ -10,6 +10,15 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-03 (14h03) — "Referência" no início do §5.1 (V10)
+
+- Oscar (#221): "a referência de que?" no bloco 511. Virou "mostra as
+  componentes de eixo direto e de quadratura da tensão com a sintonia nominal,
+  que serve de base de comparação para a sintonia inadequada"; "valores
+  contínuos" → "constantes". #221 reancorado em "base de comparação", "Feito.".
+- `C:\Temp\tcc_ref51\gen_ref51.py` → audit 0 → entregue (`58e4be8f…`); o Word
+  regravou o canônico ao fechar, staging refeito antes da entrega.
+
 ## 2026-10-03 (12h23) — Comentários do Oscar após a Figura 5.8: 3 tabelas e 2 figuras (V10)
 
 - 13 abertos entre os blocos 543 e 599. Pedido do Victor: números em

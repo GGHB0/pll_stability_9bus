@@ -10,6 +10,27 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-03 (12h23) — Comentários do Oscar após a Figura 5.8: 3 tabelas e 2 figuras (V10)
+
+- 13 abertos entre os blocos 543 e 599. Pedido do Victor: números em
+  sequência no texto viram tabela ("nosso relatório carece de tabelas").
+- **Novas:** Tabela 5.1 (trifásicas nominais: retenção, pico, retorno, 120 Hz),
+  Figura 5.9 (`bus7_3phase_corrente_dq.png`, #266), Tabela 5.2 (rampa do ONS ×
+  `iq_ref` simulado, #268/#344), Figura 5.10 (`espectro_vd_falta.png`, gerada por
+  `scripts/gen_espectro_vd.py`, #275), Tabela 5.3 (assimétricas, #276/#277).
+  Figuras antigas 5.9-5.19 → 5.11-5.21 (24 remissões). Primeiras tabelas
+  Word do TCC (estilo IBGE, sem bordas verticais, `tblHeader`, `keepNext`).
+- Métricas pela receita de [[tcc-revisao-fragmento-cap5-metricas]]; rampa
+  `i_q = (0,85 − V)/0,35` aplicada ao `|V|` médio do inversor. Fecha bem em
+  corrente (Barra 6: rampa 0,76, `iq_ref` médio 0,72, final 0,78).
+- "Feito." em 266-269, 272, 273, 275-277, 344, 345; resposta escrita no #347.
+  **#300 ficou sem resposta**: Q medido ≠ V·i_q na mesma base (fator ≈ 1,5),
+  a conferir antes de citar Q médio. Ver [[tcc-pendencias]].
+- `C:\Temp\tcc_oscar58\gen_oscar58.py` → finalize 82 págs → audit 0 →
+  entregue (`cfb354f3…`); backup `_20261003_122344`. O MD5 do OneDrive mudou
+  entre a conferência e a cópia porque o Word regravou o arquivo ao fechar;
+  backup conferido: texto e comentários idênticos ao staging.
+
 ## 2026-10-02 (23h36) — Figura 4.1 redesenhada + potência da UFV no §4.3.1 (V10)
 
 - Oscar (#181): "O inversor está injetando 163 MW?? ... tirar o G2". A figura

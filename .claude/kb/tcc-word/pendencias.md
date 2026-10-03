@@ -116,7 +116,12 @@ aliases: [tcc-pendencias]
     `P_ufv` exportado dá 0,87 pu com `id = 1,0 pu` e `vd ≈ 0,98 pu`
     (vd·id ≈ 0,98): ~12% de diferença a investigar (escala da medição ou
     perda no LCL). G1/G3 ainda oscilam em 0,6 s (G1 107 a 133 MW). Banca
-    pode perguntar; ter resposta antes da defesa.
+    pode perguntar; ter resposta antes da defesa. **Q tem o mesmo problema,
+    maior (2026-10-03):** na falta, `Q_ufv` ≈ 1,5·0,88·V·i_q (Barra 6
+    trifásica: 0,655 pu medido contra 0,38 esperado), enquanto P fecha com o
+    fator 0,88. Conferir no `.slx` onde P e Q são medidos. Trava a resposta
+    ao comentário #300 do Oscar (P e Q médios na falta × rampa), que ficou
+    sem "Feito.": o texto já traz corrente e P, falta o Q médio.
 
 ## P3 — Limpeza
 
@@ -147,14 +152,14 @@ aliases: [tcc-pendencias]
 27. **Revisão visual das figuras do Cap. 5 (2026-10-01)** — os valores batem
     com o CSV atual (P pré-falta 0,875 pu nas duas sintonias; só a tensão
     pré-falta da inadequada mudou, 0,82 → 1,00 pu). Defeitos de desenho:
-    - **5.18** (`gen_potencia_didatica.py`): "antes: −0,00 pu" em Q (sinal
+    - **5.20** (ex-5.18, `gen_potencia_didatica.py`): "antes: −0,00 pu" em Q (sinal
       de zero negativo) e caixa "antes: 0,87 pu" tapando o traço de P.
     - **5.1 e 5.2** (`gen_regime_waveforms.py`): rótulo "transitório de
       partida excluído dos cálculos" contradiz o §5.1, que mede 34/40/42/79 ms
       dentro dessa faixa. Trocar por "transitório de partida".
-    - **5.14** (`gen_retencao_didatica.py`): traço de `v_d` sai pelo topo
+    - **5.16** (ex-5.14, `gen_retencao_didatica.py`): traço de `v_d` sai pelo topo
       após a eliminação no painel nominal e pelo pé no inadequado.
-    - **5.19** (`gen_fault_waveforms.py`): legenda tapa o `i_q` medido no
+    - **5.21** (ex-5.19, `gen_fault_waveforms.py`): legenda tapa o `i_q` medido no
       canto inferior direito.
     Corrigir nos geradores e trocar só a mídia no V10.
 28. **~~Sigla GD sem uso~~** — ✅ FEITO (2026-10-02): saiu da lista de siglas

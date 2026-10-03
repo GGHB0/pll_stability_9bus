@@ -115,14 +115,16 @@ metadata:
 ## Cap. 5 — Análise e Discussão de Resultados
 
 > **Substituído por inteiro em 2026-09-02**, na mesma operação. Números
-> auditados (ver [[tcc-revisao-fragmento-cap5-metricas]] e o `_54`), 15 figuras.
+> auditados (ver [[tcc-revisao-fragmento-cap5-metricas]]). Desde 2026-10-03,
+> 21 figuras e 3 tabelas Word (conferido no V10 entregue às 12h23).
 
-- ✅ **5.1** Validação da operação em regime permanente — Figuras 5.1 a 5.3
-- ✅ **5.2** Faltas simétricas: severidade e localização — Figuras 5.4 a 5.6
+- ✅ **5.1** Validação da operação em regime permanente — Figuras 5.1 a 5.4
+- ✅ **5.2** Faltas simétricas: severidade e localização — Figuras 5.5 a 5.9,
+  Tabelas 5.1 (indicadores por ponto) e 5.2 (rampa ONS × corrente reativa)
 - ✅ **5.3** Faltas assimétricas: sequência negativa e efeito da sintonia —
-  Figuras 5.7 a 5.10
+  Figuras 5.10 (espectro de v_d) a 5.15, Tabela 5.3 (pares por sintonia)
 - ✅ **5.4** Perda de sincronismo sob falta simétrica no ponto de conexão —
-  Figuras 5.11 a 5.15, o caso-limite `bus7/3phase_bad_pll`
+  Figuras 5.16 a 5.21, o caso-limite `bus7/3phase_bad_pll`
 - ✅ **5.5** Conformidade com o código de rede
 - ✅ **5.6** Resumo e conclusões do capítulo
 
@@ -170,9 +172,9 @@ metadata:
   entradas órfãs (ALVES 2021 e SOUSA et al. 2021) foram removidas. Sobrou
   só o `XX` da ficha catalográfica (`pendencias.md` item 20)
 
-## Inventário de ilustrações (2026-09-13, revisto 2026-10-02)
+## Inventário de ilustrações (2026-09-13, revisto 2026-10-03)
 
-29 ilustrações (V10) numeradas por capítulo com campo `SEQ` (ver `abnt_layout.md`
+34 ilustrações (V10) numeradas por capítulo com campo `SEQ` (ver `abnt_layout.md`
 e a D2 de `tcc-abnt-layout/decisoes.md`):
 
 | Nº | Conteúdo | Fonte |
@@ -187,7 +189,8 @@ e a D2 de `tcc-abnt-layout/decisoes.md`):
 | Figura 4.2 | Inversor com LCL e malhas de controle | Adaptado de Alves (2022) |
 | Figura 4.3 | Laço do SRF-PLL | Adaptado de Teodorescu, Liserre e Rodriguez (2011) |
 | Tabela 4.1 | Matriz de cenários (`matriz_cenarios.svg`) | Os autores (2026) |
-| Figuras 5.1-5.19 | Séries de simulação | Os autores (2026) |
+| Figuras 5.1-5.21 | Séries de simulação e espectro | Os autores (2026) |
+| Tabelas 5.1-5.3 | Indicadores do Cap. 5 (Word, estilo IBGE) | Os autores (2026) |
 
 Fontes revistas em 2026-10-02: figura apoiada em obra leva "Adaptado de",
 mesmo redesenhada sobre o modelo (D10 em `tcc-abnt-layout/decisoes.md`).

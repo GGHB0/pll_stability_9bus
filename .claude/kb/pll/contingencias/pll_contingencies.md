@@ -2,7 +2,9 @@
 name: pll-contingencies
 aliases: [pll-contingencies]
 description: Os 4 cenários de contingência simulados, efeitos no SRF-PLL e métricas de avaliação
-source: TCCs V8 cap.2.4, cap.4 (estrutura); pll_stability_9bus.slx
+source: TCCs V8 cap.2.4, cap.4 (estrutura); pll_stability_9bus.slx; IEEE 1547-2018 §6.5.2.6 p.58
+references:
+  - "IEEE. IEEE Std 1547-2018: IEEE Standard for Interconnection and Interoperability of Distributed Energy Resources with Associated Electric Power Systems Interfaces. New York: IEEE, 2018."
 ---
 
 # Contingências e Métricas de Avaliação
@@ -37,8 +39,12 @@ sem desconectar. **Não há confirmação dessa alegação.** Checado o artigo A
 et al. (IEC 61400-21, 2015) — norma de *medição/ensaio*, não de requisito — e não
 há menção a "phase jump" em nenhum lugar do texto; o único ângulo tabelado ali é o
 "short-circuit angle" da rede (ψk = 30°/50°/70°/85°), usado no cálculo de flicker,
-sem relação com salto de fase de tensão. Tratar como **gap de norma em aberto** para
-o cenário 3, não como dado já levantado.
+sem relação com salto de fase de tensão.
+
+**Atualização 2026-10-12:** o requisito existe na **IEEE 1547-2018 §6.5.2.6** (p.58):
+DER trifásico suporta salto de fase de sequência positiva de até 20° em escala de
+sub-ciclo a um ciclo (60° por fase). RfG, VDE e ONS seguem sem confirmação. Salto
+medido no modelo e por que o 1º ciclo da falta sai do pico: [[pll-phase-jump-fault-inception]].
 
 ### 4. Alto RoCoF (Rate of Change of Frequency)
 - **Causa:** Perda súbita de geração inercial; alta penetração de IBRs

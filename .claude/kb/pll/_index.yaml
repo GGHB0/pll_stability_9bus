@@ -41,6 +41,9 @@ subfolders:
       - file: pll_cycle_slip_measurement.md
         name: pll-cycle-slip-measurement
         description: "Receita de medição do escorregamento de ciclo (cycle slipping) do SRF-PLL — arctan2+unwrap sobre vd/vq, com verificação cruzada via ângulos gravados pelo modelo"
+      - file: pll_phase_jump_fault_inception.md
+        name: pll-phase-jump-fault-inception
+        description: "Por que o primeiro ciclo da falta fica fora do pico do erro de fase — salto de fase (Bollen §4.5, IEEE 1547-2018 §6.5.2.6) e oscilação do fasor, mais rápidos que o SRF-PLL"
   - folder: notch
     description: Notch de 120 Hz testado em 2026-05 e removido do modelo — registro histórico, não estado atual
     files:

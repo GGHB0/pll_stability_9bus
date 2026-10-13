@@ -48,10 +48,11 @@ instante cai uma amostra depois de `t_fault + 2 ciclos`, então
 cai num bin exato, e os bins abaixo de 60 Hz são a variação lenta de `v_d`
 durante a falta, não harmônica (explicado em `gen_espectro_vd.py`).
 
-**Por que descartar o primeiro ciclo:** o transitório de comutação da
-aplicação domina o pico. Em `bus6/3phase` o máximo por ciclo cai
-40,1° → 7,3° → 5,7° → 4,3° → 2,7° → 1,1°. Incluir o primeiro ciclo mede o
-chaveamento, não o rastreamento. É a mesma armadilha do pico de energização
+**Por que descartar o primeiro ciclo:** o salto de fase da aplicação da
+falta (e a oscilação do fasor que o acompanha) domina o pico; fundamentação
+no Bollen em [[pll-phase-jump-fault-inception]]. Em `bus6/3phase` o máximo por ciclo cai
+40,1° → 7,3° → 5,7° → 4,3° → 2,7° → 1,1°. Incluir o primeiro ciclo mede a
+tensão mudando mais rápido que o laço, não o rastreamento. É a mesma armadilha do pico de energização
 já registrada em [[tcc-revisao-fragmento-cap5]].
 
 Nas assimétricas o comportamento é oposto: o erro **cresce** ao longo da

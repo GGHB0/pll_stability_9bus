@@ -66,6 +66,10 @@ importam `cenario_ok()` e `pasta_inadequada()` e **pulam pasta reprovada**.
 
 A causa provável das cópias é um export com `logsout` de uma rodada anterior.
 **A monofásica na Barra 7 com sintonia inadequada precisa ser re-simulada.**
+Em 12/10/2026 seguia faltando: `main` igual a `origin/main` e nenhuma versão
+válida em commit ou branch. O Oscar cobrou a comparação (comentários na Tabela
+5.3 e no texto da Figura 5.14 do TCC), e o Victor repassou ao Bruno. A pasta `bus7/1phase_ground_bad_pll` foi
+apagada (`git rm`) à espera da rodada nova.
 
 ## Inventário (30 pastas, 28 aprovadas)
 
@@ -73,7 +77,7 @@ A causa provável das cópias é um export com `logsout` de uma rodada anterior.
 |---|---|---|
 | `bus4`, `bus5`, `bus8`, `bus9` | 1phase, 2phase, 3phase | — |
 | `bus6` | 1phase, 2phase, 3phase | 1phase_ground, 2phase, 3phase |
-| `bus7` | 1phase, 2phase, 3phase | 2phase, 3phase (`1phase_ground` reprovada; `1phase_bad_pll` apagada em 01/10) |
+| `bus7` | 1phase, 2phase, 3phase | 2phase, 3phase (monofásica a re-simular; as duas cópias apagadas, 01/10 e 12/10) |
 | `line7_8` | 3phase | 3phase |
 | `line8_9` | 3phase (2phase reprovado) | — |
 | `regime` | sem falta | sem falta |

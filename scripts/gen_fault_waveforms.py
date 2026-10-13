@@ -321,7 +321,32 @@ def gen_scenario(sc):
     set_title(ax, "Potência ativa e reativa do inversor" + suf)
     ax.set_xlim(settle_t, t_end)
     mark_fault(ax, t_fault, t_clear)
-    ax.legend(loc="lower right", fontsize=9, **LEGEND_KW)
+    # media na falta (Oscar, 11/10/2026): tracejada sobre a janela sem o 1o
+    # ciclo (transitorio sombreado no texto), a mesma dos valores do Cap. 5
+    t_m0 = t_fault + CICLO_S
+    falta = d_pq_full[(d_pq_full.t_s >= t_m0) & (d_pq_full.t_s < t_clear)]
+    medias = {c: float(falta[c].mean()) for c in ("P_ufv_pu", "Q_ufv_pu")}
+    # rotulos afastados quando as medias quase coincidem (trifasicas: P~0, Q~0,09)
+    y_lo, y_hi = ax.get_ylim()
+    sep = 0.09 * (y_hi - y_lo)
+    y_p, y_q = medias["P_ufv_pu"], medias["Q_ufv_pu"]
+    if abs(y_p - y_q) < sep:
+        meio, s = (y_p + y_q) / 2, (1 if y_q >= y_p else -1) * sep / 2
+        y_p, y_q = meio - s, meio + s
+    for col, nome, color, y_txt in [("P_ufv_pu", "P", AZUL_REF, y_p),
+                                    ("Q_ufv_pu", "Q", "#9a3412", y_q)]:
+        m = medias[col]
+        ax.hlines(m, t_m0, t_clear, colors=color, linewidth=1.6,
+                  linestyles="--", zorder=4)
+        val = f"{abs(m) if abs(m) < 0.005 else m:.2f}".replace(".", ",").replace("-", "−")
+        ax.text(t_clear + 0.004, y_txt, f"{nome} = {val}", color=color,
+                fontsize=8, fontweight="bold", va="center", ha="left",
+                bbox=dict(facecolor="white", edgecolor="none", pad=0.5, alpha=0.85),
+                zorder=5)
+    h, l = ax.get_legend_handles_labels()
+    h.append(plt.Line2D([0], [0], color=NAVY, linewidth=1.6, linestyle="--"))
+    l.append("Média na falta")
+    ax.legend(h, l, loc="lower right", fontsize=9, **LEGEND_KW)
     save(fig, f"{prefix}_potencia_pq")
 
     # 4. corrente dq ----------------------------------------------------

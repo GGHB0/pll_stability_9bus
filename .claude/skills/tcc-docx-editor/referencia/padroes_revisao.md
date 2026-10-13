@@ -49,7 +49,8 @@ finalização e a entrega).
 
 ## 4. Canônico atual
 
-`TCC_Victor_Bruno_V10.docx` (desde 2026-09-26; o `_2` saiu da pasta). A fonte
+`TCC_Victor_Bruno_VF - Copia.docx` (desde 2026-10-12; antes o V10, desde
+2026-09-26). Backups em `_backups/VF/` (o `entrega.ps1` deduz `VF` do nome). A fonte
 da verdade é `config.py`. Se o arquivo de `config.py` sumir, listar a pasta,
 propor o mais recente e **confirmar com o Victor** antes de editar.
 
@@ -67,6 +68,9 @@ no texto).
 - Sem prefixo `[Claude]`: a resposta sai pela conta do Victor no Office, e é
   ele quem responde ao Oscar. O prefixo continua só nos comentários do item 1.
 - Casar pelo texto, nunca pelo ID: o Word renumera os IDs ao salvar.
+- Nota [Claude] aprovada pelo Victor sai com `-Delete <json>`: lista de
+  inícios de texto (`["[Claude] ..."]`), mesma regra de casar um só; apaga
+  junto as respostas da thread.
 - Conferir depois no `commentsExtended.xml` que cada `Feito.` tem
   `paraIdParent` apontando para o comentário certo.
 - **Atendido em parte, ou de outro jeito, não leva "Feito."**: em 2026-10-02

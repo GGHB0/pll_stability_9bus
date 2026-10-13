@@ -77,7 +77,7 @@ Write-Output "MD5 do canonico confere com o staging: $atual"
 
 # 4. backup
 if (-not $Versao) {
-  if ($nome -match '_(V\d+)') { $Versao = $Matches[1] } else { Aborta 'informe -Versao (nao achei V<n> no nome)' }
+  if ($nome -cmatch '_(V[0-9A-Z]+)') { $Versao = $Matches[1] } else { Aborta 'informe -Versao (nao achei V<n>/VF no nome)' }
 }
 $dirBk = Join-Path $pasta (Join-Path '_backups' $Versao)
 New-Item -ItemType Directory -Force -Path $dirBk | Out-Null

@@ -34,13 +34,19 @@
 # com "match" (tem que casar exatamente um). Usado para responder ao Oscar que
 # o pedido foi atendido ("Feito."), sem marcar o comentario como resolvido.
 # Sem prefixo "[Claude]": quem responde e o Victor, pela conta dele no Office.
+#
+# -Delete <arquivo.json> (opcional): lista de strings. Apaga o comentario de
+# nivel superior cujo texto comeca com cada string (casar exatamente um), junto
+# com as respostas. Usado para tirar nota [Claude] que o Victor ja aprovou.
+# Roda antes de -Replies.
 
 param(
   [Parameter(Mandatory=$true)][string]$In,
   [Parameter(Mandatory=$true)][string]$Out,
   [string]$Pdf = "",
   [string]$Comments = "",
-  [string]$Replies = ""
+  [string]$Replies = "",
+  [string]$Delete = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -65,6 +71,19 @@ try {
       if (-not $r.Find.Execute($c.anchor, $true)) { throw "ancora nao encontrada: $($c.anchor)" }
       $d.Comments.Add($r, "[Claude] " + $c.text) | Out-Null
       "comentario   : +1 em '" + $c.anchor.Substring(0, [Math]::Min(50, $c.anchor.Length)) + "...'"
+    }
+  }
+
+  if ($Delete -ne "") {
+    $lista = Get-Content $Delete -Raw -Encoding UTF8 | ConvertFrom-Json
+    foreach ($m in $lista) {
+      $alvo = @()
+      foreach ($c in $d.Comments) {
+        if ($c.Ancestor -eq $null -and $c.Range.Text.StartsWith($m)) { $alvo += $c }
+      }
+      if ($alvo.Count -ne 1) { throw "apagar: '$m' casou $($alvo.Count) comentarios (esperado 1)" }
+      $alvo[0].DeleteRecursively()
+      "apagado      : '" + $m.Substring(0, [Math]::Min(50, $m.Length)) + "...'"
     }
   }
 

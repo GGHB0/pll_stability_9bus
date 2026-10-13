@@ -1,6 +1,6 @@
 # Skill: tcc-docx-editor
 
-Edita o TCC DOCX (`config.py`; hoje `TCC_Victor_Bruno_V10.docx`) no OOXML.
+Edita o TCC DOCX (`config.py`; hoje `TCC_Victor_Bruno_VF - Copia.docx`) no OOXML.
 **Padrões fixos** (Resumo↔Abstract + comentário, fechar/reabrir Word, "Feito." ao Oscar, siglas): `referencia/padroes_revisao.md`.
 Modo aceito pelo Victor: **edições diretas no XML, sem tracked changes**
 (`helpers.py` mantém os geradores com `w:ins` caso volte a ser necessário).
@@ -116,7 +116,7 @@ com prompt autocontido: paths exatos, o que rodar e a "saída esperada".
   - `check_pt.py <xml> [--corpo N]`: varredura de português (`casos/revisao_pt.md`)
   - `repack.py <template.docx> <xml> <saida.docx>`: injeta o document.xml
   - `audit_docx.py <docx> [--util-in N]`: auditoria pré-entrega; código 1 se falhou
-  - `word_finalize.ps1 -In <montado> -Out <final> [-Pdf] [-Comments <json>] [-Replies <json>]`:
+  - `word_finalize.ps1 -In <montado> -Out <final> [-Pdf] [-Comments <json>] [-Replies <json>] [-Delete <json>]`:
     passa pelo Word, reconstrói o sumário e **prova que o Word salva**
   - `troca_imagem.py <staging.docx> <novo.png> <saida.docx> --apos "Figura 4.2 – Circuito"`
     (ou `--rid rIdN`): figura redesenhada no lugar da antiga, mesma largura,

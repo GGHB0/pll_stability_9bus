@@ -126,6 +126,8 @@ com prompt autocontido: paths exatos, o que rodar e a "saída esperada".
     para as remissões no texto quando entra ilustração no meio do capítulo
   - `entrega.ps1 -Final <final> -Dest <canônico> -Md5Staging <md5>`: passo 9
     inteiro, com aborto (`referencia/entrega.md`)
+  - `diff_texto.py <antes.docx> <depois.docx>`: texto visível parágrafo a
+    parágrafo + delta de comentários e "Feito."; conferência pós-entrega
 - Ilustração e tabela nova: `tcc-abnt-layout/scripts/campos.py`
   (`figura_nova`, `tabela_completa`, `legenda`/`imagem`/`fonte`)
 
@@ -153,7 +155,8 @@ com prompt autocontido: paths exatos, o que rodar e a "saída esperada".
 7. REVISÃO: dump_blocks da saída + check_pt
 8. FINALIZAÇÃO: repack → word_finalize.ps1 -Replies <json com os Feito.>
    → audit_docx.py (0 falhas) → conferir o delta de "Feito." no comments.xml
-9. ENTREGA: scripts/entrega.ps1 (referencia/entrega.md)
+9. ENTREGA: scripts/entrega.ps1 (referencia/entrega.md) → diff_texto.py
+   backup × canônico: só o que o plano previa
 10. KB: historico_entregas / content_map / pendencias / siglas, conforme o caso
 ```
 

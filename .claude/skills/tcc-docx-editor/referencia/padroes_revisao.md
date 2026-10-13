@@ -97,3 +97,16 @@ entrega**; edição que introduz sigla nova a define na 1ª ocorrência e a
 acrescenta. Em 2026-10-02 a reescrita da 3.2 tirou "GD" do texto e a lista só
 foi corrigida duas rodadas depois. Termo por extenso sem a sigla ("geração
 distribuída") não segura a sigla na lista.
+
+## 8. Oscar pede referência: fundamentar no KB antes de citar
+
+Definido pelo Victor em 2026-10-12 (comentário #131, "transitório de
+comutação"). Primeiro um doc no KB com o trecho e a página de cada fonte,
+`references:` completo e, se couber, o número medido nas simulações
+(`pll-phase-jump-fault-inception` é o modelo). Só depois a frase no TCC.
+
+- Conferir se o termo do texto é o da literatura; se não for, trocar o termo
+  junto (lá, virou "salto de fase", Bollen §4.5).
+- Citar no TCC de preferência obra que já está na lista de referências; obra
+  nova só com o ok do Victor (o Fan et al. ficou só no KB).
+- Página impressa ≠ página do PDF: anotar o deslocamento no doc.

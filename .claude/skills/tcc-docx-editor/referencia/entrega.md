@@ -31,6 +31,21 @@ falhar):
 4. `cp` do final → `md5sum` do destino igual ao do final.
 5. Reabrir o canônico no Word (`Start-Process "<path>"`).
 
+## Conferência depois da entrega (desde 2026-10-12)
+
+Toda entrega termina com o diff do texto visível entre o backup que o
+`entrega.ps1` acabou de gravar e o canônico:
+
+```text
+python.exe scripts\diff_texto.py "<_backups\VF\..._backup_<data>.docx>" "<canônico>"
+```
+
+Só deve aparecer o que o plano previa, e o delta de comentários e de
+`Feito.` tem que bater com o `-Replies`/`-Delete`. Diff de XML não serve:
+o Word renumera `_Toc`, IDs e paraIds e refaz os números de página do
+sumário (80 "parágrafos diferentes" numa entrega de uma frase). O script lê
+o canônico mesmo com o Word já reaberto e travando o arquivo.
+
 ## MD5 mudou
 
 - **Antes da entrega**: refazer o staging e reaplicar o `gen_*.py` (ele só lê

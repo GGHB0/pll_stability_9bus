@@ -58,12 +58,14 @@ modelo principal.
 4. **Finalização** — antes de qualquer entrega, sobre o DOCX montado:
    a. `python.exe .../scripts/repack.py <template> <xml editado> <saida>`
    b. `powershell -ExecutionPolicy Bypass -File .../scripts/word_finalize.ps1
-      -In <saida> -Out <final> [-Replies <json>]` — passa pelo Word (reconstrói o sumário, zera
+      -In <saida> -Out <final> [-Replies <json>] [-Delete <json>]` — passa pelo Word (reconstrói o sumário, zera
       `w:dirty`, prova que o Word salva). Se ele disser que o Word está aberto,
       ABORTAR e reportar. Com `-Replies` (respostas "Feito." ao Oscar):
       contar `<w:t>Feito.</w:t>` no `word/comments.xml` da entrada e do
       final; o delta tem que ser igual ao número de itens do JSON, senão
-      ABORTAR e reportar as duas contagens.
+      ABORTAR e reportar as duas contagens. Com `-Delete` (threads apagadas):
+      a contagem de `<w:comment ` cai pelo total de comentários das threads
+      (pai + respostas) que o prompt informar.
    c. `python.exe .../scripts/audit_docx.py <final>` — **qualquer FALHOU,
       ABORTAR e reportar a saída inteira.** Só seguir com 0 falhas.
 
@@ -99,6 +101,9 @@ modelo principal.
    Com o Word fechado, o mesmo erro no `mv` do bash vem de arquivo só na
    nuvem do OneDrive: usar `Move-Item` do PowerShell, que baixa e move.
    e. Se o prompt pedir, reabrir o canônico: `Start-Process "<path>"`.
+   f. Sempre, depois de a–e (ou do `entrega.ps1`): `python.exe
+      .../scripts/diff_texto.py "<backup gravado>" "<canônico>"` e reportar a
+      saída inteira. O runner não julga o diff; o principal confere contra o plano.
 
 ## Regras de aborto (invioláveis)
 

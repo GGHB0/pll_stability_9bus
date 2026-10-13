@@ -104,7 +104,8 @@ entradas à esquerda em espaço simples; ANEXOS centralizado; `XXf.` e ano
 
 ## O que continua aberto
 
-- **ANEXOS sem conteúdo** — título sozinho na última folha e no sumário.
+- ~~**ANEXOS sem conteúdo**~~ — removido em 2026-10-12; o documento termina na
+  última referência.
 - **Dedicatória e epígrafe** — marcadores à espera do texto dos autores.
 - **`75 f.`** (desde 2026-09-26) — confirmar com o Oscar se conta o total de folhas ou a
   última numerada (73); atualizar se o documento mudar de tamanho.

@@ -16,13 +16,13 @@ Gerado por `scripts/kb_links.py index`. Links `[[slug]]` abrem no Obsidian (vaul
 | dashboard/ | 16 | [dashboard/index.md](dashboard/index.md) |
 | events/ | 9 | [events/index.md](events/index.md) |
 | inverter/ | 5 | [inverter/index.md](inverter/index.md) |
-| pll/ | 12 | [pll/index.md](pll/index.md) |
+| pll/ | 13 | [pll/index.md](pll/index.md) |
 | power-system/ | 9 | [power-system/index.md](power-system/index.md) |
 | psim/ | 2 | [psim/index.md](psim/index.md) |
 | python/ | 11 | [python/index.md](python/index.md) |
 | simulation/ | 6 | [simulation/index.md](simulation/index.md) |
 | standards/ | 16 | [standards/index.md](standards/index.md) |
-| tcc-word/ | 35 | [tcc-word/index.md](tcc-word/index.md) |
+| tcc-word/ | 36 | [tcc-word/index.md](tcc-word/index.md) |
 
 Soltos na raiz: [project-scope.md](project-scope.md)
 

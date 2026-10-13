@@ -53,6 +53,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 | [historico_entregas_2026_09_inicio.md](historico/historico_entregas_2026_09_inicio.md) | [[tcc-historico-entregas-2026-09-inicio]] | Entregas de setembro até 2026-09-09: troca PAC→PCC, mesclagem Cap. 4-5, enxugamento Cap. 5 |
 | [historico_entregas_2026_10_01.md](historico/historico_entregas_2026_10_01.md) | [[tcc-historico-entregas-2026-10-01]] | Entregas de 2026-10-01 no V10 — safra de 01/10 no Cap. 5, texto antes das figuras, reaquisitar, citações e referências do Oscar |
 | [historico_entregas_2026_10_02.md](historico/historico_entregas_2026_10_02.md) | [[tcc-historico-entregas-2026-10-02]] | Entregas de 2026-10-02 no V10 — Figura 3.1 do controle dq, fontes "Adaptado de", Figura 4.1 redesenhada, Cap. 5 restaurado |
+| [historico_entregas_2026_10_03.md](historico/historico_entregas_2026_10_03.md) | [[tcc-historico-entregas-2026-10-03]] | Entregas de 2026-10-03 no V10 — comentários do Oscar após a Figura 5.8, \"Referência\" no §5.1, Figura 4.2 com letras maiores, escala de P… |
 | [historico_entregas_v8.md](historico/historico_entregas_v8.md) | [[tcc-historico-entregas-v8]] | Histórico de entregas da versão V8 do TCC: seção 3.3, correções dos comentários do Oscar |
 
 ### revisao-fragmento/
@@ -73,9 +74,9 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 
 - [dashboard/](../dashboard/index.md) — saem 1, chegam 0
 - [events/](../events/index.md) — saem 2, chegam 0
-- [pll/](../pll/index.md) — saem 9, chegam 5
+- [pll/](../pll/index.md) — saem 12, chegam 7
 - [power-system/](../power-system/index.md) — saem 8, chegam 1
-- [simulation/](../simulation/index.md) — saem 9, chegam 5
+- [simulation/](../simulation/index.md) — saem 10, chegam 5
 - [standards/](../standards/index.md) — saem 4, chegam 2
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)

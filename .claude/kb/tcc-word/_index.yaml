@@ -90,6 +90,9 @@ subfolders:
       - file: historico_entregas.md
         name: tcc-historico-entregas
         description: Histórico de entregas do Claude no DOCX canônico, mais recente primeiro (entregas antigas nos arquivos _2026_07 e _v8)
+      - file: historico_entregas_2026_10_03.md
+        name: tcc-historico-entregas-2026-10-03
+        description: "Entregas de 2026-10-03 no V10 — comentários do Oscar após a Figura 5.8, Referência no §5.1, Figura 4.2, escala de P e Q"
       - file: historico_entregas_2026_10_02.md
         name: tcc-historico-entregas-2026-10-02
         description: "Entregas de 2026-10-02 no V10 — Figura 3.1 do controle dq, fontes \"Adaptado de\", Figura 4.1 redesenhada, Cap. 5 restaurado"

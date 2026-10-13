@@ -159,7 +159,7 @@ metadata:
 ## Referências (seção final)
 
 - ⚠️ Mistura template UERJ (refs fictícias) com refs reais — limpar
-- ✅ "REFERÊNCIAS" e "ANEXOS" são `Ttulo1` centralizados e entram no sumário (2026-09-13)
+- ✅ "REFERÊNCIAS" é `Ttulo1` centralizado e entra no sumário (2026-09-13); ANEXOS removido em 2026-10-12
 - **+4 entradas em 2026-08-04**: ALVES; DIAS; ROLIM (2020, DOI
   10.1007/s40313-020-00576-x), CIGRE (CSE N037, ✅ **jun. 2025**, fechado em
   2026-09-12), OGATA (2009) e STRAUSS-MINCU et al. (2026, DOI

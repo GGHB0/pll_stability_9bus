@@ -10,69 +10,102 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
-## 2026-10-03 (15h23) — Escala de P e Q corrigida + potências médias (#315) (V10)
+## 2026-10-12 (21h02) — Primeiro ciclo = salto de fase (#130, VF - Copia)
 
-- Oscar (#315): médias de potência na falta comparadas com a rampa. Ao
-  validar, achado: o `.slx` (SID 4055) usava ganho 1/√3 em P e Q, então P
-  saía ×√3/2 (pré-falta 0,87 pu) e Q ×1,5. `.slx` corrigido, rodadas antigas
-  reescaladas na leitura (`src/pipeline/pq.py`, ver [[export-workflow]]).
-- Figuras 5.4, 5.8, 5.15, 5.19 e 5.20 regeneradas e trocadas
-  (`troca_imagem.py`, rId29/33/40/44/45). Texto: 0,14 → 0,09 pu (Fig. 5.8),
-  0,34 → 0,41 pu (Barra 6, texto e Tabela 5.2), coluna de P da Tabela 5.2
-  −0,01/−0,01/0,02/0,41, ondulação de Q 4,8 → 3,0 virou 3,2 → 2,0 pu.
-  Bloco 585 ganhou P = 0,70 pu (1,01 pré-falta) e Q = 0,22 pu; "Feito." no
-  #315 (40 → 41). Percentuais de sentido do fluxo (§5.4) não mudam.
-- 1ª entrega abortou: o Bruno salvou o V10 às 14h56 (só estilos renomeados,
-  texto e comentários iguais); reaplicado sobre ele. Há um V11 (Victor,
-  14h49) com o mesmo texto: o Victor confirmou que o canônico segue o V10.
-  Entregue `cf77f1ac…`, backup `_20261003_152345`.
+§542: "transitório de comutação" (termo sem uso na bibliografia para falta)
+virou "salto de fase que o curto-circuito impõe à tensão, ao qual o SRF-PLL
+só responde com atraso (BOLLEN, 2000)". Bollen já estava nas referências.
+Base em [[pll-phase-jump-fault-inception]]. "Feito." no comentário. Um
+parágrafo alterado, 81 págs, 31 comentários, audit limpo. MD5 d688df33…;
+backup `_210221`.
 
-## 2026-10-03 (14h16) — Figura 4.2 com letras maiores (V10)
+## 2026-10-12 (20h23) — ANEXOS removido (#218, VF - Copia)
 
-- Oscar (#190, 1ª parte): "gostaria que as letras tivessem um tamanho maior".
-  O `vsi_lcl_pwm_circuit.svg` tinha `viewBox` 900×780 e fontes de 8-15 px:
-  4-7,5 pt na página. Sem título interno (repetia a legenda), `viewBox`
-  recortado para `40 45 840 730` e fontes de 14-18 px (7,6-9,8 pt).
-  Subscritos que caíam sobre seta ou borda foram reposicionados, e a nota
-  do Submódulo perdeu o "—". Os dois `θ̂_PLL` viraram `θ_PLL` (chapéu
-  combinante sai deslocado, armadilha 2 da skill `svg-diagrams`).
-- Troca do `media/image10.png` (rId23), cy 4992624 → 5006340. Finalize
-  82 págs → audit 0 → entregue (`428d3a77…`); o `θ` foi numa 2ª entrega já
-  pelo `troca_imagem.py` (`90879eba…`, backup `_20261003_141940`).
-- **#190 segue aberto, sem "Feito."**: a 2ª parte pede uma caixa de regime
-  permanente (entradas Pmppt, Qmppt, Vpcc; saídas as referências dq), ainda
-  não feita.
-- Virou ferramenta: `tcc-docx-editor/scripts/troca_imagem.py`.
+Título ANEXOS vazio (último parágrafo, sem remissão no texto; material
+autoral seria APÊNDICE) apagado junto com o comentário do Oscar e a resposta
+do Bruno, ancorados só nele: `-Delete`, corte do parágrafo no XML (o
+`sectPr` é do `body`), sumário reconstruído. 82 → 81 págs, 30 comentários;
+saíram só a linha do sumário e o título. `pagecheck` perdeu o grupo do
+ANEXOS; restam 2 anteriores (legendas das Tabelas 5.1-5.3, título "3.
+Objetivos" no pé da folha 18). MD5 03641fa8…; backup `_202324`.
 
-## 2026-10-03 (14h03) — "Referência" no início do §5.1 (V10)
+## 2026-10-12 (20h08) — Notas [Claude] aprovadas apagadas (VF - Copia)
 
-- Oscar (#221): "a referência de que?" no bloco 511. Virou "mostra as
-  componentes de eixo direto e de quadratura da tensão com a sintonia nominal,
-  que serve de base de comparação para a sintonia inadequada"; "valores
-  contínuos" → "constantes". #221 reancorado em "base de comparação", "Feito.".
-- `C:\Temp\tcc_ref51\gen_ref51.py` → audit 0 → entregue (`58e4be8f…`); o Word
-  regravou o canônico ao fechar, staging refeito antes da entrega.
+Victor aprovou as notas da frase nova do §573 (atende o comentário do Oscar
+sobre a sintonia inadequada parecer melhor), da remissão "perda de
+sincronismo descrita acima" e do "recuperando o travamento angular". Apagadas
+com `-Delete`; nenhuma nota [Claude] sobra no documento. Texto visível
+idêntico. 82 págs, 32 comentários, audit limpo. MD5 3c72df2f…; backup
+`_backups\VF\…_backup_20261012_200815.docx`.
 
-## 2026-10-03 (12h23) — Comentários do Oscar após a Figura 5.8: 3 tabelas e 2 figuras (V10)
+## 2026-10-12 (19h32) — "5.45 ??" respondido (#175, VF - Copia)
 
-- 13 abertos entre os blocos 543 e 599. Pedido do Victor: números em
-  sequência no texto viram tabela ("nosso relatório carece de tabelas").
-- **Novas:** Tabela 5.1 (trifásicas nominais: retenção, pico, retorno, 120 Hz),
-  Figura 5.9 (`bus7_3phase_corrente_dq.png`, #266), Tabela 5.2 (rampa do ONS ×
-  `iq_ref` simulado, #268/#344), Figura 5.10 (`espectro_vd_falta.png`, gerada por
-  `scripts/gen_espectro_vd.py`, #275), Tabela 5.3 (assimétricas, #276/#277).
-  Figuras antigas 5.9-5.19 → 5.11-5.21 (24 remissões). Primeiras tabelas
-  Word do TCC (estilo IBGE, sem bordas verticais, `tblHeader`, `keepNext`).
-- Métricas pela receita de [[tcc-revisao-fragmento-cap5-metricas]]; rampa
-  `i_q = (0,85 − V)/0,35` aplicada ao `|V|` médio do inversor. Fecha bem em
-  corrente (Barra 6: rampa 0,76, `iq_ref` médio 0,72, final 0,78).
-- "Feito." em 266-269, 272, 273, 275-277, 344, 345; resposta escrita no #347.
-  **#300 ficou sem resposta**: Q medido ≠ V·i_q na mesma base (fator ≈ 1,5),
-  a conferir antes de citar Q médio. Ver [[tcc-pendencias]].
-- `C:\Temp\tcc_oscar58\gen_oscar58.py` → finalize 82 págs → audit 0 →
-  entregue (`cfb354f3…`); backup `_20261003_122344`. O MD5 do OneDrive mudou
-  entre a conferência e a cópia porque o Word regravou o arquivo ao fechar;
-  backup conferido: texto e comentários idênticos ao staging.
+Remissão à Figura 5.5 no §592 estava certa; as legendas já dizem "com
+sintonia nominal". Só comentários: "Feito." no "5.45 ??" e nota [Claude] das
+legendas apagada (`word_finalize.ps1 -Delete`, opção nova). Texto visível
+idêntico ao anterior. 82 págs, 35 comentários, audit limpo. MD5 91bac371…;
+backup `_backups\VF\…_backup_20261012_193225.docx`.
+
+## 2026-10-12 (18h40) — 180° = oposição de fase (#148 e #183, VF - Copia)
+
+- Oscar: 180° = −1 + j0, o inversor absorveria P (#148, célula da Tabela 5.3);
+  ligação com a §5.4 (#183, Bruno confirmou). Dados (bifásica Barra 7): P < 0
+  em 50,9 % (nominal) e 47,5 % (inadequada) da falta, 1-3 % depois.
+- Frase no §580 (após "…alinhamento com o vetor de tensão da rede.") e no
+  §596 (após "…dentro do referencial estimado."): na bifásica, a oposição se
+  repete só durante a falta; na §5.4, a cada volta após a eliminação. Reativo
+  fora de propósito (já no §604). "Feito." nos dois. `C:\Temp\tcc_180\gen_180.py`
+  → 82 págs, 35 comentários, audit 0 → MD5 1263623e…, backup `_20261012_184054`.
+
+## 2026-10-12 (18h23) — Q acima de V·Iq e média na falta nas figuras (#168, VF - Copia)
+
+- Oscar: V·Iq = 0,77 × 0,22 ≈ 0,17 pu, mas o texto dá Q = 0,22 pu. Nos dados
+  (bifásica Barra 6, inadequada, janela 0,317-0,4 s): a média do produto não é
+  o produto das médias. vd e iq oscilam juntos em 120 Hz (≈ +0,04 pu) e vq ≈
+  0,025 com id ≈ 0,94 (≈ +0,04 pu). Na trifásica da Barra 6 a conta fecha
+  (0,58 × 0,66 ≈ 0,39; Q = 0,40). Os dq gravados não reconstroem Q exato
+  (0,24 × 0,22): explicação de ordem de grandeza.
+- Bloco 585 reescrito com "média" uma vez só, pré-falta "1 pu" (pedido do
+  Victor) e a frase da diferença. Figuras 5.8, 5.15 e 5.19 com tracejada da
+  média na falta sem o 1º ciclo (`gen_fault_waveforms.py`, rótulos afastados
+  quando P e Q quase coincidem); rId33/40/44. 5.4 e 5.20 não têm falta.
+  "Feito." no #168. `C:\Temp\tcc_media1012\gen_media1012.py` → 82 págs →
+  audit 0 → entregue `ffc6ee37…`, backup `_backups/VF/…_20261012_182329`.
+
+## 2026-10-12 (17h56) — Correção de P e Q de 03/10 reaplicada (VF - Copia)
+
+- O VF (03/10 18h47) saiu de um arquivo anterior à entrega das 15h23 abaixo:
+  texto **e figuras** de antes da correção (imagens idênticas às do backup
+  `V10_backup_20261003_152345`). Só isso divergia do V10.
+- Reaplicado do V10: blocos 551 (0,09 pu), 555 (0,41 pu, mantendo "de
+  tensão"/"de corrente reativa" do Bruno), 585 (P 0,70 / Q 0,22 pu), 589
+  (3,2 → 2,0 pu), Tabela 5.2 inteira, e as Figuras 5.4, 5.8, 5.15, 5.19 e
+  5.20 (`troca_imagem.py --rid` rId29/33/40/44/45 com o PNG do V10). Depois:
+  0 imagem divergente do V10. `C:\Temp\tcc_pq1012\gen_pq1012.py` → 82 págs
+  → audit 0 → entregue `c34c4fce…`, backup `_backups/VF/…_20261012_175643`.
+- O Word estava aberto (reaberto pela entrega anterior): fechado por COM,
+  `Saved=True`, MD5 sem mudança.
+
+## 2026-10-12 (17h37) — Comentários do Oscar de 11/10, parte de texto (VF - Copia)
+
+- Canônico novo (Victor confirmou): `TCC_Victor_Bruno_VF - Copia.docx`, o VF
+  com 22 comentários do Oscar (11/10, Cap. 5 + ANEXOS), respostas e edições
+  diretas do Bruno (12/10). Pendências em [[tcc-pendencias]].
+- Texto: "energização" → "transitório de inicialização" (Figs. 5.1-5.4 e
+  §5.1); "com sintonia nominal" nas legendas 5.5, 5.6, 5.8; fórmula da rampa
+  com o "−" que o Bruno apagou; vírgula no 559; "−0,02" no 573 + frase de
+  ressalva (#152); Figura 5.14 → 5.16 no 592; 596 e 600 reescritos (o Bruno
+  tirou "escorregamento de ciclo" do 596); 625 "recuperando o travamento
+  após a eliminação". "Feito." em #152 e "Fiquei confuso…"; 4 comentários
+  [Claude]. `C:\Temp\tcc_oscar1012\gen_oscar1012.py` (troca mínima por
+  prefixo/sufixo comum, preserva âncoras) → finalize 82 págs → audit 0 →
+  entregue `cbaf969d…`, backup `_backups/VF/…_20261012_173752`.
+
+## Entregas de 2026-10-03
+
+Ver [[tcc-historico-entregas-2026-10-03]]: comentários do Oscar após a
+Figura 5.8 (3 tabelas e 2 figuras), "Referência" no §5.1, Figura 4.2 com
+letras maiores e escala de P e Q corrigida com potências médias.
 
 ## Entregas de 2026-10-02
 

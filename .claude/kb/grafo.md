@@ -38,7 +38,7 @@ graph LR
     pll -->|1| psim
     pll -->|2| simulation
     pll -->|3| standards
-    pll -->|5| tcc_word
+    pll -->|7| tcc_word
     power_system -->|6| pll
     power_system -->|2| standards
     power_system -->|1| tcc_word
@@ -60,9 +60,9 @@ graph LR
     standards -->|2| tcc_word
     tcc_word -->|1| dashboard
     tcc_word -->|2| events
-    tcc_word -->|9| pll
+    tcc_word -->|12| pll
     tcc_word -->|8| power_system
-    tcc_word -->|9| simulation
+    tcc_word -->|10| simulation
     tcc_word -->|4| standards
 ```
 

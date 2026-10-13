@@ -9,6 +9,21 @@ aliases: [tcc-pendencias]
 > Extraído de `docx_structure.md` (2026-07-19) para respeitar o limite de 200 linhas.
 > Mapa completo seção a seção: `content_map.md`.
 
+## P0 — Comentários do Oscar de 11/10/2026 em aberto (VF - Copia)
+
+Texto direto já aplicado ([[tcc-historico-entregas]], 12/10). Faltam:
+
+- ~~**Q médio × rampa (Bloco 585)**~~ — ✅ FEITO 12/10 18h23 ([[tcc-historico-entregas]]).
+- ~~**180° no erro de fase (Tabela 5.3) e §5.4**~~ — ✅ FEITO 12/10 18h40 ([[tcc-historico-entregas]]).
+- **Primeiro ciclo = "transitório de comutação" (§5.2, #131):** ✅ FEITO 12/10
+  21h02: salto de fase (BOLLEN, 2000); [[pll-phase-jump-fault-inception]].
+- **Monofásica na Barra 7 sem sintonia inadequada (#150, #164):** a rodada era
+  cópia da trifásica (fases a, b, c todas a 0,09 pu) e foi apagada em 12/10
+  ([[cenarios-simulados]]). O Bruno vai re-simular; depois, validar, completar
+  Tabela 5.3, Figura 5.14 e §581, e corrigir a resposta dele no #164.
+- **"5.45 ??" na §5.4:** ✅ FEITO 12/10 19h32 ("Feito." e nota [Claude] apagada).
+- **ANEXOS vazio:** ✅ REMOVIDO 12/10 20h23 (título e comentário do Oscar).
+
 ## P1 — Correções estruturais (rápidas, alto impacto)
 
 1. **[FIGURA 3.1] sem placeholder** — referenciada 2× na seção 4.3.2
@@ -131,8 +146,8 @@ aliases: [tcc-pendencias]
 14. ~~**Tracked change restante** no título "2.6. Resumo ou Conclusões do
     Capítulo"~~ — ✅ RESOLVIDO: `check_ids.py` em 2026-09-12 mostra o documento
     sem nenhum `w:ins` e sem nenhum `w:del`.
-21. **ANEXOS sem conteúdo** — título sozinho na última folha e no sumário.
-    Escrever os anexos ou remover a seção (decisão dos autores).
+21. ~~**ANEXOS sem conteúdo**~~ — ✅ REMOVIDO em 2026-10-12 (sem anexo; material
+    autoral iria em APÊNDICE). Ver [[tcc-historico-entregas]].
 22. **Dedicatória e epígrafe** — marcadores "Dedicatória opcional." e "Frase
     opcional. / Autor" nas folhas 5 e 7, à espera do texto dos autores.
 23. **Subseções do Cap. 1 fora do sumário** — "Contextualização", "Motivação

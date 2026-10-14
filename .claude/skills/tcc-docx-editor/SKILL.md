@@ -116,7 +116,7 @@ com prompt autocontido: paths exatos, o que rodar e a "saída esperada".
   - `check_pt.py <xml> [--corpo N]`: varredura de português (`casos/revisao_pt.md`)
   - `repack.py <template.docx> <xml> <saida.docx>`: injeta o document.xml
   - `audit_docx.py <docx> [--util-in N]`: auditoria pré-entrega; código 1 se falhou
-  - `word_finalize.ps1 -In <montado> -Out <final> [-Pdf] [-Comments <json>] [-Replies <json>] [-Delete <json>]`:
+  - `word_finalize.ps1 -In <montado> -Out <final> [-Pdf] [-Comments <json>] [-Replies <json>] [-Delete <json>] [-Resolve <json>]`:
     passa pelo Word, reconstrói o sumário e **prova que o Word salva**
   - `troca_imagem.py <staging.docx> <novo.png> <saida.docx> --apos "Figura 4.2 – Circuito"`
     (ou `--rid rIdN`): figura redesenhada no lugar da antiga, mesma largura,

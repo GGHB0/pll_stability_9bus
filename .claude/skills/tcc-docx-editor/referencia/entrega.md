@@ -57,6 +57,12 @@ o canônico mesmo com o Word já reaberto e travando o arquivo.
   de `Feito.` no `comments.xml`). Sobreviveram → a próxima rodada parte do
   arquivo atual. Sumiram → restaurar por paraId, como em 2026-10-02 00h17
   (`historico_entregas.md`).
+- **Cópia velha salva por cima** (2026-10-13: o Bruno salvou à 00h59 um
+  Word aberto desde as 17h56 da véspera): rodar `diff_texto.py` do canônico
+  contra cada backup do dia; o que der 0 trechos é a origem. Se o arquivo
+  não trouxer texto novo, entregar de novo o `final.docx` da última rodada
+  (fica em `C:\Temp\tcc_<tema>\`) e refazer as resoluções do outro autor
+  com `word_finalize.ps1 -Resolve` (diff de `dump_comments.py` mostra quais).
 
 ## Versão irmã na pasta (achado em 2026-10-03)
 

@@ -39,6 +39,11 @@
 # nivel superior cujo texto comeca com cada string (casar exatamente um), junto
 # com as respostas. Usado para tirar nota [Claude] que o Victor ja aprovou.
 # Roda antes de -Replies.
+#
+# -Resolve <arquivo.json> (opcional): lista de strings. Marca como resolvido o
+# comentario de nivel superior cujo texto comeca com cada string (casar
+# exatamente um). Usado para refazer resolucao feita por outro autor numa
+# copia que foi descartada (2026-10-13). Roda depois de -Replies.
 
 param(
   [Parameter(Mandatory=$true)][string]$In,
@@ -46,7 +51,8 @@ param(
   [string]$Pdf = "",
   [string]$Comments = "",
   [string]$Replies = "",
-  [string]$Delete = ""
+  [string]$Delete = "",
+  [string]$Resolve = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -97,6 +103,19 @@ try {
       if ($alvo.Count -ne 1) { throw "resposta: '$($rp.match)' casou $($alvo.Count) comentarios (esperado 1)" }
       $alvo[0].Replies.Add($alvo[0].Scope, $rp.text) | Out-Null
       "resposta     : +1 em '" + $rp.match.Substring(0, [Math]::Min(50, $rp.match.Length)) + "...'"
+    }
+  }
+
+  if ($Resolve -ne "") {
+    $lista = Get-Content $Resolve -Raw -Encoding UTF8 | ConvertFrom-Json
+    foreach ($m in $lista) {
+      $alvo = @()
+      foreach ($c in $d.Comments) {
+        if ($c.Ancestor -eq $null -and $c.Range.Text.StartsWith($m)) { $alvo += $c }
+      }
+      if ($alvo.Count -ne 1) { throw "resolver: '$m' casou $($alvo.Count) comentarios (esperado 1)" }
+      $alvo[0].Done = $true
+      "resolvido    : '" + $m.Substring(0, [Math]::Min(50, $m.Length)) + "...'"
     }
   }
 

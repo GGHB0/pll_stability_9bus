@@ -10,6 +10,17 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-13 (23h54) — Restauração da entrega de 12/10 (VF - Copia)
+
+O Bruno salvou às 00h59 de 13/10 uma cópia aberta às 17h56 de 12/10: texto
+idêntico ao backup `_175643`, perdendo as 6 entregas de 18h23 a 21h02
+(#130 Bollen, Tabela 5.2, médias de P e Q, ANEXOS, notas [Claude]; "Feito."
+7 → 2). Achado pelo `diff_texto` contra cada backup do dia. De novo, só 4
+resoluções (2 do Oscar, 2 notas [Claude] já apagadas). Entregue o
+`final.docx` das 21h02, com as 2 resoluções do Oscar refeitas pelo
+`word_finalize.ps1 -Resolve` (novo). Diff contra 21h02: 0 trechos, 31
+comentários, 7 "Feito."; backup `_235421` guarda a versão do Bruno.
+
 ## 2026-10-12 (21h02) — Primeiro ciclo = salto de fase (#130, VF - Copia)
 
 §542: "transitório de comutação" (termo sem uso na bibliografia para falta)

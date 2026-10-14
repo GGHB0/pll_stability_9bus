@@ -28,7 +28,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 - [power-system/](../power-system/index.md) — saem 1, chegam 0
 - [psim/](../psim/index.md) — saem 0, chegam 4
 - [standards/](../standards/index.md) — saem 1, chegam 2
-- [tcc-word/](../tcc-word/index.md) — saem 5, chegam 10
+- [tcc-word/](../tcc-word/index.md) — saem 5, chegam 11
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)
 <!-- kb-links:end -->

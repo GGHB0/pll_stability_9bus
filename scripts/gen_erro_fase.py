@@ -5,8 +5,9 @@ apresentando os graficos de erro angular?").
 
 Definicao do erro de fase = a mesma do texto do Cap. 5, NAO o theta_err do
 dashboard: atan2(vq_rede_pu, vd_rede_pu) em graus, no PCC. Pico medido a
-partir do 1o ciclo apos a aplicacao da falta (o 1o ciclo e transitorio de
-comutacao); t_s = ultimo instante com |erro| > 2 graus, contado de t_clear.
+partir do 1o ciclo apos a aplicacao da falta (o 1o ciclo e o salto de fase
+imposto pelo curto, ver .claude/kb/pll/contingencias/ pll-phase-jump-fault-inception);
+t_s = ultimo instante com |erro| > 2 graus, contado de t_clear.
 Receita fechada em .claude/kb/tcc-word/revisao-fragmento/
 revisao_fragmento_cap5_metricas.md -- os numeros anotados nas figuras saem
 daqui, calculados na hora, para nao divergirem do texto a cada re-simulacao.
@@ -100,7 +101,7 @@ def mark_fault_rel(ax, dur_ms, labels=True):
 def fault_legend_handles():
     return [plt.Rectangle((0, 0), 1, 1, color=CINZA, alpha=0.3),
             plt.Rectangle((0, 0), 1, 1, color=VERDE, alpha=0.35)], \
-           ["1º ciclo (comutação, fora do pico)", "faixa de ±2°"]
+           ["1º ciclo (salto de fase, fora do pico)", "faixa de ±2°"]
 
 
 def ts_txt(ts):

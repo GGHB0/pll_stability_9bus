@@ -65,19 +65,22 @@ importam `cenario_ok()` e `pasta_inadequada()` e **pulam pasta reprovada**.
 | `bus7/3phase_bad_pll`, `line7_8/3phase_bad_pll` | válidas (originais das duas cópias) |
 
 A causa provável das cópias é um export com `logsout` de uma rodada anterior.
-**A monofásica na Barra 7 com sintonia inadequada precisa ser re-simulada.**
-Em 12/10/2026 seguia faltando: `main` igual a `origin/main` e nenhuma versão
+**Resolvido em 13/10/2026** (commit `3c49f5a`): a rodada de 12/10
+(`1f201bf`) também era inválida, sem falta aplicada (fases a 1,01/0,98/1,01
+pu do pré-falta, igual ao regime a 0,04 pu; o validador acusa "parece
+trifásica" porque só mede desequilíbrio). A de 13/10 afunda a/b/c para
+0,60/0,61/1,15, como a nominal, e passou. Antes disso, em 12/10/2026 seguia faltando: `main` igual a `origin/main` e nenhuma versão
 válida em commit ou branch. O Oscar cobrou a comparação (comentários na Tabela
 5.3 e no texto da Figura 5.14 do TCC), e o Victor repassou ao Bruno. A pasta `bus7/1phase_ground_bad_pll` foi
 apagada (`git rm`) à espera da rodada nova.
 
-## Inventário (30 pastas, 28 aprovadas)
+## Inventário (30 pastas, 29 aprovadas)
 
 | Local | Nominal | Sintonia inadequada |
 |---|---|---|
 | `bus4`, `bus5`, `bus8`, `bus9` | 1phase, 2phase, 3phase | — |
 | `bus6` | 1phase, 2phase, 3phase | 1phase_ground, 2phase, 3phase |
-| `bus7` | 1phase, 2phase, 3phase | 2phase, 3phase (monofásica a re-simular; as duas cópias apagadas, 01/10 e 12/10) |
+| `bus7` | 1phase, 2phase, 3phase | 1phase (13/10), 2phase, 3phase |
 | `line7_8` | 3phase | 3phase |
 | `line8_9` | 3phase (2phase reprovado) | — |
 | `regime` | sem falta | sem falta |
@@ -117,13 +120,13 @@ Medido por `scripts/gen_erro_fase.py`, com a receita de
 | regime (energização) | — | 79 ms | 563 ms (V10) |
 | `bus6/2phase` | 34,5° | 30 ms | 34,9° / 78 ms (V10) |
 | `bus6/1phase_ground` | 12,8° | 31 ms | 13,2° / 47 ms (safra de agosto) |
-| `bus7/1phase` | reprovado | — | 72,2° / 98 ms (V10) |
+| `bus7/1phase` (13/10) | 70,6° | 95 ms | 72,2° / 98 ms (V10) |
 | `bus7/2phase` | 179,9° | 96 ms | — |
 | `bus7/3phase` | 44,0° | não retorna | perda de sincronismo |
 | `line7_8/3phase` | 34,6° | não retorna | (sem texto) |
 
 Recuperação (t_s) nominal → inadequada: `bus6/2phase` 48 → 30 ms,
-`bus6/1phase` 39 → 31 ms, `bus7/2phase` 51 → 96 ms, `bus6/3phase` 76 →
+`bus6/1phase` 39 → 31 ms, `bus7/1phase` 46 → 95 ms, `bus7/2phase` 51 → 96 ms, `bus6/3phase` 76 →
 106 ms. Retenção `v_d`: `bus7/3phase` 9,2% → 8,2% (pré-falta 0,989 → 1,002
 pu), `line7_8/3phase_bad_pll` 9,7%. Já aplicado ao texto do V10 em 01/10
 (ver [[tcc-historico-entregas]]).

@@ -62,7 +62,7 @@ graph LR
     tcc_word -->|2| events
     tcc_word -->|12| pll
     tcc_word -->|8| power_system
-    tcc_word -->|10| simulation
+    tcc_word -->|11| simulation
     tcc_word -->|4| standards
 ```
 

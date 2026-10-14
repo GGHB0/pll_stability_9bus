@@ -17,10 +17,11 @@ Texto direto já aplicado ([[tcc-historico-entregas]], 12/10). Faltam:
 - ~~**180° no erro de fase (Tabela 5.3) e §5.4**~~ — ✅ FEITO 12/10 18h40 ([[tcc-historico-entregas]]).
 - **Primeiro ciclo = "transitório de comutação" (§5.2, #131):** ✅ FEITO 12/10
   21h02: salto de fase (BOLLEN, 2000); [[pll-phase-jump-fault-inception]].
-- **Monofásica na Barra 7 sem sintonia inadequada (#150, #164):** a rodada era
-  cópia da trifásica (fases a, b, c todas a 0,09 pu) e foi apagada em 12/10
-  ([[cenarios-simulados]]). O Bruno vai re-simular; depois, validar, completar
-  Tabela 5.3, Figura 5.14 e §581, e corrigir a resposta dele no #164.
+- **Monofásica na Barra 7 com sintonia inadequada (#150, #164):** ✅ FEITO
+  14/10 00h58: rodada válida do Bruno em 13/10 ([[cenarios-simulados]]),
+  linha na Tabela 5.3, Figura 5.14 completa, §579/580/588; "Feito." nos dois.
+  Resposta do Bruno no #164 ("monofásico terra") ficou sem correção (regra:
+  só "Feito.").
 - **"5.45 ??" na §5.4:** ✅ FEITO 12/10 19h32 ("Feito." e nota [Claude] apagada).
 - **ANEXOS vazio:** ✅ REMOVIDO 12/10 20h23 (título e comentário do Oscar).
 

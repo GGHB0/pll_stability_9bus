@@ -6,7 +6,7 @@
   "t_clear": 0.4,
   "duration_s": 0.10000000000000003,
   "bad_pll": true,
-  "timestamp": "2026-10-12T21:10:51",
+  "timestamp": "2026-10-13T23:25:44",
   "model": "pll_stability_9bus",
   "pq_ganho_p": "2/3",
   "pq_ganho_q": "2/(3*sqrt(3))"

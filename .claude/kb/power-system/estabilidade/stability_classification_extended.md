@@ -7,6 +7,8 @@ references:
   - "HATZIARGYRIOU, Nikos et al. Stability Definitions and Characterization of Dynamic Behavior in Systems with High Penetration of Power Electronic Interfaced Technologies. IEEE PES Technical Report PES-TR77. Piscataway: IEEE Power & Energy Society, maio 2020."
   - "LINDNER, Marco; ABELE, Hans; JOHN, Christoph; LEHNER, Joachim; VENNEMANN, Klaus; HENNIG, Tobias; DIMITROVSKI, Robert; KLÖTZL, Nico; JUST, Hendrik; STORNOWSKI, Reinhard. Suitable Classification of Power System Stability Phenomena. CIGRE Science & Engineering, n. 37, jun. 2025."
   - "STRAUSS-MINCU, Diana; DEGNER, Thomas; HACHMANN, Christian; BECKER, Holger; MENDE, Denis; BRAUN, Martin; HENNIG, Tobias; STRAUSS, Philipp. Inverter-Dominated Future Power Systems: A Roadmap for System Stability. IEEE Power and Energy Magazine, v. 24, p. 93-107, 2026. DOI: 10.1109/MPE.2025.3617895."
+  - "ALI, Jana Sheikh; QIBLAWEY, Yazan; ALASSI, Abdulrahman; MASSOUD, Ahmed M.; MUYEEN, S. M.; ABU-RUB, Haitham. Power System Stability With High Penetration of Renewable Energy Sources: Challenges, Assessment, and Mitigation Strategies. IEEE Access, v. 13, p. 39912-39934, 2025. DOI: 10.1109/ACCESS.2025.3546491."
+  - "IEEE. IEEE Std 2800.2-2026: IEEE Recommended Practice for Test and Verification Procedures for Inverter-Based Resources Interconnecting with Bulk Power Systems. Piscataway: IEEE Standards Association, 2026."
 ---
 
 # Classificação Estendida de Estabilidade — IEEE TR77 / Roadmap Alemão
@@ -121,3 +123,25 @@ Isso dá enquadramento teórico para a seção 2.3 e conecta diretamente com:
 - ENTSO-E R&D Innovation Roadmap 2024–2034; NREL Grid-Forming Inverters
   Roadmap; G-PST Consortium; AEMO NEM Engineering Roadmap FY2024 — roadmaps
   internacionais análogos citados para contexto comparativo.
+
+## Referências adicionais indicadas pelo orientador (2026-10-15)
+
+Duas referências para delimitar o escopo do TCC perante o leitor, sem
+aprofundamento próprio (pedido do professor Oscar: citar para que fique
+claro que a literatura segue além do recorte deste trabalho).
+
+- **ALI et al. (2025)**, revisão em *IEEE Access*, propõe uma classificação
+  com mais desdobramento que a adotada neste TCC: separa os fenômenos em
+  categorias **fundamentais** e **não-fundamentais**, e organiza os métodos
+  de avaliação da literatura em baseados em modelo, em otimização e em IA.
+  É um terceiro enquadramento, ao lado de TR77/CIGRE CSE N037 já discutidos
+  acima, que cobre também estabilidade por impedância — tema que este TCC
+  não persegue.
+- **IEEE Std 2800.2-2026**, publicada neste ano, é a prática recomendada
+  companheira do IEEE Std 2800-2022 (requisitos mínimos de interconexão de
+  IBR em transmissão): define procedimentos de teste e verificação de
+  conformidade a nível de usina, incluindo avaliação de estabilidade por
+  impedância em nível de planta. Confirma que a indústria já formaliza
+  diretrizes de certificação para sistemas com alta penetração de IBR além
+  do que este TCC aborda (focado na interação PLL–rede fraca via PI, não em
+  procedimentos de certificação de planta).

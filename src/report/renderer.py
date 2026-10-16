@@ -145,6 +145,7 @@ class HTMLRenderer:
         select_html   = self._select_html()
         pll_toggle_html = self._pll_toggle_html() if has_bad_pll else ""
         uerj_logo_html = self._uerj_logo_html()
+        plotly_js_html = self._plotly_js_html()
 
         return f"""<!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
@@ -152,7 +153,7 @@ class HTMLRenderer:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SRF-PLL · IEEE 9-Bus · UERJ 2025</title>
-<script src="https://cdn.plot.ly/plotly-2.35.0.min.js" charset="utf-8"></script>
+{plotly_js_html}
 <style>
 {self._css()}
 </style>
@@ -837,6 +838,17 @@ setPllMode(pllMode);
 
 </body>
 </html>"""
+
+    # ── Plotly embutido ─────────────────────────────────────────────────────
+
+    def _plotly_js_html(self) -> str:
+        """plotly.js inline para o HTML abrir sem internet (defesa); CDN se faltar o arquivo."""
+        from ..config import PROJ_ROOT
+        js_path = PROJ_ROOT / "assets" / "vendor" / "plotly-2.35.0.min.js"
+        try:
+            return f'<script charset="utf-8">{js_path.read_text(encoding="utf-8")}</script>'
+        except FileNotFoundError:
+            return '<script src="https://cdn.plot.ly/plotly-2.35.0.min.js" charset="utf-8"></script>'
 
     # ── Logo UERJ ───────────────────────────────────────────────────────────
 

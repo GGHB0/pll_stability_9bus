@@ -31,7 +31,7 @@ Histórico de mudanças por commit: `CHANGELOG.md` na raiz do repo.
    `SimData` por cenário e monta `fig_inv`/`fig_sys` com `ChartBuilder`.
 2. `HTMLRenderer` serializa cada figura para JSON (`SCENARIOS` no JS), gera
    cards/story/linha-da-tabela por cenário em Python e embute tudo num único
-   HTML portátil (Plotly via CDN, logo em base64).
+   HTML portátil (Plotly 2.35 embutido desde 2026-10-16, logo em base64).
 3. No browser, `switchScenario(key)` re-renderiza tudo client-side via
    `Plotly.react` — sem servidor.
 

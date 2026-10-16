@@ -6,7 +6,7 @@ description: Esqueleto do relatório HTML — header, filter-bar, seções, obje
 
 # Estrutura do HTML (renderer.py)
 
-Arquivo único e portátil: Plotly 2.35 via CDN, logo UERJ em base64
+Arquivo único e portátil: Plotly 2.35 embutido (`assets/vendor/`, abre sem internet, desde 2026-10-16; CDN só se faltar o arquivo), logo UERJ em base64
 ([[header-branding]]), CSS em `_css()` (string plana — **chaves simples**),
 JS no template f-string (**chaves duplas** `{{}}`). Todo estado por cenário é
 pré-computado em Python e embutido no objeto `SCENARIOS`.

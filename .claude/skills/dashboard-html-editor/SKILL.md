@@ -16,7 +16,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 
 `app.py` varre `output/` por cenário, monta `SimData`/`fig_inv`/`fig_sys` e o
 `HTMLRenderer` embute tudo (JSON das figuras + JS) num único HTML portátil
-(Plotly via CDN); no browser, `switchScenario`/`switchTab` re-renderizam via
+(Plotly embutido de `assets/vendor/` desde 2026-10-16); no browser, `switchScenario`/`switchTab` re-renderizam via
 `Plotly.react`, sem servidor.
 
 ## Workflow padrão
@@ -86,7 +86,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
   futura em `_label`/`goToChart`/`_openTabAt` deve resolver isso junto, não
   ignorar. Detalhes em `tabs-navegacao.md`.
 
-- **Plotly não renderiza em preview `file://` no browser pane**: o script
+- **Plotly não renderiza em preview `file://` no browser pane** (valia até 2026-10-16; com o Plotly embutido, `file://` renderiza): o script
   `<script src="https://cdn.plot.ly/...">` é bloqueado (CORS/sandbox) quando
   a página é aberta como `file://` no `mcp__Claude_Browser__*` — a página
   carrega, abas/selects funcionam, mas os gráficos ficam em branco e

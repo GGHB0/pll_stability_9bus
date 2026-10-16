@@ -10,6 +10,15 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-16 (madrugada): capa com fotos de usinas (entregue)
+
+- Staging MD5 `a3476f1764dae394ac691d54d7e1bbab`; script
+  `C:\Temp\defesa_capa\gen_capa.py` (variantes A/B; o Victor escolheu a A, só
+  fotos). Entregue MD5 `cc5e0460a8b0effb45180236061f10ca`; backup
+  `_backups\defesa\Defesa_TCC_SRF-PLL_backup_20261016_013211.pptx`.
+- Fotos Pexels 9893729 (FV com sol), 29636334 (eólica costeira), 35105443
+  (FV com montanhas), no lugar das três figuras do TCC. Só o slide 1 mudou.
+
 ## 2026-10-16 (madrugada): visual do template "Project Portfolio" (entregue)
 
 - Staging do canônico (MD5 `3231ecd2806662bb5130fd66685f8f32`); script

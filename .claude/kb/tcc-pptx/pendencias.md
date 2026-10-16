@@ -25,6 +25,8 @@ aliases: [defesa-pendencias]
   no último slide do apêndice). Decisão do Victor.
 - **Cosmético (slide-validator)**: ~1 in vazio no pé da capa; vão de ~0,5 in
   entre a tabela e a pergunta no slide 7.
+- A capa troca de figuras do TCC para fotos de usinas (2026-10-16); o
+  crédito CC BY acima vale só para o template, não para as fotos (Pexels).
 - **6. Fontes**: Arial (título) + Calibri (corpo) do tema, sem mudança no
   deck. Conferir no notebook da defesa e levar o PDF de reserva.
 - **Opcional**: rótulos internos da Figura 5.14 (slide 18) pequenos no

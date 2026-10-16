@@ -24,10 +24,12 @@ estilo padrão do Office.
   MOTIVAÇÃO 2-4, MODELAGEM 5-8, MÉTODO 9-10, RESULTADOS 11-15, CONCLUSÃO
   16-17, APÊNDICE 18-25. Slide novo: copiar a "Seção" do vizinho e trocar
   o texto, se mudar de seção.
-- Capa: faixa branca de y 0,75 a 4,55 com três figuras do TCC (circuito,
-  unifilar, erro de fase), divisórias cinza `CBCBCB`, linha de 1 pt em
-  4,55; título 26 pt negrito em (0,75; 4,78), subtítulo abaixo, autores e
-  orientadores em x = 9,85.
+- Capa: faixa de y 0,75 a 4,55 com três fotos de usinas (FV, eólica, FV;
+  Pexels, licença livre, sem crédito obrigatório), cada uma preenchendo o
+  bloco com corte central ("Foto da capa N"), divisórias brancas de 3 pt,
+  linha de 1 pt em 4,55; título 26 pt negrito em (0,75; 4,78), subtítulo
+  abaixo, autores e orientadores em x = 9,85. Só usina inversorizada:
+  heliotérmica (espelhos + torre) e eólica antiga de indução ficam de fora.
 
 ## Grade (polegadas)
 

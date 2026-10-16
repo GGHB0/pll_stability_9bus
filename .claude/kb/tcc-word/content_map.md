@@ -35,10 +35,10 @@ metadata:
 - ✅ **2.3** Classificação Estendida da Estabilidade — redigido 2026-07-19
   (Strauss-Mincu et al./Roadmap alemão: IEEE TR77, converter-driven stability
   ~10 Hz, mitigação = sintonia `K_pPLL`/`K_iPLL` do PLL). **Ampliado
-  2026-08-04**: CIGRE CSE N037 citada como classificação alternativa (TR77
-  segue como base) e parágrafo novo com o mecanismo físico completo
-  (sequência negativa → 120 Hz em `v_q` → perda de travamento → cycle
-  slipping → colapso do controle vetorial)
+  2026-08-04**: CIGRE CSE N037 como alternativa (TR77 segue base) e mecanismo
+  físico (seq. negativa → 120 Hz em `v_q` → perda de travamento → cycle
+  slipping → colapso do controle vetorial). **2026-10-15**: fecho de escopo
+  com ALI et al. (2025) e IEEE (2026, Std 2800.2), pedido do Oscar
 - ✅ **2.4** Principais blecautes — redigido 2026-07-19: intro + 2.4.1 Ibéria
   2025 (ENTSO-E) · 2.4.2 Chile 2025 (Coordinador Eléctrico Nacional) ·
   2.4.3 Brasil 2023 (ONS RAP-ONS 00012/2023 — inércia/SCC descartados como
@@ -183,7 +183,7 @@ e a D2 de `tcc-abnt-layout/decisoes.md`):
 | Figura 2.2 | Requisito de injeção de corrente reativa, ONS | Adaptado de ONS (2022) |
 | Figura 2.3 | Perfil de afundamento de tensão (`voltage_sag_profile.svg`) | Adaptado de Bollen (2000) |
 | Figura 3.1 | Controle de corrente dq implementado | Adaptado de Yazdani e Iravani (2010) |
-| Figura 3.2 | VSI conectado à rede (`vsi_grid_schematic.svg`) | Adaptado de Yazdani e Iravani (2010) e Teodorescu, Liserre e Rodriguez (2011) |
+| Figura 3.2 | VSI conectado à rede, só em blocos (`vsi_grid_blocos.svg`, 2026-10-15; antes `vsi_grid_schematic.svg`) | Adaptado de Yazdani e Iravani (2010) e Teodorescu, Liserre e Rodriguez (2011) |
 | Figura 3.3 | SRF-PLL em três blocos funcionais (`srf_pll_blocos_funcionais.svg`) | Adaptado de Teodorescu, Liserre e Rodriguez (2011) |
 | Figura 4.1 | Unifilar IEEE 9 barras | Adaptado de Anderson e Fouad (2003) e MathWorks (2025) |
 | Figura 4.2 | Inversor com LCL e malhas de controle | Adaptado de Alves (2022) |

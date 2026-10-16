@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 22 760 230" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <!-- Versão só em diagrama de blocos da Figura 3.2 (pedido do prof. André,
+       2026-10-15): sem símbolo de unifilar e sem nó de PCC destacado.
+       A versão anterior continua em vsi_grid_schematic.svg. -->
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0B132B"/>
+    </marker>
+    <marker id="arrCtrl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F97316"/>
+    </marker>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1971c2"/>
+    </marker>
+  </defs>
+
+  <rect y="22" width="760" height="230" fill="#ffffff"/>
+
+  <!-- ============= Fonte primária ============= -->
+  <rect x="20" y="40" width="140" height="80" fill="#f0fdf4" stroke="#166534" stroke-width="2" rx="6"/>
+  <text x="90" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="#166534">Fonte Primária</text>
+  <text x="90" y="89" text-anchor="middle" font-size="12" fill="#166534">(solar / eólica)</text>
+  <text x="90" y="107" text-anchor="middle" font-size="15" font-style="italic" fill="#166534">V<tspan baseline-shift="sub" font-size="75%">dc</tspan></text>
+
+  <line x1="160" y1="80" x2="205" y2="80" stroke="#0B132B" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="182" y="72" text-anchor="middle" font-size="13" fill="#0B132B">CC</text>
+
+  <!-- ============= VSI ============= -->
+  <rect x="205" y="40" width="140" height="80" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2" rx="6"/>
+  <text x="275" y="62" text-anchor="middle" font-size="15" font-weight="700" fill="#0B132B">VSI</text>
+  <text x="275" y="80" text-anchor="middle" font-size="13" fill="#0B132B">Inversor Fonte</text>
+  <text x="275" y="96" text-anchor="middle" font-size="13" fill="#0B132B">de Tensão</text>
+  <text x="275" y="112" text-anchor="middle" font-size="12" fill="#0B132B">(CC → CA, 2 níveis)</text>
+
+  <line x1="345" y1="80" x2="390" y2="80" stroke="#0B132B" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="367" y="72" text-anchor="middle" font-size="13" fill="#0B132B">3φ</text>
+
+  <!-- ============= Filtro de acoplamento ============= -->
+  <rect x="390" y="40" width="130" height="80" fill="#fef3c7" stroke="#b45309" stroke-width="2" rx="6"/>
+  <text x="455" y="70" text-anchor="middle" font-size="15" font-weight="700" fill="#b45309">Filtro de</text>
+  <text x="455" y="88" text-anchor="middle" font-size="15" font-weight="700" fill="#b45309">Acoplamento</text>
+  <text x="455" y="106" text-anchor="middle" font-size="12" fill="#b45309">(LCL)</text>
+
+  <line x1="520" y1="80" x2="575" y2="80" stroke="#0B132B" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="547" y="72" text-anchor="middle" font-size="13" fill="#0B132B">3φ</text>
+
+  <!-- ============= Rede elétrica (bloco, não símbolo de fonte) ============= -->
+  <rect x="575" y="40" width="165" height="80" fill="#f1f5f9" stroke="#0B132B" stroke-width="2" rx="6"/>
+  <text x="657" y="76" text-anchor="middle" font-size="15" font-weight="700" fill="#0B132B">Rede Elétrica</text>
+  <text x="657" y="96" text-anchor="middle" font-size="13" fill="#0B132B">(sistema IEEE 9 barras)</text>
+
+  <!-- ============= Controle digital ============= -->
+  <rect x="205" y="175" width="315" height="60" fill="#fff7ed" stroke="#F97316" stroke-width="2" stroke-dasharray="5,3" rx="6"/>
+  <text x="362" y="200" text-anchor="middle" font-size="14" font-weight="700" fill="#0B132B">Controle Digital</text>
+  <text x="362" y="220" text-anchor="middle" font-size="13" fill="#0B132B">PWM · malhas de corrente dq · SRF-PLL</text>
+
+  <!-- comando das chaves: controle -> VSI -->
+  <line x1="275" y1="175" x2="275" y2="120" stroke="#F97316" stroke-width="2" marker-end="url(#arrCtrl)"/>
+  <text x="283" y="153" font-size="13" fill="#F97316">pulsos de comando</text>
+
+  <!-- corrente medida na saída do filtro -> controle -->
+  <line x1="455" y1="120" x2="455" y2="175" stroke="#1971c2" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrB)"/>
+  <text x="463" y="153" font-size="16" font-style="italic" fill="#1971c2">i<tspan baseline-shift="sub" font-size="75%">abc</tspan></text>
+
+  <!-- tensão medida na conexão com a rede -> controle -->
+  <path d="M 657 120 L 657 205 L 520 205" fill="none" stroke="#1971c2" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrB)"/>
+  <text x="667" y="165" font-size="16" font-style="italic" fill="#1971c2">u<tspan baseline-shift="sub" font-size="75%">abc</tspan></text>
+</svg>

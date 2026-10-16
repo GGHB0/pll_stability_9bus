@@ -35,7 +35,10 @@ e `referencia/armadilhas.md`.
   `C:\projetos\pll_stability_9bus\.venv\Scripts\python.exe`.
 - Importar utilidades:
   `sys.path.insert(0, r"C:\projetos\pll_stability_9bus\.claude\skills\tcc-pptx-editor\scripts")`
-  e `from pptx_util import abrir, formas, texto_forma, notas, utf8`.
+  e `from edicoes import Edicao` (+ `pptx_util` se precisar de `formas`).
+  O script é uma função `g_<grupo>(ed)` por tipo de edição e termina em
+  `ed.rodar(globals())`; o docstring do `edicoes.py` tem o molde. Edição que
+  o módulo não cobre e vai se repetir → propor a função nova no relatório.
 - Ler sempre `deck.pptx` (staging), gravar `montado.pptx`; nunca encadear
   sobre a própria saída.
 - Antes de cada troca, `assert` de que a forma-alvo tem o texto antigo
@@ -46,8 +49,10 @@ e `referencia/armadilhas.md`.
 - Forma nova = `copy.deepcopy` de uma forma molde, com `cNvPr id` novo
   (maior que todos do slide) e nome do papel ("Cartão de destaque"...).
   Cores por `schemeClr` do tema, não RGB solto.
-- Imagem: chamar `troca_imagem.py` (ou a mesma lógica: `get_or_add_image_part`
-  + `blip.rEmbed`), nunca `add_picture` com largura e altura juntas.
+- Imagem: `ed.troca_img`, nunca `add_picture` com largura e altura juntas.
+- Remover run: `ed.tira_run` (limpa os `a:pPr` soltos; ver armadilhas).
+- Arquivo recusado pelo `render.ps1`/finalize → bisseção por grupo
+  (`gen_<tema>.py <grupo> <saída>`), um render por variante; reportar o grupo.
 
 ## Workflow
 

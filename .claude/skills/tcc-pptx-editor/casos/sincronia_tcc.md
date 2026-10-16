@@ -36,9 +36,19 @@ TCC: número, figura ou afirmação diferente no slide vira pergunta.
   que está na moldura?
 - **Figura em si**: a imagem do slide é a mesma do TCC? Figura regenerada
   no TCC (ex.: P/Q corrigidos em 03/10) precisa ser trocada aqui também
-  (`casos/troca_figura.md`).
+  (`casos/troca_figura.md`). O esboço de 2026-10-16 tinha 4 de 10 figuras
+  velhas: comparar cada mídia com o PNG de mesmo papel em `assets/charts/`
+  (`git log` do PNG depois da data do deck = suspeita). Não extrair a
+  figura do DOCX pela legenda: a Lista de Ilustrações casa primeiro.
 - **Notas de fala**: os mesmos números aparecem por extenso nas notas.
   `find_text.py <deck> "<valor>" --notas` em cada valor alterado.
+
+## Número que o TCC não tem
+
+Coluna do deck sem par no TCC (ex.: "Vd mínima e máxima" do slide 21):
+achar o método que **reproduz as linhas existentes** antes de calcular a
+nova, e registrar o método em [deck_map.md](../../../kb/tcc-pptx/deck_map.md).
+O `slide-validator` não consegue conferir: dizer isso no plano ao Victor.
 
 ## Ao terminar
 

@@ -26,9 +26,12 @@ $Out = (Resolve-Path -LiteralPath $Out).Path
 
 $jaRodava = [bool](Get-Process POWERPNT -ErrorAction SilentlyContinue)
 $pp = New-Object -ComObject PowerPoint.Application
-# Open(FileName, ReadOnly, Untitled, WithWindow)
-$pres = $pp.Presentations.Open($In, -1, 0, 0)
+$pres = $null
 try {
+  # Open(FileName, ReadOnly, Untitled, WithWindow). Dentro do try: arquivo recusado
+  # pelo PowerPoint precisa passar pelo finally, senao a instancia sem janela fica
+  # orfa e trava o entrega.ps1 (2026-10-16)
+  $pres = $pp.Presentations.Open($In, -1, 0, 0)
   $alto = [int]($Largura * $pres.PageSetup.SlideHeight / $pres.PageSetup.SlideWidth)
   $lista = if ($Slides) { $Slides.Split(',') | ForEach-Object { [int]$_ } } else { 1..$pres.Slides.Count }
   foreach ($n in $lista) {
@@ -36,7 +39,7 @@ try {
   }
   Write-Output "exportados $($lista.Count) slides em $Out (${Largura}x$alto)"
 } finally {
-  $pres.Close()
+  if ($pres) { $pres.Close() }
   if (-not $jaRodava -and $pp.Presentations.Count -eq 0) { $pp.Quit() }
   [void][Runtime.InteropServices.Marshal]::ReleaseComObject($pp)
 }

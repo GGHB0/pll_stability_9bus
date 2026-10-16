@@ -6,13 +6,14 @@ aliases: [defesa-deck-map]
 
 # Deck da defesa — mapa slide a slide
 
-> Estado em 2026-10-16 (esboço inicial, 24 slides, 16:9). Arquivo e
+> Estado em 2026-10-16 (esboço com as pendências 1-5 aplicadas, 24 slides,
+> 16:9; entrega pendente). Arquivo e
 > pipeline: skill [tcc-pptx-editor](../../skills/tcc-pptx-editor/SKILL.md).
 > Cada slide resume uma parte do TCC: a coluna "TCC" diz onde conferir
 > (seções e figuras de [[tcc-docx-content-map]]). Pendências em
 > [[defesa-pendencias]].
 
-## Corpo (slides 1-16, ~31 min de roteiro a 130 ppm; limite 30)
+## Corpo (slides 1-16, 24,6 min de roteiro a 130 ppm; limite 30)
 
 | # | Mensagem (título) | TCC | Números a conferir |
 |---|---|---|---|
@@ -25,11 +26,11 @@ aliases: [defesa-deck-map]
 | 7 | Memorial: ts = 20 ms → Kp = 460, Ki = 105.820 | §4.3, [[pll-loop-filter-gains]] | ωn 325,3 rad/s (51,8 Hz), ξ 0,707 |
 | 8 | Sintonia inadequada: ganhos −80% | §4.3, [[cenarios-simulados]] | Kp 92, Ki 21.164, ωn 145,5, ξ 0,316 |
 | 9 | IEEE 9 barras com UFV de 100 MW na Barra 2 | Fig. 4.1 | 192 MVA original |
-| 10 | Protocolo: falta 0,3-0,4 s, observação até 0,6 s | §4.3.4, Tab. 4.1 | travamento 40/79 ms; **contagem de cenários** |
+| 10 | Protocolo: falta 0,3-0,4 s, observação até 0,6 s | §4.3.4, Tab. 4.1 | travamento 40/79 ms; 29 cenários (21 + 8) |
 | 11 | Energização: inadequada leva ~2× para travar | Fig. 5.3 | 34/40 ms × 42/79 ms |
 | 12 | Trifásica: mais perto, mais severa; nominal reconverge | Fig. 5.7, Tab. 5.1 | retenção 9,2-58,4%, pico 7,3-37,3°, retorno 76-112 ms |
 | 13 | Assimétricas expõem a fragilidade (cycle slipping) | Fig. 5.10, 5.18 | 250×, 98 ms, 754 rad/s = 2,32 ωn |
-| 14 | ONS Submódulo 2.10 exige mais que ficar conectado | Fig. 2.2, Tab. 5.2 | Q 0,14 pu com corrente saturada |
+| 14 | ONS Submódulo 2.10 exige mais que ficar conectado | Fig. 2.2, Tab. 5.2 | Q 0,09 pu com corrente saturada (escala corrigida) |
 | 15 | Conclusões (3 cartões + contribuição) | Cap. 6 | |
 | 16 | Trabalhos futuros, limites, agradecimento | Cap. 7 | |
 
@@ -38,17 +39,21 @@ aliases: [defesa-deck-map]
 | # | Conteúdo | TCC |
 |---|---|---|
 | 17 | Divisor "Apêndice" (lista o que vem) | |
-| 18 | Ganhos menores: compromisso, não piora uniforme | Fig. 5.14, Tab. 5.3 |
+| 18 | Ganhos menores: compromisso, não piora uniforme (inclui monofásica B7) | Fig. 5.14, Tab. 5.3 |
 | 19 | vd e vq nas trifásicas Barra 7 × Barra 6 | Fig. 5.5, 5.6 |
 | 20 | Tabelas 5.1 e 5.2 completas | Tab. 5.1, 5.2 |
-| 21 | Tabela 5.3 completa (assimétricas) | Tab. 5.3 |
+| 21 | Tabela 5.3 completa (assimétricas) + coluna Vd mín./máx.* | Tab. 5.3 |
 | 22 | Pós-falta: absorve P em 66,8% do tempo (Barra 7, inadequada) | Fig. 5.20, 5.21 |
 | 23 | Classificação estendida de estabilidade | Cap. 2 |
 | 24 | Ibéria e Chile 2025 | Cap. 2 |
 
+\* Coluna sem par no TCC: `vd_rede_pu` mínimo e máximo na falta, de 0,3 s +
+1 ciclo (1/60 s) a 0,4 s, lido por `le_sim_data`; reproduz as linhas do
+esboço. Monofásica B7 inadequada: 0,03 a 1,39.
+
 ## Estrutura visual
 
 Fundo creme, primária petróleo, um destaque laranja por slide, títulos em
-frase completa, caixa "Justificativa de ouro" no rodapé da maioria dos
-slides de conteúdo. Grade e cores em
+frase completa, caixa com a pergunta da banca ("Por que...?", sem rótulo)
+no rodapé da maioria dos slides de conteúdo. Grade e cores em
 [design.md](../../skills/tcc-pptx-editor/referencia/design.md).

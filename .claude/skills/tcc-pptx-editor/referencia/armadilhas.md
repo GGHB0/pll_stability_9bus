@@ -33,6 +33,13 @@ Continuação de `SKILL.md`. Ordem: ambiente, python-pptx, PowerPoint, conteúdo
   Mover slide: reordenar `prs.slides._sldIdLst`.
 - Remover slide: tirar do `_sldIdLst` **e** `drop_rel` na presentation part,
   senão o slide fica órfão no pacote e o PowerPoint pode pedir reparo.
+- **`a:pPr` solto entre runs** (herança do gerador do esboço; 7 restam no
+  deck): o PowerPoint tolera, mas remover o run que vem antes dele deixa dois
+  `a:pPr` seguidos no início do parágrafo, e aí ele **recusa o arquivo**
+  inteiro (2026-10-16, remoção do rótulo "Justificativa de ouro:"). Ao tirar
+  run, apagar todo `a:pPr` do parágrafo além do primeiro. Arquivo recusado →
+  bisseção por grupo de edição (`gen_*.py <grupos> <saída>`), um render por
+  variante.
 - `add_picture` com só `width` mantém a proporção; com width e height
   deforma. Para trocar figura, usar `troca_imagem.py`.
 
@@ -43,6 +50,13 @@ Continuação de `SKILL.md`. Ordem: ambiente, python-pptx, PowerPoint, conteúdo
   apresentação dele: `render.ps1` e `pptx_finalize.ps1` só dão Quit se não
   havia PowerPoint rodando antes. O processo some alguns segundos depois do
   Quit; não matar.
+- **Instância órfã**: se o `Open` falhar fora do `try`, o PowerPoint sem
+  janela fica vivo (fora da ROT, `GetActiveObject` não acha), as chamadas
+  seguintes se penduram nele com `jaRodava = true` e nunca dão Quit, e o
+  `entrega.ps1` aborta com "PowerPoint não fechou". `New-Object -ComObject`
+  alcança a órfã para listar e fechar as apresentações; se o processo
+  persistir vazio, quem encerra é o Victor (o modo automático nega
+  `Stop-Process`). `render.ps1` corrigido em 2026-10-16.
 - `Presentations.Open(path, ReadOnly, Untitled, WithWindow)`: sem janela,
   arquivo corrompido vira exceção em vez de diálogo de reparo travado.
 - Export de slide em PNG usa as fontes instaladas na máquina: o render

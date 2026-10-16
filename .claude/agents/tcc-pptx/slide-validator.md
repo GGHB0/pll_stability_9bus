@@ -48,6 +48,11 @@ figura errada só sai assim.
 Mesmo fato dito igual em todo o deck: slide × notas × apêndice (ex.:
 contagem de cenários no slide 10 e na Tabela do apêndice). Usar
 `find_text.py --notas` com o valor ou a frase.
+Roteiro encurtado: `diff_slides.py <staging> <montado>` nas notas e listar
+o que saiu; número ou explicação que a banca pode cobrar (exemplo numérico,
+justificativa de faixa ou janela) e que não foi dito em outro slide é
+RECOMENDA "devolver". Número sem par no TCC (coluna calculada): dizer
+NÃO VERIFICÁVEL e qual método o plano declarou, não aprovar nem reprovar.
 
 ### 4. Visual
 **Leia os PNGs.** Procure: texto cortado ou saindo da caixa; caixa

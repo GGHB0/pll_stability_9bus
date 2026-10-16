@@ -20,7 +20,7 @@ vez de desenhar com `add_shape`, que nasce com o estilo padrão do Office.
 |---|---|---|---|
 | Título (frase) | 0,60 | 0,98 | 12,13 × 1,05 |
 | Área de conteúdo | 0,60 | 2,20 | até 12,73 em x, até ~6,85 em y |
-| Caixa de rodapé ("Justificativa", "Contribuição") | 0,60 | 5,55 a 6,05 | 12,13 × 0,70 a 1,25 |
+| Caixa de rodapé ("Pergunta da banca", "Contribuição") | 0,60 | 5,55 a 6,05 | 12,13 × 0,70 a 1,25 |
 
 - Margem lateral 0,60; vão entre colunas 0,20.
 - **2 colunas**: 5,96 de largura em x = 0,60 e 6,76.
@@ -36,12 +36,12 @@ vez de desenhar com `add_shape`, que nasce com o estilo padrão do Office.
 | Papel | Tema | RGB |
 |---|---|---|
 | Texto | `tx1` / dk1 | `1E1E1E` |
-| Primária (petróleo): título de cartão, cabeçalho de tabela, rótulo "Justificativa de ouro:" | `accent1` / dk2 | `1B6B7F` |
+| Primária (petróleo): título de cartão, cabeçalho de tabela, pergunta da caixa de rodapé | `accent1` / dk2 | `1B6B7F` |
 | Destaque (laranja): número que a banca deve ver, linha "inadequada"/Barra 7 em tabela | `accent2` | `EA580C` |
 | Azul (raro, gráfico) | `accent3` | `2563EB` |
 | Borda de cartão (bege) | `accent4` | `D8D2C4` |
 | Texto secundário, legenda de figura | `accent5` | `5B6B73` |
-| Fundo de caixa de ênfase ("Justificativa", "Nota", "Síntese") | `accent6` | `E3F0F2` |
+| Fundo de caixa de ênfase ("Pergunta da banca", "Nota", "Síntese") | `accent6` | `E3F0F2` |
 | Fundo de cartão | `bg1` | `FFFFFF` |
 
 O laranja é o único destaque: no máximo 1 ou 2 elementos por slide.
@@ -66,7 +66,7 @@ Todas `roundRect`, fundo `bg1` e borda `accent4`, salvo indicação.
 | Cartão de destaque | número grande + legenda curta | borda `accent2` quando o número é laranja |
 | Moldura da figura | figura + legenda "Figura X.Y do TCC" | |
 | Especificação | rótulo + valor (parâmetros) | |
-| Justificativa de ouro | "Por que X?" + resposta de 1-2 linhas | fundo `accent6`, borda `accent1` |
+| Pergunta da banca | "Por que X?" em `accent1` + resposta de 1-2 linhas (sem rótulo antes desde 2026-10-16) | fundo `accent6`, borda `accent1` |
 | Nota / Síntese / Contribuição | frase de fechamento do slide | fundo `accent6` (Contribuição: fundo `accent1`, texto branco) |
 | Etapa do problema / Etapa do cálculo | cadeia causal com setas | última etapa com borda `accent1` |
 | Cartão de evento / de conclusão / Trabalho futuro | colunas paralelas | |

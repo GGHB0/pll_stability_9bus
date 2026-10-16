@@ -1,7 +1,7 @@
 ---
 name: tcc-pptx-editor
 description: Edita o deck da defesa do TCC (Defesa_TCC_SRF-PLL.pptx, no OneDrive) com python-pptx — texto e títulos dos slides, tabelas, troca de figura, notas do apresentador (roteiro Bruno/Victor), slide novo no padrão visual, tempo de fala, conferência de números e legendas contra o TCC DOCX, render em PNG e entrega com backup. Ativar quando o usuário falar em "apresentação", "slides", "slide N", "PPT/PPTX", "defesa", "banca", "roteiro de fala", "notas do apresentador" ou pedir para mexer no deck. Não edita o TCC DOCX (ver tcc-docx-editor).
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Skill: tcc-pptx-editor
@@ -19,8 +19,8 @@ Pastas: `referencia/` (lido em toda edição), `casos/` (fluxos ocasionais),
 ## Leitura obrigatória
 
 - `referencia/design.md`: grade, cores do tema, fontes, tamanhos, as caixas
-  que se repetem ("Cartão de destaque", "Moldura da figura", "Justificativa
-  de ouro"...). Slide novo ou forma nova **copia uma existente**, não nasce do zero.
+  que se repetem ("Cartão de destaque", "Moldura da figura", "Pergunta da
+  banca"...). Slide novo ou forma nova **copia uma existente**, não nasce do zero.
 - `referencia/entrega.md`: staging, finalize, entrega, sessões em paralelo.
 - `referencia/armadilhas.md`: python-pptx, PowerPoint COM, OneDrive.
 
@@ -88,6 +88,9 @@ Mesma regra da `tcc-docx-editor`: o critério é custo total.
   PowerPoint pelo COM, MD5, backup, cópia, reabre
 - `pptx_util.py`: `abrir`, `formas` (entra em grupos), `texto_forma`,
   `notas`, `falas`, `faixa` para os `gen_*.py`
+- `edicoes.py`: classe `Edicao` com as edições conferidas (`troca_run`,
+  `tira_run`, `notas`, `troca_img`, `linha_nova`, `alturas`) e `rodar`, que
+  executa os grupos `g_*` do script. **Base de todo `gen_*.py`**
 
 ## Workflow padrão
 
@@ -98,9 +101,10 @@ Mesma regra da `tcc-docx-editor`: o critério é custo total.
 3. CONFERÊNCIA: casos/sincronia_tcc.md para todo número/figura que entra
 4. PLANO (principal): slide, forma, texto antigo → novo, notas, layout.
    AGUARDAR APROVAÇÃO do Victor
-5. SCRIPT: C:\Temp\defesa_<tema>\gen_<tema>.py, lendo SEMPRE o deck do
-   staging e gravando montado.pptx; localiza forma por nome + índice e
-   confere o texto antigo antes de trocar (count esperado)
+5. SCRIPT: C:\Temp\defesa_<tema>\gen_<tema>.py sobre edicoes.Edicao, uma
+   função g_<grupo> por tipo de edição (txt, tab, img, notas...), lendo SEMPRE
+   o deck do staging e gravando montado.pptx. PowerPoint recusou → bisseção:
+   gen_<tema>.py <grupo> <saída> + render de cada variante
 6. CHECKS: check_pptx --tcc (0 FALHA) + tempo_fala + render dos slides
    alterados → ler os PNGs; slide-validator quando couber
 7. FINALIZE: pptx_finalize.ps1 [-Pdf]

@@ -32,6 +32,7 @@ Subpastas criadas sob demanda, quando o primeiro conteúdo chegar:
 | `kb/events/` | Blecautes reais, uma subpasta por evento: `brasil-2023/`, `chile-2025/`, `iberia-2025/` |
 | `kb/dashboard/` | Relatório HTML, com subpastas `dados/`, `graficos/`, `cards/`, `layout/` |
 | `kb/tcc-word/` | TCC DOCX: `content_map`/`pendencias` na raiz; subpastas `conteudo/`, `docx/`, `revisao-fragmento/`, `historico/` |
+| `kb/tcc-pptx/` | Deck da defesa: `deck_map`, `pendencias`, `historico_entregas` (plana; pipeline na skill `tcc-pptx-editor`) |
 | `kb/psim/` | Fase inicial de modelagem no PSIM (Altair), anterior ao Simulink — registro histórico |
 
 ## Subpastas temáticas

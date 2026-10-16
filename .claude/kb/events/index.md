@@ -40,6 +40,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 - [pll/](../pll/index.md) — saem 0, chegam 1
 - [power-system/](../power-system/index.md) — saem 2, chegam 0
 - [standards/](../standards/index.md) — saem 1, chegam 2
+- [tcc-pptx/](../tcc-pptx/index.md) — saem 0, chegam 1
 - [tcc-word/](../tcc-word/index.md) — saem 0, chegam 2
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)

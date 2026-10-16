@@ -22,7 +22,8 @@ Gerado por `scripts/kb_links.py index`. Links `[[slug]]` abrem no Obsidian (vaul
 | python/ | 11 | [python/index.md](python/index.md) |
 | simulation/ | 6 | [simulation/index.md](simulation/index.md) |
 | standards/ | 16 | [standards/index.md](standards/index.md) |
-| tcc-word/ | 36 | [tcc-word/index.md](tcc-word/index.md) |
+| tcc-pptx/ | 3 | [tcc-pptx/index.md](tcc-pptx/index.md) |
+| tcc-word/ | 37 | [tcc-word/index.md](tcc-word/index.md) |
 
 Soltos na raiz: [project-scope.md](project-scope.md)
 
@@ -38,6 +39,7 @@ Mapa de relações entre pastas: [grafo.md](grafo.md)
 - [tcc-abnt-layout](../skills/tcc-abnt-layout/SKILL.md) — [decisoes](../skills/tcc-abnt-layout/decisoes.md) · [decisoes_2](../skills/tcc-abnt-layout/decisoes_2.md) · [regras_abnt](../skills/tcc-abnt-layout/regras_abnt.md)
 - [tcc-docx-editor](../skills/tcc-docx-editor/SKILL.md) — [fragmento_externo](../skills/tcc-docx-editor/casos/fragmento_externo.md) · [mesclagem_comentarios](../skills/tcc-docx-editor/casos/mesclagem_comentarios.md) · [mesclagem_no_canonico](../skills/tcc-docx-editor/casos/mesclagem_no_canonico.md) · [revisao_pt](../skills/tcc-docx-editor/casos/revisao_pt.md) · [armadilhas](../skills/tcc-docx-editor/referencia/armadilhas.md) · [entrega](../skills/tcc-docx-editor/referencia/entrega.md) · [padroes_revisao](../skills/tcc-docx-editor/referencia/padroes_revisao.md)
 - [tcc-pdf-notes](../skills/tcc-pdf-notes/SKILL.md)
+- [tcc-pptx-editor](../skills/tcc-pptx-editor/SKILL.md) — [roteiro_fala](../skills/tcc-pptx-editor/casos/roteiro_fala.md) · [sincronia_tcc](../skills/tcc-pptx-editor/casos/sincronia_tcc.md) · [troca_figura](../skills/tcc-pptx-editor/casos/troca_figura.md) · [armadilhas](../skills/tcc-pptx-editor/referencia/armadilhas.md) · [design](../skills/tcc-pptx-editor/referencia/design.md) · [entrega](../skills/tcc-pptx-editor/referencia/entrega.md)
 
 ## Agentes
 
@@ -48,6 +50,9 @@ Mapa de relações entre pastas: [grafo.md](grafo.md)
 - [pdf-note-runner](../agents/notas/pdf-note-runner.md) — /
 - [docx-runner](../agents/tcc-docx/docx-runner.md) — /
 - [docx-scripter](../agents/tcc-docx/docx-scripter.md) — /
+- [pptx-runner](../agents/tcc-pptx/pptx-runner.md) — /
+- [pptx-scripter](../agents/tcc-pptx/pptx-scripter.md) — /
+- [slide-validator](../agents/tcc-pptx/slide-validator.md) — /
 
 ## Regras
 

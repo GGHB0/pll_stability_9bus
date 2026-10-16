@@ -20,6 +20,7 @@ graph LR
     python["python/"]
     simulation["simulation/"]
     standards["standards/"]
+    tcc_pptx["tcc-pptx/"]
     tcc_word["tcc-word/"]
     dashboard -->|3| pll
     dashboard -->|1| power_system
@@ -58,10 +59,14 @@ graph LR
     standards -->|3| power_system
     standards -->|2| simulation
     standards -->|2| tcc_word
+    tcc_pptx -->|1| events
+    tcc_pptx -->|1| pll
+    tcc_pptx -->|2| simulation
+    tcc_pptx -->|3| tcc_word
     tcc_word -->|1| dashboard
     tcc_word -->|2| events
     tcc_word -->|12| pll
-    tcc_word -->|8| power_system
+    tcc_word -->|9| power_system
     tcc_word -->|11| simulation
     tcc_word -->|4| standards
 ```

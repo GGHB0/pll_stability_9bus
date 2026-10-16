@@ -1,0 +1,12 @@
+folder: tcc-pptx
+description: Deck da apresentação da defesa do TCC — mapa slide a slide, pendências e histórico de entregas (pipeline na skill tcc-pptx-editor)
+files:
+  - file: deck_map.md
+    name: defesa-deck-map
+    description: Mapa slide a slide do deck da defesa — mensagem, seção e figuras do TCC de onde vem, números que precisam bater
+  - file: pendencias.md
+    name: defesa-pendencias
+    description: Pendências do deck da defesa — divergências com o TCC, tempo de fala, decisões de conteúdo em aberto
+  - file: historico_entregas.md
+    name: defesa-historico-entregas
+    description: Histórico de entregas do Claude ao deck da defesa (Defesa_TCC_SRF-PLL.pptx), mais recente primeiro

@@ -1,0 +1,109 @@
+---
+name: tcc-pptx-editor
+description: Edita o deck da defesa do TCC (Defesa_TCC_SRF-PLL.pptx, no OneDrive) com python-pptx — texto e títulos dos slides, tabelas, troca de figura, notas do apresentador (roteiro Bruno/Victor), slide novo no padrão visual, tempo de fala, conferência de números e legendas contra o TCC DOCX, render em PNG e entrega com backup. Ativar quando o usuário falar em "apresentação", "slides", "slide N", "PPT/PPTX", "defesa", "banca", "roteiro de fala", "notas do apresentador" ou pedir para mexer no deck. Não edita o TCC DOCX (ver tcc-docx-editor).
+version: 1.0.0
+---
+
+# Skill: tcc-pptx-editor
+
+Edita o deck da defesa (`config.py`; hoje `Defesa_TCC_SRF-PLL.pptx`, na
+pasta `Template Modelo TCC` do OneDrive), sempre no **mesmo caminho**, com
+backup datado em `_backups\defesa\`. Ferramenta: **python-pptx** no `.venv`
+(XML cru só onde ele não chega: animação, transição, cirurgia em grupo).
+
+Pastas: `referencia/` (lido em toda edição), `casos/` (fluxos ocasionais),
+`scripts/`. Mapa slide a slide e pendências no KB:
+[deck_map.md](../../kb/tcc-pptx/deck_map.md) e
+[pendencias.md](../../kb/tcc-pptx/pendencias.md).
+
+## Leitura obrigatória
+
+- `referencia/design.md`: grade, cores do tema, fontes, tamanhos, as caixas
+  que se repetem ("Cartão de destaque", "Moldura da figura", "Justificativa
+  de ouro"...). Slide novo ou forma nova **copia uma existente**, não nasce do zero.
+- `referencia/entrega.md`: staging, finalize, entrega, sessões em paralelo.
+- `referencia/armadilhas.md`: python-pptx, PowerPoint COM, OneDrive.
+
+## Casos
+
+- `casos/sincronia_tcc.md`: número, figura ou legenda do deck contra o TCC
+  canônico e o KB. **Toda edição de conteúdo passa por aqui**: o deck é
+  resumo do TCC e não pode dizer outra coisa.
+- `casos/roteiro_fala.md`: notas `[Bruno]`/`[Victor]`, tempo (30 min de
+  defesa, só o corpo conta), redação falada.
+- `casos/troca_figura.md`: PNG novo do TCC ou do dashboard numa moldura.
+
+## Convenções de conteúdo
+
+- **Título é uma frase-afirmação** (o que o slide prova), não um rótulo.
+  Duas linhas no máximo em 28 pt.
+- **Sem travessão "—"**, como no TCC. Sem nome de código na tela
+  (`BAD_PLL`, `params.m`): na tela e na fala é "sintonia inadequada".
+- **Sem RoCoF, sem "reaquisitar"** (memória do projeto, valem aqui também).
+- Número no slide = número do TCC canônico, com o mesmo arredondamento.
+  Divergiu → o TCC manda, salvo erro do TCC (aí avisar o Victor, não
+  corrigir só no deck).
+- Legenda de figura: `Figura X.Y do TCC: <descrição curta>`, conferida por
+  `check_pptx.py --tcc`. Renumerou figura no TCC → atualizar as legendas.
+- Apêndice (depois do slide DIVIDER) é material para perguntas: não entra no
+  tempo de fala, mas segue as mesmas regras de número e legenda.
+
+## Divisão de trabalho por modelo
+
+Mesma regra da `tcc-docx-editor`: o critério é custo total.
+
+| Nível | Quem | Faz |
+|---|---|---|
+| Síntese | principal | Mensagem do slide, título, roteiro de fala, decisão de layout |
+| Scripting | `pptx-scripter` (Sonnet) | `gen_*.py` a partir de spec fechada, quando a edição é grande ou repetitiva |
+| Execução | `pptx-runner` (Haiku) | Staging, dumps, render, rodar scripts, finalize, entrega |
+| Revisão | `slide-validator` (Sonnet) | Números × TCC/KB e defeitos visuais nos PNGs, antes da entrega |
+
+- **Direto, sem agente**: 1-5 trocas de texto, uma figura, notas de até ~3
+  slides. A spec teria o tamanho do script.
+- **`slide-validator` sempre** que a entrega mexer em número, tabela,
+  figura ou layout. Só nota de fala → basta o `tempo_fala.py`.
+- Sessão em Sonnet não escala para Opus por conta própria.
+
+## Scripts (`scripts/`, `python.exe` = `.venv\Scripts\python.exe`)
+
+- `dump_slides.py <pptx> [--slides 3-7] [--notas] [--sem-texto] [--xml N]`:
+  formas com nome, índice, tipo, caixa em polegadas, texto, tabelas, notas
+- `find_text.py <pptx> <padrão> [--regex] [--notas] [-i]`: ocorrências e total
+- `check_pptx.py <pptx> [--tcc <docx>] [--slides 1-16]`: FALHA = forma fora
+  do slide, legenda "Figura X.Y do TCC" inexistente/tipo trocado; AVISO =
+  texto talvez vazando (heurística), < 11 pt, imagem < 150 px/in, fonte fora
+  do tema, travessão, nome de código, slide sem notas. Código 1 se FALHA
+- `tempo_fala.py <pptx> [--ppm 130] [--limite 30]`: minutos por slide e por
+  orador; código 1 acima do limite
+- `troca_imagem.py <in> <slide> <forma> <png> <out> [--esticar]`: troca a
+  mídia mantendo a caixa (cabe pela proporção, centrado)
+- `diff_slides.py <antes> <depois> [--sem-notas]`: texto, tabelas, notas e
+  hash das imagens, slide a slide
+- `render.ps1 -In <pptx> -Out <pasta> [-Slides "3,5"] [-Folha]`: PNG pelo
+  PowerPoint + folha-resumo 4 colunas
+- `pptx_finalize.ps1 -In <montado> -Out <final> [-Pdf]`: prova que o
+  PowerPoint abre sem reparo e regrava
+- `entrega.ps1 -Final <final> -Dest <canônico> -Md5Staging <md5>`: fecha o
+  PowerPoint pelo COM, MD5, backup, cópia, reabre
+- `pptx_util.py`: `abrir`, `formas` (entra em grupos), `texto_forma`,
+  `notas`, `falas`, `faixa` para os `gen_*.py`
+
+## Workflow padrão
+
+```
+1. STAGING: OneDrive → C:\Temp\defesa_<tema>\deck.pptx; guardar o MD5
+2. INSPEÇÃO: dump_slides (--sem-texto para achar a forma-alvo) / find_text;
+   render.ps1 -Folha dos slides envolvidos (o "antes")
+3. CONFERÊNCIA: casos/sincronia_tcc.md para todo número/figura que entra
+4. PLANO (principal): slide, forma, texto antigo → novo, notas, layout.
+   AGUARDAR APROVAÇÃO do Victor
+5. SCRIPT: C:\Temp\defesa_<tema>\gen_<tema>.py, lendo SEMPRE o deck do
+   staging e gravando montado.pptx; localiza forma por nome + índice e
+   confere o texto antigo antes de trocar (count esperado)
+6. CHECKS: check_pptx --tcc (0 FALHA) + tempo_fala + render dos slides
+   alterados → ler os PNGs; slide-validator quando couber
+7. FINALIZE: pptx_finalize.ps1 [-Pdf]
+8. ENTREGA: entrega.ps1 → diff_slides backup × canônico: só o que o plano previa
+9. KB: deck_map / pendencias / historico_entregas (tcc-pptx/)
+```

@@ -82,6 +82,8 @@ for n in faixa(a.slides, len(slides)):
         avisos.append(f"slide {n} NOTAS: identificador de código '{c}'")
     for sh, _ in formas(s):
         x, y, w, h = pol(sh.left), pol(sh.top), pol(sh.width), pol(sh.height)
+        if round(getattr(sh, "rotation", 0) or 0) % 180 == 90:   # girada a 90/270: caixa visível troca w e h no centro
+            x, y, w, h = x + (w - h) / 2, y + (h - w) / 2, h, w
         nome = f'slide {n} "{sh.name}"'
         if x < -0.02 or y < -0.02 or x + w > W + 0.02 or y + h > H + 0.02:
             falhas.append(f"{nome}: fora do slide ({x:.2f},{y:.2f}) {w:.2f}x{h:.2f}")

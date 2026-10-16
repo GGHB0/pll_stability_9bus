@@ -13,19 +13,24 @@ aliases: [defesa-pendencias]
 
 ## Em aberto
 
-- **Entrega da rodada de 2026-10-16.** Itens 1-5 abaixo aplicados e validados
-  em `C:\Temp\defesa_pend\final.pptx` (+ PDF), **ainda não copiados** para o
-  OneDrive: o `entrega.ps1` abortou porque havia PowerPoint rodando (instância
-  órfã da automação, depois aberta pelo Victor com o deck). Fechar o
-  PowerPoint e rodar a entrega com `-Md5Staging c1a5457ba911ccbc6a1b3a702bc6837a`;
-  se o canônico mudou nesse meio-tempo, refazer o staging e rodar o
-  `gen_pendencias.py` de novo.
+- **Partida "até 0,1 s" (slide 9, tela e notas)**: o valor não aparece no
+  TCC (§4.3.4) nem no KB (slide-validator, 2026-10-16). Conferir com o Bruno
+  no código das métricas; se for real, registrar em [[cenarios-simulados]].
+- **Ensaiar a demo (slide 12) no notebook da defesa, sem internet**: abrir
+  `output/pll_metrics.html` antes, no cenário Barra 7 trifásica nominal;
+  conferir os nomes dos botões citados nas notas (Zoom na falta, aba
+  Espectro FFT em dq). O cabeçalho do HTML ainda diz "UERJ 2025".
+- **Crédito do template (CC BY 4.0)**: o visual vem do "Project
+  Portfolio" do SlidesCarnival; falta a linha de crédito (sugestão: discreta
+  no último slide do apêndice). Decisão do Victor.
+- **Cosmético (slide-validator)**: ~1 in vazio no pé da capa; vão de ~0,5 in
+  entre a tabela e a pergunta no slide 7.
 - **6. Fontes**: Arial (título) + Calibri (corpo) do tema, sem mudança no
   deck. Conferir no notebook da defesa e levar o PDF de reserva.
 - **Opcional**: rótulos internos da Figura 5.14 (slide 18) pequenos no
   projetor; os valores estão na tabela ao lado.
 
-## Resolvidas em 2026-10-16 (aguardando entrega)
+## Resolvidas em 2026-10-16 (entregues na rodada da noite)
 
 1. Monofásica na Barra 7 com sintonia inadequada: slide 10 "com as duas
    sintonias"; linha nova nas tabelas dos slides 18 e 21 (Tabela 5.3 do TCC:

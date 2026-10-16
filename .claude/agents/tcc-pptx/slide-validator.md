@@ -57,7 +57,7 @@ NÃO VERIFICÁVEL e qual método o plano declarou, não aprovar nem reprovar.
 ### 4. Visual
 **Leia os PNGs.** Procure: texto cortado ou saindo da caixa; caixa
 sobrepondo outra; figura com texto ilegível na escala do slide; elemento
-fora da grade de `referencia/design.md` (margem 0,60 in, colunas
+fora da grade de `referencia/design.md` (conteúdo de x 1,10 a 12,95 in, nada sobre a linha da seção, colunas
 alinhadas); mais de 2 destaques laranja no slide; título em 3 linhas;
 tabela com linha espremida. Compare com um slide vizinho não alterado:
 a edição tem que parecer do mesmo deck.

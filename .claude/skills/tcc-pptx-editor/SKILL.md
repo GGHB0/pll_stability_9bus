@@ -32,6 +32,8 @@ Pastas: `referencia/` (lido em toda edição), `casos/` (fluxos ocasionais),
 - `casos/roteiro_fala.md`: notas `[Bruno]`/`[Victor]`, tempo (30 min de
   defesa, só o corpo conta), redação falada.
 - `casos/troca_figura.md`: PNG novo do TCC ou do dashboard numa moldura.
+- `casos/troca_template.md`: achar, comparar e aplicar um template visual
+  novo (SlidesCarnival, export do Canva, cores `srgbClr` × `schemeClr`).
 
 ## Convenções de conteúdo
 
@@ -86,6 +88,8 @@ Mesma regra da `tcc-docx-editor`: o critério é custo total.
   PowerPoint abre sem reparo e regrava
 - `entrega.ps1 -Final <final> -Dest <canônico> -Md5Staging <md5>`: fecha o
   PowerPoint pelo COM, MD5, backup, cópia, reabre
+- `template_util.py`: `Rascunho` (formas para layouts), `desloca`,
+  `rotulo_secao`, `estilo_chapado` (troca de template)
 - `pptx_util.py`: `abrir`, `formas` (entra em grupos), `texto_forma`,
   `notas`, `falas`, `faixa` para os `gen_*.py`
 - `edicoes.py`: classe `Edicao` com as edições conferidas (`troca_run`,

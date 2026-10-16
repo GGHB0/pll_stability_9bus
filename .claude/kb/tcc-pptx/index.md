@@ -19,6 +19,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 
 ## Pastas relacionadas
 
+- [dashboard/](../dashboard/index.md) — saem 1, chegam 0
 - [events/](../events/index.md) — saem 1, chegam 0
 - [pll/](../pll/index.md) — saem 1, chegam 0
 - [simulation/](../simulation/index.md) — saem 2, chegam 0

@@ -43,6 +43,11 @@ confirmem: a regra do deck é só o que está no TCC entregue.
 "Figura X.Y do TCC" dos slides alterados: o título da legenda no TCC
 descreve a imagem da moldura? (ler o PNG). Número certo apontando para
 figura errada só sai assim.
+**Figura dedicada** (`assets/charts/defesa/`, ver
+`casos/figura_dedicada.md`): ler a nova e a original do TCC lado a lado.
+Curva, janela, eixos, séries e cores iguais; valor anotado igual ao do
+TCC; nada anotado que o TCC não traga → senão BLOQUEIA. Anotação que saiu
+só é aceita se o número estiver na tabela ou nos cartões do slide.
 
 ### 3. Coerência interna
 Mesmo fato dito igual em todo o deck: slide × notas × apêndice (ex.:

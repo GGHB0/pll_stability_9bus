@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 190" font-family="Cambria Math, Cambria, serif" font-size="30" fill="#1E3A8A">
+  <rect x="0" y="0" width="960" height="190" fill="#ffffff"/>
+  <!-- vetor dq -->
+  <path d="M18 40 h-8 v110 h8 M62 40 h8 v110 h-8" fill="none" stroke="#1E3A8A" stroke-width="2.2"/>
+  <text x="40" y="83" text-anchor="middle" font-style="italic">v<tspan font-size="20" dy="7">d</tspan></text>
+  <text x="40" y="133" text-anchor="middle" font-style="italic">v<tspan font-size="20" dy="7">q</tspan></text>
+  <text x="96" y="105" text-anchor="middle">=</text>
+  <!-- 2/3 -->
+  <text x="140" y="86" text-anchor="middle">2</text>
+  <line x1="126" y1="96" x2="154" y2="96" stroke="#1E3A8A" stroke-width="2"/>
+  <text x="140" y="127" text-anchor="middle">3</text>
+  <!-- matriz -->
+  <path d="M180 30 h-8 v130 h8 M818 30 h8 v130 h-8" fill="none" stroke="#1E3A8A" stroke-width="2.2"/>
+  <g text-anchor="middle">
+    <text x="268" y="83">cos <tspan fill="#EA580C" font-style="italic">θ</tspan></text>
+    <text x="470" y="83">cos(<tspan fill="#EA580C" font-style="italic">θ</tspan> − 2π/3)</text>
+    <text x="700" y="83">cos(<tspan fill="#EA580C" font-style="italic">θ</tspan> + 2π/3)</text>
+    <text x="268" y="133">−sin <tspan fill="#EA580C" font-style="italic">θ</tspan></text>
+    <text x="470" y="133">−sin(<tspan fill="#EA580C" font-style="italic">θ</tspan> − 2π/3)</text>
+    <text x="700" y="133">−sin(<tspan fill="#EA580C" font-style="italic">θ</tspan> + 2π/3)</text>
+  </g>
+  <!-- vetor abc -->
+  <path d="M866 20 h-8 v150 h8 M920 20 h8 v150 h-8" fill="none" stroke="#1E3A8A" stroke-width="2.2"/>
+  <g text-anchor="middle" font-style="italic">
+    <text x="892" y="62">v<tspan font-size="20" dy="7">a</tspan></text>
+    <text x="892" y="108">v<tspan font-size="20" dy="7">b</tspan></text>
+    <text x="892" y="154">v<tspan font-size="20" dy="7">c</tspan></text>
+  </g>
+</svg>

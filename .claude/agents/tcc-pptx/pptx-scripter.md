@@ -28,6 +28,12 @@ e `referencia/armadilhas.md`.
   e tamanho em polegadas (grade do `design.md`).
 - Notas novas por slide, já redigidas com `[Bruno]`/`[Victor]`.
 - Checks finais (strings que devem sumir/aparecer, tempo de fala esperado).
+- **Figura dedicada** (`casos/figura_dedicada.md`): figura do TCC de
+  origem, função do gerador do TCC que dá os dados, caixa da imagem em
+  polegadas e o que sai da figura. Você escreve a `fig_<N_M>()` em
+  `.claude/skills/tcc-pptx-editor/scripts/figuras/gen_figs_defesa.py`
+  seguindo as existentes; dado sempre pelas funções do gerador do TCC,
+  nunca leitura própria do CSV, e nenhum número que a spec não peça.
 
 ## Regras de código
 

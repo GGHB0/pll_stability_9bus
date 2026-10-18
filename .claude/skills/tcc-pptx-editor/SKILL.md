@@ -32,6 +32,8 @@ Pastas: `referencia/` (lido em toda edição), `casos/` (fluxos ocasionais),
 - `casos/roteiro_fala.md`: notas `[Bruno]`/`[Victor]`, tempo (30 min de
   defesa, só o corpo conta), redação falada.
 - `casos/troca_figura.md`: PNG novo do TCC ou do dashboard numa moldura.
+- `casos/figura_dedicada.md`: gráfico do Cap. 5 redesenhado para projeção
+  (mesmos dados, tamanho da caixa do slide), em `scripts/figuras/`.
 - `casos/troca_template.md`: achar, comparar e aplicar um template visual
   novo (SlidesCarnival, export do Canva, cores `srgbClr` × `schemeClr`).
 
@@ -104,6 +106,8 @@ Mesma regra da `tcc-docx-editor`: o critério é custo total.
   `tira_run`, `notas`, `troca_img`, `linha_nova`, `alturas`, `duplica_slide`,
   `renumera_ids`, `move_slides`) e `rodar`, que
   executa os grupos `g_*` do script. **Base de todo `gen_*.py`**
+- `figuras/gen_figs_defesa.py [5.3,5.7,...]` + `figuras/estilo.py`: figuras
+  dedicadas ao deck em `assets/charts/defesa/` (`casos/figura_dedicada.md`)
 
 ## Workflow padrão
 

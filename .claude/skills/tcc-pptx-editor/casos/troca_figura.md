@@ -10,6 +10,8 @@ figura" com legenda "Figura X.Y do TCC: ...".
   `rId` da legenda. É a mesma que a banca viu. Preferir à regeneração.
 - **Gráfico regenerado** (`scripts/` do projeto, dashboard): só se o TCC
   também recebeu o novo; senão o deck passa a mostrar outra coisa.
+- **Versão para projeção** (mesmos dados, desenho no tamanho do slide):
+  `casos/figura_dedicada.md`.
 - **Diagrama** (`assets/diagrams/*.svg`): PNG via skill `svg-diagrams`
   (`export_png.ps1`).
 - Resolução: ≥ 150 px por polegada **exibida** (moldura de 6 in → ≥ 900 px

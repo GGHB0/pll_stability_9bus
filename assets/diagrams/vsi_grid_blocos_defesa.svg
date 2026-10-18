@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1140 345" font-family="Calibri, Carlito, sans-serif" fill="#0F172A">
+  <!-- Fig. 3.2 do TCC (vsi_grid_blocos.svg) redesenhada para o slide da fonte na defesa:
+       caixa 7,60 x 2,30 in (150 un/in, 1 un = 0,48 pt). Mesmos blocos e ligações da Fig. 3.2,
+       notação v como nos slides 5 e 6; SRF-PLL destacado em laranja (ponte com o slide 6). -->
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1E3A8A"/>
+    </marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EA580C"/>
+    </marker>
+    <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563EB"/>
+    </marker>
+  </defs>
+  <rect width="1140" height="345" fill="#ffffff"/>
+
+  <!-- fonte primária -->
+  <rect x="10" y="24" width="230" height="140" rx="10" fill="#F0FDF4" stroke="#166534" stroke-width="3"/>
+  <text x="125" y="70" text-anchor="middle" font-size="30" font-weight="700" fill="#166534">Fonte primária</text>
+  <text x="125" y="106" text-anchor="middle" font-size="24" fill="#166534">(solar / eólica)</text>
+  <text x="125" y="146" text-anchor="middle" font-size="30" font-style="italic" fill="#166534">V<tspan baseline-shift="sub" font-size="70%">dc</tspan></text>
+  <line x1="240" y1="94" x2="298" y2="94" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
+  <text x="269" y="80" text-anchor="middle" font-size="24">CC</text>
+
+  <!-- VSI -->
+  <rect x="300" y="24" width="210" height="140" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="3"/>
+  <text x="405" y="62" text-anchor="middle" font-size="32" font-weight="700">VSI</text>
+  <text x="405" y="94" text-anchor="middle" font-size="24">Inversor Fonte</text>
+  <text x="405" y="120" text-anchor="middle" font-size="24">de Tensão</text>
+  <text x="405" y="150" text-anchor="middle" font-size="22">(CC → CA, 2 níveis)</text>
+  <line x1="510" y1="94" x2="568" y2="94" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
+  <text x="539" y="80" text-anchor="middle" font-size="24">3φ</text>
+
+  <!-- filtro -->
+  <rect x="570" y="24" width="210" height="140" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="3"/>
+  <text x="675" y="72" text-anchor="middle" font-size="30" font-weight="700" fill="#B45309">Filtro de</text>
+  <text x="675" y="106" text-anchor="middle" font-size="30" font-weight="700" fill="#B45309">acoplamento</text>
+  <text x="675" y="142" text-anchor="middle" font-size="24" fill="#B45309">(LCL)</text>
+  <line x1="780" y1="94" x2="838" y2="94" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
+  <text x="809" y="80" text-anchor="middle" font-size="24">3φ</text>
+
+  <!-- rede -->
+  <rect x="840" y="24" width="290" height="140" rx="10" fill="#F1F5F9" stroke="#0F172A" stroke-width="3"/>
+  <text x="985" y="86" text-anchor="middle" font-size="30" font-weight="700">Rede elétrica</text>
+  <text x="985" y="122" text-anchor="middle" font-size="24">(sistema IEEE 9 barras)</text>
+
+  <!-- controle digital -->
+  <rect x="300" y="232" width="560" height="100" rx="10" fill="#FFF7ED" stroke="#EA580C" stroke-width="2.6" stroke-dasharray="9,6"/>
+  <text x="580" y="270" text-anchor="middle" font-size="28" font-weight="700">Controle digital</text>
+  <text x="580" y="310" text-anchor="middle" font-size="24">PWM · malhas de corrente dq · <tspan font-weight="700" font-size="28" fill="#EA580C">SRF-PLL</tspan></text>
+
+  <!-- pulsos de comando: controle -> VSI -->
+  <line x1="405" y1="232" x2="405" y2="166" stroke="#EA580C" stroke-width="2.6" marker-end="url(#arrO)"/>
+  <text x="417" y="208" font-size="22" fill="#EA580C">pulsos de comando</text>
+
+  <!-- corrente medida na saída do filtro -->
+  <line x1="675" y1="164" x2="675" y2="230" stroke="#2563EB" stroke-width="2.4" stroke-dasharray="7,5" marker-end="url(#arrB)"/>
+  <text x="687" y="210" font-size="28" font-style="italic" fill="#2563EB">i<tspan baseline-shift="sub" font-size="70%">abc</tspan></text>
+
+  <!-- tensão medida na rede -->
+  <path d="M 985 164 L 985 282 L 862 282" fill="none" stroke="#2563EB" stroke-width="2.4" stroke-dasharray="7,5" marker-end="url(#arrB)"/>
+  <text x="997" y="232" font-size="28" font-style="italic" fill="#2563EB">v<tspan baseline-shift="sub" font-size="70%">abc</tspan></text>
+</svg>

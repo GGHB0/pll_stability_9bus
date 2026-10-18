@@ -1,7 +1,7 @@
 ---
 name: tcc-pptx-editor
 description: Edita o deck da defesa do TCC (Defesa_TCC_SRF-PLL.pptx, no OneDrive) com python-pptx — texto e títulos dos slides, tabelas, troca de figura, notas do apresentador (roteiro Bruno/Victor), slide novo no padrão visual, tempo de fala, conferência de números e legendas contra o TCC DOCX, render em PNG e entrega com backup. Ativar quando o usuário falar em "apresentação", "slides", "slide N", "PPT/PPTX", "defesa", "banca", "roteiro de fala", "notas do apresentador" ou pedir para mexer no deck. Não edita o TCC DOCX (ver tcc-docx-editor).
-version: 1.1.0
+version: 1.2.0
 ---
 
 # Skill: tcc-pptx-editor
@@ -50,7 +50,7 @@ Pastas: `referencia/` (lido em toda edição), `casos/` (fluxos ocasionais),
   mesmo que esteja no KB ou no modelo. Nunca propor ressalva, aviso ou
   errata na fala. **Exceção de método** (Victor, 2026-10-18): etapa de
   modelagem que o TCC não descreve (bancada do PLL entre duas fontes
-  ideais, montagem do inversor em etapas, slides 7 e 9) pode entrar como
+  ideais, montagem do inversor em etapas, slides 9 e 11) pode entrar como
   etapa, **sem número** fora do TCC; registrar em `pendencias.md` cada
   exceção aprovada. Erro do próprio TCC: o deck evita os dois lados, avisar o
   Victor, e a explicação vai para o material de perguntas
@@ -116,12 +116,17 @@ Mesma regra da `tcc-docx-editor`: o critério é custo total.
 2. INSPEÇÃO: dump_slides (--sem-texto para achar a forma-alvo) / find_text;
    render.ps1 -Folha dos slides envolvidos (o "antes")
 3. CONFERÊNCIA: casos/sincronia_tcc.md para todo número/figura que entra
-4. PLANO (principal): slide, forma, texto antigo → novo, notas, layout.
-   AGUARDAR APROVAÇÃO do Victor
+4. PLANO (principal): slide, forma, texto antigo → novo, notas, layout
 5. SCRIPT: C:\Temp\defesa_<tema>\gen_<tema>.py sobre edicoes.Edicao, uma
    função g_<grupo> por tipo de edição (txt, tab, img, notas...), lendo SEMPRE
    o deck do staging e gravando montado.pptx. PowerPoint recusou → bisseção:
    gen_<tema>.py <grupo> <saída> + render de cada variante
+   PRÉVIA (toda mudança visível na tela): render -Folha do montado com os
+   slides alterados e os vizinhos que a mudança afeta; ler os PNGs, corrigir
+   o óbvio (quebra de título, texto encostando) e mostrar ao Victor o caminho
+   completo do PNG + o que muda e o que fica igual. Só staging, nada no
+   OneDrive. Ajuste pedido → nova prévia. AGUARDAR APROVAÇÃO do Victor
+   (só nota de fala dispensa prévia: basta o texto no plano)
 6. CHECKS: check_pptx --tcc (0 FALHA) + tempo_fala + render dos slides
    alterados → ler os PNGs; slide-validator quando couber
 7. FINALIZE: pptx_finalize.ps1 [-Pdf]

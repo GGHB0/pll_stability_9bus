@@ -21,23 +21,27 @@ aliases: [defesa-pendencias]
   na tela (R_th, L_th, Vdc e m ficam para a arguição). **Tela entregue em
   2026-10-18.** Depois, no mesmo dia, o slide 5 foi dividido em dois (deck
   26 → 27): 5 = transformada de Park (equação 3.5, gancho "E o ângulo θ?"),
-  6 = Fig. 4.3 com os blocos PD, PI e VCO. Pendente: **falas dos slides
-  5-10** (5, 6 e 8 têm só o marcador "[Victor] Fala a escrever"; 7, 9 e 10
-  ainda têm as antigas). Itens que saíram da tela e devem ir para a fala:
-  compromisso de banda do PI (slide 6), Rd1/Rd2/Rd3
-  (slide 10), PI de corrente com ξ 0,707 e ωn = 4√2·fg (antiga fala do 6).
+  6 = Fig. 4.3 com os blocos PD, PI e VCO. À noite entrou um slide 5 novo
+  (deck 27 → 28): a usina fotovoltaica como inversor seguidor de rede
+  (Fig. 3.2), que abre a MODELAGEM e resume o que vem; Park passou a 6.
+  Pendente: **falas dos slides 5-11** (5, 6, 7 e 9 têm só o marcador
+  "[Victor] Fala a escrever"; 8, 10 e 11 ainda têm as antigas; no 5, o
+  gancho para a substituição da máquina da Barra 2 no IEEE 9 barras, que
+  aparece no 8). Itens que saíram da tela e devem ir para a fala:
+  compromisso de banda do PI (slide 7), Rd1/Rd2/Rd3
+  (slide 11), PI de corrente com ξ 0,707 e ωn = 4√2·fg (antiga fala do 6).
 
 - **Regra (2026-10-17)**: o deck traz só o que está no TCC entregue
   (VFinal), com o mesmo valor; nada de ressalva na fala. A partida "até
-  0,1 s" saiu do slide 9 por isso.
+  0,1 s" saiu do slide 10 por isso.
 - **Inconsistências do próprio TCC entregue** (o deck evita os dois lados):
   Tabela 4.1 diz 28 cenários (21 + 7), mas a Tabela 5.3 já usa a
   monofásica na Barra 7 inadequada (29 = 21 + 8); a introdução traz
   22.547 MW (31%) e a §2.4.3, 23.368 MW (34,5%), que é o número do deck.
-- **Demo (slide 14)**: o cartão do painel mostra "V residual médio B2"
+- **Demo (slide 15)**: o cartão do painel mostra "V residual médio B2"
   (0,099 / 0,094 pu), não a retenção de Vd do TCC (9,2% / 8,2%). As notas
   citam só o TCC; não ler o cartão em voz alta.
-- **Ensaiar a demo (slide 14) no notebook da defesa, sem internet**: abrir
+- **Ensaiar a demo (slide 15) no notebook da defesa, sem internet**: abrir
   `output/pll_metrics.html` antes, no cenário Barra 7 trifásica nominal;
   conferir os nomes dos botões citados nas notas (Zoom na falta, aba
   Espectro FFT em dq). O cabeçalho do HTML ainda diz "UERJ 2025".
@@ -45,20 +49,23 @@ aliases: [defesa-pendencias]
   Portfolio" do SlidesCarnival; falta a linha de crédito (sugestão: discreta
   no último slide do apêndice). Decisão do Victor.
 - **Cosmético (slide-validator)**: ~1 in vazio no pé da capa; vão de ~0,5 in
-  entre a tabela e a pergunta no slide 9 (ganhos).
+  entre a tabela e a pergunta no slide 10 (ganhos).
 - A capa troca de figuras do TCC para fotos de usinas (2026-10-16); o
   crédito CC BY acima vale só para o template, não para as fotos (Pexels).
 - **6. Fontes**: Arial (título) + Calibri (corpo) do tema, sem mudança no
   deck. Conferir no notebook da defesa e levar o PDF de reserva.
 - **Figuras dedicadas do apêndice** (caso `figura_dedicada.md` da skill):
-  5.14 (slide 21), 5.5/5.6 (slide 22), 5.20/5.21 (slide 25). Corpo (13, 15,
-  16) entregue em 2026-10-18.
-- **Opcionais do slide-validator (figuras dedicadas, 2026-10-18)**: slide 16
+  5.14 (slide 22), 5.5/5.6 (slide 23), 5.20/5.21 (slide 26). Corpo (14, 16,
+  17) entregue em 2026-10-18.
+- **Opcionais do slide-validator (figuras dedicadas, 2026-10-18)**: slide 17
   com moldura direita até x 12,30 (não 12,95) e ticks ~10,5 pt nas 5.10/5.18;
   faixa cinza do 1º ciclo sem legenda nas 5.7/5.18 (explicar na fala, está
   no texto da Fig. 5.7); rótulo "falta" encosta na curva no painel Barra 7;
-  cartão "250×" do slide 16, onde o TCC diz "mais de 250 vezes"; título do
-  cartão "Sintonia nominal" do slide 13 em roxo (design: azul = nominal).
+  cartão "250×" do slide 17, onde o TCC diz "mais de 250 vezes"; título do
+  cartão "Sintonia nominal" do slide 14 em roxo (design: azul = nominal).
+- **Opcional (slide 5, slide-validator)**: o redesenho da Fig. 3.2 usa
+  rótulos em minúscula ("Fonte primária"), o TCC em maiúscula ("Fonte
+  Primária"); o cartão "Seguidor de rede" é paráfrase do §4.1, sem número novo.
 - Resolvido em 2026-10-18 (noite): Fig. 4.3 redesenhada para o slide 6 a pedido do Victor (exceção à regra de diagrama idêntico ao TCC), equações num cartão à direita.
 - Resolvido em 2026-10-18 (fim de tarde): equação do slide 5 na largura toda
   com cartões embaixo; Fig. 4.3 de 5,5 para 6,2 in; subscritos reais

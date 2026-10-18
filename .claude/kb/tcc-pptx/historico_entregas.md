@@ -10,6 +10,19 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-18 (noite, 4): slide 5 novo, a fonte antes de Park, 27 → 28 (entregue)
+
+- Pedido do Victor: apresentar a fonte renovável antes do IEEE 9 barras.
+  Slide novo (cópia do layout do 6) entre a motivação e Park: Fig. 3.2
+  redesenhada (`vsi_grid_blocos_defesa.svg`), 3 cartões e gancho "Como o
+  inversor segue a rede?". Primeiro passo com PRÉVIA na skill (v1.2.0).
+  Staging `C:\Temp\defesa_fonte\`.
+- MD5 antes 2d916e20cfbbe4e70c8e60b3f1904c67, depois
+  f2c78deb98e0a2a84df2bdffd6610a9e; backup
+  `Defesa_TCC_SRF-PLL_backup_20261018_193851.pptx`. slide-validator: sem
+  bloqueador, demais slides idênticos com deslocamento de 1; V_CC → V_dc
+  como na Fig. 3.2; check_pptx 0 falhas; tempo 23,3 min.
+
 ## 2026-10-18 (noite, 3): blocos funcionais demarcados no slide 6 (entregue)
 
 - Pedido do Victor: marcar na figura o detector de fase, o PI e o VCO.

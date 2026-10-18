@@ -1,6 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1130 280" font-family="Calibri, Carlito, sans-serif" fill="#0F172A">
-  <!-- Fig. 4.3 do TCC redesenhada para o slide 6 da defesa: caixa 7,53 x 1,87 in (150 un/in, 1 un = 0,48 pt).
-       Sem título interno e sem as equações (ficam num cartão de texto à direita, no slide). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1130 340" font-family="Calibri, Carlito, sans-serif" fill="#0F172A">
+  <!-- Fig. 4.3 do TCC redesenhada para o slide 6 da defesa: caixa 7,53 x 2,27 in (150 un/in, 1 un = 0,48 pt).
+       Sem título interno e sem as equações (ficam num cartão de texto à direita, no slide).
+       Áreas tracejadas = blocos funcionais da Fig. 3.3 do TCC (§3.4) (PD, PI, VCO), com os nomes dos cartões do slide. -->
   <defs>
     <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#1E3A8A"/>
@@ -9,59 +10,71 @@
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#EA580C"/>
     </marker>
   </defs>
-  <rect width="1130" height="280" fill="#ffffff"/>
+  <rect width="1130" height="340" fill="#ffffff"/>
+
+  <!-- blocos funcionais (Fig. 3.3 do TCC) -->
+  <g fill="#F8FAFC" stroke="#94A3B8" stroke-width="2" stroke-dasharray="8,6">
+    <rect x="92" y="50" width="304" height="212" rx="12"/>
+    <rect x="418" y="50" width="306" height="212" rx="12"/>
+    <rect x="742" y="50" width="370" height="212" rx="12"/>
+  </g>
+  <g font-size="28" font-weight="700" fill="#2563EB" text-anchor="middle">
+    <text x="244" y="38">Detector de fase (Park)</text>
+    <text x="571" y="38">Controlador PI</text>
+    <text x="927" y="38">VCO</text>
+  </g>
 
   <!-- entrada v_abc -->
-  <g transform="translate(14,130)" fill="none" stroke-width="2.6">
+  <g transform="translate(14,190)" fill="none" stroke-width="2.6">
     <path d="M 0 -26 q 8 -12 16 0 q 8 12 16 0 q 8 -12 16 0 q 8 12 16 0" stroke="#DC2626"/>
     <path d="M 0 0 q 8 -12 16 0 q 8 12 16 0 q 8 -12 16 0 q 8 12 16 0" stroke="#16A34A"/>
     <path d="M 0 26 q 8 -12 16 0 q 8 12 16 0 q 8 -12 16 0 q 8 12 16 0" stroke="#2563EB"/>
   </g>
-  <text x="46" y="200" text-anchor="middle" font-size="32" font-style="italic">v<tspan baseline-shift="sub" font-size="70%">abc</tspan></text>
-  <line x1="84" y1="130" x2="104" y2="130" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
+  <text x="46" y="262" text-anchor="middle" font-size="32" font-style="italic">v<tspan baseline-shift="sub" font-size="70%">abc</tspan></text>
+  <line x1="84" y1="190" x2="104" y2="190" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
 
   <!-- Park -->
-  <rect x="106" y="72" width="180" height="116" rx="8" fill="#DBEAFE" stroke="#2563EB" stroke-width="3"/>
-  <text x="196" y="122" text-anchor="middle" font-size="38" font-weight="700">Park</text>
-  <text x="196" y="164" text-anchor="middle" font-size="32">abc → dq</text>
+  <rect x="106" y="140" width="170" height="100" rx="8" fill="#DBEAFE" stroke="#2563EB" stroke-width="3"/>
+  <text x="191" y="182" text-anchor="middle" font-size="36" font-weight="700">Park</text>
+  <text x="191" y="222" text-anchor="middle" font-size="30">abc → dq</text>
 
   <!-- v_d (saída monitorada) -->
-  <path d="M 286 96 L 318 96 L 318 42" fill="none" stroke="#1E3A8A" stroke-width="2.6"/>
-  <text x="330" y="52" font-size="32" font-style="italic">v<tspan baseline-shift="sub" font-size="70%">d</tspan> ≈ U</text>
+  <path d="M 276 160 L 306 160 L 306 108" fill="none" stroke="#1E3A8A" stroke-width="2.6"/>
+  <text x="316" y="118" font-size="32" font-style="italic">v<tspan baseline-shift="sub" font-size="70%">d</tspan> ≈ U</text>
 
   <!-- v_q -->
-  <line x1="286" y1="150" x2="420" y2="150" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
-  <text x="353" y="132" text-anchor="middle" font-size="32" font-style="italic">v<tspan baseline-shift="sub" font-size="70%">q</tspan></text>
+  <line x1="276" y1="210" x2="434" y2="210" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
+  <text x="346" y="194" text-anchor="middle" font-size="32" font-style="italic">v<tspan baseline-shift="sub" font-size="70%">q</tspan></text>
 
   <!-- PI -->
-  <rect x="422" y="112" width="280" height="76" rx="8" fill="#EFF6FF" stroke="#1E3A8A" stroke-width="3"/>
-  <text x="562" y="162" text-anchor="middle" font-size="34" font-weight="700">K<tspan baseline-shift="sub" font-size="68%">pPLL</tspan> + K<tspan baseline-shift="sub" font-size="68%">iPLL</tspan>/s</text>
-  <line x1="702" y1="150" x2="774" y2="150" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
+  <rect x="436" y="172" width="270" height="76" rx="8" fill="#EFF6FF" stroke="#1E3A8A" stroke-width="3"/>
+  <text x="571" y="222" text-anchor="middle" font-size="34" font-weight="700">K<tspan baseline-shift="sub" font-size="68%">pPLL</tspan> + K<tspan baseline-shift="sub" font-size="68%">iPLL</tspan>/s</text>
+  <line x1="706" y1="210" x2="804" y2="210" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
 
   <!-- somador -->
-  <circle cx="798" cy="150" r="22" fill="#ffffff" stroke="#1E3A8A" stroke-width="2.6"/>
-  <line x1="785" y1="150" x2="811" y2="150" stroke="#1E3A8A" stroke-width="2"/>
-  <line x1="798" y1="137" x2="798" y2="163" stroke="#1E3A8A" stroke-width="2"/>
-  <text x="750" y="190" font-size="28" font-weight="700">+</text>
-  <text x="766" y="118" font-size="28" font-weight="700">+</text>
+  <circle cx="828" cy="210" r="22" fill="#ffffff" stroke="#1E3A8A" stroke-width="2.6"/>
+  <line x1="815" y1="210" x2="841" y2="210" stroke="#1E3A8A" stroke-width="2"/>
+  <line x1="828" y1="197" x2="828" y2="223" stroke="#1E3A8A" stroke-width="2"/>
+  <text x="780" y="248" font-size="28" font-weight="700">+</text>
+  <text x="796" y="178" font-size="28" font-weight="700">+</text>
 
   <!-- feed-forward omega_0 -->
-  <rect x="718" y="4" width="160" height="50" rx="6" fill="#ffffff" stroke="#1E3A8A" stroke-width="2.4"/>
-  <text x="798" y="39" text-anchor="middle" font-size="32" font-style="italic">ω<tspan baseline-shift="sub" font-size="70%">0</tspan> = 2π·60</text>
-  <line x1="798" y1="54" x2="798" y2="126" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
-  <text x="890" y="38" font-size="28" font-style="italic" fill="#64748B">feed-forward</text>
+  <rect x="754" y="64" width="152" height="54" rx="6" fill="#ffffff" stroke="#1E3A8A" stroke-width="2.4"/>
+  <text x="830" y="98" text-anchor="middle" font-size="32" font-style="italic">ω<tspan baseline-shift="sub" font-size="70%">0</tspan> = 2π·60</text>
+  <line x1="828" y1="118" x2="828" y2="186" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
+  <text x="916" y="98" font-size="28" font-style="italic" fill="#64748B">feed-forward</text>
 
-  <!-- omega_PLL -> VCO -->
-  <line x1="820" y1="150" x2="894" y2="150" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
-  <text x="857" y="130" text-anchor="middle" font-size="32" font-style="italic">ω<tspan baseline-shift="sub" font-size="70%">PLL</tspan></text>
-  <rect x="896" y="112" width="110" height="76" rx="8" fill="#EFF6FF" stroke="#1E3A8A" stroke-width="3"/>
-  <text x="951" y="164" text-anchor="middle" font-size="40" font-weight="700">1/s</text>
+  <!-- omega_PLL -> integrador -->
+  <line x1="850" y1="210" x2="934" y2="210" stroke="#1E3A8A" stroke-width="2.6" marker-end="url(#arr)"/>
+  <text x="890" y="190" text-anchor="middle" font-size="32" font-style="italic">ω<tspan baseline-shift="sub" font-size="70%">PLL</tspan></text>
+  <rect x="936" y="172" width="104" height="76" rx="8" fill="#EFF6FF" stroke="#1E3A8A" stroke-width="3"/>
+  <text x="988" y="224" text-anchor="middle" font-size="40" font-weight="700">1/s</text>
 
   <!-- saída theta_PLL -->
-  <line x1="1006" y1="150" x2="1100" y2="150" stroke="#EA580C" stroke-width="3" marker-end="url(#arrL)"/>
-  <text x="1046" y="124" text-anchor="middle" font-size="34" font-weight="700" font-style="italic" fill="#EA580C"><tspan font-family="Cambria Math, Cambria, serif">θ</tspan><tspan baseline-shift="sub" font-size="68%">PLL</tspan></text>
+  <line x1="1040" y1="210" x2="1104" y2="210" stroke="#EA580C" stroke-width="3" marker-end="url(#arrL)"/>
+  <text x="1076" y="164" text-anchor="middle" font-size="34" font-weight="700" font-style="italic" fill="#EA580C"><tspan font-family="Cambria Math, Cambria, serif">θ</tspan><tspan baseline-shift="sub" font-size="68%">PLL</tspan></text>
 
   <!-- realimentação de fase -->
-  <path d="M 1100 150 L 1118 150 L 1118 226 L 196 226 L 196 190" fill="none" stroke="#EA580C" stroke-width="2.6" stroke-dasharray="9,6" marker-end="url(#arrL)"/>
-  <text x="657" y="264" text-anchor="middle" font-size="28" font-style="italic" fill="#EA580C">realimentação de fase (<tspan font-family="Cambria Math, Cambria, serif">θ</tspan><tspan baseline-shift="sub" font-size="68%">PLL</tspan> → Park)</text>
+  <path d="M 1104 210 L 1122 210 L 1122 290 L 191 290 L 191 244" fill="none" stroke="#EA580C" stroke-width="2.6" stroke-dasharray="9,6" marker-end="url(#arrL)"/>
+  <text x="657" y="326" text-anchor="middle" font-size="28" font-style="italic" fill="#EA580C">realimentação de fase (<tspan font-family="Cambria Math, Cambria, serif">θ</tspan><tspan baseline-shift="sub" font-size="68%">PLL</tspan> → Park)</text>
 </svg>

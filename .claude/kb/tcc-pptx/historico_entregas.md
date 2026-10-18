@@ -10,6 +10,17 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-18 (noite, 3): blocos funcionais demarcados no slide 6 (entregue)
+
+- Pedido do Victor: marcar na figura o detector de fase, o PI e o VCO.
+  Áreas tracejadas com os nomes dos cartões, recorte da Fig. 3.3 do TCC
+  (§3.4; VCO = ω0 + somador + 1/s). Moldura e cartão de equações 2,80 in;
+  cartões e caixa do pé descidos. Staging `C:\Temp\defesa_s6b\`.
+- MD5 antes 08b059738bcac85515b68e20cca33788, depois
+  2d916e20cfbbe4e70c8e60b3f1904c67; backup
+  `Defesa_TCC_SRF-PLL_backup_20261018_185235.pptx`. `diff_slides.py`: só a
+  imagem do slide 6; check_pptx 0 falhas; slide-validator sem bloqueador.
+
 ## 2026-10-18 (noite, 2): slide 6 com a Fig. 4.3 redesenhada (entregue)
 
 - Pedido do Victor: diagrama e equações maiores no projetor. Três variantes

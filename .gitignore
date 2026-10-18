@@ -39,8 +39,10 @@ output/*
 # Resultados de simulação do Bruno — versionados
 !output/results/
 !output/results/**
-# Notas técnicas em PDF — documentos, não saída de runtime
-!output/*.pdf
+
+# Documentos (PDF, Word) — vivem no OneDrive/disco, nunca no repo
+*.pdf
+*.docx
 
 # OS / editor
 .DS_Store
@@ -72,3 +74,8 @@ Capítulo*.docx
 doc_tcc_*.xml
 tcc_*_montado.docx
 tcc_*_final.docx
+
+# Staging do deck da defesa (tcc-pptx-editor), caso grave no repo em vez de
+# C:\Temp\defesa_<tema>\ — o deck vive no OneDrive, nunca no repo
+*.pptx
+defesa_*/

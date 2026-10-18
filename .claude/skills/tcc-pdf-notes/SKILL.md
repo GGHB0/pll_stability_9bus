@@ -16,7 +16,7 @@ escolha de projeto, runbook para o Bruno. **Não** é para o TCC em si (ver
 |---|---|
 | Biblioteca `pdfnote.py` | `scripts/notas/pdfnote.py` |
 | Geradores | `scripts/notas/gen_<assunto>.py` |
-| PDFs gerados | `output/<assunto>.pdf` — **versionados** (`!output/*.pdf`) |
+| PDFs gerados | `output/<assunto>.pdf` — **fora do git** (`*.pdf` no `.gitignore`) |
 | PNGs de conferência | pasta scratchpad da sessão, nunca no repositório |
 
 Python: sempre `.venv\Scripts\python.exe`. Depende de `reportlab` e
@@ -70,6 +70,9 @@ redação do conteúdo e as decisões de layout ficam no modelo principal.
 Agente novo só aparece na lista na sessão seguinte à criação.
 
 ## Armadilhas já pagas
+
+- **Título órfão no pé da página**: o estilo `s_h` usa `keepWithNext=1`
+  desde 2026-10-17, então `n.h()` sempre desce junto com o bloco seguinte.
 
 - **`rise` em `<sub>`/`<super>`**: o reportlab desalinha o avanço horizontal e
   os índices saem soltos no meio da linha. Usar o padrão, sem `rise` nem `size`.

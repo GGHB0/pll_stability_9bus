@@ -84,6 +84,53 @@ class Edicao:
         self.log.append(f"slide {n} {nome}: imagem <- {png.split(chr(92))[-1]} "
                         f"({nw / EMU:.2f}x{nh / EMU:.2f} in, caixa {w / EMU:.2f}x{h / EMU:.2f})")
 
+    # slide -----------------------------------------------------------------
+    def duplica_slide(self, n):
+        """Cópia do slide n (formas, mídia e árvore das notas) anexada no fim; devolve o número novo.
+        Mover para a posição certa com move_slides. Ver armadilhas.md (notas sem corpo)."""
+        from pptx.opc.constants import RELATIONSHIP_TYPE as RT
+        src = self.S[n - 1]
+        novo = self.prs.slides.add_slide(src.slide_layout)
+        for ph in list(novo.placeholders):
+            ph._element.getparent().remove(ph._element)
+        for sh in src.shapes:
+            el = copy.deepcopy(sh._element)
+            novo.shapes._spTree.append(el)
+            if sh.shape_type == 13:  # imagem: religar a mídia no slide novo
+                rid = novo.part.relate_to(src.part.related_part(sh._element.blipFill.blip.rEmbed), RT.IMAGE)
+                el.blipFill.blip.rEmbed = rid
+        if src.has_notes_slide:  # o notes_slide novo nasce sem placeholder de corpo
+            arv = novo.notes_slide.shapes._spTree
+            for el in list(arv)[2:]:
+                arv.remove(el)
+            for el in list(src.notes_slide.shapes._spTree)[2:]:
+                arv.append(copy.deepcopy(el))
+        self.S.append(novo)
+        self.log.append(f"slide {len(self.S)}: cópia do slide {n}")
+        return len(self.S)
+
+    def renumera_ids(self, n):
+        """Ids de forma repetidos no slide n (cópia de forma por deepcopy) viram ids novos."""
+        vistos, prox = set(), 1000
+        for el in self.S[n - 1].shapes._spTree.iter():
+            if el.tag.endswith("}cNvPr"):
+                if el.get("id") in vistos:
+                    el.set("id", str(prox))
+                    prox += 1
+                vistos.add(el.get("id"))
+        self.log.append(f"slide {n}: {prox - 1000} ids de forma renumerados")
+
+    def move_slides(self, ordem):
+        """Nova ordem pelos números atuais (base 1), ex. [1, 2, 4, 3]; precisa listar todos."""
+        lst = self.prs.slides._sldIdLst
+        ids = list(lst)
+        assert sorted(ordem) == list(range(1, len(ids) + 1)), "ordem precisa listar todos os slides"
+        for el in ids:
+            lst.remove(el)
+        for k in ordem:
+            lst.append(ids[k - 1])
+        self.log.append(f"ordem: {ordem}")
+
     # tabela ----------------------------------------------------------------
     def linha_nova(self, n, modelo, depois, textos):
         """Copia a linha 'modelo' (base 0, cabeçalho = 0) para depois da linha 'depois'."""

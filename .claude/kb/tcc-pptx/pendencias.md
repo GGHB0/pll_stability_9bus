@@ -13,6 +13,18 @@ aliases: [defesa-pendencias]
 
 ## Em aberto
 
+- **Reestruturação da MODELAGEM (decidida em 2026-10-18, Alternativa 1)**:
+  5 slides na ordem do trabalho real (dq → 9 barras/Thévenin → bancada do
+  PLL entre duas fontes ideais → ganhos → inversor em etapas PWM/LCL/100 MW),
+  deck 25 → 26. Exceção à regra abaixo **só para o método** (bancada e
+  sequência de montagem, de [[psim-modeling]]); nenhum número fora do TCC
+  na tela (R_th, L_th, Vdc e m ficam para a arguição). **Tela entregue em
+  2026-10-18.** Pendente: **falas dos slides 5-9** (as notas ainda são as
+  antigas; a do 5 cita a "figura da direita", que saiu, e o 7 tem só um
+  marcador "[Victor] Fala a escrever"). Itens que saíram da tela e devem
+  ir para a fala: compromisso de banda do PI (slide 5), Rd1/Rd2/Rd3
+  (slide 9), PI de corrente com ξ 0,707 e ωn = 4√2·fg (antiga fala do 6).
+
 - **Regra (2026-10-17)**: o deck traz só o que está no TCC entregue
   (VFinal), com o mesmo valor; nada de ressalva na fala. A partida "até
   0,1 s" saiu do slide 9 por isso.
@@ -20,10 +32,10 @@ aliases: [defesa-pendencias]
   Tabela 4.1 diz 28 cenários (21 + 7), mas a Tabela 5.3 já usa a
   monofásica na Barra 7 inadequada (29 = 21 + 8); a introdução traz
   22.547 MW (31%) e a §2.4.3, 23.368 MW (34,5%), que é o número do deck.
-- **Demo (slide 12)**: o cartão do painel mostra "V residual médio B2"
+- **Demo (slide 13)**: o cartão do painel mostra "V residual médio B2"
   (0,099 / 0,094 pu), não a retenção de Vd do TCC (9,2% / 8,2%). As notas
   citam só o TCC; não ler o cartão em voz alta.
-- **Ensaiar a demo (slide 12) no notebook da defesa, sem internet**: abrir
+- **Ensaiar a demo (slide 13) no notebook da defesa, sem internet**: abrir
   `output/pll_metrics.html` antes, no cenário Barra 7 trifásica nominal;
   conferir os nomes dos botões citados nas notas (Zoom na falta, aba
   Espectro FFT em dq). O cabeçalho do HTML ainda diz "UERJ 2025".
@@ -31,12 +43,12 @@ aliases: [defesa-pendencias]
   Portfolio" do SlidesCarnival; falta a linha de crédito (sugestão: discreta
   no último slide do apêndice). Decisão do Victor.
 - **Cosmético (slide-validator)**: ~1 in vazio no pé da capa; vão de ~0,5 in
-  entre a tabela e a pergunta no slide 7.
+  entre a tabela e a pergunta no slide 8 (ganhos).
 - A capa troca de figuras do TCC para fotos de usinas (2026-10-16); o
   crédito CC BY acima vale só para o template, não para as fotos (Pexels).
 - **6. Fontes**: Arial (título) + Calibri (corpo) do tema, sem mudança no
   deck. Conferir no notebook da defesa e levar o PDF de reserva.
-- **Opcional**: rótulos internos da Figura 5.14 (slide 18) pequenos no
+- **Opcional**: rótulos internos da Figura 5.14 (slide 20) pequenos no
   projetor; os valores estão na tabela ao lado.
 
 ## Resolvidas em 2026-10-16 (entregues na rodada da noite)

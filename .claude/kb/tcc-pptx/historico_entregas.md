@@ -10,6 +10,24 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-18: bloco MODELAGEM reestruturado, 25 → 26 slides (entregue)
+
+- Alternativa 1 aprovada pelo Victor: ordem do trabalho real (dq →
+  9 barras/Thévenin → bancada do PLL entre duas fontes ideais → ganhos →
+  inversor em etapas). Staging MD5 `3ee5d96bbd991ea529e6f6f5a4f51884`;
+  script `C:\Temp\defesa_modelagem\gen_modelagem.py`. Entregue MD5
+  `90d55095ce259bc043bcc49e563be05f`; backup
+  `_backups\defesa\Defesa_TCC_SRF-PLL_backup_20261018_133056.pptx`; PDF de
+  reserva `C:\Temp\defesa_modelagem\final.pdf`.
+- Slide 5 (era 6): sai a Fig. 3.1, entram 3 cartões; pergunta "Por que dq
+  e não abc?". Slide 6 (era 8): "Ferramentas" → "Redução". Slide 7 novo,
+  figura `assets/diagrams/pll_bancada_duas_fontes.svg`. Slide 8 (era 7):
+  título "Na bancada..."; sai "(16,7 ms)", que não está no TCC
+  (slide-validator). Slide 9 (era 5): título e cartões em etapas.
+- diff: slides 1-4 e 10-26 idênticos aos antigos 1-4 e 9-25. check 0
+  falha; slide-validator sem bloqueio após o 16,7 ms; 24,9 min (notas de
+  5-9 ainda antigas).
+
 ## 2026-10-17: deck igual ao TCC final, sem valor fora dele (entregue)
 
 - Regra do Victor: todo número e afirmação do deck é o do TCC entregue

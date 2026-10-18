@@ -40,6 +40,18 @@ Continuação de `SKILL.md`. Ordem: ambiente, python-pptx, PowerPoint, conteúdo
   run, apagar todo `a:pPr` do parágrafo além do primeiro. Arquivo recusado →
   bisseção por grupo de edição (`gen_*.py <grupos> <saída>`), um render por
   variante.
+- **Slide novo** (2026-10-18): usar `Edicao.duplica_slide` + `move_slides`.
+  Três pegadinhas que ela já resolve: o `notes_slide` de slide criado por
+  `add_slide` nasce **sem placeholder de corpo** (`notes_text_frame` é
+  `None`), então a árvore das notas é copiada da origem; imagem copiada
+  precisa de `relate_to` com a mídia da origem; e copiar a mesma forma duas
+  vezes no slide repete o `id` do `cNvPr`, o que pede `renumera_ids`. O
+  número do slide é campo (`a:fld type="slidenum"`): reordenar não o quebra.
+- Depois da entrega o `entrega.ps1` **reabre** o canônico no PowerPoint, e
+  o python-pptx não lê o arquivo aberto (`PackageNotFoundError`). Rodar o
+  `diff_slides.py` contra o `final.pptx` do staging, que tem o mesmo MD5.
+  Com slide inserido o diff é posicional: conferir os slides deslocados
+  pelo texto (antigo k → novo k+1), não pelo diff cru.
 - `add_picture` com só `width` mantém a proporção; com width e height
   deforma. Para trocar figura, usar `troca_imagem.py`.
 

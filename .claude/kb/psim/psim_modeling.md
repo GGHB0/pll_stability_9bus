@@ -82,9 +82,8 @@ Consistências com o projeto atual (`CLAUDE.md`):
   sistema completo) — **não** foi exportado; só temos o arquivo base.
 - Formas de onda do SimView — **não necessárias** (não vamos reprocessar).
 - **Bancada do PLL entre duas fontes ideais** (passo 1 da cronologia
-  abaixo): o esquemático não está no repo, e falta confirmar com o Victor
-  como as fontes eram ligadas (rede + "inversor" por uma impedância, ou
-  fonte + perturbação) e se o Thévenin da Barra 2 já era usado nela.
+  abaixo): o esquemático não está no repo, só uma captura de tela enviada
+  pelo Victor em 2026-10-18.
 
 ## Fio Narrativo para o TCC
 
@@ -103,10 +102,21 @@ PD/PI/VCO + SPWM, com degrau de referência).
 ### Cronologia da etapa 1 (relato do Victor, 2026-10-17)
 
 O trabalho todo começou no PSIM, e só se passou ao Simulink depois de PLL
-e inversor fechados:
+e inversor fechados. A modelagem inteira foi no PSIM por ser mais fácil e
+visual; **o afundamento (faltas) só existiu no Simulink**, e o ramo de
+curto que aparece na captura da bancada não foi usado nesta fase:
 
 1. **SRF-PLL entre duas fontes trifásicas ideais**, até confirmar que ele
-   seguia a rede. Não há arquivo desse passo (ver Lacunas).
+   seguia a rede. É um primeiro teste e entra no TCC só como menção breve.
+   Pela captura (2026-10-18): "Barramento infinito" → "Sistema Equivalente
+   da Rede" (RL série, o Thévenin) → PCC → RL → "Tensão da Geração" (a fonte
+   que faz o papel do inversor). O PLL mede Va/Vb/Vc no PCC, em três blocos:
+   PD (abc→dq com FasePLL), PI (+ wRede) e VCO (integrador → FasePLL). Há um
+   ramo de curto (chaves scA/scB/scC por pulso, RL à terra) e uma FFT de Va.
+   Desativados em cinza: Clarke/Park separados (S1/S2) e uma fonte de
+   "Ângulo Teta", aparentemente de uma versão anterior. **O Thévenin já
+   estava nesta bancada**, e foi nela que os ganhos do PI do PLL
+   (`Kp` 460, `Ki` 105 820) foram calculados ([[pll-loop-filter-gains]]).
 2. **Inversor só com PWM.** A primeira tentativa seguiu o YAZDANI e IRAVANI
    (2010) ([[vsc-reference]]); o projeto só andou com a TeseAGP (ALVES,
    2022), que passou a ser a referência de projeto ([[agp-current-control-theory]]).

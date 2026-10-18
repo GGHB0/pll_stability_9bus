@@ -44,7 +44,7 @@ graph LR
     power_system -->|2| standards
     power_system -->|1| tcc_word
     psim -->|3| inverter
-    psim -->|3| pll
+    psim -->|4| pll
     psim -->|1| power_system
     psim -->|4| simulation
     python -->|1| dashboard
@@ -65,6 +65,7 @@ graph LR
     tcc_pptx -->|1| dashboard
     tcc_pptx -->|1| events
     tcc_pptx -->|1| pll
+    tcc_pptx -->|2| psim
     tcc_pptx -->|2| simulation
     tcc_pptx -->|3| tcc_word
     tcc_word -->|1| dashboard

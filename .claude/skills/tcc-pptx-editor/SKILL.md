@@ -46,7 +46,11 @@ Pastas: `referencia/` (lido em toda edição), `casos/` (fluxos ocasionais),
   todo número e afirmação da tela **e das notas** é o do TCC, com o mesmo
   arredondamento. Divergiu → vira o valor do TCC. Não está no TCC → sai,
   mesmo que esteja no KB ou no modelo. Nunca propor ressalva, aviso ou
-  errata na fala. Erro do próprio TCC: o deck evita os dois lados, avisar o
+  errata na fala. **Exceção de método** (Victor, 2026-10-18): etapa de
+  modelagem que o TCC não descreve (bancada do PLL entre duas fontes
+  ideais, montagem do inversor em etapas, slides 7 e 9) pode entrar como
+  etapa, **sem número** fora do TCC; registrar em `pendencias.md` cada
+  exceção aprovada. Erro do próprio TCC: o deck evita os dois lados, avisar o
   Victor, e a explicação vai para o material de perguntas
   (`scripts/notas/gen_defesa_qa.py`, skill tcc-pdf-notes).
 - Legenda de figura: `Figura X.Y do TCC: <descrição curta>`, conferida por
@@ -97,7 +101,8 @@ Mesma regra da `tcc-docx-editor`: o critério é custo total.
 - `pptx_util.py`: `abrir`, `formas` (entra em grupos), `texto_forma`,
   `notas`, `falas`, `faixa` para os `gen_*.py`
 - `edicoes.py`: classe `Edicao` com as edições conferidas (`troca_run`,
-  `tira_run`, `notas`, `troca_img`, `linha_nova`, `alturas`) e `rodar`, que
+  `tira_run`, `notas`, `troca_img`, `linha_nova`, `alturas`, `duplica_slide`,
+  `renumera_ids`, `move_slides`) e `rodar`, que
   executa os grupos `g_*` do script. **Base de todo `gen_*.py`**
 
 ## Workflow padrão

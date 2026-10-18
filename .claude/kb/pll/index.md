@@ -50,7 +50,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 - [events/](../events/index.md) — saem 1, chegam 0
 - [inverter/](../inverter/index.md) — saem 5, chegam 6
 - [power-system/](../power-system/index.md) — saem 3, chegam 6
-- [psim/](../psim/index.md) — saem 1, chegam 3
+- [psim/](../psim/index.md) — saem 1, chegam 4
 - [simulation/](../simulation/index.md) — saem 2, chegam 3
 - [standards/](../standards/index.md) — saem 3, chegam 5
 - [tcc-pptx/](../tcc-pptx/index.md) — saem 0, chegam 1

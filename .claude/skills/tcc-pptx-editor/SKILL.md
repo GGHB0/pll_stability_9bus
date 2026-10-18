@@ -42,9 +42,13 @@ Pastas: `referencia/` (lido em toda edição), `casos/` (fluxos ocasionais),
 - **Sem travessão "—"**, como no TCC. Sem nome de código na tela
   (`BAD_PLL`, `params.m`): na tela e na fala é "sintonia inadequada".
 - **Sem RoCoF, sem "reaquisitar"** (memória do projeto, valem aqui também).
-- Número no slide = número do TCC canônico, com o mesmo arredondamento.
-  Divergiu → o TCC manda, salvo erro do TCC (aí avisar o Victor, não
-  corrigir só no deck).
+- **Deck = TCC entregue, sem acréscimo** (regra do Victor, 2026-10-17):
+  todo número e afirmação da tela **e das notas** é o do TCC, com o mesmo
+  arredondamento. Divergiu → vira o valor do TCC. Não está no TCC → sai,
+  mesmo que esteja no KB ou no modelo. Nunca propor ressalva, aviso ou
+  errata na fala. Erro do próprio TCC: o deck evita os dois lados, avisar o
+  Victor, e a explicação vai para o material de perguntas
+  (`scripts/notas/gen_defesa_qa.py`, skill tcc-pdf-notes).
 - Legenda de figura: `Figura X.Y do TCC: <descrição curta>`, conferida por
   `check_pptx.py --tcc`. Renumerou figura no TCC → atualizar as legendas.
 - Apêndice (depois do slide DIVIDER) é material para perguntas: não entra no

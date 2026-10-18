@@ -1,6 +1,6 @@
 # Skill: tcc-docx-editor
 
-Edita o TCC DOCX (`config.py`; hoje `TCC_Victor_Bruno_VF - Copia.docx`) no OOXML.
+Edita o TCC DOCX (`config.py`; hoje `TCC_Victor_Bruno_VFinal.docx`, a versão entregue à banca) no OOXML.
 **Padrões fixos** (Resumo↔Abstract + comentário, fechar/reabrir Word, "Feito." ao Oscar, siglas): `referencia/padroes_revisao.md`.
 Modo aceito pelo Victor: **edições diretas no XML, sem tracked changes**
 (`helpers.py` mantém os geradores com `w:ins` caso volte a ser necessário).

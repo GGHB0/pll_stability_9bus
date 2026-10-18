@@ -34,9 +34,9 @@ sobre o `document.xml` extraído do DOCX para a pasta de trabalho).
 Todo número dos slides alterados e das notas deles contra o TCC (texto e
 Tabelas 4.1, 5.1-5.3). Mesmo valor, mesmo arredondamento, mesma unidade.
 Refazer o que for refazível com python (ωn = √Ki, ξ = Kp/(2ωn), ts =
-4,6/(ξωn), contagem de cenários). Número no deck que não existe no TCC →
-procurar no KB (`kb/pll/sintonia/`, `kb/simulation/cenarios_simulados.md`);
-não achou → NÃO VERIFICÁVEL.
+4,6/(ξωn), contagem de cenários). Número ou afirmação no deck (tela ou
+notas) que não existe no TCC → BLOQUEIA, mesmo que o KB ou o modelo
+confirmem: a regra do deck é só o que está no TCC entregue.
 
 ### 2. Legendas e figuras
 `check_pptx.py <deck> --tcc <docx>` e reportar FALHAs. Depois, para cada
@@ -49,10 +49,9 @@ Mesmo fato dito igual em todo o deck: slide × notas × apêndice (ex.:
 contagem de cenários no slide 10 e na Tabela do apêndice). Usar
 `find_text.py --notas` com o valor ou a frase.
 Roteiro encurtado: `diff_slides.py <staging> <montado>` nas notas e listar
-o que saiu; número ou explicação que a banca pode cobrar (exemplo numérico,
-justificativa de faixa ou janela) e que não foi dito em outro slide é
-RECOMENDA "devolver". Número sem par no TCC (coluna calculada): dizer
-NÃO VERIFICÁVEL e qual método o plano declarou, não aprovar nem reprovar.
+o que saiu; explicação **que está no TCC** e que a banca pode cobrar, sem
+ter sido dita em outro slide, é RECOMENDA "devolver". O que não está no
+TCC não volta. Nunca recomendar ressalva ou aviso na fala.
 
 ### 4. Visual
 **Leia os PNGs.** Procure: texto cortado ou saindo da caixa; caixa

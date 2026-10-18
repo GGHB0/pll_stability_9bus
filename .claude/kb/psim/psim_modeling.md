@@ -1,8 +1,11 @@
 ---
 name: psim-modeling
 aliases: [psim-modeling]
-description: Fase inicial de modelagem do PLL no PSIM (Altair) — inventário, parâmetros e Vcc, antes da migração para Simulink
-source: pasta PSim/ (netlists .txt + parameters100MVA.txt, GGHB, 2026-07-22)
+description: Fase inicial de modelagem do PLL no PSIM (Altair) — cronologia, inventário, parâmetros e Vcc, antes da migração para Simulink
+source: pasta PSim/ (netlists .txt + parameters100MVA.txt, GGHB, 2026-07-22); relato do Victor (2026-10-17)
+references:
+  - "YAZDANI, Amirnaser; IRAVANI, Reza. Voltage-Sourced Converters in Power Systems: Modeling, Control, and Applications. Hoboken: John Wiley & Sons / IEEE Press, 2010. ISBN 978-0-470-52156-4."
+  - "ALVES, André Gustavo Pereira. Metodologia para Auto-Ajuste de Controladores de Corrente em Conversores Fonte de Tensão Conectados a Redes Sujeitas a Distúrbios Harmônicos. Tese (Doutorado em Engenharia Elétrica) — COPPE/UFRJ, Rio de Janeiro, 2022."
 ---
 
 # Modelagem Inicial no PSIM (Fase Pré-Simulink)
@@ -78,6 +81,10 @@ Consistências com o projeto atual (`CLAUDE.md`):
 - `parameters100MVA_VCCnovo.txt` (variante com Vcc = 136,4 kV usada no
   sistema completo) — **não** foi exportado; só temos o arquivo base.
 - Formas de onda do SimView — **não necessárias** (não vamos reprocessar).
+- **Bancada do PLL entre duas fontes ideais** (passo 1 da cronologia
+  abaixo): o esquemático não está no repo, e falta confirmar com o Victor
+  como as fontes eram ligadas (rede + "inversor" por uma impedância, ou
+  fonte + perturbação) e se o Thévenin da Barra 2 já era usado nela.
 
 ## Fio Narrativo para o TCC
 
@@ -92,6 +99,28 @@ sincronismo sem a influência das demais máquinas. Foram construídos dois
 esquemáticos: uma **bancada de projeto do controle de corrente**
 (planta RL × LCL) e o **sistema EMT completo** (VSC + LCL + SRF-PLL com
 PD/PI/VCO + SPWM, com degrau de referência).
+
+### Cronologia da etapa 1 (relato do Victor, 2026-10-17)
+
+O trabalho todo começou no PSIM, e só se passou ao Simulink depois de PLL
+e inversor fechados:
+
+1. **SRF-PLL entre duas fontes trifásicas ideais**, até confirmar que ele
+   seguia a rede. Não há arquivo desse passo (ver Lacunas).
+2. **Inversor só com PWM.** A primeira tentativa seguiu o YAZDANI e IRAVANI
+   (2010) ([[vsc-reference]]); o projeto só andou com a TeseAGP (ALVES,
+   2022), que passou a ser a referência de projeto ([[agp-current-control-theory]]).
+3. **Filtro LCL**, com ajustes e testes de valores ([[lcl-filter]]). A
+   bancada do PI de corrente (circuito `04`, RL × LCL) é desse passo.
+4. **Escala para 100 MW:** o Vdc teve de subir de 90,9 kV para 136,4 kV, o
+   que não ocorria nos 10 MW da TeseAGP. Justificativa física em
+   [[params-workflow]] (índice de modulação do SPWM).
+5. **Sistema completo** (circuito `01`) contra o Thévenin da Barra 2
+   ([[ieee9bus-thevenin]]).
+
+No texto do TCC, o passo 2 entra como escolha metodológica (Yazdani como
+base teórica do VSC, TeseAGP como referência de projeto), não como relato
+de tentativa.
 
 **Etapa 2 (Simulink).** Verificado o funcionamento, o mesmo conjunto migrou
 para `pll_stability_9bus.slx`, onde o conversor substitui a geração da

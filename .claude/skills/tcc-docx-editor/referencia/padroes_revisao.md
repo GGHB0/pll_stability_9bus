@@ -49,8 +49,9 @@ finalização e a entrega).
 
 ## 4. Canônico atual
 
-`TCC_Victor_Bruno_VF - Copia.docx` (desde 2026-10-12; antes o V10, desde
-2026-09-26). Backups em `_backups/VF/` (o `entrega.ps1` deduz `VF` do nome). A fonte
+`TCC_Victor_Bruno_VFinal.docx` (desde 2026-10-17, a versão entregue à
+banca; antes o VF - Copia, desde 2026-10-12, e o V10, desde 2026-09-26).
+O deck da defesa usa o mesmo arquivo como referência. Backups em `_backups/VF/` (o `entrega.ps1` deduz `VF` do nome). A fonte
 da verdade é `config.py`. Se o arquivo de `config.py` sumir, listar a pasta,
 propor o mais recente e **confirmar com o Victor** antes de editar.
 

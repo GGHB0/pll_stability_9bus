@@ -25,8 +25,23 @@ source of the theoretical calculation. The two can diverge on purpose.
 | Notebook | `Vcc = ((V_rms * 500)/220) * 2` | 90 909 V (AGP base) |
 | `params.m` | `Vcc = 90909.09 * 1.5` | 136 364 V (simulation override) |
 
-The `*1.5` factor in `params.m` does not come from the theoretical design. It is a
-manual tuning used to stabilize the simulation. The other values (`L1`, `L2`,
+The `*1.5` factor does not come from the AGP formula: it comes from scaling the
+converter to **100 MW**. It was introduced in the PSIM phase (see
+[[psim-modeling]]); the 10 MW case of the TeseAGP never needed it. The cause is
+the SPWM modulation margin: the drop across the filter inductance grows with
+the current, so at 100 MW the converter has to synthesize much more voltage
+than the grid peak.
+
+Check with `params.m` values (L1 + L2 = 30.7 mH, 20 kV, unity power factor,
+linear SPWM needs `Vdc >= 2·V_inv,pk`), computed 2026-10-17:
+
+| Power | `I_pk` | `ωL·I_pk` | `V_inv,pk` | `Vdc` min | `m` @ 90.9 kV | `m` @ 136.4 kV |
+|---|---|---|---|---|---|---|
+| 100 MW | 4.08 kA | 47.3 kV | 50.0 kV | 100 kV | **1.10** (overmodulation) | 0.73 |
+| 10 MW | 0.41 kA | 4.7 kV | 17.0 kV | 34 kV | 0.37 | 0.25 |
+
+The 10 MW row keeps the same L only to show the scaling; it is not the
+TeseAGP circuit. The other values (`L1`, `L2`,
 `C1`, `Kp/4`, `Ki/4`, `wres`, `Rth`, `Lth`) match the notebook because they were
 calculated from the same base.
 

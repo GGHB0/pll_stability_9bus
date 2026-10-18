@@ -10,6 +10,22 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-17: deck igual ao TCC final, sem valor fora dele (entregue)
+
+- Regra do Victor: todo número e afirmação do deck é o do TCC entregue
+  (VFinal, 15/10); o que não está no TCC sai. Staging MD5
+  `cc5e0460a8b0effb45180236061f10ca`; spec `C:\Temp\defesa_qa\spec.md`,
+  script `gen_tcc_exato.py`. Entregue MD5 `7975d03f419fc2900c712aa48ac26ab0`;
+  backup `_backups\defesa\Defesa_TCC_SRF-PLL_backup_20261017_123432.pptx`.
+- Slides 3 (23.368 MW; Ibéria: 2,5 GW por sobretensão, 0,63 Hz antes do
+  colapso), 4 (objetivos do TCC), 5 (saem Vcc 136,36 kV, L1, L2, Cf e o
+  argumento do MPPT; fica a margem de modulação da §4.3.2), 8 (sai 18/230 kV),
+  9 e 10 (saem "29 cenários", partida até 0,1 s, janela da retenção e
+  0,091/0,989), 12 ("98 ms após a eliminação"), 14 (título sem cycle
+  slipping), 17 (sai grid-forming e DSOGI; cartões do Cap. 7), 21 (P da
+  Tabela 5.2: −0,01/−0,01/0,02/0,41), 22 (sai a coluna Vd mín/máx).
+- diff_slides: só os 11 slides previstos. check 0 falha; 24,8 min.
+
 ## 2026-10-16 (madrugada): capa com fotos de usinas (entregue)
 
 - Staging MD5 `a3476f1764dae394ac691d54d7e1bbab`; script

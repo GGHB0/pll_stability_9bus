@@ -13,9 +13,16 @@ aliases: [defesa-pendencias]
 
 ## Em aberto
 
-- **Partida "até 0,1 s" (slide 9, tela e notas)**: o valor não aparece no
-  TCC (§4.3.4) nem no KB (slide-validator, 2026-10-16). Conferir com o Bruno
-  no código das métricas; se for real, registrar em [[cenarios-simulados]].
+- **Regra (2026-10-17)**: o deck traz só o que está no TCC entregue
+  (VFinal), com o mesmo valor; nada de ressalva na fala. A partida "até
+  0,1 s" saiu do slide 9 por isso.
+- **Inconsistências do próprio TCC entregue** (o deck evita os dois lados):
+  Tabela 4.1 diz 28 cenários (21 + 7), mas a Tabela 5.3 já usa a
+  monofásica na Barra 7 inadequada (29 = 21 + 8); a introdução traz
+  22.547 MW (31%) e a §2.4.3, 23.368 MW (34,5%), que é o número do deck.
+- **Demo (slide 12)**: o cartão do painel mostra "V residual médio B2"
+  (0,099 / 0,094 pu), não a retenção de Vd do TCC (9,2% / 8,2%). As notas
+  citam só o TCC; não ler o cartão em voz alta.
 - **Ensaiar a demo (slide 12) no notebook da defesa, sem internet**: abrir
   `output/pll_metrics.html` antes, no cenário Barra 7 trifásica nominal;
   conferir os nomes dos botões citados nas notas (Zoom na falta, aba

@@ -1,7 +1,8 @@
 # Sincronia do deck com o TCC
 
-Continuação de `SKILL.md`. O deck resume o TCC canônico (`DOCX_TCC` em
-`config.py`, o mesmo `DOCX_SOURCE` da `tcc-docx-editor`). A banca leu o
+Continuação de `SKILL.md`. O deck resume o TCC **entregue à banca** (`DOCX_TCC`
+em `config.py`, hoje o VFinal de 15/10/2026; pode diferir do `DOCX_SOURCE`
+de edição da `tcc-docx-editor`). A banca leu o
 TCC: número, figura ou afirmação diferente no slide vira pergunta.
 
 ## Fontes de verdade, nesta ordem
@@ -17,9 +18,9 @@ TCC: número, figura ou afirmação diferente no slide vira pergunta.
 2. **KB**: ganhos e sintonia (`kb/pll/sintonia/`), cenários
    (`kb/simulation/cenarios_simulados.md`), estado do TCC
    (`kb/tcc-word/content_map.md`, `historico/historico_entregas*.md`).
-3. **Simulação** (`output/results/`, via `src/pipeline/`): só para número
-   que não está no TCC. Número novo no deck que não está no TCC é decisão
-   do Victor: perguntar antes.
+3. **KB e simulação não autorizam número no deck.** Servem para conferir
+   e para responder perguntas da banca (`output/defesa_qa.pdf`), nunca para
+   pôr no slide o que o TCC não diz.
 
 ## O que conferir em toda edição de conteúdo
 
@@ -43,12 +44,19 @@ TCC: número, figura ou afirmação diferente no slide vira pergunta.
 - **Notas de fala**: os mesmos números aparecem por extenso nas notas.
   `find_text.py <deck> "<valor>" --notas` em cada valor alterado.
 
-## Número que o TCC não tem
+## Número ou afirmação que o TCC não tem
 
-Coluna do deck sem par no TCC (ex.: "Vd mínima e máxima" do slide 21):
-achar o método que **reproduz as linhas existentes** antes de calcular a
-nova, e registrar o método em [deck_map.md](../../../kb/tcc-pptx/deck_map.md).
-O `slide-validator` não consegue conferir: dizer isso no plano ao Victor.
+Sai do deck, na tela e nas notas (ex.: em 2026-10-17 saíram Vcc 136,36 kV,
+L1/L2/Cf, "partida até 0,1 s", a janela da retenção, a coluna "Vd mínima e
+máxima" e o cartão "grid-forming"). Se a banca pode perguntar, a resposta
+vai para o PDF de perguntas e respostas, não para o slide.
+
+## TCC com inconsistência interna
+
+O TCC entregue pode dizer duas coisas (ex.: Tabela 4.1 com 28 cenários e
+Tabela 5.3 já com o 29º; 22.547 MW na introdução e 23.368 MW na §2.4.3). O
+deck não cita a contagem em conflito, ou usa a seção dedicada ao assunto;
+registrar em `kb/tcc-pptx/pendencias.md` e avisar o Victor.
 
 ## Ao terminar
 

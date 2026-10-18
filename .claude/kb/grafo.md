@@ -43,13 +43,16 @@ graph LR
     power_system -->|6| pll
     power_system -->|2| standards
     power_system -->|1| tcc_word
+    psim -->|3| inverter
     psim -->|3| pll
+    psim -->|1| power_system
     psim -->|4| simulation
     python -->|1| dashboard
     simulation -->|6| dashboard
     simulation -->|1| inverter
     simulation -->|3| pll
     simulation -->|1| power_system
+    simulation -->|1| psim
     simulation -->|1| standards
     simulation -->|5| tcc_word
     standards -->|3| dashboard

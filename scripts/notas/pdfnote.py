@@ -121,7 +121,8 @@ class Note:
         self.s_metaR = _style("mr", fontSize=9, leading=13, textColor=MUTED,
                               spaceAfter=0, alignment=TA_RIGHT)
         self.s_h = _style("h", fontName="TNR-Bold", fontSize=13, leading=16,
-                          textColor=ACCENT, spaceBefore=12, spaceAfter=5)
+                          textColor=ACCENT, spaceBefore=12, spaceAfter=5,
+                          keepWithNext=1)   # título nunca fica sozinho no pé da página
         self.s_body = _style("b", alignment=TA_JUSTIFY)
         self.s_eq = _style("eq", fontName="TNR-Italic", fontSize=11, leading=17,
                            alignment=TA_CENTER, spaceAfter=0)

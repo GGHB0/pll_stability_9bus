@@ -75,6 +75,10 @@ Continuação de `SKILL.md`. Ordem: ambiente, python-pptx, PowerPoint, conteúdo
   daqui vale para o notebook da defesa só se as fontes forem as mesmas
   (Arial/Calibri, sem risco). Levar também o PDF (`-Pdf`).
 
+- `a:pPr` tem ordem de filhos fixa (`lnSpc`, `spcBef`, `spcAft`, `bu*`):
+  `spcBef` acrescentado depois de `buNone` é ignorado sem erro. Inserir na
+  posição certa (`ppr.insert(0, ...)` quando o `pPr` só tem `buNone`).
+
 ## Conteúdo
 
 - O deck veio de um gerador (nomes "Text N", mídia `image-<slide>-<n>.png`):

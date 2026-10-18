@@ -10,8 +10,12 @@ redesenhada dos mesmos dados**, no tamanho da caixa do slide.
 - Gráfico gerado por script do projeto (`scripts/gen_*.py`, Cap. 5) cujo
   texto, na escala do slide, cai abaixo de ~11 pt, ou com painéis
   espremidos (2x2 em menos de 6 in).
-- Não vale para figura que não é gráfico de dado (diagrama de blocos,
-  Fig. 4.3): essa fica idêntica à do TCC.
+- Diagrama de blocos fica idêntico ao do TCC, salvo pedido do Victor:
+  a Fig. 4.3 (slide 6) foi redesenhada em 2026-10-18 em SVG à mão
+  (`assets/diagrams/pll_control_loop_defesa.svg`, skill `svg-diagrams`),
+  com os mesmos blocos, sinais e ligações; equação que sai da figura vira
+  texto nativo num cartão do slide (deepcopy de um cartão vizinho;
+  runs Cambria Math 20 pt, subscrito `baseline=-25000`, sobrescrito `30000`).
 
 ## O que muda e o que nunca muda
 
@@ -70,6 +74,7 @@ TCC, função do gerador que dá os dados, caixa, o que sai).
 | 13 | 5.3 | `fig_5_3` | nota "nos primeiros ms..." |
 | 15 | 5.7 | `fig_5_7` | 4 caixas pico/retorno (na tabela), legenda 1º ciclo/faixa |
 | 16 | 5.10 | `fig_5_10` | nota das trifásicas em 120 Hz (faixa do slide 15) |
+| 6 | 4.3 (diagrama) | `pll_control_loop_defesa.svg` | título interno, rótulos cinza; equações viram cartão |
 | 16 | 5.18 | `fig_5_18` | linhas de pico/retorno (98 ms no cartão), legenda 1º ciclo/faixa |
 
 Pendentes (apêndice): 5.14 (slide 21), 5.5/5.6 (22), 5.20/5.21 (25).

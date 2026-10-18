@@ -10,6 +10,20 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-18 (noite, 2): slide 6 com a Fig. 4.3 redesenhada (entregue)
+
+- Pedido do Victor: diagrama e equações maiores no projetor. Três variantes
+  em staging (`C:\Temp\defesa_s6\`), aprovada a C: diagrama compacto
+  (`assets/diagrams/pll_control_loop_defesa.svg`, 7,55 x 1,87 in, notação v,
+  sem título interno), cartão novo "Sintonia do PI" com as equações da
+  figura em Cambria Math 20 pt, cartões PD/PI/VCO em linha embaixo; legenda
+  "Figura 4.3 do TCC: diagrama conceitual do SRF-PLL" (saiu "Clarke").
+- MD5 antes 7f164f87e23f4e100235577ae4cc5fda, depois
+  08b059738bcac85515b68e20cca33788; backup
+  `Defesa_TCC_SRF-PLL_backup_20261018_184248.pptx`. `diff_slides.py`: só o
+  slide 6; check_pptx 0 falhas (aviso: fonte Cambria Math); slide-validator
+  sem bloqueador.
+
 ## 2026-10-18 (noite): figuras dedicadas nos slides 13, 15 e 16 (entregue)
 
 - Pedido do Victor: gráficos do Cap. 5 ilegíveis no projetor → versão

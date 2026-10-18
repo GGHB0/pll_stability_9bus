@@ -59,9 +59,7 @@ aliases: [defesa-pendencias]
   no texto da Fig. 5.7); rótulo "falta" encosta na curva no painel Barra 7;
   cartão "250×" do slide 16, onde o TCC diz "mais de 250 vezes"; título do
   cartão "Sintonia nominal" do slide 13 em roxo (design: azul = nominal).
-- **Opcional**: rótulos internos da Fig. 4.3 (slide 6) seguem pequenos
-  (6-8 pt) mesmo com a figura a 6,2 in; crescer mais só com versão da figura
-  de fonte maior, que deixaria de ser idêntica à do TCC. Não fazer sem pedido.
+- Resolvido em 2026-10-18 (noite): Fig. 4.3 redesenhada para o slide 6 a pedido do Victor (exceção à regra de diagrama idêntico ao TCC), equações num cartão à direita.
 - Resolvido em 2026-10-18 (fim de tarde): equação do slide 5 na largura toda
   com cartões embaixo; Fig. 4.3 de 5,5 para 6,2 in; subscritos reais
   (baseline -25000) em v_q, v_d, ω_PLL, ω_0, θ_PLL nos cartões do slide 6.

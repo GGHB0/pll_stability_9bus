@@ -41,7 +41,8 @@ e `referencia/armadilhas.md`.
   `C:\projetos\pll_stability_9bus\.venv\Scripts\python.exe`.
 - Importar utilidades:
   `sys.path.insert(0, r"C:\projetos\pll_stability_9bus\.claude\skills\tcc-pptx-editor\scripts")`
-  e `from edicoes import Edicao` (+ `pptx_util` se precisar de `formas`).
+  e `from edicoes import Edicao` (+ `pptx_util` se precisar de `formas`;
+  + `montagem` para escrever com subscrito, posicionar e copiar formas).
   O script é uma função `g_<grupo>(ed)` por tipo de edição e termina em
   `ed.rodar(globals())`; o docstring do `edicoes.py` tem o molde. Edição que
   o módulo não cobre e vai se repetir → propor a função nova no relatório.

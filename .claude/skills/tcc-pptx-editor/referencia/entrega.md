@@ -49,11 +49,12 @@ Ordem fixa, aborta sem tocar no canônico:
 Depois, sempre:
 
 ```text
-python.exe scripts\diff_slides.py "<backup gravado>" "<canônico>"
+python.exe scripts\diff_slides.py C:\Temp\defesa_<tema>\deck.pptx C:\Temp\defesa_<tema>\final.pptx
 ```
 
-Só pode aparecer o que o plano previa. Diferença a mais → investigar antes
-de dizer "entregue".
+O canônico fica aberto no PowerPoint e o python-pptx não o lê; o
+`final.pptx` tem o mesmo MD5. Só pode aparecer o que o plano previa.
+Diferença a mais → investigar antes de dizer "entregue".
 
 - "ABORTADO: PowerPoint nao fechou": logo depois do finalize com `-Pdf`
   a instância dele leva mais de 30 s para sair (2 vezes em 2026-10-19);
@@ -65,6 +66,9 @@ de dizer "entregue".
 
 ## MD5 mudou
 
+- **No staging de uma edição nova**, MD5 diferente do da última entrega:
+  `diff_slides.py` do `final.pptx` anterior × `deck.pptx` novo. Zero
+  diferença = o PowerPoint só regravou ao fechar (2026-10-19); seguir.
 - **Antes da entrega** (o Victor ou o Bruno salvaram): refazer o staging e
   rodar o `gen_*.py` de novo sobre o deck atual. Sync do OneDrive chega em
   rajadas: esperar o MD5 parar de mudar.

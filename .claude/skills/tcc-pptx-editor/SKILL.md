@@ -107,6 +107,9 @@ Mesma regra da `tcc-docx-editor`: o critério é custo total.
   `tira_run`, `notas`, `troca_img`, `linha_nova`, `alturas`, `duplica_slide`,
   `renumera_ids`, `move_slides`, `frase_abertura`) e `rodar`, que
   executa os grupos `g_*` do script. **Base de todo `gen_*.py`**
+- `montagem.py`: `escreve` (parágrafos com subscrito `_{x}` e sobrescrito
+  `^{x}`), `caixa` (polegadas), `copia`, `duplica_grupo` (etapa nova a
+  partir de caixa + título + corpo), `tira`. Não reescrever no `gen_*.py`
 - `folha_opcoes.py <saida.png> <rotulo=png>... [--recorte y0,y1]`: empilha
   os PNGs de variantes para a prévia com opções
 - `figuras/gen_figs_defesa.py [5.3,5.7,...]` + `figuras/estilo.py`: figuras

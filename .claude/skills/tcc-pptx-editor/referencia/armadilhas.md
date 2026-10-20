@@ -52,6 +52,9 @@ Continuação de `SKILL.md`. Ordem: ambiente, python-pptx, PowerPoint, conteúdo
   `diff_slides.py` contra o `final.pptx` do staging, que tem o mesmo MD5.
   Com slide inserido o diff é posicional: conferir os slides deslocados
   pelo texto (antigo k → novo k+1), não pelo diff cru.
+- O `.venv\Scripts\python.exe` é Windows nativo: chamado do Bash, recebe
+  caminho `C:\Temp\...` entre aspas simples, nunca `/c/Temp/...`
+  (`folha_opcoes.py` deu FileNotFoundError em 2026-10-19).
 - `add_picture` com só `width` mantém a proporção; com width e height
   deforma. Para trocar figura, usar `troca_imagem.py`.
 

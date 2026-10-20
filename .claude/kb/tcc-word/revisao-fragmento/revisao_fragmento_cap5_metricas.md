@@ -41,6 +41,8 @@ causa direta da divergência: sem receita, o número não é reprodutível.
 **Script:** `scripts/medir_tabelas_cap5.py` aplica todas as definições e grava
 `output/tabelas_cap5.csv`; reproduz as Tabelas 5.1-5.3 do TCC (conferido em
 2026-10-03, diferença zero). Número novo do Cap. 5 sai dele, não de conta solta.
+Desde 2026-10-20 as receitas moram em `src/pipeline/indicadores.py`, chamado
+pelo script e pelo dashboard ([[indicadores-tcc-dashboard]]).
 
 **Janela do 120 Hz:** `[t_fault + 2 ciclos, t_clear]` tem ~67 ms, mas o 1º
 instante cai uma amostra depois de `t_fault + 2 ciclos`, então

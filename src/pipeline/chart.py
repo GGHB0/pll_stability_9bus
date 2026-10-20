@@ -13,9 +13,10 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from ..config import (
-    TOL_RAD, LVRT_THRESHOLD,
+    LVRT_THRESHOLD,
     LIGHT_COLORS, DARK_COLORS,
 )
+from .indicadores import CICLO_S, TOL_DEG
 from .loader import SimData
 
 _S = "single"   # linha inteira (colspan 2)
@@ -255,12 +256,16 @@ class ChartBuilder:
             )
 
     def _ts_marker(self, t_err: np.ndarray, err: np.ndarray, row: int, col: int) -> None:
-        """Marca no gráfico de erro o instante de acomodação tₛ calculado no loader."""
+        """Marca no gráfico de erro o retorno à faixa de 2° calculado no loader
+        (mesmo valor da coluna "Retorno à faixa de 2°" das Tabelas 5.1/5.3)."""
         d = self._d
         ts_val = d.metrics.get("ts")
         if ts_val is None or d.t_fault is None:
             return
         y_ts = float(np.interp(ts_val, t_err, np.degrees(err)))
+        ind = d.metrics.get("ind")
+        hover = (f"retorno à faixa de 2°: {ind['ts']:.0f} ms após a eliminação"
+                 if ind else "retorno à faixa de 2°: %{x:.3f} s")
         marker = go.Scatter(
             x=[ts_val], y=[y_ts], mode="markers+text",
             text=["t<sub>s</sub>"], textposition="top right",
@@ -268,7 +273,7 @@ class ChartBuilder:
             marker=dict(size=9, symbol="diamond", color="#16a34a",
                         line=dict(width=1, color="#ffffff")),
             name="tₛ", showlegend=False,
-            hovertemplate="tₛ = %{x:.3f} s<extra></extra>",
+            hovertemplate=hover + "<extra></extra>",
         )
         marker.legend = self._legend_key
         self._fig.add_trace(marker, row=row, col=col)
@@ -394,18 +399,31 @@ class ChartBuilder:
                                  name="θ Rede", mode="lines", line=dict(width=1.1, dash="dash")), row, col)
 
         elif kind == "err":
-            t_err = d.t_fast if d.t_fast is not None else t
-            err   = d.theta_err_fast if d.theta_err_fast is not None else d.theta_err
-            self._add(go.Scatter(x=t_err, y=np.degrees(err),
+            # Erro de fase do TCC: atan2(v_q, v_d) da rede (loader), faixa de
+            # 2° e 1º ciclo da falta sombreado (fica fora do pico, Fig. 5.7)
+            fast  = d.theta_err_fast is not None
+            t_err = d.t_fast if fast else t
+            err   = d.theta_err_fast if fast else d.theta_err
+            step = max(1, int(np.ceil(len(t_err) / self._max_points)))
+            x_e, y_e = t_err[::step], np.degrees(err[::step])
+            # quebra a linha nos saltos de ±180° do atan2 (escorregamento de
+            # ciclo), que sem isso viram riscos verticais
+            y_e[1:][np.abs(np.diff(y_e)) > 180] = np.nan
+            self._add(go.Scatter(x=x_e, y=y_e, connectgaps=False,
                                  name="Erro de fase", mode="lines", line=dict(width=1.8)), row, col)
-            tol_deg = np.degrees(TOL_RAD)
-            self._fig.add_hrect(y0=-tol_deg, y1=tol_deg,
+            self._fig.add_hrect(y0=-TOL_DEG, y1=TOL_DEG,
                                 fillcolor="rgba(22,163,74,0.08)", line_width=0, layer="below",
                                 row=row, col=col)
             for sign in (+1, -1):
-                self._fig.add_hline(y=sign * tol_deg,
+                self._fig.add_hline(y=sign * TOL_DEG,
                                     line=dict(color="rgba(22,163,74,0.4)", width=1.0, dash="dot"),
                                     row=row, col=col)
+            if d.t_fault is not None:
+                self._fig.add_vrect(
+                    x0=d.t_fault, x1=d.t_fault + CICLO_S,
+                    fillcolor="rgba(100,116,139,0.22)", line_width=0, layer="below",
+                    row=row, col=col,
+                )
             self._ts_marker(t_err, err, row, col)
 
         elif kind in ("vbus1", "vbus2", "vbus3"):

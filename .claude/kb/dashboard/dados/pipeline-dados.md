@@ -38,6 +38,11 @@ Descoberta de cenários e roteamento BAD_PLL: ver `kb/simulation/export_workflow
 
 ## Correção do erro de fase (theta_err)
 
+> **Desde 2026-10-20** `theta_err` é `atan2(vq_rede, vd_rede)` sempre que o CSV
+> tem v_dq da rede, sem desconto de linha de base, que é a receita do TCC
+> ([[indicadores-tcc-dashboard]]). O caminho abaixo (θ̂ − θ_rede) ficou só
+> como fallback para CSV legado.
+
 1. **Wrapping**: `Ang_pll`/`Ang_Rede` são dente-de-serra (0→2π→0); a diferença
    bruta tem spikes de ±2π em resets desalinhados. `arctan2(sin, cos)` leva
    para [−π, π].
@@ -84,7 +89,9 @@ em `export_sim_data.m`) ainda inclui a partida → viés de ~1.1% em
 
 | Métrica | Definição |
 |---|---|
-| `ts` / `settled` | última amostra com \|e\| > `TOL_RAD` (±0.02 rad ≈ ±1.15°). Se \|e\| ainda está fora nos últimos 2 ms da janela → `ts = None`, `settled = False` ("não acomodou" — evita tₛ falso no fim da simulação). **Regime → sempre `None`/`None`**: sem distúrbio não há o que acomodar. Único consumidor hoje é o marcador tₛ do gráfico ([[chart-analysis-overlays]]) |
+| `ind` | indicadores do Cap. 5 do TCC (`indicadores_falta`), só em falta eliminada: ver [[indicadores-tcc-dashboard]] |
+| `partida` | só regime: acomodação de v_d (5%) e do erro (2°) na energização |
+| `ts` / `settled` | instante absoluto `t_clear + ind["ts"]` do retorno à faixa de 2° (2026-10-20; antes ±1,15° desde `t_start`). `settled = False` se o erro não volta na janela (margem de 2 ms). **Regime → `None`/`None`**. Consumidor: marcador tₛ ([[chart-analysis-overlays]]) |
 | `vavg` | **média** (não mínimo, desde 2026-07-25) de `vbus2` — regime: janela inteira `[T_SETTLE, fim]`; falta: só o período do curto `[t_start, t_clear]` (ou fim, se `t_clear` for `None`) — severidade vs LVRT |
 | `vavg_bus1`, `vavg_bus3` | idem para `vbus1`/`vbus3` — propagação do sag pela rede (cards de severidade + colunas V méd. B1/B3 na tabela) |
 
@@ -102,5 +109,5 @@ foi a exibição como card com semáforo; o critério em si segue em revisão �
 - `SpectrumBuilder` (FFT segmentada pré-falta/falta/pós-falta em dB) —
   consome `t`/`t_fast`, `theta_err(_fast)`, `iq_ufv_meas`, `Q_ufv` e
   `t_fault`/`t_clear`; ver [[espectro-fourier]].
-- `HTMLRenderer` (cards/story/tabela) — usa `metrics` direto, hoje só
-  `vavg*` e `t_fault`/`t_clear`.
+- `HTMLRenderer` (cards/story/tabela) — usa `metrics` direto: `ind`,
+  `partida`, `vavg*` e `t_fault`/`t_clear`.

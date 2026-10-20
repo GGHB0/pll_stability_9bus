@@ -14,8 +14,9 @@ T_FAULT  = 0.2        # fallback (s) se fault_info.json não existir
 T_SETTLE = 0.1        # s — transitório de partida do PLL, excluído de TODO cálculo
                       # (FFT, janela de tensão média, tₛ). Medido nos dados
                       # (bus6/1phase): pior sinal é |V| Bus 2, acomoda em 0.078 s
-TOL_RAD  = 0.02       # ±1.15° — critério de acomodação do PLL (rad); faixa e
-                      # marcador tₛ no painel "Erro de fase" (chart.py)
+# A faixa de retorno do erro de fase (2°) e o 1º ciclo descartado no pico
+# moram em pipeline/indicadores.py, com as demais receitas do Cap. 5 do TCC.
+# O antigo TOL_RAD (±1,15°) saiu em 2026-10-20 por divergir do TCC.
 
 # Limiares de classificação: (bom_máx, moderado_máx); acima → crítico
 # Os limiares de erro de ângulo (IAE_THRESH, ISE_THRESH, TS_DELTA_THRESH,

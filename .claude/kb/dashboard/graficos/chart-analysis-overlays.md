@@ -29,19 +29,20 @@ sinal sob análise.
 
 ## Banda de tolerância + marcador tₛ (`kind == "err"`)
 
-- `add_hrect(±TOL_RAD)` verde translúcido (`rgba(22,163,74,0.08)`) — "dentro
-  da banda = acomodado"; bordas em linha pontilhada fina verde.
+- `add_hrect(±TOL_DEG)` verde translúcido (`rgba(22,163,74,0.08)`), com a
+  faixa de **2°** do TCC desde 2026-10-20 (antes ±1,15°, `TOL_RAD`); bordas
+  em linha pontilhada fina verde. O 1º ciclo após `t_fault` ganha uma faixa
+  cinza: é o salto de fase da aplicação da falta, fora do pico. O sinal é
+  `atan2(v_q, v_d)` da rede, com a linha quebrada nos saltos de ±180°. Ver
+  [[indicadores-tcc-dashboard]].
 - `_ts_marker()`: diamante verde em `(ts, erro(ts))` com texto `t_s`. Trace
   adicionado **direto** com `showlegend=False` e
   `marker.legend = self._legend_key` — não passa por `_add`, logo fica fora
   do `trace_map` e mantém cor fixa nos dois temas.
 
-⚠️ **Últimos consumidores de `metrics["ts"]`** (2026-08-09): os cards de erro
-de ângulo foram removidos ([[cards-metricas]]) e a banda + o marcador são hoje
-a única exibição do critério de acomodação no relatório. O loader continua
-calculando `ts`/`settled` só por causa deles. O critério em si está em
-revisão — ver [[pll-ts-criterion-rationale]]; se ele cair, estes dois overlays
-caem junto e `_compute_metrics` fica só com `vavg*`.
+`metrics["ts"]` é o instante absoluto `t_clear + retorno` (2026-10-20); o
+tooltip do diamante mostra o retorno em ms, o mesmo valor do card "Retorno à
+faixa de 2°" e das Tabelas 5.1/5.3. Sem retorno na janela, não há marcador.
 
 ## Painel de frequência (removido 2026-07-30)
 

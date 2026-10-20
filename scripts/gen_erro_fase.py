@@ -34,6 +34,8 @@ from gen_fault_waveforms import (  # noqa: E402  (estilo e paleta comuns ao Cap.
     AZUL, LARANJA, NAVY, VERDE, VERMELHO, LEGEND_KW, ROOT, save, style_axes,
 )
 from validar_cenarios import cenario_ok, pasta_inadequada  # noqa: E402
+sys.path.insert(0, str(ROOT))
+from src.pipeline.indicadores import pico_e_retorno  # noqa: E402
 
 CICLO_S = 1 / 60
 TOL_DEG = 2.0
@@ -58,17 +60,9 @@ def load(folder):
 
 
 def metrics(fi, t, e):
-    tf, tc = fi["t_fault"], fi["t_clear"]
-    pico = float(np.abs(e[(t >= tf + CICLO_S) & (t <= tc)]).max())
-    pos = t >= tc
-    fora = t[pos][np.abs(e[pos]) > TOL_DEG]
-    if len(fora) == 0:
-        ts = 0.0
-    elif fora[-1] >= t[-1] - 2e-3:
-        ts = None                      # nao volta a faixa dentro da janela simulada
-    else:
-        ts = (fora[-1] - tc) * 1000
-    return pico, ts
+    """Pico apos o 1o ciclo e retorno a faixa de 2 graus (ms apos t_clear):
+    receita unica em src/pipeline/indicadores.py, a mesma do dashboard."""
+    return pico_e_retorno(t, e, fi["t_fault"], fi["t_clear"])
 
 
 def thin(x, y, step=10):

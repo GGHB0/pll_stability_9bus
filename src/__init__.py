@@ -2,7 +2,7 @@
 src — Pacote de análise PLL-IEEE9Bus.
 
 Subpacotes:
-    config    → constantes (T_FAULT, TOL_RAD, thresholds, paletas)
+    config    → constantes (T_FAULT, thresholds, paletas)
     pipeline  → SimData (carrega CSV, calcula métricas) + ChartBuilder (Plotly)
     report    → HTMLRenderer (gera relatório HTML)
 """

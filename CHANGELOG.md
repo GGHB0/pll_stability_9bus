@@ -5,6 +5,33 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-20 — Indicadores do Cap. 5 do TCC no painel
+
+Arquivos: `src/pipeline/indicadores.py` (novo), `src/pipeline/loader.py`,
+`src/pipeline/chart.py`, `src/pipeline/spectrum.py`, `src/report/renderer.py`,
+`src/config/settings.py`, `src/config/__init__.py`, `src/__init__.py`,
+`scripts/medir_tabelas_cap5.py`, `scripts/gen_erro_fase.py`
+
+A defesa passa do slide 14 para o HTML ao vivo, e o painel não batia com o TCC.
+O erro de fase era `θ̂ − θ_rede` com faixa ±1,15° (pico de 53,1° contra
+37,3° na Barra 7 trifásica, e `bus6/2phase` aparecia como "não acomoda", contra
+48 ms no TCC), e faltavam os indicadores das Tabelas 5.1-5.3. Mudanças:
+
+- As receitas do Cap. 5 viraram o módulo `indicadores.py`, usado pelo
+  dashboard e pelos scripts do TCC. `tabelas_cap5.csv` regenerado com
+  diferença zero.
+- O erro de fase passa a ser `atan2(v_q, v_d)` da rede, com faixa de 2°, 1º
+  ciclo sombreado e linha quebrada nos saltos de ±180°. `TOL_RAD` foi removido.
+- Cards novos: "Sincronismo do SRF-PLL", "Tensão e suporte de reativo" e
+  "Energização do inversor" (regime), além do item "Sincronismo" na narrativa.
+- A tabela comparativa ganhou 9 colunas das Tabelas 5.1-5.3, geradas de
+  `_CMP_COLS`.
+- A aba Espectro ganhou um destaque com o 120 Hz pela receita do TCC; a tabela
+  de harmônicas, que é outro instrumento, continua igual.
+- O cabeçalho passou de "UERJ 2025" para "UERJ 2026".
+
+Detalhes em `.claude/kb/dashboard/cards/indicadores-tcc.md`.
+
 ## 2026-10-16 — Plotly embutido no HTML (abre sem internet)
 
 Arquivos: `src/report/renderer.py`, `assets/vendor/plotly-2.35.0.min.js` (novo)

@@ -13,7 +13,7 @@ Gerado por `scripts/kb_links.py index`. Links `[[slug]]` abrem no Obsidian (vaul
 
 | Pasta | Docs | Índice |
 |---|---|---|
-| dashboard/ | 16 | [dashboard/index.md](dashboard/index.md) |
+| dashboard/ | 17 | [dashboard/index.md](dashboard/index.md) |
 | events/ | 9 | [events/index.md](events/index.md) |
 | inverter/ | 5 | [inverter/index.md](inverter/index.md) |
 | pll/ | 13 | [pll/index.md](pll/index.md) |

@@ -17,6 +17,7 @@ Histórico de mudanças por commit: `CHANGELOG.md` na raiz do repo.
 | `cards/` | [cards-metricas.md](cards/cards-metricas.md) | Cards de severidade (V médio, duração, topologia); remoção do grupo de erro de ângulo e do veredito (2026-08-09) |
 | `cards/` | [cards-explainer-notebook.md](cards/cards-explainer-notebook.md) | Notebook didático que reimplementa o cálculo de cada card, com verificação cruzada |
 | `cards/` | [comparison-table.md](cards/comparison-table.md) | Tabela comparativa de cenários, ordenável, filtrada por modo PLL |
+| `cards/` | [indicadores-tcc.md](cards/indicadores-tcc.md) | Indicadores do Cap. 5 do TCC (módulo `indicadores.py`): erro de fase atan2, faixa de 2°, cards, colunas, 120 Hz no Espectro |
 | `layout/` | [estrutura-html.md](layout/estrutura-html.md) | Esqueleto do HTML, filter-bar, SCENARIOS/switchScenario, mapa SVG |
 | `layout/` | [tabs-navegacao.md](layout/tabs-navegacao.md) | Abas Resumo (cards+contexto, sem gráfico)/Inversor/Sistema/Espectro, lazy render, cards clicáveis |
 | `layout/` | [dark-mode-theming.md](layout/dark-mode-theming.md) | Temas light/dark: themedLayout, Fix 1-3 (annotations/shapes/eixos, gotcha dotted-key) |

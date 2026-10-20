@@ -53,9 +53,11 @@ aliases: [defesa-pendencias]
   Tabela 4.1 diz 28 cenários (21 + 7), mas a Tabela 5.3 já usa a
   monofásica na Barra 7 inadequada (29 = 21 + 8); a introdução traz
   22.547 MW (31%) e a §2.4.3, 23.368 MW (34,5%), que é o número do deck.
-- **Demo (slide 16)**: o cartão do painel mostra "V residual médio B2"
-  (0,099 / 0,094 pu), não a retenção de Vd do TCC (9,2% / 8,2%). As notas
-  citam só o TCC; não ler o cartão em voz alta.
+- **Demo (slide 16)**: ~~cartão mostra "V residual médio B2", não a
+  retenção~~ resolvido em 2026-10-20: o painel ganhou os indicadores do Cap. 5
+  com as receitas do TCC (retenção 9,2% / 8,2%, retorno 98 ms / "não
+  retorna", 66,8%, 0,72 pu), ver [[indicadores-tcc-dashboard]]. Os cards
+  podem ser lidos. Conferir se as notas do slide 16 querem citar o card.
 - **Ensaiar a demo (slide 16) no notebook da defesa, sem internet**: abrir
   `output/pll_metrics.html` antes, no cenário Barra 7 trifásica nominal;
   conferir os nomes dos botões citados nas notas (Zoom na falta, aba

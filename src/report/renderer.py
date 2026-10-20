@@ -129,7 +129,8 @@ class HTMLRenderer:
                 "label":     sc["label"],
                 "cardsHtml": self._cards_html(d, key),
                 "storyHtml": self._story_html(d, key),
-                "specTableHtml": self._spec_table_html(sc.get("spec_harm") or {}),
+                "specTableHtml": (self._spec_tcc_note_html(d)
+                                  + self._spec_table_html(sc.get("spec_harm") or {})),
                 "metricsRow": self._table_row_data(d),
                 "hasInv":    True,
                 "hasSys":    fs is not None,
@@ -146,13 +147,16 @@ class HTMLRenderer:
         pll_toggle_html = self._pll_toggle_html() if has_bad_pll else ""
         uerj_logo_html = self._uerj_logo_html()
         plotly_js_html = self._plotly_js_html()
+        cmp_headers   = "".join(f'\n            <th data-key="{k}">{h}</th>'
+                                for k, h in self._CMP_COLS)
+        cmp_cols_js   = json.dumps([k for k, _ in self._CMP_COLS])
 
         return f"""<!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SRF-PLL · IEEE 9-Bus · UERJ 2025</title>
+<title>SRF-PLL · IEEE 9-Bus · UERJ 2026</title>
 {plotly_js_html}
 <style>
 {self._css()}
@@ -167,7 +171,7 @@ class HTMLRenderer:
       <div class="h-title">SRF-PLL &nbsp;·&nbsp; IEEE 9-Bus</div>
       <div class="h-sub" id="header-sub">Análise pós-falta</div>
     </div>
-    <span class="badge">UERJ 2025</span>
+    <span class="badge">UERJ 2026</span>
   </div>
   <div class="h-right">
     <button class="toggle-btn" onclick="toggleTheme()">
@@ -200,10 +204,7 @@ class HTMLRenderer:
       <table class="cmp-table" id="cmp-table">
         <thead>
           <tr>
-            <th data-key="label">Cenário</th>
-            <th data-key="vavg">V méd. B2 (pu)</th>
-            <th data-key="vavg_b1">V méd. B1 (pu)</th>
-            <th data-key="vavg_b3">V méd. B3 (pu)</th>
+            <th data-key="label">Cenário</th>{cmp_headers}
           </tr>
         </thead>
         <tbody id="cmp-tbody"></tbody>
@@ -264,13 +265,14 @@ class HTMLRenderer:
     <span class="footer-dot"></span>
     <span>Plotly {plotly.__version__}</span>
     <span class="footer-dot"></span>
-    <span>TCC UERJ 2025</span>
+    <span>TCC UERJ 2026</span>
   </div>
 
 </main>
 
 <script>
 var SCENARIOS = {scenarios_js};
+var CMP_COLS = {cmp_cols_js};
 var currentKey = {first_key_js};
 var isDark = false;
 var pllMode = "nominal";
@@ -670,7 +672,7 @@ function renderComparisonTable() {{
     var active = (k === currentKey) ? " cmp-active" : "";
     return "<tr class=\\"cmp-row" + active + "\\" onclick=\\"_pickTableRow('" + k + "')\\">"
       + "<td class=\\"cmp-label\\">" + sc.label + "</td>"
-      + _cmpCell(r.vavg) + _cmpCell(r.vavg_b1) + _cmpCell(r.vavg_b3)
+      + CMP_COLS.map(function(c) {{ return _cmpCell(r[c]); }}).join("")
       + "</tr>";
   }}).join("");
 }}
@@ -1211,6 +1213,26 @@ setPllMode(pllMode);
             blocks.append(self._harm_legend_html(has_relaxed_seg))
         return "".join(blocks)
 
+    def _spec_tcc_note_html(self, data: SimData) -> str:
+        """Destaque com a componente de 120 Hz pela receita do TCC (v_d da rede,
+        Hann, [t_fault + 2 ciclos, t_clear]). A tabela de harmônicas abaixo é
+        outro instrumento (janela retangular com agrupamento IEEE 519, falta
+        inteira, v_d do inversor) e erra a 2ª casa nas assimétricas e ~50× nas
+        trifásicas, onde o transitório de comutação domina; o número que vale
+        para o Cap. 5 é este."""
+        ind = data.metrics.get("ind")
+        if not ind:
+            return ""
+        return (
+            "<div class='spec-tcc-note'>"
+            "<b>Componente de 120 Hz em v<sub>d</sub> da rede durante a falta: "
+            f"{self._fmt_a120(ind['a120'])} pu</b> · receita do TCC (Figura 5.10, "
+            "Tabelas 5.1 e 5.3): janela de Hann em [t<sub>falta</sub> + 2 ciclos, "
+            "t<sub>eliminação</sub>]. As tabelas abaixo usam janela retangular sobre a "
+            "falta inteira, para comparação com a norma."
+            "</div>"
+        )
+
     # ── Cards ────────────────────────────────────────────────────────────────
 
     @staticmethod
@@ -1222,12 +1244,45 @@ setPllMode(pllMode);
             return "good" if val <= lo else ("warn" if val <= hi else "bad")
         return "good" if val >= lo else ("warn" if val >= hi else "bad")
 
+    # Colunas da tabela comparativa: (chave em metricsRow, cabeçalho). As nove
+    # primeiras depois do cenário são as das Tabelas 5.1-5.3 do TCC, com as
+    # mesmas receitas (pipeline/indicadores.py); as três de V médio por barra
+    # descrevem a severidade vista pela rede.
+    _CMP_COLS = (
+        ("ret",     "Retenção v<sub>d</sub> (%)"),
+        ("pico",    "Pico erro (°)"),
+        ("ts",      "Retorno 2° (ms)"),
+        ("a120",    "120 Hz v<sub>d</sub> (pu)"),
+        ("vdmed",   "v<sub>d</sub> méd. (pu)"),
+        ("Vmed",    "V inv. méd. (pu)"),
+        ("rampa",   "Rampa ONS (pu)"),
+        ("iqref",   "i<sub>q,ref</sub> méd. (pu)"),
+        ("P",       "P méd. (pu)"),
+        ("vavg",    "V méd. B2 (pu)"),
+        ("vavg_b1", "V méd. B1 (pu)"),
+        ("vavg_b3", "V méd. B3 (pu)"),
+    )
+
+    @staticmethod
+    def _fmt(val, dec=2):
+        """Número com `dec` casas, sem o "-0.00" de médias como P = −0,002 pu."""
+        txt = f"{val:.{dec}f}"
+        return txt[1:] if txt.startswith("-") and float(txt) == 0 else txt
+
+    @staticmethod
+    def _fmt_a120(val):
+        # Tabela 5.1 (trifásicas, ~1e-4 pu) usa 4 casas; Tabela 5.3, 2 casas
+        return f"{val:.4f}" if val < 0.01 else f"{val:.2f}"
+
     def _table_row_data(self, data: SimData) -> dict:
         """Uma linha da tabela comparativa: {métrica: {val, raw, cls}} por cenário.
 
-        Só severidade do distúrbio (V médio por barra): as métricas derivadas do
-        erro de ângulo saíram da tabela junto com os cards — ver `_cards_html`."""
+        Indicadores do Cap. 5 do TCC (metrics["ind"], só faltas eliminadas) sem
+        semáforo, porque o TCC não os classifica por limiar; a exceção é o
+        retorno à faixa de 2° que não acontece na janela (perda de sincronismo).
+        V médio por barra mantém o semáforo de severidade."""
         m = data.metrics
+        ind = m.get("ind") or {}
 
         def cell(val, decimals, thresholds, lower_is_better=True):
             return {
@@ -1236,11 +1291,27 @@ setPllMode(pllMode);
                 "cls": self._classify(val, thresholds, lower_is_better),
             }
 
-        return {
+        def neutral(val, fmt):
+            return {"val": fmt(val) if val is not None else "—", "raw": val,
+                    "cls": "neutral"}
+
+        row = {
+            "ret":   neutral(ind.get("ret"),   lambda v: f"{v:.1f}"),
+            "pico":  neutral(ind.get("pico"),  lambda v: f"{v:.1f}"),
+            "ts":    neutral(ind.get("ts"),    lambda v: f"{v:.0f}"),
+            "a120":  neutral(ind.get("a120"),  self._fmt_a120),
+            "vdmed": neutral(ind.get("vdmed"), lambda v: f"{v:.2f}"),
+            "Vmed":  neutral(ind.get("Vmed"),  lambda v: f"{v:.2f}"),
+            "rampa": neutral(ind.get("iq_rampa_Vmed"), lambda v: f"{v:.2f}"),
+            "iqref": neutral(ind.get("iqref"), lambda v: f"{v:.2f}"),
+            "P":     neutral(ind.get("P"),     self._fmt),
             "vavg":    cell(m.get("vavg"),      3, VBUS_AVG_THRESH, lower_is_better=False),
             "vavg_b1": cell(m.get("vavg_bus1"), 3, VBUS_AVG_THRESH, lower_is_better=False),
             "vavg_b3": cell(m.get("vavg_bus3"), 3, VBUS_AVG_THRESH, lower_is_better=False),
         }
+        if ind and ind.get("ts") is None:
+            row["ts"] = {"val": "não retorna", "raw": None, "cls": "bad"}
+        return row
 
     def _cards_html(self, data: SimData, key: str) -> str:
         m = data.metrics
@@ -1271,11 +1342,10 @@ setPllMode(pllMode);
 
         is_regime = data.t_fault is None
 
-        # Grupo "Desempenho do PLL" removido (2026-08-09): IAE, ISE, tₛ,
-        # |θ_err| pico e Erro R.P. eram todos derivados do erro de ângulo
-        # θ̂ − θ_rede, sem fonte que sustente esses acumulados/média/pico como
-        # medida de desempenho do PLL. O sinal em si continua no painel
-        # "Erro de fase" do chart.py — só as métricas derivadas saíram.
+        # IAE, ISE e Erro R.P. saíram em 2026-08-09 e não voltaram (sem fonte).
+        # Pico e retorno do erro de fase voltaram em 2026-10-20 nos grupos do
+        # Cap. 5 abaixo, com a receita fechada do TCC (1º ciclo descartado,
+        # faixa de 2°), não com a antiga (θ̂ − θ_rede, ±1,15°).
 
         # Severidade: contexto do distúrbio — cor indica profundidade do sag.
         # "V residual" = tensão remanescente do afundamento (PRODIST/IEC),
@@ -1317,7 +1387,95 @@ setPllMode(pllMode);
                       topo["tip"], "neutral"))
         sev_label = "Barras de Geração" if is_regime else "Severidade do distúrbio"
 
-        return _group(sev_label, "".join(sev_cards))
+        # Indicadores do Cap. 5 do TCC (pipeline/indicadores.py), com as mesmas
+        # receitas e o mesmo arredondamento das Tabelas 5.1-5.3. Sem semáforo:
+        # o TCC não os classifica por limiar; só a perda de sincronismo (sem
+        # retorno à faixa de 2° na janela) sai em vermelho.
+        groups = []
+        ind = m.get("ind")
+        if ind:
+            if ind["ts"] is None:
+                ret_card = _card("Retorno à faixa de 2°", "não retorna", "",
+                                 "sincronismo não recuperado na janela simulada",
+                                 "Último instante com |erro| > 2°, contado da eliminação "
+                                 "da falta: o erro segue fora da faixa até o fim da simulação",
+                                 "bad", target="Erro de fase")
+            else:
+                ret_card = _card("Retorno à faixa de 2°", f"{ind['ts']:.0f}", "ms",
+                                 "após a eliminação da falta",
+                                 "Último instante com |erro de fase| > 2°, contado de t_clear "
+                                 "(Tabelas 5.1 e 5.3)", "neutral", target="Erro de fase")
+            sync = [
+                _card("Pico do erro de fase", f"{ind['pico']:.1f}", "°",
+                      "após o 1º ciclo da falta",
+                      "max |atan2(v_q, v_d)| da rede em [t_fault + 1 ciclo, t_clear]; o 1º "
+                      "ciclo (sombreado no gráfico) é o salto de fase da aplicação da falta",
+                      "neutral", target="Erro de fase"),
+                ret_card,
+                _card("Componente de 120 Hz", self._fmt_a120(ind["a120"]), "pu",
+                      "em v<sub>d</sub> da rede, durante a falta",
+                      "FFT com janela de Hann de v_d da rede em [t_fault + 2 ciclos, t_clear]: "
+                      "a sequência negativa refletida no referencial síncrono",
+                      "neutral", target="Tensão dq"),
+            ]
+            # só nas assimétricas, como no TCC (§5.3): na trifásica a fração vem
+            # só do salto de fase da aplicação da falta, não da sequência negativa
+            if ind["frac90"] > 0 and not key.endswith(("3phase", "3phase_bad_pll")):
+                sync.append(_card("Erro acima de 90°", f"{ind['frac90']:.1f}", "%",
+                                  "do intervalo da falta",
+                                  "Fração de [t_fault, t_clear] com |erro de fase| > 90°: "
+                                  "referencial estimado fora do semiplano da tensão da rede",
+                                  "neutral", target="Erro de fase"))
+            if ind["ts"] is None:
+                sync.append(_card("P absorvida", f"{ind['frac_P_absorve']:.1f}", "%",
+                                  "do tempo após a eliminação",
+                                  "Fração de [t_clear, fim] com P < 0: o inversor drena "
+                                  "potência ativa da rede", "bad", target="P / Q UFV"))
+                sync.append(_card("Q injetada", f"{ind['frac_Q_injeta']:.1f}", "%",
+                                  "do tempo após a eliminação",
+                                  "Fração de [t_clear, fim] com Q ≥ 0; no restante o inversor "
+                                  "absorve reativo", "neutral", target="P / Q UFV"))
+            groups.append(_group("Sincronismo do SRF-PLL", "".join(sync)))
+
+            sup = [
+                _card("Retenção de v<sub>d</sub>", f"{ind['ret']:.1f}", "%",
+                      "do valor pré-falta",
+                      "Média de v_d da rede em [t_fault + 2 ciclos, t_clear] sobre a média "
+                      "em [t_fault − 50 ms, t_fault)", "neutral", target="Tensão dq"),
+                _card("v<sub>d</sub> médio na falta", f"{ind['vdmed']:.2f}", "pu",
+                      f"mín. {ind['vdmin']:.2f} · máx. {ind['vdmax']:.2f} pu",
+                      "v_d da rede em [t_fault + 1 ciclo, t_clear] (Tabela 5.3)",
+                      "neutral", target="Tensão dq"),
+                _card("Tensão no inversor", f"{ind['Vmed']:.2f}", "pu",
+                      "média durante a falta",
+                      "|V| do inversor, média em [t_fault + 1 ciclo, t_clear]: "
+                      "entrada da rampa ONS (Tabela 5.2)", "neutral", target="Tensão dq"),
+                _card("i<sub>q,ref</sub> médio", f"{ind['iqref']:.2f}", "pu",
+                      f"rampa ONS prevê {ind['iq_rampa_Vmed']:.2f} pu",
+                      "Referência de corrente reativa simulada (média na falta) contra "
+                      "(0,85 − V)/0,35 limitada a 1 pu, com V = tensão média no inversor",
+                      "neutral", target="Corrente dq UFV"),
+                _card("P média na falta", self._fmt(ind['P']), "pu",
+                      "potência ativa do inversor",
+                      "Média de P em [t_fault + 1 ciclo, t_clear] (Tabela 5.2)",
+                      "neutral", target="P / Q UFV"),
+            ]
+            groups.append(_group("Tensão e suporte de reativo", "".join(sup)))
+
+        partida = m.get("partida")
+        if partida:
+            groups.append(_group("Energização do inversor", "".join([
+                _card("v<sub>d</sub> na faixa de 5%", f"{partida['t_vd5']:.0f}", "ms",
+                      "desde t = 0",
+                      "Último instante com v_d da rede fora de ±5% do valor final "
+                      "(média dos últimos 50 ms)", "neutral", target="Tensão dq"),
+                _card("Erro na faixa de 2°", f"{partida['t_err2']:.0f}", "ms",
+                      "desde t = 0",
+                      "Último instante com |erro de fase| > 2° (Seção 5.1)",
+                      "neutral", target="Erro de fase"),
+            ])))
+
+        return "".join(groups) + _group(sev_label, "".join(sev_cards))
 
     # ── Narrativa ────────────────────────────────────────────────────────────
 
@@ -1333,8 +1491,8 @@ setPllMode(pllMode);
         if is_regime:
             parts.append(("neutral", "Cenário",
                           "Operação em regime permanente, sem contingência aplicada — "
-                          "métricas calculadas descartando o transitório de partida "
-                          f"(t ≥ {T_SETTLE:.2f} s)."))
+                          "tensões médias das barras calculadas descartando o "
+                          f"transitório de partida (t ≥ {T_SETTLE:.2f} s)."))
         elif vavg is not None:
             sev = self._classify(vavg, VBUS_AVG_THRESH, lower_is_better=False)
             dur = (f" de {(data.t_clear - data.t_fault) * 1e3:.0f} ms"
@@ -1357,10 +1515,27 @@ setPllMode(pllMode);
         if topo:
             parts.append(("neutral", "Topologia", topo["story"]))
 
-        # Itens de resposta do PLL (pico de fase, acomodação, erro de regime,
-        # erro acumulado) e o chip de veredito saíram em 2026-08-09 junto com
-        # os cards de erro de ângulo — ver `_cards_html`. Sobra o contexto do
-        # cenário: severidade do afundamento e topologia do trecho.
+        # ── sincronismo: o desfecho da Seção 5.4 em uma linha ────────────────
+        ind = m.get("ind")
+        if ind:
+            if ind["ts"] is None:
+                parts.append(("bad", "Sincronismo",
+                              "O erro de fase não volta à faixa de 2° até o fim da "
+                              "simulação: o SRF-PLL não recupera o sincronismo na janela "
+                              f"simulada e o inversor absorve potência ativa em "
+                              f"{ind['frac_P_absorve']:.1f}% do tempo após a eliminação."))
+            else:
+                parts.append(("good", "Sincronismo",
+                              f"O erro de fase volta à faixa de 2° {ind['ts']:.0f} ms "
+                              "após a eliminação da falta."))
+        partida = m.get("partida")
+        if partida:
+            parts.append(("neutral", "Energização",
+                          f"v<sub>d</sub> entra na faixa de 5% em {partida['t_vd5']:.0f} ms "
+                          f"e o erro de fase na de 2° em {partida['t_err2']:.0f} ms."))
+
+        # O chip de veredito saiu em 2026-08-09 e não voltou: o TCC não
+        # classifica os indicadores por limiar.
 
         if parts:
             items = "".join(
@@ -1705,7 +1880,7 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 /* ── Tabela comparativa ── */
 .table-wrap { overflow-x: auto; padding: 4px 4px 8px }
 .cmp-table { width: 100%; border-collapse: collapse; font-size: 12.5px }
-.cmp-table th, .cmp-table td { padding: 9px 14px; text-align: right; white-space: nowrap }
+.cmp-table th, .cmp-table td { padding: 8px 9px; text-align: right; white-space: nowrap }
 .cmp-table th:first-child, .cmp-table td:first-child { text-align: left }
 .cmp-table thead th {
   font-size: 10.5px; font-weight: 700; text-transform: uppercase;
@@ -1733,6 +1908,10 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
   border-bottom: 1px solid var(--border);
 }
 .harm-block { padding: 4px 20px 14px }
+.spec-tcc-note {
+  margin: 10px 20px 4px; padding: 9px 12px; font-size: 12px; line-height: 1.5;
+  color: var(--text); background: var(--badge-bg); border-radius: 6px;
+}
 .harm-title {
   font-size: 11px; font-weight: 700; text-transform: uppercase;
   letter-spacing: .6px; color: var(--muted);

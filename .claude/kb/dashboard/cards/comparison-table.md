@@ -24,8 +24,13 @@ Colunas removidas ao longo do tempo:
   classificação de `ts` por `ts_delta` em vez do valor exibido). Detalhe da
   decisão em [[cards-metricas]].
 
-Sobraram as três colunas de tensão — a tabela hoje compara **severidade do
-distúrbio** entre cenários, não desempenho.
+Sobraram as três colunas de tensão. **Em 2026-10-20** entraram, antes delas,
+as nove colunas das Tabelas 5.1-5.3 do TCC (retenção de v_d, pico, retorno à
+faixa de 2°, 120 Hz, v_d médio, V médio do inversor, rampa ONS, i_q,ref
+médio, P médio), sem semáforo, exceto o "não retorna" em vermelho. As colunas
+vêm de `HTMLRenderer._CMP_COLS`, que gera o cabeçalho e o array JS
+`CMP_COLS` usado por `renderComparisonTable` (não há mais lista de células
+escrita à mão no JS). Ver [[indicadores-tcc-dashboard]].
 
 ## Mudanças em `src/report/renderer.py`
 

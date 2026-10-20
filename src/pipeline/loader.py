@@ -5,8 +5,10 @@ Classe principal: SimData
     .t, .P_ufv, .Q_ufv, .theta_err → arrays NumPy prontos para plotar
     .t_fast, .theta_pll_fast,   → ângulos na taxa nativa Ts (alta resolução)
     .theta_ref_fast, .theta_err_fast
-    .metrics                     → dict com ts/settled (acomodação do erro de
-                                   fase em ±TOL_RAD, marcador do gráfico) e
+    .metrics                     → dict com ind (indicadores do Cap. 5 do TCC,
+                                   ver indicadores.py), partida (só regime),
+                                   ts/settled (retorno do erro de fase à faixa
+                                   de 2°, marcador do gráfico) e
                                    vavg (média de |V| — período inteiro em
                                    regime, só a janela da falta em
                                    contingência), vavg_bus1/3
@@ -25,7 +27,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from ..config import T_FAULT, T_SETTLE, TOL_RAD
+from ..config import T_FAULT, T_SETTLE
+from .indicadores import (
+    TOL_DEG, erro_fase_deg, indicadores_falta, indicadores_partida,
+)
 from .pq import corrige_pq
 
 
@@ -117,6 +122,17 @@ class SimData:
                 del self._raw_fast
         else:
             self.theta_err = None
+
+        # Erro de fase do TCC (Cap. 5): ângulo do vetor de tensão da rede no
+        # referencial estimado, atan2(v_q, v_d), sem desconto de linha de base.
+        # θ̂ − θ_rede acima (sinal do bloco de ângulos, com baseline) dava picos
+        # e retornos diferentes das Tabelas 5.1/5.3 — fica só como fallback
+        # para CSVs sem v_dq da rede. Os ângulos absolutos seguem no painel
+        # "Ângulo" pelo eixo rápido.
+        if self.has_vdq_rede:
+            self.theta_err = np.radians(erro_fase_deg(
+                self._df["vd_rede_pu"].to_numpy(), self._df["vq_rede_pu"].to_numpy()))
+            self.theta_err_fast = None
 
         if self.theta_pll_fast is not None:
             # Usa o eixo rápido diretamente
@@ -242,27 +258,38 @@ class SimData:
         t_start = min(T_SETTLE, float(self.t[-1])) if is_regime \
             else max(self.t_fault, T_SETTLE)
         mask = self.t >= t_start
-        # IAE, ISE, peak_err, ts_delta e err_ss_* saíram em 2026-08-09 junto com
-        # os cards que os exibiam (ver renderer._cards_html): não havia fonte
-        # que sustentasse acúmulo/média/pico do erro de ângulo como medida de
-        # desempenho do PLL. tₛ ficou: interessa saber COMO o PLL retorna
-        # pós-falta, e o marcador do painel "Erro de fase" (chart.py) o usa.
-        metrics: dict = {"ts": None, "settled": None}
+        # Indicadores do Cap. 5 do TCC (indicadores.py, mesmas receitas das
+        # Tabelas 5.1-5.3): "ind" numa falta eliminada, "partida" em regime.
+        # "ts" é o instante ABSOLUTO do retorno à faixa de 2° (marcador do
+        # painel "Erro de fase"); o valor do TCC, em ms após t_clear, é
+        # ind["ts"]. settled=False: não volta à faixa na janela simulada.
+        metrics: dict = {"ts": None, "settled": None, "ind": None, "partida": None}
+        cols = ("vd_rede_pu", "vq_rede_pu", "vd_ufv_pu", "vq_ufv_pu",
+                "iq_ufv_ref_pu", "iq_ufv_pu", "P_ufv_pu", "Q_ufv_pu")
+        tem_ind = set(cols) <= self._cols
 
-        if self.theta_err is not None:
-            t_pf = self.t[mask]
-            e_pf = self.theta_err[mask]
-            # tₛ só faz sentido como resposta a um distúrbio; em regime
-            # permanente fica None (o marcador do gráfico é omitido).
-            if len(t_pf) and not is_regime:
-                fora = t_pf[np.abs(e_pf) > TOL_RAD]
-                # "Acomodou" exige |e| dentro da tolerância até o fim da
-                # janela (margem de 2 ms); sem isso o último sample fora
-                # vira ts falso em cenários que nunca reacomodam.
+        if is_regime:
+            if self.has_vdq_rede:
+                metrics["partida"] = indicadores_partida(
+                    self.t, self._df["vd_rede_pu"].to_numpy(),
+                    self._df["vq_rede_pu"].to_numpy())
+        elif tem_ind and self.t_clear is not None and self.t_clear < self.t[-1]:
+            ind = indicadores_falta(
+                self.t, {c: self._df[c].to_numpy() for c in cols},
+                self.t_fault, self.t_clear)
+            metrics["ind"] = ind
+            metrics["settled"] = ind["ts"] is not None
+            if metrics["settled"]:
+                metrics["ts"] = self.t_clear + ind["ts"] / 1000
+        elif self.theta_err is not None:
+            # CSV legado sem as colunas dq: só o retorno à faixa, na janela pós-falta
+            t_pf, e_pf = self.t[mask], np.degrees(self.theta_err[mask])
+            fora = t_pf[np.abs(e_pf) > TOL_DEG]
+            if len(t_pf):
                 if len(fora) == 0:
                     metrics["ts"], metrics["settled"] = float(t_pf[0]), True
                 elif float(fora[-1]) >= float(t_pf[-1]) - 2e-3:
-                    metrics["ts"], metrics["settled"] = None, False
+                    metrics["settled"] = False
                 else:
                     metrics["ts"], metrics["settled"] = float(fora[-1]), True
 

@@ -13,6 +13,8 @@ por segmento/modo para a tabela do relatório.
 """
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -21,7 +23,10 @@ from ..config import (
     T_SETTLE, SPEC_FMAX_HZ, SPEC_XRANGE_HZ, SPEC_MARKERS, SPEC_MARKERS_DQ,
     SPEC_SEG_COLORS, F_FUND_HZ,
 )
-from .loader import SimData
+
+if TYPE_CHECKING:
+    # só anotação: o loader importa indicadores.py, que importa este módulo
+    from .loader import SimData
 
 _MIN_DUR_S   = 0.05   # janela menor que isso → df > 20 Hz, não resolve 120 Hz
 _MIN_SAMPLES = 64

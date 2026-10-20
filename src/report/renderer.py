@@ -23,7 +23,7 @@ from ..config import (
     VOLT_INDIVIDUAL_LIMIT_PU, DQ_UNBALANCE_WARN_PU, DQ_UNBALANCE_HIGH_PU,
 )
 from ..pipeline.loader import SimData
-from .roteiro import TCC_SECOES, TCC_CASOS, OUTROS_LABEL, ROTEIRO, tcc_secao
+from .roteiro import TCC_SECOES, TCC_CASOS, OUTROS_LABEL, CAPITULOS, tcc_secao
 
 
 class HTMLRenderer:
@@ -140,6 +140,8 @@ class HTMLRenderer:
                 "badPll":    sc.get("bad_pll", False),
                 "tcc":       tcc_secao(key),
                 "tccOrd":    (list(TCC_CASOS).index(key) if key in TCC_CASOS else None),
+                "tccInd":    self._tcc_ind(d),
+                "hasTcc":    True,
                 "tFault":    d.t_fault,
                 "tClear":    d.t_clear,
                 "tEnd":      d.t[-1] if len(d.t) > 0 else None,
@@ -153,8 +155,12 @@ class HTMLRenderer:
         cmp_headers   = "".join(f'\n            <th data-key="{k}">{h}</th>'
                                 for k, h in self._CMP_COLS)
         cmp_cols_js   = json.dumps([k for k, _ in self._CMP_COLS])
-        # só os passos cujo cenário existe nesta rodada
-        roteiro_js    = json.dumps([st for st in ROTEIRO if st["key"] in self._scenarios])
+        tcc_js        = _TCC_JS
+        capitulos_js  = json.dumps(CAPITULOS)
+        cmp_head_js   = json.dumps([h for _, h in self._CMP_COLS])
+        tcc_pills     = "".join(
+            f'<button class="tcc-pill" onclick="tccGo({i})"><span>{i + 1}</span>{c["curto"]}</button>'
+            for i, c in enumerate(CAPITULOS))
 
         return f"""<!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
@@ -192,13 +198,6 @@ class HTMLRenderer:
   <button class="toggle-btn diag-btn" id="diagram-toggle" onclick="toggleDiagram()">Mapa IEEE 9-bus</button>
   <button class="toggle-btn diag-btn" id="table-toggle" onclick="toggleTable()">Comparativo</button>
   <button class="toggle-btn diag-btn" id="zoom-fault" onclick="toggleZoomFault()">Zoom na falta</button>
-  <button class="toggle-btn diag-btn rt-start" id="rt-toggle" onclick="rtToggle()">Roteiro</button>
-  <div class="rt-bar" id="rt-bar" style="display:none">
-    <button class="rt-nav" onclick="rtStep(-1)" title="Passo anterior (seta para a esquerda)">&lsaquo;</button>
-    <span class="rt-count" id="rt-count"></span>
-    <div class="rt-text"><span class="rt-title" id="rt-title"></span><span class="rt-desc" id="rt-desc"></span></div>
-    <button class="rt-nav" onclick="rtStep(1)" title="Próximo passo (seta para a direita ou PageDown)">&rsaquo;</button>
-  </div>
 </div>
 
 <main class="main">
@@ -228,10 +227,35 @@ class HTMLRenderer:
   </div>
 
   <div class="tab-bar" id="tab-bar">
+    <button class="tab-btn tab-tcc" id="tab-tcc"  onclick="switchTab('tcc')">Análise TCC</button>
     <button class="tab-btn active" id="tab-res"  onclick="switchTab('res')">Resumo</button>
     <button class="tab-btn" id="tab-inv"  onclick="switchTab('inv')">Inversor UFV</button>
     <button class="tab-btn" id="tab-sys"  onclick="switchTab('sys')">Barras de Geração</button>
     <button class="tab-btn" id="tab-spec" onclick="switchTab('spec')">Espectro FFT</button>
+  </div>
+
+  <div class="chart-section tcc-section" id="sec-tcc" style="display:none">
+    <div class="section-header">
+      <span class="section-title">Análise TCC &nbsp;·&nbsp; Capítulo 5</span>
+      <span class="spec-hint">seta → ou PageDown avança &nbsp;·&nbsp; clique num cartão para abrir o cenário</span>
+    </div>
+    <div class="tcc-nav">
+      <button class="rt-nav" onclick="tccGo(tccCap - 1)" title="Capítulo anterior (seta para a esquerda)">&lsaquo;</button>
+      <div class="tcc-pills">{tcc_pills}</div>
+      <button class="rt-nav" onclick="tccGo(tccCap + 1)" title="Próximo capítulo (seta para a direita ou PageDown)">&rsaquo;</button>
+    </div>
+    <div class="tcc-cap">
+      <p class="tcc-ref" id="tcc-ref"></p>
+      <p class="tcc-title" id="tcc-title"></p>
+      <p class="tcc-text" id="tcc-text"></p>
+    </div>
+    <div class="tcc-ctrl">
+      <div class="pll-toggle" id="tcc-sinais"></div>
+      <div class="tcc-chips" id="tcc-chips"></div>
+    </div>
+    <div id="plot-tcc"></div>
+    <div id="tcc-table"></div>
+    <div class="tcc-cards" id="tcc-cards"></div>
   </div>
 
   <div class="chart-section" id="sec-res" style="display:none">
@@ -288,17 +312,18 @@ class HTMLRenderer:
 <script>
 var SCENARIOS = {scenarios_js};
 var CMP_COLS = {cmp_cols_js};
-var ROTEIRO = {roteiro_js};
+var CAPS = {capitulos_js};
+var CMP_HEAD = {cmp_head_js};
 var currentKey = {first_key_js};
 var isDark = false;
 var pllMode = "nominal";
 
 // Abas: cada gráfico vive num painel; só o ativo é renderizado (lazy) e os
 // demais ficam "sujos" até serem abertos — _dirty[t] = precisa de Plotly.react.
-var TABS = ["res", "inv", "sys", "spec"];
-var HASKEY = {{ res: "hasRes", inv: "hasInv", sys: "hasSys", spec: "hasSpec" }};
-var activeTab = "res";
-var _dirty = {{ res: true, inv: true, sys: true, spec: true }};
+var TABS = ["tcc", "res", "inv", "sys", "spec"];
+var HASKEY = {{ tcc: "hasTcc", res: "hasRes", inv: "hasInv", sys: "hasSys", spec: "hasSpec" }};
+var activeTab = "tcc";   // a página abre na Análise TCC (demonstração da defesa)
+var _dirty = {{ tcc: true, res: true, inv: true, sys: true, spec: true }};
 
 var gd = {{}}, secEl = {{}}, tabBtn = {{}}, badgeEl = {{}};
 TABS.forEach(function(t) {{
@@ -390,6 +415,7 @@ function themedData(data, lightC, darkC, tIdx, isDarkMode) {{
 }}
 
 function _renderChart(which) {{
+  if (which === "tcc") {{ _renderTcc(); _dirty.tcc = false; return; }}
   var sc = SCENARIOS[currentKey];
   var figData, light, dark, idx;
   if (which === "spec") {{
@@ -463,6 +489,9 @@ function switchTab(which) {{
     which = TABS.filter(function(t) {{ return sc[HASKEY[t]]; }})[0];
   }}
   activeTab = which;
+  document.body.classList.toggle("tcc-mode", which === "tcc");
+  if (which === "tcc") headerSub.textContent = "Análise comparativa · Capítulo 5 do TCC";
+  else updateFaultUI(sc);
   TABS.forEach(function(t) {{
     var avail = !!sc[HASKEY[t]];
     tabBtn[t].style.display = avail ? "" : "none";
@@ -890,66 +919,7 @@ function toggleTheme() {{
   document.getElementById("lbl").textContent = isDark ? "Light mode" : "Dark mode";
 }}
 
-// ── Modo roteiro (demonstração da defesa) ─────────────────────────────────
-// Cada passo de ROTEIRO (src/report/roteiro.py) escolhe cenário, aba, zoom e
-// painel e mostra a legenda; avança com seta/PageDown (passador de slides).
-
-var rtOn = false, rtIdx = 0;
-
-function rtToggle() {{
-  rtOn = !rtOn;
-  document.getElementById("rt-bar").style.display = rtOn ? "" : "none";
-  document.getElementById("rt-toggle").classList.toggle("active", rtOn);
-  document.getElementById("rt-toggle").innerHTML = rtOn ? "Sair do roteiro" : "Roteiro";
-  if (rtOn) _rtApply(rtIdx);
-}}
-
-function rtStep(d) {{
-  var i = rtIdx + d;
-  if (i < 0 || i >= ROTEIRO.length) return;
-  _rtApply(i);
-}}
-
-function _rtApply(i) {{
-  var st = ROTEIRO[i], sc = SCENARIOS[st.key];
-  rtIdx = i;
-  _closeTip();
-  _applyPllFilter(sc.badPll ? "bad" : "nominal");
-  if (st.phase) {{ specPhase = st.phase; }}
-  zoomFault = !!st.zoom;
-  activeTab = st.tab;
-  document.getElementById("scenario-picker").value = st.key;
-  switchScenario(st.key);        // renderiza a aba ativa já com o zoom
-  var tbl = document.getElementById("table-section");
-  tbl.style.display = st.table ? "" : "none";
-  if (st.table) {{
-    tccOnly = true;
-    renderComparisonTable();
-  }}
-  document.getElementById("rt-count").textContent = (i + 1) + "/" + ROTEIRO.length;
-  document.getElementById("rt-title").textContent = st.titulo;
-  document.getElementById("rt-desc").textContent = st.texto;
-  if (st.panel && st.tab !== "res" && st.tab !== "spec") {{
-    var frac = _panelFrac(sc[st.tab + "Data"], st.panel);
-    if (frac != null) {{ _openTabAt(st.tab, sc[st.tab + "Data"], frac); return; }}
-  }}
-  var target = st.table ? tbl : document.getElementById("tab-bar");
-  setTimeout(function() {{
-    var sticky = document.querySelector(".header").offsetHeight
-               + document.querySelector(".filter-bar").offsetHeight;
-    var y = target.getBoundingClientRect().top + window.scrollY - sticky - 12;
-    document.scrollingElement.scrollTo({{ top: Math.max(0, y), behavior: "smooth" }});
-  }}, 60);
-}}
-
-document.addEventListener("keydown", function(e) {{
-  if (!rtOn) return;
-  var tg = e.target && e.target.tagName;
-  if (tg === "SELECT" || tg === "INPUT" || tg === "TEXTAREA") return;
-  if (e.key === "ArrowRight" || e.key === "PageDown") {{ e.preventDefault(); rtStep(1); }}
-  else if (e.key === "ArrowLeft" || e.key === "PageUp") {{ e.preventDefault(); rtStep(-1); }}
-  else if (e.key === "Escape") {{ rtToggle(); }}
-}});
+{tcc_js}
 
 setPllMode(pllMode);
 </script>
@@ -1422,6 +1392,28 @@ setPllMode(pllMode);
         if ind and ind.get("ts") is None:
             row["ts"] = {"val": "não retorna", "raw": None, "cls": "bad"}
         return row
+
+    def _tcc_ind(self, data: SimData) -> dict:
+        """Valores formatados dos mini-cartões da aba Análise TCC (e os
+        crus que o gráfico de barras do capítulo do ONS usa)."""
+        m = data.metrics
+        ind = m.get("ind") or {}
+        partida = m.get("partida") or {}
+        out: dict = {}
+        if partida:
+            out["tvd5"] = f"{partida['t_vd5']:.0f} ms"
+            out["terr2"] = f"{partida['t_err2']:.0f} ms"
+        if ind:
+            out["ret"] = f"{ind['ret']:.1f}%"
+            out["pico"] = f"{ind['pico']:.1f}°"
+            out["ts"] = f"{ind['ts']:.0f} ms" if ind["ts"] is not None else "não retorna"
+            out["a120"] = f"{self._fmt_a120(ind['a120'])} pu"
+            out["fracP"] = f"{ind['frac_P_absorve']:.1f}%"
+            out["Vmed"] = f"{self._fmt(ind['Vmed'])} pu"
+            out["rampa"] = f"{self._fmt(ind['iq_rampa_Vmed'])} pu"
+            out["iqref"] = f"{self._fmt(ind['iqref'])} pu"
+            out["raw"] = {"rampa": ind["iq_rampa_Vmed"], "iqref": ind["iqref"]}
+        return out
 
     def _cards_html(self, data: SimData, key: str) -> str:
         m = data.metrics
@@ -2133,6 +2125,74 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 }
 .svg-tip-btn:hover { background: var(--bg) }
 
+/* ── Aba Análise TCC ── */
+.tab-btn.tab-tcc { font-weight: 700 }
+body.tcc-mode #zoom-fault { display: none }
+/* na aba TCC o cenário único não manda: seletor e toggle ficam esmaecidos */
+body.tcc-mode #scenario-picker, body.tcc-mode .filter-bar .pll-toggle { opacity: .45 }
+.tcc-section { padding-bottom: 18px }
+.tcc-nav { display: flex; align-items: center; gap: 10px; padding: 14px 20px 4px }
+.tcc-pills { flex: 1; display: flex; flex-wrap: wrap; gap: 6px }
+.tcc-pill {
+  font-family: inherit; font-size: 12.5px; font-weight: 600;
+  padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  border: 1.5px solid var(--btn-bdr); background: var(--btn-bg); color: var(--btn-fg);
+}
+.tcc-pill span {
+  display: inline-block; min-width: 18px; margin-right: 6px; font-weight: 800;
+  color: var(--accent);
+}
+.tcc-pill.active { background: var(--accent); border-color: var(--accent); color: #fff }
+.tcc-pill.active span { color: #fff }
+[data-theme="dark"] .tcc-pill.active, [data-theme="dark"] .tcc-pill.active span { color: #0f172a }
+.rt-nav {
+  font-family: inherit; font-size: 22px; line-height: 1; font-weight: 700;
+  width: 34px; height: 34px; flex-shrink: 0;
+  border-radius: 50%; border: 1.5px solid var(--accent);
+  background: var(--surface); color: var(--accent); cursor: pointer;
+}
+.rt-nav:hover { background: var(--accent); color: #fff }
+.tcc-cap {
+  margin: 10px 20px 0; padding: 12px 16px;
+  background: var(--badge-bg); border-left: 4px solid var(--accent); border-radius: 8px;
+}
+.tcc-ref { font-size: 11px; font-weight: 700; letter-spacing: .5px; color: var(--accent); text-transform: uppercase }
+.tcc-title { font-size: 17px; font-weight: 800; margin: 3px 0 4px; color: var(--text) }
+.tcc-text { font-size: 14px; line-height: 1.5; color: var(--text); max-width: 110ch }
+.tcc-ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 20px 0 }
+.tcc-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px }
+.tcc-chip {
+  font-family: inherit; font-size: 12px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px; border-radius: 999px; cursor: pointer;
+  border: 1.5px solid var(--btn-bdr); background: var(--btn-bg); color: var(--muted);
+}
+.tcc-chip.on { border-color: var(--c); color: var(--text) }
+.tcc-sw { width: 14px; height: 4px; border-radius: 2px; background: var(--c); display: inline-block }
+.tcc-chip:not(.on) .tcc-sw { opacity: .3 }
+.tcc-add {
+  font-family: inherit; font-size: 12px; color: var(--muted);
+  background: var(--btn-bg); border: 1.5px dashed var(--btn-bdr);
+  border-radius: 999px; padding: 5px 10px; cursor: pointer;
+}
+#plot-tcc { padding: 4px 8px 0 }
+.tcc-cards {
+  display: grid; gap: 10px; padding: 6px 20px 0;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+}
+.tcc-card {
+  background: var(--card-bg); border: 1.5px solid var(--border);
+  border-top: 4px solid var(--c); border-radius: 10px;
+  padding: 10px 12px; cursor: pointer;
+}
+.tcc-card:hover { box-shadow: var(--sh-md) }
+.tcc-card-h { font-size: 12.5px; font-weight: 700; margin-bottom: 6px; color: var(--text) }
+.tcc-row { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--muted); padding: 2px 0 }
+.tcc-row b { color: var(--text); font-size: 13px; white-space: nowrap }
+#tcc-table { padding: 8px 20px 0 }
+.tcc-bad-tag { margin-left: 6px; font-size: 10px; font-weight: 700; color: #ea580c }
+[data-theme="dark"] .tcc-bad-tag { color: #fb923c }
+
 /* ── Casos do TCC: mapa e comparativo ── */
 .tcc-loc .lp, .tcc-loc line { stroke: #2563eb }
 .tcc-loc text { fill: #1d4ed8 }
@@ -2152,28 +2212,276 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 .cmp-table tbody tr.cmp-extra td { opacity: .55 }
 .table-section .section-header { justify-content: space-between }
 
-/* ── Modo roteiro ── */
-.filter-bar { flex-wrap: wrap }
-.rt-start { margin-left: auto }
-.rt-bar {
-  flex-basis: 100%;
-  display: flex; align-items: center; gap: 12px;
-  background: var(--badge-bg); border: 1.5px solid var(--accent);
-  border-radius: 10px; padding: 8px 12px;
+"""
+
+
+# JS da aba "Análise TCC" (string comum, fora do f-string do HTML: chaves
+# simples). Capítulos em src/report/roteiro.py (CAPITULOS); as curvas vêm das
+# figuras já embutidas em SCENARIOS, sem aumentar o HTML.
+_TCC_JS = r"""
+// ── Aba Análise TCC: capítulos do Cap. 5 com cenários sobrepostos ─────────
+
+var TCC_EXTRA = [["#9333ea", "#c084fc"], ["#db2777", "#f472b6"],
+                 ["#ca8a04", "#fbbf24"], ["#16a34a", "#4ade80"]];
+var SINAIS = {
+  err:  { lbl: "Erro de fase", trace: "Erro de fase", y: "Erro de fase (°)" },
+  vd:   { lbl: "v<sub>d</sub> da rede", trace: "V<sub>d</sub> Rede", y: "Tensão v<sub>d</sub> (pu)" },
+  P:    { lbl: "P", trace: "P UFV", y: "Potência ativa (pu)" },
+  Q:    { lbl: "Q", trace: "Q UFV", y: "Potência reativa (pu)" },
+  spec: { lbl: "Espectro de v<sub>d</sub>", y: "Amplitude (pu)" },
+};
+var IND_LBL = {
+  terr2: "Erro na faixa de 2°", tvd5: "v<sub>d</sub> na faixa de 5%",
+  ret: "Retenção de v<sub>d</sub>", pico: "Pico do erro na falta",
+  ts: "Retorno à faixa de 2°", a120: "120 Hz em v<sub>d</sub>",
+  fracP: "P absorvida após a eliminação", Vmed: "Tensão no inversor",
+  rampa: "Rampa ONS prevê", iqref: "i<sub>q,ref</sub> médio",
+};
+var tccCap = 0, tccState = {};
+
+function _tccSt(cap) {
+  if (!tccState[cap.id]) {
+    var on = {};
+    cap.casos.forEach(function(c) { on[c[0]] = true; });
+    tccState[cap.id] = { on: on, extra: [], sinal: cap.sinais[0] || null };
+  }
+  return tccState[cap.id];
 }
-.rt-nav {
-  font-family: inherit; font-size: 22px; line-height: 1; font-weight: 700;
-  width: 34px; height: 34px; flex-shrink: 0;
-  border-radius: 50%; border: 1.5px solid var(--accent);
-  background: var(--surface); color: var(--accent); cursor: pointer;
+
+function _tccCases(cap) {
+  var st = _tccSt(cap);
+  var list = cap.casos.filter(function(c) { return SCENARIOS[c[0]]; })
+    .map(function(c) { return { key: c[0], light: c[1][0], dark: c[1][1] }; });
+  st.extra.forEach(function(k, i) {
+    var pal = TCC_EXTRA[i % TCC_EXTRA.length];
+    list.push({ key: k, light: pal[0], dark: pal[1], extra: true });
+  });
+  return list;
 }
-.rt-nav:hover { background: var(--accent); color: #fff }
-.rt-count {
-  font-size: 12px; font-weight: 800; color: var(--accent);
-  white-space: nowrap; min-width: 32px; text-align: center;
+
+function _tccLabel(k, mixed) {
+  var sc = SCENARIOS[k];
+  if (sc.badPll) return sc.label + " · inadequada";
+  return mixed ? sc.label + " · nominal" : sc.label;
 }
-.rt-text { flex: 1; font-size: 14px; line-height: 1.4; color: var(--text) }
-.rt-title { font-weight: 700; margin-right: 8px }
-.rt-title::after { content: " ·"; color: var(--muted) }
-.rt-desc { color: var(--text) }
+
+function _tccTrace(sc, sinal) {
+  if (sinal === "spec") {
+    var f = sc.specData && sc.specData.d;
+    if (!f) return null;
+    // 2ª linha da figura dq = tensão v_d do inversor; segmento da falta
+    for (var i = 0; i < f.data.length; i++) {
+      if (f.data[i].name === "Durante a falta" && f.data[i].yaxis === "y2") return f.data[i];
+    }
+    return null;
+  }
+  var d = sc.invData.data;
+  for (var j = 0; j < d.length; j++) {
+    if (d[j].name === SINAIS[sinal].trace) return d[j];
+  }
+  return null;
+}
+
+function tccGo(i) {
+  if (i < 0 || i >= CAPS.length) return;
+  tccCap = i;
+  if (activeTab !== "tcc") switchTab("tcc"); else _renderTcc();
+  setTimeout(function() {
+    var sticky = document.querySelector(".header").offsetHeight
+               + document.querySelector(".filter-bar").offsetHeight;
+    var y = document.getElementById("tab-bar").getBoundingClientRect().top
+          + window.scrollY - sticky - 8;
+    document.scrollingElement.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+  }, 60);
+}
+
+function _tccSinal(s) { _tccSt(CAPS[tccCap]).sinal = s; _renderTcc(); }
+
+function _tccChip(k) {
+  var st = _tccSt(CAPS[tccCap]);
+  st.on[k] = (st.on[k] === false);
+  _renderTcc();
+}
+
+function _tccAdd(sel) {
+  var k = sel.value;
+  if (!k) return;
+  var st = _tccSt(CAPS[tccCap]);
+  if (st.extra.indexOf(k) === -1) st.extra.push(k);
+  st.on[k] = true;
+  _renderTcc();
+}
+
+function _openScenario(k) {
+  _applyPllFilter(SCENARIOS[k].badPll ? "bad" : "nominal");
+  activeTab = "inv";
+  document.getElementById("scenario-picker").value = k;
+  switchScenario(k);
+  var tb = document.getElementById("tab-bar");
+  setTimeout(function() {
+    var sticky = document.querySelector(".header").offsetHeight
+               + document.querySelector(".filter-bar").offsetHeight;
+    var y = tb.getBoundingClientRect().top + window.scrollY - sticky - 8;
+    document.scrollingElement.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+  }, 60);
+}
+
+function _tccTableHtml() {
+  var keys = Object.keys(SCENARIOS).filter(function(k) { return SCENARIOS[k].tcc; })
+    .sort(function(a, b) { return SCENARIOS[a].tccOrd - SCENARIOS[b].tccOrd; });
+  var head = "<th>Cenário</th>" + CMP_HEAD.map(function(h) { return "<th>" + h + "</th>"; }).join("");
+  var rows = keys.map(function(k) {
+    var sc = SCENARIOS[k], r = sc.metricsRow;
+    var bad = sc.badPll ? "<span class=\"tcc-bad-tag\">inadequada</span>" : "";
+    return "<tr class=\"cmp-row\" onclick=\"_openScenario('" + k + "')\">"
+      + "<td class=\"cmp-label\">" + sc.label + bad
+      + "<span class=\"tcc-tag\">§" + sc.tcc + "</span></td>"
+      + CMP_COLS.map(function(c) { return _cmpCell(r[c]); }).join("") + "</tr>";
+  }).join("");
+  return "<div class=\"table-wrap\"><table class=\"cmp-table tcc-cmp\"><thead><tr>"
+    + head + "</tr></thead><tbody>" + rows + "</tbody></table></div>";
+}
+
+function _renderTcc() {
+  var cap = CAPS[tccCap], st = _tccSt(cap), cases = _tccCases(cap);
+  document.querySelectorAll(".tcc-pill").forEach(function(b, i) {
+    b.classList.toggle("active", i === tccCap);
+  });
+  document.getElementById("tcc-ref").textContent = cap.ref;
+  document.getElementById("tcc-title").textContent = cap.titulo;
+  document.getElementById("tcc-text").innerHTML = cap.texto;   // texto nosso, com <sub>
+
+  var sb = document.getElementById("tcc-sinais");
+  sb.style.display = (cap.sinais.length > 1) ? "" : "none";
+  sb.innerHTML = cap.sinais.map(function(s) {
+    return "<button class=\"pll-btn" + (s === st.sinal ? " active" : "") + "\" onclick=\"_tccSinal('"
+      + s + "')\">" + SINAIS[s].lbl + "</button>";
+  }).join("");
+
+  var mixed = cases.some(function(c) { return SCENARIOS[c.key].badPll; })
+           && cases.some(function(c) { return !SCENARIOS[c.key].badPll; });
+  var col = function(c) { return isDark ? c.dark : c.light; };
+  var visible = cases.filter(function(c) { return st.on[c.key] !== false; });
+
+  var chips = cases.map(function(c) {
+    return "<button class=\"tcc-chip" + (st.on[c.key] !== false ? " on" : "") + "\" style=\"--c:"
+      + col(c) + "\" onclick=\"_tccChip('" + c.key + "')\"><span class=\"tcc-sw\"></span>"
+      + _tccLabel(c.key, mixed) + "</button>";
+  }).join("");
+  if (cap.kind === "time" || cap.kind === "spec") {
+    var inList = cases.map(function(c) { return c.key; });
+    var opts = Object.keys(SCENARIOS).filter(function(k) {
+      return inList.indexOf(k) === -1 && (cap.kind === "time"
+        ? (cap.id === "energ") === (SCENARIOS[k].tFault == null)
+        : SCENARIOS[k].tFault != null);
+    }).map(function(k) {
+      return "<option value=\"" + k + "\">" + _tccLabel(k, true) + "</option>";
+    }).join("");
+    chips += "<select class=\"tcc-add\" onchange=\"_tccAdd(this)\">"
+      + "<option value=\"\">+ comparar com…</option>" + opts + "</select>";
+  }
+  document.getElementById("tcc-chips").innerHTML = chips;
+
+  var plotEl = gd.tcc, tbl = document.getElementById("tcc-table");
+  var cardsEl = document.getElementById("tcc-cards");
+  if (cap.kind === "tabela") {
+    plotEl.style.display = "none"; cardsEl.innerHTML = "";
+    tbl.innerHTML = _tccTableHtml();
+    return;
+  }
+  tbl.innerHTML = "";
+  plotEl.style.display = "";
+
+  var B = isDark ? BASE_DARK : BASE_LIGHT;
+  var grid = isDark ? "#2a3a55" : "#e2e8f0";
+  var layout = {
+    height: 460, margin: { t: 26, r: 20, b: 60, l: 70 },
+    paper_bgcolor: B.paper, plot_bgcolor: B.plot,
+    font: { family: "Inter, Segoe UI, system-ui, sans-serif", color: B.font, size: 12 },
+    hoverlabel: { bgcolor: B.hoverBg, bordercolor: B.hoverBorder },
+    showlegend: false,   // os chips acima do gráfico fazem de legenda
+    xaxis: { gridcolor: grid, zerolinecolor: grid },
+    yaxis: { gridcolor: grid, zerolinecolor: grid },
+    shapes: [], annotations: [],
+  };
+  var traces = [];
+
+  if (cap.kind === "ons") {
+    var lbls = visible.map(function(c) { return SCENARIOS[c.key].label.replace(" — Trifásica", ""); });
+    var raw = function(c, f) { var r = SCENARIOS[c.key].tccInd.raw; return r ? r[f] : null; };
+    traces.push({ type: "bar", name: "Rampa ONS (prevista)", x: lbls,
+      y: visible.map(function(c) { return raw(c, "rampa"); }),
+      marker: { color: isDark ? "#64748b" : "#94a3b8" },
+      hovertemplate: "%{y:.2f} pu<extra>Rampa ONS</extra>" });
+    traces.push({ type: "bar", name: "i<sub>q,ref</sub> médio", x: lbls,
+      y: visible.map(function(c) { return raw(c, "iqref"); }),
+      marker: { color: visible.map(col) },
+      hovertemplate: "%{y:.2f} pu<extra>i<sub>q,ref</sub></extra>" });
+    layout.barmode = "group";
+    layout.yaxis.title = { text: "Corrente reativa (pu)" };
+    layout.yaxis.range = [0, 1.1];
+  } else {
+    var sinal = (cap.kind === "spec") ? "spec" : st.sinal;
+    visible.forEach(function(c) {
+      var t = _tccTrace(SCENARIOS[c.key], sinal);
+      if (!t) return;
+      var lbl = _tccLabel(c.key, mixed);
+      traces.push({ type: "scatter", mode: "lines", x: t.x, y: t.y, name: lbl,
+        line: { color: col(c), width: 2.2, dash: c.extra ? "dot" : "solid" },
+        connectgaps: false,
+        hovertemplate: (sinal === "spec" ? "%{x:.0f} Hz · %{y:.3f} pu" : "t = %{x:.4f} s · %{y:.3f}")
+          + "<extra>" + lbl + "</extra>" });
+    });
+    layout.xaxis.title = { text: sinal === "spec" ? "Frequência (Hz)" : "Tempo (s)" };
+    layout.yaxis.title = { text: SINAIS[sinal].y };
+    if (cap.xrange) layout.xaxis.range = cap.xrange;
+    if (sinal === "spec") {
+      layout.yaxis.range = [0, 1];
+      layout.shapes.push({ type: "line", xref: "x", yref: "paper", x0: 120, x1: 120, y0: 0, y1: 1,
+        line: { color: B.font, width: 1, dash: "dash" }, opacity: 0.45 });
+      layout.annotations.push({ xref: "x", yref: "paper", x: 120, y: 1, yanchor: "bottom",
+        text: "120 Hz", showarrow: false, font: { size: 11 } });
+    } else {
+      var f0 = visible.map(function(c) { return SCENARIOS[c.key]; })
+        .filter(function(sc) { return sc.tFault != null; })[0];
+      if (f0) {
+        layout.shapes.push({ type: "rect", xref: "x", yref: "paper", layer: "below",
+          x0: f0.tFault, x1: (f0.tClear != null ? f0.tClear : f0.tFault), y0: 0, y1: 1,
+          fillcolor: isDark ? "rgba(248,113,113,.10)" : "rgba(220,38,38,.06)", line: { width: 0 } });
+        layout.annotations.push({ xref: "x", yref: "paper", x: (f0.tFault + (f0.tClear || f0.tFault)) / 2,
+          y: 1, yanchor: "bottom", text: "falta", showarrow: false, font: { size: 11, color: B.font } });
+      }
+      if (sinal === "err") {
+        layout.shapes.push({ type: "rect", xref: "paper", yref: "y", layer: "below",
+          x0: 0, x1: 1, y0: -2, y1: 2, line: { width: 0 },
+          fillcolor: isDark ? "rgba(74,222,128,.18)" : "rgba(22,163,74,.14)" });
+        if (cap.id === "sinc") {   // escorregamento de ciclo: faixa inteira de ±180°
+          layout.yaxis.range = [-190, 190];
+          layout.yaxis.tickvals = [-180, -90, 0, 90, 180];
+        }
+      }
+    }
+  }
+  PLOTLY_CFG.toImageButtonOptions.filename = "tcc_" + cap.id + (st.sinal ? "_" + st.sinal : "");
+  Plotly.react(plotEl, traces, layout, PLOTLY_CFG);
+
+  cardsEl.innerHTML = visible.map(function(c) {
+    var ind = SCENARIOS[c.key].tccInd || {};
+    var rows = cap.metricas.map(function(m) {
+      return "<p class=\"tcc-row\"><span>" + IND_LBL[m] + "</span><b>"
+        + (ind[m] != null ? ind[m] : "—") + "</b></p>";
+    }).join("");
+    return "<div class=\"tcc-card\" style=\"--c:" + col(c) + "\" title=\"Abrir este cenário nas abas\""
+      + " onclick=\"_openScenario('" + c.key + "')\"><p class=\"tcc-card-h\">"
+      + _tccLabel(c.key, mixed) + "</p>" + rows + "</div>";
+  }).join("");
+}
+
+document.addEventListener("keydown", function(e) {
+  if (activeTab !== "tcc") return;
+  var tg = e.target && e.target.tagName;
+  if (tg === "SELECT" || tg === "INPUT" || tg === "TEXTAREA") return;
+  if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); tccGo(tccCap + 1); }
+  else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); tccGo(tccCap - 1); }
+});
 """

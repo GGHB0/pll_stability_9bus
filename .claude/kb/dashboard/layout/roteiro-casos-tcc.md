@@ -1,10 +1,10 @@
 ---
 name: roteiro-demonstracao-dashboard
 aliases: [roteiro-demonstracao-dashboard]
-description: Casos do Cap. 5 destacados no dashboard (seletor por seção, mapa azul/cinza, comparativo "Só casos do TCC") e modo roteiro da demonstração da defesa (9 passos, seta/PageDown) — src/report/roteiro.py
+description: Casos do Cap. 5 destacados no dashboard (seletor por seção, mapa azul/cinza, comparativo "Só casos do TCC") e aba "Análise TCC" da demonstração da defesa (7 capítulos com cenários sobrepostos, seta/PageDown) — src/report/roteiro.py
 ---
 
-# Casos do TCC e modo roteiro
+# Casos do TCC e aba Análise TCC
 
 Motivação (2026-10-20): na defesa, o slide 16 abre o painel ao vivo
 ([[defesa-deck-map]]). O painel tem 34 cenários, e o TCC discute 17. A banca
@@ -21,9 +21,10 @@ de achar o cenário certo no `<select>` durante a fala.
   inadequadas da Linha 7-8 (9,7% de retenção) e da Barra 6 (106 ms), que o
   texto usa como contraste.
 - Fora do TCC: Barras 4, 5, 8 e 9 (todas as faltas) e Linha 8-9 bifásica.
-- `ROTEIRO`: os passos da demonstração. Cada um tem `key`, `tab`, `zoom`,
-  `panel` (fragmento do título do painel), `phase` (eixo do espectro),
-  `table` (comparativo filtrado), `titulo` e `texto` (a legenda).
+- `CAPITULOS`: os capítulos da aba "Análise TCC". Cada um tem `id`,
+  `curto` (botão), `titulo`, `ref`, `texto` (pode ter `<sub>`), `kind`
+  (`time`, `spec`, `ons`, `tabela`), `casos` com cor (light, dark),
+  `sinais` (o 1º é o padrão), `xrange` e `metricas` (mini-cartões).
 
 Caso novo no TCC → entrada em `TCC_CASOS`. Número de legenda alterado → ele
 tem de bater com o card do mesmo cenário ([[indicadores-tcc-dashboard]]).
@@ -43,47 +44,53 @@ tem de bater com o card do mesmo cenário ([[indicadores-tcc-dashboard]]).
 - `_locOf(key)` tira o `_bad_pll` antes do `split`: `regime_bad_pll` passou
   a acender o título do mapa, o que antes não acontecia.
 
-## Modo roteiro
+## Aba "Análise TCC"
 
-Botão "Roteiro" na filter-bar. Abre uma faixa (dentro da filter-bar, então
-fica fixa no topo) com ‹ n/9 › e a legenda do passo. Teclas, só com o modo
-ligado e fora do `<select>`: seta → ou PageDown avança, seta ← ou PageUp
-volta, Esc sai. Um passador de slides manda PageDown/PageUp.
+Histórico: em 2026-10-20 a demonstração começou como uma faixa de 9 passos
+sobre as abas por cenário (commit `d1a8e8c`). No mesmo dia virou esta aba,
+a pedido do usuário, para comparar os cenários num painel só.
 
-`_rtApply(i)` aplica o passo sem renderizar duas vezes: `_applyPllFilter`
-(o filtro do toggle sem trocar de cenário), depois `specPhase`, `zoomFault`
-e `activeTab`, e só então `switchScenario`. O comparativo aparece só no
-passo `table` e a rolagem vai ao painel pedido por `_panelFrac` +
-`_openTabAt`.
+A aba é a primeira e a página abre nela. Cada capítulo sobrepõe no mesmo
+eixo os cenários que o TCC compara: azul = nominal, laranja = inadequada,
+e na localização um degradê de azul do mais perto ao mais longe da usina.
 
-| # | Cenário | Aba | O que a legenda diz |
+| # | Capítulo | Casos | Gráfico |
 |---|---|---|---|
-| 1 | Regime | Inversor | trava em 40 ms; inadequada em 79 ms |
-| 2 | B7 trifásica | Inversor, zoom | 9,2%; 37,3°; 98 ms |
-| 3 | B6 trifásica | Inversor, zoom | 58,4%; 7,3°; 76 ms |
-| 4 | B7 trifásica inadequada | Inversor, zoom | 8,2%; ±180° contínuo |
-| 5 | idem, painel P/Q | Inversor, zoom | absorve P em 66,8% do pós-falta |
-| 6 | B6 bifásica | Espectro, eixo d | 0,39 pu × 0,0011 pu das trifásicas |
-| 7 | B6 bifásica | Inversor, zoom | 96,0°; 48 ms |
-| 8 | B6 bifásica inadequada | Inversor, zoom | 34,5°; 30 ms |
-| 9 | B7 trifásica | Resumo + comparativo | casos do TCC |
+| 1 | Energização | regime × regime inadequada | erro de fase / v_d (0-0,2 s) |
+| 2 | Localização | 4 trifásicas nominais | erro / v_d / P |
+| 3 | Perda de sincronismo | B7 trifásica nas duas sintonias | erro (±180° fixo) / P / Q / v_d |
+| 4 | Sequência negativa | 4 assimétricas + B7 trifásica (cinza) | espectro de v_d na falta |
+| 5 | Compromisso da sintonia | B6 bifásica nas duas sintonias | erro / v_d |
+| 6 | Código de rede | 4 trifásicas | barras rampa ONS × i_q,ref |
+| 7 | Todos os casos | 17 casos do TCC | tabela (colunas do comparativo) |
 
-As legendas dizem "durante a falta" no pico: no passo 8 o transitório da
-eliminação desce a cerca de −100°, fora da janela do pico.
+- As curvas vêm das figuras já embutidas em `SCENARIOS` (traço "Erro de
+  fase", "V<sub>d</sub> Rede", "P UFV", "Q UFV" do Inversor; "Durante a
+  falta" em `y2` do espectro dq). O HTML não cresce.
+- Os chips ligam e desligam cenários e fazem de legenda (a do Plotly fica
+  oculta). "+ comparar com…" acrescenta qualquer cenário, em linha
+  pontilhada.
+- Os mini-cartões vêm de `tccInd` (`_tcc_ind` no renderer, mesmas receitas
+  dos cards). Clicar abre o cenário na aba Inversor.
+- Na aba, o cabeçalho diz "Análise comparativa", o seletor e o toggle PLL
+  ficam esmaecidos e o "Zoom na falta" some.
+- Teclas, só com a aba ativa e fora de `<select>`: seta → ou PageDown
+  avança, seta ← ou PageUp volta (um passador de slides funciona).
+- O JS mora em `_TCC_JS`, uma string comum no fim do `renderer.py`, e entra
+  no f-string do HTML por `{tcc_js}`, sem precisar dobrar chaves.
 
-Conferido em 2026-10-20 no Edge headless (Playwright em venv descartável):
-os 9 passos sem erro de JS, os números das legendas iguais aos cards, o modo
-dark, Esc e a ordem do comparativo.
+Os números das legendas foram conferidos contra os mini-cartões no Edge
+headless (Playwright em venv descartável), nos 7 capítulos, sem erro de JS.
 
 ## `goToChart` consertado junto
 
-O roteiro rola até o painel com a mesma rotina dos cards clicáveis, que
+A faixa de passos rolava até o painel com a mesma rotina dos cards clicáveis, que
 estava quebrada desde 2026-07-24 ([[tabs-navegacao]]). `_panelFrac` acha a
 barra de título pelo texto e usa o `y` dela (`yref="paper"`), e
 `_openTabAt` desconta as margens da figura.
 
 ## Relacionados
 
-- [[bad-pll-dashboard-filter]]: o toggle PLL, que o roteiro aciona por
-  `_applyPllFilter`
+- [[bad-pll-dashboard-filter]]: o toggle PLL, que o clique num mini-cartão
+  aciona por `_applyPllFilter`
 - [[tcc-revisao-fragmento-cap5-metricas]]: os números das tabelas do Cap. 5

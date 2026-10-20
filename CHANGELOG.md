@@ -5,6 +5,27 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-20 — Aba "Análise TCC" no lugar da faixa de roteiro
+
+Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`
+
+O usuário pediu o roteiro numa aba própria, com mais liberdade para comparar
+os gráficos num painel direcionado. A faixa de 9 passos (entrada abaixo)
+saiu e a nova aba é a primeira, aberta por padrão:
+
+- 7 capítulos do Cap. 5 (energização, localização, perda de sincronismo,
+  sequência negativa, compromisso da sintonia, código de rede, todos os
+  casos), cada um com legenda e referência às tabelas e figuras do TCC.
+- Cenários sobrepostos no mesmo eixo (azul = nominal, laranja =
+  inadequada), seletor de sinal (erro de fase, v_d, P, Q), chips para ligar
+  e desligar curvas e "+ comparar com…" para qualquer cenário.
+- Mini-cartões por cenário com os indicadores do TCC; o clique abre o
+  cenário nas abas.
+- Seta ou PageDown troca de capítulo (passador de slides).
+- As curvas reaproveitam as figuras já embutidas: o HTML não cresce.
+
+Detalhes em `.claude/kb/dashboard/layout/roteiro-casos-tcc.md`.
+
 ## 2026-10-20 — Casos do TCC em destaque e modo roteiro da demonstração
 
 Arquivos: `src/report/roteiro.py` (novo), `src/report/renderer.py`
@@ -76,77 +97,11 @@ traz `pq_ganho_p` (P ×2/√3, Q ×2/3). Os gráficos e métricas de potência d
 dashboard mudam de valor, não de forma. Detalhe em
 `.claude/kb/simulation/export_workflow.md`.
 
-## 2026-08-18 — Fix: filtro do toggle PLL não aplicado na carga inicial do HTML
-
-Arquivos: `src/report/renderer.py`
-
-Bug reportado pelo usuário: ao abrir o HTML pela primeira vez, com o toggle
-"Nominal" ativo, o `<select>` de cenário mostrava (e permitia abrir) todos
-os casos de sintonia inadequada (`_bad_pll`) também. Só depois de alternar
-manualmente para "Sintonia inadequada" e voltar para "Nominal" é que o
-filtro passava a funcionar corretamente.
-
-Causa: o script de inicialização só chamava `switchScenario(currentKey)` no
-final da página — nunca `setPllMode(pllMode)`. A filtragem das `<option>`
-do `<select>` (`opt.hidden = ...`) só acontece dentro de `setPllMode`, então
-nunca rodava na carga inicial, mesmo com a variável `pllMode` já valendo
-`"nominal"` e o botão correspondente marcado como ativo.
-
-Fix: trocado `switchScenario(currentKey);` por `setPllMode(pllMode);` na
-inicialização (linha final do `<script>`). `setPllMode("nominal")` já
-reencontra o cenário equivalente (o próprio `currentKey`, pois os cenários
-nominais vêm primeiro na ordenação) e chama `switchScenario` internamente,
-então o cenário inicial exibido não muda — só passa a aplicar o filtro do
-`<select>` desde o primeiro carregamento.
-
-Verificado no browser pane (via `http.server` local): na carga inicial,
-30 opções totais, 22 visíveis, 0 `_bad_pll` visíveis (as 8 corretamente
-ocultas). Alternância manual "Sintonia inadequada" ↔ "Nominal" continua
-funcionando nos dois sentidos.
-
-## 2026-08-18 — Fix: título do eixo X do espectro FFT sobrepondo painel abaixo
-
-Arquivos: `src/pipeline/spectrum.py`
-
-Bug reportado pelo usuário: no painel de espectro FFT (abc), quando o modo
-tem 2 linhas (corrente + tensão), o texto "Frequência (Hz)" do eixo x da
-linha de cima (corrente) aparecia sobreposto à barra de título azul da linha
-de baixo ("Tensão v̂ₐ UFV (abc)").
-
-Causa: `_apply_layout` setava `title_text="Frequência (Hz)"` via
-`fig.update_xaxes(...)` sem filtrar por linha — `shared_xaxes=True` já
-esconde os números do eixo de cima, mas não some com o **título** do eixo
-(propriedade independente dos ticks), que ficava caindo no vão estreito
-reservado só para a barra de título da linha seguinte.
-
-Fix: título em branco no `update_xaxes` geral; "Frequência (Hz)" setado só
-no eixo x da última linha (`fig.layout[last_ax].title.text`). Verificado
-regenerando os 30 cenários (sem exceptions) e inspecionando
-`gd._fullLayout` no browser pane (servido via `python -m http.server`):
-`xaxis.title.text === ""` / `xaxis2.title.text === "Frequência (Hz)"` no
-modo `a` do cenário `bus4/1phase`; posição das duas barras de título
-("Corrente"/"Tensão") sem sobreposição no DOM.
-
-## 2026-08-17 — Aba "Sistema 9-Bus" renomeada para "Barras de Geração"
-
-Arquivos: `src/report/renderer.py`, `src/pipeline/chart.py`
-
-A pedido do usuário. Três ocorrências do rótulo trocadas:
-
-- Botão da `tab-bar` (`#tab-sys`).
-- Cabeçalho `.section-title` da seção `#sec-sys`.
-- Título do grupo de cards de topologia/severidade na aba Resumo, exibido
-  quando o cenário é regime permanente (`sev_label` em `_group_severidade`,
-  antes idêntico ao nome da aba) — confirmado com o usuário que também
-  deveria mudar, já que reutilizava o mesmo texto.
-
-Comentário de docstring em `chart.py` atualizado por consistência. Nenhuma
-mudança de comportamento — só rótulo. Verificado no browser pane (servido
-via `python -m http.server`): botão, cabeçalho da seção e grupo de cards do
-Resumo (cenário `regime`) todos exibindo "Barras de Geração".
-
 ## Entradas anteriores
 
+- [2026-08-17 a 2026-08-18](docs/changelog/2026-08-17_18.md) — fix do filtro
+  do toggle PLL na carga inicial, título do eixo X do espectro, aba "Sistema
+  9-Bus" renomeada para "Barras de Geração".
 - [2026-08-11](docs/changelog/2026-08-11.md) — tabela de critérios na legenda
   da tabela de harmônicas; FFT mede a frequência real por segmento (abc).
 - [2026-08-09](docs/changelog/2026-08-09.md) — medição de harmônicas pelo

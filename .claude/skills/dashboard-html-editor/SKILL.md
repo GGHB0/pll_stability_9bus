@@ -70,7 +70,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 | Tema light/dark | `renderer.py` (`_css`, `toggleTheme`) | `layout/dark-mode-theming.md` |
 | Header/branding/botões da filter-bar | `renderer.py` | `layout/header-branding.md`, `layout/estrutura-html.md` |
 | Toggle PLL nominal/sintonia inadequada | `renderer.py`, `app.py` | `layout/bad-pll-dashboard-filter.md` |
-| Casos do TCC, passos do modo roteiro | `roteiro.py` (`TCC_CASOS`, `ROTEIRO`) | `layout/roteiro-casos-tcc.md` |
+| Casos do TCC, capítulos da aba Análise TCC | `roteiro.py` (`TCC_CASOS`, `CAPITULOS`), `_TCC_JS` no `renderer.py` | `layout/roteiro-casos-tcc.md` |
 | Narrativa/veredito (story) | `renderer.py` (`_story_html`) | `cards/cards-metricas.md` |
 | Remover aba/gráfico inteiro (feature) | `chart.py` (método build), `app.py` (chamada + chaves do dict), `renderer.py` (chaves `SCENARIOS`, HTML da seção, `TIME_TABS`/guards de `switchTab`, ordem do `goToChart`) | doc do gráfico removido + `layout/{estrutura-html,tabs-navegacao}.md` |
 
@@ -86,7 +86,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 - **Sem browser pane, verificar com Edge headless**: Playwright num venv
   descartável do scratchpad, `chromium.launch(channel="msedge")` (não baixa
   browser), abrir o HTML como `file://`, avaliar JS e tirar screenshots.
-  Usado em 2026-10-20 para percorrer o modo roteiro.
+  Usado em 2026-10-20 para percorrer a aba Análise TCC.
 
 - **Plotly não renderiza em preview `file://` no browser pane** (valia até 2026-10-16; com o Plotly embutido, `file://` renderiza): o script
   `<script src="https://cdn.plot.ly/...">` é bloqueado (CORS/sandbox) quando

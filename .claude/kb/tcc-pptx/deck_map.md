@@ -52,6 +52,13 @@ para sintonia inadequada (o painel troca para o cenário equivalente);
 falhar, os slides 17-18 cobrem os mesmos números. Na arguição o painel
 fica aberto para "e na barra X?".
 
+Desde 2026-10-20 o painel tem o **modo roteiro** (botão "Roteiro"): 9
+passos com legenda, avançados pelo passador (PageDown), do regime ao
+comparativo dos casos do TCC ([[roteiro-demonstracao-dashboard]]). As notas
+do slide 16 ainda descrevem os 3 cliques antigos, e o tempo da demo (o
+roteiro pede 3 a 4 min, contra ~1,5 min) ainda não foi decidido: ver
+[[defesa-pendencias]].
+
 ## Apêndice (22-29, para perguntas; fora do tempo)
 
 | # | Conteúdo | TCC |

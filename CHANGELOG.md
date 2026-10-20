@@ -5,6 +5,28 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-20 — Casos do TCC em destaque e modo roteiro da demonstração
+
+Arquivos: `src/report/roteiro.py` (novo), `src/report/renderer.py`
+
+O painel tem 34 cenários e o TCC discute 17; na defesa, a banca precisa ver
+quais são os do TCC, e a demonstração não pode depender de achar cenário no
+`<select>` durante a fala. Mudanças:
+
+- Seletor agrupado por seção do Cap. 5 (§5.1 a §5.4) e "Outros cenários
+  (fora do TCC)".
+- Mapa unifilar: pontos de falta do TCC em azul, os demais esmaecidos (ainda
+  clicáveis), com legenda. É a convenção do slide 13 do deck.
+- Comparativo: etiqueta `§5.x`, linhas fora do TCC esmaecidas e botão "Só
+  casos do TCC", que ordena pelas Tabelas 5.1-5.3.
+- Modo roteiro: botão "Roteiro", 9 passos com legenda (cenário, aba, zoom e
+  painel), avançados por seta ou PageDown (passador de slides).
+- Fixes: `goToChart` voltou a rolar até o painel (quebrado desde 2026-07-24),
+  `regime_bad_pll` passou a acender o mapa, e o toggle PLL acha a monofásica
+  inadequada da Barra 6 (`1phase_ground`).
+
+Detalhes em `.claude/kb/dashboard/layout/roteiro-casos-tcc.md`.
+
 ## 2026-10-20 — Indicadores do Cap. 5 do TCC no painel
 
 Arquivos: `src/pipeline/indicadores.py` (novo), `src/pipeline/loader.py`,

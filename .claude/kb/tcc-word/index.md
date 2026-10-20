@@ -73,7 +73,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 
 ## Pastas relacionadas
 
-- [dashboard/](../dashboard/index.md) — saem 2, chegam 1
+- [dashboard/](../dashboard/index.md) — saem 2, chegam 2
 - [events/](../events/index.md) — saem 2, chegam 0
 - [pll/](../pll/index.md) — saem 12, chegam 7
 - [power-system/](../power-system/index.md) — saem 9, chegam 1

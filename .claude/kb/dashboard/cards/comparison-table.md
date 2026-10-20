@@ -127,3 +127,7 @@ var(--badge-bg)`.
 | Clique em header ordenável | Ordena asc; clique de novo no mesmo header inverte para desc |
 | Toggle PLL (nominal/bad) | Filtra linhas visíveis, mesma regra do `<select>` |
 | Toggle "Comparativo" | Só mostra/oculta a seção — não precisa re-renderizar |
+| Botão "Só casos do TCC" | Esconde os cenários fora do Cap. 5; sem coluna escolhida, ordena pela ordem das Tabelas 5.1-5.3 |
+
+Desde 2026-10-20 o nome do cenário leva a etiqueta `§5.x` da seção do TCC e
+as linhas fora do TCC ficam esmaecidas: [[roteiro-demonstracao-dashboard]].

@@ -23,6 +23,7 @@ from ..config import (
     VOLT_INDIVIDUAL_LIMIT_PU, DQ_UNBALANCE_WARN_PU, DQ_UNBALANCE_HIGH_PU,
 )
 from ..pipeline.loader import SimData
+from .roteiro import TCC_SECOES, TCC_CASOS, OUTROS_LABEL, ROTEIRO, tcc_secao
 
 
 class HTMLRenderer:
@@ -137,6 +138,8 @@ class HTMLRenderer:
                 "hasRes":    True,
                 "hasSpec":   bool(fp),
                 "badPll":    sc.get("bad_pll", False),
+                "tcc":       tcc_secao(key),
+                "tccOrd":    (list(TCC_CASOS).index(key) if key in TCC_CASOS else None),
                 "tFault":    d.t_fault,
                 "tClear":    d.t_clear,
                 "tEnd":      d.t[-1] if len(d.t) > 0 else None,
@@ -150,6 +153,8 @@ class HTMLRenderer:
         cmp_headers   = "".join(f'\n            <th data-key="{k}">{h}</th>'
                                 for k, h in self._CMP_COLS)
         cmp_cols_js   = json.dumps([k for k, _ in self._CMP_COLS])
+        # só os passos cujo cenário existe nesta rodada
+        roteiro_js    = json.dumps([st for st in ROTEIRO if st["key"] in self._scenarios])
 
         return f"""<!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
@@ -187,18 +192,28 @@ class HTMLRenderer:
   <button class="toggle-btn diag-btn" id="diagram-toggle" onclick="toggleDiagram()">Mapa IEEE 9-bus</button>
   <button class="toggle-btn diag-btn" id="table-toggle" onclick="toggleTable()">Comparativo</button>
   <button class="toggle-btn diag-btn" id="zoom-fault" onclick="toggleZoomFault()">Zoom na falta</button>
+  <button class="toggle-btn diag-btn rt-start" id="rt-toggle" onclick="rtToggle()">Roteiro</button>
+  <div class="rt-bar" id="rt-bar" style="display:none">
+    <button class="rt-nav" onclick="rtStep(-1)" title="Passo anterior (seta para a esquerda)">&lsaquo;</button>
+    <span class="rt-count" id="rt-count"></span>
+    <div class="rt-text"><span class="rt-title" id="rt-title"></span><span class="rt-desc" id="rt-desc"></span></div>
+    <button class="rt-nav" onclick="rtStep(1)" title="Próximo passo (seta para a direita ou PageDown)">&rsaquo;</button>
+  </div>
 </div>
 
 <main class="main">
 
   <div class="diagram-section" id="diagram-section">
 {self._svg_section_html()}
-    <p class="diag-hint">Clique em uma barra ou linha para selecionar o cenário de falta</p>
+    <p class="diag-hint"><span class="diag-key diag-key-tcc"></span>analisado no TCC
+      <span class="diag-key diag-key-extra"></span>consultável no painel
+      &nbsp;·&nbsp; clique em uma barra ou linha para selecionar o cenário de falta</p>
   </div>
 
   <div class="table-section" id="table-section" style="display:none">
     <div class="section-header">
       <span class="section-title">Comparativo de cenários</span>
+      <button class="toggle-btn diag-btn" id="tcc-only-btn" onclick="toggleTccOnly()">Só casos do TCC</button>
     </div>
     <div class="table-wrap">
       <table class="cmp-table" id="cmp-table">
@@ -273,6 +288,7 @@ class HTMLRenderer:
 <script>
 var SCENARIOS = {scenarios_js};
 var CMP_COLS = {cmp_cols_js};
+var ROTEIRO = {roteiro_js};
 var currentKey = {first_key_js};
 var isDark = false;
 var pllMode = "nominal";
@@ -461,8 +477,21 @@ function switchTab(which) {{
 }}
 
 // ── Cards clicáveis: pula para o painel da métrica ────────────────────────
-// Procura o rótulo do painel (annotation do chart.py) nas figuras na ordem
-// res → inv → sys; abre a aba e rola até o painel usando o domínio do eixo Y.
+// Procura a barra de título do painel (annotation do chart.py, xref/yref
+// "paper" desde o redesign dos títulos) nas figuras inv → sys; abre a aba e
+// rola até o painel pela posição da barra no papel.
+
+function _panelFrac(fig, labelFrag) {{
+  var anns = (fig && fig.layout && fig.layout.annotations) || [];
+  for (var j = 0; j < anns.length; j++) {{
+    if ((anns[j].text || "").indexOf(labelFrag) === -1) continue;
+    if (anns[j].yref === "paper") return anns[j].y;
+    var m = (anns[j].yref || "").match(/^y(\\d*)/);
+    var lay = fig.layout["yaxis" + (m && m[1] ? m[1] : "")];
+    return (lay && lay.domain) ? lay.domain[1] : 1;
+  }}
+  return null;
+}}
 
 function goToChart(labelFrag) {{
   var sc = SCENARIOS[currentKey];
@@ -470,23 +499,13 @@ function goToChart(labelFrag) {{
   for (var i = 0; i < order.length; i++) {{
     var t = order[i];
     if (!sc[HASKEY[t]]) continue;
-    var fig = sc[t + "Data"];
-    var anns = (fig.layout && fig.layout.annotations) || [];
-    for (var j = 0; j < anns.length; j++) {{
-      if (anns[j].xref !== "paper" && (anns[j].text || "").indexOf(labelFrag) !== -1) {{
-        _openTabAt(t, fig, anns[j].yref);
-        return;
-      }}
-    }}
+    var frac = _panelFrac(sc[t + "Data"], labelFrag);
+    if (frac != null) {{ _openTabAt(t, sc[t + "Data"], frac); return; }}
   }}
 }}
 
-function _openTabAt(t, fig, yref) {{
+function _openTabAt(t, fig, frac) {{
   switchTab(t);
-  var m = (yref || "").match(/^y(\\d*)/);
-  var axName = "yaxis" + (m && m[1] ? m[1] : "");
-  var lay = fig.layout[axName];
-  var frac = (lay && lay.domain) ? lay.domain[1] : 1;   // topo do painel (0–1, base→topo)
   // setTimeout (não rAF): dá tempo do layout assentar após switchTab e
   // funciona mesmo com a aba do browser em segundo plano
   setTimeout(function() {{
@@ -494,7 +513,10 @@ function _openTabAt(t, fig, yref) {{
                + document.querySelector(".filter-bar").offsetHeight;
     var secTop = secEl[t].getBoundingClientRect().top + window.scrollY;
     var headerH = secEl[t].querySelector(".section-header").offsetHeight;
-    var y = secTop + headerH + (1 - frac) * (fig.layout.height || 0) - sticky - 12;
+    var lay = fig.layout || {{}}, mg = lay.margin || {{}};
+    var mt = (mg.t != null) ? mg.t : 100, mb = (mg.b != null) ? mg.b : 80;
+    var plotH = (lay.height || 0) - mt - mb;            // área do papel (0–1)
+    var y = secTop + headerH + mt + (1 - frac) * plotH - sticky - 16;
     document.scrollingElement.scrollTo({{ top: Math.max(0, y), behavior: "smooth" }});
   }}, 60);
 }}
@@ -653,10 +675,23 @@ function _cmpCell(cell) {{
   return "<td class=\\"cmp-" + cell.cls + "\\">" + cell.val + "</td>";
 }}
 
+var tccOnly = false;
+
+function toggleTccOnly() {{
+  tccOnly = !tccOnly;
+  renderComparisonTable();
+}}
+
 function renderComparisonTable() {{
+  document.getElementById("tcc-only-btn").classList.toggle("active", tccOnly);
   var keys = Object.keys(SCENARIOS).filter(function(k) {{
-    return SCENARIOS[k].badPll === (pllMode === "bad");
+    return SCENARIOS[k].badPll === (pllMode === "bad")
+      && (!tccOnly || SCENARIOS[k].tcc);
   }});
+  if (!sortState.key && tccOnly) {{
+    // sem ordenação escolhida: ordem do Cap. 5 (Tabelas 5.1 a 5.3)
+    keys.sort(function(a, b) {{ return SCENARIOS[a].tccOrd - SCENARIOS[b].tccOrd; }});
+  }}
   if (sortState.key) {{
     keys.sort(function(a, b) {{
       var ra = _sortVal(sortState.key, a), rb = _sortVal(sortState.key, b);
@@ -670,8 +705,10 @@ function renderComparisonTable() {{
   document.getElementById("cmp-tbody").innerHTML = keys.map(function(k) {{
     var sc = SCENARIOS[k], r = sc.metricsRow;
     var active = (k === currentKey) ? " cmp-active" : "";
-    return "<tr class=\\"cmp-row" + active + "\\" onclick=\\"_pickTableRow('" + k + "')\\">"
-      + "<td class=\\"cmp-label\\">" + sc.label + "</td>"
+    var extra  = sc.tcc ? "" : " cmp-extra";
+    var tag    = sc.tcc ? "<span class=\\"tcc-tag\\">§" + sc.tcc + "</span>" : "";
+    return "<tr class=\\"cmp-row" + active + extra + "\\" onclick=\\"_pickTableRow('" + k + "')\\">"
+      + "<td class=\\"cmp-label\\">" + sc.label + tag + "</td>"
       + CMP_COLS.map(function(c) {{ return _cmpCell(r[c]); }}).join("")
       + "</tr>";
   }}).join("");
@@ -694,9 +731,14 @@ document.querySelectorAll("#cmp-table thead th[data-key]").forEach(function(th) 
 // ── SVG diagram interactivity ─────────────────────────────────────────────
 
 var svgLocMap = {{}};
+
+function _locOf(key) {{
+  return key.replace("_bad_pll", "").split("/")[0];   // regime_bad_pll → regime
+}}
+
 (function() {{
   Object.keys(SCENARIOS).forEach(function(k) {{
-    var loc = (k === "regime") ? "regime" : k.split("/")[0];
+    var loc = _locOf(k);
     if (!svgLocMap[loc]) svgLocMap[loc] = [];
     svgLocMap[loc].push(k);
   }});
@@ -704,6 +746,9 @@ var svgLocMap = {{}};
     var loc = el.getAttribute("data-loc");
     if (svgLocMap[loc]) {{
       el.classList.add("has-data");
+      // azul = algum caso deste ponto está no TCC; cinza = só no painel
+      var inTcc = svgLocMap[loc].some(function(k) {{ return SCENARIOS[k].tcc; }});
+      if (loc !== "regime") el.classList.add(inTcc ? "tcc-loc" : "svg-extra");
       el.addEventListener("click", function(e) {{
         e.stopPropagation();
         selectLocation(loc, el);
@@ -715,6 +760,17 @@ var svgLocMap = {{}};
 var _tip = null;
 
 function setPllMode(mode) {{
+  _applyPllFilter(mode);
+  var equiv = _findEquiv(currentKey, mode);
+  if (equiv) {{
+    document.getElementById("scenario-picker").value = equiv;
+    switchScenario(equiv);
+  }}
+}}
+
+// Botões e <option> visíveis do modo, sem trocar de cenário (o roteiro usa
+// direto, para não renderizar duas vezes)
+function _applyPllFilter(mode) {{
   pllMode = mode;
   document.querySelectorAll(".pll-btn").forEach(function(b) {{
     b.classList.toggle("active", b.dataset.mode === mode);
@@ -726,11 +782,6 @@ function setPllMode(mode) {{
   document.querySelectorAll("#scenario-picker optgroup").forEach(function(og) {{
     og.hidden = !Array.from(og.querySelectorAll("option")).some(function(o) {{ return !o.hidden; }});
   }});
-  var equiv = _findEquiv(currentKey, mode);
-  if (equiv) {{
-    document.getElementById("scenario-picker").value = equiv;
-    switchScenario(equiv);
-  }}
 }}
 
 function _findEquiv(key, mode) {{
@@ -739,10 +790,15 @@ function _findEquiv(key, mode) {{
     var badKey = parts.length === 2
       ? parts[0] + "/" + parts[1] + "_bad_pll"
       : key + "_bad_pll";
-    return SCENARIOS[badKey] ? badKey : _firstOfMode(true);
+    if (SCENARIOS[badKey]) return badKey;
+    // a monofásica inadequada da Barra 6 foi exportada como 1phase_ground
+    var gKey = badKey.replace("/1phase_bad_pll", "/1phase_ground_bad_pll");
+    return SCENARIOS[gKey] ? gKey : _firstOfMode(true);
   }} else {{
     var nomKey = key.replace("_bad_pll", "");
-    return SCENARIOS[nomKey] ? nomKey : _firstOfMode(false);
+    if (SCENARIOS[nomKey]) return nomKey;
+    var gNom = nomKey.replace("/1phase_ground", "/1phase");
+    return SCENARIOS[gNom] ? gNom : _firstOfMode(false);
   }}
 }}
 
@@ -812,8 +868,7 @@ function highlightSVG(key) {{
   document.querySelectorAll("[data-loc].svg-active").forEach(function(el) {{
     el.classList.remove("svg-active");
   }});
-  var loc = (key === "regime") ? "regime" : key.split("/")[0];
-  var el = document.querySelector("[data-loc='" + loc + "']");
+  var el = document.querySelector("[data-loc='" + _locOf(key) + "']");
   if (el) el.classList.add("svg-active");
 }}
 
@@ -834,6 +889,67 @@ function toggleTheme() {{
   _applyZoom();
   document.getElementById("lbl").textContent = isDark ? "Light mode" : "Dark mode";
 }}
+
+// ── Modo roteiro (demonstração da defesa) ─────────────────────────────────
+// Cada passo de ROTEIRO (src/report/roteiro.py) escolhe cenário, aba, zoom e
+// painel e mostra a legenda; avança com seta/PageDown (passador de slides).
+
+var rtOn = false, rtIdx = 0;
+
+function rtToggle() {{
+  rtOn = !rtOn;
+  document.getElementById("rt-bar").style.display = rtOn ? "" : "none";
+  document.getElementById("rt-toggle").classList.toggle("active", rtOn);
+  document.getElementById("rt-toggle").innerHTML = rtOn ? "Sair do roteiro" : "Roteiro";
+  if (rtOn) _rtApply(rtIdx);
+}}
+
+function rtStep(d) {{
+  var i = rtIdx + d;
+  if (i < 0 || i >= ROTEIRO.length) return;
+  _rtApply(i);
+}}
+
+function _rtApply(i) {{
+  var st = ROTEIRO[i], sc = SCENARIOS[st.key];
+  rtIdx = i;
+  _closeTip();
+  _applyPllFilter(sc.badPll ? "bad" : "nominal");
+  if (st.phase) {{ specPhase = st.phase; }}
+  zoomFault = !!st.zoom;
+  activeTab = st.tab;
+  document.getElementById("scenario-picker").value = st.key;
+  switchScenario(st.key);        // renderiza a aba ativa já com o zoom
+  var tbl = document.getElementById("table-section");
+  tbl.style.display = st.table ? "" : "none";
+  if (st.table) {{
+    tccOnly = true;
+    renderComparisonTable();
+  }}
+  document.getElementById("rt-count").textContent = (i + 1) + "/" + ROTEIRO.length;
+  document.getElementById("rt-title").textContent = st.titulo;
+  document.getElementById("rt-desc").textContent = st.texto;
+  if (st.panel && st.tab !== "res" && st.tab !== "spec") {{
+    var frac = _panelFrac(sc[st.tab + "Data"], st.panel);
+    if (frac != null) {{ _openTabAt(st.tab, sc[st.tab + "Data"], frac); return; }}
+  }}
+  var target = st.table ? tbl : document.getElementById("tab-bar");
+  setTimeout(function() {{
+    var sticky = document.querySelector(".header").offsetHeight
+               + document.querySelector(".filter-bar").offsetHeight;
+    var y = target.getBoundingClientRect().top + window.scrollY - sticky - 12;
+    document.scrollingElement.scrollTo({{ top: Math.max(0, y), behavior: "smooth" }});
+  }}, 60);
+}}
+
+document.addEventListener("keydown", function(e) {{
+  if (!rtOn) return;
+  var tg = e.target && e.target.tagName;
+  if (tg === "SELECT" || tg === "INPUT" || tg === "TEXTAREA") return;
+  if (e.key === "ArrowRight" || e.key === "PageDown") {{ e.preventDefault(); rtStep(1); }}
+  else if (e.key === "ArrowLeft" || e.key === "PageUp") {{ e.preventDefault(); rtStep(-1); }}
+  else if (e.key === "Escape") {{ rtToggle(); }}
+}});
 
 setPllMode(pllMode);
 </script>
@@ -877,28 +993,22 @@ setPllMode(pllMode);
     # ── Select ───────────────────────────────────────────────────────────────
 
     def _select_html(self) -> str:
-        regime_opts: list[str] = []
-        bus_opts:    list[str] = []
-        line_opts:   list[str] = []
-
-        for key, sc in self._scenarios.items():
+        # Grupos pela seção do Cap. 5 em que o caso aparece (ordem das
+        # tabelas do TCC); o que o TCC não usa vai para o grupo final.
+        def _opt(key: str) -> str:
+            sc = self._scenarios[key]
             pll_attr = 'data-pll="bad"' if sc.get("bad_pll", False) else 'data-pll="nominal"'
-            opt = f'<option value="{key}" {pll_attr}>{sc["label"]}</option>'
-            clean_loc = key.replace("_bad_pll", "").split("/")[0]
-            if clean_loc == "regime":
-                regime_opts.append(opt)
-            elif clean_loc.startswith("bus"):
-                bus_opts.append(opt)
-            elif clean_loc.startswith("line"):
-                line_opts.append(opt)
+            return f'<option value="{key}" {pll_attr}>{sc["label"]}</option>'
 
         groups: list[str] = []
-        if regime_opts:
-            groups.append(f'<optgroup label="Regime">{"".join(regime_opts)}</optgroup>')
-        if bus_opts:
-            groups.append(f'<optgroup label="Barras">{"".join(bus_opts)}</optgroup>')
-        if line_opts:
-            groups.append(f'<optgroup label="Linhas">{"".join(line_opts)}</optgroup>')
+        for sec_id, sec_label in TCC_SECOES:
+            opts = [_opt(k) for k, sec in TCC_CASOS.items()
+                    if sec == sec_id and k in self._scenarios]
+            if opts:
+                groups.append(f'<optgroup label="{sec_label}">{"".join(opts)}</optgroup>')
+        outros = [_opt(k) for k in self._scenarios if tcc_secao(k) is None]
+        if outros:
+            groups.append(f'<optgroup label="{OUTROS_LABEL}">{"".join(outros)}</optgroup>')
 
         return (
             '<select id="scenario-picker" onchange="switchScenario(this.value)">'
@@ -2022,4 +2132,48 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
   font-weight: 500; color: var(--text); cursor: pointer;
 }
 .svg-tip-btn:hover { background: var(--bg) }
+
+/* ── Casos do TCC: mapa e comparativo ── */
+.tcc-loc .lp, .tcc-loc line { stroke: #2563eb }
+.tcc-loc text { fill: #1d4ed8 }
+.svg-extra { opacity: .45; transition: opacity .2s }
+.svg-extra:hover, .svg-extra.svg-active { opacity: 1 }
+.diag-key {
+  display: inline-block; width: 18px; height: 4px; border-radius: 2px;
+  vertical-align: middle; margin: 0 5px 0 10px;
+}
+.diag-key-tcc   { background: #2563eb }
+.diag-key-extra { background: #111827; opacity: .45 }
+.tcc-tag {
+  margin-left: 7px; padding: 1px 6px; border-radius: 999px;
+  font-size: 10px; font-weight: 700; letter-spacing: .3px;
+  background: var(--badge-bg); color: var(--badge-fg);
+}
+.cmp-table tbody tr.cmp-extra td { opacity: .55 }
+.table-section .section-header { justify-content: space-between }
+
+/* ── Modo roteiro ── */
+.filter-bar { flex-wrap: wrap }
+.rt-start { margin-left: auto }
+.rt-bar {
+  flex-basis: 100%;
+  display: flex; align-items: center; gap: 12px;
+  background: var(--badge-bg); border: 1.5px solid var(--accent);
+  border-radius: 10px; padding: 8px 12px;
+}
+.rt-nav {
+  font-family: inherit; font-size: 22px; line-height: 1; font-weight: 700;
+  width: 34px; height: 34px; flex-shrink: 0;
+  border-radius: 50%; border: 1.5px solid var(--accent);
+  background: var(--surface); color: var(--accent); cursor: pointer;
+}
+.rt-nav:hover { background: var(--accent); color: #fff }
+.rt-count {
+  font-size: 12px; font-weight: 800; color: var(--accent);
+  white-space: nowrap; min-width: 32px; text-align: center;
+}
+.rt-text { flex: 1; font-size: 14px; line-height: 1.4; color: var(--text) }
+.rt-title { font-weight: 700; margin-right: 8px }
+.rt-title::after { content: " ·"; color: var(--muted) }
+.rt-desc { color: var(--text) }
 """

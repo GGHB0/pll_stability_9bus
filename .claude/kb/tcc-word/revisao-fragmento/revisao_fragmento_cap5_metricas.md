@@ -78,13 +78,15 @@ antigo era furado pela Linha 8-9 (112 ms); o texto agora diz 112 ms.
 Valores de 2026-10-03 (Tabela 5.3 do TCC). A sintonia inadequada foi
 re-simulada em 01/10 com a janela de falta do nominal; os números de 08-23
 (t_s 99 / 78 / 47 ms) eram da safra antiga, com falta em 0,6-0,7 s.
-`bus7/1phase_bad_pll` não existe na safra nova (sai da tabela).
+`bus7/1phase_bad_pll` foi simulada em 13/10 e está na Tabela 5.3 do VFinal
+(70,6°, 95 ms, 0,55 pu de 120 Hz; conferido em 2026-10-20).
 
 | Cenário | Pico (>1 ciclo) | t_s pós | 120 Hz em `v_d` |
 |---|---|---|---|
 | `bus7/2phase` | 180,0° | 51 ms | 0,719 |
 | `bus7/2phase_bad_pll` | 179,9° | 96 ms | 0,636 |
 | `bus7/1phase` | 89,7° | 46 ms | 0,591 |
+| `bus7/1phase_bad_pll` | 70,6° | 95 ms | 0,55 (VFinal) |
 | `bus6/2phase` | 96,0° | 48 ms | 0,394 |
 | `bus6/2phase_bad_pll` | 34,5° | 30 ms | 0,375 |
 | `bus6/1phase` | 12,0° | 39 ms | 0,294 |

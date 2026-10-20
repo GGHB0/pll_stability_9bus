@@ -182,7 +182,13 @@ function selectLocation(loc, el) {
 | Sem dados BAD_PLL | Botões não aparecem |
 | BAD_PLL=true, cenário equivalente existe | Troca diretamente para o equivalente |
 | BAD_PLL=true, sem equivalente | Salta para o 1° cenário do modo |
+| Monofásica da Barra 6 | `_findEquiv` também tenta `1phase` ↔ `1phase_ground` (nome do export inadequado), desde 2026-10-20 |
 | Clique no SVG no modo "bad" | Tooltip lista apenas os `_bad_pll` daquele local |
+
+> Desde 2026-10-20 o filtro do `<select>` e dos botões mora em
+> `_applyPllFilter(mode)`, que o modo roteiro chama sem trocar de cenário;
+> `setPllMode` = `_applyPllFilter` + `_findEquiv` + `switchScenario`. Ver
+> [[roteiro-demonstracao-dashboard]].
 
 > Bug conhecido de inicialização do filtro do `<select>` (fix 2026-08-18):
 > ver [[bad-pll-select-init-bug]].

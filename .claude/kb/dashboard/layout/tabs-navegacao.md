@@ -60,8 +60,10 @@ annotation de painel gerada pelo `_label` do chart.py:
 - Duração / Topologia → sem target (não clicáveis)
 
 Os cards que apontavam para `"Erro de fase"` (IAE, ISE, tₛ, \|θ_err\| pico,
-Erro R.P.) foram removidos em 2026-08-09 — ver [[cards-metricas]]. Hoje só os
-cards de tensão são clicáveis.
+Erro R.P.) foram removidos em 2026-08-09 — ver [[cards-metricas]]. Os cards
+dos indicadores do TCC (2026-10-20) voltaram a apontar para `"Erro de
+fase"`, `"Tensão dq"`, `"Corrente dq UFV"` e `"P / Q UFV"`
+([[indicadores-tcc-dashboard]]).
 
 `goToChart` varre as figuras na ordem **inv → sys** (res saiu da busca em
 2026-07-24 — não tem mais figura), acha a primeira annotation (não-`paper`)
@@ -75,14 +77,16 @@ filter-bar sticky.
   com a aba do browser em segundo plano (descoberto no Claude Preview).
 - `document.scrollingElement.scrollTo({behavior:"smooth"})` em vez de
   `window.scrollTo` (que era no-op no ambiente de preview).
-- ⚠️ **Bug conhecido (desde b2bbb2a, 2026-07-24)**: o redesign dos títulos
+- **Bug corrigido em 2026-10-20** ([[roteiro-demonstracao-dashboard]]):
+  `_panelFrac` acha a barra de título pelo texto e devolve o `y` dela
+  quando `yref="paper"`, e `_openTabAt(t, fig, frac)` desconta as margens
+  da figura. Registro do defeito, para referência: o redesign dos títulos
   de painel (barra preenchida) fez `_label` em `chart.py` passar a usar
   `xref="paper"` também para a annotation do rótulo (antes era
   `"x/y domain"`). O filtro `anns[j].xref !== "paper"` em `goToChart` ficou
   obsoleto — nunca mais casa nada, então clique em card não navega mais.
-  Fix sugerido: filtrar por `yref` (`"paper"` = rótulo de painel,
-  `"y... domain"` = `_group_title`) e usar o `y` da própria annotation
-  como fração de scroll, em vez de resolver via domain do yaxis.
+  O fix seguiu a sugestão registrada aqui: usar o `y` da própria
+  annotation como fração de scroll.
 
 ## Badges de falta
 

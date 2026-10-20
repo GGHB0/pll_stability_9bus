@@ -70,6 +70,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 | Tema light/dark | `renderer.py` (`_css`, `toggleTheme`) | `layout/dark-mode-theming.md` |
 | Header/branding/botões da filter-bar | `renderer.py` | `layout/header-branding.md`, `layout/estrutura-html.md` |
 | Toggle PLL nominal/sintonia inadequada | `renderer.py`, `app.py` | `layout/bad-pll-dashboard-filter.md` |
+| Casos do TCC, passos do modo roteiro | `roteiro.py` (`TCC_CASOS`, `ROTEIRO`) | `layout/roteiro-casos-tcc.md` |
 | Narrativa/veredito (story) | `renderer.py` (`_story_html`) | `cards/cards-metricas.md` |
 | Remover aba/gráfico inteiro (feature) | `chart.py` (método build), `app.py` (chamada + chaves do dict), `renderer.py` (chaves `SCENARIOS`, HTML da seção, `TIME_TABS`/guards de `switchTab`, ordem do `goToChart`) | doc do gráfico removido + `layout/{estrutura-html,tabs-navegacao}.md` |
 
@@ -77,14 +78,15 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 
 ## Armadilhas conhecidas
 
-- **`goToChart`/`_label` (chart.py) desde o redesign dos títulos de painel
-  (`b2bbb2a`, 2026-07-21)**: os rótulos de painel agora usam
-  `xref="paper"`, igual aos subtítulos de grupo (`_group_title`) — o filtro
-  antigo em `goToChart` (`xref !== "paper"`) ficou obsoleto e clique em card
-  não navega mais até o gráfico. Fix disparado numa sessão de background
-  separada em 2026-07-24; se ainda não tiver sido aplicado, qualquer edição
-  futura em `_label`/`goToChart`/`_openTabAt` deve resolver isso junto, não
-  ignorar. Detalhes em `tabs-navegacao.md`.
+- **`goToChart` corrigido em 2026-10-20** (quebrado desde `b2bbb2a`): a
+  barra de título do painel tem `xref`/`yref="paper"`; `_panelFrac` acha
+  pelo texto e usa o `y` dela. Painel novo deve manter a barra via `_label`
+  para cards e roteiro acharem. Detalhes em `tabs-navegacao.md`.
+
+- **Sem browser pane, verificar com Edge headless**: Playwright num venv
+  descartável do scratchpad, `chromium.launch(channel="msedge")` (não baixa
+  browser), abrir o HTML como `file://`, avaliar JS e tirar screenshots.
+  Usado em 2026-10-20 para percorrer o modo roteiro.
 
 - **Plotly não renderiza em preview `file://` no browser pane** (valia até 2026-10-16; com o Plotly embutido, `file://` renderiza): o script
   `<script src="https://cdn.plot.ly/...">` é bloqueado (CORS/sandbox) quando

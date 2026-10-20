@@ -20,6 +20,12 @@ aliases: [defesa-historico-entregas]
 - Staging `C:\Temp\defesa_fluxo\` (`gen_fluxo.py`): MD5 74cc0096… →
   a2b58bdf67e259a7e9ba0c649a8d4deb, backup `_20261020_001615`. diff: só o
   slide 14; check 0 falha; 25,6 min.
+- **Sobrescrita**: às 00:17:37 um PowerPoint ainda aberto na versão antiga
+  regravou o canônico (slide 14 antigo, notas editadas à mão). Reentregue
+  sobre essa versão: só a tela nova, **notas do Victor mantidas** (ainda
+  citam "duas taxas" e "nenhuma métrica lida à mão", fora do TCC). MD5
+  1a121959… → 28fe61546aa9637f17d96d9f6768c9e7, backup `_20261020_001847`.
+  Lição: depois da entrega, conferir o canônico de novo antes de encerrar.
 
 ## 2026-10-20: slide 14 revertido ao original (entregue)
 

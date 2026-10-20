@@ -5,6 +5,22 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-20 — Modo apresentação, rampa do ONS e rótulo do mouse
+
+Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`
+
+- Botão "Modo apresentação" no cabeçalho: o site vira um palco escuro em
+  tela cheia, um capítulo do Cap. 5 por tela, com os sinais empilhados
+  (erro de fase + v_d ou + P), legenda, chips e mini-cartões, sem rolagem.
+  Seta ou PageDown avança, Esc sai.
+- Capítulo do ONS: as barras deram lugar à rampa do Submódulo 2.10 com o
+  ponto de operação de cada trifásica.
+- Cores distintas (amarelo → índigo) nos capítulos só com casos nominais.
+- Rótulo do mouse legível em todas as abas: fundo sólido, borda azul, fonte
+  maior e 3 casas decimais.
+
+Detalhes em `.claude/kb/dashboard/layout/roteiro-casos-tcc.md`.
+
 ## 2026-10-20 — Aba "Análise TCC" no lugar da faixa de roteiro
 
 Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`

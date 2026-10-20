@@ -46,27 +46,29 @@ TCC_CASOS: dict[str, str] = {
 }
 
 # Cores (light, dark). Azul = sintonia nominal, laranja = inadequada, como no
-# deck; na comparação por localização, azul do mais escuro (perto da usina)
-# ao mais claro (longe).
+# deck. Nos capítulos só com casos nominais (localização, assimétricas, ONS),
+# escala amarelo → verde → ciano → índigo, do mais perto ao mais longe da
+# usina: os tons de azul não se distinguiam no fundo escuro da apresentação.
 _NOM = ("#2563eb", "#60a5fa")
 _BAD = ("#ea580c", "#fb923c")
-_LOC = (("#1e3a8a", "#dbeafe"), ("#1d4ed8", "#93c5fd"),
-        ("#3b82f6", "#60a5fa"), ("#7cb1f8", "#2563eb"))
+_LOC = (("#ca8a04", "#fde047"), ("#16a34a", "#4ade80"),
+        ("#0891b2", "#22d3ee"), ("#4f46e5", "#a5b4fc"))
 _REF = ("#94a3b8", "#64748b")
 
 # Capítulos da aba "Análise TCC" (demonstração da defesa, slide 16 do deck).
 # Campos: id, curto (botão), titulo, ref (seção/figura do TCC), texto,
 # kind (time/spec/ons/tabela), casos [(key, cor)], sinais (o 1º é o
-# padrão), xrange, metricas (chaves de tccInd nos mini-cartões).
+# padrão), pres (sinais empilhados no modo apresentação), xrange,
+# metricas (chaves de tccInd nos mini-cartões).
 CAPITULOS: list[dict] = [
-    dict(id="energ", curto="Energização", kind="time",
+    dict(id="energ", pres=["err", "vd"], curto="Energização", kind="time",
          titulo="Energização do inversor", ref="§5.1 · Figura 5.3",
          texto="Na partida, o SRF-PLL trava na rede: o erro de fase entra na "
                "faixa de 2° em 40 ms com a sintonia nominal e em 79 ms com a "
                "inadequada.",
          casos=[("regime", _NOM), ("regime_bad_pll", _BAD)],
          sinais=["err", "vd"], xrange=[0.0, 0.2], metricas=["terr2", "tvd5"]),
-    dict(id="local", curto="Localização", kind="time",
+    dict(id="local", pres=["err", "vd"], curto="Localização", kind="time",
          titulo="Falta trifásica: quanto mais perto, mais severa",
          ref="§5.2 · Tabela 5.1 · Figura 5.7",
          texto="A mesma falta em quatro pontos, do mais próximo ao mais "
@@ -77,7 +79,7 @@ CAPITULOS: list[dict] = [
                 ("line8_9/3phase", _LOC[2]), ("bus6/3phase", _LOC[3])],
          sinais=["err", "vd", "P"], xrange=[0.25, 0.6],
          metricas=["ret", "pico", "ts"]),
-    dict(id="sinc", curto="Perda de sincronismo", kind="time",
+    dict(id="sinc", pres=["err", "P"], curto="Perda de sincronismo", kind="time",
          titulo="Barra 7 trifásica: a sintonia decide o sincronismo",
          ref="§5.4 · Figuras 5.18 e 5.19",
          texto="A tensão cai quase igual nas duas sintonias (9,2% e 8,2%). "
@@ -88,7 +90,7 @@ CAPITULOS: list[dict] = [
          casos=[("bus7/3phase", _NOM), ("bus7/3phase_bad_pll", _BAD)],
          sinais=["err", "P", "Q", "vd"], xrange=[0.25, 0.6],
          metricas=["ret", "pico", "ts", "fracP"]),
-    dict(id="seqneg", curto="Sequência negativa", kind="spec",
+    dict(id="seqneg", pres=["spec"], curto="Sequência negativa", kind="spec",
          titulo="Faltas assimétricas: a sequência negativa vira 120 Hz",
          ref="§5.3 · Tabela 5.3 · Figura 5.10",
          texto="Nas faltas assimétricas, a sequência negativa aparece em v<sub>d</sub> "
@@ -100,7 +102,7 @@ CAPITULOS: list[dict] = [
                 ("bus6/2phase", _LOC[2]), ("bus6/1phase", _LOC[3]),
                 ("bus7/3phase", _REF)],
          sinais=["spec"], xrange=[0.0, 400.0], metricas=["a120", "pico"]),
-    dict(id="comp", curto="Compromisso da sintonia", kind="time",
+    dict(id="comp", pres=["err", "vd"], curto="Compromisso da sintonia", kind="time",
          titulo="Ganho menor é compromisso, não piora uniforme",
          ref="§5.3 · Tabela 5.3 · Figura 5.14",
          texto="Na falta bifásica da Barra 6, a sintonia inadequada filtra "
@@ -110,7 +112,7 @@ CAPITULOS: list[dict] = [
          casos=[("bus6/2phase", _NOM), ("bus6/2phase_bad_pll", _BAD)],
          sinais=["err", "vd"], xrange=[0.25, 0.6],
          metricas=["pico", "ts", "a120"]),
-    dict(id="ons", curto="Código de rede", kind="ons",
+    dict(id="ons", pres=[], curto="Código de rede", kind="ons",
          titulo="Corrente reativa contra a rampa do ONS",
          ref="§5.5 · Tabela 5.2",
          texto="O Submódulo 2.10 pede corrente reativa proporcional ao "
@@ -120,7 +122,7 @@ CAPITULOS: list[dict] = [
          casos=[("bus7/3phase", _LOC[0]), ("line7_8/3phase", _LOC[1]),
                 ("line8_9/3phase", _LOC[2]), ("bus6/3phase", _LOC[3])],
          sinais=[], xrange=None, metricas=["Vmed", "rampa", "iqref"]),
-    dict(id="sintese", curto="Todos os casos", kind="tabela",
+    dict(id="sintese", pres=[], curto="Todos os casos", kind="tabela",
          titulo="Todos os casos do TCC",
          ref="Tabelas 5.1 a 5.3",
          texto="Indicadores de todos os cenários analisados, nas duas "

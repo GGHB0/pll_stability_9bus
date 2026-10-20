@@ -1,7 +1,7 @@
 ---
 name: roteiro-demonstracao-dashboard
 aliases: [roteiro-demonstracao-dashboard]
-description: Casos do Cap. 5 destacados no dashboard (seletor por seção, mapa azul/cinza, comparativo "Só casos do TCC") e aba "Análise TCC" da demonstração da defesa (7 capítulos com cenários sobrepostos, seta/PageDown) — src/report/roteiro.py
+description: Casos do Cap. 5 destacados no dashboard (seletor por seção, mapa azul/cinza, comparativo "Só casos do TCC"), aba "Análise TCC" (7 capítulos com cenários sobrepostos) e modo apresentação em tela cheia da defesa — src/report/roteiro.py
 ---
 
 # Casos do TCC e aba Análise TCC
@@ -61,7 +61,7 @@ e na localização um degradê de azul do mais perto ao mais longe da usina.
 | 3 | Perda de sincronismo | B7 trifásica nas duas sintonias | erro (±180° fixo) / P / Q / v_d |
 | 4 | Sequência negativa | 4 assimétricas + B7 trifásica (cinza) | espectro de v_d na falta |
 | 5 | Compromisso da sintonia | B6 bifásica nas duas sintonias | erro / v_d |
-| 6 | Código de rede | 4 trifásicas | barras rampa ONS × i_q,ref |
+| 6 | Código de rede | 4 trifásicas | rampa ONS (i_q × V) com o ponto de cada caso |
 | 7 | Todos os casos | 17 casos do TCC | tabela (colunas do comparativo) |
 
 - As curvas vêm das figuras já embutidas em `SCENARIOS` (traço "Erro de
@@ -81,6 +81,41 @@ e na localização um degradê de azul do mais perto ao mais longe da usina.
 
 Os números das legendas foram conferidos contra os mini-cartões no Edge
 headless (Playwright em venv descartável), nos 7 capítulos, sem erro de JS.
+
+## Modo apresentação
+
+Botão "Modo apresentação" no cabeçalho, pedido em 2026-10-20 para dar
+imersão e caber tudo na tela. O site inteiro vira um palco escuro em tela
+cheia (`#pres`, `position: fixed`, `requestFullscreen`), um capítulo por
+tela, sem rolagem: número do capítulo, legenda, chips, gráfico ocupando a
+altura que sobra, faixa de mini-cartões e os botões dos capítulos embaixo.
+
+- Os sinais de `cap.pres` ficam empilhados num só gráfico, com o mesmo eixo
+  x (o zoom vale para todos): erro de fase + v_d na energização, na
+  localização e no compromisso; erro de fase + P na perda de sincronismo.
+- O tema escuro é fixo no palco: as variáveis CSS são redefinidas dentro de
+  `.pres`, e os chips e cartões reaproveitam as classes da aba.
+- Seta ou PageDown avança, Esc sai. Com a tela cheia, o navegador consome o
+  Esc, e quem fecha o modo é o `fullscreenchange`. O capítulo é o mesmo da
+  aba (`tccCap`), e clicar num cartão sai do palco e abre o cenário.
+- `_tccFigure(cap, sinais, o)` monta a figura nos dois casos (aba com um
+  sinal, palco com vários), e `_renderPres` mede a altura do `#pres-plot`
+  e redesenha no `resize`.
+
+Na mesma rodada:
+
+- **Capítulo do ONS** trocado de barras (três coladas em 1 pu) pela rampa
+  do Submódulo 2.10 (i_q contra V) com o ponto de operação de cada trifásica
+  (V médio, i_q,ref médio). Mostra onde cada caso cai na curva e a Barra 6
+  um pouco abaixo dela.
+- **Cores dos capítulos só com casos nominais**: escala amarelo → verde →
+  ciano → índigo, do mais perto ao mais longe da usina. Os tons de azul se
+  confundiam no fundo escuro.
+- **Rótulo do mouse**: "x unified" com fundo sólido, borda azul, fonte 13 e
+  3 casas decimais, também nas abas por cenário (`themedLayout`).
+
+Conferido no Edge headless em 1920×1080: os 7 capítulos cabem na tela
+(`scrollHeight` = altura da janela) e não houve erro de JS.
 
 ## `goToChart` consertado junto
 

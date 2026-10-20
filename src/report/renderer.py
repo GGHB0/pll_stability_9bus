@@ -185,6 +185,7 @@ class HTMLRenderer:
     <span class="badge">UERJ 2026</span>
   </div>
   <div class="h-right">
+    <button class="toggle-btn pres-btn" onclick="presToggle()" title="Tela cheia, um capítulo do Cap. 5 por tela (Esc sai)">Modo apresentação</button>
     <button class="toggle-btn" onclick="toggleTheme()">
       <span id="lbl">Dark mode</span>
     </button>
@@ -309,6 +310,27 @@ class HTMLRenderer:
 
 </main>
 
+<div class="pres" id="pres" style="display:none">
+  <div class="pres-top">
+    <div class="pres-count" id="pres-count"></div>
+    <div class="pres-head">
+      <p class="pres-ref" id="pres-ref"></p>
+      <p class="pres-title" id="pres-title"></p>
+      <p class="pres-text" id="pres-text"></p>
+    </div>
+    <button class="pres-exit" onclick="presToggle()">Sair &nbsp;Esc</button>
+  </div>
+  <div class="tcc-chips pres-chips" id="pres-chips"></div>
+  <div class="pres-plot" id="pres-plot"></div>
+  <div class="pres-table" id="pres-table" style="display:none"></div>
+  <div class="tcc-cards pres-cards" id="pres-cards"></div>
+  <div class="pres-nav">
+    <button class="rt-nav" onclick="presGo(tccCap - 1)" title="Capítulo anterior">&lsaquo;</button>
+    <div class="pres-dots" id="pres-dots"></div>
+    <button class="rt-nav" onclick="presGo(tccCap + 1)" title="Próximo capítulo">&rsaquo;</button>
+  </div>
+</div>
+
 <script>
 var SCENARIOS = {scenarios_js};
 var CMP_COLS = {cmp_cols_js};
@@ -359,8 +381,10 @@ function themedLayout(figData, isDarkMode) {{
   var base = {{
     paper_bgcolor: C.paper, plot_bgcolor: C.plot,
     font: Object.assign({{}}, figData.layout.font, {{ color: C.font }}),
-    hoverlabel: Object.assign({{}}, figData.layout.hoverlabel,
-                              {{ bgcolor: C.hoverBg, bordercolor: C.hoverBorder }}),
+    // rótulo do mouse legível: fundo sólido, borda de destaque, fonte maior
+    hoverlabel: Object.assign({{}}, figData.layout.hoverlabel, {{
+      bgcolor: C.hoverBg, bordercolor: isDarkMode ? "#60a5fa" : "#2563eb",
+      font: {{ size: 13, color: C.font }}, align: "left" }}),
   }};
   var axUpd = {{}};
   Object.keys(figData.layout).forEach(function(k) {{
@@ -369,6 +393,8 @@ function themedLayout(figData, isDarkMode) {{
         gridcolor:     isDarkMode ? "#31425c" : "#f1f5f9",
         zerolinecolor: isDarkMode ? "#4b5d7a" : "#e5e7eb",
       }});
+      // 3 casas no rótulo do mouse (antes saía 0.990505)
+      if (k.startsWith("yaxis") && !axUpd[k].hoverformat) axUpd[k].hoverformat = ".3f";
     }}
     // legendas múltiplas (legend, legend2, …): fonte segue o tema; só a bgcolor
     // das internas (semi-opaca, painéis pareados) é re-temada — externas ficam
@@ -1412,7 +1438,8 @@ setPllMode(pllMode);
             out["Vmed"] = f"{self._fmt(ind['Vmed'])} pu"
             out["rampa"] = f"{self._fmt(ind['iq_rampa_Vmed'])} pu"
             out["iqref"] = f"{self._fmt(ind['iqref'])} pu"
-            out["raw"] = {"rampa": ind["iq_rampa_Vmed"], "iqref": ind["iqref"]}
+            out["raw"] = {"rampa": ind["iq_rampa_Vmed"], "iqref": ind["iqref"],
+                          "Vmed": ind["Vmed"]}
         return out
 
     def _cards_html(self, data: SimData, key: str) -> str:
@@ -2125,6 +2152,55 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 }
 .svg-tip-btn:hover { background: var(--bg) }
 
+/* ── Modo apresentação (palco escuro em tela cheia) ── */
+.pres-btn { background: var(--accent); color: #fff; border-color: var(--accent) }
+[data-theme="dark"] .pres-btn { color: #0f172a }
+body.pres-on { overflow: hidden }
+.pres {
+  --bg: #0a0f1e; --surface: #111827; --border: #1f2937; --text: #f9fafb;
+  --muted: #9ca3af; --accent: #60a5fa; --badge-bg: #1e3050; --badge-fg: #93c5fd;
+  --card-bg: #111827; --btn-bg: #111827; --btn-fg: #d1d5db; --btn-bdr: #374151;
+  position: fixed; inset: 0; z-index: 2000;
+  background: #0a0f1e; color: var(--text);
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 18px 32px 12px;
+}
+.pres-top { display: flex; align-items: flex-start; gap: 22px }
+.pres-count {
+  font-size: 44px; font-weight: 800; line-height: 1; color: var(--accent);
+  min-width: 70px;
+}
+.pres-count span { font-size: 18px; color: var(--muted); font-weight: 600 }
+.pres-head { flex: 1 }
+.pres-ref { font-size: 12px; font-weight: 700; letter-spacing: .6px; color: var(--accent); text-transform: uppercase }
+.pres-title { font-size: 26px; font-weight: 800; margin: 2px 0 4px }
+.pres-text { font-size: 16px; line-height: 1.45; color: #d1d5db; max-width: 120ch }
+.pres-exit {
+  font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+  background: transparent; color: var(--muted);
+  border: 1.5px solid var(--btn-bdr); border-radius: 999px; padding: 6px 14px;
+}
+.pres-exit:hover { color: var(--text); border-color: var(--muted) }
+.pres-chips { padding: 0 }
+.pres-chips .tcc-chip { font-size: 13px }
+.pres-plot { flex: 1; min-height: 0 }
+.pres-table { flex: 1; min-height: 0; overflow: auto }
+.pres-table .cmp-table { font-size: 14px }
+.pres-cards {
+  padding: 0; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+.pres-cards .tcc-card { padding: 8px 12px }
+.pres-cards .tcc-row { font-size: 13px }
+.pres-cards .tcc-row b { font-size: 15px }
+.pres-nav { display: flex; align-items: center; justify-content: center; gap: 12px }
+.pres-dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px }
+.pres-dot {
+  font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+  padding: 5px 11px; border-radius: 999px;
+  background: transparent; color: var(--muted); border: 1.5px solid var(--btn-bdr);
+}
+.pres-dot.active { background: var(--accent); border-color: var(--accent); color: #0f172a }
+
 /* ── Aba Análise TCC ── */
 .tab-btn.tab-tcc { font-weight: 700 }
 body.tcc-mode #zoom-fault { display: none }
@@ -2219,16 +2295,18 @@ body.tcc-mode #scenario-picker, body.tcc-mode .filter-bar .pll-toggle { opacity:
 # simples). Capítulos em src/report/roteiro.py (CAPITULOS); as curvas vêm das
 # figuras já embutidas em SCENARIOS, sem aumentar o HTML.
 _TCC_JS = r"""
-// ── Aba Análise TCC: capítulos do Cap. 5 com cenários sobrepostos ─────────
+// ── Aba Análise TCC e modo apresentação: capítulos do Cap. 5 ──────────────
+// Os dois usam _tccFigure: a aba mostra um sinal por vez (seletor), a
+// apresentação empilha os sinais de cap.pres em tela cheia, no tema escuro.
 
 var TCC_EXTRA = [["#9333ea", "#c084fc"], ["#db2777", "#f472b6"],
                  ["#ca8a04", "#fbbf24"], ["#16a34a", "#4ade80"]];
 var SINAIS = {
-  err:  { lbl: "Erro de fase", trace: "Erro de fase", y: "Erro de fase (°)" },
-  vd:   { lbl: "v<sub>d</sub> da rede", trace: "V<sub>d</sub> Rede", y: "Tensão v<sub>d</sub> (pu)" },
-  P:    { lbl: "P", trace: "P UFV", y: "Potência ativa (pu)" },
-  Q:    { lbl: "Q", trace: "Q UFV", y: "Potência reativa (pu)" },
-  spec: { lbl: "Espectro de v<sub>d</sub>", y: "Amplitude (pu)" },
+  err:  { lbl: "Erro de fase", trace: "Erro de fase", y: "Erro de fase (°)", u: "°" },
+  vd:   { lbl: "v<sub>d</sub> da rede", trace: "V<sub>d</sub> Rede", y: "v<sub>d</sub> (pu)", u: " pu" },
+  P:    { lbl: "Potência ativa P", trace: "P UFV", y: "P (pu)", u: " pu" },
+  Q:    { lbl: "Potência reativa Q", trace: "Q UFV", y: "Q (pu)", u: " pu" },
+  spec: { lbl: "Espectro de v<sub>d</sub> na falta", y: "Amplitude (pu)", u: " pu" },
 };
 var IND_LBL = {
   terr2: "Erro na faixa de 2°", tvd5: "v<sub>d</sub> na faixa de 5%",
@@ -2237,7 +2315,7 @@ var IND_LBL = {
   fracP: "P absorvida após a eliminação", Vmed: "Tensão no inversor",
   rampa: "Rampa ONS prevê", iqref: "i<sub>q,ref</sub> médio",
 };
-var tccCap = 0, tccState = {};
+var tccCap = 0, tccState = {}, presOn = false;
 
 function _tccSt(cap) {
   if (!tccState[cap.id]) {
@@ -2257,6 +2335,17 @@ function _tccCases(cap) {
     list.push({ key: k, light: pal[0], dark: pal[1], extra: true });
   });
   return list;
+}
+
+function _tccVisible(cap) {
+  var st = _tccSt(cap);
+  return _tccCases(cap).filter(function(c) { return st.on[c.key] !== false; });
+}
+
+function _tccMixed(cap) {
+  var cs = _tccCases(cap);
+  return cs.some(function(c) { return SCENARIOS[c.key].badPll; })
+      && cs.some(function(c) { return !SCENARIOS[c.key].badPll; });
 }
 
 function _tccLabel(k, mixed) {
@@ -2282,48 +2371,151 @@ function _tccTrace(sc, sinal) {
   return null;
 }
 
-function tccGo(i) {
-  if (i < 0 || i >= CAPS.length) return;
-  tccCap = i;
-  if (activeTab !== "tcc") switchTab("tcc"); else _renderTcc();
-  setTimeout(function() {
-    var sticky = document.querySelector(".header").offsetHeight
-               + document.querySelector(".filter-bar").offsetHeight;
-    var y = document.getElementById("tab-bar").getBoundingClientRect().top
-          + window.scrollY - sticky - 8;
-    document.scrollingElement.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
-  }, 60);
+// Figura de um capítulo. sinais = um painel por sinal, empilhados com o mesmo
+// eixo x (zoom junto). o = { dark, height, big, bg }.
+function _tccFigure(cap, sinais, o) {
+  var dark = o.dark, B = dark ? BASE_DARK : BASE_LIGHT;
+  var bg = o.bg || B.paper, grid = dark ? "#2a3a55" : "#e2e8f0";
+  var fs = o.big ? 15 : 12, mixed = _tccMixed(cap), visible = _tccVisible(cap);
+  var col = function(c) { return dark ? c.dark : c.light; };
+  var layout = {
+    height: o.height, margin: { t: o.big ? 30 : 26, r: 24, b: 58, l: 80 },
+    paper_bgcolor: bg, plot_bgcolor: o.bg || B.plot, showlegend: false,
+    font: { family: "Inter, Segoe UI, system-ui, sans-serif", color: B.font, size: fs },
+    hoverlabel: { bgcolor: dark ? "#0f172a" : "#ffffff", bordercolor: dark ? "#60a5fa" : "#2563eb",
+                  font: { size: fs + 1, color: B.font }, align: "left" },
+    hovermode: "x unified", shapes: [], annotations: [],
+  };
+  var data = [];
+
+  if (cap.kind === "ons") {
+    // Rampa do Submódulo 2.10 (i_q contra V) com o ponto de operação de cada caso
+    layout.hovermode = "closest";
+    data.push({ type: "scatter", mode: "lines", name: "Rampa ONS",
+      x: [0, 0.5, 0.85, 1.0], y: [1, 1, 0, 0],
+      line: { color: dark ? "#94a3b8" : "#64748b", width: o.big ? 4 : 3 },
+      hovertemplate: "Rampa ONS<br>V = %{x:.2f} pu → i<sub>q</sub> = %{y:.2f} pu<extra></extra>" });
+    // rótulos fora da rampa: B7 e L7-8 quase no mesmo ponto, um em cima e
+    // outro embaixo; B6 fica abaixo da rampa, rótulo à esquerda
+    var POS = ["top center", "bottom center", "bottom center", "bottom left"];
+    visible.forEach(function(c, i) {
+      var r = SCENARIOS[c.key].tccInd.raw;
+      if (!r) return;
+      var lbl = _tccLabel(c.key, mixed);
+      data.push({ type: "scatter", mode: "markers+text", name: lbl,
+        x: [r.Vmed], y: [r.iqref], text: [SCENARIOS[c.key].label.replace(" — Trifásica", "")],
+        textposition: POS[i] || "top center",
+        textfont: { size: fs + 1, color: col(c) },
+        marker: { size: o.big ? 20 : 15, color: col(c), line: { width: 2, color: bg } },
+        hovertemplate: "<b>" + lbl + "</b><br>tensão no inversor: %{x:.2f} pu"
+          + "<br>i<sub>q,ref</sub> médio: %{y:.2f} pu<br>rampa prevê: " + r.rampa.toFixed(2)
+          + " pu<extra></extra>" });
+    });
+    layout.xaxis = { title: { text: "Tensão média no inversor (pu)" }, range: [0, 1.0], dtick: 0.1,
+                     gridcolor: grid, zerolinecolor: grid };
+    layout.yaxis = { title: { text: "Corrente reativa i<sub>q</sub> (pu)" }, range: [-0.05, 1.18],
+                     gridcolor: grid, zerolinecolor: grid };
+    layout.annotations.push({ x: 0.70, y: 0.62, xref: "x", yref: "y", showarrow: false,
+      text: "i<sub>q</sub> = (0,85 − V) / 0,35", font: { size: fs, color: dark ? "#94a3b8" : "#64748b" } });
+    layout.annotations.push({ x: 0.25, y: 1.06, xref: "x", yref: "y", showarrow: false,
+      text: "corrente máxima abaixo de 0,5 pu", font: { size: fs - 1, color: dark ? "#94a3b8" : "#64748b" } });
+    return { data: data, layout: layout };
+  }
+
+  var n = sinais.length, gap = n > 1 ? 0.09 : 0, h = (1 - gap * (n - 1)) / n;
+  var spec = sinais[0] === "spec";
+  sinais.forEach(function(sinal, i) {
+    var ax = (i === 0) ? "" : String(i + 1);
+    var y1 = 1 - i * (h + gap), y0 = y1 - h;
+    var S = SINAIS[sinal];
+    layout["yaxis" + ax] = { domain: [y0, y1], anchor: "x", gridcolor: grid, zerolinecolor: grid,
+      title: { text: S.y }, hoverformat: ".3f" };
+    visible.forEach(function(c) {
+      var t = _tccTrace(SCENARIOS[c.key], sinal);
+      if (!t) return;
+      var lbl = _tccLabel(c.key, mixed);
+      data.push({ type: "scatter", mode: "lines", x: t.x, y: t.y, name: lbl,
+        xaxis: "x", yaxis: "y" + ax,
+        line: { color: col(c), width: o.big ? 2.6 : 2.2, dash: c.extra ? "dot" : "solid" },
+        hovertemplate: lbl + ": <b>%{y:.3f}" + S.u + "</b><extra></extra>" });
+    });
+    if (n > 1) {
+      layout.annotations.push({ xref: "paper", yref: "paper", x: 0, y: y1, xanchor: "left",
+        yanchor: "bottom", showarrow: false, text: "<b>" + S.lbl + "</b>",
+        font: { size: fs, color: dark ? "#93c5fd" : "#1d4ed8" } });
+    }
+    if (sinal === "err") {
+      layout.shapes.push({ type: "rect", xref: "paper", yref: "y" + ax, layer: "below",
+        x0: 0, x1: 1, y0: -2, y1: 2, line: { width: 0 },
+        fillcolor: dark ? "rgba(74,222,128,.18)" : "rgba(22,163,74,.14)" });
+      if (cap.id === "sinc") {   // escorregamento de ciclo: faixa inteira de ±180°
+        layout["yaxis" + ax].range = [-190, 190];
+        layout["yaxis" + ax].tickvals = [-180, -90, 0, 90, 180];
+        layout["yaxis" + ax].ticktext = ["−180", "−90", "0", "90", "180"];
+      }
+    }
+    if (sinal === "spec") {
+      layout["yaxis" + ax].range = [0, 1];
+      layout.shapes.push({ type: "line", xref: "x", yref: "paper", x0: 120, x1: 120, y0: y0, y1: y1,
+        line: { color: B.font, width: 1, dash: "dash" }, opacity: 0.45 });
+      layout.annotations.push({ xref: "x", yref: "paper", x: 120, y: y1, yanchor: "bottom",
+        text: "120 Hz", showarrow: false, font: { size: fs - 1 } });
+    }
+  });
+  layout.xaxis = { anchor: "y" + (n > 1 ? String(n) : ""), gridcolor: grid, zerolinecolor: grid,
+    title: { text: spec ? "Frequência (Hz)" : "Tempo (s)" },
+    hoverformat: spec ? ".0f" : ".4f" };
+  if (cap.xrange) layout.xaxis.range = cap.xrange;
+  if (!spec) {
+    var f0 = visible.map(function(c) { return SCENARIOS[c.key]; })
+      .filter(function(sc) { return sc.tFault != null; })[0];
+    if (f0) {
+      var tc = (f0.tClear != null) ? f0.tClear : f0.tFault;
+      layout.shapes.push({ type: "rect", xref: "x", yref: "paper", layer: "below",
+        x0: f0.tFault, x1: tc, y0: 0, y1: 1, line: { width: 0 },
+        fillcolor: dark ? "rgba(248,113,113,.10)" : "rgba(220,38,38,.06)" });
+      layout.annotations.push({ xref: "x", yref: "paper", x: (f0.tFault + tc) / 2, y: 1,
+        yanchor: "bottom", text: "falta", showarrow: false,
+        font: { size: fs - 1, color: dark ? "#fca5a5" : "#b91c1c" } });
+    }
+  }
+  return { data: data, layout: layout };
 }
 
-function _tccSinal(s) { _tccSt(CAPS[tccCap]).sinal = s; _renderTcc(); }
-
-function _tccChip(k) {
-  var st = _tccSt(CAPS[tccCap]);
-  st.on[k] = (st.on[k] === false);
-  _renderTcc();
+function _tccChipsHtml(cap, dark, withAdd) {
+  var st = _tccSt(cap), mixed = _tccMixed(cap);
+  var html = _tccCases(cap).map(function(c) {
+    return "<button class=\"tcc-chip" + (st.on[c.key] !== false ? " on" : "") + "\" style=\"--c:"
+      + (dark ? c.dark : c.light) + "\" onclick=\"_tccChip('" + c.key + "')\"><span class=\"tcc-sw\"></span>"
+      + _tccLabel(c.key, mixed) + "</button>";
+  }).join("");
+  if (withAdd && (cap.kind === "time" || cap.kind === "spec")) {
+    var inList = _tccCases(cap).map(function(c) { return c.key; });
+    var opts = Object.keys(SCENARIOS).filter(function(k) {
+      return inList.indexOf(k) === -1 && (cap.kind === "time"
+        ? (cap.id === "energ") === (SCENARIOS[k].tFault == null)
+        : SCENARIOS[k].tFault != null);
+    }).map(function(k) {
+      return "<option value=\"" + k + "\">" + _tccLabel(k, true) + "</option>";
+    }).join("");
+    html += "<select class=\"tcc-add\" onchange=\"_tccAdd(this)\">"
+      + "<option value=\"\">+ comparar com…</option>" + opts + "</select>";
+  }
+  return html;
 }
 
-function _tccAdd(sel) {
-  var k = sel.value;
-  if (!k) return;
-  var st = _tccSt(CAPS[tccCap]);
-  if (st.extra.indexOf(k) === -1) st.extra.push(k);
-  st.on[k] = true;
-  _renderTcc();
-}
-
-function _openScenario(k) {
-  _applyPllFilter(SCENARIOS[k].badPll ? "bad" : "nominal");
-  activeTab = "inv";
-  document.getElementById("scenario-picker").value = k;
-  switchScenario(k);
-  var tb = document.getElementById("tab-bar");
-  setTimeout(function() {
-    var sticky = document.querySelector(".header").offsetHeight
-               + document.querySelector(".filter-bar").offsetHeight;
-    var y = tb.getBoundingClientRect().top + window.scrollY - sticky - 8;
-    document.scrollingElement.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
-  }, 60);
+function _tccCardsHtml(cap, dark) {
+  var mixed = _tccMixed(cap);
+  return _tccVisible(cap).map(function(c) {
+    var ind = SCENARIOS[c.key].tccInd || {};
+    var rows = cap.metricas.map(function(m) {
+      return "<p class=\"tcc-row\"><span>" + IND_LBL[m] + "</span><b>"
+        + (ind[m] != null ? ind[m] : "—") + "</b></p>";
+    }).join("");
+    return "<div class=\"tcc-card\" style=\"--c:" + (dark ? c.dark : c.light) + "\""
+      + " title=\"Abrir este cenário nas abas\" onclick=\"_openScenario('" + c.key + "')\">"
+      + "<p class=\"tcc-card-h\">" + _tccLabel(c.key, mixed) + "</p>" + rows + "</div>";
+  }).join("");
 }
 
 function _tccTableHtml() {
@@ -2342,45 +2534,66 @@ function _tccTableHtml() {
     + head + "</tr></thead><tbody>" + rows + "</tbody></table></div>";
 }
 
+function _tccRefresh() { if (presOn) _renderPres(); else _renderTcc(); }
+
+function _tccSinal(s) { _tccSt(CAPS[tccCap]).sinal = s; _tccRefresh(); }
+
+function _tccChip(k) {
+  var st = _tccSt(CAPS[tccCap]);
+  st.on[k] = (st.on[k] === false);
+  _tccRefresh();
+}
+
+function _tccAdd(sel) {
+  var k = sel.value;
+  if (!k) return;
+  var st = _tccSt(CAPS[tccCap]);
+  if (st.extra.indexOf(k) === -1) st.extra.push(k);
+  st.on[k] = true;
+  _tccRefresh();
+}
+
+function _scrollToTabs() {
+  setTimeout(function() {
+    var sticky = document.querySelector(".header").offsetHeight
+               + document.querySelector(".filter-bar").offsetHeight;
+    var y = document.getElementById("tab-bar").getBoundingClientRect().top
+          + window.scrollY - sticky - 8;
+    document.scrollingElement.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+  }, 60);
+}
+
+function tccGo(i) {
+  if (i < 0 || i >= CAPS.length) return;
+  tccCap = i;
+  if (activeTab !== "tcc") switchTab("tcc"); else _renderTcc();
+  _scrollToTabs();
+}
+
+function _openScenario(k) {
+  if (presOn) presToggle();
+  _applyPllFilter(SCENARIOS[k].badPll ? "bad" : "nominal");
+  activeTab = "inv";
+  document.getElementById("scenario-picker").value = k;
+  switchScenario(k);
+  _scrollToTabs();
+}
+
 function _renderTcc() {
-  var cap = CAPS[tccCap], st = _tccSt(cap), cases = _tccCases(cap);
+  var cap = CAPS[tccCap], st = _tccSt(cap);
   document.querySelectorAll(".tcc-pill").forEach(function(b, i) {
     b.classList.toggle("active", i === tccCap);
   });
   document.getElementById("tcc-ref").textContent = cap.ref;
   document.getElementById("tcc-title").textContent = cap.titulo;
   document.getElementById("tcc-text").innerHTML = cap.texto;   // texto nosso, com <sub>
-
   var sb = document.getElementById("tcc-sinais");
   sb.style.display = (cap.sinais.length > 1) ? "" : "none";
   sb.innerHTML = cap.sinais.map(function(s) {
     return "<button class=\"pll-btn" + (s === st.sinal ? " active" : "") + "\" onclick=\"_tccSinal('"
       + s + "')\">" + SINAIS[s].lbl + "</button>";
   }).join("");
-
-  var mixed = cases.some(function(c) { return SCENARIOS[c.key].badPll; })
-           && cases.some(function(c) { return !SCENARIOS[c.key].badPll; });
-  var col = function(c) { return isDark ? c.dark : c.light; };
-  var visible = cases.filter(function(c) { return st.on[c.key] !== false; });
-
-  var chips = cases.map(function(c) {
-    return "<button class=\"tcc-chip" + (st.on[c.key] !== false ? " on" : "") + "\" style=\"--c:"
-      + col(c) + "\" onclick=\"_tccChip('" + c.key + "')\"><span class=\"tcc-sw\"></span>"
-      + _tccLabel(c.key, mixed) + "</button>";
-  }).join("");
-  if (cap.kind === "time" || cap.kind === "spec") {
-    var inList = cases.map(function(c) { return c.key; });
-    var opts = Object.keys(SCENARIOS).filter(function(k) {
-      return inList.indexOf(k) === -1 && (cap.kind === "time"
-        ? (cap.id === "energ") === (SCENARIOS[k].tFault == null)
-        : SCENARIOS[k].tFault != null);
-    }).map(function(k) {
-      return "<option value=\"" + k + "\">" + _tccLabel(k, true) + "</option>";
-    }).join("");
-    chips += "<select class=\"tcc-add\" onchange=\"_tccAdd(this)\">"
-      + "<option value=\"\">+ comparar com…</option>" + opts + "</select>";
-  }
-  document.getElementById("tcc-chips").innerHTML = chips;
+  document.getElementById("tcc-chips").innerHTML = _tccChipsHtml(cap, isDark, true);
 
   var plotEl = gd.tcc, tbl = document.getElementById("tcc-table");
   var cardsEl = document.getElementById("tcc-cards");
@@ -2391,97 +2604,99 @@ function _renderTcc() {
   }
   tbl.innerHTML = "";
   plotEl.style.display = "";
-
-  var B = isDark ? BASE_DARK : BASE_LIGHT;
-  var grid = isDark ? "#2a3a55" : "#e2e8f0";
-  var layout = {
-    height: 460, margin: { t: 26, r: 20, b: 60, l: 70 },
-    paper_bgcolor: B.paper, plot_bgcolor: B.plot,
-    font: { family: "Inter, Segoe UI, system-ui, sans-serif", color: B.font, size: 12 },
-    hoverlabel: { bgcolor: B.hoverBg, bordercolor: B.hoverBorder },
-    showlegend: false,   // os chips acima do gráfico fazem de legenda
-    xaxis: { gridcolor: grid, zerolinecolor: grid },
-    yaxis: { gridcolor: grid, zerolinecolor: grid },
-    shapes: [], annotations: [],
-  };
-  var traces = [];
-
-  if (cap.kind === "ons") {
-    var lbls = visible.map(function(c) { return SCENARIOS[c.key].label.replace(" — Trifásica", ""); });
-    var raw = function(c, f) { var r = SCENARIOS[c.key].tccInd.raw; return r ? r[f] : null; };
-    traces.push({ type: "bar", name: "Rampa ONS (prevista)", x: lbls,
-      y: visible.map(function(c) { return raw(c, "rampa"); }),
-      marker: { color: isDark ? "#64748b" : "#94a3b8" },
-      hovertemplate: "%{y:.2f} pu<extra>Rampa ONS</extra>" });
-    traces.push({ type: "bar", name: "i<sub>q,ref</sub> médio", x: lbls,
-      y: visible.map(function(c) { return raw(c, "iqref"); }),
-      marker: { color: visible.map(col) },
-      hovertemplate: "%{y:.2f} pu<extra>i<sub>q,ref</sub></extra>" });
-    layout.barmode = "group";
-    layout.yaxis.title = { text: "Corrente reativa (pu)" };
-    layout.yaxis.range = [0, 1.1];
-  } else {
-    var sinal = (cap.kind === "spec") ? "spec" : st.sinal;
-    visible.forEach(function(c) {
-      var t = _tccTrace(SCENARIOS[c.key], sinal);
-      if (!t) return;
-      var lbl = _tccLabel(c.key, mixed);
-      traces.push({ type: "scatter", mode: "lines", x: t.x, y: t.y, name: lbl,
-        line: { color: col(c), width: 2.2, dash: c.extra ? "dot" : "solid" },
-        connectgaps: false,
-        hovertemplate: (sinal === "spec" ? "%{x:.0f} Hz · %{y:.3f} pu" : "t = %{x:.4f} s · %{y:.3f}")
-          + "<extra>" + lbl + "</extra>" });
-    });
-    layout.xaxis.title = { text: sinal === "spec" ? "Frequência (Hz)" : "Tempo (s)" };
-    layout.yaxis.title = { text: SINAIS[sinal].y };
-    if (cap.xrange) layout.xaxis.range = cap.xrange;
-    if (sinal === "spec") {
-      layout.yaxis.range = [0, 1];
-      layout.shapes.push({ type: "line", xref: "x", yref: "paper", x0: 120, x1: 120, y0: 0, y1: 1,
-        line: { color: B.font, width: 1, dash: "dash" }, opacity: 0.45 });
-      layout.annotations.push({ xref: "x", yref: "paper", x: 120, y: 1, yanchor: "bottom",
-        text: "120 Hz", showarrow: false, font: { size: 11 } });
-    } else {
-      var f0 = visible.map(function(c) { return SCENARIOS[c.key]; })
-        .filter(function(sc) { return sc.tFault != null; })[0];
-      if (f0) {
-        layout.shapes.push({ type: "rect", xref: "x", yref: "paper", layer: "below",
-          x0: f0.tFault, x1: (f0.tClear != null ? f0.tClear : f0.tFault), y0: 0, y1: 1,
-          fillcolor: isDark ? "rgba(248,113,113,.10)" : "rgba(220,38,38,.06)", line: { width: 0 } });
-        layout.annotations.push({ xref: "x", yref: "paper", x: (f0.tFault + (f0.tClear || f0.tFault)) / 2,
-          y: 1, yanchor: "bottom", text: "falta", showarrow: false, font: { size: 11, color: B.font } });
-      }
-      if (sinal === "err") {
-        layout.shapes.push({ type: "rect", xref: "paper", yref: "y", layer: "below",
-          x0: 0, x1: 1, y0: -2, y1: 2, line: { width: 0 },
-          fillcolor: isDark ? "rgba(74,222,128,.18)" : "rgba(22,163,74,.14)" });
-        if (cap.id === "sinc") {   // escorregamento de ciclo: faixa inteira de ±180°
-          layout.yaxis.range = [-190, 190];
-          layout.yaxis.tickvals = [-180, -90, 0, 90, 180];
-        }
-      }
-    }
-  }
+  var sinais = (cap.kind === "spec") ? ["spec"] : (cap.kind === "ons" ? [] : [st.sinal]);
+  var fig = _tccFigure(cap, sinais, { dark: isDark, height: 460 });
   PLOTLY_CFG.toImageButtonOptions.filename = "tcc_" + cap.id + (st.sinal ? "_" + st.sinal : "");
-  Plotly.react(plotEl, traces, layout, PLOTLY_CFG);
-
-  cardsEl.innerHTML = visible.map(function(c) {
-    var ind = SCENARIOS[c.key].tccInd || {};
-    var rows = cap.metricas.map(function(m) {
-      return "<p class=\"tcc-row\"><span>" + IND_LBL[m] + "</span><b>"
-        + (ind[m] != null ? ind[m] : "—") + "</b></p>";
-    }).join("");
-    return "<div class=\"tcc-card\" style=\"--c:" + col(c) + "\" title=\"Abrir este cenário nas abas\""
-      + " onclick=\"_openScenario('" + c.key + "')\"><p class=\"tcc-card-h\">"
-      + _tccLabel(c.key, mixed) + "</p>" + rows + "</div>";
-  }).join("");
+  Plotly.react(plotEl, fig.data, fig.layout, PLOTLY_CFG);
+  cardsEl.innerHTML = _tccCardsHtml(cap, isDark);
 }
 
+// ── Modo apresentação: o site inteiro vira um palco escuro em tela cheia ──
+
+var PRES_CFG = { responsive: true, displaylogo: false, displayModeBar: false };
+
+function presToggle() {
+  presOn = !presOn;
+  var el = document.getElementById("pres");
+  el.style.display = presOn ? "" : "none";
+  document.body.classList.toggle("pres-on", presOn);
+  if (presOn) {
+    var fs = document.documentElement.requestFullscreen;
+    if (fs) {
+      try {
+        var pr = document.documentElement.requestFullscreen();
+        if (pr && pr.catch) pr.catch(function() {});
+      } catch (e) {}
+    }
+    _renderPres();
+  } else {
+    if (document.fullscreenElement && document.exitFullscreen) {
+      try { document.exitFullscreen(); } catch (e) {}
+    }
+    if (activeTab === "tcc") _renderTcc();
+  }
+}
+
+function presGo(i) {
+  if (i < 0 || i >= CAPS.length) return;
+  tccCap = i;
+  _renderPres();
+}
+
+function _renderPres() {
+  var cap = CAPS[tccCap];
+  document.getElementById("pres-count").innerHTML = (tccCap + 1) + "<span>/" + CAPS.length + "</span>";
+  document.getElementById("pres-ref").textContent = cap.ref;
+  document.getElementById("pres-title").textContent = cap.titulo;
+  document.getElementById("pres-text").innerHTML = cap.texto;
+  document.getElementById("pres-chips").innerHTML = _tccChipsHtml(cap, true, false);
+  document.getElementById("pres-dots").innerHTML = CAPS.map(function(c, i) {
+    return "<button class=\"pres-dot" + (i === tccCap ? " active" : "") + "\" onclick=\"presGo("
+      + i + ")\" title=\"" + c.curto + "\">" + (i + 1) + " · " + c.curto + "</button>";
+  }).join("");
+  var plotEl = document.getElementById("pres-plot");
+  var tbl = document.getElementById("pres-table");
+  var cardsEl = document.getElementById("pres-cards");
+  if (cap.kind === "tabela") {
+    Plotly.purge(plotEl);
+    plotEl.style.display = "none"; cardsEl.innerHTML = "";
+    tbl.style.display = ""; tbl.innerHTML = _tccTableHtml();
+    return;
+  }
+  tbl.style.display = "none"; tbl.innerHTML = "";
+  plotEl.style.display = "";
+  cardsEl.innerHTML = _tccCardsHtml(cap, true);
+  var h = Math.max(260, plotEl.clientHeight);
+  var fig = _tccFigure(cap, cap.pres, { dark: true, height: h, big: true, bg: "#0a0f1e" });
+  Plotly.react(plotEl, fig.data, fig.layout, PRES_CFG);
+}
+
+var _presResizeT = null;
+window.addEventListener("resize", function() {
+  if (!presOn) return;
+  clearTimeout(_presResizeT);
+  _presResizeT = setTimeout(_renderPres, 150);
+});
+
+// Esc com tela cheia: o navegador sai da tela cheia e não entrega a tecla;
+// fullscreenchange fecha o modo junto
+document.addEventListener("fullscreenchange", function() {
+  if (!document.fullscreenElement && presOn) presToggle();
+});
+
 document.addEventListener("keydown", function(e) {
-  if (activeTab !== "tcc") return;
   var tg = e.target && e.target.tagName;
   if (tg === "SELECT" || tg === "INPUT" || tg === "TEXTAREA") return;
-  if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); tccGo(tccCap + 1); }
-  else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); tccGo(tccCap - 1); }
+  var next = (e.key === "ArrowRight" || e.key === "PageDown");
+  var prev = (e.key === "ArrowLeft" || e.key === "PageUp");
+  if (presOn) {
+    if (next) { e.preventDefault(); presGo(tccCap + 1); }
+    else if (prev) { e.preventDefault(); presGo(tccCap - 1); }
+    else if (e.key === "Escape") { presToggle(); }
+    return;
+  }
+  if (activeTab !== "tcc") return;
+  if (next) { e.preventDefault(); tccGo(tccCap + 1); }
+  else if (prev) { e.preventDefault(); tccGo(tccCap - 1); }
 });
 """

@@ -10,6 +10,14 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-19: slide 9, título curto e bancada espelhada (entregue)
+
+- Opção B de 3 ("Bancada do PLL"). Pedido do Victor: geração à esquerda e
+  rede à direita, impedâncias junto (`pll_bancada_duas_fontes.svg`, linha
+  de cima espelhada, mesmo PNG 1644x1356). Staging `C:\Temp\defesa_titulo9\`:
+  MD5 fd61897d… → f59e76279ebd1d783e3cd4ccf9db8052, backup `_20261019_220257`.
+  diff: só o slide 9; check_pptx 0 falhas; slide-validator sem bloqueio.
+
 ## 2026-10-19: título curto e frase de abertura nos slides 6, 7 e 8 (entregue)
 
 - Revisão slide a slide pedida pelo Victor, padrão do slide 5 por

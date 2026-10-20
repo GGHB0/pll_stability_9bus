@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-14 0 548 452" font-family="Calibri, Arial, sans-serif">
-  <!-- Bancada inicial no PSIM: SRF-PLL entre duas fontes trifásicas ideais (deck da defesa, slide 7) -->
+  <!-- Bancada inicial no PSIM: SRF-PLL entre duas fontes trifásicas ideais (deck da defesa, slide 9; geração à esquerda, rede à direita) -->
   <defs>
     <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#0F172A"/>
@@ -10,36 +10,36 @@
   </defs>
   <rect x="-14" width="548" height="452" fill="#ffffff"/>
 
-  <!-- rede: barramento infinito — Thévenin — PCC — acoplamento — fonte ideal -->
+  <!-- fonte ideal (geração) — acoplamento — PCC — Thévenin — barramento infinito -->
   <g stroke="#0F172A" stroke-width="2.5" fill="none">
-    <line x1="69" y1="90" x2="105" y2="90"/>
-    <line x1="205" y1="90" x2="310" y2="90"/>
-    <line x1="390" y1="90" x2="431" y2="90"/>
+    <line x1="69" y1="90" x2="110" y2="90"/>
+    <line x1="190" y1="90" x2="295" y2="90"/>
+    <line x1="395" y1="90" x2="431" y2="90"/>
     <circle cx="45" cy="90" r="24"/>
     <circle cx="455" cy="90" r="24"/>
     <path d="M 31 90 C 38 74, 45 74, 45 90 S 52 106, 59 90"/>
     <path d="M 441 90 C 448 74, 455 74, 455 90 S 462 106, 469 90"/>
   </g>
-  <rect x="105" y="72" width="100" height="36" fill="#DBEAFE" stroke="#1E3A8A" stroke-width="2"/>
-  <text x="155" y="97" font-size="20" text-anchor="middle" fill="#0F172A" font-style="italic">Z<tspan baseline-shift="sub" font-size="75%">th</tspan></text>
-  <rect x="310" y="72" width="80" height="36" fill="#DBEAFE" stroke="#1E3A8A" stroke-width="2"/>
-  <text x="350" y="97" font-size="20" text-anchor="middle" fill="#0F172A" font-style="italic">Z</text>
-  <line x1="260" y1="52" x2="260" y2="128" stroke="#1E3A8A" stroke-width="7"/>
-  <text x="260" y="40" font-size="18" text-anchor="middle" font-weight="bold" fill="#1E3A8A">PCC</text>
+  <rect x="110" y="72" width="80" height="36" fill="#DBEAFE" stroke="#1E3A8A" stroke-width="2"/>
+  <text x="150" y="97" font-size="20" text-anchor="middle" fill="#0F172A" font-style="italic">Z</text>
+  <rect x="295" y="72" width="100" height="36" fill="#DBEAFE" stroke="#1E3A8A" stroke-width="2"/>
+  <text x="345" y="97" font-size="20" text-anchor="middle" fill="#0F172A" font-style="italic">Z<tspan baseline-shift="sub" font-size="75%">th</tspan></text>
+  <line x1="240" y1="52" x2="240" y2="128" stroke="#1E3A8A" stroke-width="7"/>
+  <text x="240" y="40" font-size="18" text-anchor="middle" font-weight="bold" fill="#1E3A8A">PCC</text>
 
   <g font-size="18" text-anchor="middle" fill="#0F172A">
-    <text x="45" y="138">Barramento</text>
-    <text x="45" y="158">infinito</text>
-    <text x="155" y="138">Equivalente</text>
-    <text x="155" y="158">de Thévenin</text>
-    <text x="350" y="138">Acoplamento</text>
-    <text x="455" y="138">Fonte ideal</text>
-    <text x="455" y="158">(geração)</text>
+    <text x="45" y="138">Fonte ideal</text>
+    <text x="45" y="158">(geração)</text>
+    <text x="150" y="138">Acoplamento</text>
+    <text x="345" y="138">Equivalente</text>
+    <text x="345" y="158">de Thévenin</text>
+    <text x="455" y="138">Barramento</text>
+    <text x="455" y="158">infinito</text>
   </g>
 
   <!-- medição no PCC -->
-  <path d="M 260 128 V 192 H 110 V 246" stroke="#2563EB" stroke-width="2.2" fill="none" marker-end="url(#arrB)"/>
-  <text x="270" y="176" font-size="18" fill="#2563EB" font-style="italic">v<tspan baseline-shift="sub" font-size="75%">abc</tspan></text>
+  <path d="M 240 128 V 192 H 110 V 246" stroke="#2563EB" stroke-width="2.2" fill="none" marker-end="url(#arrB)"/>
+  <text x="250" y="176" font-size="18" fill="#2563EB" font-style="italic">v<tspan baseline-shift="sub" font-size="75%">abc</tspan></text>
 
   <!-- SRF-PLL -->
   <rect x="30" y="210" width="460" height="214" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-dasharray="6 4"/>

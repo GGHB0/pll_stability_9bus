@@ -1,7 +1,7 @@
 ---
 name: tcc-pptx-editor
 description: Edita o deck da defesa do TCC (Defesa_TCC_SRF-PLL.pptx, no OneDrive) com python-pptx — texto e títulos dos slides, tabelas, troca de figura, notas do apresentador (roteiro Bruno/Victor), slide novo no padrão visual, tempo de fala, conferência de números e legendas contra o TCC DOCX, render em PNG e entrega com backup. Ativar quando o usuário falar em "apresentação", "slides", "slide N", "PPT/PPTX", "defesa", "banca", "roteiro de fala", "notas do apresentador" ou pedir para mexer no deck. Não edita o TCC DOCX (ver tcc-docx-editor).
-version: 1.2.0
+version: 1.3.0
 ---
 
 # Skill: tcc-pptx-editor
@@ -40,7 +40,8 @@ Pastas: `referencia/` (lido em toda edição), `casos/` (fluxos ocasionais),
 ## Convenções de conteúdo
 
 - **Título é uma frase-afirmação** (o que o slide prova), não um rótulo.
-  Duas linhas no máximo em 28 pt.
+  Duas linhas no máximo em 28 pt. Exceção aprovada (slide 5, 2026-10-19):
+  título curto + **frase de abertura** logo abaixo (`referencia/design.md`).
 - **Sem travessão "—"**, como no TCC. Sem nome de código na tela
   (`BAD_PLL`, `params.m`): na tela e na fala é "sintonia inadequada".
 - **Sem RoCoF, sem "reaquisitar"** (memória do projeto, valem aqui também).
@@ -106,6 +107,8 @@ Mesma regra da `tcc-docx-editor`: o critério é custo total.
   `tira_run`, `notas`, `troca_img`, `linha_nova`, `alturas`, `duplica_slide`,
   `renumera_ids`, `move_slides`) e `rodar`, que
   executa os grupos `g_*` do script. **Base de todo `gen_*.py`**
+- `folha_opcoes.py <saida.png> <rotulo=png>... [--recorte y0,y1]`: empilha
+  os PNGs de variantes para a prévia com opções
 - `figuras/gen_figs_defesa.py [5.3,5.7,...]` + `figuras/estilo.py`: figuras
   dedicadas ao deck em `assets/charts/defesa/` (`casos/figura_dedicada.md`)
 
@@ -126,7 +129,9 @@ Mesma regra da `tcc-docx-editor`: o critério é custo total.
    o óbvio (quebra de título, texto encostando) e mostrar ao Victor o caminho
    completo do PNG + o que muda e o que fica igual. Só staging, nada no
    OneDrive. Ajuste pedido → nova prévia. AGUARDAR APROVAÇÃO do Victor
-   (só nota de fala dispensa prévia: basta o texto no plano)
+   (só nota de fala dispensa prévia: basta o texto no plano). Escolha de
+   gosto (cor, destaque, título) → 2 a 4 variantes var_<X>.pptx no mesmo
+   staging + folha_opcoes.py, com uma recomendação; a escolhida é a entregue
 6. CHECKS: check_pptx --tcc (0 FALHA) + tempo_fala + render dos slides
    alterados → ler os PNGs; slide-validator quando couber
 7. FINALIZE: pptx_finalize.ps1 [-Pdf]

@@ -10,3 +10,6 @@ files:
   - file: historico_entregas.md
     name: defesa-historico-entregas
     description: Histórico de entregas do Claude ao deck da defesa (Defesa_TCC_SRF-PLL.pptx), mais recente primeiro
+  - file: historico_entregas_10_16.md
+    name: defesa-historico-entregas-10-16
+    description: "Histórico de entregas ao deck da defesa em 2026-10-16 (montagem do pipeline, pendências 1-5, demo, template, capa)"

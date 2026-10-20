@@ -98,6 +98,7 @@ salvo indicação.
 | Contribuição | fecho de slide em faixa cheia | fundo marinho, texto branco |
 | Etapa do problema / Etapa do cálculo | cadeia causal com setas | última etapa com borda `accent1` |
 | Cartão de evento / de conclusão / Trabalho futuro | colunas paralelas | |
+| Frase de abertura | 2º parágrafo do título curto (slide 5) | 20 pt `1E3A8A`, termo-chave em negrito, `spcBef` 6 pt, `marL` 0,22 in; barra `rect` `2563EB` 0,07 × 0,36 in em (1,10; 1,56), sem borda nem sombra |
 | Número / Círculo do ícone | `ellipse` marinho com número ou ícone branco | |
 
 O texto fica numa caixa de texto **separada**, por cima da forma (a forma

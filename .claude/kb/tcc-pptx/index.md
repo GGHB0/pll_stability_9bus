@@ -15,6 +15,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 |---|---|---|
 | [deck_map.md](deck_map.md) | [[defesa-deck-map]] | Mapa slide a slide do deck da defesa (Defesa_TCC_SRF-PLL.pptx) — mensagem, seção e figuras do TCC de onde vem, números que precisam bater |
 | [historico_entregas.md](historico_entregas.md) | [[defesa-historico-entregas]] | Histórico de entregas do Claude ao deck da defesa (Defesa_TCC_SRF-PLL.pptx), mais recente primeiro |
+| [historico_entregas_10_16.md](historico_entregas_10_16.md) | [[defesa-historico-entregas-10-16]] | Histórico de entregas ao deck da defesa em 2026-10-16 (montagem do pipeline, pendências 1-5, demo, template, capa) |
 | [pendencias.md](pendencias.md) | [[defesa-pendencias]] | Pendências do deck da defesa — divergências com o TCC, tempo de fala, decisões de conteúdo em aberto |
 
 ## Pastas relacionadas

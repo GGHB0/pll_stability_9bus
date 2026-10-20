@@ -62,7 +62,8 @@ TCC não volta. Nunca recomendar ressalva ou aviso na fala.
 **Leia os PNGs.** Procure: texto cortado ou saindo da caixa; caixa
 sobrepondo outra; figura com texto ilegível na escala do slide; elemento
 fora da grade de `referencia/design.md` (conteúdo de x 1,10 a 12,95 in, nada sobre a linha da seção, colunas
-alinhadas); mais de 2 destaques laranja no slide; título em 3 linhas;
+alinhadas); mais de 2 destaques laranja no slide; título em 3 linhas (título curto
+com "Frase de abertura" do `design.md`, como no slide 5, é padrão aprovado);
 tabela com linha espremida. Compare com um slide vizinho não alterado:
 a edição tem que parecer do mesmo deck.
 

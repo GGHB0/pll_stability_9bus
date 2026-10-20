@@ -54,7 +54,10 @@ e `referencia/armadilhas.md`.
   `cell.text =` em texto formatado.
 - Forma nova = `copy.deepcopy` de uma forma molde, com `cNvPr id` novo
   (maior que todos do slide) e nome do papel ("Cartão de destaque"...).
-  Cores por `schemeClr` do tema, não RGB solto.
+  Cores por `schemeClr` do tema, não RGB solto (salvo os RGB fixos da
+  tabela de cores do `design.md`). Spec com variantes (A/B/C) → um
+  `var_<X>.pptx` por variante a partir do mesmo `montado.pptx`, e a folha
+  por `scripts/folha_opcoes.py`.
 - Imagem: `ed.troca_img`, nunca `add_picture` com largura e altura juntas.
 - Remover run: `ed.tira_run` (limpa os `a:pPr` soltos; ver armadilhas).
 - Arquivo recusado pelo `render.ps1`/finalize → bisseção por grupo

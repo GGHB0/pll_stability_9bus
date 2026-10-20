@@ -66,6 +66,8 @@ aliases: [defesa-pendencias]
 - **Opcional (slide 5, slide-validator)**: o redesenho da Fig. 3.2 usa
   rótulos em minúscula ("Fonte primária"), o TCC em maiúscula ("Fonte
   Primária"); o cartão "Seguidor de rede" é paráfrase do §4.1, sem número novo.
+- Resolvido em 2026-10-19: título do slide 5 encurtado ("Fonte renovável")
+  com a frase de abertura (opção C de 4, a pedido do Victor).
 - Resolvido em 2026-10-18 (noite): Fig. 4.3 redesenhada para o slide 6 a pedido do Victor (exceção à regra de diagrama idêntico ao TCC), equações num cartão à direita.
 - Resolvido em 2026-10-18 (fim de tarde): equação do slide 5 na largura toda
   com cartões embaixo; Fig. 4.3 de 5,5 para 6,2 in; subscritos reais

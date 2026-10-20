@@ -155,6 +155,64 @@ class Edicao:
         gf.height = sum(r.height for r in gf.table.rows)
         self.log.append(f"slide {n} tabela: termina em {(gf.top + gf.height) / EMU:.2f} in")
 
+    # título curto + frase de abertura (design.md, slide 5 de 2026-10-19) --------
+    def frase_abertura(self, n, velho, titulo, frase, destaque=None):
+        """Troca o título do slide n (que começa por `velho`) por `titulo` curto e põe
+        `frase` como 2º parágrafo: 20 pt 1E3A8A, `destaque` (trecho da frase) em negrito,
+        barra 2563EB à esquerda."""
+        from lxml import etree
+        from pptx.enum.shapes import MSO_SHAPE
+        from pptx.dml.color import RGBColor
+        from pptx.util import Inches
+        s = self.S[n - 1]
+        c = [sh for sh in s.shapes if sh.has_text_frame and sh.text_frame.text.startswith(velho)]
+        assert len(c) == 1, f"slide {n}: {len(c)} títulos começando por '{velho}'"
+        t = c[0]
+        ps = t.text_frame.paragraphs
+        for p in ps[1:]:
+            p._p.getparent().remove(p._p)
+        p0 = ps[0]
+        p0.runs[0].text = titulo
+        for r in p0.runs[1:]:
+            Edicao.tira_run(r)
+        p1 = copy.deepcopy(p0._p)
+        p0._p.addnext(p1)
+        r0 = p1.findall(A + "r")[0]
+        partes = [frase] if not destaque else frase.partition(destaque)
+        assert not destaque or partes[1], f"'{destaque}' fora da frase"
+        for i, txt in enumerate(partes):
+            if not txt:
+                continue
+            r = copy.deepcopy(r0)
+            r.find(A + "t").text = txt
+            rpr = r.find(A + "rPr")
+            rpr.set("sz", "2000")
+            rpr.set("b", "1" if i == 1 else "0")
+            for f in rpr.findall(A + "solidFill"):
+                rpr.remove(f)
+            sf = etree.Element(A + "solidFill")
+            etree.SubElement(sf, A + "srgbClr").set("val", "1E3A8A")
+            rpr.insert(0, sf)
+            r0.addprevious(r)
+        p1.remove(r0)
+        end = p1.find(A + "endParaRPr")
+        if end is not None:
+            end.set("sz", "2000")
+        ppr = p1.find(A + "pPr")
+        ppr.set("marL", str(int(Inches(0.22))))
+        sb = etree.Element(A + "spcBef")
+        etree.SubElement(sb, A + "spcPts").set("val", "600")
+        ppr.insert(0, sb)
+        y = t.top / EMU + 0.58
+        b = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(t.left / EMU), Inches(y),
+                               Inches(0.07), Inches(0.36))
+        b.name = "Barra da frase"
+        b.fill.solid()
+        b.fill.fore_color.rgb = RGBColor.from_string("2563EB")
+        b.line.fill.background()
+        b.shadow.inherit = False
+        self.log.append(f"slide {n}: título '{titulo}' + frase de abertura")
+
     # execução --------------------------------------------------------------
     def rodar(self, escopo):
         """gen_x.py [grupos,separados] [saída]: roda os g_* do script e grava."""

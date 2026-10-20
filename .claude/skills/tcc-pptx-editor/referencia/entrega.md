@@ -55,10 +55,11 @@ python.exe scripts\diff_slides.py "<backup gravado>" "<canônico>"
 Só pode aparecer o que o plano previa. Diferença a mais → investigar antes
 de dizer "entregue".
 
-- "ABORTADO: PowerPoint nao fechou em 30 s" logo depois do finalize
-  com `-Pdf`: a instância do finalize ainda estava saindo. Conferir
-  `Get-Process POWERPNT`; sem processo, rodar a entrega de novo (o
-  canônico não foi tocado). Com processo, é diálogo aberto: avisar o Victor.
+- "ABORTADO: PowerPoint nao fechou": logo depois do finalize com `-Pdf`
+  a instância dele leva mais de 30 s para sair (2 vezes em 2026-10-19);
+  a espera passou a 90 s. Se ainda abortar: `Get-Process POWERPNT`; sem
+  processo, rodar a entrega de novo (o canônico não foi tocado); com
+  processo, é diálogo aberto: avisar o Victor.
 - Pastas `C:\Temp\defesa_*` não são apagadas na entrega (o backup que
   vale é o de `_backups\defesa\`); limpar só a pedido do Victor.
 

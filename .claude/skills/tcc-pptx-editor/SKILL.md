@@ -105,7 +105,7 @@ Mesma regra da `tcc-docx-editor`: o critério é custo total.
   `notas`, `falas`, `faixa` para os `gen_*.py`
 - `edicoes.py`: classe `Edicao` com as edições conferidas (`troca_run`,
   `tira_run`, `notas`, `troca_img`, `linha_nova`, `alturas`, `duplica_slide`,
-  `renumera_ids`, `move_slides`) e `rodar`, que
+  `renumera_ids`, `move_slides`, `frase_abertura`) e `rodar`, que
   executa os grupos `g_*` do script. **Base de todo `gen_*.py`**
 - `folha_opcoes.py <saida.png> <rotulo=png>... [--recorte y0,y1]`: empilha
   os PNGs de variantes para a prévia com opções

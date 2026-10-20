@@ -47,9 +47,11 @@ if (Get-Process POWERPNT -ErrorAction SilentlyContinue) {
     Write-Output "COM indisponivel ($($_.Exception.Message)); CloseMainWindow"
     Get-Process POWERPNT -ErrorAction SilentlyContinue | ForEach-Object { [void]$_.CloseMainWindow() }
   }
+  # logo depois do pptx_finalize -Pdf a instancia dele ainda esta saindo e leva
+  # mais de 30 s (2026-10-19, duas vezes): 90 s antes de abortar
   $t = 0
-  while ((Get-Process POWERPNT -ErrorAction SilentlyContinue) -and $t -lt 60) { Start-Sleep -Milliseconds 500; $t++ }
-  if (Get-Process POWERPNT -ErrorAction SilentlyContinue) { Aborta 'PowerPoint nao fechou em 30 s (dialogo aberto?)' }
+  while ((Get-Process POWERPNT -ErrorAction SilentlyContinue) -and $t -lt 180) { Start-Sleep -Milliseconds 500; $t++ }
+  if (Get-Process POWERPNT -ErrorAction SilentlyContinue) { Aborta 'PowerPoint nao fechou em 90 s (dialogo aberto?)' }
   Write-Output "PowerPoint fechado; estavam abertos: $($abertos -join ' | ')"
   Start-Sleep -Seconds 2
 }

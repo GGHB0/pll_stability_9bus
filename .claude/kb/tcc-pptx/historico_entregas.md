@@ -10,6 +10,18 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-19: título curto e frase de abertura nos slides 6, 7 e 8 (entregue)
+
+- Revisão slide a slide pedida pelo Victor, padrão do slide 5 por
+  `Edicao.frase_abertura` (novo). Slides 6 ("Transformada de Park", var. A)
+  e 7 ("Estrutura do SRF-PLL", var. D) em `C:\Temp\defesa_titulo6\`: MD5
+  0c7c30ea… → 2388670c95e82fc71c0b8e46abafc25e, backup `_20261019_213908`.
+  Slide 8 ("Sistema IEEE 9 barras", var. C) em `C:\Temp\defesa_titulo8\`:
+  → fd61897d96d28d9133952e81c4cc92f2, backup `_20261019_214732`.
+- diff: só os títulos; check_pptx 0 falhas; slide-validator sem bloqueio.
+  `entrega.ps1` abortou 2× (PowerPoint do finalize ainda saindo): espera
+  passou de 30 para 90 s, e a entrega do 8 passou de primeira.
+
 ## 2026-10-19: título curto e frase de abertura no slide 5 (entregue)
 
 - Pedido do Victor: título menor. "Fonte renovável" + frase em 20 pt

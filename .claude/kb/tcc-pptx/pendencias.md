@@ -31,6 +31,21 @@ aliases: [defesa-pendencias]
   compromisso de banda do PI (slide 7), Rd1/Rd2/Rd3
   (slide 12), PI de corrente com ξ 0,707 e ωn = 4√2·fg (antiga fala do 6).
 
+- **Exceções aprovadas no slide 13 (2026-10-19)**: (1) 0,1 s de
+  inicialização (PLL trava, fora das métricas: `T_SETTLE` do pipeline), só
+  no MÉTODO, nunca na MODELAGEM; (2) a matriz segue o simulado, não a
+  Tabela 4.1 desatualizada (+ "I" na monofásica B7; bifásica L8-9 reprovada
+  fica fora). Opcional do validador: o regime "N e I" da legenda se apoia no
+  §5.1, não no Cap. 4.
+- **Sem "EMT" no deck (Victor, 2026-10-19)**: termo fora de uso para eles,
+  embora o TCC entregue ainda o traga (Resumo, objetivo da §1, Cap. 6). Na
+  tela e na fala: "simulação" / "simulação computacional". Deck limpo desde
+  2026-10-20.
+- **Slide 14 = fluxo da análise (Victor, 2026-10-20)**: Simulink → CSV →
+  Python → painel HTML, não as ferramentas da modelagem (Python/PSIM/Simulink
+  da §4.2; essa leitura foi entregue e revertida). Entregue no mesmo dia
+  (tabela de métricas, rodapé-ponte B). Próximo passo do Victor: o **gancho
+  para os resultados** (slides 15 em diante).
 - **Regra (2026-10-17)**: o deck traz só o que está no TCC entregue
   (VFinal), com o mesmo valor; nada de ressalva na fala. A partida "até
   0,1 s" saiu do slide 10 por isso.

@@ -62,7 +62,6 @@ graph LR
     standards -->|3| power_system
     standards -->|2| simulation
     standards -->|2| tcc_word
-    tcc_pptx -->|1| dashboard
     tcc_pptx -->|1| events
     tcc_pptx -->|1| pll
     tcc_pptx -->|2| psim

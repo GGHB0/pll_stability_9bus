@@ -13,3 +13,6 @@ files:
   - file: historico_entregas_10_16.md
     name: defesa-historico-entregas-10-16
     description: "Histórico de entregas ao deck da defesa em 2026-10-16 (montagem do pipeline, pendências 1-5, demo, template, capa)"
+  - file: historico_entregas_10_17_18.md
+    name: defesa-historico-entregas-10-17-18
+    description: "Histórico de entregas ao deck da defesa em 2026-10-17 e 2026-10-18 (deck = TCC final, MODELAGEM reestruturada, figuras dedicadas, slides 5 e 6)"

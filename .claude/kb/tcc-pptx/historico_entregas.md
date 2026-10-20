@@ -10,6 +10,18 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-19: slide 10, etapa "Tensão em pu" e fontes nas notas (entregue)
+
+- Pedido do Victor: deixar frisado que os ganhos são calculados em pu (a
+  tensão é dividida por 16.329,93 V de pico na entrada do PLL, antes de
+  Park). Opção B de 2: 4 etapas (1. Tensão em pu, 2. Linearizar, 3. Forma
+  canônica, 4. Fixar ξ), régua vira etapa 5. Notas citam Ogata, Alves/Dias/
+  Rolim 2020 e Teodorescu/Liserre/Rodriguez 2011, como a §3.4; saiu a
+  definição de ts que não está no TCC (slide-validator). Staging
+  `C:\Temp\defesa_s10pu\`: MD5 a20d3094… (só regravado pelo PowerPoint,
+  conteúdo igual à entrega anterior) → 88e8f55bd32bc280ad4b979f0eeeb928,
+  backup `_20261019_225558`. diff: só o slide 10; check 0 falha; 25,4 min.
+
 ## 2026-10-19: slide 10 em dois, sintonia do PLL e duas sintonias, 28 → 29 (entregue)
 
 - Pedido do Victor: dizer como se chegou aos ganhos, não só jogá-los.

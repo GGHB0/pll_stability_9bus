@@ -51,7 +51,7 @@ Pastas: `referencia/` (lido em toda edição), `casos/` (fluxos ocasionais),
   mesmo que esteja no KB ou no modelo. Nunca propor ressalva, aviso ou
   errata na fala. **Exceção de método** (Victor, 2026-10-18): etapa de
   modelagem que o TCC não descreve (bancada do PLL entre duas fontes
-  ideais, montagem do inversor em etapas, slides 9 e 11) pode entrar como
+  ideais, montagem do inversor em etapas, slides 9 e 12) pode entrar como
   etapa, **sem número** fora do TCC; registrar em `pendencias.md` cada
   exceção aprovada. Erro do próprio TCC: o deck evita os dois lados, avisar o
   Victor, e a explicação vai para o material de perguntas

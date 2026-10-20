@@ -21,8 +21,8 @@ estilo padrão do Office.
   nada disso no slide.
 - **Nome da seção** (forma "Seção", no slide, não no layout): caixa de
   texto girada 270°, 18 pt negrito, centrada em (0,40; 4,10). Seções:
-  MOTIVAÇÃO 2-4, MODELAGEM 5-11, MÉTODO 12-13, RESULTADOS 14-18, CONCLUSÃO
-  19-20, APÊNDICE 21-28. Slide novo: copiar a "Seção" do vizinho e trocar
+  MOTIVAÇÃO 2-4, MODELAGEM 5-12, MÉTODO 13-14, RESULTADOS 15-19, CONCLUSÃO
+  20-21, APÊNDICE 22-29. Slide novo: copiar a "Seção" do vizinho e trocar
   o texto, se mudar de seção.
 - Capa: faixa de y 0,75 a 4,55 com três fotos de usinas (FV, eólica, FV;
   Pexels, licença livre, sem crédito obrigatório), cada uma preenchendo o

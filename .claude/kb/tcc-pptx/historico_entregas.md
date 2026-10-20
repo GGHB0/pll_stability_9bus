@@ -10,6 +10,19 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-19: slide 10 em dois, sintonia do PLL e duas sintonias, 28 → 29 (entregue)
+
+- Pedido do Victor: dizer como se chegou aos ganhos, não só jogá-los.
+  Direção B de 3, layout B de 2: 10 "Sintonia do PLL" (passos 1-3 da §3.4,
+  régua do ts `pll_ts_regua_defesa.svg`, conta até os ganhos); 11 novo
+  "Duas sintonias do PLL" (tabela, 2ω0 = 2,32·ωn, "Por que reduzir os
+  ganhos?"). Notas novas, com a escolha do ts explicada pelo TCC (saíram
+  16,7 ms e "mesma rede, mesmo inversor, mesma falta", fora do TCC).
+  Staging `C:\Temp\defesa_s10\`: MD5 f59e7627… → 6a22988e6be3d7d1e40cf5f3f3a7ee50,
+  backup `_20261019_223544`. Slides 12-29 = antigos 11-28 (conferido por
+  script); check_pptx 0 falhas; slide-validator sem bloqueio (2 ajustes de
+  redação literais ao TCC aplicados); 24,8 min.
+
 ## 2026-10-19: slide 9, título curto e bancada espelhada (entregue)
 
 - Opção B de 3 ("Bancada do PLL"). Pedido do Victor: geração à esquerda e

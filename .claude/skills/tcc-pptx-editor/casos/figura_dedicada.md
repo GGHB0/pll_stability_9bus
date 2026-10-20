@@ -71,11 +71,11 @@ TCC, função do gerador que dá os dados, caixa, o que sai).
 
 | Slide | Figura | Arquivo | O que saiu |
 |---|---|---|---|
-| 14 | 5.3 | `fig_5_3` | nota "nos primeiros ms..." |
-| 16 | 5.7 | `fig_5_7` | 4 caixas pico/retorno (na tabela), legenda 1º ciclo/faixa |
-| 17 | 5.10 | `fig_5_10` | nota das trifásicas em 120 Hz (faixa do slide 16) |
+| 15 | 5.3 | `fig_5_3` | nota "nos primeiros ms..." |
+| 17 | 5.7 | `fig_5_7` | 4 caixas pico/retorno (na tabela), legenda 1º ciclo/faixa |
+| 18 | 5.10 | `fig_5_10` | nota das trifásicas em 120 Hz (faixa do slide 17) |
 | 7 | 4.3 (diagrama) | `pll_control_loop_defesa.svg` | título interno, rótulos cinza; equações viram cartão |
 | 5 | 3.2 (diagrama) | `vsi_grid_blocos_defesa.svg` | notação u → v, SRF-PLL em laranja, letras maiores |
-| 17 | 5.18 | `fig_5_18` | linhas de pico/retorno (98 ms no cartão), legenda 1º ciclo/faixa |
+| 18 | 5.18 | `fig_5_18` | linhas de pico/retorno (98 ms no cartão), legenda 1º ciclo/faixa |
 
-Pendentes (apêndice): 5.14 (slide 22), 5.5/5.6 (23), 5.20/5.21 (26).
+Pendentes (apêndice): 5.14 (slide 23), 5.5/5.6 (24), 5.20/5.21 (27).

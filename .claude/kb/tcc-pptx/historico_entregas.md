@@ -10,6 +10,18 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-21 (madrugada): layout do 20 e frase de abertura em 20-22 (entregue)
+
+- 20 (demo): só layout, texto intacto (diff sem diferença de texto): grade de
+  2 colunas 5,82, moldura da figura, caixas chapadas, Arial → Calibri do tema,
+  corpo 11 → 12 pt, legenda 11 pt. 20, 21 e 22 ganharam título curto + frase
+  de abertura. Staging `C:\Temp\defesa_s20\gen_s20.py` e `defesa_s22\gen_s22.py`.
+- 1ª entrega (20-21): 7377235a… → 869545bf…, backup `_20261021_005432`.
+  2ª (22): o canônico virou c581ac8c… só por regravação do PowerPoint (diff
+  vazio); entregue → 151946bf8daca45e2b2586816a7c99a8, backup `_20261021_005913`.
+- Ficam na tela, para a passada de texto: travessão nos cartões do 20,
+  "BAD_PLL" no 20, "EMT" na legenda do 20 e nos limites do 22.
+
 ## 2026-10-21: lógica do ONS e sistema completo, slides 14-17 (entregue)
 
 - 14 "Referência pelo ONS" (`referencia_corrente_ons.svg`), 15 "Dentro do

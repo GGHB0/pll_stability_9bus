@@ -47,6 +47,11 @@ aliases: [defesa-pendencias]
   Equações do 12c e do 13 a revisar juntas. Deck 26 → 30, fala 29,9 min:
   **rodada de tempo pendente** (slides 5, 6, 7, 9 sem fala; 10 com 384 palavras).
 
+- **Passada de texto em 20-22 (pendente, 2026-10-21)**: layout e frase de
+  abertura entregues sem mexer no corpo, a pedido do Victor. Ainda na tela:
+  travessão nos 3 cartões do 20, "BAD_PLL" no cartão 2 do 20, "EMT" na
+  legenda do 20 e nos limites do 22. Só quando o Victor pedir.
+
 - **Reestruturação da MODELAGEM (decidida em 2026-10-18, Alternativa 1)**:
   5 slides na ordem do trabalho real (dq → 9 barras/Thévenin → bancada do
   PLL entre duas fontes ideais → ganhos → inversor em etapas PWM/LCL/100 MW),

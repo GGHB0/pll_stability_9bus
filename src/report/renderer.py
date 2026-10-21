@@ -2152,16 +2152,16 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
 }
 .svg-tip-btn:hover { background: var(--bg) }
 
-/* ── Modo apresentação (palco escuro em tela cheia) ── */
+/* ── Modo apresentação (palco branco em tela cheia) ── */
 .pres-btn { background: var(--accent); color: #fff; border-color: var(--accent) }
 [data-theme="dark"] .pres-btn { color: #0f172a }
 body.pres-on { overflow: hidden }
 .pres {
-  --bg: #0a0f1e; --surface: #111827; --border: #1f2937; --text: #f9fafb;
-  --muted: #9ca3af; --accent: #60a5fa; --badge-bg: #1e3050; --badge-fg: #93c5fd;
-  --card-bg: #111827; --btn-bg: #111827; --btn-fg: #d1d5db; --btn-bdr: #374151;
+  --bg: #ffffff; --surface: #ffffff; --border: #e2e8f0; --text: #0f172a;
+  --muted: #64748b; --accent: #2563eb; --badge-bg: #eff6ff; --badge-fg: #1d4ed8;
+  --card-bg: #ffffff; --btn-bg: #ffffff; --btn-fg: #334155; --btn-bdr: #cbd5e1;
   position: fixed; inset: 0; z-index: 2000;
-  background: #0a0f1e; color: var(--text);
+  background: #ffffff; color: var(--text);
   display: flex; flex-direction: column; gap: 10px;
   padding: 18px 32px 12px;
 }
@@ -2174,7 +2174,7 @@ body.pres-on { overflow: hidden }
 .pres-head { flex: 1 }
 .pres-ref { font-size: 12px; font-weight: 700; letter-spacing: .6px; color: var(--accent); text-transform: uppercase }
 .pres-title { font-size: 26px; font-weight: 800; margin: 2px 0 4px }
-.pres-text { font-size: 16px; line-height: 1.45; color: #d1d5db; max-width: 120ch }
+.pres-text { font-size: 16px; line-height: 1.45; color: #334155; max-width: 120ch }
 .pres-exit {
   font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
   background: transparent; color: var(--muted);
@@ -2199,7 +2199,7 @@ body.pres-on { overflow: hidden }
   padding: 5px 11px; border-radius: 999px;
   background: transparent; color: var(--muted); border: 1.5px solid var(--btn-bdr);
 }
-.pres-dot.active { background: var(--accent); border-color: var(--accent); color: #0f172a }
+.pres-dot.active { background: var(--accent); border-color: var(--accent); color: #fff }
 
 /* ── Aba Análise TCC ── */
 .tab-btn.tab-tcc { font-weight: 700 }
@@ -2297,7 +2297,7 @@ body.tcc-mode #scenario-picker, body.tcc-mode .filter-bar .pll-toggle { opacity:
 _TCC_JS = r"""
 // ── Aba Análise TCC e modo apresentação: capítulos do Cap. 5 ──────────────
 // Os dois usam _tccFigure: a aba mostra um sinal por vez (seletor), a
-// apresentação empilha os sinais de cap.pres em tela cheia, no tema escuro.
+// apresentação empilha os sinais de cap.pres em tela cheia, em palco branco.
 
 var TCC_EXTRA = [["#9333ea", "#c084fc"], ["#db2777", "#f472b6"],
                  ["#ca8a04", "#fbbf24"], ["#16a34a", "#4ade80"]];
@@ -2611,7 +2611,7 @@ function _renderTcc() {
   cardsEl.innerHTML = _tccCardsHtml(cap, isDark);
 }
 
-// ── Modo apresentação: o site inteiro vira um palco escuro em tela cheia ──
+// ── Modo apresentação: o site inteiro vira um palco branco em tela cheia ──
 
 var PRES_CFG = { responsive: true, displaylogo: false, displayModeBar: false };
 
@@ -2649,7 +2649,7 @@ function _renderPres() {
   document.getElementById("pres-ref").textContent = cap.ref;
   document.getElementById("pres-title").textContent = cap.titulo;
   document.getElementById("pres-text").innerHTML = cap.texto;
-  document.getElementById("pres-chips").innerHTML = _tccChipsHtml(cap, true, false);
+  document.getElementById("pres-chips").innerHTML = _tccChipsHtml(cap, false, false);
   document.getElementById("pres-dots").innerHTML = CAPS.map(function(c, i) {
     return "<button class=\"pres-dot" + (i === tccCap ? " active" : "") + "\" onclick=\"presGo("
       + i + ")\" title=\"" + c.curto + "\">" + (i + 1) + " · " + c.curto + "</button>";
@@ -2665,9 +2665,9 @@ function _renderPres() {
   }
   tbl.style.display = "none"; tbl.innerHTML = "";
   plotEl.style.display = "";
-  cardsEl.innerHTML = _tccCardsHtml(cap, true);
+  cardsEl.innerHTML = _tccCardsHtml(cap, false);
   var h = Math.max(260, plotEl.clientHeight);
-  var fig = _tccFigure(cap, cap.pres, { dark: true, height: h, big: true, bg: "#0a0f1e" });
+  var fig = _tccFigure(cap, cap.pres, { dark: false, height: h, big: true, bg: "#ffffff" });
   Plotly.react(plotEl, fig.data, fig.layout, PRES_CFG);
 }
 

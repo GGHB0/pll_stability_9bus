@@ -87,6 +87,11 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
   descartável do scratchpad, `chromium.launch(channel="msedge")` (não baixa
   browser), abrir o HTML como `file://`, avaliar JS e tirar screenshots.
   Usado em 2026-10-20 para percorrer a aba Análise TCC.
+- **Pedido de gosto visual (tema, cores) → prévias antes de editar**: no
+  mesmo Playwright, injetar CSS (`page.add_style_tag`) e sobrescrever a
+  função de render via `page.evaluate` sobre o HTML já gerado; 2-4 variantes
+  em PNG, o código só muda depois da escolha. Assim saiu o palco branco do
+  modo apresentação (2026-10-20, após o escuro ser recusado).
 
 - **Plotly não renderiza em preview `file://` no browser pane** (valia até 2026-10-16; com o Plotly embutido, `file://` renderiza): o script
   `<script src="https://cdn.plot.ly/...">` é bloqueado (CORS/sandbox) quando

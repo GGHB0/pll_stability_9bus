@@ -5,6 +5,15 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-20 — Modo apresentação em palco branco
+
+Arquivo: `src/report/renderer.py`
+
+O palco escuro não agradou. Entre três prévias claras (branco puro, cinza
+com cartões, faixa azul-marinho no topo), o usuário escolheu o branco puro:
+fundo branco, título escuro, destaque azul, curvas com as cores do tema
+claro. O palco fica claro mesmo com o site em dark mode.
+
 ## 2026-10-20 — Modo apresentação, rampa do ONS e rótulo do mouse
 
 Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`

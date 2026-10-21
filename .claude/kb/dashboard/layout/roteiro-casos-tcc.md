@@ -85,7 +85,7 @@ headless (Playwright em venv descartável), nos 7 capítulos, sem erro de JS.
 ## Modo apresentação
 
 Botão "Modo apresentação" no cabeçalho, pedido em 2026-10-20 para dar
-imersão e caber tudo na tela. O site inteiro vira um palco escuro em tela
+imersão e caber tudo na tela. O site inteiro vira um palco branco em tela
 cheia (`#pres`, `position: fixed`, `requestFullscreen`), um capítulo por
 tela, sem rolagem: número do capítulo, legenda, chips, gráfico ocupando a
 altura que sobra, faixa de mini-cartões e os botões dos capítulos embaixo.
@@ -93,8 +93,13 @@ altura que sobra, faixa de mini-cartões e os botões dos capítulos embaixo.
 - Os sinais de `cap.pres` ficam empilhados num só gráfico, com o mesmo eixo
   x (o zoom vale para todos): erro de fase + v_d na energização, na
   localização e no compromisso; erro de fase + P na perda de sincronismo.
-- O tema escuro é fixo no palco: as variáveis CSS são redefinidas dentro de
-  `.pres`, e os chips e cartões reaproveitam as classes da aba.
+- O tema claro é fixo no palco, independente do botão "Dark mode": as
+  variáveis CSS são redefinidas dentro de `.pres` e a figura sai com
+  `dark: false` sobre fundo branco. A primeira versão era escura; o usuário
+  não gostou e escolheu, entre três prévias claras (branco puro, cinza com
+  cartões, faixa azul-marinho no topo como o deck), o branco puro. O claro
+  também resiste melhor ao projetor numa sala iluminada.
+- Os chips e cartões reaproveitam as classes da aba.
 - Seta ou PageDown avança, Esc sai. Com a tela cheia, o navegador consome o
   Esc, e quem fecha o modo é o `fullscreenchange`. O capítulo é o mesmo da
   aba (`tccCap`), e clicar num cartão sai do palco e abre o cenário.
@@ -110,7 +115,7 @@ Na mesma rodada:
   um pouco abaixo dela.
 - **Cores dos capítulos só com casos nominais**: escala amarelo → verde →
   ciano → índigo, do mais perto ao mais longe da usina. Os tons de azul se
-  confundiam no fundo escuro.
+  confundiam no fundo escuro e seguem distintos no branco.
 - **Rótulo do mouse**: "x unified" com fundo sólido, borda azul, fonte 13 e
   3 casas decimais, também nas abas por cenário (`themedLayout`).
 

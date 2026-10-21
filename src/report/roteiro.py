@@ -178,12 +178,15 @@ CAPITULOS: list[dict] = [
          sinais=["err", "vd"], xrange=[0.25, 0.6],
          metricas=["pico", "ts", "a120"]),
     dict(id="ons", pres=[], curto="Código de rede", kind="ons",
-         titulo="Corrente reativa contra a rampa do ONS",
-         ref="§5.5 · Tabela 5.2",
-         texto="O Submódulo 2.10 pede corrente reativa proporcional ao "
-               "afundamento. Nas trifásicas, a referência de i<sub>q</sub> acompanha a "
-               "rampa: satura em 1 pu da Barra 7 à Linha 8-9 e fica em "
-               "0,72 pu na Barra 6, contra 0,76 pu previstos.",
+         titulo="Código de rede: permanência e corrente reativa",
+         ref="§5.5 · Figuras 2.1 e 2.2 · Tabela 5.2",
+         texto="O Submódulo 2.10 pede duas coisas durante a falta: permanecer "
+               "conectado enquanto a tensão estiver dentro da região de "
+               "suportabilidade e injetar corrente reativa proporcional ao "
+               "afundamento. A Barra 7 e a Linha 7-8 levam a tensão abaixo de "
+               "0,2 pu, onde a desconexão é permitida, e mesmo assim o inversor "
+               "fica conectado com i<sub>q</sub> saturado em 1 pu. A Barra 6 fica "
+               "dentro da região, com 0,72 pu contra 0,76 pu previstos.",
          casos=[("bus7/3phase", _LOC[0]), ("line7_8/3phase", _LOC[1]),
                 ("line8_9/3phase", _LOC[2]), ("bus6/3phase", _LOC[3])],
          sinais=[], xrange=None, metricas=["Vmed", "rampa", "iqref"]),

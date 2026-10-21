@@ -5,6 +5,20 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-21 — Curva de suportabilidade no capítulo "Código de rede"
+
+Arquivos: `src/pipeline/indicadores.py`, `src/pipeline/loader.py`,
+`src/report/renderer.py`, `src/report/roteiro.py`
+
+O capítulo do ONS ganhou, ao lado da rampa de corrente reativa, a curva de
+suportabilidade a subtensões (Figura 2.1) com a tensão da fase mais
+afundada no inversor de cada caso. Etiqueta "dentro/fora da região" nos
+chips e cartões; anel vermelho na rampa para os casos fora; faixas por
+regime na rampa. "+ Mostrar os outros curtos" acende os demais cenários sem
+destaque, e o mouse sobre "Fora/Dentro da região · N casos" lista e filtra
+os casos no gráfico. Nova receita `suportabilidade_ons` (60 Hz por fase,
+janela de 1 ciclo); a série entra em `tccInd.lvrt` (~0,2 MB no HTML).
+
 ## 2026-10-21 — Capítulo "Faltas destacadas"
 
 Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`

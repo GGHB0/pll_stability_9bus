@@ -41,6 +41,18 @@ A Figura 13 do ONS termina logo depois de 5 s. A norma não diz que a faixa
 ilimitado está no §5.2.4 (a), que remete ao critério do Submódulo 2.3. Por
 isso a figura do TCC deixa a borda direita aberta, sem rótulo.
 
+## Os casos simulados contra a curva (dashboard, 2026-10-21)
+
+O capítulo "Código de rede" do dashboard ([[roteiro-demonstracao-dashboard]])
+aplica a curva à fase mais afundada no inversor (§5.7.1.1). Ficam **fora**
+(abaixo de 0,2 pu depois do 1º ciclo): Barra 7 trifásica e bifásica (as duas
+sintonias), Linha 7-8 trifásica (as duas), Barra 8 bifásica e trifásica e
+Barra 4 bifásica (mínimo de 0,19 pu, no limite). Fora da região a norma
+permite desconectar; o inversor do modelo não tem proteção de subtensão e
+fica conectado. O TCC não faz essa leitura (o §5.5 diz que o inversor
+"mantém-se conectado"). As rodadas terminam 0,3 s depois do início da falta:
+só o patamar de 0,2 pu tem dado, a rampa até 0,85 pu fica fora da janela.
+
 ## Figura 14 (§5.8), corrente reativa: convenção de sinal
 
 Na figura do ONS, ΔI_Q/I_n = +1 na subtensão (fornecimento) e −1 na

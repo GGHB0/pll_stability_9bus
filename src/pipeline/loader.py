@@ -30,6 +30,7 @@ import pandas as pd
 from ..config import T_FAULT, T_SETTLE
 from .indicadores import (
     TOL_DEG, erro_fase_deg, indicadores_falta, indicadores_partida,
+    suportabilidade_ons,
 )
 from .pq import corrige_pq
 
@@ -263,7 +264,8 @@ class SimData:
         # "ts" é o instante ABSOLUTO do retorno à faixa de 2° (marcador do
         # painel "Erro de fase"); o valor do TCC, em ms após t_clear, é
         # ind["ts"]. settled=False: não volta à faixa na janela simulada.
-        metrics: dict = {"ts": None, "settled": None, "ind": None, "partida": None}
+        metrics: dict = {"ts": None, "settled": None, "ind": None, "partida": None,
+                         "lvrt": None}
         cols = ("vd_rede_pu", "vq_rede_pu", "vd_ufv_pu", "vq_ufv_pu",
                 "iq_ufv_ref_pu", "iq_ufv_pu", "P_ufv_pu", "Q_ufv_pu")
         tem_ind = set(cols) <= self._cols
@@ -279,6 +281,10 @@ class SimData:
                 self.t_fault, self.t_clear)
             metrics["ind"] = ind
             metrics["settled"] = ind["ts"] is not None
+            # curva de suportabilidade do ONS (capítulo "Código de rede")
+            if self.has_vabc_ufv:
+                metrics["lvrt"] = suportabilidade_ons(
+                    self.t_abc, (self.va_ufv, self.vb_ufv, self.vc_ufv), self.t_fault)
             if metrics["settled"]:
                 metrics["ts"] = self.t_clear + ind["ts"] / 1000
         elif self.theta_err is not None:

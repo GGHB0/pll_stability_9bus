@@ -61,7 +61,7 @@ e na localização um degradê de azul do mais perto ao mais longe da usina.
 | 3 | Perda de sincronismo | B7 trifásica nas duas sintonias | erro (±180° fixo) / P / Q / v_d |
 | 4 | Sequência negativa | 4 assimétricas + B7 trifásica (cinza) | espectro de v_d na falta |
 | 5 | Compromisso da sintonia | B6 bifásica nas duas sintonias | erro / v_d |
-| 6 | Código de rede | 4 trifásicas | rampa ONS (i_q × V) com o ponto de cada caso |
+| 6 | Código de rede | 4 trifásicas | suportabilidade (V × t) e rampa ONS (i_q × V), lado a lado |
 | 7 | Todos os casos | 17 casos do TCC | tabela (colunas do comparativo) |
 
 - As curvas vêm das figuras já embutidas em `SCENARIOS` (traço "Erro de
@@ -121,6 +121,20 @@ Na mesma rodada:
 
 Conferido no Edge headless em 1920×1080: os 7 capítulos cabem na tela
 (`scrollHeight` = altura da janela) e não houve erro de JS.
+
+**Capítulo "Código de rede" (2026-10-21, a pedido do usuário).** Dois
+painéis na mesma figura Plotly (`_onsFigure`, subplots `x`/`x2`): à
+esquerda, a tensão da fase mais afundada no inversor contra a curva de
+suportabilidade da Figura 2.1 (`tccInd.lvrt`, receita em
+[[indicadores-tcc-dashboard]]); à direita, a rampa com faixas por regime
+(corrente máxima, proporcional, banda morta) e anel vermelho nos casos fora.
+Etiqueta "fora da região"/"dentro" nos chips e cartões. "+ Mostrar os outros
+curtos" acende os demais cenários sem destaque (`st.outros`); o mouse em
+"Fora da região · N casos" ou "Dentro · N" lista os casos e filtra o painel
+da esquerda (`onsFiltro`, redesenha só a figura). A Barra 7 e a Linha 7-8
+ficam fora (abaixo de 0,2 pu); o TCC não diz isso, e o usuário aprovou a
+leitura como exceção à regra do deck exato. As rodadas acabam 0,3 s depois
+do início da falta, então só o patamar de 0,2 pu da curva tem dado.
 
 Desde 2026-10-21, o 1º capítulo é "Faltas destacadas" (`kind="mapa"`):
 o unifilar com os quatro pontos de falta, antes da Energização, e os

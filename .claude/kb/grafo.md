@@ -25,7 +25,7 @@ graph LR
     dashboard -->|3| pll
     dashboard -->|2| power_system
     dashboard -->|5| simulation
-    dashboard -->|1| standards
+    dashboard -->|2| standards
     dashboard -->|2| tcc_pptx
     dashboard -->|2| tcc_word
     events -->|2| power_system
@@ -59,7 +59,7 @@ graph LR
     simulation -->|1| psim
     simulation -->|1| standards
     simulation -->|5| tcc_word
-    standards -->|3| dashboard
+    standards -->|4| dashboard
     standards -->|2| events
     standards -->|3| inverter
     standards -->|5| pll

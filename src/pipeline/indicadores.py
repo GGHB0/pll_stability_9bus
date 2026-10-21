@@ -12,6 +12,8 @@ Receitas e valores conferidos em
     indicadores_falta → retenção de v_d, 120 Hz, rampa ONS × i_q,ref, P média,
                         % do tempo com erro > 90°, sentido do fluxo pós-falta
     indicadores_partida → acomodação de v_d (5%) e do erro (2°) na energização
+    suportabilidade_ons → tensão da fase mais afundada contra a curva de
+                          suportabilidade a subtensões do ONS (Figura 2.1)
 """
 from __future__ import annotations
 
@@ -25,6 +27,11 @@ JANELA_PRE_S = 0.05   # média pré-falta da retenção de v_d
 TAU_V = 0.005         # filtro de |V| na entrada do bloco ONS_2_11
 FAIXA_VD = 0.05       # acomodação de v_d na partida: ±5% do valor final
 JANELA_FINAL_S = 0.05  # valor final de v_d = média dos últimos 50 ms
+# Borda inferior da curva de suportabilidade (ONS Subm. 2.10 §5.7, Figura 13;
+# Figura 2.1 do TCC): tempo desde o início da falta (s) → tensão (pu)
+LVRT_T = (0.0, 0.5, 1.0, 5.0)
+LVRT_V = (0.2, 0.2, 0.85, 0.85)
+PASSO_LVRT_S = 0.002   # reamostragem da curva embutida no HTML
 
 
 def erro_fase_deg(vd_rede: np.ndarray, vq_rede: np.ndarray) -> np.ndarray:
@@ -109,3 +116,27 @@ def indicadores_partida(t: np.ndarray, vd_rede: np.ndarray, vq_rede: np.ndarray)
         t_vd5=float(fora_vd[-1] * 1000) if len(fora_vd) else 0.0,
         t_err2=float(fora_e[-1] * 1000) if len(fora_e) else 0.0,
     )
+
+
+def suportabilidade_ons(t: np.ndarray, vabc: tuple, t_fault: float) -> dict:
+    """Tensão da fase mais afundada no inversor contra a curva de
+    suportabilidade a subtensões do ONS (§5.7.1.1: aferida pela fase com
+    maior variação). Cada fase vira a amplitude da componente de 60 Hz numa
+    janela móvel de 1 ciclo (causal, termina no instante marcado). "fora" =
+    a fase mais afundada passa abaixo da borda inferior depois do 1º ciclo de
+    falta (a janela que atravessa o degrau não mede um afundamento).
+    t_rel e v saem reamostrados a cada PASSO_LVRT_S, desde 50 ms antes da falta."""
+    n = int(round(CICLO_S / np.median(np.diff(t))))
+    giro = np.exp(-2j * np.pi * 60 * t)
+    amp = []
+    for v in vabc:
+        acum = np.concatenate([[0], np.cumsum(v * giro)])
+        amp.append(np.abs(acum[n:] - acum[:-n]) * 2 / n)
+    vmin, tt = np.min(amp, axis=0), t[n - 1:]
+    # classificação na taxa nativa (a reamostragem perde mínimos de borda)
+    falta = tt >= t_fault + CICLO_S
+    margem = vmin[falta] - np.interp(tt[falta] - t_fault, LVRT_T, LVRT_V)
+    tg = np.arange(t_fault - JANELA_PRE_S, tt[-1], PASSO_LVRT_S)
+    vg = np.interp(tg, tt, vmin)
+    return dict(t_rel=np.round(tg - t_fault, 4).tolist(), v=np.round(vg, 4).tolist(),
+                fora=bool((margem < 0).any()), vmin=float(vmin[falta].min()))

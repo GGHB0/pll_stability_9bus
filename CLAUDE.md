@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Projeto
 
-TCC (Trabalho de Conclusão de Curso) em Engenharia Elétrica — UERJ 2025. Investiga o
+TCC (Trabalho de Conclusão de Curso) em Engenharia Elétrica — UERJ 2026. Investiga o
 comportamento dinâmico do **SRF-PLL** (Synchronous Reference Frame Phase-Locked Loop)
 em inversores conectados à rede sob contingências severas, motivado pela perturbação de
 15/08/2023 no SIN (23 368 MW desligados, ~34,5% da carga).

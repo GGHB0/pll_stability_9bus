@@ -13,7 +13,7 @@ Gerado por `scripts/kb_links.py index`. Links `[[slug]]` abrem no Obsidian (vaul
 
 | Pasta | Docs | Índice |
 |---|---|---|
-| dashboard/ | 18 | [dashboard/index.md](dashboard/index.md) |
+| dashboard/ | 19 | [dashboard/index.md](dashboard/index.md) |
 | events/ | 9 | [events/index.md](events/index.md) |
 | inverter/ | 5 | [inverter/index.md](inverter/index.md) |
 | pll/ | 13 | [pll/index.md](pll/index.md) |
@@ -31,7 +31,7 @@ Mapa de relações entre pastas: [grafo.md](grafo.md)
 
 ## Skills
 
-- [dashboard-html-editor](../skills/dashboard-html-editor/SKILL.md)
+- [dashboard-html-editor](../skills/dashboard-html-editor/SKILL.md) — [historico](../skills/dashboard-html-editor/historico.md) · [previa-standalone](../skills/dashboard-html-editor/previa-standalone.md)
 - [pdf-kb-updater](../skills/pdf-kb-updater/SKILL.md) — [examples](../skills/pdf-kb-updater/examples.md) · [scripts](../skills/pdf-kb-updater/scripts.md) · [section-maps](../skills/pdf-kb-updater/section-maps.md)
 - [slx-explorer](../skills/slx-explorer/SKILL.md)
 - [slx-runner](../skills/slx-runner/SKILL.md)

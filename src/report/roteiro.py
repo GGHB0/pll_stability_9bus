@@ -59,8 +59,73 @@ _REF = ("#94a3b8", "#64748b")
 # Campos: id, curto (botão), titulo, ref (seção/figura do TCC), texto,
 # kind (time/spec/ons/tabela), casos [(key, cor)], sinais (o 1º é o
 # padrão), pres (sinais empilhados no modo apresentação), xrange,
-# metricas (chaves de tccInd nos mini-cartões).
+# metricas (chaves de tccInd nos mini-cartões). O kind "mapa" não tem
+# gráfico: desenha o unifilar e percorre passos (seta → antes de trocar de
+# capítulo), cada um com id do ponto, rotulo e pos na régua (∝ tensão residual
+# na Barra 2, ver kb ieee9bus-thevenin), cenario aberto pelo botão, faltas e
+# inadequada (cobertura conforme kb cenarios-simulados).
 CAPITULOS: list[dict] = [
+    dict(id="faltas", pres=[], curto="Faltas destacadas", kind="mapa",
+         titulo="Faltas destacadas", ref="Antes dos resultados",
+         texto="Quatro pontos de falta, do mais próximo ao mais distante da "
+               "usina fotovoltaica.",
+         casos=[], sinais=[], xrange=None, metricas=[],
+         passos=[
+             dict(titulo="Quatro pontos, uma pergunta", tag="Visão geral",
+                  texto=["A falta é aplicada em quatro pontos da rede IEEE 9 "
+                         "barras. De um caso para outro, muda a distância "
+                         "elétrica entre a falta e o inversor.",
+                         "São duas barras (7 e 6) e duas linhas (7-8 e 8-9)."],
+                  papel="<b>Pergunta:</b> como a distância da falta muda a "
+                        "resposta do SRF-PLL?"),
+             dict(id="b7", rotulo="B7", pos=0.03, cenario="bus7/3phase",
+                  titulo="Barra 7", tag="Mais próxima da usina", tom="near",
+                  texto=["Fica logo depois do transformador T2, que liga a "
+                         "usina à rede. Entre o inversor e a falta, só há "
+                         "esse transformador.",
+                         "É o caso mais severo: o afundamento de tensão no "
+                         "ponto de conexão é o mais profundo."],
+                  papel="<b>No estudo:</b> o extremo severo, ponto de partida "
+                        "da análise de perda de sincronismo.",
+                  faltas=["trifásica", "bifásica", "monofásica"], inadequada=True),
+             dict(id="l78", rotulo="L7-8", pos=0.19, cenario="line7_8/3phase",
+                  titulo="Linha 7-8", tag="Circuito simples", tom="mid",
+                  texto=["Sai da Barra 7 em direção ao centro da rede. A falta "
+                         "é aplicada na própria linha.",
+                         "Como não há circuito paralelo, a linha inteira fica "
+                         "sob falta, e o ponto continua eletricamente perto "
+                         "da usina."],
+                  papel="<b>No estudo:</b> falta em linha próxima à usina, "
+                        "comparada à Barra 7.",
+                  faltas=["trifásica"], inadequada=True),
+             dict(id="l89", rotulo="L8-9", pos=0.66, cenario="line8_9/3phase",
+                  titulo="Linha 8-9", tag="Circuito duplo", tom="mid",
+                  texto=["Dois circuitos em paralelo ligam as Barras 8 e 9. A "
+                         "falta é aplicada em apenas um deles.",
+                         "O outro circuito continua conduzindo, e as duas "
+                         "barras seguem ligadas durante a falta."],
+                  papel="<b>No estudo:</b> falta em linha com um caminho "
+                        "alternativo preservado.",
+                  faltas=["trifásica"], inadequada=False),
+             dict(id="b6", rotulo="B6", pos=0.97, cenario="bus6/3phase",
+                  titulo="Barra 6", tag="Mais distante da usina", tom="far",
+                  texto=["Fica no ramo inferior da rede, entre as Barras 4 e "
+                         "9. Qualquer caminho da usina até ela passa por "
+                         "três linhas.",
+                         "É o caso mais brando: parte da tensão se mantém no "
+                         "ponto de conexão do inversor."],
+                  papel="<b>No estudo:</b> o extremo brando, o contraponto da "
+                        "Barra 7.",
+                  faltas=["trifásica", "bifásica", "monofásica"], inadequada=True),
+             dict(titulo="Faltas destacadas", tag="Resumo", resumo=True,
+                  texto=["Da mais próxima à mais distante da usina: Barra 7, "
+                         "Linha 7-8, Linha 8-9 e Barra 6.",
+                         "Os quatro pontos recebem falta trifásica. Nas Barras "
+                         "7 e 6 também há faltas monofásica e bifásica, que "
+                         "entram no capítulo de sequência negativa."],
+                  papel="<b>Daqui em diante:</b> os capítulos comparam estes "
+                        "casos, nas duas sintonias do PLL."),
+         ]),
     dict(id="energ", pres=["err", "vd"], curto="Energização", kind="time",
          titulo="Energização do inversor", ref="§5.1 · Figura 5.3",
          texto="Na partida, o SRF-PLL trava na rede: o erro de fase entra na "

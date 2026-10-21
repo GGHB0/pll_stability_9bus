@@ -5,6 +5,19 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-21 — Capítulo "Faltas destacadas"
+
+Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`
+
+Primeiro capítulo da aba Análise TCC e do modo apresentação: antes dos
+resultados, o unifilar mostra onde as faltas foram aplicadas (Barra 7, Linha
+7-8, Linha 8-9 em circuito duplo, Barra 6). Seis passos: visão geral, um
+por ponto e resumo. Cada passo traz um cartão com texto, as faltas e
+sintonias simuladas e "Abrir no painel →", além de uma régua do
+afundamento mais profundo ao mais raso. A seta → percorre os passos antes de
+trocar de capítulo. Clicar na barra, na linha ou no pino da régua pula para
+o ponto. Saiu de três prévias standalone aprovadas pelo usuário.
+
 ## 2026-10-20 — Modo apresentação em palco branco
 
 Arquivo: `src/report/renderer.py`

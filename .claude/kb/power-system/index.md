@@ -37,7 +37,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 
 ## Pastas relacionadas
 
-- [dashboard/](../dashboard/index.md) — saem 0, chegam 1
+- [dashboard/](../dashboard/index.md) — saem 1, chegam 2
 - [events/](../events/index.md) — saem 0, chegam 2
 - [inverter/](../inverter/index.md) — saem 0, chegam 1
 - [pll/](../pll/index.md) — saem 6, chegam 3

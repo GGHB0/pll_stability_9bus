@@ -23,10 +23,10 @@ graph LR
     tcc_pptx["tcc-pptx/"]
     tcc_word["tcc-word/"]
     dashboard -->|3| pll
-    dashboard -->|1| power_system
-    dashboard -->|4| simulation
+    dashboard -->|2| power_system
+    dashboard -->|5| simulation
     dashboard -->|1| standards
-    dashboard -->|1| tcc_pptx
+    dashboard -->|2| tcc_pptx
     dashboard -->|2| tcc_word
     events -->|2| power_system
     events -->|1| standards
@@ -42,6 +42,7 @@ graph LR
     pll -->|2| simulation
     pll -->|3| standards
     pll -->|7| tcc_word
+    power_system -->|1| dashboard
     power_system -->|6| pll
     power_system -->|2| standards
     power_system -->|1| tcc_word

@@ -1,7 +1,7 @@
 ---
 name: dashboard-html-editor
 description: Edita o pipeline Python que gera o relatório HTML interativo (output/pll_metrics.html) — SimData/ChartBuilder/HTMLRenderer em src/. Ativar sempre que o usuário pedir para mudar/adicionar/remover algo no dashboard: cards, métricas, gráficos, abas, tabela comparativa, tema light/dark, toggle PLL, diagrama unifilar, ou qualquer elemento visual/funcional do relatório. Também usar para regenerar e verificar o HTML após qualquer mudança em src/pipeline ou src/report.
-version: 1.5.0
+version: 1.6.0
 ---
 
 # Dashboard HTML Editor — Skill de Edição do Relatório Interativo
@@ -93,15 +93,11 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
   em PNG, o código só muda depois da escolha. Assim saiu o palco branco do
   modo apresentação (2026-10-20, após o escuro ser recusado).
 
-- **Plotly não renderiza em preview `file://` no browser pane** (valia até 2026-10-16; com o Plotly embutido, `file://` renderiza): o script
-  `<script src="https://cdn.plot.ly/...">` é bloqueado (CORS/sandbox) quando
-  a página é aberta como `file://` no `mcp__Claude_Browser__*` — a página
-  carrega, abas/selects funcionam, mas os gráficos ficam em branco e
-  `typeof Plotly === "undefined"`, sem erro no console. Não é bug do código:
-  confirmado servindo a mesma pasta via `python -m http.server` e abrindo
-  `http://localhost:<porta>/...` — Plotly carrega normal. Sempre que a
-  verificação envolver ler o gráfico renderizado (não só `layout.shapes` via
-  JS), usar o servidor HTTP local, não `file://` direto.
+- **Elemento novo de visual indefinido → prévia standalone** antes de
+  editar `src/`: ver [previa-standalone.md](previa-standalone.md).
+- Até 2026-10-16, o Plotly via CDN não carregava em `file://` no browser
+  pane. Com o Plotly embutido, `file://` renderiza (detalhe em
+  [historico.md](historico.md), v1.5.0).
 
 ## Convenções fixas do projeto
 
@@ -118,69 +114,13 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
   não reintroduzir uma figura ali sem que o usuário peça; era repetitivo
   com Inversor/Sistema e foi removido por esse motivo.
 
-## Evolução desta skill
+## Guias e histórico
 
-v1.0.0 (2026-07-24): criada a partir do padrão observado na remoção das
-métricas ΔP/ΔQ e dos emoji dos botões/abas.
-
-v1.1.0 (2026-07-24): adicionada a linha "remover aba/gráfico inteiro" na
-tabela (padrão da remoção do `build_resume`); nova seção "Armadilhas
-conhecidas" com o bug do `goToChart`/`xref` achado durante a verificação
-desta mesma mudança; passo de verificação reforçado para interações
-clicáveis, com a regra de não expandir escopo ao achar bugs não
-relacionados (usar `spawn_task`).
-
-v1.2.0 (2026-07-25): nova linha "redefinir cálculo de métrica existente" na
-tabela — padrão da troca de V min→V médio (mínimo instantâneo virou média
-numa janela por regra de cenário), que tocou `loader.py`, `settings.py`
-(threshold renomeado) e toda referência à chave antiga em `renderer.py`
-(cards, tabela comparativa, JS de ordenação, story) simultaneamente — grepar
-o nome da chave/threshold no `src/` inteiro antes de considerar a renomeação
-completa, não só nos arquivos "óbvios".
-
-v1.3.0 (2026-07-25): removido o overlay "Comparar PLL" (`ghost-toggle`,
-`ghostMode`/`_exactEquiv`/`_ghostData`/`toggleGhost` em `renderer.py`) por
-não estar sendo usado — não confundir com o toggle nominal/sintonia
-inadequada (`pllMode`), que é feature separada e não foi tocado; doc
-`graficos/dashboard-zoom-ghost.md` virou `graficos/dashboard-zoom-export.md`
-(nome não fazia mais sentido sem o fantasma). Também corrigido um bug real
-achado ao investigar "título dos gráficos deveria ser branco": a barra de
-título do painel (`_label`) já era branca no Python, mas o JS
-`themedLayout` a confundia com `_group_title` (ambos usam `xref="paper"`
-desde o redesign de títulos) e sobrescrevia para cinza — fix por `yref`,
-detalhes em `layout/dark-mode-legend-title-fixes.md` (Fix 5).
-
-v1.4.0 (2026-07-25): correção da 3ª mudança do v1.3.0 — a 1ª tentativa do
-eixo Y (copiar o texto completo do painel, ex. `"P / Q UFV (pu)"`) foi
-rejeitada pelo usuário: o pedido real era identificar a **grandeza física
-genérica** (`"Tensão (pu)"`, `"Potência (pu)"`, `"Frequência (Hz)"`), o
-mesmo critério já usado no `"Tempo (s)"` do eixo X — não o título
-específico daquele painel. Fix: `_AXIS_LABELS` (dicionário `kind →
-grandeza`) em `chart.py`, ver `graficos/construcao-graficos.md`. **Lição
-para novos painéis/labels**: quando o pedido é "identificar o que é" um
-eixo/valor, checar se existe uma convenção já usada em outro eixo do
-mesmo gráfico antes de assumir que copiar o texto mais específico
-disponível resolve — geralmente não resolve.
-
-v1.5.0 (2026-07-28): faixa ONS §5.2.1 no painel de frequência (`add_hrect`/
-`add_hline`) — mantida. Verificação no browser pane revelou uma armadilha
-nova (não relacionada ao código): Plotly não carrega em preview `file://`
-(script CDN bloqueado, sem erro de console) — resolvido servindo `output/`
-via `python -m http.server` local. Registrado em "Armadilhas conhecidas" e
-no passo 5 do workflow.
-
-Também nesta sessão: um painel extra "Deslizamento de Fase PLL" (Δθ vs.
-relógio nominal de 60 Hz, a partir da pergunta "dá pra fazer um delta ângulo
-comparando essas frequências com 60Hz?") foi implementado com plano
-apresentado e aprovado — mas o usuário rejeitou o resultado ("Não era esse
-deslizamento de Fase PLL que eu pedi") e pediu para reverter. Reverted em
-`chart.py`/`loader.py`, doc e CHANGELOG. **Lição**: aprovação de um plano
-escrito não é garantia de que a interpretação bateu com o pedido — pedidos
-formulados como pergunta aberta ("dá pra fazer X comparando Y?") merecem
-uma repetição mais explícita do que vai ser mostrado (ex.: confirmar se é
-um valor acumulado/integrado ou outra coisa) antes de implementar, mesmo
-com plano aprovado.
+- [previa-standalone.md](previa-standalone.md): elemento novo de visual
+  indefinido (capítulo do palco, diagrama) prototipado num HTML do
+  scratchpad, com PNG por passo no Edge headless, antes de tocar em `src/`.
+- [historico.md](historico.md): versões v1.0.0 a v1.6.0 e a lição de cada
+  rodada. Versão nova ganha entrada lá, não aqui.
 
 Atualizar a tabela e as convenções conforme novas edições no dashboard
-revelarem passos, armadilhas ou arquivos que valha registrar — esta skill
-deve crescer com o uso, não ser escrita de uma vez.
+revelarem passos, armadilhas ou arquivos que valha registrar.

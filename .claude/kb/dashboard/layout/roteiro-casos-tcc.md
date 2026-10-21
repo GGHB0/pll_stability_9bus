@@ -122,6 +122,11 @@ Na mesma rodada:
 Conferido no Edge headless em 1920×1080: os 7 capítulos cabem na tela
 (`scrollHeight` = altura da janela) e não houve erro de JS.
 
+Desde 2026-10-21, o 1º capítulo é "Faltas destacadas" (`kind="mapa"`):
+o unifilar com os quatro pontos de falta, antes da Energização, e os
+demais passaram para 2 a 8. Design, passos e navegação em
+[[faltas-destacadas]].
+
 ## `goToChart` consertado junto
 
 A faixa de passos rolava até o painel com a mesma rotina dos cards clicáveis, que

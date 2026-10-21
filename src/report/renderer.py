@@ -241,9 +241,9 @@ class HTMLRenderer:
       <span class="spec-hint">seta → ou PageDown avança &nbsp;·&nbsp; clique num cartão para abrir o cenário</span>
     </div>
     <div class="tcc-nav">
-      <button class="rt-nav" onclick="tccGo(tccCap - 1)" title="Capítulo anterior (seta para a esquerda)">&lsaquo;</button>
+      <button class="rt-nav" onclick="tccStep(-1)" title="Capítulo anterior (seta para a esquerda)">&lsaquo;</button>
       <div class="tcc-pills">{tcc_pills}</div>
-      <button class="rt-nav" onclick="tccGo(tccCap + 1)" title="Próximo capítulo (seta para a direita ou PageDown)">&rsaquo;</button>
+      <button class="rt-nav" onclick="tccStep(1)" title="Próximo capítulo (seta para a direita ou PageDown)">&rsaquo;</button>
     </div>
     <div class="tcc-cap">
       <p class="tcc-ref" id="tcc-ref"></p>
@@ -256,6 +256,7 @@ class HTMLRenderer:
     </div>
     <div id="plot-tcc"></div>
     <div id="tcc-table"></div>
+    <div class="tcc-mapa" id="tcc-mapa"></div>
     <div class="tcc-cards" id="tcc-cards"></div>
   </div>
 
@@ -323,11 +324,12 @@ class HTMLRenderer:
   <div class="tcc-chips pres-chips" id="pres-chips"></div>
   <div class="pres-plot" id="pres-plot"></div>
   <div class="pres-table" id="pres-table" style="display:none"></div>
+  <div class="pres-mapa" id="pres-mapa" style="display:none"></div>
   <div class="tcc-cards pres-cards" id="pres-cards"></div>
   <div class="pres-nav">
-    <button class="rt-nav" onclick="presGo(tccCap - 1)" title="Capítulo anterior">&lsaquo;</button>
+    <button class="rt-nav" onclick="presStep(-1)" title="Capítulo anterior">&lsaquo;</button>
     <div class="pres-dots" id="pres-dots"></div>
-    <button class="rt-nav" onclick="presGo(tccCap + 1)" title="Próximo capítulo">&rsaquo;</button>
+    <button class="rt-nav" onclick="presStep(1)" title="Próximo capítulo">&rsaquo;</button>
   </div>
 </div>
 
@@ -2201,6 +2203,56 @@ body.pres-on { overflow: hidden }
 }
 .pres-dot.active { background: var(--accent); border-color: var(--accent); color: #fff }
 
+/* ── Capítulo "Faltas destacadas" (kind mapa): unifilar + cartão + régua ── */
+.mapa { display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 24px; align-items: center }
+.tcc-mapa .mapa { padding: 8px 0 4px }
+.tcc-mapa .mapa-svg svg { width: 100%; height: 470px; display: block }
+.pres-mapa { flex: 1; min-height: 0 }
+.pres-mapa .mapa { height: 100% }
+.pres-mapa .mapa-svg { height: 100%; min-height: 0; display: flex; flex-direction: column }
+.pres-mapa .mapa-svg svg { width: 100%; flex: 1; min-height: 0 }
+@media (max-width: 1100px) { .mapa { grid-template-columns: 1fr } }
+.mapa-hint { font-size: 12.5px; color: var(--muted); margin: 2px 0 0 }
+.mp-cond { stroke: #9ca3af; stroke-width: 2; fill: none }
+.mp-cond.on { stroke: var(--accent); stroke-width: 3.5 }
+.mp-bus { stroke: var(--text); stroke-width: 6; stroke-linecap: round }
+.mp-bus.on { stroke: var(--accent) }
+.mp-lbl { font-size: 14px; font-weight: 600; fill: var(--text) }
+.mp-fill { fill: var(--surface) }
+.mp-hot { cursor: pointer }
+.mp-hit { fill: transparent; stroke: none; pointer-events: all }
+.mp-hot:hover .mp-hit { fill: rgba(37,99,235,.08) }
+.mp-hot.cur .mp-hit { fill: rgba(37,99,235,.14) }
+.mp-raio, .mp-note { pointer-events: none }
+.mp-raio circle { fill: #fee2e2; stroke: #dc2626; stroke-width: 2 }
+.mp-raio path { fill: #dc2626 }
+.mp-card { border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; background: var(--surface) }
+.mp-tag {
+  display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px;
+  border-radius: 999px; margin-bottom: 8px; background: #e5e7eb; color: #374151;
+}
+.mp-tag.near { background: #fee2e2; color: #991b1b }
+.mp-tag.mid  { background: #fef3c7; color: #92400e }
+.mp-tag.far  { background: #dbeafe; color: #1e40af }
+.mp-h { font-size: 21px; font-weight: 800; margin: 0 0 6px }
+.mp-p { font-size: 16px; line-height: 1.45; margin: 0 0 8px; color: var(--text) }
+.mp-why { border-top: 1px solid var(--border); margin: 10px 0 0; padding-top: 10px; font-size: 14.5px; line-height: 1.4; color: var(--muted) }
+.mp-why b { color: var(--text) }
+.mp-facts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px }
+.mp-facts span { font-size: 12.5px; padding: 3px 9px; border-radius: 6px; border: 1px solid var(--border); color: var(--text) }
+.mp-facts span.off { color: var(--muted); border-style: dashed; text-decoration: line-through; opacity: .7 }
+.mp-open {
+  margin-top: 12px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+  color: var(--accent); background: none; border: 1.5px solid var(--accent); border-radius: 8px; padding: 6px 12px;
+}
+.mp-open:hover { background: rgba(37,99,235,.08) }
+.mp-ruler { width: 100%; margin-top: 12px; display: block }
+.mp-ruler text { fill: var(--muted); font-size: 12px }
+.mp-pin { cursor: pointer }
+.mp-pin circle { fill: var(--surface); stroke: var(--text); stroke-width: 2.5 }
+.mp-pin text { fill: var(--text); font-weight: 700; font-size: 12.5px }
+.mp-step { font-size: 12.5px; color: var(--muted); margin: 6px 0 0 }
+
 /* ── Aba Análise TCC ── */
 .tab-btn.tab-tcc { font-weight: 700 }
 body.tcc-mode #zoom-fault { display: none }
@@ -2534,6 +2586,136 @@ function _tccTableHtml() {
     + head + "</tr></thead><tbody>" + rows + "</tbody></table></div>";
 }
 
+// ── Capítulo kind "mapa" (Faltas destacadas): unifilar redesenhado do
+// ieee9bus_unifilar.svg, sem R/X/B nem cargas; a Linha 8-9 em dois circuitos ──
+var mapaPasso = 0;
+var MAPA_RAIO = { b7: [265, 222], l78: [368, 178], l89: [568, 187], b6: [665, 392] };
+
+function _mapaSvg(cap, on, cur) {
+  var idx = {};
+  cap.passos.forEach(function(p, i) { if (p.id) idx[p.id] = i; });
+  var c = function(id) { return on[id] ? " on" : ""; };
+  var hot = function(id) {
+    return "<g class=\"mp-hot" + (cur === id ? " cur" : "") + "\" onclick=\"_mapaGo(" + idx[id] + ")\">";
+  };
+  var cond = function(pts) { return "<polyline class=\"mp-cond\" points=\"" + pts + "\"/>"; };
+  var trafo = function(x1, y1, x2, y2, r) {
+    return "<circle cx=\"" + x1 + "\" cy=\"" + y1 + "\" r=\"" + r + "\" class=\"mp-fill\" stroke=\"#1e40af\" stroke-width=\"2.2\"/>"
+         + "<circle cx=\"" + x2 + "\" cy=\"" + y2 + "\" r=\"" + r + "\" class=\"mp-fill\" stroke=\"#1e40af\" stroke-width=\"2.2\"/>";
+  };
+  var gen = function(x, y, r) {
+    return "<circle cx=\"" + x + "\" cy=\"" + y + "\" r=\"" + r + "\" class=\"mp-fill\" stroke=\"#166534\" stroke-width=\"2.5\"/>";
+  };
+  var s = "<svg viewBox=\"20 90 860 590\" preserveAspectRatio=\"xMidYMid meet\">"
+    // usina e Barra 2
+    + "<rect x=\"30\" y=\"140\" width=\"66\" height=\"78\" rx=\"5\" fill=\"#fffbeb\" stroke=\"#b45309\" stroke-width=\"2\"/>"
+    + "<text x=\"63\" y=\"176\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#b45309\">UFV</text>"
+    + "<text x=\"63\" y=\"191\" text-anchor=\"middle\" font-size=\"10.5\" fill=\"#78350f\">100 MW</text>"
+    + "<text x=\"63\" y=\"205\" text-anchor=\"middle\" font-size=\"10.5\" fill=\"#b45309\">SRF-PLL</text>"
+    + cond("96,178 265,178")
+    + "<line class=\"mp-bus\" style=\"stroke:#b45309\" x1=\"109\" y1=\"152\" x2=\"109\" y2=\"204\"/>"
+    + "<text x=\"109\" y=\"139\" text-anchor=\"middle\" class=\"mp-lbl\" style=\"fill:#b45309\">2</text>"
+    + trafo(174, 178, 200, 178, 13)
+    + "<text x=\"187\" y=\"212\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"600\" fill=\"#1e40af\">T2</text>"
+    // anel inferior, G1 e G3
+    + cond("265,200 300,200 300,392") + cond("668,200 633,200 633,392")
+    + cond("336,392 336,498 412,498 412,517") + cond("598,392 598,498 524,498 524,517")
+    + cond("468,517 468,538") + trafo(468, 550, 468, 572, 12) + cond("468,584 468,620")
+    + "<line class=\"mp-bus\" style=\"stroke:#166534\" x1=\"440\" y1=\"604\" x2=\"496\" y2=\"604\"/>"
+    + gen(468, 638, 20) + "<text x=\"500\" y=\"643\" class=\"mp-lbl\" style=\"fill:#166534\">G1</text>"
+    + cond("668,178 815,178") + trafo(719, 178, 745, 178, 13)
+    + gen(840, 178, 22) + "<text x=\"840\" y=\"230\" text-anchor=\"middle\" class=\"mp-lbl\" style=\"fill:#166534\">G3</text>"
+    // barras sem falta
+    + "<line class=\"mp-bus\" x1=\"178\" y1=\"392\" x2=\"362\" y2=\"392\"/><text x=\"185\" y=\"378\" class=\"mp-lbl\">5</text>"
+    + "<line class=\"mp-bus\" x1=\"352\" y1=\"517\" x2=\"584\" y2=\"517\"/><text x=\"468\" y=\"503\" text-anchor=\"middle\" class=\"mp-lbl\">4</text>"
+    + "<line class=\"mp-bus\" x1=\"468\" y1=\"128\" x2=\"468\" y2=\"218\"/><text x=\"468\" y=\"113\" text-anchor=\"middle\" class=\"mp-lbl\">8</text>"
+    + "<line class=\"mp-bus\" x1=\"668\" y1=\"142\" x2=\"668\" y2=\"258\"/><text x=\"668\" y=\"127\" text-anchor=\"middle\" class=\"mp-lbl\">9</text>"
+    // pontos de falta (clicáveis)
+    + hot("l78") + "<rect class=\"mp-hit\" x=\"272\" y=\"150\" width=\"190\" height=\"56\" rx=\"6\"/>"
+    + "<line class=\"mp-cond" + c("l78") + "\" x1=\"265\" y1=\"178\" x2=\"468\" y2=\"178\"/></g>"
+    + hot("l89") + "<rect class=\"mp-hit\" x=\"474\" y=\"150\" width=\"188\" height=\"56\" rx=\"6\"/>"
+    + "<line class=\"mp-cond" + c("l89") + "\" x1=\"468\" y1=\"171\" x2=\"668\" y2=\"171\"/>"
+    + "<line class=\"mp-cond" + c("l89") + "\" x1=\"468\" y1=\"187\" x2=\"668\" y2=\"187\"/>"
+    + cond("468,171 468,187") + cond("668,171 668,187") + "</g>"
+    + hot("b7") + "<rect class=\"mp-hit\" x=\"248\" y=\"118\" width=\"34\" height=\"150\" rx=\"6\"/>"
+    + "<line class=\"mp-bus" + c("b7") + "\" x1=\"265\" y1=\"142\" x2=\"265\" y2=\"258\"/>"
+    + "<text x=\"265\" y=\"127\" text-anchor=\"middle\" class=\"mp-lbl\">7</text></g>"
+    + hot("b6") + "<rect class=\"mp-hit\" x=\"565\" y=\"364\" width=\"200\" height=\"40\" rx=\"6\"/>"
+    + "<line class=\"mp-bus" + c("b6") + "\" x1=\"572\" y1=\"392\" x2=\"758\" y2=\"392\"/>"
+    + "<text x=\"751\" y=\"378\" text-anchor=\"end\" class=\"mp-lbl\">6</text></g>";
+  Object.keys(MAPA_RAIO).forEach(function(id) {
+    if (!on[id]) return;
+    var p = MAPA_RAIO[id];
+    s += "<g class=\"mp-raio\" transform=\"translate(" + p[0] + "," + p[1] + ")\"><circle r=\"20\"/>"
+       + "<path d=\"M3,-13 L-7,2 L-1,2 L-4,13 L7,-4 L1,-4z\"/></g>";
+  });
+  if (on.l89) s += "<g class=\"mp-note\"><text x=\"568\" y=\"152\" text-anchor=\"middle\" font-size=\"13\" fill=\"#6b7280\">circuito sem falta</text>"
+    + "<text x=\"568\" y=\"228\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#dc2626\">circuito com falta</text></g>";
+  if (on.b7) s += "<text class=\"mp-note\" x=\"200\" y=\"290\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"700\" fill=\"#dc2626\">mais perto da usina</text>";
+  if (on.b6) s += "<text class=\"mp-note\" x=\"665\" y=\"432\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"700\" style=\"fill:var(--accent)\">mais longe da usina</text>";
+  return s + "</svg>";
+}
+
+// gid: prefixo do gradiente, para a aba e o palco não repetirem o id
+function _mapaHtml(cap, gid) {
+  var p = cap.passos[mapaPasso], on = {};
+  cap.passos.forEach(function(q) { if (q.id && (p.resumo || q.id === p.id)) on[q.id] = true; });
+  var side = "<div class=\"mp-card\"><span class=\"mp-tag " + (p.tom || "") + "\">" + p.tag + "</span>"
+    + "<p class=\"mp-h\">" + p.titulo + "</p>"
+    + p.texto.map(function(t) { return "<p class=\"mp-p\">" + t + "</p>"; }).join("")
+    + "<p class=\"mp-why\">" + p.papel + "</p>";
+  if (p.faltas) {
+    side += "<div class=\"mp-facts\">" + ["trifásica", "bifásica", "monofásica"].map(function(f) {
+      return "<span" + (p.faltas.indexOf(f) === -1 ? " class=\"off\"" : "") + ">" + f + "</span>";
+    }).join("") + "<span>sintonia nominal</span><span" + (p.inadequada ? "" : " class=\"off\"")
+      + ">sintonia inadequada</span></div>";
+  }
+  if (p.cenario && SCENARIOS[p.cenario]) {
+    side += "<button class=\"mp-open\" onclick=\"_openScenario('" + p.cenario + "')\">Abrir no painel &rarr;</button>";
+  }
+  side += "</div>";
+  var pins = cap.passos.map(function(q, k) {
+    if (!q.id) return "";
+    var cx = 10 + q.pos * 360, cur = (q.id === p.id);
+    return "<g class=\"mp-pin\" onclick=\"_mapaGo(" + k + ")\" opacity=\"" + (on[q.id] ? 1 : 0.3) + "\">"
+      + "<circle cx=\"" + cx + "\" cy=\"30\" r=\"" + (cur ? 10 : 8) + "\"/>"
+      + "<text x=\"" + cx + "\" y=\"60\" text-anchor=\"middle\">" + q.rotulo + "</text></g>";
+  }).join("");
+  side += "<svg class=\"mp-ruler\" viewBox=\"0 0 380 74\"><defs><linearGradient id=\"" + gid + "-gr\" x1=\"0\" x2=\"1\">"
+    + "<stop offset=\"0\" stop-color=\"#dc2626\"/><stop offset=\"1\" stop-color=\"#2563eb\"/></linearGradient></defs>"
+    + "<text x=\"10\" y=\"14\">afundamento mais profundo</text>"
+    + "<text x=\"370\" y=\"14\" text-anchor=\"end\">mais raso</text>"
+    + "<rect x=\"10\" y=\"26\" width=\"360\" height=\"8\" rx=\"4\" fill=\"url(#" + gid + "-gr)\"/>" + pins + "</svg>"
+    + "<p class=\"mp-step\">passo " + (mapaPasso + 1) + " de " + cap.passos.length + " &nbsp;·&nbsp; seta &rarr; avança</p>";
+  return "<div class=\"mapa\"><div class=\"mapa-svg\">" + _mapaSvg(cap, on, p.id)
+    + "<p class=\"mapa-hint\">Clique numa barra ou linha para ver o ponto de falta</p></div>"
+    + "<div class=\"mapa-side\">" + side + "</div></div>";
+}
+
+function _mapaGo(n) {
+  var cap = CAPS[tccCap];
+  if (cap.kind !== "mapa" || n < 0 || n >= cap.passos.length) return;
+  mapaPasso = n;
+  _tccRefresh();
+}
+
+// seta dentro do capítulo mapa: anda um passo; true se consumiu a tecla
+function _mapaStep(d) {
+  var cap = CAPS[tccCap], n = mapaPasso + d;
+  if (cap.kind !== "mapa" || n < 0 || n >= cap.passos.length) return false;
+  _mapaGo(n);
+  return true;
+}
+
+// ao entrar num capítulo mapa: passo 1, ou o último se veio pela seta ←
+function _mapaEnter(i, back) {
+  if (CAPS[i].kind === "mapa" && i !== tccCap) mapaPasso = back ? CAPS[i].passos.length - 1 : 0;
+}
+
+// seta (teclado ou botões ‹ ›): passo do mapa ou capítulo vizinho
+function tccStep(d) { if (!_mapaStep(d)) tccGo(tccCap + d, d < 0); }
+function presStep(d) { if (!_mapaStep(d)) presGo(tccCap + d, d < 0); }
+
 function _tccRefresh() { if (presOn) _renderPres(); else _renderTcc(); }
 
 function _tccSinal(s) { _tccSt(CAPS[tccCap]).sinal = s; _tccRefresh(); }
@@ -2563,8 +2745,9 @@ function _scrollToTabs() {
   }, 60);
 }
 
-function tccGo(i) {
+function tccGo(i, back) {
   if (i < 0 || i >= CAPS.length) return;
+  _mapaEnter(i, back);
   tccCap = i;
   if (activeTab !== "tcc") switchTab("tcc"); else _renderTcc();
   _scrollToTabs();
@@ -2597,6 +2780,12 @@ function _renderTcc() {
 
   var plotEl = gd.tcc, tbl = document.getElementById("tcc-table");
   var cardsEl = document.getElementById("tcc-cards");
+  var mapaEl = document.getElementById("tcc-mapa");
+  mapaEl.innerHTML = (cap.kind === "mapa") ? _mapaHtml(cap, "tcc") : "";
+  if (cap.kind === "mapa") {
+    plotEl.style.display = "none"; tbl.innerHTML = ""; cardsEl.innerHTML = "";
+    return;
+  }
   if (cap.kind === "tabela") {
     plotEl.style.display = "none"; cardsEl.innerHTML = "";
     tbl.innerHTML = _tccTableHtml();
@@ -2637,8 +2826,9 @@ function presToggle() {
   }
 }
 
-function presGo(i) {
+function presGo(i, back) {
   if (i < 0 || i >= CAPS.length) return;
+  _mapaEnter(i, back);
   tccCap = i;
   _renderPres();
 }
@@ -2657,6 +2847,15 @@ function _renderPres() {
   var plotEl = document.getElementById("pres-plot");
   var tbl = document.getElementById("pres-table");
   var cardsEl = document.getElementById("pres-cards");
+  var mapaEl = document.getElementById("pres-mapa");
+  if (cap.kind === "mapa") {
+    Plotly.purge(plotEl);
+    plotEl.style.display = "none"; cardsEl.innerHTML = "";
+    tbl.style.display = "none"; tbl.innerHTML = "";
+    mapaEl.style.display = ""; mapaEl.innerHTML = _mapaHtml(cap, "pres");
+    return;
+  }
+  mapaEl.style.display = "none"; mapaEl.innerHTML = "";
   if (cap.kind === "tabela") {
     Plotly.purge(plotEl);
     plotEl.style.display = "none"; cardsEl.innerHTML = "";
@@ -2689,14 +2888,15 @@ document.addEventListener("keydown", function(e) {
   if (tg === "SELECT" || tg === "INPUT" || tg === "TEXTAREA") return;
   var next = (e.key === "ArrowRight" || e.key === "PageDown");
   var prev = (e.key === "ArrowLeft" || e.key === "PageUp");
+  // no capítulo mapa, a seta anda os passos antes de trocar de capítulo
   if (presOn) {
-    if (next) { e.preventDefault(); presGo(tccCap + 1); }
-    else if (prev) { e.preventDefault(); presGo(tccCap - 1); }
+    if (next) { e.preventDefault(); presStep(1); }
+    else if (prev) { e.preventDefault(); presStep(-1); }
     else if (e.key === "Escape") { presToggle(); }
     return;
   }
   if (activeTab !== "tcc") return;
-  if (next) { e.preventDefault(); tccGo(tccCap + 1); }
-  else if (prev) { e.preventDefault(); tccGo(tccCap - 1); }
+  if (next) { e.preventDefault(); tccStep(1); }
+  else if (prev) { e.preventDefault(); tccStep(-1); }
 });
 """

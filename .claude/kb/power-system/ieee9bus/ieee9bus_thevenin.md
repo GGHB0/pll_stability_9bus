@@ -79,6 +79,26 @@ a rede e mais estável o PLL. Contingências que aumentam Z_th (perda de gerador
 abertura de linha) degradam a estabilidade do PLL — esse é o fenômeno central
 investigado no TCC.
 
+## Severidade da falta vista da Barra 2
+
+Usada na régua do capítulo [[faltas-destacadas]] (2026-10-21). Tensão
+residual na Barra 2 com falta franca no ponto k, pelo Zbarra acima **sem a
+UFV como fonte** (só G1 e G3): `|1 − Z2k/Zkk|`. Linha: nó extra no meio.
+
+| Ponto | V residual na Barra 2 |
+|---|---|
+| Barra 7 | 0,00 pu |
+| Linha 7-8 (meio) | 0,06 pu |
+| Linha 8-9 (meio de um circuito, dupla) | 0,19 a 0,27 pu |
+| Barra 6 | 0,36 pu |
+| Barra 8 (referência) | 0,11 pu |
+
+A faixa da 8-9 depende de como a linha dupla é modelada: 0,19 se cada
+circuito tem o Z da tabela, 0,27 se cada um tem 2Z (paralelo = Z). O
+notebook guarda um Z só para a 8-9. A ordem B7 < L7-8 < L8-9 < B6 vale nos
+dois casos. É uma estimativa de ordem, não um resultado do TCC: a simulação
+inclui a corrente da UFV e a impedância de falta.
+
 ## Relacionados
 
 - [[ieee9bus-line-params]] — parâmetros de linha que alimentam o cálculo

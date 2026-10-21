@@ -57,7 +57,8 @@ O canônico fica aberto no PowerPoint e o python-pptx não o lê; o
 Diferença a mais → investigar antes de dizer "entregue".
 
 - "ABORTADO: PowerPoint nao fechou": logo depois do finalize com `-Pdf`
-  a instância dele leva mais de 30 s para sair (2 vezes em 2026-10-19);
+  a instância dele leva mais de 30 s para sair (2 vezes em 2026-10-19; de
+  novo em 2026-10-20 e 10-21, sempre sem processo, e a 2ª tentativa passou);
   a espera passou a 90 s. Se ainda abortar: `Get-Process POWERPNT`; sem
   processo, rodar a entrega de novo (o canônico não foi tocado); com
   processo, é diálogo aberto: avisar o Victor.
@@ -69,6 +70,9 @@ Diferença a mais → investigar antes de dizer "entregue".
 - **No staging de uma edição nova**, MD5 diferente do da última entrega:
   `diff_slides.py` do `final.pptx` anterior × `deck.pptx` novo. Zero
   diferença = o PowerPoint só regravou ao fechar (2026-10-19); seguir.
+  Também conta como "só regravou": diferença apenas nos "Slide Number
+  Placeholder" e em formas de grupo relidas sem texto novo. Acontece depois
+  de **toda** entrega, porque o `entrega.ps1` reabre o deck (2026-10-21).
 - **Antes da entrega** (o Victor ou o Bruno salvaram): refazer o staging e
   rodar o `gen_*.py` de novo sobre o deck atual. Sync do OneDrive chega em
   rajadas: esperar o MD5 parar de mudar.

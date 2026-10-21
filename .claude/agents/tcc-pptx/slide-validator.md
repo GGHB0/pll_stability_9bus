@@ -36,7 +36,12 @@ Tabelas 4.1, 5.1-5.3). Mesmo valor, mesmo arredondamento, mesma unidade.
 Refazer o que for refazível com python (ωn = √Ki, ξ = Kp/(2ωn), ts =
 4,6/(ξωn), contagem de cenários). Número ou afirmação no deck (tela ou
 notas) que não existe no TCC → BLOQUEIA, mesmo que o KB ou o modelo
-confirmem: a regra do deck é só o que está no TCC entregue.
+confirmem: a regra do deck é só o que está no TCC entregue. **Antes de
+bloquear, ler as exceções aprovadas** em `.claude/kb/tcc-pptx/pendencias.md`
+(exceções de método e número aprovados pelo Victor, por slide): afirmação
+coberta por uma delas, ou que só remete a um slide que já tem a exceção
+(ex.: o slide do ONS lembrando a referência fixa do slide 12), vai como OK
+citando a exceção, não como BLOQUEIA (2026-10-21).
 
 ### 2. Legendas e figuras
 `check_pptx.py <deck> --tcc <docx>` e reportar FALHAs. Depois, para cada

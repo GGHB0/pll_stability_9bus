@@ -10,6 +10,13 @@ Continuação de `SKILL.md`. Ordem: ambiente, python-pptx, PowerPoint, conteúdo
   quebra `[...]`). `sys.stdout.reconfigure(encoding="utf-8")` (ou
   `pptx_util.utf8()`): o console é cp1252 e morre em `→`, `ξ`, `ω`.
 - `python -I` ignora `PYTHONIOENCODING`: o reconfigure é o que resolve.
+- **Não gerar trecho de `gen_*.py` por heredoc + `str.replace` em Python**:
+  caminho Windows e `
+` dentro do texto injetado viram caractere de
+  controle (`` = bell em `...9busssets`, `	` = tab em `...ons	cc_fig`,
+  `
+` quebra a string das notas). Aconteceu 4 vezes em 2026-10-20/21.
+  Usar Write/Edit no script, ou caminhos com `/`.
 
 ## python-pptx
 

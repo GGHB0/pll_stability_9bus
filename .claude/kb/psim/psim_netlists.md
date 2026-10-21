@@ -50,7 +50,12 @@ SRF-PLL e SPWM. `.TIME`: passo 20 µs, total 1 s.
   [[pll-notch-implementation]].
 - `DQ_ALPHABETA` → `ALPHABETA_ABC` — referências `md`/`mq` → abc.
 - Referências `Idref`/`Iqref` vêm do subcircuito `Correnteref`
-  (P/Q → corrente via `DIVD`).
+  (P/Q → corrente via `DIVD`): `Idref = Pref/Vd` e `Iqref = Qref/Vd`, com
+  Vd do Park do PLL. `Pref` = degrau `VSTEP2` de 0 a −100·10⁶ W em
+  t = 0,035 s, ×1e-8 (`P28`) = **1 pu** na base de 100 MVA (o sinal
+  negativo é a convenção de medição do PSIM); `Qref` = constante 0. Era a
+  referência fixa de antes da lógica do ONS do Simulink ([[ons-2-11]]):
+  é a forma em pu de id,ref = 2P/(3Vd) de [[vsc-reference]].
 
 **Medição:**
 - `VSEN1…3` (tensões PCC), `ISEN3` (correntes), `ABC2DQO` (corrente do

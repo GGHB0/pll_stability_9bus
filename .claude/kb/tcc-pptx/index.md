@@ -24,8 +24,9 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 - [dashboard/](../dashboard/index.md) — saem 3, chegam 1
 - [events/](../events/index.md) — saem 1, chegam 0
 - [pll/](../pll/index.md) — saem 1, chegam 0
-- [psim/](../psim/index.md) — saem 2, chegam 0
+- [psim/](../psim/index.md) — saem 4, chegam 0
 - [simulation/](../simulation/index.md) — saem 2, chegam 0
+- [standards/](../standards/index.md) — saem 0, chegam 1
 - [tcc-word/](../tcc-word/index.md) — saem 3, chegam 0
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)

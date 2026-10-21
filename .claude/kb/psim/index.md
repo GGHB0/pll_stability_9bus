@@ -18,11 +18,12 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 
 ## Pastas relacionadas
 
-- [inverter/](../inverter/index.md) — saem 3, chegam 0
+- [inverter/](../inverter/index.md) — saem 4, chegam 0
 - [pll/](../pll/index.md) — saem 4, chegam 1
 - [power-system/](../power-system/index.md) — saem 1, chegam 0
 - [simulation/](../simulation/index.md) — saem 4, chegam 1
-- [tcc-pptx/](../tcc-pptx/index.md) — saem 0, chegam 2
+- [standards/](../standards/index.md) — saem 1, chegam 0
+- [tcc-pptx/](../tcc-pptx/index.md) — saem 0, chegam 4
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)
 <!-- kb-links:end -->

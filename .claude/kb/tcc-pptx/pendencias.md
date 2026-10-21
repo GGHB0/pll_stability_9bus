@@ -13,6 +13,40 @@ aliases: [defesa-pendencias]
 
 ## Em aberto
 
+- **Slide 12 (inversor) dividido em três (2026-10-20; 12a e 12b entregues como slides 12 e 13, 12c pendente)**: 12a
+  "Referência de corrente" (2ª prévia: diagrama de blocos da 1ª versão no
+  PSIM, `assets/diagrams/referencia_corrente_psim.svg`, Pref 1 pu e Qref = 0
+  ÷ vd do SRF-PLL, malha e PWM tracejados; embaixo a Eq. 3.9 invertida e
+  "Por que o PLL importa aqui?". A 1ª prévia, só com a conta, foi recusada:
+  o Victor quer mostrar como foi feito, não só a equação; 2ª prévia
+  **aprovada** em 2026-10-20; **exceção aprovada** pelo Victor: "t = 35 ms" discreto sob o degrau
+  do diagrama e na fala, único número fora do TCC no slide), 12b
+  "Controle de corrente" (diagrama da malha dq, PWM 5 kHz, LCL, PI com
+  ξ 0,707 e ωn = 4√2·fg → Kp = 8·fg·Lest, Ki = 32·fg²·Lest; sem Kp/Ki
+  numéricos; Fig. 4.2 sai; 1ª prévia em 2026-10-20: Fig. 3.1 do TCC à
+  esquerda, 3 cartões PWM/LCL/PI à direita, "Por que dois PIs?" embaixo;
+  feito sobre o slide 12 antigo; entregue; **equações do PI a revisar**,
+  o Victor não gostou da forma atual), 12c "Suporte de reativos do ONS" (Fig. 2.2 +
+  como aplicamos: iq pela curva, saturado em Imax, id = min(id,nom,
+  √(Imax² − iq²))). A fórmula do 12c é **exceção de método** (não está no
+  TCC; inclinações do código fora). Ordem = trabalho real: PSIM com
+  referência fixa ([[psim-netlists]]) → malha de corrente → ONS. Staging e
+  script em `C:\Temp\defesa_inversor\gen_inversor.py` (um grupo `g_12a`,
+  `g_12b`, `g_12c` por slide). Com o 12c, os slides seguintes descem mais 1.
+  **TCC se contradiz**: §3.1.4 diz que não há desacoplamento, §3.5 diz que
+  há; o 12b não afirma nenhum dos dois, e a explicação vai para o material
+  de perguntas.
+  **12c virou três slides (2026-10-21, staging `C:\Temp\defesa_ons\gen_ons.py`,
+  entregue como slides 14-17, com o "Sistema completo" da Fig. 4.2 no fim)**: 12c "Referência pelo ONS" (`referencia_corrente_ons.svg`,
+  bloco do Submódulo 2.10 no esqueleto do slide 12, encaixe da Fig. 4.2;
+  aprovado), 12d "Dentro do Submódulo 2.10" (`ons_logica_defesa.svg`: rampa +
+  círculo de raio I_max; **aprovado, "não tirar"**; a 1ª versão em caixas foi
+  recusada por pouco clara) e 12e "Lógica em blocos" (`ons_fluxo_defesa.svg`,
+  fluxograma do código, para o Victor explicar a lógica). Rampa
+  (0,85 − V)/0,35 é do TCC (§5.2); a prioridade/círculo é exceção de método.
+  Equações do 12c e do 13 a revisar juntas. Deck 26 → 30, fala 29,9 min:
+  **rodada de tempo pendente** (slides 5, 6, 7, 9 sem fala; 10 com 384 palavras).
+
 - **Reestruturação da MODELAGEM (decidida em 2026-10-18, Alternativa 1)**:
   5 slides na ordem do trabalho real (dq → 9 barras/Thévenin → bancada do
   PLL entre duas fontes ideais → ganhos → inversor em etapas PWM/LCL/100 MW),

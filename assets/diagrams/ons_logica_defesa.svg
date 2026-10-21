@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <!-- Dentro do Submódulo 2.10 (função ONS_2_11), versão de projeção. Dois painéis
+       com a mesma escala de i_q (170 px = 1 pu, eixo em y = 250):
+       1) rampa do TCC (§5.2): i_q = (0,85 − V)/0,35, limitada a I_max (ponto de
+          exemplo sem número: V = 0,65 → i_q = 0,571);
+       2) círculo de raio I_max no plano dq: i_d,ref = min(i_d,nom, √(I_max² − i_q,ref²)).
+       Sobretensão (absorção acima de 1,1 pu) só citada. Sem inclinações do código.
+       Deck da defesa, slide 12d (2026-10-21). -->
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0B132B"/>
+    </marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F97316"/>
+    </marker>
+  </defs>
+  <rect width="900" height="300" fill="#ffffff"/>
+
+  <g font-size="16" fill="#0B132B">
+    <!-- painel 1: a tensão define o reativo -->
+    <text x="225" y="26" text-anchor="middle" font-weight="700">1. A tensão define o reativo</text>
+    <line x1="70" y1="250" x2="420" y2="250" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <line x1="70" y1="250" x2="70" y2="52" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="426" y="256" font-style="italic">V</text>
+    <text x="62" y="60" font-style="italic" text-anchor="end">i<tspan baseline-shift="sub" font-size="75%">q</tspan></text>
+    <rect x="297" y="70" width="66" height="180" fill="#fef9c3" opacity="0.8"/>
+    <text x="330" y="100" text-anchor="middle" font-size="13" fill="#854d0e">faixa</text>
+    <text x="330" y="116" text-anchor="middle" font-size="13" fill="#854d0e">normal</text>
+    <polyline points="70,80 203,80 297,250 363,250" fill="none" stroke="#1d4ed8" stroke-width="3"/>
+    <line x1="66" y1="80" x2="74" y2="80" stroke="#0B132B" stroke-width="1.5"/>
+    <text x="62" y="85" font-style="italic" text-anchor="end">I<tspan baseline-shift="sub" font-size="75%">max</tspan></text>
+    <line x1="203" y1="246" x2="203" y2="254" stroke="#0B132B" stroke-width="1.5"/>
+    <text x="203" y="272" text-anchor="middle" font-size="14">0,5</text>
+    <text x="297" y="272" text-anchor="middle" font-size="14">0,85</text>
+    <text x="363" y="272" text-anchor="middle" font-size="14">1,1</text>
+    <text x="140" y="72" text-anchor="middle" font-size="13" fill="#475569">limite</text>
+    <text x="234" y="205" font-size="14" text-anchor="end" fill="#1d4ed8">(0,85 − V) / 0,35</text>
+    <!-- ponto de exemplo -->
+    <line x1="243" y1="250" x2="243" y2="156" stroke="#64748B" stroke-width="1.4" stroke-dasharray="4,3"/>
+    <text x="243" y="290" text-anchor="middle" font-size="13" fill="#64748B">V medida</text>
+    <circle cx="243" cy="153" r="5.5" fill="#F97316"/>
+
+    <!-- a mesma altura de i_q passa para o painel 2 -->
+    <line x1="249" y1="153" x2="656" y2="153" stroke="#F97316" stroke-width="1.8" stroke-dasharray="6,4"/>
+    <text x="470" y="138" text-anchor="middle" font-size="14" font-weight="700" fill="#F97316">i<tspan baseline-shift="sub" font-size="75%">q,ref</tspan> primeiro</text>
+
+    <!-- painel 2: o ativo fica com o que sobra -->
+    <text x="680" y="26" text-anchor="middle" font-weight="700">2. O ativo fica com o que sobra</text>
+    <line x1="520" y1="250" x2="770" y2="250" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <line x1="520" y1="250" x2="520" y2="52" stroke="#0B132B" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="772" y="272" font-style="italic" text-anchor="end">i<tspan baseline-shift="sub" font-size="75%">d</tspan></text>
+    <text x="512" y="60" font-style="italic" text-anchor="end">i<tspan baseline-shift="sub" font-size="75%">q</tspan></text>
+    <path d="M 520 250 L 690 250 A 170 170 0 0 0 520 80 Z" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2.5"/>
+    <line x1="520" y1="250" x2="690" y2="250" stroke="#1d4ed8" stroke-width="0"/>
+    <text x="676" y="112" font-size="15" fill="#1d4ed8">raio <tspan font-style="italic">I<tspan baseline-shift="sub" font-size="75%">max</tspan></tspan></text>
+    <!-- componentes -->
+    <line x1="520" y1="250" x2="520" y2="153" stroke="#F97316" stroke-width="5"/>
+    <line x1="520" y1="250" x2="660" y2="250" stroke="#166534" stroke-width="5"/>
+    <line x1="660" y1="153" x2="660" y2="250" stroke="#64748B" stroke-width="1.4" stroke-dasharray="4,3"/>
+    <line x1="520" y1="250" x2="656" y2="156" stroke="#0B132B" stroke-width="2" marker-end="url(#arr)"/>
+    <circle cx="660" cy="153" r="5.5" fill="#F97316"/>
+    <text x="590" y="280" text-anchor="middle" font-style="italic" font-weight="700" fill="#166534">i<tspan baseline-shift="sub" font-size="75%">d,ref</tspan></text>
+    <text x="702" y="198" font-size="14" fill="#166534">o que cabe</text>
+    <text x="702" y="216" font-size="14" fill="#166534">no círculo,</text>
+    <text x="702" y="234" font-size="14" fill="#166534">até <tspan font-style="italic">i<tspan baseline-shift="sub" font-size="75%">d,nom</tspan></tspan></text>
+  </g>
+</svg>

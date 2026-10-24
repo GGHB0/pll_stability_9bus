@@ -9,7 +9,7 @@ AVISO (o principal decide; confirmar no render):
   - texto que provavelmente não cabe na caixa (estimativa por caracteres)
   - corpo de texto < 11 pt (ilegível projetado)
   - imagem abaixo de 150 px/in na escala exibida (borra no projetor)
-  - fonte explícita fora de Arial/Calibri (design.md)
+  - fonte explícita fora de Arial/Calibri/Cambria Math (design.md)
   - travessão "—" em slide ou nota; identificador de código (BAD_PLL, params.m)
   - slide sem notas
 A estimativa de overflow não substitui o render: render.ps1 e ler os PNGs.
@@ -27,7 +27,7 @@ ap.add_argument("--tcc")
 ap.add_argument("--slides")
 a = ap.parse_args()
 
-FONTES_OK = {"Arial", "Calibri", "+mj-lt", "+mn-lt"}
+FONTES_OK = {"Arial", "Calibri", "Cambria Math", "+mj-lt", "+mn-lt"}  # Cambria Math: equação em destaque
 CODIGO = re.compile(r"\b(BAD_PLL|FAULT_TYPE|params\.m|logsout|[A-Z]{2,}_[A-Z_]{2,})\b")
 REF_TCC = re.compile(r"\b(Figura|Gráfico|Tabela|Quadro)s?\s+(\d+\.\d+)(?:\s*(?:,|e)\s*(\d+\.\d+))*")
 

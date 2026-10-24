@@ -77,6 +77,15 @@ O laranja é o único destaque: no máximo 1 ou 2 elementos por slide.
   notebook da defesa. Fonte explícita fora disso é aviso do
   `check_pptx.py`. "Aptos" aparece no PowerPoint por padrão de tabela; não
   introduzir.
+- **Equações** (padrão de 2026-10-24, notação do TCC: K<sub>pPLL</sub>,
+  K<sub>iPLL</sub>, ω<sub>n</sub>, v<sub>q</sub>, θ<sub>PLL</sub>; nunca "Kp<sub>PLL</sub>"):
+  - *Em destaque* (linha própria): **Cambria Math 20 pt** `1E3A8A`,
+    centralizada; letras em itálico, números, operadores, rótulos de
+    subscrito (PLL, ref, est) e o "e" do português retos.
+  - *No texto*: fonte e cor do texto em volta, sem itálico.
+  - Sempre subscrito/sobrescrito de verdade (`baseline`), nunca "vq" corrido
+    nem o "²" do Unicode. Número grande de cartão de destaque (slide 11)
+    segue a regra do cartão, não a de equação.
 - Título 28 pt negrito `tx1`. Número de cartão de destaque 36 pt negrito
   (`accent1` ou `accent2`). Título de cartão 16-18 pt negrito `accent1`.
   Corpo 14 pt. Legenda de figura 11 pt `accent5`. Nada abaixo de 11 pt.

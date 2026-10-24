@@ -10,6 +10,18 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-24: padronização das equações, slides 7, 10-14, 23-24 (entregue)
+
+- Só runs de texto, nenhuma caixa mexida. Destaque (7, 12, 13, 14): Cambria
+  Math com letras em itálico e números/rótulos retos, centralizado (o 7 era à
+  esquerda). Texto: K<sub>pPLL</sub>/K<sub>iPLL</sub> do TCC (10, tabela do 11, 23) e
+  subscrito/sobrescrito onde faltava (12-14, 23-24). Regra em `design.md`.
+- 95f02b8b2752954bba02f9cd33e7c27d → a018e6d77e7e4161267d4dfd22d2370f,
+  backup `_20261024_150810`. Diff: só 10, 13, 23 ("²" → sobrescrito).
+  Staging `C:\Temp\defesa_equacoes\gen_equacoes.py`.
+- Ficam: "EMT"/"params.m" no 23, cabeçalhos "Vd/Vméd/Pméd" no 24, espaço
+  levemente apertado antes do "+" na equação característica do 7.
+
 ## 2026-10-21 (madrugada): layout do 20 e frase de abertura em 20-22 (entregue)
 
 - 20 (demo): só layout, texto intacto (diff sem diferença de texto): grade de

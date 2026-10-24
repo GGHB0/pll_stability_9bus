@@ -10,6 +10,15 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-24 (noite): referencial dq ao lado da equação, slide 6 (entregue)
+
+- Moldura, cartões e rodapé intactos. Equação 9,09 → 5,45 in à esquerda,
+  divisória `CBD5E1` em x = 7,10, e dois desenhos à direita (variante "E",
+  escolhida entre A, B, C, D, E): vetor v em dq girante + senoides → constantes.
+- a018e6d77e7e4161267d4dfd22d2370f → 21891b35dc5a0cfa7f6e0ac426ef38f5,
+  backup `_20261024_204055`. Diff: só as 2 imagens novas no 6. Staging
+  `C:\Temp\defesa_dq\` (`gen_svgs.py`, `gen_dq.py BC_largo`).
+
 ## 2026-10-24: padronização das equações, slides 7, 10-14, 23-24 (entregue)
 
 - Só runs de texto, nenhuma caixa mexida. Destaque (7, 12, 13, 14): Cambria

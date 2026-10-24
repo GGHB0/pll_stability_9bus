@@ -13,6 +13,11 @@ aliases: [defesa-pendencias]
 
 ## Em aberto
 
+- **Exceção de método no slide 6 (2026-10-24, aprovada pelo Victor)**: o
+  TCC só tem a Eq. (3.5); o slide ganhou dois desenhos conceituais sem número
+  ao lado dela (eixos abc + dq girante com o vetor v projetado em v_d e v_q;
+  senoides abc → Park → v_d e v_q constantes). Rótulos das senoides ficaram
+  perto de 11 pt: conferir no projetor.
 - **Slide 12 (inversor) dividido em três (2026-10-20; 12a e 12b entregues como slides 12 e 13, 12c pendente)**: 12a
   "Referência de corrente" (2ª prévia: diagrama de blocos da 1ª versão no
   PSIM, `assets/diagrams/referencia_corrente_psim.svg`, Pref 1 pu e Qref = 0

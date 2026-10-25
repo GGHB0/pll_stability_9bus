@@ -155,7 +155,7 @@ class HTMLRenderer:
         cmp_headers   = "".join(f'\n            <th data-key="{k}">{h}</th>'
                                 for k, h in self._CMP_COLS)
         cmp_cols_js   = json.dumps([k for k, _ in self._CMP_COLS])
-        tcc_js        = _TCC_JS
+        tcc_js        = _tcc_js()
         capitulos_js  = json.dumps(CAPITULOS)
         cmp_head_js   = json.dumps([h for _, h in self._CMP_COLS])
         tcc_pills     = "".join(
@@ -322,7 +322,11 @@ class HTMLRenderer:
     <button class="pres-exit" onclick="presToggle()">Sair &nbsp;Esc</button>
   </div>
   <div class="tcc-chips pres-chips" id="pres-chips"></div>
-  <div class="pres-plot" id="pres-plot"></div>
+  <div class="pres-body" id="pres-body">
+    <div class="pres-plot" id="pres-plot"></div>
+    <div class="pres-side" id="pres-side" style="display:none"></div>
+    <div class="fs-cursor" id="fs-cursor" style="display:none"></div>
+  </div>
   <div class="pres-table" id="pres-table" style="display:none"></div>
   <div class="pres-mapa" id="pres-mapa" style="display:none"></div>
   <div class="tcc-cards pres-cards" id="pres-cards"></div>
@@ -330,6 +334,7 @@ class HTMLRenderer:
     <button class="rt-nav" onclick="presStep(-1)" title="Capítulo anterior">&lsaquo;</button>
     <div class="pres-dots" id="pres-dots"></div>
     <button class="rt-nav" onclick="presStep(1)" title="Próximo capítulo">&rsaquo;</button>
+    <span class="pres-passo" id="pres-passo"></span>
   </div>
 </div>
 
@@ -1431,6 +1436,10 @@ setPllMode(pllMode);
         if partida:
             out["tvd5"] = f"{partida['t_vd5']:.0f} ms"
             out["terr2"] = f"{partida['t_err2']:.0f} ms"
+            # marcações de acomodação no capítulo "Energização"
+            out["partida"] = {"terr2": partida["t_err2"] / 1000, "tvd5": partida["t_vd5"] / 1000,
+                              "err": partida["err_t2"], "vd": partida["vd_t5"],
+                              "vdfin": partida["vd_fin"]}
         if ind:
             out["ret"] = f"{ind['ret']:.1f}%"
             out["pico"] = f"{ind['pico']:.1f}°"
@@ -1442,10 +1451,18 @@ setPllMode(pllMode);
             out["iqref"] = f"{self._fmt(ind['iqref'])} pu"
             out["raw"] = {"rampa": ind["iq_rampa_Vmed"], "iqref": ind["iqref"],
                           "Vmed": ind["Vmed"]}
+            if ind["ts"] and data.t_clear is not None:
+                # marcação do retorno à faixa de 2° (capítulos com falta)
+                out["retorno"] = {"t0": data.t_clear, "t": data.t_clear + ind["ts"] / 1000,
+                                  "ms": ind["ts"], "err": ind["err_ts"]}
         lvrt = m.get("lvrt")
         if lvrt:
             # curva do painel de suportabilidade (capítulo "Código de rede")
             out["lvrt"] = {"t": lvrt["t_rel"], "v": lvrt["v"], "fora": lvrt["fora"]}
+        # textos dos cartões com vírgula decimal, como as legendas (palco da defesa)
+        for k, v in out.items():
+            if isinstance(v, str):
+                out[k] = v.replace(".", ",")
         return out
 
     def _cards_html(self, data: SimData, key: str) -> str:
@@ -2189,7 +2206,39 @@ body.pres-on { overflow: hidden }
 .pres-exit:hover { color: var(--text); border-color: var(--muted) }
 .pres-chips { padding: 0 }
 .pres-chips .tcc-chip { font-size: 13px }
-.pres-plot { flex: 1; min-height: 0 }
+.pres-body { flex: 1; min-height: 0; display: flex; gap: 24px; position: relative }
+.pres-plot { flex: 1; min-height: 0; min-width: 0 }
+.pres-msg { font-size: 22px; color: var(--text) }
+.pres-passo { position: absolute; right: 0; font-size: 13px; font-weight: 600; color: var(--muted) }
+/* painel ao lado do gráfico (cap.lado): fasor ou mini-mapa */
+.pres-side {
+  flex: none; display: flex; flex-direction: column; justify-content: center;
+  align-items: center; gap: 10px; border-left: 1px solid var(--border); padding-left: 20px;
+}
+.pres-side.fasor { width: 430px }
+.pres-side.minimapa { width: 600px; align-items: stretch }
+.pres-side-h { margin: 0; font-weight: 800; font-size: 18px; color: var(--badge-fg) }
+.pres-side .mapa-svg svg { width: 100%; display: block }
+.pres-side .mp-note { display: none }
+.fs-leg { display: flex; gap: 18px; font-size: 14px; font-weight: 600 }
+.fs-ctl { display: flex; align-items: center; gap: 14px; margin-top: 6px }
+.fs-play {
+  font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
+  padding: 8px 18px; border-radius: 999px; border: 1.5px solid var(--accent);
+  background: var(--accent); color: #fff;
+}
+.fs-t { font-size: 17px; font-weight: 600; min-width: 110px }
+.fs-falta {
+  font-size: 13px; font-weight: 700; color: #b91c1c; background: #fee2e2;
+  padding: 3px 10px; border-radius: 999px;
+}
+.fs-cursor { position: absolute; width: 2px; background: #0f172a; pointer-events: none }
+.fs-dest {
+  margin-top: 14px; padding: 10px 16px; border: 1.5px solid #fecaca; border-radius: 10px;
+  color: #b91c1c; display: flex; align-items: center; gap: 14px;
+}
+.fs-dest b { font-size: 42px; font-weight: 800; line-height: 1 }
+.fs-dest span { font-size: 15px; line-height: 1.3 }
 .pres-table { flex: 1; min-height: 0; overflow: auto }
 .pres-table .cmp-table { font-size: 14px }
 .pres-cards {
@@ -2198,7 +2247,7 @@ body.pres-on { overflow: hidden }
 .pres-cards .tcc-card { padding: 8px 12px }
 .pres-cards .tcc-row { font-size: 13px }
 .pres-cards .tcc-row b { font-size: 15px }
-.pres-nav { display: flex; align-items: center; justify-content: center; gap: 12px }
+.pres-nav { display: flex; align-items: center; justify-content: center; gap: 12px; position: relative }
 .pres-dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px }
 .pres-dot {
   font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
@@ -2372,723 +2421,14 @@ body.tcc-mode #scenario-picker, body.tcc-mode .filter-bar .pll-toggle { opacity:
 """
 
 
-# JS da aba "Análise TCC" (string comum, fora do f-string do HTML: chaves
-# simples). Capítulos em src/report/roteiro.py (CAPITULOS); as curvas vêm das
-# figuras já embutidas em SCENARIOS, sem aumentar o HTML.
-_TCC_JS = r"""
-// ── Aba Análise TCC e modo apresentação: capítulos do Cap. 5 ──────────────
-// Os dois usam _tccFigure: a aba mostra um sinal por vez (seletor), a
-// apresentação empilha os sinais de cap.pres em tela cheia, em palco branco.
+# JS da aba "Análise TCC" e do modo apresentação: arquivos comuns em
+# src/report/js/ (fora do f-string do HTML, chaves simples), concatenados
+# nesta ordem. Capítulos em src/report/roteiro.py (CAPITULOS); as curvas vêm
+# das figuras já embutidas em SCENARIOS, sem aumentar o HTML.
+_JS_DIR = Path(__file__).parent / "js"
+TCC_JS_FILES = ("tcc.js", "ons.js", "tcc_ui.js", "mapa.js", "navegacao.js",
+                "palco.js", "fasor.js", "minimapa.js", "eventos.js")
 
-var TCC_EXTRA = [["#9333ea", "#c084fc"], ["#db2777", "#f472b6"],
-                 ["#ca8a04", "#fbbf24"], ["#16a34a", "#4ade80"]];
-var SINAIS = {
-  err:  { lbl: "Erro de fase", trace: "Erro de fase", y: "Erro de fase (°)", u: "°" },
-  vd:   { lbl: "v<sub>d</sub> da rede", trace: "V<sub>d</sub> Rede", y: "v<sub>d</sub> (pu)", u: " pu" },
-  P:    { lbl: "Potência ativa P", trace: "P UFV", y: "P (pu)", u: " pu" },
-  Q:    { lbl: "Potência reativa Q", trace: "Q UFV", y: "Q (pu)", u: " pu" },
-  spec: { lbl: "Espectro de v<sub>d</sub> na falta", y: "Amplitude (pu)", u: " pu" },
-};
-var IND_LBL = {
-  terr2: "Erro na faixa de 2°", tvd5: "v<sub>d</sub> na faixa de 5%",
-  ret: "Retenção de v<sub>d</sub>", pico: "Pico do erro na falta",
-  ts: "Retorno à faixa de 2°", a120: "120 Hz em v<sub>d</sub>",
-  fracP: "P absorvida após a eliminação", Vmed: "Tensão no inversor",
-  rampa: "Rampa ONS prevê", iqref: "i<sub>q,ref</sub> médio",
-};
-var tccCap = 0, tccState = {}, presOn = false;
 
-function _tccSt(cap) {
-  if (!tccState[cap.id]) {
-    var on = {};
-    cap.casos.forEach(function(c) { on[c[0]] = true; });
-    tccState[cap.id] = { on: on, extra: [], sinal: cap.sinais[0] || null };
-  }
-  return tccState[cap.id];
-}
-
-function _tccCases(cap) {
-  var st = _tccSt(cap);
-  var list = cap.casos.filter(function(c) { return SCENARIOS[c[0]]; })
-    .map(function(c) { return { key: c[0], light: c[1][0], dark: c[1][1] }; });
-  st.extra.forEach(function(k, i) {
-    var pal = TCC_EXTRA[i % TCC_EXTRA.length];
-    list.push({ key: k, light: pal[0], dark: pal[1], extra: true });
-  });
-  return list;
-}
-
-function _tccVisible(cap) {
-  var st = _tccSt(cap);
-  return _tccCases(cap).filter(function(c) { return st.on[c.key] !== false; });
-}
-
-function _tccMixed(cap) {
-  var cs = _tccCases(cap);
-  return cs.some(function(c) { return SCENARIOS[c.key].badPll; })
-      && cs.some(function(c) { return !SCENARIOS[c.key].badPll; });
-}
-
-function _tccLabel(k, mixed) {
-  var sc = SCENARIOS[k];
-  if (sc.badPll) return sc.label + " · inadequada";
-  return mixed ? sc.label + " · nominal" : sc.label;
-}
-
-function _tccTrace(sc, sinal) {
-  if (sinal === "spec") {
-    var f = sc.specData && sc.specData.d;
-    if (!f) return null;
-    // 2ª linha da figura dq = tensão v_d do inversor; segmento da falta
-    for (var i = 0; i < f.data.length; i++) {
-      if (f.data[i].name === "Durante a falta" && f.data[i].yaxis === "y2") return f.data[i];
-    }
-    return null;
-  }
-  var d = sc.invData.data;
-  for (var j = 0; j < d.length; j++) {
-    if (d[j].name === SINAIS[sinal].trace) return d[j];
-  }
-  return null;
-}
-
-// Figura de um capítulo. sinais = um painel por sinal, empilhados com o mesmo
-// eixo x (zoom junto). o = { dark, height, big, bg }.
-function _tccFigure(cap, sinais, o) {
-  var dark = o.dark, B = dark ? BASE_DARK : BASE_LIGHT;
-  var bg = o.bg || B.paper, grid = dark ? "#2a3a55" : "#e2e8f0";
-  var fs = o.big ? 15 : 12, mixed = _tccMixed(cap), visible = _tccVisible(cap);
-  var col = function(c) { return dark ? c.dark : c.light; };
-  var layout = {
-    height: o.height, margin: { t: o.big ? 30 : 26, r: 24, b: 58, l: 80 },
-    paper_bgcolor: bg, plot_bgcolor: o.bg || B.plot, showlegend: false,
-    font: { family: "Inter, Segoe UI, system-ui, sans-serif", color: B.font, size: fs },
-    hoverlabel: { bgcolor: dark ? "#0f172a" : "#ffffff", bordercolor: dark ? "#60a5fa" : "#2563eb",
-                  font: { size: fs + 1, color: B.font }, align: "left" },
-    hovermode: "x unified", shapes: [], annotations: [],
-  };
-  var data = [];
-
-  if (cap.kind === "ons") return _onsFigure(cap, o, layout, visible, mixed, col, grid, fs);
-
-  var n = sinais.length, gap = n > 1 ? 0.09 : 0, h = (1 - gap * (n - 1)) / n;
-  var spec = sinais[0] === "spec";
-  sinais.forEach(function(sinal, i) {
-    var ax = (i === 0) ? "" : String(i + 1);
-    var y1 = 1 - i * (h + gap), y0 = y1 - h;
-    var S = SINAIS[sinal];
-    layout["yaxis" + ax] = { domain: [y0, y1], anchor: "x", gridcolor: grid, zerolinecolor: grid,
-      title: { text: S.y }, hoverformat: ".3f" };
-    visible.forEach(function(c) {
-      var t = _tccTrace(SCENARIOS[c.key], sinal);
-      if (!t) return;
-      var lbl = _tccLabel(c.key, mixed);
-      data.push({ type: "scatter", mode: "lines", x: t.x, y: t.y, name: lbl,
-        xaxis: "x", yaxis: "y" + ax,
-        line: { color: col(c), width: o.big ? 2.6 : 2.2, dash: c.extra ? "dot" : "solid" },
-        hovertemplate: lbl + ": <b>%{y:.3f}" + S.u + "</b><extra></extra>" });
-    });
-    if (n > 1) {
-      layout.annotations.push({ xref: "paper", yref: "paper", x: 0, y: y1, xanchor: "left",
-        yanchor: "bottom", showarrow: false, text: "<b>" + S.lbl + "</b>",
-        font: { size: fs, color: dark ? "#93c5fd" : "#1d4ed8" } });
-    }
-    if (sinal === "err") {
-      layout.shapes.push({ type: "rect", xref: "paper", yref: "y" + ax, layer: "below",
-        x0: 0, x1: 1, y0: -2, y1: 2, line: { width: 0 },
-        fillcolor: dark ? "rgba(74,222,128,.18)" : "rgba(22,163,74,.14)" });
-      if (cap.id === "sinc") {   // escorregamento de ciclo: faixa inteira de ±180°
-        layout["yaxis" + ax].range = [-190, 190];
-        layout["yaxis" + ax].tickvals = [-180, -90, 0, 90, 180];
-        layout["yaxis" + ax].ticktext = ["−180", "−90", "0", "90", "180"];
-      }
-    }
-    if (sinal === "spec") {
-      layout["yaxis" + ax].range = [0, 1];
-      layout.shapes.push({ type: "line", xref: "x", yref: "paper", x0: 120, x1: 120, y0: y0, y1: y1,
-        line: { color: B.font, width: 1, dash: "dash" }, opacity: 0.45 });
-      layout.annotations.push({ xref: "x", yref: "paper", x: 120, y: y1, yanchor: "bottom",
-        text: "120 Hz", showarrow: false, font: { size: fs - 1 } });
-    }
-  });
-  layout.xaxis = { anchor: "y" + (n > 1 ? String(n) : ""), gridcolor: grid, zerolinecolor: grid,
-    title: { text: spec ? "Frequência (Hz)" : "Tempo (s)" },
-    hoverformat: spec ? ".0f" : ".4f" };
-  if (cap.xrange) layout.xaxis.range = cap.xrange;
-  if (!spec) {
-    var f0 = visible.map(function(c) { return SCENARIOS[c.key]; })
-      .filter(function(sc) { return sc.tFault != null; })[0];
-    if (f0) {
-      var tc = (f0.tClear != null) ? f0.tClear : f0.tFault;
-      layout.shapes.push({ type: "rect", xref: "x", yref: "paper", layer: "below",
-        x0: f0.tFault, x1: tc, y0: 0, y1: 1, line: { width: 0 },
-        fillcolor: dark ? "rgba(248,113,113,.10)" : "rgba(220,38,38,.06)" });
-      layout.annotations.push({ xref: "x", yref: "paper", x: (f0.tFault + tc) / 2, y: 1,
-        yanchor: "bottom", text: "falta", showarrow: false,
-        font: { size: fs - 1, color: dark ? "#fca5a5" : "#b91c1c" } });
-    }
-  }
-  return { data: data, layout: layout };
-}
-
-// ── Capítulo "Código de rede" (kind "ons"): dois painéis na mesma figura.
-// Esquerda: tensão da fase mais afundada contra a curva de suportabilidade
-// (Figura 2.1, tccInd.lvrt). Direita: i_q contra a rampa (Figura 2.2), com
-// anel vermelho nos casos fora da região. st.outros acende os demais
-// cenários sem destaque; onsFiltro (mouse num rótulo-resumo) mostra só os
-// casos fora ou dentro no painel da esquerda.
-var onsFiltro = null;
-
-function _onsCls(k) {
-  var l = SCENARIOS[k].tccInd && SCENARIOS[k].tccInd.lvrt;
-  return l ? (l.fora ? "fora" : "dentro") : null;
-}
-
-function _onsOutros(cap) {
-  var mine = _tccCases(cap).map(function(c) { return c.key; });
-  return Object.keys(SCENARIOS).filter(function(k) {
-    return mine.indexOf(k) === -1 && _onsCls(k);
-  });
-}
-
-function _onsNome(k) {
-  return SCENARIOS[k].label.replace(" — ", " · ") + (SCENARIOS[k].badPll ? " (inadequada)" : "");
-}
-
-function _onsFigure(cap, o, layout, visible, mixed, col, grid, fs) {
-  var dark = o.dark, st = _tccSt(cap), data = [];
-  var T = dark
-    ? { ink: "#cbd5e1", mut: "#94a3b8", ok: "#4ade80", bad: "#fca5a5", amb: "#fbbf24", blu: "#93c5fd",
-        note: "rgba(15,23,42,0.85)", grey: "rgba(148,163,184,0.35)", redf: "rgba(248,113,113,0.40)" }
-    : { ink: "#334155", mut: "#64748b", ok: "#15803d", bad: "#b91c1c", amb: "#a16207", blu: "#1d4ed8",
-        note: "rgba(255,255,255,0.85)", grey: "rgba(100,116,139,0.38)", redf: "rgba(220,38,38,0.40)" };
-  var big = o.big, lw = big ? 3.5 : 2.5;
-  var ax = function(title, dom, anchor) {
-    return { title: { text: title, standoff: 8 }, domain: dom, anchor: anchor, gridcolor: grid,
-             zeroline: false, showline: true, linecolor: T.mut, ticks: "outside", tickcolor: T.mut,
-             tickfont: { size: fs - 1, color: T.mut } };
-  };
-  layout.hovermode = "closest";
-  layout.separators = ",.";
-  layout.margin = { t: big ? 66 : 58, r: 16, b: 58, l: 66 };
-  layout.xaxis = ax("Tempo desde o início da falta (s)", [0, 0.45], "y");
-  layout.yaxis = ax("Tensão (pu)", [0, 1], "x");
-  layout.xaxis2 = ax("Tensão média no inversor (pu)", [0.55, 1], "y2");
-  layout.yaxis2 = ax("Corrente reativa i<sub>q</sub> (pu)", [0, 1], "x2");
-  var sc0 = visible.length ? SCENARIOS[visible[0].key] : null;
-  var dur = (sc0 && sc0.tClear != null) ? sc0.tClear - sc0.tFault : 0.1;
-  var lv0 = sc0 && sc0.tccInd.lvrt;
-  var tFim = lv0 ? lv0.t[lv0.t.length - 1] : 0.3, XMAX = 0.6;
-  layout.xaxis.range = [-0.04, XMAX]; layout.xaxis.dtick = 0.1;
-  layout.yaxis.range = [0, 1.3]; layout.yaxis.dtick = 0.2;
-  layout.xaxis2.range = [0, 1.0]; layout.xaxis2.dtick = 0.1;
-  layout.yaxis2.range = [-0.04, 1.16]; layout.yaxis2.dtick = 0.2;
-
-  function faixa(a, x0, x1, cor, rot, corRot) {
-    layout.shapes.push({ type: "rect", xref: "x" + a, yref: "y" + a + " domain", x0: x0, x1: x1, y0: 0, y1: 1,
-      fillcolor: cor, line: { width: 0 }, layer: "below" });
-    if (rot) layout.annotations.push({ x: (x0 + x1) / 2, y: 1, xref: "x" + a, yref: "y" + a + " domain",
-      yanchor: "bottom", yshift: 3, showarrow: false, text: rot, font: { size: fs - 2, color: corRot || T.mut } });
-  }
-  function nota(a, x, y, txt, cor, extra) {
-    var n = { x: x, y: y, xref: "x" + a, yref: "y" + a, text: txt, showarrow: false, bgcolor: T.note, borderpad: 3,
-              font: { size: fs - 1, color: cor } };
-    for (var k in extra) n[k] = extra[k];
-    layout.annotations.push(n);
-  }
-  function titulo(a, txt, dir) {
-    layout.annotations.push({ x: 0, y: 1, xref: "x" + a + " domain", yref: "y" + a + " domain", xanchor: "left",
-      yanchor: "bottom", yshift: big ? 26 : 22, showarrow: false, text: txt, font: { size: fs + 2, color: T.ink } });
-    if (dir) layout.annotations.push({ x: 1, y: 1, xref: "x" + a + " domain", yref: "y" + a + " domain",
-      xanchor: "right", yanchor: "bottom", yshift: big ? 27 : 23, showarrow: false, text: dir,
-      font: { size: fs - 2, color: T.mut } });
-  }
-
-  // ── Esquerda: região de permanência (ONS Subm. 2.10 §5.7, Figura 13) ──
-  var bx = [0, 0.5, 1.0, 2];
-  data.push({ type: "scatter", mode: "lines", x: bx.concat([2, 0]), y: [0.2, 0.2, 0.85, 0.85, 1.2, 1.2],
-    fill: "toself", fillcolor: "rgba(22,163,74,0.08)", line: { width: 0 }, hoverinfo: "skip" });
-  data.push({ type: "scatter", mode: "lines", x: bx.concat([2, 0]), y: [0.2, 0.2, 0.85, 0.85, 0, 0],
-    fill: "toself", fillcolor: "rgba(220,38,38,0.07)", line: { width: 0 }, hoverinfo: "skip" });
-  data.push({ type: "scatter", mode: "lines", x: bx, y: [0.2, 0.2, 0.85, 0.85],
-    line: { color: T.ink, width: 3 }, hoverinfo: "skip" });
-  data.push({ type: "scatter", mode: "lines", x: [0, 2], y: [1.2, 1.2],
-    line: { color: T.ink, width: 2, dash: "dot" }, hoverinfo: "skip" });
-  var outros = (st.outros || onsFiltro) ? _onsOutros(cap) : [];
-  outros.forEach(function(k) {
-    var l = SCENARIOS[k].tccInd.lvrt, cls = l.fora ? "fora" : "dentro";
-    if (onsFiltro && cls !== onsFiltro) return;
-    var cor = onsFiltro ? (l.fora ? "rgba(220,38,38,0.75)" : (dark ? "rgba(203,213,225,0.6)" : "rgba(51,65,85,0.6)"))
-                        : (l.fora ? T.redf : T.grey);
-    data.push({ type: "scatter", mode: "lines", x: l.t, y: l.v, name: _onsNome(k),
-      line: { color: cor, width: onsFiltro ? 1.8 : 1.3 },
-      hovertemplate: "<b>" + _onsNome(k) + "</b><br>t = %{x:.3f} s · %{y:.2f} pu<br>"
-        + (l.fora ? "fora da região" : "dentro da região") + "<extra></extra>" });
-  });
-  visible.forEach(function(c) {
-    var l = SCENARIOS[c.key].tccInd.lvrt;
-    if (!l) return;
-    var lbl = _tccLabel(c.key, mixed);
-    data.push({ type: "scatter", mode: "lines", x: l.t, y: l.v, name: lbl,
-      line: { color: col(c), width: lw }, opacity: (onsFiltro && _onsCls(c.key) !== onsFiltro) ? 0.15 : 1,
-      hovertemplate: "<b>" + lbl + "</b><br>t = %{x:.3f} s · %{y:.2f} pu<br>"
-        + (l.fora ? "fora da região" : "dentro da região") + "<extra></extra>" });
-  });
-  faixa("", 0, dur, dark ? "rgba(226,232,240,0.06)" : "rgba(15,23,42,0.05)", "<b>falta</b>", T.ink);
-  faixa("", dur, tFim, "rgba(0,0,0,0)", "pós-falta");
-  faixa("", tFim, XMAX, "rgba(148,163,184,0.16)", "além da janela simulada");
-  nota("", 0.45, 1.05, "região de permanência obrigatória", T.ok);
-  nota("", 0.45, 0.1, "abaixo da borda: desconexão permitida", T.bad);
-  nota("", XMAX, 0.5, "a borda sobe até 0,85 pu em 1 s", T.mut, { xanchor: "right" });
-  nota("", 0.4, 0.2, "0,2 pu", T.ink, { yanchor: "bottom", yshift: 2 });
-  titulo("", "<b>Suportabilidade a subtensões</b>  · Figura 2.1", "tensão da fase mais afundada no inversor");
-
-  // ── Direita: rampa de corrente reativa (§5.8, Figura 14) ──
-  data.push({ type: "scatter", mode: "lines", x: [0, 0.5, 0.85, 1.0], y: [1, 1, 0, 0], xaxis: "x2", yaxis: "y2",
-    line: { color: T.ink, width: big ? 3.5 : 3 }, hoverinfo: "skip" });
-  if (st.outros) outros.forEach(function(k) {
-    var r = SCENARIOS[k].tccInd.raw;
-    if (!r) return;
-    data.push({ type: "scatter", mode: "markers", x: [r.Vmed], y: [r.iqref], xaxis: "x2", yaxis: "y2",
-      name: _onsNome(k), marker: { size: big ? 10 : 8, color: _onsCls(k) === "fora" ? T.redf : T.grey },
-      hovertemplate: "<b>" + _onsNome(k) + "</b><br>V = %{x:.2f} pu · i<sub>q,ref</sub> = %{y:.2f} pu<extra></extra>" });
-  });
-  // rótulos fora da rampa: B7 e L7-8 quase no mesmo ponto, um em cima e
-  // outro embaixo; B6 fica abaixo da rampa, rótulo à esquerda
-  var POS = ["top center", "bottom center", "bottom center", "bottom left"];
-  visible.forEach(function(c, i) {
-    var r = SCENARIOS[c.key].tccInd.raw;
-    if (!r) return;
-    var lbl = _tccLabel(c.key, mixed), fora = _onsCls(c.key) === "fora";
-    data.push({ type: "scatter", mode: "markers+text", name: lbl, xaxis: "x2", yaxis: "y2",
-      x: [r.Vmed], y: [r.iqref], text: ["<b>" + SCENARIOS[c.key].label.replace(" — Trifásica", "") + "</b>"],
-      textposition: POS[i] || "top center", textfont: { size: fs + 1, color: col(c) },
-      marker: { size: big ? 20 : 15, color: col(c),
-                line: { width: fora ? 4 : 2, color: fora ? "#dc2626" : (o.bg || layout.paper_bgcolor) } },
-      hovertemplate: "<b>" + lbl + "</b><br>tensão no inversor: %{x:.2f} pu"
-        + "<br>i<sub>q,ref</sub> médio: %{y:.2f} pu<br>rampa prevê: " + r.rampa.toFixed(2)
-        + " pu<br>" + (fora ? "fora da região" : "dentro da região") + "<extra></extra>" });
-  });
-  faixa("2", 0, 0.5, "rgba(234,179,8,0.10)", "<b>corrente máxima</b>", T.amb);
-  faixa("2", 0.5, 0.85, "rgba(37,99,235,0.07)", "<b>proporcional ao afundamento</b>", T.blu);
-  faixa("2", 0.85, 1.0, "rgba(148,163,184,0.16)", "<b>banda morta</b>", T.ink);
-  nota("2", 0.25, 0.55, "abaixo de 0,5 pu,<br>i<sub>q</sub> = 1 pu", T.amb);
-  nota("2", 0.64, 0.36, "i<sub>q</sub> = (0,85 − V) / 0,35", T.blu, { xanchor: "right" });
-  nota("2", 0.925, 0.55, "sem injeção<br>adicional", T.ink);
-  titulo("2", "<b>Corrente reativa contra a rampa</b>  · Figura 2.2",
-         "<span style=\"color:#dc2626\">◯</span> fora da região de suportabilidade");
-  return { data: data, layout: layout };
-}
-
-// rótulos-resumo e botão dos outros curtos, ao lado dos chips
-function _onsCtrlHtml(cap) {
-  var st = _tccSt(cap);
-  var todos = _tccCases(cap).map(function(c) { return c.key; }).filter(_onsCls).concat(_onsOutros(cap));
-  var html = ["fora", "dentro"].map(function(cls) {
-    var ks = todos.filter(function(k) { return _onsCls(k) === cls; });
-    var mine = _tccCases(cap).map(function(c) { return c.key; });
-    var lista = ks.map(function(k) {
-      return "<div" + (mine.indexOf(k) >= 0 ? " class=\"mine\"" : "") + ">" + _onsNome(k) + "</div>";
-    }).join("");
-    return "<span class=\"ons-sum " + cls + "\" onmouseenter=\"_onsFiltrar('" + cls + "')\""
-      + " onmouseleave=\"_onsFiltrar(null)\">" + (cls === "fora" ? "Fora da região" : "Dentro da região")
-      + " · " + ks.length + " casos<span class=\"ons-pop\"><b>"
-      + (cls === "fora" ? "A fase mais afundada cai abaixo de 0,2 pu" : "Acima da borda em toda a janela simulada")
-      + "</b>" + lista + "</span></span>";
-  }).join("");
-  return "<span class=\"ons-ctrl\">" + html + "<button class=\"ons-outros" + (st.outros ? " on" : "")
-    + "\" onclick=\"_onsToggleOutros()\">" + (st.outros ? "Ocultar os outros curtos" : "+ Mostrar os outros curtos")
-    + "</button></span>";
-}
-
-function _onsBadge(k, curto) {
-  var cls = _onsCls(k);
-  return cls ? "<span class=\"ons-badge " + cls + "\">" + (cls === "fora" && !curto ? "fora da região" : cls)
-    + "</span>" : "";
-}
-
-function _onsToggleOutros() {
-  var st = _tccSt(CAPS[tccCap]);
-  st.outros = !st.outros;
-  _tccRefresh();
-}
-
-// só redesenha a figura: refazer os chips trocaria o elemento sob o mouse
-function _onsFiltrar(cls) {
-  onsFiltro = cls;
-  var cap = CAPS[tccCap], el = presOn ? document.getElementById("pres-plot") : gd.tcc;
-  if (!el || !el.layout) return;
-  var fig = _tccFigure(cap, [], presOn
-    ? { dark: false, height: el.layout.height, big: true, bg: "#ffffff" }
-    : { dark: isDark, height: el.layout.height });
-  Plotly.react(el, fig.data, fig.layout, presOn ? PRES_CFG : PLOTLY_CFG);
-}
-
-function _tccChipsHtml(cap, dark, withAdd) {
-  var st = _tccSt(cap), mixed = _tccMixed(cap);
-  var html = _tccCases(cap).map(function(c) {
-    return "<button class=\"tcc-chip" + (st.on[c.key] !== false ? " on" : "") + "\" style=\"--c:"
-      + (dark ? c.dark : c.light) + "\" onclick=\"_tccChip('" + c.key + "')\"><span class=\"tcc-sw\"></span>"
-      + _tccLabel(c.key, mixed) + (cap.kind === "ons" ? _onsBadge(c.key) : "") + "</button>";
-  }).join("");
-  if (cap.kind === "ons") html += _onsCtrlHtml(cap);
-  if (withAdd && (cap.kind === "time" || cap.kind === "spec")) {
-    var inList = _tccCases(cap).map(function(c) { return c.key; });
-    var opts = Object.keys(SCENARIOS).filter(function(k) {
-      return inList.indexOf(k) === -1 && (cap.kind === "time"
-        ? (cap.id === "energ") === (SCENARIOS[k].tFault == null)
-        : SCENARIOS[k].tFault != null);
-    }).map(function(k) {
-      return "<option value=\"" + k + "\">" + _tccLabel(k, true) + "</option>";
-    }).join("");
-    html += "<select class=\"tcc-add\" onchange=\"_tccAdd(this)\">"
-      + "<option value=\"\">+ comparar com…</option>" + opts + "</select>";
-  }
-  return html;
-}
-
-function _tccCardsHtml(cap, dark) {
-  var mixed = _tccMixed(cap);
-  return _tccVisible(cap).map(function(c) {
-    var ind = SCENARIOS[c.key].tccInd || {};
-    var rows = cap.metricas.map(function(m) {
-      return "<p class=\"tcc-row\"><span>" + IND_LBL[m] + "</span><b>"
-        + (ind[m] != null ? ind[m] : "—") + "</b></p>";
-    }).join("");
-    return "<div class=\"tcc-card\" style=\"--c:" + (dark ? c.dark : c.light) + "\""
-      + " title=\"Abrir este cenário nas abas\" onclick=\"_openScenario('" + c.key + "')\">"
-      + "<p class=\"tcc-card-h\">" + _tccLabel(c.key, mixed)
-      + (cap.kind === "ons" ? _onsBadge(c.key, true) : "") + "</p>" + rows + "</div>";
-  }).join("");
-}
-
-function _tccTableHtml() {
-  var keys = Object.keys(SCENARIOS).filter(function(k) { return SCENARIOS[k].tcc; })
-    .sort(function(a, b) { return SCENARIOS[a].tccOrd - SCENARIOS[b].tccOrd; });
-  var head = "<th>Cenário</th>" + CMP_HEAD.map(function(h) { return "<th>" + h + "</th>"; }).join("");
-  var rows = keys.map(function(k) {
-    var sc = SCENARIOS[k], r = sc.metricsRow;
-    var bad = sc.badPll ? "<span class=\"tcc-bad-tag\">inadequada</span>" : "";
-    return "<tr class=\"cmp-row\" onclick=\"_openScenario('" + k + "')\">"
-      + "<td class=\"cmp-label\">" + sc.label + bad
-      + "<span class=\"tcc-tag\">§" + sc.tcc + "</span></td>"
-      + CMP_COLS.map(function(c) { return _cmpCell(r[c]); }).join("") + "</tr>";
-  }).join("");
-  return "<div class=\"table-wrap\"><table class=\"cmp-table tcc-cmp\"><thead><tr>"
-    + head + "</tr></thead><tbody>" + rows + "</tbody></table></div>";
-}
-
-// ── Capítulo kind "mapa" (Faltas destacadas): unifilar redesenhado do
-// ieee9bus_unifilar.svg, sem R/X/B nem cargas; a Linha 8-9 em dois circuitos ──
-var mapaPasso = 0;
-var MAPA_RAIO = { b7: [265, 222], l78: [368, 178], l89: [568, 187], b6: [665, 392] };
-
-function _mapaSvg(cap, on, cur) {
-  var idx = {};
-  cap.passos.forEach(function(p, i) { if (p.id) idx[p.id] = i; });
-  var c = function(id) { return on[id] ? " on" : ""; };
-  var hot = function(id) {
-    return "<g class=\"mp-hot" + (cur === id ? " cur" : "") + "\" onclick=\"_mapaGo(" + idx[id] + ")\">";
-  };
-  var cond = function(pts) { return "<polyline class=\"mp-cond\" points=\"" + pts + "\"/>"; };
-  var trafo = function(x1, y1, x2, y2, r) {
-    return "<circle cx=\"" + x1 + "\" cy=\"" + y1 + "\" r=\"" + r + "\" class=\"mp-fill\" stroke=\"#1e40af\" stroke-width=\"2.2\"/>"
-         + "<circle cx=\"" + x2 + "\" cy=\"" + y2 + "\" r=\"" + r + "\" class=\"mp-fill\" stroke=\"#1e40af\" stroke-width=\"2.2\"/>";
-  };
-  var gen = function(x, y, r) {
-    return "<circle cx=\"" + x + "\" cy=\"" + y + "\" r=\"" + r + "\" class=\"mp-fill\" stroke=\"#166534\" stroke-width=\"2.5\"/>";
-  };
-  var s = "<svg viewBox=\"20 90 860 590\" preserveAspectRatio=\"xMidYMid meet\">"
-    // usina e Barra 2
-    + "<rect x=\"30\" y=\"140\" width=\"66\" height=\"78\" rx=\"5\" fill=\"#fffbeb\" stroke=\"#b45309\" stroke-width=\"2\"/>"
-    + "<text x=\"63\" y=\"176\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#b45309\">UFV</text>"
-    + "<text x=\"63\" y=\"191\" text-anchor=\"middle\" font-size=\"10.5\" fill=\"#78350f\">100 MW</text>"
-    + "<text x=\"63\" y=\"205\" text-anchor=\"middle\" font-size=\"10.5\" fill=\"#b45309\">SRF-PLL</text>"
-    + cond("96,178 265,178")
-    + "<line class=\"mp-bus\" style=\"stroke:#b45309\" x1=\"109\" y1=\"152\" x2=\"109\" y2=\"204\"/>"
-    + "<text x=\"109\" y=\"139\" text-anchor=\"middle\" class=\"mp-lbl\" style=\"fill:#b45309\">2</text>"
-    + trafo(174, 178, 200, 178, 13)
-    + "<text x=\"187\" y=\"212\" text-anchor=\"middle\" font-size=\"12.5\" font-weight=\"600\" fill=\"#1e40af\">T2</text>"
-    // anel inferior, G1 e G3
-    + cond("265,200 300,200 300,392") + cond("668,200 633,200 633,392")
-    + cond("336,392 336,498 412,498 412,517") + cond("598,392 598,498 524,498 524,517")
-    + cond("468,517 468,538") + trafo(468, 550, 468, 572, 12) + cond("468,584 468,620")
-    + "<line class=\"mp-bus\" style=\"stroke:#166534\" x1=\"440\" y1=\"604\" x2=\"496\" y2=\"604\"/>"
-    + gen(468, 638, 20) + "<text x=\"500\" y=\"643\" class=\"mp-lbl\" style=\"fill:#166534\">G1</text>"
-    + cond("668,178 815,178") + trafo(719, 178, 745, 178, 13)
-    + gen(840, 178, 22) + "<text x=\"840\" y=\"230\" text-anchor=\"middle\" class=\"mp-lbl\" style=\"fill:#166534\">G3</text>"
-    // barras sem falta
-    + "<line class=\"mp-bus\" x1=\"178\" y1=\"392\" x2=\"362\" y2=\"392\"/><text x=\"185\" y=\"378\" class=\"mp-lbl\">5</text>"
-    + "<line class=\"mp-bus\" x1=\"352\" y1=\"517\" x2=\"584\" y2=\"517\"/><text x=\"468\" y=\"503\" text-anchor=\"middle\" class=\"mp-lbl\">4</text>"
-    + "<line class=\"mp-bus\" x1=\"468\" y1=\"128\" x2=\"468\" y2=\"218\"/><text x=\"468\" y=\"113\" text-anchor=\"middle\" class=\"mp-lbl\">8</text>"
-    + "<line class=\"mp-bus\" x1=\"668\" y1=\"142\" x2=\"668\" y2=\"258\"/><text x=\"668\" y=\"127\" text-anchor=\"middle\" class=\"mp-lbl\">9</text>"
-    // pontos de falta (clicáveis)
-    + hot("l78") + "<rect class=\"mp-hit\" x=\"272\" y=\"150\" width=\"190\" height=\"56\" rx=\"6\"/>"
-    + "<line class=\"mp-cond" + c("l78") + "\" x1=\"265\" y1=\"178\" x2=\"468\" y2=\"178\"/></g>"
-    + hot("l89") + "<rect class=\"mp-hit\" x=\"474\" y=\"150\" width=\"188\" height=\"56\" rx=\"6\"/>"
-    + "<line class=\"mp-cond" + c("l89") + "\" x1=\"468\" y1=\"171\" x2=\"668\" y2=\"171\"/>"
-    + "<line class=\"mp-cond" + c("l89") + "\" x1=\"468\" y1=\"187\" x2=\"668\" y2=\"187\"/>"
-    + cond("468,171 468,187") + cond("668,171 668,187") + "</g>"
-    + hot("b7") + "<rect class=\"mp-hit\" x=\"248\" y=\"118\" width=\"34\" height=\"150\" rx=\"6\"/>"
-    + "<line class=\"mp-bus" + c("b7") + "\" x1=\"265\" y1=\"142\" x2=\"265\" y2=\"258\"/>"
-    + "<text x=\"265\" y=\"127\" text-anchor=\"middle\" class=\"mp-lbl\">7</text></g>"
-    + hot("b6") + "<rect class=\"mp-hit\" x=\"565\" y=\"364\" width=\"200\" height=\"40\" rx=\"6\"/>"
-    + "<line class=\"mp-bus" + c("b6") + "\" x1=\"572\" y1=\"392\" x2=\"758\" y2=\"392\"/>"
-    + "<text x=\"751\" y=\"378\" text-anchor=\"end\" class=\"mp-lbl\">6</text></g>";
-  Object.keys(MAPA_RAIO).forEach(function(id) {
-    if (!on[id]) return;
-    var p = MAPA_RAIO[id];
-    s += "<g class=\"mp-raio\" transform=\"translate(" + p[0] + "," + p[1] + ")\"><circle r=\"20\"/>"
-       + "<path d=\"M3,-13 L-7,2 L-1,2 L-4,13 L7,-4 L1,-4z\"/></g>";
-  });
-  if (on.l89) s += "<g class=\"mp-note\"><text x=\"568\" y=\"152\" text-anchor=\"middle\" font-size=\"13\" fill=\"#6b7280\">circuito sem falta</text>"
-    + "<text x=\"568\" y=\"228\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"700\" fill=\"#dc2626\">circuito com falta</text></g>";
-  if (on.b7) s += "<text class=\"mp-note\" x=\"200\" y=\"290\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"700\" fill=\"#dc2626\">mais perto da usina</text>";
-  if (on.b6) s += "<text class=\"mp-note\" x=\"665\" y=\"432\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"700\" style=\"fill:var(--accent)\">mais longe da usina</text>";
-  return s + "</svg>";
-}
-
-// gid: prefixo do gradiente, para a aba e o palco não repetirem o id
-function _mapaHtml(cap, gid) {
-  var p = cap.passos[mapaPasso], on = {};
-  cap.passos.forEach(function(q) { if (q.id && (p.resumo || q.id === p.id)) on[q.id] = true; });
-  var side = "<div class=\"mp-card\"><span class=\"mp-tag " + (p.tom || "") + "\">" + p.tag + "</span>"
-    + "<p class=\"mp-h\">" + p.titulo + "</p>"
-    + p.texto.map(function(t) { return "<p class=\"mp-p\">" + t + "</p>"; }).join("")
-    + "<p class=\"mp-why\">" + p.papel + "</p>";
-  if (p.faltas) {
-    side += "<div class=\"mp-facts\">" + ["trifásica", "bifásica", "monofásica"].map(function(f) {
-      return "<span" + (p.faltas.indexOf(f) === -1 ? " class=\"off\"" : "") + ">" + f + "</span>";
-    }).join("") + "<span>sintonia nominal</span><span" + (p.inadequada ? "" : " class=\"off\"")
-      + ">sintonia inadequada</span></div>";
-  }
-  if (p.cenario && SCENARIOS[p.cenario]) {
-    side += "<button class=\"mp-open\" onclick=\"_openScenario('" + p.cenario + "')\">Abrir no painel &rarr;</button>";
-  }
-  side += "</div>";
-  var pins = cap.passos.map(function(q, k) {
-    if (!q.id) return "";
-    var cx = 10 + q.pos * 360, cur = (q.id === p.id);
-    return "<g class=\"mp-pin\" onclick=\"_mapaGo(" + k + ")\" opacity=\"" + (on[q.id] ? 1 : 0.3) + "\">"
-      + "<circle cx=\"" + cx + "\" cy=\"30\" r=\"" + (cur ? 10 : 8) + "\"/>"
-      + "<text x=\"" + cx + "\" y=\"60\" text-anchor=\"middle\">" + q.rotulo + "</text></g>";
-  }).join("");
-  side += "<svg class=\"mp-ruler\" viewBox=\"0 0 380 74\"><defs><linearGradient id=\"" + gid + "-gr\" x1=\"0\" x2=\"1\">"
-    + "<stop offset=\"0\" stop-color=\"#dc2626\"/><stop offset=\"1\" stop-color=\"#2563eb\"/></linearGradient></defs>"
-    + "<text x=\"10\" y=\"14\">afundamento mais profundo</text>"
-    + "<text x=\"370\" y=\"14\" text-anchor=\"end\">mais raso</text>"
-    + "<rect x=\"10\" y=\"26\" width=\"360\" height=\"8\" rx=\"4\" fill=\"url(#" + gid + "-gr)\"/>" + pins + "</svg>"
-    + "<p class=\"mp-step\">passo " + (mapaPasso + 1) + " de " + cap.passos.length + " &nbsp;·&nbsp; seta &rarr; avança</p>";
-  return "<div class=\"mapa\"><div class=\"mapa-svg\">" + _mapaSvg(cap, on, p.id)
-    + "<p class=\"mapa-hint\">Clique numa barra ou linha para ver o ponto de falta</p></div>"
-    + "<div class=\"mapa-side\">" + side + "</div></div>";
-}
-
-function _mapaGo(n) {
-  var cap = CAPS[tccCap];
-  if (cap.kind !== "mapa" || n < 0 || n >= cap.passos.length) return;
-  mapaPasso = n;
-  _tccRefresh();
-}
-
-// seta dentro do capítulo mapa: anda um passo; true se consumiu a tecla
-function _mapaStep(d) {
-  var cap = CAPS[tccCap], n = mapaPasso + d;
-  if (cap.kind !== "mapa" || n < 0 || n >= cap.passos.length) return false;
-  _mapaGo(n);
-  return true;
-}
-
-// ao entrar num capítulo mapa: passo 1, ou o último se veio pela seta ←
-function _mapaEnter(i, back) {
-  if (CAPS[i].kind === "mapa" && i !== tccCap) mapaPasso = back ? CAPS[i].passos.length - 1 : 0;
-}
-
-// seta (teclado ou botões ‹ ›): passo do mapa ou capítulo vizinho
-function tccStep(d) { if (!_mapaStep(d)) tccGo(tccCap + d, d < 0); }
-function presStep(d) { if (!_mapaStep(d)) presGo(tccCap + d, d < 0); }
-
-function _tccRefresh() { if (presOn) _renderPres(); else _renderTcc(); }
-
-function _tccSinal(s) { _tccSt(CAPS[tccCap]).sinal = s; _tccRefresh(); }
-
-function _tccChip(k) {
-  var st = _tccSt(CAPS[tccCap]);
-  st.on[k] = (st.on[k] === false);
-  _tccRefresh();
-}
-
-function _tccAdd(sel) {
-  var k = sel.value;
-  if (!k) return;
-  var st = _tccSt(CAPS[tccCap]);
-  if (st.extra.indexOf(k) === -1) st.extra.push(k);
-  st.on[k] = true;
-  _tccRefresh();
-}
-
-function _scrollToTabs() {
-  setTimeout(function() {
-    var sticky = document.querySelector(".header").offsetHeight
-               + document.querySelector(".filter-bar").offsetHeight;
-    var y = document.getElementById("tab-bar").getBoundingClientRect().top
-          + window.scrollY - sticky - 8;
-    document.scrollingElement.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
-  }, 60);
-}
-
-function tccGo(i, back) {
-  if (i < 0 || i >= CAPS.length) return;
-  _mapaEnter(i, back);
-  tccCap = i;
-  if (activeTab !== "tcc") switchTab("tcc"); else _renderTcc();
-  _scrollToTabs();
-}
-
-function _openScenario(k) {
-  if (presOn) presToggle();
-  _applyPllFilter(SCENARIOS[k].badPll ? "bad" : "nominal");
-  activeTab = "inv";
-  document.getElementById("scenario-picker").value = k;
-  switchScenario(k);
-  _scrollToTabs();
-}
-
-function _renderTcc() {
-  var cap = CAPS[tccCap], st = _tccSt(cap);
-  document.querySelectorAll(".tcc-pill").forEach(function(b, i) {
-    b.classList.toggle("active", i === tccCap);
-  });
-  document.getElementById("tcc-ref").textContent = cap.ref;
-  document.getElementById("tcc-title").textContent = cap.titulo;
-  document.getElementById("tcc-text").innerHTML = cap.texto;   // texto nosso, com <sub>
-  var sb = document.getElementById("tcc-sinais");
-  sb.style.display = (cap.sinais.length > 1) ? "" : "none";
-  sb.innerHTML = cap.sinais.map(function(s) {
-    return "<button class=\"pll-btn" + (s === st.sinal ? " active" : "") + "\" onclick=\"_tccSinal('"
-      + s + "')\">" + SINAIS[s].lbl + "</button>";
-  }).join("");
-  document.getElementById("tcc-chips").innerHTML = _tccChipsHtml(cap, isDark, true);
-
-  var plotEl = gd.tcc, tbl = document.getElementById("tcc-table");
-  var cardsEl = document.getElementById("tcc-cards");
-  var mapaEl = document.getElementById("tcc-mapa");
-  mapaEl.innerHTML = (cap.kind === "mapa") ? _mapaHtml(cap, "tcc") : "";
-  if (cap.kind === "mapa") {
-    plotEl.style.display = "none"; tbl.innerHTML = ""; cardsEl.innerHTML = "";
-    return;
-  }
-  if (cap.kind === "tabela") {
-    plotEl.style.display = "none"; cardsEl.innerHTML = "";
-    tbl.innerHTML = _tccTableHtml();
-    return;
-  }
-  tbl.innerHTML = "";
-  plotEl.style.display = "";
-  var sinais = (cap.kind === "spec") ? ["spec"] : (cap.kind === "ons" ? [] : [st.sinal]);
-  var fig = _tccFigure(cap, sinais, { dark: isDark, height: cap.kind === "ons" ? 520 : 460 });
-  PLOTLY_CFG.toImageButtonOptions.filename = "tcc_" + cap.id + (st.sinal ? "_" + st.sinal : "");
-  Plotly.react(plotEl, fig.data, fig.layout, PLOTLY_CFG);
-  cardsEl.innerHTML = _tccCardsHtml(cap, isDark);
-}
-
-// ── Modo apresentação: o site inteiro vira um palco branco em tela cheia ──
-
-var PRES_CFG = { responsive: true, displaylogo: false, displayModeBar: false };
-
-function presToggle() {
-  presOn = !presOn;
-  var el = document.getElementById("pres");
-  el.style.display = presOn ? "" : "none";
-  document.body.classList.toggle("pres-on", presOn);
-  if (presOn) {
-    var fs = document.documentElement.requestFullscreen;
-    if (fs) {
-      try {
-        var pr = document.documentElement.requestFullscreen();
-        if (pr && pr.catch) pr.catch(function() {});
-      } catch (e) {}
-    }
-    _renderPres();
-  } else {
-    if (document.fullscreenElement && document.exitFullscreen) {
-      try { document.exitFullscreen(); } catch (e) {}
-    }
-    if (activeTab === "tcc") _renderTcc();
-  }
-}
-
-function presGo(i, back) {
-  if (i < 0 || i >= CAPS.length) return;
-  _mapaEnter(i, back);
-  tccCap = i;
-  _renderPres();
-}
-
-function _renderPres() {
-  var cap = CAPS[tccCap];
-  document.getElementById("pres-count").innerHTML = (tccCap + 1) + "<span>/" + CAPS.length + "</span>";
-  document.getElementById("pres-ref").textContent = cap.ref;
-  document.getElementById("pres-title").textContent = cap.titulo;
-  document.getElementById("pres-text").innerHTML = cap.texto;
-  document.getElementById("pres-chips").innerHTML = _tccChipsHtml(cap, false, false);
-  document.getElementById("pres-dots").innerHTML = CAPS.map(function(c, i) {
-    return "<button class=\"pres-dot" + (i === tccCap ? " active" : "") + "\" onclick=\"presGo("
-      + i + ")\" title=\"" + c.curto + "\">" + (i + 1) + " · " + c.curto + "</button>";
-  }).join("");
-  var plotEl = document.getElementById("pres-plot");
-  var tbl = document.getElementById("pres-table");
-  var cardsEl = document.getElementById("pres-cards");
-  var mapaEl = document.getElementById("pres-mapa");
-  if (cap.kind === "mapa") {
-    Plotly.purge(plotEl);
-    plotEl.style.display = "none"; cardsEl.innerHTML = "";
-    tbl.style.display = "none"; tbl.innerHTML = "";
-    mapaEl.style.display = ""; mapaEl.innerHTML = _mapaHtml(cap, "pres");
-    return;
-  }
-  mapaEl.style.display = "none"; mapaEl.innerHTML = "";
-  if (cap.kind === "tabela") {
-    Plotly.purge(plotEl);
-    plotEl.style.display = "none"; cardsEl.innerHTML = "";
-    tbl.style.display = ""; tbl.innerHTML = _tccTableHtml();
-    return;
-  }
-  tbl.style.display = "none"; tbl.innerHTML = "";
-  plotEl.style.display = "";
-  cardsEl.innerHTML = _tccCardsHtml(cap, false);
-  var h = Math.max(260, plotEl.clientHeight);
-  var fig = _tccFigure(cap, cap.pres, { dark: false, height: h, big: true, bg: "#ffffff" });
-  Plotly.react(plotEl, fig.data, fig.layout, PRES_CFG);
-}
-
-var _presResizeT = null;
-window.addEventListener("resize", function() {
-  if (!presOn) return;
-  clearTimeout(_presResizeT);
-  _presResizeT = setTimeout(_renderPres, 150);
-});
-
-// Esc com tela cheia: o navegador sai da tela cheia e não entrega a tecla;
-// fullscreenchange fecha o modo junto
-document.addEventListener("fullscreenchange", function() {
-  if (!document.fullscreenElement && presOn) presToggle();
-});
-
-document.addEventListener("keydown", function(e) {
-  var tg = e.target && e.target.tagName;
-  if (tg === "SELECT" || tg === "INPUT" || tg === "TEXTAREA") return;
-  var next = (e.key === "ArrowRight" || e.key === "PageDown");
-  var prev = (e.key === "ArrowLeft" || e.key === "PageUp");
-  // no capítulo mapa, a seta anda os passos antes de trocar de capítulo
-  if (presOn) {
-    if (next) { e.preventDefault(); presStep(1); }
-    else if (prev) { e.preventDefault(); presStep(-1); }
-    else if (e.key === "Escape") { presToggle(); }
-    return;
-  }
-  if (activeTab !== "tcc") return;
-  if (next) { e.preventDefault(); tccStep(1); }
-  else if (prev) { e.preventDefault(); tccStep(-1); }
-});
-"""
+def _tcc_js() -> str:
+    return "\n" + "".join((_JS_DIR / f).read_text(encoding="utf-8") for f in TCC_JS_FILES)

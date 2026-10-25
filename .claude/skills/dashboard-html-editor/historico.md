@@ -79,3 +79,24 @@ o dashboard. O fluxo virou o guia `previa-standalone.md`, e este histórico
 saiu do SKILL.md para liberar espaço. **Lição**: frase de severidade ("mais
 severo", "mais distante") num cartão é afirmação técnica. Conferir com
 cálculo (Zbarra) ou com o TCC antes de mostrar, mesmo numa prévia.
+
+v1.7.0 (2026-10-24): palco enriquecido. Marcação de acomodação na
+Energização (linha + ponto + faixa de ±5% em v_d, eixo do erro em ±20°),
+depois quatro elementos aprovados juntos: passos com frase-mensagem,
+fasor animado, mini-mapa com retenção e número de destaque (ver
+`kb/dashboard/layout/modo-apresentacao.md`). As prévias saíram por
+**injeção no palco real** (seção nova em `previa-standalone.md`), com os
+dados de verdade. **Lição**: a verificação no Edge headless clicando de
+fato achou o gráfico cobrindo o painel ao lado (`Plotly.react` guarda a
+largura antiga); a tela parada parecia certa.
+
+v1.8.0 (2026-10-24, mesma conversa): ferramentas para o palco. O JS da aba
+Análise TCC e do palco saiu da string `_TCC_JS` para 9 arquivos em
+`src/report/js/` (HTML gerado idêntico byte a byte, `node --check` no
+pre-commit); `scripts/verifica_palco.py` versiona a verificação que antes
+morava no scratchpad; agente `palco-validator` lê as telas. Na mesma
+rodada: vírgula decimal nos cartões e na tabela do palco, e marcação do
+retorno à faixa de 2° nos capítulos com falta (seta a partir da eliminação,
+porque o tempo é contado de t_clear). **Lição**: `tickvals` sem `ticktext`
+herda o `hoverformat` (".3f") e escreve "60.000" no eixo; o mesmo erro
+apareceu duas vezes na sessão.

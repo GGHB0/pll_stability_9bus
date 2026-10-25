@@ -13,7 +13,7 @@ Gerado por `scripts/kb_links.py index`. Links `[[slug]]` abrem no Obsidian (vaul
 
 | Pasta | Docs | Índice |
 |---|---|---|
-| dashboard/ | 19 | [dashboard/index.md](dashboard/index.md) |
+| dashboard/ | 20 | [dashboard/index.md](dashboard/index.md) |
 | events/ | 9 | [events/index.md](events/index.md) |
 | inverter/ | 5 | [inverter/index.md](inverter/index.md) |
 | pll/ | 13 | [pll/index.md](pll/index.md) |
@@ -45,6 +45,7 @@ Mapa de relações entre pastas: [grafo.md](grafo.md)
 
 - [code-reviewer](../agents/codigo/code-reviewer.md) — /
 - [code-runner](../agents/codigo/code-runner.md) — /
+- [palco-validator](../agents/codigo/palco-validator.md) — /
 - [pdf-extractor](../agents/kb/pdf-extractor.md) — /
 - [note-validator](../agents/notas/note-validator.md) — /
 - [pdf-note-runner](../agents/notas/pdf-note-runner.md) — /

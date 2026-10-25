@@ -1,0 +1,124 @@
+---
+name: modo-apresentacao-palco
+aliases: [modo-apresentacao-palco]
+description: Modo apresentação do dashboard (palco branco em tela cheia da defesa) — estrutura, navegação, marcação de acomodação, passos com frase-mensagem, painel lateral (fasor, mini-mapa) e números de destaque; src/report/renderer.py e roteiro.py
+---
+
+# Modo apresentação (palco)
+
+Botão "Modo apresentação" no cabeçalho, pedido em 2026-10-20 para dar
+imersão e caber tudo na tela. O site inteiro vira um palco branco em tela
+cheia (`#pres`, `position: fixed`, `requestFullscreen`), um capítulo por
+tela, sem rolagem: número do capítulo, legenda, chips, gráfico ocupando a
+altura que sobra, faixa de mini-cartões e os botões dos capítulos embaixo.
+Os capítulos são os da aba Análise TCC ([[roteiro-demonstracao-dashboard]]).
+
+## Estrutura
+
+- Os sinais de `cap.pres` ficam empilhados num só gráfico, com o mesmo eixo
+  x (o zoom vale para todos): erro de fase + v_d na energização, na
+  localização e no compromisso; erro de fase + P na perda de sincronismo.
+- O tema claro é fixo no palco, independente do botão "Dark mode": as
+  variáveis CSS são redefinidas dentro de `.pres` e a figura sai com
+  `dark: false` sobre fundo branco. A primeira versão era escura; o usuário
+  escolheu, entre três prévias claras, o branco puro, que também resiste
+  melhor ao projetor numa sala iluminada.
+- `#pres-body` é uma linha flex com `#pres-plot` e `#pres-side` (painel ao
+  lado, só com `cap.lado`). Nos capítulos sem gráfico (mapa, tabela), o
+  `#pres-body` inteiro some.
+- `_tccFigure(cap, sinais, o)` monta a figura na aba e no palco (`o.big`).
+  `_renderPres` passa altura **e largura** explícitas: o `Plotly.react`
+  guardava a largura do capítulo anterior e o gráfico cobria o painel ao
+  lado (achado na verificação de 2026-10-24).
+- Seta ou PageDown avança, Esc sai (com tela cheia, quem fecha é o
+  `fullscreenchange`). Clicar num cartão sai do palco e abre o cenário.
+
+## Navegação em três níveis
+
+`presStep(d)`: primeiro os passos do mapa (`_mapaStep`, capítulo "Faltas
+destacadas", [[faltas-destacadas]]), depois os passos do palco
+(`_presPassoStep`), e só então o capítulo vizinho. Entrando num capítulo
+pela seta ←, cai no último passo.
+
+## Marcação de acomodação (Energização, 2026-10-24)
+
+`_marcaPartida` marca, por caso, linha tracejada na cor da curva, tempo no
+topo (40/79 ms no erro, 34/42 ms em v_d) e ponto onde a curva entra de vez
+na faixa. O painel de v_d ganhou a faixa de ±5% do valor final, uma por
+caso em volta do próprio valor final (0,983 nominal, 0,996 inadequada; com
+uma só, o ponto da inadequada caía fora dela, achado do code-reviewer). O eixo do
+erro fica em ±20°: em ±150° a faixa de 2° sumia. Valores de
+`tccInd.partida` ([[indicadores-tcc-dashboard]]). Vale no palco e na aba.
+Escolhida entre três prévias (linha + ponto, etiqueta só no erro, setas de
+duração).
+
+## Retorno à faixa de 2° (capítulos com falta, 2026-10-24)
+
+`_marcaRetorno` (`tcc.js`) vale em todo capítulo com a métrica `ts`
+(Localização, Perda de sincronismo, Compromisso), no palco e na aba:
+tracejado e ponto no instante em que o erro volta de vez à faixa, e uma
+seta de duas pontas **da eliminação até esse instante**, com o tempo do
+cartão (98, 112, 76 ms...). A seta existe porque o retorno é contado de
+t_clear (`pico_e_retorno`), e um rótulo solto "98 ms" num eixo que começa
+em 0,25 s seria lido como instante. Caso que não retorna fica sem marca.
+Valores em `tccInd.retorno` ([[indicadores-tcc-dashboard]]).
+
+O campo `faixa_err` do capítulo fixa o eixo do erro: ±60° na Localização,
+que corta só o salto do 1º ciclo (o TCC já o descarta no pico). O
+Compromisso fica em escala automática, porque o pico de 96° é a mensagem;
+a Perda de sincronismo segue em ±180°. Eixo fixo leva `ticktext`: sem ele,
+o Plotly escreve os ticks com o `hoverformat` (".3f", "60.000").
+
+## Vírgula decimal
+
+Os textos de `tccInd` (cartões do palco e da aba) saem com vírgula
+(`_tcc_ind`), como as legendas; a tabela "Todos os casos" troca na hora de
+desenhar (`tcc_ui.js`). A tabela comparativa das abas por cenário segue
+com ponto.
+
+## Elementos só do palco (2026-10-24)
+
+Pedidos para "enriquecer a apresentação além dos gráficos"; quatro prévias
+injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
+(`roteiro.py`), sem nada fixo no JS.
+
+- **Passos com frase-mensagem** (`passos_pres`, Energização): cada passo
+  troca o parágrafo da legenda por uma frase grande (`.pres-msg`) e esconde
+  os casos de `ocultar`. Passo 1 só a nominal ("40 ms"), passo 2 entra a
+  inadequada ("79 ms: quase o dobro"). Indicador "passo N de M" no canto
+  direito da navegação. `_presPassoReset` devolve os casos à aba ao sair.
+  Por ora só na Energização; o mecanismo serve a qualquer capítulo.
+- **Fasor** (`lado="fasor"`, Perda de sincronismo): círculo com a rede
+  (marca preta no topo, cunha verde de ±2°) e um vetor por caso, no ângulo
+  do erro de fase. O instante segue o mouse no gráfico (`plotly_hover`) e o
+  play percorre a janela do capítulo em 8 s (`FASOR_MS`). Cursor vertical
+  (`#fs-cursor`) posicionado por `xaxis.l2p`. Os ângulos vêm de
+  `gd._fullData` (os `x`/`y` em `SCENARIOS` estão em base64 e não têm
+  `.length`). O fasor não mostra número.
+- **Mini-mapa** (`lado="minimapa"`, Localização): o unifilar de
+  `_mapaSvg` (capítulo "Faltas destacadas"), com cada ponto na cor da curva
+  e a retenção de v_d (`tccInd.ret`) em grande. As notas pequenas do mapa
+  (`.mp-note`) somem; posição dos rótulos em `MINI_ROT`.
+- **Número de destaque** (`destaque`): caixa vermelha com o número em 46 px
+  sobre o gráfico (`_destaque`, só com `o.big`), com seta até o alvo. "> 250×"
+  aponta para o pico de 120 Hz da menor assimétrica. Com `lado=True`, o
+  número vai para o painel ao lado: o "66,8%" da perda de sincronismo fica
+  sob o play do fasor, porque sobre o gráfico cobria os vales de P.
+
+Regra: todo número escrito no palco vem da legenda ou de `tccInd`, que
+batem com o TCC ([[defesa-deck-map]]). Nada de número calculado só para a
+tela.
+
+## Verificação
+
+`scripts/verifica_palco.py` percorre o palco com a seta e falha em erro de
+JS, tela que rola, gráfico sobre o painel ao lado, ← fora do último passo,
+fasor parado e caso escondido na aba depois de sair. Os PNGs vão para
+`output/verifica_palco/`; quem lê é o agente `palco-validator`. O JS está
+em `src/report/js/` (`tcc.js`, `palco.js`, `fasor.js`, `minimapa.js` etc.,
+ordem em `TCC_JS_FILES`), com `node --check` no pre-commit.
+
+## Relacionados
+
+- [[roteiro-demonstracao-dashboard]] — capítulos, casos e cores
+- [[indicadores-tcc-dashboard]] — origem dos números (`tccInd`)

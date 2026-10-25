@@ -5,6 +5,54 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-24 — JS em arquivos, verificação do palco, vírgula e retorno à faixa
+
+Arquivos: `src/report/renderer.py`, `src/report/js/` (novo, 9 arquivos),
+`src/report/roteiro.py`, `src/pipeline/indicadores.py`,
+`scripts/verifica_palco.py` (novo), `.githooks/pre-commit`, `requirements.txt`
+
+- O JS da aba Análise TCC e do palco saiu da string `_TCC_JS` para
+  `src/report/js/`, lido na geração na ordem de `TCC_JS_FILES`. O HTML
+  gerado ficou idêntico byte a byte; o pre-commit roda `node --check`.
+- `scripts/verifica_palco.py` percorre o palco no Edge headless e falha em
+  erro de JS, tela que rola, gráfico sobre o painel ao lado e navegação
+  errada; PNGs em `output/verifica_palco/`. Playwright entrou no
+  `requirements.txt`.
+- Cartões e tabela "Todos os casos" com vírgula decimal, como as legendas.
+- Retorno à faixa de 2° marcado nos capítulos com falta: tracejado, ponto
+  e seta da eliminação até o retorno, com o tempo do cartão. Eixo do erro
+  em ±60° na Localização (`faixa_err`). `indicadores_falta` devolve também
+  `err_ts`.
+
+## 2026-10-24 — Palco: passos, fasor, mini-mapa e números de destaque
+
+Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`
+
+Elementos só do modo apresentação, para enriquecer a defesa além dos
+gráficos, configurados por capítulo em `CAPITULOS`:
+- `passos_pres` (Energização): a seta mostra primeiro só a nominal e
+  depois a inadequada, com a legenda trocada por uma frase grande por passo.
+- `lado="fasor"` (Perda de sincronismo): círculo com o ângulo do PLL de cada
+  sintonia contra a rede, seguindo o mouse ou um play de 8 s.
+- `lado="minimapa"` (Localização): unifilar com os pontos na cor das curvas
+  e a retenção de v_d.
+- `destaque`: "> 250×" sobre o espectro e "66,8%" sob o fasor.
+O gráfico do palco passou a receber largura explícita no `Plotly.react`.
+Detalhes em `.claude/kb/dashboard/layout/modo-apresentacao.md`.
+
+## 2026-10-24 — Marcação da acomodação no capítulo "Energização"
+
+Arquivos: `src/pipeline/indicadores.py`, `src/report/renderer.py`
+
+No palco e na aba Análise TCC, o capítulo de energização marca onde cada
+curva entra de vez na faixa: linha tracejada na cor do caso, tempo no topo
+(40/79 ms no erro, 34/42 ms em v_d) e ponto na curva. O painel de v_d ganhou
+a faixa de ±5% do valor final (uma por caso), e o eixo do erro fica em ±20°: em ±150° a
+faixa de 2° não aparecia. `indicadores_partida` passou a devolver o valor
+final de v_d e o valor de cada sinal no instante de acomodação
+(`tccInd.partida`). Escolhida entre três prévias (linha + ponto, etiqueta só
+no erro, setas de duração).
+
 ## 2026-10-21 — Curva de suportabilidade no capítulo "Código de rede"
 
 Arquivos: `src/pipeline/indicadores.py`, `src/pipeline/loader.py`,
@@ -32,125 +80,13 @@ afundamento mais profundo ao mais raso. A seta → percorre os passos antes de
 trocar de capítulo. Clicar na barra, na linha ou no pino da régua pula para
 o ponto. Saiu de três prévias standalone aprovadas pelo usuário.
 
-## 2026-10-20 — Modo apresentação em palco branco
-
-Arquivo: `src/report/renderer.py`
-
-O palco escuro não agradou. Entre três prévias claras (branco puro, cinza
-com cartões, faixa azul-marinho no topo), o usuário escolheu o branco puro:
-fundo branco, título escuro, destaque azul, curvas com as cores do tema
-claro. O palco fica claro mesmo com o site em dark mode.
-
-## 2026-10-20 — Modo apresentação, rampa do ONS e rótulo do mouse
-
-Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`
-
-- Botão "Modo apresentação" no cabeçalho: o site vira um palco escuro em
-  tela cheia, um capítulo do Cap. 5 por tela, com os sinais empilhados
-  (erro de fase + v_d ou + P), legenda, chips e mini-cartões, sem rolagem.
-  Seta ou PageDown avança, Esc sai.
-- Capítulo do ONS: as barras deram lugar à rampa do Submódulo 2.10 com o
-  ponto de operação de cada trifásica.
-- Cores distintas (amarelo → índigo) nos capítulos só com casos nominais.
-- Rótulo do mouse legível em todas as abas: fundo sólido, borda azul, fonte
-  maior e 3 casas decimais.
-
-Detalhes em `.claude/kb/dashboard/layout/roteiro-casos-tcc.md`.
-
-## 2026-10-20 — Aba "Análise TCC" no lugar da faixa de roteiro
-
-Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`
-
-O usuário pediu o roteiro numa aba própria, com mais liberdade para comparar
-os gráficos num painel direcionado. A faixa de 9 passos (entrada abaixo)
-saiu e a nova aba é a primeira, aberta por padrão:
-
-- 7 capítulos do Cap. 5 (energização, localização, perda de sincronismo,
-  sequência negativa, compromisso da sintonia, código de rede, todos os
-  casos), cada um com legenda e referência às tabelas e figuras do TCC.
-- Cenários sobrepostos no mesmo eixo (azul = nominal, laranja =
-  inadequada), seletor de sinal (erro de fase, v_d, P, Q), chips para ligar
-  e desligar curvas e "+ comparar com…" para qualquer cenário.
-- Mini-cartões por cenário com os indicadores do TCC; o clique abre o
-  cenário nas abas.
-- Seta ou PageDown troca de capítulo (passador de slides).
-- As curvas reaproveitam as figuras já embutidas: o HTML não cresce.
-
-Detalhes em `.claude/kb/dashboard/layout/roteiro-casos-tcc.md`.
-
-## 2026-10-20 — Casos do TCC em destaque e modo roteiro da demonstração
-
-Arquivos: `src/report/roteiro.py` (novo), `src/report/renderer.py`
-
-O painel tem 34 cenários e o TCC discute 17; na defesa, a banca precisa ver
-quais são os do TCC, e a demonstração não pode depender de achar cenário no
-`<select>` durante a fala. Mudanças:
-
-- Seletor agrupado por seção do Cap. 5 (§5.1 a §5.4) e "Outros cenários
-  (fora do TCC)".
-- Mapa unifilar: pontos de falta do TCC em azul, os demais esmaecidos (ainda
-  clicáveis), com legenda. É a convenção do slide 13 do deck.
-- Comparativo: etiqueta `§5.x`, linhas fora do TCC esmaecidas e botão "Só
-  casos do TCC", que ordena pelas Tabelas 5.1-5.3.
-- Modo roteiro: botão "Roteiro", 9 passos com legenda (cenário, aba, zoom e
-  painel), avançados por seta ou PageDown (passador de slides).
-- Fixes: `goToChart` voltou a rolar até o painel (quebrado desde 2026-07-24),
-  `regime_bad_pll` passou a acender o mapa, e o toggle PLL acha a monofásica
-  inadequada da Barra 6 (`1phase_ground`).
-
-Detalhes em `.claude/kb/dashboard/layout/roteiro-casos-tcc.md`.
-
-## 2026-10-20 — Indicadores do Cap. 5 do TCC no painel
-
-Arquivos: `src/pipeline/indicadores.py` (novo), `src/pipeline/loader.py`,
-`src/pipeline/chart.py`, `src/pipeline/spectrum.py`, `src/report/renderer.py`,
-`src/config/settings.py`, `src/config/__init__.py`, `src/__init__.py`,
-`scripts/medir_tabelas_cap5.py`, `scripts/gen_erro_fase.py`
-
-A defesa passa do slide 14 para o HTML ao vivo, e o painel não batia com o TCC.
-O erro de fase era `θ̂ − θ_rede` com faixa ±1,15° (pico de 53,1° contra
-37,3° na Barra 7 trifásica, e `bus6/2phase` aparecia como "não acomoda", contra
-48 ms no TCC), e faltavam os indicadores das Tabelas 5.1-5.3. Mudanças:
-
-- As receitas do Cap. 5 viraram o módulo `indicadores.py`, usado pelo
-  dashboard e pelos scripts do TCC. `tabelas_cap5.csv` regenerado com
-  diferença zero.
-- O erro de fase passa a ser `atan2(v_q, v_d)` da rede, com faixa de 2°, 1º
-  ciclo sombreado e linha quebrada nos saltos de ±180°. `TOL_RAD` foi removido.
-- Cards novos: "Sincronismo do SRF-PLL", "Tensão e suporte de reativo" e
-  "Energização do inversor" (regime), além do item "Sincronismo" na narrativa.
-- A tabela comparativa ganhou 9 colunas das Tabelas 5.1-5.3, geradas de
-  `_CMP_COLS`.
-- A aba Espectro ganhou um destaque com o 120 Hz pela receita do TCC; a tabela
-  de harmônicas, que é outro instrumento, continua igual.
-- O cabeçalho passou de "UERJ 2025" para "UERJ 2026".
-
-Detalhes em `.claude/kb/dashboard/cards/indicadores-tcc.md`.
-
-## 2026-10-16 — Plotly embutido no HTML (abre sem internet)
-
-Arquivos: `src/report/renderer.py`, `assets/vendor/plotly-2.35.0.min.js` (novo)
-
-O painel vai ser aberto ao vivo na defesa do TCC, e a sala pode não ter
-internet: com o `<script src>` do CDN, os gráficos ficavam em branco. O
-`_plotly_js_html` embute o plotly.js 2.35.0 (mesma versão do CDN, 4,5 MB) a
-partir de `assets/vendor/`; sem o arquivo, volta ao CDN. O HTML passa de
-~68 MB para ~73 MB e também renderiza aberto como `file://`.
-
-## 2026-10-03 — Fix: escala de P e Q do UFV
-
-Arquivos: `src/pipeline/pq.py` (novo), `src/pipeline/loader.py`
-
-O subsistema do `.slx` que calcula P e Q (SID 4055) usava ganho 1/√3 nos
-dois: P saía ×√3/2 (0,87 pu pré-falta com i_d = 1) e Q ×1,5. O `.slx` foi
-corrigido, mas as rodadas existentes não foram re-simuladas: o `SimData`
-passa o CSV por `corrige_pq`, que reescala quando o `fault_info.json` não
-traz `pq_ganho_p` (P ×2/√3, Q ×2/3). Os gráficos e métricas de potência do
-dashboard mudam de valor, não de forma. Detalhe em
-`.claude/kb/simulation/export_workflow.md`.
-
 ## Entradas anteriores
 
+- [2026-10-20](docs/changelog/2026-10-20.md) — indicadores do Cap. 5 no painel,
+  casos do TCC em destaque, aba "Análise TCC", modo apresentação (palco branco),
+  rampa do ONS e rótulo do mouse.
+- [2026-10-03 a 2026-10-16](docs/changelog/2026-10-03_16.md) — Plotly embutido
+  no HTML (abre sem internet); fix da escala de P e Q do UFV.
 - [2026-08-17 a 2026-08-18](docs/changelog/2026-08-17_18.md) — fix do filtro
   do toggle PLL na carga inicial, título do eixo X do espectro, aba "Sistema
   9-Bus" renomeada para "Barras de Geração".

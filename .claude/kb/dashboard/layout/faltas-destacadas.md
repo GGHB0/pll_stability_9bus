@@ -18,7 +18,7 @@ implementado no mesmo dia como 1º capítulo (no palco aparece como "1/8").
   ponto, `rotulo`, `pos` na régua, `cenario` do botão, `faltas`,
   `inadequada`, `tom` da etiqueta, `texto`, `papel`; `resumo=True` acende
   tudo). Textos e cobertura ficam ali, não no JS.
-- `renderer.py` (`_TCC_JS`): `_mapaSvg` monta o unifilar como string a
+- `src/report/js/mapa.js`: `_mapaSvg` monta o unifilar como string a
   cada passo; `_mapaHtml(cap, gid)` monta SVG, cartão e régua (o `gid`
   evita id de gradiente repetido entre aba e palco). Os containers são
   `#tcc-mapa` e `#pres-mapa`.

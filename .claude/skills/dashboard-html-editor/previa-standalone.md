@@ -45,6 +45,30 @@ na mesma conversa até o "ficou muito bom".
    os textos (o scratchpad some com a sessão), depois implementar pelo
    workflow normal do SKILL.md.
 
+## Variante: injetar no palco real
+
+Quando o elemento novo **acompanha um gráfico que já existe** (painel ao
+lado, número sobre a curva, passos de um capítulo), injetar no HTML gerado
+dá a prévia com os dados de verdade, sem redesenhar nada. Usado em
+2026-10-24 (fasor, mini-mapa, passos, destaque; aprovados de primeira).
+
+1. Playwright no venv do scratchpad, `chromium.launch(channel="msedge")`,
+   viewport 1920×1080, `file://` do `output/pll_metrics.html`.
+2. Abrir o capítulo: `tccCap = CAPS.findIndex(c => c.id === "<id>");
+   presToggle()`.
+3. `page.evaluate(js)` monta o elemento: mover `#pres-plot` para uma linha
+   flex com um painel ao lado, `Plotly.relayout`/`addTraces` para
+   anotações. Os dados de curva vêm de `gd._fullData` (os de `SCENARIOS`
+   estão em base64).
+4. Elemento animado: um PNG por instante (passar `t` ao `evaluate`), não
+   um vídeo.
+5. Ler todos os PNGs antes de mostrar: na rodada de 10-24, o rótulo de
+   retenção cortou no mapa e o vetor da rede sumiu sob o da nominal.
+
+Na migração para `src/`, o que a prévia fez com `relayout` vira campo em
+`CAPITULOS` + função num arquivo de `src/report/js/`; a largura do gráfico passa a ser
+explícita no `Plotly.react` (senão cobre o painel ao lado).
+
 ## Armadilhas
 
 - O arquivo da prévia pode ser alterado por fora entre rodadas (o usuário

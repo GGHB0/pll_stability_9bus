@@ -76,7 +76,8 @@ e na localização um degradê de azul do mais perto ao mais longe da usina.
   ficam esmaecidos e o "Zoom na falta" some.
 - Teclas, só com a aba ativa e fora de `<select>`: seta → ou PageDown
   avança, seta ← ou PageUp volta (um passador de slides funciona).
-- O JS mora em `_TCC_JS`, uma string comum no fim do `renderer.py`, e entra
+- O JS mora em `src/report/js/` (9 arquivos por tema, desde 2026-10-24;
+  antes era a string `_TCC_JS` no fim do `renderer.py`) e entra
   no f-string do HTML por `{tcc_js}`, sem precisar dobrar chaves.
 
 Os números das legendas foram conferidos contra os mini-cartões no Edge
@@ -84,30 +85,11 @@ headless (Playwright em venv descartável), nos 7 capítulos, sem erro de JS.
 
 ## Modo apresentação
 
-Botão "Modo apresentação" no cabeçalho, pedido em 2026-10-20 para dar
-imersão e caber tudo na tela. O site inteiro vira um palco branco em tela
-cheia (`#pres`, `position: fixed`, `requestFullscreen`), um capítulo por
-tela, sem rolagem: número do capítulo, legenda, chips, gráfico ocupando a
-altura que sobra, faixa de mini-cartões e os botões dos capítulos embaixo.
+Palco branco em tela cheia, um capítulo por tela. Estrutura, navegação,
+passos, painel lateral (fasor, mini-mapa) e números de destaque em
+[[modo-apresentacao-palco]].
 
-- Os sinais de `cap.pres` ficam empilhados num só gráfico, com o mesmo eixo
-  x (o zoom vale para todos): erro de fase + v_d na energização, na
-  localização e no compromisso; erro de fase + P na perda de sincronismo.
-- O tema claro é fixo no palco, independente do botão "Dark mode": as
-  variáveis CSS são redefinidas dentro de `.pres` e a figura sai com
-  `dark: false` sobre fundo branco. A primeira versão era escura; o usuário
-  não gostou e escolheu, entre três prévias claras (branco puro, cinza com
-  cartões, faixa azul-marinho no topo como o deck), o branco puro. O claro
-  também resiste melhor ao projetor numa sala iluminada.
-- Os chips e cartões reaproveitam as classes da aba.
-- Seta ou PageDown avança, Esc sai. Com a tela cheia, o navegador consome o
-  Esc, e quem fecha o modo é o `fullscreenchange`. O capítulo é o mesmo da
-  aba (`tccCap`), e clicar num cartão sai do palco e abre o cenário.
-- `_tccFigure(cap, sinais, o)` monta a figura nos dois casos (aba com um
-  sinal, palco com vários), e `_renderPres` mede a altura do `#pres-plot`
-  e redesenha no `resize`.
-
-Na mesma rodada:
+Na rodada que criou o palco (2026-10-20):
 
 - **Capítulo do ONS** trocado de barras (três coladas em 1 pu) pela rampa
   do Submódulo 2.10 (i_q contra V) com o ponto de operação de cada trifásica

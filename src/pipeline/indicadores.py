@@ -78,6 +78,9 @@ def indicadores_falta(t: np.ndarray, s: dict, t_fault: float, t_clear: float) ->
     vd = s["vd_rede_pu"]
     e = erro_fase_deg(vd, s["vq_rede_pu"])
     pico, ts = pico_e_retorno(t, e, t_fault, t_clear)
+    # erro no instante do retorno (ponto marcado no palco); None sem retorno
+    err_ts = (float(e[np.argmin(np.abs(t - (t_clear + ts / 1000)))])
+              if ts else None)
     pre = (t >= t_fault - JANELA_PRE_S) & (t < t_fault)
     w2 = (t >= t_fault + 2 * CICLO_S) & (t <= t_clear)
     w1 = (t >= t_fault + CICLO_S) & (t <= t_clear)
@@ -92,7 +95,7 @@ def indicadores_falta(t: np.ndarray, s: dict, t_fault: float, t_clear: float) ->
         ret=float(vd[w2].mean() / vd[pre].mean() * 100),
         vdmed=float(vd[w1].mean()), vdmin=float(vd[w1].min()), vdmax=float(vd[w1].max()),
         a120=float(a[np.argmin(np.abs(f - 120))]),
-        pico=pico, ts=ts,
+        pico=pico, ts=ts, err_ts=err_ts,
         frac90=float((np.abs(e[wf]) > 90).mean() * 100),
         Vmed=float(V[w1].mean()),
         iq_rampa_Vmed=float(rampa_ons(V[w1].mean())),
@@ -107,14 +110,19 @@ def indicadores_falta(t: np.ndarray, s: dict, t_fault: float, t_clear: float) ->
 
 def indicadores_partida(t: np.ndarray, vd_rede: np.ndarray, vq_rede: np.ndarray) -> dict:
     """Acomodação na energização (§5.1), em ms desde t = 0: v_d na faixa de
-    ±5% do valor final e erro de fase na faixa de 2°."""
+    ±5% do valor final e erro de fase na faixa de 2°. Também devolve o valor
+    final de v_d e o valor de cada sinal no instante de acomodação, que o
+    palco usa para desenhar a faixa e o ponto de entrada nela."""
     e = erro_fase_deg(vd_rede, vq_rede)
     fin = vd_rede[t >= t[-1] - JANELA_FINAL_S].mean()
-    fora_vd = t[np.abs(vd_rede - fin) > FAIXA_VD * abs(fin)]
-    fora_e = t[np.abs(e) > TOL_DEG]
+    fora_vd = np.flatnonzero(np.abs(vd_rede - fin) > FAIXA_VD * abs(fin))
+    fora_e = np.flatnonzero(np.abs(e) > TOL_DEG)
+    i_vd = fora_vd[-1] if len(fora_vd) else 0
+    i_e = fora_e[-1] if len(fora_e) else 0
     return dict(
-        t_vd5=float(fora_vd[-1] * 1000) if len(fora_vd) else 0.0,
-        t_err2=float(fora_e[-1] * 1000) if len(fora_e) else 0.0,
+        t_vd5=float(t[i_vd] * 1000) if len(fora_vd) else 0.0,
+        t_err2=float(t[i_e] * 1000) if len(fora_e) else 0.0,
+        vd_fin=float(fin), vd_t5=float(vd_rede[i_vd]), err_t2=float(e[i_e]),
     )
 
 

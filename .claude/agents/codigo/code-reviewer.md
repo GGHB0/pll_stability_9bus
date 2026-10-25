@@ -121,6 +121,14 @@ um texto de interface com justificativa, sinalize.
 Confira também português: erro de digitação, concordância, e coerência entre
 o texto exibido e o que o código de fato faz.
 
+**Número no modo apresentação.** O palco da defesa só mostra número que está
+no TCC. Todo número novo em `roteiro.py` (`texto`, `passos_pres`,
+`destaque`) ou desenhado pelo JS de `src/report/js/` tem de bater com a legenda do
+capítulo ou com `tccInd` do mesmo cenário (`kb/dashboard/layout/modo-apresentacao.md`).
+Número calculado só para a tela, ou digitado diferente do cartão, é defeito.
+Elemento do palco com painel ao lado: confira que o gráfico encolhe
+(largura explícita no `Plotly.react`) e que cabe em 1920×1080.
+
 ## Relatório
 
 Devolva exatamente estas quatro seções:

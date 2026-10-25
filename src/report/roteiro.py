@@ -64,6 +64,13 @@ _REF = ("#94a3b8", "#64748b")
 # capítulo), cada um com id do ponto, rotulo e pos na régua (∝ tensão residual
 # na Barra 2, ver kb ieee9bus-thevenin), cenario aberto pelo botão, faltas e
 # inadequada (cobertura conforme kb cenarios-simulados).
+# Só no modo apresentação (palco): passos_pres troca a legenda por uma frase
+# por passo (texto, ocultar = casos escondidos naquele passo), lado põe um
+# painel ao lado do gráfico ("fasor" ou "minimapa") e destaque escreve um
+# número grande sobre o gráfico (sinal, num, txt, x/y do alvo, ax/ay da
+# caixa; sem x, a caixa fica solta em ax/ay; lado=True põe o número no
+# painel ao lado). Números só os da legenda. faixa_err fixa o eixo do erro
+# de fase (palco e aba) para a faixa de 2° aparecer.
 CAPITULOS: list[dict] = [
     dict(id="faltas", pres=[], curto="Faltas destacadas", kind="mapa",
          titulo="Faltas destacadas", ref="Antes dos resultados",
@@ -132,7 +139,15 @@ CAPITULOS: list[dict] = [
                "faixa de 2° em 40 ms com a sintonia nominal e em 79 ms com a "
                "inadequada.",
          casos=[("regime", _NOM), ("regime_bad_pll", _BAD)],
-         sinais=["err", "vd"], xrange=[0.0, 0.2], metricas=["terr2", "tvd5"]),
+         sinais=["err", "vd"], xrange=[0.0, 0.2], metricas=["terr2", "tvd5"],
+         passos_pres=[
+             dict(texto="Com a sintonia nominal, o erro de fase entra na faixa "
+                        f"de 2° em <b style='color:{_NOM[0]}'>40 ms</b>.",
+                  ocultar=["regime_bad_pll"]),
+             dict(texto="Com a sintonia inadequada, leva "
+                        f"<b style='color:{_BAD[0]}'>79 ms</b>: quase o dobro.",
+                  ocultar=[]),
+         ]),
     dict(id="local", pres=["err", "vd"], curto="Localização", kind="time",
          titulo="Falta trifásica: quanto mais perto, mais severa",
          ref="§5.2 · Tabela 5.1 · Figura 5.7",
@@ -143,7 +158,7 @@ CAPITULOS: list[dict] = [
          casos=[("bus7/3phase", _LOC[0]), ("line7_8/3phase", _LOC[1]),
                 ("line8_9/3phase", _LOC[2]), ("bus6/3phase", _LOC[3])],
          sinais=["err", "vd", "P"], xrange=[0.25, 0.6],
-         metricas=["ret", "pico", "ts"]),
+         metricas=["ret", "pico", "ts"], lado="minimapa", faixa_err=[-60, 60]),
     dict(id="sinc", pres=["err", "P"], curto="Perda de sincronismo", kind="time",
          titulo="Barra 7 trifásica: a sintonia decide o sincronismo",
          ref="§5.4 · Figuras 5.18 e 5.19",
@@ -154,7 +169,10 @@ CAPITULOS: list[dict] = [
                "tempo após a eliminação.",
          casos=[("bus7/3phase", _NOM), ("bus7/3phase_bad_pll", _BAD)],
          sinais=["err", "P", "Q", "vd"], xrange=[0.25, 0.6],
-         metricas=["ret", "pico", "ts", "fracP"]),
+         metricas=["ret", "pico", "ts", "fracP"], lado="fasor",
+         destaque=dict(lado=True, num="66,8%",
+                       txt="do tempo absorvendo potência ativa após a "
+                           "eliminação, com a sintonia inadequada")),
     dict(id="seqneg", pres=["spec"], curto="Sequência negativa", kind="spec",
          titulo="Faltas assimétricas: a sequência negativa vira 120 Hz",
          ref="§5.3 · Tabela 5.3 · Figura 5.10",
@@ -166,7 +184,9 @@ CAPITULOS: list[dict] = [
          casos=[("bus7/2phase", _LOC[0]), ("bus7/1phase", _LOC[1]),
                 ("bus6/2phase", _LOC[2]), ("bus6/1phase", _LOC[3]),
                 ("bus7/3phase", _REF)],
-         sinais=["spec"], xrange=[0.0, 400.0], metricas=["a120", "pico"]),
+         sinais=["spec"], xrange=[0.0, 400.0], metricas=["a120", "pico"],
+         destaque=dict(sinal="spec", num="&gt; 250×", x=122, y=0.29, ax=200, ay=0.55,
+                       txt="a menor assimétrica contra<br>a maior trifásica")),
     dict(id="comp", pres=["err", "vd"], curto="Compromisso da sintonia", kind="time",
          titulo="Ganho menor é compromisso, não piora uniforme",
          ref="§5.3 · Tabela 5.3 · Figura 5.14",

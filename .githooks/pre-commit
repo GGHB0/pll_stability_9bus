@@ -1,8 +1,21 @@
 #!/bin/sh
-# Pre-commit do projeto: audita os .md (KB, CLAUDE.md, limite de linhas) quando
-# o commit mexe em markdown, _index.yaml ou no próprio script.
+# Pre-commit do projeto: confere a sintaxe do JS do dashboard e audita os .md
+# (KB, CLAUDE.md, limite de linhas) quando o commit mexe em markdown,
+# _index.yaml ou no próprio script.
 # Ativar uma vez por clone:  git config core.hooksPath .githooks
 # Regras: .claude/rules/kb-links.md e .claude/rules/limits.md
+
+# JS do dashboard (src/report/js/): node --check, se houver node instalado
+js=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^src/report/js/.*\.js$')
+if [ -n "$js" ] && command -v node >/dev/null 2>&1; then
+    for f in $js; do
+        if ! node --check "$f"; then
+            echo
+            echo "pre-commit: erro de sintaxe em $f (node --check)."
+            exit 1
+        fi
+    done
+fi
 
 git diff --cached --name-only --diff-filter=ACMRD \
     | grep -qE '\.md$|_index\.yaml$|scripts/kb_links\.py$' || exit 0

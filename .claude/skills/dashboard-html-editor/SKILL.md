@@ -1,7 +1,7 @@
 ---
 name: dashboard-html-editor
 description: Edita o pipeline Python que gera o relatório HTML interativo (output/pll_metrics.html) — SimData/ChartBuilder/HTMLRenderer em src/. Ativar sempre que o usuário pedir para mudar/adicionar/remover algo no dashboard: cards, métricas, gráficos, abas, tabela comparativa, tema light/dark, toggle PLL, diagrama unifilar, ou qualquer elemento visual/funcional do relatório. Também usar para regenerar e verificar o HTML após qualquer mudança em src/pipeline ou src/report.
-version: 1.6.0
+version: 1.8.0
 ---
 
 # Dashboard HTML Editor — Skill de Edição do Relatório Interativo
@@ -70,7 +70,8 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 | Tema light/dark | `renderer.py` (`_css`, `toggleTheme`) | `layout/dark-mode-theming.md` |
 | Header/branding/botões da filter-bar | `renderer.py` | `layout/header-branding.md`, `layout/estrutura-html.md` |
 | Toggle PLL nominal/sintonia inadequada | `renderer.py`, `app.py` | `layout/bad-pll-dashboard-filter.md` |
-| Casos do TCC, capítulos da aba Análise TCC | `roteiro.py` (`TCC_CASOS`, `CAPITULOS`), `_TCC_JS` no `renderer.py` | `layout/roteiro-casos-tcc.md` |
+| Casos do TCC, capítulos da aba Análise TCC | `roteiro.py` (`TCC_CASOS`, `CAPITULOS`), JS em `src/report/js/` (ordem em `TCC_JS_FILES` no `renderer.py`) | `layout/roteiro-casos-tcc.md` |
+| Palco: passos com frase, painel ao lado (fasor, mini-mapa), número de destaque | campos `passos_pres`/`lado`/`destaque` em `CAPITULOS`; `palco.js` (`_renderPres`), `fasor.js`, `minimapa.js`, `tcc.js` (`_destaque`, `_marcaPartida`, `_marcaRetorno`) | `layout/modo-apresentacao.md` |
 | Narrativa/veredito (story) | `renderer.py` (`_story_html`) | `cards/cards-metricas.md` |
 | Remover aba/gráfico inteiro (feature) | `chart.py` (método build), `app.py` (chamada + chaves do dict), `renderer.py` (chaves `SCENARIOS`, HTML da seção, `TIME_TABS`/guards de `switchTab`, ordem do `goToChart`) | doc do gráfico removido + `layout/{estrutura-html,tabs-navegacao}.md` |
 
@@ -83,10 +84,17 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
   pelo texto e usa o `y` dela. Painel novo deve manter a barra via `_label`
   para cards e roteiro acharem. Detalhes em `tabs-navegacao.md`.
 
-- **Sem browser pane, verificar com Edge headless**: Playwright num venv
-  descartável do scratchpad, `chromium.launch(channel="msedge")` (não baixa
-  browser), abrir o HTML como `file://`, avaliar JS e tirar screenshots.
-  Usado em 2026-10-20 para percorrer a aba Análise TCC.
+- **Palco e aba Análise TCC: `scripts/verifica_palco.py`** (desde
+  2026-10-24). Percorre o palco com a seta no Edge headless (Playwright do
+  `.venv`, `channel="msedge"`, não baixa browser), tira um PNG por tela em
+  `output/verifica_palco/` e falha em erro de JS, tela que rola, gráfico
+  sobre o painel ao lado, seta ← fora do último passo e fasor parado.
+  Mudança no palco → rodar o script e acionar o agente `palco-validator`,
+  que lê as telas (número contra cartão, texto cortado, vírgula decimal).
+- **JS em `src/report/js/`**: `node --check <arquivo>` depois de editar (o
+  pre-commit também roda). Mudança só de organização do JS: o HTML gerado
+  tem de sair idêntico (`cmp` com uma cópia de antes), como na extração de
+  2026-10-24.
 - **Pedido de gosto visual (tema, cores) → prévias antes de editar**: no
   mesmo Playwright, injetar CSS (`page.add_style_tag`) e sobrescrever a
   função de render via `page.evaluate` sobre o HTML já gerado; 2-4 variantes
@@ -119,7 +127,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 - [previa-standalone.md](previa-standalone.md): elemento novo de visual
   indefinido (capítulo do palco, diagrama) prototipado num HTML do
   scratchpad, com PNG por passo no Edge headless, antes de tocar em `src/`.
-- [historico.md](historico.md): versões v1.0.0 a v1.6.0 e a lição de cada
+- [historico.md](historico.md): versões v1.0.0 a v1.8.0 e a lição de cada
   rodada. Versão nova ganha entrada lá, não aqui.
 
 Atualizar a tabela e as convenções conforme novas edições no dashboard

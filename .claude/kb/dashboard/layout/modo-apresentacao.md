@@ -61,7 +61,8 @@ seta de duas pontas **da eliminação até esse instante**, com o tempo do
 cartão (98, 112, 76 ms...). A seta existe porque o retorno é contado de
 t_clear (`pico_e_retorno`), e um rótulo solto "98 ms" num eixo que começa
 em 0,25 s seria lido como instante. Caso que não retorna fica sem marca.
-Valores em `tccInd.retorno` ([[indicadores-tcc-dashboard]]).
+Desde 2026-10-25 as setas ficam numa faixa própria acima do eixo do erro
+(o domínio do eixo desce), fora das curvas. `tccInd.retorno` ([[indicadores-tcc-dashboard]]).
 
 O campo `faixa_err` do capítulo fixa o eixo do erro: ±60° na Localização,
 que corta só o salto do 1º ciclo (o TCC já o descarta no pico). O
@@ -119,7 +120,7 @@ injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
   (`FASOR_MS`, 20 s desde 2026-10-24: 8 s ficou rápido demais), **sempre a partir do início** (pedido de 2026-10-24: na
   Energização, t = 0, o PLL girando até travar); trocar de capítulo zera
   `fasorT`. Na Energização os passos também valem no fasor (passo 1 só o
-  vetor nominal). Cursor vertical
+  vetor nominal). Cursor vertical cinza tracejado
   (`#fs-cursor`) posicionado por `xaxis.l2p`. Os ângulos vêm de
   `gd._fullData` (os `x`/`y` em `SCENARIOS` estão em base64 e não têm
   `.length`). O fasor não mostra número. Legenda: "PLL nominal/inadequada"

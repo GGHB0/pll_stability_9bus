@@ -103,5 +103,7 @@ pelo nº do eixo):
 entre as duas figuras em [[dashboard-zoom-export]].
 
 Outros pontos do layout: `exponentformat="none"` nos eixos Y (pu é
-adimensional — sem prefixo SI), `hovermode="x unified"`, altura
+adimensional — sem prefixo SI), `separators=",."` (vírgula decimal nos
+eixos e no rótulo do mouse, desde 2026-10-25; idem `spectrum.py` e
+`_tccFigure` do palco), `hovermode="x unified"`, altura
 `240 px × n_rows`, margem superior extra quando há subtítulos de grupo.

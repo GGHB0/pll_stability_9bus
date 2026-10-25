@@ -5,6 +5,26 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-25 — Gráficos: vírgula decimal e leitura no projetor
+
+Arquivos: `src/report/js/tcc.js`, `src/report/renderer.py`,
+`src/pipeline/chart.py`, `src/pipeline/spectrum.py`
+
+Revisão dos gráficos do palco. Os eixos saíam com ponto decimal (0.25,
+1.5) enquanto cartões e texto usam vírgula: `separators=",."` no palco, na
+aba Análise TCC e nas abas Inversor e Sistema. O cursor do fasor virou
+linha cinza tracejada (a preta cortava "Potência ativa P"). O rótulo de
+cada painel subiu 12 px, com margem de cima 44 px nos gráficos de dois
+painéis, para não colar no número do topo do eixo; o vão entre os
+painéis tem ao menos 48 px e os tempos da Energização se afastam pela
+altura do painel (colavam em 1280×720). No palco, curvas de
+3 px e fonte proporcional à altura do gráfico (14 a 18). A faixa da falta
+fica só dentro de cada painel. As setas de retorno à faixa de 2°
+(Localização, Compromisso, Perda de sincronismo) foram para uma faixa
+própria acima do eixo do erro, fora das curvas, escolhida por prévia.
+Recusados nas prévias: espectro em hastes ou com pontos e rótulo direto
+nas curvas. `verifica_palco.py` sem falhas.
+
 ## 2026-10-25 — Palco: Código de rede em seis passos, com fecho
 
 Arquivos: `src/report/roteiro.py`, `src/report/js/ons.js`,

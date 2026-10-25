@@ -83,7 +83,8 @@ function _tccTrace(sc, sinal) {
 function _tccFigure(cap, sinais, o) {
   var dark = o.dark, B = dark ? BASE_DARK : BASE_LIGHT;
   var bg = o.bg || B.paper, grid = dark ? "#2a3a55" : "#e2e8f0";
-  var fs = o.big ? 15 : 12, mixed = _tccMixed(cap), visible = _tccVisible(cap);
+  // no palco a fonte acompanha a altura do gráfico (16 em 1080p, 14 em 720p)
+  var fs = o.big ? Math.max(14, Math.min(18, Math.round(o.height / 42))) : 12, mixed = _tccMixed(cap), visible = _tccVisible(cap);
   var col = function(c) { return dark ? c.dark : c.light; };
   var layout = {
     height: o.height, margin: { t: o.big ? 30 : 26, r: 24, b: 58, l: 80 },
@@ -91,17 +92,21 @@ function _tccFigure(cap, sinais, o) {
     font: { family: "Inter, Segoe UI, system-ui, sans-serif", color: B.font, size: fs },
     hoverlabel: { bgcolor: dark ? "#0f172a" : "#ffffff", bordercolor: dark ? "#60a5fa" : "#2563eb",
                   font: { size: fs + 1, color: B.font }, align: "left" },
-    hovermode: "x unified", shapes: [], annotations: [],
+    hovermode: "x unified", shapes: [], annotations: [], separators: ",.",
   };
   var data = [];
 
   if (cap.kind === "ons") return _onsFigure(cap, o, layout, visible, mixed, col, grid, fs);
 
-  var n = sinais.length, gap = n > 1 ? 0.09 : 0, h = (1 - gap * (n - 1)) / n;
-  var spec = sinais[0] === "spec";
+  if (o.big && sinais.length > 1) layout.margin.t = 44;   // espaço para o rótulo do 1º painel
+  // vão entre painéis de ao menos 48 px, para o rótulo do 2º não colar no eixo de cima
+  var pxPlot = o.height - layout.margin.t - layout.margin.b;
+  var n = sinais.length, gap = n > 1 ? Math.max(0.09, 48 / pxPlot) : 0, h = (1 - gap * (n - 1)) / n;
+  var spec = sinais[0] === "spec", doms = [];
   sinais.forEach(function(sinal, i) {
     var ax = (i === 0) ? "" : String(i + 1);
     var y1 = 1 - i * (h + gap), y0 = y1 - h;
+    doms.push([y0, y1]);
     var S = SINAIS[sinal];
     layout["yaxis" + ax] = { domain: [y0, y1], anchor: "x", gridcolor: grid, zerolinecolor: grid,
       title: { text: S.y }, hoverformat: ".3f" };
@@ -113,13 +118,13 @@ function _tccFigure(cap, sinais, o) {
       var lbl = _tccLabel(c.key, mixed);
       data.push({ type: "scatter", mode: "lines", x: t.x, y: t.y, name: lbl,
         xaxis: "x", yaxis: "y" + ax,
-        line: { color: col(c), width: c.larg ? (o.big ? c.larg : c.larg - 0.6) : (o.big ? 2.6 : 2.2),
+        line: { color: col(c), width: c.larg ? (o.big ? c.larg : c.larg - 0.6) : (o.big ? 3 : 2.2),
                 dash: c.extra ? "dot" : (c.dash || "solid") },
         hovertemplate: lbl + ": <b>%{y:.3f}" + S.u + "</b><extra></extra>" });
     });
     if (n > 1) {
       layout.annotations.push({ xref: "paper", yref: "paper", x: 0, y: y1, xanchor: "left",
-        yanchor: "bottom", showarrow: false, text: "<b>" + S.lbl + "</b>",
+        yanchor: "bottom", yshift: 12, showarrow: false, text: "<b>" + S.lbl + "</b>",
         font: { size: fs, color: dark ? "#93c5fd" : "#1d4ed8" } });
     }
     if (sinal === "err") {
@@ -132,7 +137,8 @@ function _tccFigure(cap, sinais, o) {
         layout["yaxis" + ax].ticktext = ["−180", "−90", "0", "90", "180"];
       }
     }
-    if (cap.id === "energ") _marcaPartida(layout, data, visible, sinal, ax, [y0, y1], col, fs, dark);
+    if (cap.id === "energ") _marcaPartida(layout, data, visible, sinal, ax, [y0, y1], col, fs, dark,
+      pxPlot * (y1 - y0));
     if (sinal === "err" && cap.faixa_err) {
       var fe = cap.faixa_err, st4 = (fe[1] - fe[0]) / 4;
       layout["yaxis" + ax].range = fe;
@@ -162,9 +168,12 @@ function _tccFigure(cap, sinais, o) {
       .filter(function(sc) { return sc.tFault != null; })[0];
     if (f0) {
       var tc = (f0.tClear != null) ? f0.tClear : f0.tFault;
-      layout.shapes.push({ type: "rect", xref: "x", yref: "paper", layer: "below",
-        x0: f0.tFault, x1: tc, y0: 0, y1: 1, line: { width: 0 },
-        fillcolor: dark ? "rgba(248,113,113,.10)" : "rgba(220,38,38,.06)" });
+      // uma faixa por painel, sem pintar o vão entre eles
+      doms.forEach(function(d) {
+        layout.shapes.push({ type: "rect", xref: "x", yref: "paper", layer: "below",
+          x0: f0.tFault, x1: tc, y0: d[0], y1: d[1], line: { width: 0 },
+          fillcolor: dark ? "rgba(248,113,113,.10)" : "rgba(220,38,38,.06)" });
+      });
       layout.annotations.push({ xref: "x", yref: "paper", x: (f0.tFault + tc) / 2, y: 1,
         yanchor: "bottom", text: "falta", showarrow: false,
         font: { size: fs - 1, color: dark ? "#fca5a5" : "#b91c1c" } });
@@ -221,7 +230,8 @@ function _foco(f, xr, layout) {
 // eliminação até ele com o tempo do cartão, porque o retorno é contado de
 // t_clear. Casos com o mesmo tempo dividem uma seta só, em cor neutra. As
 // setas ficam a 22 px uma da outra (pxh = altura do painel em px), para não
-// se sobreporem em tela pequena. Casos que não retornam ficam sem marca.
+// se sobreporem em tela pequena, numa faixa acima do eixo do erro. Casos
+// que não retornam ficam sem marca.
 // Valores de tccInd.retorno.
 function _marcaRetorno(layout, data, visible, ax, dom, col, fs, dark, pxh) {
   var yref = "y" + ax, grupos = [], porMs = {};
@@ -238,8 +248,12 @@ function _marcaRetorno(layout, data, visible, ax, dom, col, fs, dark, pxh) {
     porMs[ms] = { r: r, ms: ms, cor: cor };
     grupos.push(porMs[ms]);
   });
+  if (!grupos.length) return;
+  // faixa própria acima do painel: o eixo do erro desce e as setas ficam
+  // fora das curvas; os tracejados atravessam a faixa até a seta
   var span = dom[1] - dom[0], px = pxh > 0 ? span / pxh : 0;
-  var passo = Math.max(0.07 * span, 22 * px), topo = Math.max(0.06 * span, 14 * px);
+  var passo = Math.max(0.07 * span, 22 * px), topo = Math.max(0.05 * span, 12 * px);
+  layout["yaxis" + ax].domain = [dom[0], dom[1] - 2 * topo - (grupos.length - 1) * passo];
   grupos.forEach(function(g, i) {
     var ya = dom[1] - topo - i * passo;
     layout.annotations.push({ xref: "x", yref: "paper", x: g.r.t, y: ya, ax: g.r.t0, ay: ya,
@@ -255,7 +269,7 @@ function _marcaRetorno(layout, data, visible, ax, dom, col, fs, dark, pxh) {
 // em 2°, v_d em 5% do valor final). Linha tracejada na cor do caso com o
 // tempo no topo e ponto na curva; o eixo do erro fica em ±20° para a faixa de
 // 2° aparecer (o pico da partida sai do quadro). Valores de tccInd.partida.
-function _marcaPartida(layout, data, visible, sinal, ax, dom, col, fs, dark) {
+function _marcaPartida(layout, data, visible, sinal, ax, dom, col, fs, dark, pxh) {
   if (sinal !== "err" && sinal !== "vd") return;
   var verde = dark ? "#4ade80" : "#15803d", yref = "y" + ax;
   var tKey = sinal === "err" ? "terr2" : "tvd5";
@@ -264,7 +278,7 @@ function _marcaPartida(layout, data, visible, sinal, ax, dom, col, fs, dark) {
     layout["yaxis" + ax].tickvals = [-20, -10, 0, 10, 20];
     layout["yaxis" + ax].ticktext = ["−20", "−10", "0", "10", "20"];
   }
-  var fin = null;
+  var fin = null, dy = Math.max(0.045, 26 * (dom[1] - dom[0]) / (pxh || 1));
   visible.forEach(function(c, j) {
     var p = SCENARIOS[c.key].tccInd && SCENARIOS[c.key].tccInd.partida;
     if (!p) return;
@@ -277,7 +291,7 @@ function _marcaPartida(layout, data, visible, sinal, ax, dom, col, fs, dark) {
     var x = p[tKey], y = sinal === "err" ? p.err : p.vd, cor = col(c);
     layout.shapes.push({ type: "line", xref: "x", yref: "paper", x0: x, x1: x, y0: dom[0], y1: dom[1],
       line: { color: cor, width: 1.6, dash: "dash" } });
-    layout.annotations.push({ xref: "x", yref: "paper", x: x, y: dom[1] - j * 0.045, xshift: 6,
+    layout.annotations.push({ xref: "x", yref: "paper", x: x, y: dom[1] - j * dy, xshift: 6,
       xanchor: "left", yanchor: "top", showarrow: false, text: "<b>" + Math.round(x * 1000) + " ms</b>",
       font: { size: fs + 1, color: cor }, bgcolor: dark ? "rgba(15,23,42,.85)" : "rgba(255,255,255,.9)" });
     data.push({ type: "scatter", mode: "markers", x: [x], y: [y], xaxis: "x", yaxis: yref,

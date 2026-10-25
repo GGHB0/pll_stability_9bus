@@ -2252,7 +2252,7 @@ body.pres-on { overflow: hidden }
   font-size: 13px; font-weight: 700; color: #b91c1c; background: #fee2e2;
   padding: 3px 10px; border-radius: 999px;
 }
-.fs-cursor { position: absolute; width: 2px; background: #0f172a; pointer-events: none }
+.fs-cursor { position: absolute; width: 0; border-left: 1.5px dashed rgba(100,116,139,.75); pointer-events: none }
 .fs-dest {
   margin-top: 14px; padding: 10px 16px; border: 1.5px solid #fecaca; border-radius: 10px;
   color: #b91c1c; display: flex; align-items: center; gap: 14px;

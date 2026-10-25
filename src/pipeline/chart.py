@@ -326,7 +326,7 @@ class ChartBuilder:
             margin=dict(t=top_margin, b=16, l=64, r=100),
             paper_bgcolor="#ffffff", plot_bgcolor="#ffffff",
             font=dict(family="Inter, Segoe UI, system-ui, sans-serif", size=12, color="#111827"),
-            hovermode="x unified",
+            hovermode="x unified", separators=",.",
             hoverlabel=dict(bgcolor="#ffffff", bordercolor="#e5e7eb",
                             font_family="Inter, Segoe UI, system-ui, sans-serif", font_size=11),
             height=240 * n_rows,

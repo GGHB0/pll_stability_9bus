@@ -5,6 +5,31 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-24 — Faltas destacadas: por que estes quatro pontos
+
+Arquivos: `src/report/roteiro.py`
+
+O primeiro passo do capítulo "Faltas destacadas" dava a entender que só
+quatro pontos receberam falta. O texto passou a dizer que outros pontos
+também foram simulados e que a análise se concentra nestes quatro, cada um
+com uma particularidade: juntos, vão do afundamento mais profundo ao mais
+raso e incluem uma linha de circuito simples e outra de circuito duplo.
+`verifica_palco.py` sem falhas em 1920×1080 e 1280×720.
+
+## 2026-10-24 — Palco legível em telas menores que 1920×1080
+
+Arquivos: `src/report/renderer.py` (CSS e estrutura do palco),
+`src/report/js/tcc.js`, `src/report/js/fasor.js`, `scripts/verifica_palco.py`
+
+Um notebook Full HD com escala de 150% no Windows entrega 1280×720 ao
+navegador. Nessa faixa a dica de passo cobria os botões dos capítulos, os
+rótulos de retorno se sobrepunham, o fasor ficava espremido e a tabela
+"Todos os casos" cortava linhas e colunas. A dica foi para o cabeçalho, o
+painel ao lado ficou proporcional à largura, uma regra `@media` compacta
+cabeçalho, cartões e tabela, e casos com o mesmo tempo de retorno dividem
+uma seta. Em 1920×1080 nada muda. O `verifica_palco.py` passou a rodar em
+1920×1080 e 1280×720 e a acusar painel ao lado e tabela que não cabem.
+
 ## 2026-10-24 — JS em arquivos, verificação do palco, vírgula e retorno à faixa
 
 Arquivos: `src/report/renderer.py`, `src/report/js/` (novo, 9 arquivos),

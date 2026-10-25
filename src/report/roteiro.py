@@ -79,10 +79,12 @@ CAPITULOS: list[dict] = [
          casos=[], sinais=[], xrange=None, metricas=[],
          passos=[
              dict(titulo="Quatro pontos, uma pergunta", tag="Visão geral",
-                  texto=["A falta é aplicada em quatro pontos da rede IEEE 9 "
-                         "barras. De um caso para outro, muda a distância "
-                         "elétrica entre a falta e o inversor.",
-                         "São duas barras (7 e 6) e duas linhas (7-8 e 8-9)."],
+                  texto=["Outros pontos da rede também receberam falta, mas a "
+                         "análise se concentra em quatro deles: duas barras "
+                         "(7 e 6) e duas linhas (7-8 e 8-9).",
+                         "Cada um tem uma particularidade. Juntos, vão do "
+                         "afundamento mais profundo ao mais raso e incluem uma "
+                         "linha de circuito simples e outra de circuito duplo."],
                   papel="<b>Pergunta:</b> como a distância da falta muda a "
                         "resposta do SRF-PLL?"),
              dict(id="b7", rotulo="B7", pos=0.03, cenario="bus7/3phase",

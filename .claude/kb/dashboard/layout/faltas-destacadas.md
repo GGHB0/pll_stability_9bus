@@ -70,7 +70,7 @@ Na primeira mensagem, a Barra 8 apareceu como a mais distante. Era a 6
 
 | Passo | Título | Conteúdo resumido |
 |---|---|---|
-| 1 | Quatro pontos, uma pergunta | quatro pontos; muda a distância elétrica até o inversor. Pergunta: como a distância muda a resposta do SRF-PLL? |
+| 1 | Quatro pontos, uma pergunta | outros pontos também receberam falta, a análise se concentra nestes quatro; cada um tem uma particularidade e juntos vão do afundamento mais profundo ao mais raso, com linha de circuito simples e de circuito duplo (2026-10-24: não listar os outros curtos, só anunciar a lógica da escolha). Pergunta: como a distância muda a resposta do SRF-PLL? |
 | 2 | Barra 7 | logo depois do T2; caso mais severo, afundamento mais profundo; ponto de partida da perda de sincronismo |
 | 3 | Linha 7-8 | sai da B7; sem circuito paralelo, a linha inteira sob falta; ainda perto da usina |
 | 4 | Linha 8-9 | dois circuitos, falta em um; o outro segue conduzindo |

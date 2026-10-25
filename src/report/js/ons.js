@@ -30,6 +30,10 @@ function _onsFigure(cap, o, layout, visible, mixed, col, grid, fs) {
     : { ink: "#334155", mut: "#64748b", ok: "#15803d", bad: "#b91c1c", amb: "#a16207", blu: "#1d4ed8",
         note: "rgba(255,255,255,0.85)", grey: "rgba(100,116,139,0.38)", redf: "rgba(220,38,38,0.40)" };
   var big = o.big, lw = big ? 3.5 : 2.5;
+  // passo do palco: realce = casos em cena (os outros esmaecem); destaque
+  // aponta o ponto de um caso no painel da rampa
+  var ps = big ? _presPassoAtual(cap) : null, dest = big ? _capDestaque(cap) : null;
+  var esm = function(k) { return !!(ps && ps.realce && ps.realce.indexOf(k) === -1); };
   var ax = function(title, dom, anchor) {
     return { title: { text: title, standoff: 8 }, domain: dom, anchor: anchor, gridcolor: grid,
              zeroline: false, showline: true, linecolor: T.mut, ticks: "outside", tickcolor: T.mut,
@@ -97,7 +101,8 @@ function _onsFigure(cap, o, layout, visible, mixed, col, grid, fs) {
     if (!l) return;
     var lbl = _tccLabel(c.key, mixed);
     data.push({ type: "scatter", mode: "lines", x: l.t, y: l.v, name: lbl,
-      line: { color: col(c), width: lw }, opacity: (onsFiltro && _onsCls(c.key) !== onsFiltro) ? 0.15 : 1,
+      line: { color: col(c), width: lw },
+      opacity: ((onsFiltro && _onsCls(c.key) !== onsFiltro) || esm(c.key)) ? 0.15 : 1,
       hovertemplate: "<b>" + lbl + "</b><br>t = %{x:.3f} s · %{y:.2f} pu<br>"
         + (l.fora ? "fora da região" : "dentro da região") + "<extra></extra>" });
   });
@@ -122,14 +127,16 @@ function _onsFigure(cap, o, layout, visible, mixed, col, grid, fs) {
   });
   // rótulos fora da rampa: B7 e L7-8 quase no mesmo ponto, um em cima e
   // outro embaixo; B6 fica abaixo da rampa, rótulo à esquerda
-  var POS = ["top center", "bottom center", "bottom center", "bottom left"];
+  var POS = ["top center", "bottom center", "bottom left", "bottom left"];
   visible.forEach(function(c, i) {
     var r = SCENARIOS[c.key].tccInd.raw;
     if (!r) return;
     var lbl = _tccLabel(c.key, mixed), fora = _onsCls(c.key) === "fora";
-    data.push({ type: "scatter", mode: "markers+text", name: lbl, xaxis: "x2", yaxis: "y2",
+    // esmaecido no passo com realce: sem rótulo, para a seta do destaque não cruzá-lo
+    data.push({ type: "scatter", mode: esm(c.key) ? "markers" : "markers+text", name: lbl, xaxis: "x2", yaxis: "y2",
       x: [r.Vmed], y: [r.iqref], text: ["<b>" + SCENARIOS[c.key].label.replace(" — Trifásica", "") + "</b>"],
       textposition: POS[i] || "top center", textfont: { size: fs + 1, color: col(c) },
+      opacity: esm(c.key) ? 0.2 : 1,
       marker: { size: big ? 20 : 15, color: col(c),
                 line: { width: fora ? 4 : 2, color: fora ? "#dc2626" : (o.bg || layout.paper_bgcolor) } },
       hovertemplate: "<b>" + lbl + "</b><br>tensão no inversor: %{x:.2f} pu"
@@ -139,7 +146,14 @@ function _onsFigure(cap, o, layout, visible, mixed, col, grid, fs) {
   faixa("2", 0, 0.5, "rgba(234,179,8,0.10)", "<b>corrente máxima</b>", T.amb);
   faixa("2", 0.5, 0.85, "rgba(37,99,235,0.07)", "<b>proporcional ao afundamento</b>", T.blu);
   faixa("2", 0.85, 1.0, "rgba(148,163,184,0.16)", "<b>banda morta</b>", T.ink);
-  nota("2", 0.25, 0.55, "abaixo de 0,5 pu,<br>i<sub>q</sub> = 1 pu", T.amb);
+  if (!dest) nota("2", 0.25, 0.55, "abaixo de 0,5 pu,<br>i<sub>q</sub> = 1 pu", T.amb);
+  var rd = dest && dest.key && SCENARIOS[dest.key] && SCENARIOS[dest.key].tccInd.raw;
+  if (rd) layout.annotations.push({ xref: "x2", yref: "y2", x: rd.Vmed, y: rd.iqref,
+    axref: "x2", ayref: "y2", ax: 0.17, ay: 0.72, showarrow: true, arrowhead: 2, arrowwidth: 2.5,
+    arrowcolor: "#b91c1c", standoff: 14, align: "left", xanchor: "left", yanchor: "middle",
+    text: "<b style='font-size:46px'>" + dest.num + "</b><br><span style='font-size:16px'>" + dest.txt + "</span>",
+    font: { color: "#b91c1c", size: 16 }, bgcolor: "rgba(255,255,255,.92)", bordercolor: "#fecaca",
+    borderwidth: 1.5, borderpad: 10 });
   nota("2", 0.64, 0.36, "i<sub>q</sub> = (0,85 − V) / 0,35", T.blu, { xanchor: "right" });
   nota("2", 0.925, 0.55, "sem injeção<br>adicional", T.ink);
   titulo("2", "<b>Corrente reativa contra a rampa</b>  · Figura 2.2",

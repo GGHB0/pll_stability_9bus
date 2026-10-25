@@ -94,6 +94,11 @@ _ASSIM = {
 # prefixo da linha + "/" + sufixo da coluna, realce = coluna sombreada,
 # rotulos = nome curto das métricas, nota = rodapé). faixa_err fixa o eixo
 # do erro de fase (palco e aba) para a faixa de 2° aparecer.
+# No kind "ons", o passo aceita realce = casos em cena (os outros esmaecem)
+# e outros=True (acende os demais curtos), e o destaque aponta o ponto do
+# caso (key) no painel da rampa. cartoes_pres=False tira os cartões do palco.
+# fecho = {pergunta, resposta} vela o gráfico e põe a conclusão num cartão
+# grande (último passo do capítulo, a tese do trabalho em uma tela).
 CAPITULOS: list[dict] = [
     dict(id="faltas", pres=[], curto="Faltas destacadas", kind="mapa",
          titulo="Faltas destacadas", ref="Antes dos resultados",
@@ -291,7 +296,46 @@ CAPITULOS: list[dict] = [
                "0,76 pu da rampa.",
          casos=[("bus7/3phase", _LOC[0]), ("line7_8/3phase", _LOC[1]),
                 ("line8_9/3phase", _LOC[2]), ("bus6/3phase", _LOC[3])],
-         sinais=[], xrange=None, metricas=["Vmed", "rampa", "iqref"]),
+         sinais=[], xrange=None, metricas=["Vmed", "rampa", "iqref"],
+         cartoes_pres=False,
+         destaque=dict(key="bus7/3phase", num="0,09 pu",
+                       txt="de potência reativa na Barra 7,<br>"
+                           "com i<sub>q</sub> saturado em 1 pu"),
+         passos_pres=[
+             dict(texto="O Submódulo 2.10 pede duas coisas durante a falta: "
+                        "<b>permanecer conectado</b> e <b>injetar corrente "
+                        "reativa</b> conforme o afundamento.",
+                  ocultar=["bus7/3phase", "line7_8/3phase", "line8_9/3phase",
+                           "bus6/3phase"]),
+             dict(texto="A Barra 7 e a Linha 7-8 levam a tensão abaixo de "
+                        "0,2 pu, onde a desconexão é permitida, e o inversor "
+                        "fica conectado com i<sub>q</sub> saturado em "
+                        "<b>1 pu</b>.",
+                  ocultar=["line8_9/3phase", "bus6/3phase"]),
+             dict(texto="Mais longe, a injeção acompanha o afundamento: na "
+                        "Barra 6, i<sub>q,ref</sub> médio de <b>0,72 pu</b> "
+                        "contra 0,76 pu da rampa.",
+                  ocultar=[]),
+             dict(texto="Mas a potência é tensão vezes corrente: com a tensão "
+                        "retida abaixo de 10% do valor pré-falta, a corrente "
+                        "máxima entrega só "
+                        "<b>0,09 pu</b> de reativo.",
+                  ocultar=[], realce=["bus7/3phase"], destaque=True),
+             dict(texto="Nas assimétricas e na perda de sincronismo, o "
+                        "inversor também permanece conectado, mas a potência "
+                        "carrega o 120 Hz ou se inverte e drena energia do "
+                        "sistema.",
+                  ocultar=[], outros=True),
+             dict(texto="A permanência conectada não é suficiente para "
+                        "caracterizar conformidade.",
+                  ocultar=[], outros=True,
+                  fecho=dict(
+                      pergunta="O inversor permaneceu conectado?",
+                      resposta="Essa pergunta é insuficiente: é preciso "
+                               "acompanhar a qualidade do rastreamento angular "
+                               "ao longo de toda a contingência e na "
+                               "recuperação.")),
+         ]),
     dict(id="sintese", pres=[], curto="Todos os casos", kind="tabela",
          titulo="Todos os casos do TCC",
          ref="Tabelas 5.1 a 5.3",

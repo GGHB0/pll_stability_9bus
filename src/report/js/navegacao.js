@@ -37,6 +37,7 @@ function _presPassoReset() {
   CAPS.forEach(function(c) {
     if (!c.passos_pres || !tccState[c.id]) return;
     c.passos_pres.forEach(function(ps) { ps.ocultar.forEach(function(k) { tccState[c.id].on[k] = true; }); });
+    if (c.kind === "ons") tccState[c.id].outros = false;
   });
 }
 

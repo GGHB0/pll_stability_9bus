@@ -48,6 +48,7 @@ function _renderPres() {
     var st = _tccSt(cap);
     pp.forEach(function(q) { q.ocultar.forEach(function(k) { st.on[k] = true; }); });
     ps.ocultar.forEach(function(k) { st.on[k] = false; });
+    if (cap.kind === "ons") st.outros = !!ps.outros;
   }
   document.getElementById("pres-text").innerHTML = ps ? "<span class=\"pres-msg\">" + ps.texto + "</span>" : cap.texto;
   document.getElementById("pres-passo").innerHTML = ps
@@ -83,12 +84,19 @@ function _renderPres() {
   bodyEl.style.display = "";
   var lado = _presLado();
   if (lado) { sideEl.className = "pres-side " + lado; sideEl.style.display = ""; }
-  cardsEl.innerHTML = _tccCardsHtml(cap, false);
+  cardsEl.innerHTML = (cap.cartoes_pres === false) ? "" : _tccCardsHtml(cap, false);
   var h = Math.max(260, plotEl.clientHeight);
   var fig = _tccFigure(cap, cap.pres, { dark: false, height: h, big: true, bg: "#ffffff" });
   // largura explícita: o react guarda a do capítulo anterior (com ou sem painel ao lado)
   fig.layout.width = plotEl.clientWidth;
   Plotly.react(plotEl, fig.data, fig.layout, PRES_CFG);
+  var fe = document.getElementById("pres-fecho");
+  if (fe) fe.remove();
+  if (ps && ps.fecho) bodyEl.insertAdjacentHTML("beforeend", "<div id=\"pres-fecho\" class=\"pres-fecho\">"
+    + "<div class=\"fq\"><p class=\"fq-k\">O que a verificação de hoje pergunta</p>"
+    + "<p class=\"fq-q\">" + ps.fecho.pergunta + "</p>"
+    + "<p class=\"fq-k fq-r\">O que os resultados mostram</p>"
+    + "<p class=\"fq-a\">" + ps.fecho.resposta + "</p></div></div>");
   if (lado === "fasor") _fasorInit(plotEl, cap);
   else if (lado === "minimapa") _miniMapa(cap, sideEl);
 }

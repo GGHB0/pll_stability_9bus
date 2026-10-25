@@ -127,3 +127,13 @@ sem foco; indicador de passo em segmentos (`_passoInd`) no lugar de
 "passo N de M · seta → avança", também no mapa. **Lição**: capítulo que entra
 inteiro de uma vez entrega a conclusão antes da evidência; revelar caso a
 caso, com o número grande só no último passo, é o padrão do palco.
+
+v1.11.0 (2026-10-25): Código de rede em seis passos (regra, curtos
+próximos, distantes, dilema Q = V·i<sub>q</sub> com "0,09 pu", outros
+curtos, fecho). Campos `realce`, `outros` e `fecho` no passo do kind
+"ons"; `cartoes_pres=False` e `destaque.key` no capítulo. Fecho escolhido
+entre três prévias. **Lição**: frase de palco também se confere contra a
+Conclusão, não só contra o Cap. 5; a variante com "28 de 28 não
+desconectaram" caiu porque o TCC não diz isso. E caixa de destaque precisa
+de prévia em 1280: em 1920 ela cabia em área vazia e em 1280 cobria
+rótulos.

@@ -94,6 +94,10 @@ dentro da janela de `foco` (contorno pontilhado azul, véu branco fora). O
 só aparece no passo com `destaque=True`. Número citado fora da janela ou
 destaque antes da hora vira **BLOQUEIA**. O indicador de passo (segmentos
 azuis + "k de n", no cabeçalho e no mapa) tem de bater com o nome do PNG.
+No Código de rede (kind "ons") o foco é por caso (`realce` esmaece os
+outros) e o último passo vela o gráfico com o cartão de fecho, de
+propósito. Ali, a caixa do "0,09 pu" não pode cobrir rótulo nem a seta
+cruzar texto, nas duas resoluções ([[palco-codigo-de-rede]]).
 
 ### 5. Coerência com o resto do palco
 

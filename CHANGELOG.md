@@ -5,6 +5,26 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-25 — Palco: Código de rede em seis passos, com fecho
+
+Arquivos: `src/report/roteiro.py`, `src/report/js/ons.js`,
+`src/report/js/palco.js`, `src/report/js/navegacao.js`,
+`src/report/renderer.py`
+
+A tela mostrava tudo de uma vez (parágrafo, dois gráficos e quatro
+cartões), sem os dois argumentos mais fortes do deck. Agora são seis
+passos: a regra sozinha (região e rampa, sem casos); Barra 7 e Linha 7-8
+abaixo de 0,2 pu e conectadas com i<sub>q</sub> = 1 pu; os quatro casos,
+com a Barra 6 a 0,72 contra 0,76 pu da rampa; o dilema, com a Barra 7
+realçada e "0,09 pu" de reativo com seta ao ponto (texto da Fig. 5.8);
+os outros curtos acesos, com assimétricas e perda de sincronismo (§5.5);
+e o fecho, com o gráfico velado e um cartão com a frase da Conclusão
+("essa pergunta é insuficiente"), escolhido entre três prévias. Campos
+novos no passo do kind "ons": `realce`, `outros`, `fecho`; no capítulo,
+`cartoes_pres=False` (sem cartões no palco) e `destaque.key` (ponto
+apontado na rampa). A aba Análise TCC não mudou. `verifica_palco.py`
+sem falhas.
+
 ## 2026-10-25 — Palco: foco também na Energização, Localização e Sequência negativa
 
 Arquivos: `src/report/roteiro.py`, `src/report/js/navegacao.js`,
@@ -49,109 +69,12 @@ Compromisso virou "Ganho menor filtra melhor o 120 Hz" e a última frase
 virou ponte ("Mas, na trifásica da Barra 7, a mesma sintonia perde o
 sincronismo").
 
-## 2026-10-24 — Sequência negativa: trifásica visível, casos agrupados por barra
-
-Arquivos: `src/report/roteiro.py`, `src/report/js/tcc.js`,
-`src/report/js/tcc_ui.js`, `src/report/renderer.py`
-
-Na tela 5 do palco, a trifásica da Barra 7 (cinza-claro, colada no zero)
-não aparecia. Agora é grafite, grossa e desenhada por cima, com uma caixa
-"Barra 7 trifásica, 0,0002 pu" apontando para ela em 120 Hz (campo novo
-`notas`, `_nota`). Cor = barra (laranja = 7, verde-azulado = 6), traço =
-curto (contínuo = bifásica, tracejado = monofásica); chips agrupados sob
-"Barra 7"/"Barra 6" e cartões na mesma ordem, com respiro entre as barras
-(3º item opcional de `casos`: `dash`, `larg`, `grupo`, `frente`). A caixa
-"> 250×" passou a dizer "contra as trifásicas". Os cartões da tela viraram
-uma matriz Barra 7/6 × trifásica/bifásica/monofásica (campo `matriz`,
-`_tccMatrizHtml`), com a trifásica da Barra 6 (0,0011 pu) só na tabela;
-escolhida entre duas prévias.
-
-## 2026-10-24 — Fasor mais lento; mini-mapa liga e desliga casos
-
-Arquivos: `src/report/js/fasor.js`, `src/report/js/minimapa.js`
-
-O play do fasor estava rápido demais para acompanhar na defesa: passou de
-8 s para 20 s por janela (`FASOR_MS`), em todos os capítulos com fasor. No
-mini-mapa da Localização, clicar num ponto (traço ou número de retenção)
-liga ou desliga o caso no gráfico e nos cartões, como o chip; o caso
-desligado fica esmaecido no mapa e continua clicável. O estado vale também
-no passo do fasor. `verifica_palco.py` sem falhas em 1920×1080 e 1280×720.
-
-## 2026-10-24 — Localização em dois passos: mini-mapa, depois fasor
-
-Arquivos: `src/report/roteiro.py`, `src/report/js/palco.js`,
-`src/report/js/fasor.js`, `scripts/verifica_palco.py`
-
-O capítulo Localização ganhou dois passos no palco, sem perder o mini-mapa.
-Passo 1: mini-mapa ao lado e a frase da retenção de v_d (9,2% na Barra 7,
-58,4% na Barra 6). Passo 2: o painel ao lado vira o fasor com os quatro
-casos e a frase do pico do erro (37,3° e 7,3°), números da Tabela 5.1. Cada
-passo pode ter `lado` próprio, resolvido por `_presLado()`; o
-`verifica_palco.py` usa a mesma função para achar o fasor. Sem mistura de
-sintonias, a legenda do fasor usa o rótulo do mapa (B7, L7-8, L8-9, B6) em
-vez de "PLL nominal" repetido. `verifica_palco.py` sem falhas em 1920×1080
-e 1280×720.
-
-## 2026-10-24 — Fasor também na Energização; play sempre do início
-
-Arquivos: `src/report/roteiro.py`, `src/report/js/fasor.js`, `src/report/js/palco.js`
-
-O fasor da Perda de sincronismo foi para o capítulo Energização
-(`lado="fasor"`): o play mostra o vetor do PLL girando até travar na marca
-da rede, em 8 s para a janela de 0 a 0,2 s. Os passos valem também no
-fasor: no passo 1 só o vetor nominal, no passo 2 entra o da inadequada. O
-play passou a recomeçar sempre do início da janela do capítulo (antes
-continuava de onde tinha parado), e o instante volta ao início ao trocar
-de capítulo. `verifica_palco.py` sem falhas em 1920×1080 e 1280×720.
-
-## 2026-10-24 — Faltas destacadas: por que estes quatro pontos
-
-Arquivos: `src/report/roteiro.py`
-
-O primeiro passo do capítulo "Faltas destacadas" dava a entender que só
-quatro pontos receberam falta. O texto passou a dizer que outros pontos
-também foram simulados e que a análise se concentra nestes quatro, cada um
-com uma particularidade: juntos, vão do afundamento mais profundo ao mais
-raso e incluem uma linha de circuito simples e outra de circuito duplo.
-`verifica_palco.py` sem falhas em 1920×1080 e 1280×720.
-
-## 2026-10-24 — Palco legível em telas menores que 1920×1080
-
-Arquivos: `src/report/renderer.py` (CSS e estrutura do palco),
-`src/report/js/tcc.js`, `src/report/js/fasor.js`, `scripts/verifica_palco.py`
-
-Um notebook Full HD com escala de 150% no Windows entrega 1280×720 ao
-navegador. Nessa faixa a dica de passo cobria os botões dos capítulos, os
-rótulos de retorno se sobrepunham, o fasor ficava espremido e a tabela
-"Todos os casos" cortava linhas e colunas. A dica foi para o cabeçalho, o
-painel ao lado ficou proporcional à largura, uma regra `@media` compacta
-cabeçalho, cartões e tabela, e casos com o mesmo tempo de retorno dividem
-uma seta. Em 1920×1080 nada muda. O `verifica_palco.py` passou a rodar em
-1920×1080 e 1280×720 e a acusar painel ao lado e tabela que não cabem.
-
-## 2026-10-24 — JS em arquivos, verificação do palco, vírgula e retorno à faixa
-
-Arquivos: `src/report/renderer.py`, `src/report/js/` (novo, 9 arquivos),
-`src/report/roteiro.py`, `src/pipeline/indicadores.py`,
-`scripts/verifica_palco.py` (novo), `.githooks/pre-commit`, `requirements.txt`
-
-- O JS da aba Análise TCC e do palco saiu da string `_TCC_JS` para
-  `src/report/js/`, lido na geração na ordem de `TCC_JS_FILES`. O HTML
-  gerado ficou idêntico byte a byte; o pre-commit roda `node --check`.
-- `scripts/verifica_palco.py` percorre o palco no Edge headless e falha em
-  erro de JS, tela que rola, gráfico sobre o painel ao lado e navegação
-  errada; PNGs em `output/verifica_palco/`. Playwright entrou no
-  `requirements.txt`.
-- Cartões e tabela "Todos os casos" com vírgula decimal, como as legendas.
-- Retorno à faixa de 2° marcado nos capítulos com falta: tracejado, ponto
-  e seta da eliminação até o retorno, com o tempo do cartão. Eixo do erro
-  em ±60° na Localização (`faixa_err`). `indicadores_falta` devolve também
-  `err_ts`.
-
 ## Entradas anteriores
 
 - [2026-10-24](docs/changelog/2026-10-24.md) — palco com passos, fasor,
-  mini-mapa e números de destaque; marcação da acomodação na Energização.
+  mini-mapa e números de destaque; marcação da acomodação na Energização;
+  JS em arquivos, `verifica_palco.py`, telas menores, matriz da sequência
+  negativa.
 - [2026-10-21](docs/changelog/2026-10-21.md) — capítulo "Faltas destacadas"
   (unifilar com os quatro pontos) e curva de suportabilidade no "Código de rede".
 - [2026-10-20](docs/changelog/2026-10-20.md) — indicadores do Cap. 5 no painel,

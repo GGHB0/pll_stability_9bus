@@ -25,7 +25,7 @@ graph LR
     dashboard -->|3| pll
     dashboard -->|2| power_system
     dashboard -->|5| simulation
-    dashboard -->|2| standards
+    dashboard -->|3| standards
     dashboard -->|3| tcc_pptx
     dashboard -->|2| tcc_word
     events -->|2| power_system

@@ -2207,6 +2207,16 @@ body.pres-on { overflow: hidden }
 .pres-chips { padding: 0 }
 .pres-chips .tcc-chip { font-size: 13px }
 .pres-body { flex: 1; min-height: 0; display: flex; gap: 24px; position: relative }
+.pres-fecho { position: absolute; inset: 0; z-index: 5; display: flex; align-items: center;
+  justify-content: center; background: rgba(255,255,255,.78); backdrop-filter: blur(1.5px) }
+.pres-fecho .fq { max-width: min(900px, 80vw); background: #fff; border: 1px solid #e2e8f0;
+  border-left: 6px solid var(--accent); border-radius: 14px; padding: clamp(20px, 2.2vw, 34px) clamp(26px, 2.8vw, 44px);
+  box-shadow: 0 18px 50px rgba(15,23,42,.12) }
+.pres-fecho .fq-k { font-size: clamp(12px, .8vw, 14px); font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: #64748b; margin: 0 0 8px }
+.pres-fecho .fq-r { margin-top: clamp(16px, 1.6vw, 26px); color: #b91c1c }
+.pres-fecho .fq-q { font-size: clamp(24px, 1.8vw, 34px); font-weight: 600; color: #0f172a; margin: 0 }
+.pres-fecho .fq-a { font-size: clamp(19px, 1.4vw, 26px); font-weight: 500; line-height: 1.4; color: #1f2937; margin: 0 }
 .pres-plot { flex: 1; min-height: 0; min-width: 0 }
 .pres-msg { font-size: 22px; color: var(--text) }
 .pres-passo { align-self: center; white-space: nowrap }

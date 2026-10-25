@@ -190,5 +190,9 @@ function selectLocation(loc, el) {
 > `setPllMode` = `_applyPllFilter` + `_findEquiv` + `switchScenario`. Ver
 > [[roteiro-demonstracao-dashboard]].
 
+> **Ganhos ao lado do toggle (2026-10-25)**: `#pll-gains` mostra Kp, Ki, ωn, ξ
+> do modo ativo (`_pll_gains_txt`, U = 1 pu: ωn = √Ki, ξ = Kp/2ωn) a partir de
+> `KP_PLL`/`KI_PLL`/`BAD_PLL_FATOR` de `settings.py`, espelho de `params.m`.
+
 > Bug conhecido de inicialização do filtro do `<select>` (fix 2026-08-18):
 > ver [[bad-pll-select-init-bug]].

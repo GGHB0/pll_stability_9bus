@@ -1,7 +1,7 @@
 ---
 name: chart-analysis-overlays
 aliases: [chart-analysis-overlays]
-description: Overlays de análise nos gráficos — janela de falta sombreada, hierarquia θ̂ PLL vs θ Rede, marcador tₛ e envelope LVRT 1547 Cat II
+description: Overlays de análise nos gráficos — janela de falta sombreada, hierarquia θ̂ PLL vs θ Rede, marcador tₛ e curva de suportabilidade do ONS
 ---
 
 # Overlays de Análise (chart.py / loader.py)
@@ -61,61 +61,30 @@ sido pedido. Não reintroduzir essa interpretação sem confirmação explícita
 se o usuário pedir "delta ângulo" de novo, esclarecer o que exatamente ele
 quer antes de implementar.
 
-## Envelope LVRT (`_lvrt_envelope`, só no |V| Bus 2)
+## Curva de suportabilidade do ONS (`_lvrt_envelope`, só no |V| Bus 2)
 
-Curva degrau V×t de **trip mandatório** (Table 8, IEEE Std 1547.2-2023)
-Categoria II, ancorada em `t_fault` (constante de classe `_LVRT_STEPS`):
+Desde 2026-10-25 é a borda inferior da curva de suportabilidade a
+subtensões do ONS (Submódulo 2.10, Figura 2.1 do TCC;
+[[ons-voltage-ride-through]]), a mesma do capítulo Código de rede do
+palco e do card "Suportabilidade ONS" ([[indicadores-tcc-dashboard]]).
+Pontos `LVRT_T`/`LVRT_V` de `pipeline/indicadores.py` (0,2 pu até 0,5 s,
+rampa até 0,85 pu em 1 s), ancorados em `t_fault`, interpolados
+linearmente e recortados no fim da janela: com falta em 0,3 s e janela de
+0,6 s, só o patamar de 0,2 pu aparece. Tracejado vermelho,
+`hoverinfo="skip"`, nome "Suportabilidade ONS". `vbus1`/`vbus3` (e `vbus2`
+em regime) mantêm a hline de `LVRT_THRESHOLD`.
 
-| Δt após a falta | V mínimo antes do trip |
-|---|---|
-| até 0.16 s | 0.45 pu (UV2) |
-| até 10 s   | 0.70 pu (UV1) |
-| depois     | 0.88 pu (operação contínua) |
+O painel mostra |V| da Barra 2, e o veredito do card usa a fase mais
+afundada no inversor: a curva é referência visual, a classificação vem
+do card.
 
-Scatter com `line_shape="hv"`, tracejado vermelho, `hoverinfo="skip"`,
-`legend = self._legend_key`, nome "IEEE 1547". Substitui a hline fixa de
-`LVRT_THRESHOLD` apenas em `vbus2` com falta; `vbus1`/`vbus3` (e `vbus2` em
-regime) mantêm a hline antiga.
-
-### Correção 2026-07-26 — valores alinhados à Table 8 real
-
-Os degraus originais (0,30/0,45/0,65 pu) foram escritos (commit `bc428d7`,
-05/07/2026) com atribuição genérica ao IEEE 1547-2018 Cat II, sem citar
-tabela/página, antes de qualquer PDF da norma ter sido processado pela
-skill `pdf-kb-updater`. Corrigido para os 2 degraus reais de Table 8 (ver
-[ieee1547_ride_through.md](../../standards/ride-through/ieee1547_ride_through.md)):
-UV2 = 0,45 pu/0,16 s e UV1 = 0,70 pu/10 s.
-
-**Ressalva semântica que permanece:** Table 8 é a curva de **trip
-mandatório** (proteção — abaixo disso o inversor *deve* desconectar), não a
-curva de **ride-through contínuo** (Table 14/15/16 do 1547-2018 normativo
-puro, que não está disponível no Application Guide extraído). Se a
-Table 14/15/16 for obtida no futuro, essa curva pode ser substituída pela de
-ride-through de verdade.
-
-### Nome do trace (2026-07-27)
-
-O nome passou por duas iterações — "LVRT 1547 Cat II" (original, sem fonte
-verificada) → "V mín. trip 1547 Cat II" (após a correção de valores, mas com
-mistura de idiomas e abreviação pouco clara) → **"IEEE 1547"** (simplificado
-a pedido do usuário). A ressalva semântica trip-vs-ride-through acima
-continua valendo mesmo com o nome curto; fica documentada aqui e em
-[ieee1547_ride_through.md](../../standards/ride-through/ieee1547_ride_through.md) para
-quem for interpretar o gráfico.
-
-### Correção 2026-07-27 — recorte não avança degrau que a janela não alcança
-
-`_lvrt_envelope` sempre acrescentava um ponto final `(t_end, 0.88)`,
-independente de o degrau UV1 (10 s após a falta) ter de fato ocorrido dentro
-da janela simulada. Em cenários com falta em t≈0,3 s e janela de 0,6 s, isso
-desenhava um salto falso para 0,88 pu bem na borda direita do gráfico —
-sugerindo retomada de operação contínua em 0,6 s, quando a exigência real
-(0,70 pu) continuaria valendo até 10,3 s. Achado pelo usuário ao comparar o
-print do gráfico com a duração da simulação.
-
-Corrigido: o laço só avança para o próximo degrau (inclusive o final de
-0,88 pu) se `t0 + dt_step < t_end`; caso contrário, mantém o último patamar
-válido constante até o fim da janela, sem saltos fora do horizonte simulado.
+**Histórico.** De 2026-07-05 a 2026-10-24 o envelope era o degrau de trip
+mandatório da Table 8 do IEEE Std 1547.2-2023, Categoria II (UV2 0,45 pu
+por 0,16 s, UV1 0,70 pu por 10 s; [[ieee1547-ride-through]]), nome "IEEE
+1547". Saiu porque o TCC e o deck avaliam pela curva do ONS, e a banca
+veria duas normas diferentes no mesmo painel. A lição do recorte
+(2026-07-27: não desenhar degrau que a janela não alcança) continua
+valendo.
 
 ## Gotcha ⚠️ traces adicionados fora de `_add`
 

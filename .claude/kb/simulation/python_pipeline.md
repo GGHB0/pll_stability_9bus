@@ -20,8 +20,8 @@ src/
 │   └── spectrum.py        → SpectrumBuilder: FFT segmentada pré/falta/pós em pu (ver [[espectro-fourier]])
 └── report/               → figuras → HTML
     ├── renderer.py         → HTMLRenderer: HTML multi-cenário com tema light/dark
-    ├── roteiro.py          → casos do TCC e capítulos da aba Análise TCC / palco
-    └── js/                 → JS da aba Análise TCC e do palco (ordem em TCC_JS_FILES)
+    ├── roteiro.py          → casos do TCC e capítulos do palco
+    └── js/                 → JS do palco (ordem em TCC_JS_FILES)
 ```
 
 Ler `sim_data.csv` sempre por `pq.py`, nunca `pd.read_csv` direto

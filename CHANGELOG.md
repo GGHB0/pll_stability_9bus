@@ -5,6 +5,25 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-25 — Sem a aba Análise TCC; ONS e ganhos nas abas por cenário
+
+Arquivos: `src/report/renderer.py`, `src/report/js/navegacao.js`,
+`src/report/js/eventos.js`, `src/report/js/palco.js`,
+`src/report/js/ons.js`, `src/pipeline/chart.py`,
+`src/config/settings.py`, `src/config/__init__.py`
+
+Revisão do painel contra o deck da defesa. A aba "Análise TCC" saiu: o
+palco ("Modo apresentação") já mostra os mesmos capítulos, e a página
+passa a abrir no Resumo. O "+ comparar com…", que só a aba tinha, saiu
+junto. O envelope de trip da IEEE 1547 no |V| Bus 2 deu lugar à curva de
+suportabilidade do ONS (Figura 2.1), que é a usada no TCC e no deck. O
+Resumo ganhou o card "Suportabilidade ONS" (dentro/fora, mesma conta do
+capítulo Código de rede; B7 e L7-8 fora, B6 e L8-9 dentro). Kp, Ki, ωn e
+ξ do modo ativo aparecem ao lado do toggle PLL (460 / 105.820 / 325,3 /
+0,707 e 92 / 21.164 / 145,5 / 0,316, como no slide 11). `verifica_palco.py`
+sem falhas, sem erro de JS. Fica para depois, com prévia: a rampa i_q × V
+por cenário.
+
 ## 2026-10-25 — Gráficos: vírgula decimal e leitura no projetor
 
 Arquivos: `src/report/js/tcc.js`, `src/report/renderer.py`,

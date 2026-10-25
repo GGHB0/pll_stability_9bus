@@ -42,8 +42,9 @@ recusado por citar "28 de 28 não desconectaram", que não está no TCC).
 - `destaque.key` no capítulo: a caixa aponta o ponto (V<sub>méd</sub>,
   i<sub>q,ref</sub>) do caso no painel da rampa; com destaque, a nota
   "abaixo de 0,5 pu, i<sub>q</sub> = 1 pu" some para não colidir.
-- `cartoes_pres=False`: sem cartões embaixo no palco; a aba Análise TCC
-  segue com eles.
+- `cartoes_pres=False`: sem cartões embaixo no palco (a aba Análise TCC,
+  que os mostrava, saiu em 2026-10-25). O veredito por cenário fica no card
+  "Suportabilidade ONS" do Resumo ([[indicadores-tcc-dashboard]]).
 
 ## Relacionados
 

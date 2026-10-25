@@ -16,7 +16,7 @@ from ..config import (
     LVRT_THRESHOLD,
     LIGHT_COLORS, DARK_COLORS,
 )
-from .indicadores import CICLO_S, TOL_DEG
+from .indicadores import CICLO_S, LVRT_T, LVRT_V, TOL_DEG
 from .loader import SimData
 
 _S = "single"   # linha inteira (colspan 2)
@@ -278,32 +278,17 @@ class ChartBuilder:
         marker.legend = self._legend_key
         self._fig.add_trace(marker, row=row, col=col)
 
-    # Table 8 (trip mandatório) do IEEE Std 1547.2-2023, Categoria II: (Δt após
-    # a falta, V mínimo antes do trip obrigatório) — UV2 0.45 pu/0.16 s,
-    # UV1 0.70 pu/10 s, 0.88 pu operação contínua. Não é a curva de
-    # ride-through contínuo (Table 14/15/16 do 1547-2018 normativo, não
-    # disponível na bibliografia) — ver chart-analysis-overlays.md.
-    _LVRT_STEPS = ((0.16, 0.45), (10.0, 0.70))
-
     def _lvrt_envelope(self, row: int, col: int) -> None:
-        """Curva degrau V×t de ride-through, ancorada em t_fault (só no |V| Bus 2)."""
+        """Borda inferior da curva de suportabilidade do ONS (Figura 2.1 do
+        TCC), ancorada em t_fault e recortada no fim da janela (só no |V| Bus 2)."""
         d = self._d
         t0, t_end = d.t_fault, float(d.t[-1])
-        xs, ys = [t0], [self._LVRT_STEPS[0][1]]
-        v_cur = self._LVRT_STEPS[0][1]
-        for i, (dt_step, _v) in enumerate(self._LVRT_STEPS):
-            t_step = t0 + dt_step
-            if t_step >= t_end:
-                break
-            v_cur = self._LVRT_STEPS[i + 1][1] if i + 1 < len(self._LVRT_STEPS) else 0.88
-            xs.append(t_step)
-            ys.append(v_cur)
-        xs.append(t_end)
-        ys.append(v_cur)
+        xs = [t0 + dt for dt in LVRT_T if t0 + dt < t_end] + [t_end]
+        ys = list(np.interp(np.array(xs) - t0, LVRT_T, LVRT_V))
         env = go.Scatter(
-            x=xs, y=ys, mode="lines", line_shape="hv",
+            x=xs, y=ys, mode="lines",
             line=dict(color="rgba(220,50,50,0.7)", width=1.6, dash="dash"),
-            name="IEEE 1547", hoverinfo="skip",
+            name="Suportabilidade ONS", hoverinfo="skip",
         )
         env.legend = self._legend_key
         self._fig.add_trace(env, row=row, col=col)

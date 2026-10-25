@@ -59,9 +59,10 @@ para sintonia inadequada (o painel troca para o cenário equivalente);
 falhar, os slides 17-18 cobrem os mesmos números. Na arguição o painel
 fica aberto para "e na barra X?".
 
-Desde 2026-10-20 o painel abre na aba **"Análise TCC"**: 7 capítulos do
-Cap. 5 com os cenários sobrepostos, legenda e mini-cartões, avançados pelo
-passador (PageDown) ([[roteiro-demonstracao-dashboard]]). As notas do slide
+De 2026-10-20 a 2026-10-25 o painel abria na aba "Análise TCC"; a aba
+saiu e hoje ele abre no **Resumo**, com os capítulos do Cap. 5 só no botão
+"Modo apresentação", avançados pelo passador (PageDown)
+([[roteiro-demonstracao-dashboard]]). As notas do slide
 16 ainda descrevem os 3 cliques antigos, e o tempo da demo (a aba pede 3 a
 4 min, contra ~1,5 min) ainda não foi decidido: ver [[defesa-pendencias]].
 

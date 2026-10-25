@@ -11,7 +11,8 @@ imersão e caber tudo na tela. O site inteiro vira um palco branco em tela
 cheia (`#pres`, `position: fixed`, `requestFullscreen`), um capítulo por
 tela, sem rolagem: número do capítulo, legenda, chips, gráfico ocupando a
 altura que sobra, faixa de mini-cartões e os botões dos capítulos embaixo.
-Os capítulos são os da aba Análise TCC ([[roteiro-demonstracao-dashboard]]).
+Os capítulos estão em [[roteiro-demonstracao-dashboard]] (até 2026-10-25 também
+apareciam na aba Análise TCC, que saiu; menções a "aba" abaixo são desse período).
 
 ## Estrutura
 
@@ -185,7 +186,7 @@ Em 1920×1080 nada mudou.
 `scripts/verifica_palco.py` percorre o palco com a seta em 1920×1080 e
 1280×720 (`--telas` muda a lista) e falha em erro de JS, tela que rola,
 gráfico sobre o painel ao lado, painel ao lado que transborda, tabela que
-não cabe, ← fora do último passo, fasor parado e caso escondido na aba
+não cabe, ← fora do último passo, fasor parado e caso escondido depois de sair do palco
 depois de sair. Os PNGs vão para `output/verifica_palco/<L>x<A>/`; quem lê
 é o agente `palco-validator`. O JS está
 em `src/report/js/` (`tcc.js`, `palco.js`, `fasor.js`, `minimapa.js` etc.,

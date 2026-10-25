@@ -14,6 +14,11 @@ T_FAULT  = 0.2        # fallback (s) se fault_info.json não existir
 T_SETTLE = 0.1        # s — transitório de partida do PLL, excluído de TODO cálculo
                       # (FFT, janela de tensão média, tₛ). Medido nos dados
                       # (bus6/1phase): pior sinal é |V| Bus 2, acomoda em 0.078 s
+# Ganhos do PI do SRF-PLL (espelham params.m) e fator da sintonia inadequada
+# (BAD_PLL: os dois ganhos ×0,2). Só alimentam o rótulo do toggle PLL.
+KP_PLL = 460.0
+KI_PLL = 105820.0
+BAD_PLL_FATOR = 0.2
 # A faixa de retorno do erro de fase (2°) e o 1º ciclo descartado no pico
 # moram em pipeline/indicadores.py, com as demais receitas do Cap. 5 do TCC.
 # O antigo TOL_RAD (±1,15°) saiu em 2026-10-20 por divergir do TCC.

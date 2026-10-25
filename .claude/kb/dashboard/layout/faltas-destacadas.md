@@ -1,7 +1,7 @@
 ---
 name: faltas-destacadas
 aliases: [faltas-destacadas]
-description: Capítulo "Faltas destacadas" (1º da aba Análise TCC e do modo apresentação) — unifilar com os quatro pontos de falta (B7, L7-8, L8-9 dupla, B6), passos por seta ou clique, régua de severidade; implementado em 2026-10-21 (kind "mapa")
+description: Capítulo "Faltas destacadas" (1º do modo apresentação) — unifilar com os quatro pontos de falta (B7, L7-8, L8-9 dupla, B6), passos por seta ou clique, régua de severidade; implementado em 2026-10-21 (kind "mapa")
 source: prévia standalone de 2026-10-21; Zbarra do notebook (ver ieee9bus-thevenin)
 ---
 

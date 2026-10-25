@@ -137,3 +137,13 @@ Conclusão, não só contra o Cap. 5; a variante com "28 de 28 não
 desconectaram" caiu porque o TCC não diz isso. E caixa de destaque precisa
 de prévia em 1280: em 1920 ela cabia em área vazia e em 1280 cobria
 rótulos.
+
+v1.12.0 (2026-10-25): aba "Análise TCC" removida (o palco já mostra os
+capítulos; a página abre no Resumo); envelope IEEE 1547 do |V| Bus 2
+trocado pela curva de suportabilidade do ONS; card "Suportabilidade ONS"
+no Resumo; Kp, Ki, ωn e ξ ao lado do toggle PLL. Saíram de uma revisão
+deck × painel. **Lição**: o que o deck e o TCC trazem e o painel não traz
+(ou traz por outra norma) aparece numa comparação slide a slide com o
+[deck_map](../../kb/tcc-pptx/deck_map.md). Rodar essa comparação depois de cada rodada grande
+do deck. Pendente da mesma revisão: a rampa i_q × V por cenário nas
+abas, que vai precisar de prévia antes.

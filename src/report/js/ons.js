@@ -197,11 +197,9 @@ function _onsToggleOutros() {
 // só redesenha a figura: refazer os chips trocaria o elemento sob o mouse
 function _onsFiltrar(cls) {
   onsFiltro = cls;
-  var cap = CAPS[tccCap], el = presOn ? document.getElementById("pres-plot") : gd.tcc;
-  if (!el || !el.layout) return;
-  var fig = _tccFigure(cap, [], presOn
-    ? { dark: false, height: el.layout.height, big: true, bg: "#ffffff" }
-    : { dark: isDark, height: el.layout.height });
-  Plotly.react(el, fig.data, fig.layout, presOn ? PRES_CFG : PLOTLY_CFG);
+  var cap = CAPS[tccCap], el = document.getElementById("pres-plot");
+  if (!presOn || !el.layout) return;
+  var fig = _tccFigure(cap, [], { dark: false, height: el.layout.height, big: true, bg: "#ffffff" });
+  Plotly.react(el, fig.data, fig.layout, PRES_CFG);
 }
 

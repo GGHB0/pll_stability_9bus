@@ -10,8 +10,8 @@ cada tela (capítulo ou passo) tira um PNG e confere:
     painel cabe nele;
   - se a tabela "Todos os casos" cabe sem rolar.
 Depois confere a navegação de volta (← entra no último passo), o fasor
-(o instante segue o mouse e o play anda) e se a aba recupera os casos
-escondidos pelos passos ao sair do palco.
+(o instante segue o mouse e o play anda) e se os capítulos recuperam os
+casos escondidos pelos passos ao sair do palco.
 
 Tamanhos padrão: 1920×1080 (projetor Full HD) e 1280×720 (notebook Full HD
 com escala de 150% no Windows, ou projetor espelhado em resolução menor).
@@ -163,7 +163,7 @@ def _percorre(nav, html: Path, out: Path, w: int, h: int) -> tuple[int, list[str
             falhas.append(f"voltar com ← para o capítulo {i + 1} não caiu no último passo "
                           f"(foi para {d['n']}, passo {d['passo'] + 1})")
 
-    # sair do palco: casos escondidos pelos passos voltam à aba
+    # sair do palco: casos escondidos pelos passos voltam a aparecer
     pg.evaluate("() => { if (presOn) presToggle(); }")
     pg.wait_for_timeout(400)
     presos = pg.evaluate("""() => CAPS.filter(function(c) { return c.passos_pres && tccState[c.id]; })
@@ -171,7 +171,7 @@ def _percorre(nav, html: Path, out: Path, w: int, h: int) -> tuple[int, list[str
         .filter(function(k) { return tccState[c.id].on[k] === false; }); })
       .reduce(function(a, b) { return a.concat(b); }, [])""")
     if presos:
-        falhas.append(f"casos ainda escondidos na aba depois de sair do palco: {presos}")
+        falhas.append(f"casos ainda escondidos depois de sair do palco: {presos}")
 
     for er in erros:
         falhas.append(f"erro de JS: {er}")

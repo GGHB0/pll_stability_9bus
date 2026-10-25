@@ -21,9 +21,5 @@ document.addEventListener("keydown", function(e) {
     if (next) { e.preventDefault(); presStep(1); }
     else if (prev) { e.preventDefault(); presStep(-1); }
     else if (e.key === "Escape") { presToggle(); }
-    return;
   }
-  if (activeTab !== "tcc") return;
-  if (next) { e.preventDefault(); tccStep(1); }
-  else if (prev) { e.preventDefault(); tccStep(-1); }
 });

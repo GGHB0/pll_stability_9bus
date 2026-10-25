@@ -63,8 +63,16 @@ quebrar o ciclo `loader → indicadores → spectrum → loader`.
     vermelho), 120 Hz; "Erro acima de 90°" só nas assimétricas (na trifásica
     a fração vem só do salto de fase da aplicação da falta); "P absorvida" e
     "Q injetada" só quando não há retorno (§5.4).
-  - *Tensão e suporte de reativo*: retenção de v_d, v_d médio (mín./máx.),
-    tensão no inversor, i_q,ref médio com a rampa ONS no subtítulo, P média.
+  - *Tensão e suporte de reativo*: "Suportabilidade ONS" (dentro/fora,
+    desde 2026-10-25), retenção de v_d, v_d médio (mín./máx.), tensão no
+    inversor, i_q,ref médio com a rampa ONS no subtítulo, P média.
+  - O card "Suportabilidade ONS" é o único com semáforo (verde dentro,
+    vermelho fora), porque o TCC classifica por essa borda. Lê
+    `metrics["lvrt"]` (`suportabilidade_ons`, a mesma conta do capítulo
+    Código de rede do palco): "fora" = fase mais afundada abaixo da borda
+    depois do 1º ciclo; subtítulo com o mínimo dela. Clique abre |V| Bus 2,
+    onde a curva está desenhada ([[chart-analysis-overlays]]). Nas 4
+    trifásicas: B7 e L7-8 fora, B6 e L8-9 dentro.
   - *Energização do inversor* (regime): 5% de v_d e 2° do erro.
   - A narrativa ganhou o item "Sincronismo" (falta) ou "Energização" (regime).
 - **Tabela comparativa**: 9 colunas novas antes das de V médio; ver

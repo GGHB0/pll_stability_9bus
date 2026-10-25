@@ -102,16 +102,18 @@ aliases: [defesa-pendencias]
   com as receitas do TCC (retenção 9,2% / 8,2%, retorno 98 ms / "não
   retorna", 66,8%, 0,72 pu), ver [[indicadores-tcc-dashboard]]. Os cards
   podem ser lidos. Conferir se as notas do slide 16 querem citar o card.
-- **Notas do slide 16 × aba "Análise TCC" (2026-10-20)**: o painel abre
-  numa aba de 7 capítulos avançados pelo passador
-  ([[roteiro-demonstracao-dashboard]]). Falta reescrever as notas pelos
+- **Notas do slide 16 × aba "Análise TCC" (2026-10-20)**: desde 2026-10-25
+  a aba não existe mais; o painel abre no **Resumo** e os 8 capítulos ficam
+  só no botão "Modo apresentação" (passador avança)
+  ([[roteiro-demonstracao-dashboard]]). As notas do slide da demo têm de
+  dizer isso. Falta reescrever as notas pelos
   capítulos e decidir o tempo: a aba pede 3 a 4 min, então ou os slides
   17-18 viram síntese rápida, ou capítulos saem (`CAPITULOS` em
   `src/report/roteiro.py`).
 - **Ensaiar a demo (slide 16) no notebook da defesa, sem internet**: abrir
   `output/pll_metrics.html` antes, no cenário Barra 7 trifásica nominal;
   conferir os nomes dos botões citados nas notas (Zoom na falta, aba
-  Espectro FFT em dq; agora a aba "Análise TCC"). O cabeçalho já
+  Espectro FFT em dq; agora o botão "Modo apresentação"). O cabeçalho já
   diz "UERJ 2026" (corrigido em 2026-10-20).
 - **Crédito do template (CC BY 4.0)**: o visual vem do "Project
   Portfolio" do SlidesCarnival; falta a linha de crédito (sugestão: discreta

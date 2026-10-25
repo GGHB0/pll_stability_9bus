@@ -18,7 +18,7 @@ import plotly
 import plotly.graph_objects as go
 
 from ..config import (
-    T_SETTLE, LVRT_THRESHOLD, F_FUND_HZ, VBUS_AVG_THRESH,
+    T_SETTLE, KP_PLL, KI_PLL, BAD_PLL_FATOR, LVRT_THRESHOLD, F_FUND_HZ, VBUS_AVG_THRESH,
     SPEC_SEG_LIMIT_FACTOR, CURR_ODD_LIMIT_PU, CURR_ODD_LIMIT_11_16_PU, CURR_EVEN_LIMITS_PU,
     VOLT_INDIVIDUAL_LIMIT_PU, DQ_UNBALANCE_WARN_PU, DQ_UNBALANCE_HIGH_PU,
 )
@@ -141,7 +141,6 @@ class HTMLRenderer:
                 "tcc":       tcc_secao(key),
                 "tccOrd":    (list(TCC_CASOS).index(key) if key in TCC_CASOS else None),
                 "tccInd":    self._tcc_ind(d),
-                "hasTcc":    True,
                 "tFault":    d.t_fault,
                 "tClear":    d.t_clear,
                 "tEnd":      d.t[-1] if len(d.t) > 0 else None,
@@ -158,9 +157,6 @@ class HTMLRenderer:
         tcc_js        = _tcc_js()
         capitulos_js  = json.dumps(CAPITULOS)
         cmp_head_js   = json.dumps([h for _, h in self._CMP_COLS])
-        tcc_pills     = "".join(
-            f'<button class="tcc-pill" onclick="tccGo({i})"><span>{i + 1}</span>{c["curto"]}</button>'
-            for i, c in enumerate(CAPITULOS))
 
         return f"""<!DOCTYPE html>
 <html lang="pt-BR" data-theme="light">
@@ -228,36 +224,10 @@ class HTMLRenderer:
   </div>
 
   <div class="tab-bar" id="tab-bar">
-    <button class="tab-btn tab-tcc" id="tab-tcc"  onclick="switchTab('tcc')">Análise TCC</button>
     <button class="tab-btn active" id="tab-res"  onclick="switchTab('res')">Resumo</button>
     <button class="tab-btn" id="tab-inv"  onclick="switchTab('inv')">Inversor UFV</button>
     <button class="tab-btn" id="tab-sys"  onclick="switchTab('sys')">Barras de Geração</button>
     <button class="tab-btn" id="tab-spec" onclick="switchTab('spec')">Espectro FFT</button>
-  </div>
-
-  <div class="chart-section tcc-section" id="sec-tcc" style="display:none">
-    <div class="section-header">
-      <span class="section-title">Análise TCC &nbsp;·&nbsp; Capítulo 5</span>
-      <span class="spec-hint">seta → ou PageDown avança &nbsp;·&nbsp; clique num cartão para abrir o cenário</span>
-    </div>
-    <div class="tcc-nav">
-      <button class="rt-nav" onclick="tccStep(-1)" title="Capítulo anterior (seta para a esquerda)">&lsaquo;</button>
-      <div class="tcc-pills">{tcc_pills}</div>
-      <button class="rt-nav" onclick="tccStep(1)" title="Próximo capítulo (seta para a direita ou PageDown)">&rsaquo;</button>
-    </div>
-    <div class="tcc-cap">
-      <p class="tcc-ref" id="tcc-ref"></p>
-      <p class="tcc-title" id="tcc-title"></p>
-      <p class="tcc-text" id="tcc-text"></p>
-    </div>
-    <div class="tcc-ctrl">
-      <div class="pll-toggle" id="tcc-sinais"></div>
-      <div class="tcc-chips" id="tcc-chips"></div>
-    </div>
-    <div id="plot-tcc"></div>
-    <div id="tcc-table"></div>
-    <div class="tcc-mapa" id="tcc-mapa"></div>
-    <div class="tcc-cards" id="tcc-cards"></div>
   </div>
 
   <div class="chart-section" id="sec-res" style="display:none">
@@ -349,10 +319,10 @@ var pllMode = "nominal";
 
 // Abas: cada gráfico vive num painel; só o ativo é renderizado (lazy) e os
 // demais ficam "sujos" até serem abertos — _dirty[t] = precisa de Plotly.react.
-var TABS = ["tcc", "res", "inv", "sys", "spec"];
-var HASKEY = {{ tcc: "hasTcc", res: "hasRes", inv: "hasInv", sys: "hasSys", spec: "hasSpec" }};
-var activeTab = "tcc";   // a página abre na Análise TCC (demonstração da defesa)
-var _dirty = {{ tcc: true, res: true, inv: true, sys: true, spec: true }};
+var TABS = ["res", "inv", "sys", "spec"];
+var HASKEY = {{ res: "hasRes", inv: "hasInv", sys: "hasSys", spec: "hasSpec" }};
+var activeTab = "res";
+var _dirty = {{ res: true, inv: true, sys: true, spec: true }};
 
 var gd = {{}}, secEl = {{}}, tabBtn = {{}}, badgeEl = {{}};
 TABS.forEach(function(t) {{
@@ -448,7 +418,6 @@ function themedData(data, lightC, darkC, tIdx, isDarkMode) {{
 }}
 
 function _renderChart(which) {{
-  if (which === "tcc") {{ _renderTcc(); _dirty.tcc = false; return; }}
   var sc = SCENARIOS[currentKey];
   var figData, light, dark, idx;
   if (which === "spec") {{
@@ -522,9 +491,7 @@ function switchTab(which) {{
     which = TABS.filter(function(t) {{ return sc[HASKEY[t]]; }})[0];
   }}
   activeTab = which;
-  document.body.classList.toggle("tcc-mode", which === "tcc");
-  if (which === "tcc") headerSub.textContent = "Análise comparativa · Capítulo 5 do TCC";
-  else updateFaultUI(sc);
+  updateFaultUI(sc);
   TABS.forEach(function(t) {{
     var avail = !!sc[HASKEY[t]];
     tabBtn[t].style.display = avail ? "" : "none";
@@ -837,6 +804,8 @@ function _applyPllFilter(mode) {{
   document.querySelectorAll(".pll-btn").forEach(function(b) {{
     b.classList.toggle("active", b.dataset.mode === mode);
   }});
+  var gains = document.getElementById("pll-gains");
+  if (gains) gains.innerHTML = gains.dataset[mode];
   document.querySelectorAll("#scenario-picker option").forEach(function(opt) {{
     var isBad = SCENARIOS[opt.value] && SCENARIOS[opt.value].badPll;
     opt.hidden = (mode === "nominal") ? isBad : !isBad;
@@ -1019,7 +988,20 @@ setPllMode(pllMode);
             + "</select>"
         )
 
+    @staticmethod
+    def _pll_gains_txt(fator: float) -> str:
+        """Ganhos do PI e ωn, ξ do laço linearizado com U = 1 pu (Kpd = 1):
+        s² + Kp·s + Ki = 0 → ωn = √Ki, ξ = Kp / (2ωn) (Seção 3.4)."""
+        kp, ki = KP_PLL * fator, KI_PLL * fator
+        wn = ki ** 0.5
+
+        def num(v, n):
+            return f"{v:,.{n}f}".replace(",", " ").replace(".", ",").replace(" ", ".")
+        return (f"K<sub>p</sub> = {num(kp, 0)} · K<sub>i</sub> = {num(ki, 0)} · "
+                f"ω<sub>n</sub> = {num(wn, 1)} rad/s · ξ = {num(kp / (2 * wn), 3)}")
+
     def _pll_toggle_html(self) -> str:
+        nom, bad = self._pll_gains_txt(1.0), self._pll_gains_txt(BAD_PLL_FATOR)
         return (
             '<span class="filter-label" style="margin-left:8px">PLL</span>'
             '<div class="pll-toggle">'
@@ -1028,6 +1010,9 @@ setPllMode(pllMode);
             '<button class="pll-btn" data-mode="bad" '
             'onclick="setPllMode(\'bad\')">Sintonia inadequada</button>'
             '</div>'
+            f'<span class="pll-gains" id="pll-gains" data-nominal="{nom}" '
+            f'data-bad="ganhos ×0,2: {bad}" title="Ganhos do PI do SRF-PLL; ωn e ξ com U = 1 pu (Seção 3.4)">'
+            f'{nom}</span>'
         )
 
     # ── Tabela de harmônicas (aba Espectro) ──────────────────────────────────
@@ -1589,7 +1574,16 @@ setPllMode(pllMode);
                                   "absorve reativo", "neutral", target="P / Q UFV"))
             groups.append(_group("Sincronismo do SRF-PLL", "".join(sync)))
 
-            sup = [
+            sup = []
+            lvrt = m.get("lvrt")
+            if lvrt:
+                sup.append(_card("Suportabilidade ONS", "fora" if lvrt["fora"] else "dentro", "",
+                                 f"fase mais afundada: mín. {lvrt['vmin']:.2f} pu",
+                                 "Fase mais afundada no inversor (60 Hz, janela de 1 ciclo) "
+                                 "contra a borda inferior da curva de suportabilidade "
+                                 "(Figura 2.1), a partir do 1º ciclo de falta",
+                                 "bad" if lvrt["fora"] else "good", target="|V| Bus 2"))
+            sup += [
                 _card("Retenção de v<sub>d</sub>", f"{ind['ret']:.1f}", "%",
                       "do valor pré-falta",
                       "Média de v_d da rede em [t_fault + 2 ciclos, t_clear] sobre a média "
@@ -2008,6 +2002,8 @@ body, .card, .header, .chart-section, .badge, .toggle-btn,
   background: var(--accent); color: #fff;
 }
 [data-theme="dark"] .pll-btn.active { color: #0f172a }
+.pll-gains { font-size: 11.5px; color: var(--muted); white-space: nowrap; cursor: default }
+@media (max-width: 1100px) { .pll-gains { display: none } }
 
 /* ── Diagram section ── */
 .diagram-section {
@@ -2302,8 +2298,6 @@ body.pres-on { overflow: hidden }
 
 /* ── Capítulo "Faltas destacadas" (kind mapa): unifilar + cartão + régua ── */
 .mapa { display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 24px; align-items: center }
-.tcc-mapa .mapa { padding: 8px 0 4px }
-.tcc-mapa .mapa-svg svg { width: 100%; height: 470px; display: block }
 .pres-mapa { flex: 1; min-height: 0 }
 .pres-mapa .mapa { height: 100% }
 .pres-mapa .mapa-svg { height: 100%; min-height: 0; display: flex; flex-direction: column }
@@ -2351,26 +2345,7 @@ body.pres-on { overflow: hidden }
 .mp-step { margin: 8px 0 0 }
 .mp-step .passo-ind { align-items: flex-start }
 
-/* ── Aba Análise TCC ── */
-.tab-btn.tab-tcc { font-weight: 700 }
-body.tcc-mode #zoom-fault { display: none }
-/* na aba TCC o cenário único não manda: seletor e toggle ficam esmaecidos */
-body.tcc-mode #scenario-picker, body.tcc-mode .filter-bar .pll-toggle { opacity: .45 }
-.tcc-section { padding-bottom: 18px }
-.tcc-nav { display: flex; align-items: center; gap: 10px; padding: 14px 20px 4px }
-.tcc-pills { flex: 1; display: flex; flex-wrap: wrap; gap: 6px }
-.tcc-pill {
-  font-family: inherit; font-size: 12.5px; font-weight: 600;
-  padding: 6px 12px; border-radius: 999px; cursor: pointer;
-  border: 1.5px solid var(--btn-bdr); background: var(--btn-bg); color: var(--btn-fg);
-}
-.tcc-pill span {
-  display: inline-block; min-width: 18px; margin-right: 6px; font-weight: 800;
-  color: var(--accent);
-}
-.tcc-pill.active { background: var(--accent); border-color: var(--accent); color: #fff }
-.tcc-pill.active span { color: #fff }
-[data-theme="dark"] .tcc-pill.active, [data-theme="dark"] .tcc-pill.active span { color: #0f172a }
+/* ── Capítulos do Cap. 5 (palco) ── */
 .rt-nav {
   font-family: inherit; font-size: 22px; line-height: 1; font-weight: 700;
   width: 34px; height: 34px; flex-shrink: 0;
@@ -2378,14 +2353,6 @@ body.tcc-mode #scenario-picker, body.tcc-mode .filter-bar .pll-toggle { opacity:
   background: var(--surface); color: var(--accent); cursor: pointer;
 }
 .rt-nav:hover { background: var(--accent); color: #fff }
-.tcc-cap {
-  margin: 10px 20px 0; padding: 12px 16px;
-  background: var(--badge-bg); border-left: 4px solid var(--accent); border-radius: 8px;
-}
-.tcc-ref { font-size: 11px; font-weight: 700; letter-spacing: .5px; color: var(--accent); text-transform: uppercase }
-.tcc-title { font-size: 17px; font-weight: 800; margin: 3px 0 4px; color: var(--text) }
-.tcc-text { font-size: 14px; line-height: 1.5; color: var(--text); max-width: 110ch }
-.tcc-ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 20px 0 }
 .tcc-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px }
 .tcc-chip {
   font-family: inherit; font-size: 12px; font-weight: 600;
@@ -2427,7 +2394,6 @@ body.tcc-mode #scenario-picker, body.tcc-mode .filter-bar .pll-toggle { opacity:
   background: var(--btn-bg); border: 1.5px dashed var(--btn-bdr);
   border-radius: 999px; padding: 5px 10px; cursor: pointer;
 }
-#plot-tcc { padding: 4px 8px 0 }
 .tcc-cards {
   display: grid; gap: 10px; padding: 6px 20px 0;
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -2441,7 +2407,6 @@ body.tcc-mode #scenario-picker, body.tcc-mode .filter-bar .pll-toggle { opacity:
 .tcc-card-h { font-size: 12.5px; font-weight: 700; margin-bottom: 6px; color: var(--text) }
 .tcc-row { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--muted); padding: 2px 0 }
 .tcc-row b { color: var(--text); font-size: 13px; white-space: nowrap }
-#tcc-table { padding: 8px 20px 0 }
 .tcc-bad-tag { margin-left: 6px; font-size: 10px; font-weight: 700; color: #ea580c }
 [data-theme="dark"] .tcc-bad-tag { color: #fb923c }
 
@@ -2451,7 +2416,6 @@ body.tcc-mode #scenario-picker, body.tcc-mode .filter-bar .pll-toggle { opacity:
 .ons-badge.dentro, .ons-sum.dentro { background: #dcfce7; color: #15803d }
 [data-theme="dark"] .ons-badge.fora, [data-theme="dark"] .ons-sum.fora { background: rgba(248,113,113,.18); color: #fca5a5 }
 [data-theme="dark"] .ons-badge.dentro, [data-theme="dark"] .ons-sum.dentro { background: rgba(74,222,128,.15); color: #86efac }
-.tcc-ctrl .tcc-chips:has(.ons-ctrl) { flex: 1 }   /* na aba (linha); no palco já ocupa a largura */
 .ons-ctrl { margin-left: auto; display: inline-flex; align-items: center; gap: 6px }
 .ons-sum { position: relative; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 5px 11px; cursor: default }
 .ons-pop {

@@ -23,7 +23,6 @@ function presToggle() {
     if (document.fullscreenElement && document.exitFullscreen) {
       try { document.exitFullscreen(); } catch (e) {}
     }
-    if (activeTab === "tcc") _renderTcc();
   }
 }
 

@@ -2,7 +2,7 @@
 name: palco-validator
 description: |
   Valida o modo apresentação do dashboard (palco da defesa) depois de uma mudança em src/report/ — roda scripts/verifica_palco.py, lê os PNGs de cada tela e confere números contra legendas e cartões, texto cortado, sobreposição, vírgula decimal e português. Não edita arquivos.
-  Use PROACTIVELY sempre que uma mudança em src/report/ (roteiro.py, renderer.py, js/) mexer no palco ou na aba Análise TCC, antes de considerá-la pronta.
+  Use PROACTIVELY sempre que uma mudança em src/report/ (roteiro.py, renderer.py, js/) mexer no palco, antes de considerá-la pronta.
 
   Exemplo: o principal acrescentou um painel ao lado no capítulo Localização → palco-validator roda o verifica_palco, lê 03_local.png e as telas vizinhas e devolve o parecer.
 model: sonnet
@@ -35,7 +35,7 @@ Ele percorre o palco com a seta em **1920×1080 e 1280×720**, tira um PNG
 por tela em `output/verifica_palco/<L>x<A>/` e grava `relatorio.txt` em
 cada pasta. Falha que ele aponta (erro de JS, tela que rola, gráfico
 invadindo o painel, painel ao lado transbordando, tabela que não cabe,
-seta ← fora do último passo, fasor parado, caso escondido na aba) entra no
+seta ← fora do último passo, fasor parado, caso escondido depois de sair do palco) entra no
 parecer como **BLOQUEIA**, com a linha do relatório.
 
 **Resolução**: as duas telas valem. 1280×720 é o que um notebook Full HD

@@ -70,7 +70,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 | Tema light/dark | `renderer.py` (`_css`, `toggleTheme`) | `layout/dark-mode-theming.md` |
 | Header/branding/botões da filter-bar | `renderer.py` | `layout/header-branding.md`, `layout/estrutura-html.md` |
 | Toggle PLL nominal/sintonia inadequada | `renderer.py`, `app.py` | `layout/bad-pll-dashboard-filter.md` |
-| Casos do TCC, capítulos da aba Análise TCC | `roteiro.py` (`TCC_CASOS`, `CAPITULOS`), JS em `src/report/js/` (ordem em `TCC_JS_FILES` no `renderer.py`) | `layout/roteiro-casos-tcc.md` |
+| Casos do TCC, capítulos do palco | `roteiro.py` (`TCC_CASOS`, `CAPITULOS`), JS em `src/report/js/` (ordem em `TCC_JS_FILES` no `renderer.py`) | `layout/roteiro-casos-tcc.md` |
 | Palco: passos com frase, painel ao lado (fasor, mini-mapa), número de destaque, notas com seta | campos `passos_pres`/`lado`/`destaque`/`notas` em `CAPITULOS`; `palco.js` (`_renderPres`), `fasor.js`, `minimapa.js`, `tcc.js` (`_destaque`, `_nota`, `_marcaPartida`, `_marcaRetorno`) | `layout/modo-apresentacao.md` |
 | Palco: foco do passo, destaque só num passo, indicador de passo | campos `foco`/`destaque` do passo; `tcc.js` (`_foco`), `navegacao.js` (`_capDestaque`, `_passoInd`) | `layout/modo-apresentacao.md` |
 | Palco do Código de rede: casos em cena, outros curtos, cartão de fecho, sem cartões | campos `realce`/`outros`/`fecho` do passo e `cartoes_pres`/`destaque.key` do capítulo; `ons.js` (`_onsFigure`), `palco.js` | `layout/palco-codigo-de-rede.md` |
@@ -87,7 +87,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
   pelo texto e usa o `y` dela. Painel novo deve manter a barra via `_label`
   para cards e roteiro acharem. Detalhes em `tabs-navegacao.md`.
 
-- **Palco e aba Análise TCC: `scripts/verifica_palco.py`** (desde
+- **Palco: `scripts/verifica_palco.py`** (desde
   2026-10-24). Percorre o palco com a seta no Edge headless (Playwright do
   `.venv`, `channel="msedge"`, não baixa browser) em 1920×1080 e 1280×720,
   tira um PNG por tela em `output/verifica_palco/<L>x<A>/` e falha em erro
@@ -134,6 +134,8 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
   `destaque=True`. Capítulo novo com gráfico já nasce assim. Exceção:
   o último passo do Código de rede vela o gráfico com o cartão de fecho
   (a tese do trabalho, frase da Conclusão).
+- **Sem aba "Análise TCC"** (desde 2026-10-25): os capítulos do Cap. 5 só
+  existem no palco ("Modo apresentação") e a página abre no Resumo.
 - **Aba Resumo é cards + diagnóstico, sem gráfico** (desde 2026-07-24) —
   não reintroduzir uma figura ali sem que o usuário peça; era repetitivo
   com Inversor/Sistema e foi removido por esse motivo.
@@ -143,7 +145,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 - [previa-standalone.md](previa-standalone.md): elemento novo de visual
   indefinido (capítulo do palco, diagrama) prototipado num HTML do
   scratchpad, com PNG por passo no Edge headless, antes de tocar em `src/`.
-- [historico.md](historico.md): versões v1.0.0 a v1.11.0 e a lição de cada
+- [historico.md](historico.md): versões v1.0.0 a v1.12.0 e a lição de cada
   rodada. Versão nova ganha entrada lá, não aqui.
 
 Atualizar a tabela e as convenções conforme novas edições no dashboard

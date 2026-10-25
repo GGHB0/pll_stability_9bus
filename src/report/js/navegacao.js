@@ -1,4 +1,3 @@
-function tccStep(d) { if (!_mapaStep(d)) tccGo(tccCap + d, d < 0); }
 function presStep(d) { if (!_mapaStep(d) && !_presPassoStep(d)) presGo(tccCap + d, d < 0); }
 
 // Passos do palco (cap.passos_pres): cada um troca a legenda por uma frase e
@@ -32,7 +31,7 @@ function _capDestaque(cap) {
   return (ps && !ps.destaque) ? null : cap.destaque;
 }
 
-// ao sair do palco, a aba volta a mostrar todos os casos dos capítulos com passos
+// ao sair do palco, os capítulos com passos voltam a mostrar todos os casos
 function _presPassoReset() {
   CAPS.forEach(function(c) {
     if (!c.passos_pres || !tccState[c.id]) return;
@@ -41,7 +40,7 @@ function _presPassoReset() {
   });
 }
 
-function _tccRefresh() { if (presOn) _renderPres(); else _renderTcc(); }
+function _tccRefresh() { if (presOn) _renderPres(); }
 
 function _tccSinal(s) { _tccSt(CAPS[tccCap]).sinal = s; _tccRefresh(); }
 
@@ -70,14 +69,6 @@ function _scrollToTabs() {
   }, 60);
 }
 
-function tccGo(i, back) {
-  if (i < 0 || i >= CAPS.length) return;
-  _mapaEnter(i, back);
-  tccCap = i;
-  if (activeTab !== "tcc") switchTab("tcc"); else _renderTcc();
-  _scrollToTabs();
-}
-
 function _openScenario(k) {
   if (presOn) presToggle();
   _applyPllFilter(SCENARIOS[k].badPll ? "bad" : "nominal");
@@ -86,42 +77,3 @@ function _openScenario(k) {
   switchScenario(k);
   _scrollToTabs();
 }
-
-function _renderTcc() {
-  var cap = CAPS[tccCap], st = _tccSt(cap);
-  document.querySelectorAll(".tcc-pill").forEach(function(b, i) {
-    b.classList.toggle("active", i === tccCap);
-  });
-  document.getElementById("tcc-ref").textContent = cap.ref;
-  document.getElementById("tcc-title").textContent = cap.titulo;
-  document.getElementById("tcc-text").innerHTML = cap.texto;   // texto nosso, com <sub>
-  var sb = document.getElementById("tcc-sinais");
-  sb.style.display = (cap.sinais.length > 1) ? "" : "none";
-  sb.innerHTML = cap.sinais.map(function(s) {
-    return "<button class=\"pll-btn" + (s === st.sinal ? " active" : "") + "\" onclick=\"_tccSinal('"
-      + s + "')\">" + SINAIS[s].lbl + "</button>";
-  }).join("");
-  document.getElementById("tcc-chips").innerHTML = _tccChipsHtml(cap, isDark, true);
-
-  var plotEl = gd.tcc, tbl = document.getElementById("tcc-table");
-  var cardsEl = document.getElementById("tcc-cards");
-  var mapaEl = document.getElementById("tcc-mapa");
-  mapaEl.innerHTML = (cap.kind === "mapa") ? _mapaHtml(cap, "tcc") : "";
-  if (cap.kind === "mapa") {
-    plotEl.style.display = "none"; tbl.innerHTML = ""; cardsEl.innerHTML = "";
-    return;
-  }
-  if (cap.kind === "tabela") {
-    plotEl.style.display = "none"; cardsEl.innerHTML = "";
-    tbl.innerHTML = _tccTableHtml();
-    return;
-  }
-  tbl.innerHTML = "";
-  plotEl.style.display = "";
-  var sinais = (cap.kind === "spec") ? ["spec"] : (cap.kind === "ons" ? [] : [st.sinal]);
-  var fig = _tccFigure(cap, sinais, { dark: isDark, height: cap.kind === "ons" ? 520 : 460 });
-  PLOTLY_CFG.toImageButtonOptions.filename = "tcc_" + cap.id + (st.sinal ? "_" + st.sinal : "");
-  Plotly.react(plotEl, fig.data, fig.layout, PLOTLY_CFG);
-  cardsEl.innerHTML = _tccCardsHtml(cap, isDark);
-}
-

@@ -1,10 +1,10 @@
 ---
 name: roteiro-demonstracao-dashboard
 aliases: [roteiro-demonstracao-dashboard]
-description: Casos do Cap. 5 destacados no dashboard (seletor por seção, mapa azul/cinza, comparativo "Só casos do TCC"), aba "Análise TCC" (8 capítulos com cenários sobrepostos) e modo apresentação em tela cheia da defesa — src/report/roteiro.py
+description: Casos do Cap. 5 destacados no dashboard (seletor por seção, mapa azul/cinza, comparativo "Só casos do TCC"), 8 capítulos com cenários sobrepostos (só no palco desde 2026-10-25, quando a aba "Análise TCC" saiu) e modo apresentação em tela cheia da defesa — src/report/roteiro.py
 ---
 
-# Casos do TCC e aba Análise TCC
+# Casos do TCC e capítulos do Cap. 5
 
 Motivação (2026-10-20): na defesa, o slide 16 abre o painel ao vivo
 ([[defesa-deck-map]]). O painel tem 34 cenários, e o TCC discute 17. A banca
@@ -21,7 +21,7 @@ de achar o cenário certo no `<select>` durante a fala.
   inadequadas da Linha 7-8 (9,7% de retenção) e da Barra 6 (106 ms), que o
   texto usa como contraste.
 - Fora do TCC: Barras 4, 5, 8 e 9 (todas as faltas) e Linha 8-9 bifásica.
-- `CAPITULOS`: os capítulos da aba "Análise TCC". Cada um tem `id`,
+- `CAPITULOS`: os capítulos do modo apresentação. Cada um tem `id`,
   `curto` (botão), `titulo`, `ref`, `texto` (pode ter `<sub>`), `kind`
   (`mapa`, `time`, `spec`, `ons`, `tabela`), `casos` com cor (light, dark)
   e estilo opcional, `sinais` (o 1º é o padrão), `xrange` e `metricas`
@@ -46,13 +46,18 @@ tem de bater com o card do mesmo cenário ([[indicadores-tcc-dashboard]]).
 - `_locOf(key)` tira o `_bad_pll` antes do `split`: `regime_bad_pll` passou
   a acender o título do mapa, o que antes não acontecia.
 
-## Aba "Análise TCC"
+## Capítulos do Cap. 5
 
 Histórico: em 2026-10-20 a demonstração começou como uma faixa de 9 passos
-sobre as abas por cenário (commit `d1a8e8c`). No mesmo dia virou esta aba,
-a pedido do usuário, para comparar os cenários num painel só.
+sobre as abas por cenário (commit `d1a8e8c`). No mesmo dia virou a aba
+"Análise TCC", a pedido do usuário, para comparar os cenários num painel só.
+**Em 2026-10-25 a aba saiu**, também a pedido: o palco (botão "Modo
+apresentação") já mostra os mesmos capítulos, e a página passou a abrir no
+Resumo. Saíram com ela `tccGo`, `tccStep`, `_renderTcc`, o HTML de
+`sec-tcc`, o CSS só da aba e o "+ comparar com…" (seletor que só a aba
+mostrava). `_tccRefresh` agora só redesenha o palco.
 
-A aba é a primeira e a página abre nela. Cada capítulo sobrepõe no mesmo
+Cada capítulo sobrepõe no mesmo
 eixo os cenários que o TCC compara: azul = nominal, laranja = inadequada;
 na localização e no código de rede, amarelo → verde → ciano → índigo do
 mais perto ao mais longe da usina; nas assimétricas, cor = barra e traço =
@@ -77,14 +82,11 @@ para a defesa terminar no argumento a favor da sintonia nominal (2026-10-24).
   fase", "V<sub>d</sub> Rede", "P UFV", "Q UFV" do Inversor; "Durante a
   falta" em `y2` do espectro dq). O HTML não cresce.
 - Os chips ligam e desligam cenários e fazem de legenda (a do Plotly fica
-  oculta). "+ comparar com…" acrescenta qualquer cenário, em linha
-  pontilhada.
+  oculta).
 - Os mini-cartões vêm de `tccInd` (`_tcc_ind` no renderer, mesmas receitas
-  dos cards). Clicar abre o cenário na aba Inversor.
-- Na aba, o cabeçalho diz "Análise comparativa", o seletor e o toggle PLL
-  ficam esmaecidos e o "Zoom na falta" some.
-- Teclas, só com a aba ativa e fora de `<select>`: seta → ou PageDown
-  avança, seta ← ou PageUp volta (um passador de slides funciona).
+  dos cards). Clicar sai do palco e abre o cenário na aba Inversor.
+- Teclas, só no palco e fora de `<select>`: seta → ou PageDown avança,
+  seta ← ou PageUp volta (um passador de slides funciona), Esc sai.
 - O JS mora em `src/report/js/` (9 arquivos por tema, desde 2026-10-24;
   antes era a string `_TCC_JS` no fim do `renderer.py`) e entra
   no f-string do HTML por `{tcc_js}`, sem precisar dobrar chaves.

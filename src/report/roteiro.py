@@ -88,8 +88,10 @@ _ASSIM = {
 # caixa; sem x, a caixa fica solta em ax/ay; lado=True põe o número no
 # painel ao lado); notas põe caixas menores com seta (sinal, txt, x/y do
 # alvo, ax/ay da caixa, cor opcional). Números só os da legenda e dos
-# cartões. faixa_err fixa o eixo do erro de fase (palco e aba) para a faixa
-# de 2° aparecer.
+# cartões. matriz troca os cartões por uma tabela linhas × colunas (chave =
+# prefixo da linha + "/" + sufixo da coluna, realce = coluna sombreada,
+# rotulos = nome curto das métricas, nota = rodapé). faixa_err fixa o eixo
+# do erro de fase (palco e aba) para a faixa de 2° aparecer.
 CAPITULOS: list[dict] = [
     dict(id="faltas", pres=[], curto="Faltas destacadas", kind="mapa",
          titulo="Faltas destacadas", ref="Antes dos resultados",
@@ -210,15 +212,22 @@ CAPITULOS: list[dict] = [
          texto="Nas faltas assimétricas, a sequência negativa aparece em v<sub>d</sub> "
                "como uma oscilação de 120 Hz, de 0,29 a 0,72 pu: mais de 250 "
                "vezes o maior valor das trifásicas (0,0011 pu). O gráfico é o "
-               "espectro de v<sub>d</sub> do inversor durante a falta; os cartões "
-               "seguem a receita do TCC.",
+               "espectro de v<sub>d</sub> do inversor durante a falta; a tabela "
+               "segue a receita do TCC.",
          casos=[(k, *_ASSIM[k]) for k in ("bus7/3phase", "bus7/2phase", "bus7/1phase",
                                           "bus6/2phase", "bus6/1phase")],
          sinais=["spec"], xrange=[0.0, 400.0], metricas=["a120", "pico"],
          destaque=dict(sinal="spec", num="&gt; 250×", x=122, y=0.29, ax=200, ay=0.55,
                        txt="a menor assimétrica contra<br>as trifásicas"),
          notas=[dict(sinal="spec", x=121, y=0.004, ax=180, ay=0.24,
-                     txt="<b>Barra 7 trifásica</b><br>0,0002 pu")]),
+                     txt="<b>Barra 7 trifásica</b><br>0,0002 pu")],
+         matriz=dict(linhas=[["Barra 7", "bus7"], ["Barra 6", "bus6"]],
+                     colunas=[["Trifásica", "3phase"], ["Bifásica", "2phase"],
+                              ["Monofásica", "1phase"]],
+                     realce=0, rotulos={"pico": "pico do erro"},
+                     nota="Amplitude de 120 Hz em v<sub>d</sub> durante a falta e "
+                          "pico do erro de fase. A trifásica da Barra 6 não está "
+                          "traçada: fica sobre a da Barra 7, no zero.")),
     dict(id="comp", pres=["err", "vd"], curto="Compromisso da sintonia", kind="time",
          titulo="Ganho menor é compromisso, não piora uniforme",
          ref="§5.3 · Tabela 5.3 · Figura 5.14",

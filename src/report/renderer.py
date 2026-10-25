@@ -2383,6 +2383,27 @@ body.tcc-mode #scenario-picker, body.tcc-mode .filter-bar .pll-toggle { opacity:
 .tcc-grupo { font-size: 13px; font-weight: 700; color: var(--text); margin: 0 2px 0 4px }
 .tcc-grupo:not(:first-child) { margin-left: 18px }
 .tcc-card-grupo { margin-left: 18px }
+.tcc-cards:has(.tcc-mat-wrap) { display: block }
+.tcc-mat-wrap { display: flex; flex-direction: column; align-items: center }
+.tcc-mat { border-collapse: separate; border-spacing: 0; color: var(--text); font-size: 14px }
+.tcc-mat th { text-align: left; padding: 6px 14px; font-size: 13px; font-weight: 700; color: var(--muted);
+  border-bottom: 2px solid var(--border) }
+.tcc-mat th.tcc-mat-l { font-size: 15px; color: var(--text); white-space: nowrap; border-bottom: 1px solid var(--border) }
+.tcc-mat td { padding: 8px 14px; border-bottom: 1px solid var(--border); cursor: pointer; white-space: nowrap }
+.tcc-mat td:hover { background: rgba(148,163,184,.12) }
+.tcc-mat .realce { background: rgba(148,163,184,.14) }
+.tcc-mat td.off { opacity: .35 }
+.tcc-mat .tcc-sw { width: 22px; margin-right: 12px; vertical-align: middle }
+.tcc-mat .tcc-sw.vazio { background: none }
+.tcc-mat-v { font-size: 22px; margin-right: 14px }
+.tcc-mat-s { color: var(--muted) }
+.tcc-mat-s b { color: var(--text) }
+.tcc-mat-nota { font-size: 12px; color: var(--muted); margin: 4px 0 0 }
+@media (max-width: 1500px) {
+  .tcc-mat { font-size: 12px } .tcc-mat th { font-size: 11px; padding: 4px 12px }
+  .tcc-mat th.tcc-mat-l { font-size: 12px } .tcc-mat td { padding: 6px 12px }
+  .tcc-mat-v { font-size: 18px } .tcc-mat-nota { font-size: 10px }
+}
 .tcc-add {
   font-family: inherit; font-size: 12px; color: var(--muted);
   background: var(--btn-bg); border: 1.5px dashed var(--btn-bdr);

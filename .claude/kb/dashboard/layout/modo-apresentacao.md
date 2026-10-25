@@ -125,6 +125,14 @@ injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
   tracejado = monofásica) e a trifásica vai grafite, grossa e por cima. Com
   `grupo`, os chips saem sob o rótulo "Barra 7"/"Barra 6" (sem o prefixo no
   chip) e os cartões ganham um respiro entre os grupos.
+- **Matriz no lugar dos cartões** (`matriz`, 2026-10-24; aba e palco,
+  `_tccMatrizHtml`): linhas × colunas de cenário (chave = prefixo da linha
+  + "/" + sufixo da coluna), 1ª métrica grande e as outras ao lado, coluna
+  `realce` sombreada, clique abre o cenário. Na Sequência negativa: Barra
+  7/6 × trifásica/bifásica/monofásica; a trifásica da Barra 6 (0,0011 pu, o
+  "maior valor das trifásicas" do texto) entra só na matriz, sem curva,
+  porque ficaria sobre a da Barra 7 no zero. Escolhida entre duas prévias
+  (a outra: barras horizontais no painel ao lado).
 
 Regra: todo número escrito no palco vem da legenda ou de `tccInd`, que
 batem com o TCC ([[defesa-deck-map]]). Nada de número calculado só para a

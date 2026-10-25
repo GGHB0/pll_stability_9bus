@@ -17,7 +17,10 @@ não aparecia. Agora é grafite, grossa e desenhada por cima, com uma caixa
 curto (contínuo = bifásica, tracejado = monofásica); chips agrupados sob
 "Barra 7"/"Barra 6" e cartões na mesma ordem, com respiro entre as barras
 (3º item opcional de `casos`: `dash`, `larg`, `grupo`, `frente`). A caixa
-"> 250×" passou a dizer "contra as trifásicas".
+"> 250×" passou a dizer "contra as trifásicas". Os cartões da tela viraram
+uma matriz Barra 7/6 × trifásica/bifásica/monofásica (campo `matriz`,
+`_tccMatrizHtml`), com a trifásica da Barra 6 (0,0011 pu) só na tabela;
+escolhida entre duas prévias.
 
 ## 2026-10-24 — Fasor mais lento; mini-mapa liga e desliga casos
 

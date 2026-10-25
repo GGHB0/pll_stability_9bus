@@ -82,39 +82,82 @@ Pedidos para "enriquecer a apresentação além dos gráficos"; quatro prévias
 injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
 (`roteiro.py`), sem nada fixo no JS.
 
-- **Passos com frase-mensagem** (`passos_pres`, Energização): cada passo
+- **Passos com frase-mensagem** (`passos_pres`, Energização e Localização): cada passo
   troca o parágrafo da legenda por uma frase grande (`.pres-msg`) e esconde
   os casos de `ocultar`. Passo 1 só a nominal ("40 ms"), passo 2 entra a
   inadequada ("79 ms: quase o dobro"). Indicador "passo N de M" no canto
   direito da navegação. `_presPassoReset` devolve os casos à aba ao sair.
-  Por ora só na Energização; o mecanismo serve a qualquer capítulo.
-- **Fasor** (`lado="fasor"`, Perda de sincronismo): círculo com a rede
-  (marca preta no topo, cunha verde de ±2°) e um vetor por caso, no ângulo
-  do erro de fase. O instante segue o mouse no gráfico (`plotly_hover`) e o
-  play percorre a janela do capítulo em 8 s (`FASOR_MS`). Cursor vertical
+  Na Localização (2026-10-24) os passos trocam o painel ao lado: campo
+  `lado` do passo, resolvido por `_presLado()` (o do passo, senão o do
+  capítulo). Passo 1 mini-mapa e retenção de v_d (9,2% a 58,4%), passo 2
+  fasor e pico do erro (37,3° a 7,3°), Tabela 5.1. O usuário não quis
+  perder o mini-mapa e recusou os dois empilhados (espremidos em 1280×720).
+- **Fasor** (`lado="fasor"`, Energização, Perda de sincronismo e passo 2
+  da Localização): círculo
+  com a rede (marca preta no topo, cunha verde de ±2°) e um vetor por caso,
+  no ângulo do erro de fase. O instante segue o mouse no gráfico
+  (`plotly_hover`) e o play percorre a janela do capítulo em 20 s
+  (`FASOR_MS`, 20 s desde 2026-10-24: 8 s ficou rápido demais), **sempre a partir do início** (pedido de 2026-10-24: na
+  Energização, t = 0, o PLL girando até travar); trocar de capítulo zera
+  `fasorT`. Na Energização os passos também valem no fasor (passo 1 só o
+  vetor nominal). Cursor vertical
   (`#fs-cursor`) posicionado por `xaxis.l2p`. Os ângulos vêm de
   `gd._fullData` (os `x`/`y` em `SCENARIOS` estão em base64 e não têm
-  `.length`). O fasor não mostra número.
+  `.length`). O fasor não mostra número. Legenda: "PLL nominal/inadequada"
+  quando o capítulo mistura sintonias, senão o rótulo do ponto no mapa (B7...).
 - **Mini-mapa** (`lado="minimapa"`, Localização): o unifilar de
   `_mapaSvg` (capítulo "Faltas destacadas"), com cada ponto na cor da curva
   e a retenção de v_d (`tccInd.ret`) em grande. As notas pequenas do mapa
-  (`.mp-note`) somem; posição dos rótulos em `MINI_ROT`.
+  (`.mp-note`) somem; posição dos rótulos em `MINI_ROT`. Clicar no ponto
+  ou no número chama `_tccChip` (liga/desliga o caso, como o chip); caso
+  desligado fica com opacidade 0,3 e segue clicável (2026-10-24).
 - **Número de destaque** (`destaque`): caixa vermelha com o número em 46 px
   sobre o gráfico (`_destaque`, só com `o.big`), com seta até o alvo. "> 250×"
   aponta para o pico de 120 Hz da menor assimétrica. Com `lado=True`, o
   número vai para o painel ao lado: o "66,8%" da perda de sincronismo fica
   sob o play do fasor, porque sobre o gráfico cobria os vales de P.
+- **Notas** (`notas`, 2026-10-24): caixas menores com seta (`_nota`, só com
+  `o.big`), para curva que some no gráfico. Na Sequência negativa, a
+  trifásica da Barra 7 (0,0002 pu, do cartão) colada no zero em 120 Hz.
+- **Estilo por caso** (3º item opcional de `casos`: `dash`, `larg`, `grupo`,
+  `frente`; vale para aba e palco). Na Sequência negativa a cor diz a barra
+  (laranja = 7, verde-azulado = 6), o traço diz o curto (contínuo = bifásica,
+  tracejado = monofásica) e a trifásica vai grafite, grossa e por cima. Com
+  `grupo`, os chips saem sob o rótulo "Barra 7"/"Barra 6" (sem o prefixo no
+  chip) e os cartões ganham um respiro entre os grupos.
 
 Regra: todo número escrito no palco vem da legenda ou de `tccInd`, que
 batem com o TCC ([[defesa-deck-map]]). Nada de número calculado só para a
 tela.
 
+## Telas menores que 1920×1080 (2026-10-24)
+
+O palco foi desenhado em 1920×1080, mas o navegador pode enxergar bem
+menos: notebook Full HD com escala de 150% no Windows entrega 1280×720, e
+projetor espelhado costuma baixar a resolução. Em 1366×768 o
+`palco-validator` achou a dica de passo sobre os botões, os rótulos de
+retorno sobrepostos, o fasor espremido e a tabela final cortada. Correções:
+
+- Dica "passo N de M" no cabeçalho, ao lado do título, fora da barra de
+  capítulos.
+- Painel ao lado proporcional: fasor `clamp(340px, 30vw, 430px)`, mini-mapa
+  `clamp(320px, 31vw, 600px)`. O SVG do fasor ocupa a altura que sobra.
+- `@media (max-height: 900px), (max-width: 1500px)`: cabeçalho, cartões,
+  botões e tabela mais compactos; cabeçalho da tabela quebra linha.
+- Setas de retorno a 22 px uma da outra (calculado pela altura do painel)
+  e casos com o mesmo tempo dividem uma seta só, em cor neutra (B7 e L7-8,
+  98 ms).
+
+Em 1920×1080 nada mudou.
+
 ## Verificação
 
-`scripts/verifica_palco.py` percorre o palco com a seta e falha em erro de
-JS, tela que rola, gráfico sobre o painel ao lado, ← fora do último passo,
-fasor parado e caso escondido na aba depois de sair. Os PNGs vão para
-`output/verifica_palco/`; quem lê é o agente `palco-validator`. O JS está
+`scripts/verifica_palco.py` percorre o palco com a seta em 1920×1080 e
+1280×720 (`--telas` muda a lista) e falha em erro de JS, tela que rola,
+gráfico sobre o painel ao lado, painel ao lado que transborda, tabela que
+não cabe, ← fora do último passo, fasor parado e caso escondido na aba
+depois de sair. Os PNGs vão para `output/verifica_palco/<L>x<A>/`; quem lê
+é o agente `palco-validator`. O JS está
 em `src/report/js/` (`tcc.js`, `palco.js`, `fasor.js`, `minimapa.js` etc.,
 ordem em `TCC_JS_FILES`), com `node --check` no pre-commit.
 

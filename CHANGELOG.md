@@ -5,6 +5,58 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-24 — Sequência negativa: trifásica visível, casos agrupados por barra
+
+Arquivos: `src/report/roteiro.py`, `src/report/js/tcc.js`,
+`src/report/js/tcc_ui.js`, `src/report/renderer.py`
+
+Na tela 5 do palco, a trifásica da Barra 7 (cinza-claro, colada no zero)
+não aparecia. Agora é grafite, grossa e desenhada por cima, com uma caixa
+"Barra 7 trifásica, 0,0002 pu" apontando para ela em 120 Hz (campo novo
+`notas`, `_nota`). Cor = barra (laranja = 7, verde-azulado = 6), traço =
+curto (contínuo = bifásica, tracejado = monofásica); chips agrupados sob
+"Barra 7"/"Barra 6" e cartões na mesma ordem, com respiro entre as barras
+(3º item opcional de `casos`: `dash`, `larg`, `grupo`, `frente`). A caixa
+"> 250×" passou a dizer "contra as trifásicas".
+
+## 2026-10-24 — Fasor mais lento; mini-mapa liga e desliga casos
+
+Arquivos: `src/report/js/fasor.js`, `src/report/js/minimapa.js`
+
+O play do fasor estava rápido demais para acompanhar na defesa: passou de
+8 s para 20 s por janela (`FASOR_MS`), em todos os capítulos com fasor. No
+mini-mapa da Localização, clicar num ponto (traço ou número de retenção)
+liga ou desliga o caso no gráfico e nos cartões, como o chip; o caso
+desligado fica esmaecido no mapa e continua clicável. O estado vale também
+no passo do fasor. `verifica_palco.py` sem falhas em 1920×1080 e 1280×720.
+
+## 2026-10-24 — Localização em dois passos: mini-mapa, depois fasor
+
+Arquivos: `src/report/roteiro.py`, `src/report/js/palco.js`,
+`src/report/js/fasor.js`, `scripts/verifica_palco.py`
+
+O capítulo Localização ganhou dois passos no palco, sem perder o mini-mapa.
+Passo 1: mini-mapa ao lado e a frase da retenção de v_d (9,2% na Barra 7,
+58,4% na Barra 6). Passo 2: o painel ao lado vira o fasor com os quatro
+casos e a frase do pico do erro (37,3° e 7,3°), números da Tabela 5.1. Cada
+passo pode ter `lado` próprio, resolvido por `_presLado()`; o
+`verifica_palco.py` usa a mesma função para achar o fasor. Sem mistura de
+sintonias, a legenda do fasor usa o rótulo do mapa (B7, L7-8, L8-9, B6) em
+vez de "PLL nominal" repetido. `verifica_palco.py` sem falhas em 1920×1080
+e 1280×720.
+
+## 2026-10-24 — Fasor também na Energização; play sempre do início
+
+Arquivos: `src/report/roteiro.py`, `src/report/js/fasor.js`, `src/report/js/palco.js`
+
+O fasor da Perda de sincronismo foi para o capítulo Energização
+(`lado="fasor"`): o play mostra o vetor do PLL girando até travar na marca
+da rede, em 8 s para a janela de 0 a 0,2 s. Os passos valem também no
+fasor: no passo 1 só o vetor nominal, no passo 2 entra o da inadequada. O
+play passou a recomeçar sempre do início da janela do capítulo (antes
+continuava de onde tinha parado), e o instante volta ao início ao trocar
+de capítulo. `verifica_palco.py` sem falhas em 1920×1080 e 1280×720.
+
 ## 2026-10-24 — Faltas destacadas: por que estes quatro pontos
 
 Arquivos: `src/report/roteiro.py`
@@ -78,35 +130,10 @@ final de v_d e o valor de cada sinal no instante de acomodação
 (`tccInd.partida`). Escolhida entre três prévias (linha + ponto, etiqueta só
 no erro, setas de duração).
 
-## 2026-10-21 — Curva de suportabilidade no capítulo "Código de rede"
-
-Arquivos: `src/pipeline/indicadores.py`, `src/pipeline/loader.py`,
-`src/report/renderer.py`, `src/report/roteiro.py`
-
-O capítulo do ONS ganhou, ao lado da rampa de corrente reativa, a curva de
-suportabilidade a subtensões (Figura 2.1) com a tensão da fase mais
-afundada no inversor de cada caso. Etiqueta "dentro/fora da região" nos
-chips e cartões; anel vermelho na rampa para os casos fora; faixas por
-regime na rampa. "+ Mostrar os outros curtos" acende os demais cenários sem
-destaque, e o mouse sobre "Fora/Dentro da região · N casos" lista e filtra
-os casos no gráfico. Nova receita `suportabilidade_ons` (60 Hz por fase,
-janela de 1 ciclo); a série entra em `tccInd.lvrt` (~0,2 MB no HTML).
-
-## 2026-10-21 — Capítulo "Faltas destacadas"
-
-Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`
-
-Primeiro capítulo da aba Análise TCC e do modo apresentação: antes dos
-resultados, o unifilar mostra onde as faltas foram aplicadas (Barra 7, Linha
-7-8, Linha 8-9 em circuito duplo, Barra 6). Seis passos: visão geral, um
-por ponto e resumo. Cada passo traz um cartão com texto, as faltas e
-sintonias simuladas e "Abrir no painel →", além de uma régua do
-afundamento mais profundo ao mais raso. A seta → percorre os passos antes de
-trocar de capítulo. Clicar na barra, na linha ou no pino da régua pula para
-o ponto. Saiu de três prévias standalone aprovadas pelo usuário.
-
 ## Entradas anteriores
 
+- [2026-10-21](docs/changelog/2026-10-21.md) — capítulo "Faltas destacadas"
+  (unifilar com os quatro pontos) e curva de suportabilidade no "Código de rede".
 - [2026-10-20](docs/changelog/2026-10-20.md) — indicadores do Cap. 5 no painel,
   casos do TCC em destaque, aba "Análise TCC", modo apresentação (palco branco),
   rampa do ONS e rótulo do mouse.

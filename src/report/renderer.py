@@ -319,6 +319,7 @@ class HTMLRenderer:
       <p class="pres-title" id="pres-title"></p>
       <p class="pres-text" id="pres-text"></p>
     </div>
+    <span class="pres-passo" id="pres-passo"></span>
     <button class="pres-exit" onclick="presToggle()">Sair &nbsp;Esc</button>
   </div>
   <div class="tcc-chips pres-chips" id="pres-chips"></div>
@@ -334,7 +335,6 @@ class HTMLRenderer:
     <button class="rt-nav" onclick="presStep(-1)" title="Capítulo anterior">&lsaquo;</button>
     <div class="pres-dots" id="pres-dots"></div>
     <button class="rt-nav" onclick="presStep(1)" title="Próximo capítulo">&rsaquo;</button>
-    <span class="pres-passo" id="pres-passo"></span>
   </div>
 </div>
 
@@ -2209,18 +2209,21 @@ body.pres-on { overflow: hidden }
 .pres-body { flex: 1; min-height: 0; display: flex; gap: 24px; position: relative }
 .pres-plot { flex: 1; min-height: 0; min-width: 0 }
 .pres-msg { font-size: 22px; color: var(--text) }
-.pres-passo { position: absolute; right: 0; font-size: 13px; font-weight: 600; color: var(--muted) }
+.pres-passo { align-self: center; white-space: nowrap; font-size: 13px; font-weight: 600; color: var(--muted) }
 /* painel ao lado do gráfico (cap.lado): fasor ou mini-mapa */
 .pres-side {
   flex: none; display: flex; flex-direction: column; justify-content: center;
   align-items: center; gap: 10px; border-left: 1px solid var(--border); padding-left: 20px;
 }
-.pres-side.fasor { width: 430px }
-.pres-side.minimapa { width: 600px; align-items: stretch }
+.pres-side.fasor { width: clamp(340px, 30vw, 430px) }
+.pres-side.minimapa { width: clamp(320px, 31vw, 600px); align-items: stretch }
 .pres-side-h { margin: 0; font-weight: 800; font-size: 18px; color: var(--badge-fg) }
-.pres-side .mapa-svg svg { width: 100%; display: block }
+.pres-side .mapa-svg { min-height: 0; flex: 0 1 auto }
+.pres-side .mapa-svg svg { width: 100%; height: 100%; display: block }
+#fs-svg { flex: 0 1 380px; min-height: 0; width: 100% }
+#fs-svg svg { width: 100%; height: 100%; display: block }
 .pres-side .mp-note { display: none }
-.fs-leg { display: flex; gap: 18px; font-size: 14px; font-weight: 600 }
+.fs-leg { display: flex; gap: 14px; font-size: 14px; font-weight: 600; white-space: nowrap }
 .fs-ctl { display: flex; align-items: center; gap: 14px; margin-top: 6px }
 .fs-play {
   font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
@@ -2247,7 +2250,31 @@ body.pres-on { overflow: hidden }
 .pres-cards .tcc-card { padding: 8px 12px }
 .pres-cards .tcc-row { font-size: 13px }
 .pres-cards .tcc-row b { font-size: 15px }
-.pres-nav { display: flex; align-items: center; justify-content: center; gap: 12px; position: relative }
+.pres-nav { display: flex; align-items: center; justify-content: center; gap: 12px }
+/* telas menores que 1920×1080 (notebook com escala do Windows, projetor
+   espelhado): cabeçalho, cartões e tabela mais compactos */
+@media (max-height: 900px), (max-width: 1500px) {
+  .pres { gap: 6px; padding: 12px 22px 8px }
+  .pres-count { font-size: 34px; min-width: 56px }
+  .pres-title { font-size: 22px }
+  .pres-text { font-size: 14px }
+  .pres-msg { font-size: 19px }
+  .pres-side-h { font-size: 15px }
+  .pres-cards .tcc-card { padding: 5px 10px }
+  .pres-cards .tcc-row { font-size: 12px }
+  .pres-cards .tcc-row b { font-size: 13px }
+  .pres-table .cmp-table { font-size: 12px }
+  .pres-table .cmp-table th, .pres-table .cmp-table td { padding: 4px 6px }
+  .pres-table .cmp-table thead th { white-space: normal; vertical-align: bottom }
+  .pres-side { gap: 6px }
+  .fs-leg { font-size: 12.5px }
+  .fs-ctl { margin-top: 0 }
+  .fs-play { font-size: 13px; padding: 6px 14px }
+  .fs-dest { margin-top: 4px; padding: 6px 12px }
+  .pres-dot { font-size: 11px; padding: 4px 9px }
+  .fs-dest b { font-size: 32px }
+  .fs-dest span { font-size: 13px }
+}
 .pres-dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px }
 .pres-dot {
   font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
@@ -2351,6 +2378,11 @@ body.tcc-mode #scenario-picker, body.tcc-mode .filter-bar .pll-toggle { opacity:
 .tcc-chip.on { border-color: var(--c); color: var(--text) }
 .tcc-sw { width: 14px; height: 4px; border-radius: 2px; background: var(--c); display: inline-block }
 .tcc-chip:not(.on) .tcc-sw { opacity: .3 }
+.tcc-sw.tracejado { background: repeating-linear-gradient(90deg, var(--c) 0 5px, transparent 5px 8px) }
+.tcc-sw.grosso { height: 6px }
+.tcc-grupo { font-size: 13px; font-weight: 700; color: var(--text); margin: 0 2px 0 4px }
+.tcc-grupo:not(:first-child) { margin-left: 18px }
+.tcc-card-grupo { margin-left: 18px }
 .tcc-add {
   font-family: inherit; font-size: 12px; color: var(--muted);
   background: var(--btn-bg); border: 1.5px dashed var(--btn-bdr);

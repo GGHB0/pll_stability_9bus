@@ -86,9 +86,11 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 
 - **Palco e aba Análise TCC: `scripts/verifica_palco.py`** (desde
   2026-10-24). Percorre o palco com a seta no Edge headless (Playwright do
-  `.venv`, `channel="msedge"`, não baixa browser), tira um PNG por tela em
-  `output/verifica_palco/` e falha em erro de JS, tela que rola, gráfico
-  sobre o painel ao lado, seta ← fora do último passo e fasor parado.
+  `.venv`, `channel="msedge"`, não baixa browser) em 1920×1080 e 1280×720,
+  tira um PNG por tela em `output/verifica_palco/<L>x<A>/` e falha em erro
+  de JS, tela que rola, gráfico sobre o painel ao lado, painel ou tabela
+  que não cabe, seta ← fora do último passo e fasor parado. Elemento novo
+  do palco: tamanho proporcional (`clamp`, `vw`), nunca só px fixo.
   Mudança no palco → rodar o script e acionar o agente `palco-validator`,
   que lê as telas (número contra cartão, texto cortado, vírgula decimal).
 - **JS em `src/report/js/`**: `node --check <arquivo>` depois de editar (o

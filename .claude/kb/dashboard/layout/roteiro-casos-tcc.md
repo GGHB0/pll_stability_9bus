@@ -59,7 +59,7 @@ e na localização um degradê de azul do mais perto ao mais longe da usina.
 | 1 | Energização | regime × regime inadequada | erro de fase / v_d (0-0,2 s) |
 | 2 | Localização | 4 trifásicas nominais | erro / v_d / P |
 | 3 | Perda de sincronismo | B7 trifásica nas duas sintonias | erro (±180° fixo) / P / Q / v_d |
-| 4 | Sequência negativa | 4 assimétricas + B7 trifásica (cinza) | espectro de v_d na falta |
+| 4 | Sequência negativa | B7 trifásica (grafite, por cima) + 4 assimétricas, agrupadas por barra | espectro de v_d na falta |
 | 5 | Compromisso da sintonia | B6 bifásica nas duas sintonias | erro / v_d |
 | 6 | Código de rede | 4 trifásicas | suportabilidade (V × t) e rampa ONS (i_q × V), lado a lado |
 | 7 | Todos os casos | 17 casos do TCC | tabela (colunas do comparativo) |

@@ -30,7 +30,10 @@ function presToggle() {
 function presGo(i, back) {
   if (i < 0 || i >= CAPS.length) return;
   _mapaEnter(i, back);
-  if (i !== tccCap) presPasso = (back && CAPS[i].passos_pres) ? CAPS[i].passos_pres.length - 1 : 0;
+  if (i !== tccCap) {
+    presPasso = (back && CAPS[i].passos_pres) ? CAPS[i].passos_pres.length - 1 : 0;
+    fasorT = null;
+  }
   tccCap = i;
   _renderPres();
 }
@@ -78,14 +81,22 @@ function _renderPres() {
   }
   tbl.style.display = "none"; tbl.innerHTML = "";
   bodyEl.style.display = "";
-  if (cap.lado) { sideEl.className = "pres-side " + cap.lado; sideEl.style.display = ""; }
+  var lado = _presLado();
+  if (lado) { sideEl.className = "pres-side " + lado; sideEl.style.display = ""; }
   cardsEl.innerHTML = _tccCardsHtml(cap, false);
   var h = Math.max(260, plotEl.clientHeight);
   var fig = _tccFigure(cap, cap.pres, { dark: false, height: h, big: true, bg: "#ffffff" });
   // largura explícita: o react guarda a do capítulo anterior (com ou sem painel ao lado)
   fig.layout.width = plotEl.clientWidth;
   Plotly.react(plotEl, fig.data, fig.layout, PRES_CFG);
-  if (cap.lado === "fasor") _fasorInit(plotEl, cap);
-  else if (cap.lado === "minimapa") _miniMapa(cap, sideEl);
+  if (lado === "fasor") _fasorInit(plotEl, cap);
+  else if (lado === "minimapa") _miniMapa(cap, sideEl);
+}
+
+// painel ao lado do passo atual: o lado do passo, se houver, senão o do capítulo
+function _presLado() {
+  var cap = CAPS[tccCap], pp = cap.passos_pres;
+  var ps = pp ? pp[Math.min(presPasso, pp.length - 1)] : null;
+  return (ps && ps.lado) || cap.lado;
 }
 

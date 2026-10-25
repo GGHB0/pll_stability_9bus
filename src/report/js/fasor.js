@@ -1,8 +1,9 @@
 // ── Fasor (cap.lado "fasor", Perda de sincronismo): ângulo do PLL de cada
 // caso contra a rede, num círculo ao lado do gráfico. O instante segue o
-// mouse no gráfico; o play percorre a janela do capítulo em câmera lenta.
+// mouse no gráfico; o play percorre a janela do capítulo em câmera lenta
+// (20 s; 8 s ficou rápido demais na defesa, pedido de 2026-10-24).
 // Os ângulos vêm dos traços do erro de fase já desenhados (gd._fullData).
-var fasorT = null, _fasorRaf = null, FASOR_MS = 8000;
+var fasorT = null, _fasorRaf = null, FASOR_MS = 20000;
 
 function _fasorSeries(gd) {
   return gd._fullData.filter(function(d) { return d.yaxis === "y" && d.mode === "lines"; })
@@ -33,7 +34,7 @@ function _fasorDraw(t) {
     vecs += '<line x1="' + c + '" y1="' + c + '" x2="' + e[0] + '" y2="' + e[1] + '" stroke="' + s.cor
       + '" stroke-width="5" stroke-linecap="round" marker-end="url(#fs-ah' + i + ')"/>';
   });
-  box.innerHTML = '<svg viewBox="0 -20 380 400" width="360" height="380"><defs>' + defs + '</defs>'
+  box.innerHTML = '<svg viewBox="0 -20 380 400"><defs>' + defs + '</defs>'
     + '<circle cx="' + c + '" cy="' + c + '" r="' + R + '" fill="none" stroke="#cbd5e1" stroke-width="2"/>'
     + '<path d="M' + c + ',' + c + ' L' + w0[0] + ',' + w0[1] + ' A' + R + ',' + R + ' 0 0 1 ' + w1[0] + ',' + w1[1]
     + ' Z" fill="rgba(22,163,74,.35)"/>'
@@ -55,8 +56,16 @@ function _fasorDraw(t) {
 
 function _fasorInit(gd, cap) {
   var side = document.getElementById("pres-side");
+  // nominal × inadequada: legenda pela sintonia; só nominais (Localização):
+  // pelo rótulo do ponto no mapa (B7, L7-8...)
+  var mixed = _tccMixed(cap), rot = {};
+  CAPS.forEach(function(c) {
+    (c.kind === "mapa" ? c.passos : []).forEach(function(q) { if (q.cenario) rot[q.cenario] = q.rotulo; });
+  });
   var leg = _tccVisible(cap).map(function(v) {
-    return '<span style="color:' + v.light + '">&#9644; PLL ' + (SCENARIOS[v.key].badPll ? "inadequada" : "nominal") + '</span>';
+    var nome = mixed ? "PLL " + (SCENARIOS[v.key].badPll ? "inadequada" : "nominal")
+                     : (rot[v.key] || SCENARIOS[v.key].label);
+    return '<span style="color:' + v.light + '">&#9644; ' + nome + '</span>';
   }).join("") + "<span>&#9660; rede</span>";
   side.innerHTML = '<p class="pres-side-h">Ângulo do PLL contra a rede</p><div id="fs-svg"></div>'
     + '<div class="fs-leg">' + leg + '</div>'
@@ -66,14 +75,15 @@ function _fasorInit(gd, cap) {
        ? '<div class="fs-dest"><b>' + cap.destaque.num + '</b><span>' + cap.destaque.txt + '</span></div>' : '');
   if (gd.removeAllListeners) gd.removeAllListeners("plotly_hover");
   gd.on("plotly_hover", function(e) { if (!_fasorRaf && e.points.length) _fasorDraw(e.points[0].x); });
-  if (fasorT === null || fasorT < cap.xrange[0] || fasorT > cap.xrange[1]) fasorT = cap.xrange[0] + 0.04;
+  if (fasorT === null || fasorT < cap.xrange[0] || fasorT > cap.xrange[1]) fasorT = cap.xrange[0];
   _fasorDraw(fasorT);
 }
 
 function _fasorPlay() {
   if (_fasorRaf) { _fasorStop(); return; }
   var cap = CAPS[tccCap], x0 = cap.xrange[0], x1 = cap.xrange[1];
-  var t0 = (fasorT === null || fasorT >= x1 - 1e-3) ? x0 : fasorT, start = performance.now();
+  // o play sempre recomeça do início da janela do capítulo
+  var t0 = x0, start = performance.now();
   document.getElementById("fs-play").innerHTML = "&#10074;&#10074; pausa";
   var step = function(now) {
     var t = t0 + (now - start) / FASOR_MS * (x1 - x0);

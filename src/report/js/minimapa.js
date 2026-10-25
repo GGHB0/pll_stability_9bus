@@ -6,8 +6,10 @@ var MINI_ROT = { b7: [-30, "b", 64], l78: [0, "t", -4], l89: [0, "t", -4], b6: [
 function _miniMapa(cap, side) {
   var fal = CAPS.filter(function(c) { return c.kind === "mapa"; })[0];
   if (!fal) return;
-  var cor = {}, on = {};
-  _tccVisible(cap).forEach(function(v) { cor[v.key] = v.light; });
+  // clicar num ponto liga/desliga o caso no gráfico, como o chip; o caso
+  // desligado fica esmaecido e continua clicável
+  var cor = {}, on = {}, st = _tccSt(cap);
+  _tccCases(cap).forEach(function(v) { cor[v.key] = v.light; });
   fal.passos.forEach(function(q) { if (q.id && cor[q.cenario]) on[q.id] = true; });
   side.innerHTML = '<p class="pres-side-h">Onde foi a falta · retenção de v<sub>d</sub></p>'
     + '<div class="mapa-svg">' + _mapaSvg(fal, on, null) + '</div>';
@@ -17,6 +19,10 @@ function _miniMapa(cap, side) {
     g.removeAttribute("onclick");
     g.style.cursor = "default";
     if (!on[q.id]) return;
+    var vis = st.on[q.cenario] !== false;
+    g.style.cursor = "pointer";
+    g.setAttribute("onclick", "_tccChip('" + q.cenario + "')");
+    if (!vis) g.style.opacity = "0.3";
     var col = cor[q.cenario], ind = SCENARIOS[q.cenario].tccInd, r = MINI_ROT[q.id];
     g.querySelectorAll("line").forEach(function(el) { el.style.stroke = col; el.style.strokeWidth = "7"; });
     if (!ind || !ind.ret || !r) return;
@@ -28,6 +34,9 @@ function _miniMapa(cap, side) {
     tx.setAttribute("font-weight", "800");
     tx.setAttribute("fill", col);
     tx.textContent = ind.ret;
+    tx.style.cursor = "pointer";
+    tx.setAttribute("onclick", "_tccChip('" + q.cenario + "')");
+    if (!vis) tx.setAttribute("opacity", "0.3");
     svg.appendChild(tx);
   });
 }

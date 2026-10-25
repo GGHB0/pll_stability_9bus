@@ -1,9 +1,18 @@
 function _tccChipsHtml(cap, dark, withAdd) {
-  var st = _tccSt(cap), mixed = _tccMixed(cap);
+  var st = _tccSt(cap), mixed = _tccMixed(cap), grupo = null;
+  // casos com grupo (a barra) ganham o rótulo do grupo antes do 1º chip e
+  // perdem o prefixo "Barra N — " no chip; o traço do chip segue o da curva
   var html = _tccCases(cap).map(function(c) {
-    return "<button class=\"tcc-chip" + (st.on[c.key] !== false ? " on" : "") + "\" style=\"--c:"
-      + (dark ? c.dark : c.light) + "\" onclick=\"_tccChip('" + c.key + "')\"><span class=\"tcc-sw\"></span>"
-      + _tccLabel(c.key, mixed) + (cap.kind === "ons" ? _onsBadge(c.key) : "") + "</button>";
+    var lbl = _tccLabel(c.key, mixed), pre = "";
+    if (c.grupo) {
+      if (c.grupo !== grupo) pre = "<span class=\"tcc-grupo\">" + c.grupo + "</span>";
+      lbl = lbl.replace(c.grupo + " — ", "");
+    }
+    grupo = c.grupo || null;
+    var sw = "tcc-sw" + (c.dash ? " tracejado" : "") + (c.larg ? " grosso" : "");
+    return pre + "<button class=\"tcc-chip" + (st.on[c.key] !== false ? " on" : "") + "\" style=\"--c:"
+      + (dark ? c.dark : c.light) + "\" onclick=\"_tccChip('" + c.key + "')\"><span class=\"" + sw + "\"></span>"
+      + lbl + (cap.kind === "ons" ? _onsBadge(c.key) : "") + "</button>";
   }).join("");
   if (cap.kind === "ons") html += _onsCtrlHtml(cap);
   if (withAdd && (cap.kind === "time" || cap.kind === "spec")) {
@@ -22,14 +31,16 @@ function _tccChipsHtml(cap, dark, withAdd) {
 }
 
 function _tccCardsHtml(cap, dark) {
-  var mixed = _tccMixed(cap);
+  var mixed = _tccMixed(cap), grupo = null;
   return _tccVisible(cap).map(function(c) {
+    var novo = c.grupo && grupo && c.grupo !== grupo;   // respiro entre grupos
+    grupo = c.grupo || null;
     var ind = SCENARIOS[c.key].tccInd || {};
     var rows = cap.metricas.map(function(m) {
       return "<p class=\"tcc-row\"><span>" + IND_LBL[m] + "</span><b>"
         + (ind[m] != null ? ind[m] : "—") + "</b></p>";
     }).join("");
-    return "<div class=\"tcc-card\" style=\"--c:" + (dark ? c.dark : c.light) + "\""
+    return "<div class=\"tcc-card" + (novo ? " tcc-card-grupo" : "") + "\" style=\"--c:" + (dark ? c.dark : c.light) + "\""
       + " title=\"Abrir este cenário nas abas\" onclick=\"_openScenario('" + c.key + "')\">"
       + "<p class=\"tcc-card-h\">" + _tccLabel(c.key, mixed)
       + (cap.kind === "ons" ? _onsBadge(c.key, true) : "") + "</p>" + rows + "</div>";

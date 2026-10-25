@@ -31,21 +31,20 @@ não, rode `.venv\Scripts\python.exe app.py` antes.
 .venv\Scripts\python.exe scripts\verifica_palco.py
 ```
 
-Ele percorre o palco com a seta, tira um PNG por tela em
-`output/verifica_palco/` e grava `relatorio.txt`. Falha que ele aponta
-(erro de JS, tela que rola, gráfico invadindo o painel, seta ← fora do
-último passo, fasor parado, caso escondido na aba) entra no parecer como
-**BLOQUEIA**, com a linha do relatório. Se a mudança mexeu em tamanho de
-fonte ou layout, rode também com `--largura 1366 --altura 768 --out
-output/verifica_palco_1366` e compare.
+Ele percorre o palco com a seta em **1920×1080 e 1280×720**, tira um PNG
+por tela em `output/verifica_palco/<L>x<A>/` e grava `relatorio.txt` em
+cada pasta. Falha que ele aponta (erro de JS, tela que rola, gráfico
+invadindo o painel, painel ao lado transbordando, tabela que não cabe,
+seta ← fora do último passo, fasor parado, caso escondido na aba) entra no
+parecer como **BLOQUEIA**, com a linha do relatório.
 
-**Resolução da sala**: a referência é 1920×1080. Defeito que só aparece em
-1366×768 entra como observação, salvo se a descrição da tarefa disser que
-a projeção será nessa resolução.
+**Resolução**: as duas telas valem. 1280×720 é o que um notebook Full HD
+com escala de 150% entrega ao navegador; defeito nela também **BLOQUEIA**.
+Leia as telas alteradas nas duas pastas.
 
 **O que o script não vê** (só a leitura dos PNGs pega): texto sobre texto,
-rótulo sobre curva, tabela cortada na borda (`#pres-table` rola por
-dentro, então o `scrollHeight` da página não acusa), fonte pequena.
+rótulo sobre curva ou sobre outro rótulo, fonte pequena, elemento
+espremido a ponto de não se ler.
 
 **Telas geradas**: `NN_<id>[_mK|_pK].png`, um por tela, na ordem do
 palco. `mK` = passo K do mapa (capítulo 1), `pK` = passo K de

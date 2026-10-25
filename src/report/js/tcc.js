@@ -32,7 +32,11 @@ function _tccSt(cap) {
 function _tccCases(cap) {
   var st = _tccSt(cap);
   var list = cap.casos.filter(function(c) { return SCENARIOS[c[0]]; })
-    .map(function(c) { return { key: c[0], light: c[1][0], dark: c[1][1] }; });
+    .map(function(c) {
+      var e = c[2] || {};
+      return { key: c[0], light: c[1][0], dark: c[1][1], dash: e.dash, larg: e.larg,
+               grupo: e.grupo, frente: e.frente };
+    });
   st.extra.forEach(function(k, i) {
     var pal = TCC_EXTRA[i % TCC_EXTRA.length];
     list.push({ key: k, light: pal[0], dark: pal[1], extra: true });
@@ -101,13 +105,16 @@ function _tccFigure(cap, sinais, o) {
     var S = SINAIS[sinal];
     layout["yaxis" + ax] = { domain: [y0, y1], anchor: "x", gridcolor: grid, zerolinecolor: grid,
       title: { text: S.y }, hoverformat: ".3f" };
-    visible.forEach(function(c) {
+    // casos com frente=True por último, desenhados por cima dos outros
+    visible.filter(function(c) { return !c.frente; })
+      .concat(visible.filter(function(c) { return c.frente; })).forEach(function(c) {
       var t = _tccTrace(SCENARIOS[c.key], sinal);
       if (!t) return;
       var lbl = _tccLabel(c.key, mixed);
       data.push({ type: "scatter", mode: "lines", x: t.x, y: t.y, name: lbl,
         xaxis: "x", yaxis: "y" + ax,
-        line: { color: col(c), width: o.big ? 2.6 : 2.2, dash: c.extra ? "dot" : "solid" },
+        line: { color: col(c), width: c.larg ? (o.big ? c.larg : c.larg - 0.6) : (o.big ? 2.6 : 2.2),
+                dash: c.extra ? "dot" : (c.dash || "solid") },
         hovertemplate: lbl + ": <b>%{y:.3f}" + S.u + "</b><extra></extra>" });
     });
     if (n > 1) {
@@ -132,7 +139,8 @@ function _tccFigure(cap, sinais, o) {
       layout["yaxis" + ax].tickvals = [0, 1, 2, 3, 4].map(function(k) { return fe[0] + k * st4; });
       layout["yaxis" + ax].ticktext = layout["yaxis" + ax].tickvals.map(function(v) { return String(v).replace("-", "−"); });
     }
-    if (sinal === "err" && cap.metricas.indexOf("ts") !== -1) _marcaRetorno(layout, data, visible, ax, [y0, y1], col, fs, dark);
+    if (sinal === "err" && cap.metricas.indexOf("ts") !== -1) _marcaRetorno(layout, data, visible, ax, [y0, y1], col, fs, dark,
+      (o.height - layout.margin.t - layout.margin.b) * (y1 - y0));
     if (sinal === "spec") {
       layout["yaxis" + ax].range = [0, 1];
       layout.shapes.push({ type: "line", xref: "x", yref: "paper", x0: 120, x1: 120, y0: y0, y1: y1,
@@ -142,6 +150,7 @@ function _tccFigure(cap, sinais, o) {
     }
   });
   if (o.big && cap.destaque && !cap.destaque.lado) _destaque(cap.destaque, sinais, layout);
+  if (o.big) (cap.notas || []).forEach(function(N) { _nota(N, sinais, layout); });
   layout.xaxis = { anchor: "y" + (n > 1 ? String(n) : ""), gridcolor: grid, zerolinecolor: grid,
     title: { text: spec ? "Frequência (Hz)" : "Tempo (s)" },
     hoverformat: spec ? ".0f" : ".4f" };
@@ -181,28 +190,50 @@ function _destaque(D, sinais, layout) {
   layout.annotations.push(a);
 }
 
+// Caixa menor com seta (cap.notas, só no palco): aponta uma curva que some
+// no gráfico, como a trifásica colada no zero do espectro.
+function _nota(N, sinais, layout) {
+  var i = sinais.indexOf(N.sinal);
+  if (i === -1) return;
+  var yr = "y" + (i === 0 ? "" : String(i + 1)), cor = N.cor || "#1f2937";
+  layout.annotations.push({ xref: "x", yref: yr, x: N.x, y: N.y, ax: N.ax, ay: N.ay,
+    axref: "x", ayref: yr, text: N.txt, align: "left", showarrow: true, arrowhead: 2,
+    arrowwidth: 2.2, arrowcolor: cor, font: { size: 16, color: cor },
+    bgcolor: "rgba(255,255,255,.92)", bordercolor: cor, borderwidth: 1.2, borderpad: 6 });
+}
+
 // Capítulos com falta (métrica "ts"): onde o erro volta de vez à faixa de 2°
 // depois da eliminação. Tracejado e ponto no instante do retorno, e seta da
 // eliminação até ele com o tempo do cartão, porque o retorno é contado de
-// t_clear. Casos que não retornam ficam sem marca. Valores de tccInd.retorno.
-function _marcaRetorno(layout, data, visible, ax, dom, col, fs, dark) {
-  var row = 0, yref = "y" + ax;
+// t_clear. Casos com o mesmo tempo dividem uma seta só, em cor neutra. As
+// setas ficam a 22 px uma da outra (pxh = altura do painel em px), para não
+// se sobreporem em tela pequena. Casos que não retornam ficam sem marca.
+// Valores de tccInd.retorno.
+function _marcaRetorno(layout, data, visible, ax, dom, col, fs, dark, pxh) {
+  var yref = "y" + ax, grupos = [], porMs = {};
   visible.forEach(function(c) {
     var r = SCENARIOS[c.key].tccInd && SCENARIOS[c.key].tccInd.retorno;
     if (!r) return;
-    var cor = col(c), ya = dom[1] - (0.06 + row * 0.07) * (dom[1] - dom[0]);
-    row++;
+    var cor = col(c), ms = Math.round(r.ms);
     layout.shapes.push({ type: "line", xref: "x", yref: "paper", x0: r.t, x1: r.t, y0: dom[0], y1: dom[1],
       line: { color: cor, width: 1.4, dash: "dash" } });
-    layout.annotations.push({ xref: "x", yref: "paper", x: r.t, y: ya, ax: r.t0, ay: ya,
-      axref: "x", ayref: "paper", text: "", showarrow: true, arrowhead: 2, arrowside: "end+start",
-      arrowsize: 0.8, arrowwidth: 1.6, arrowcolor: cor });
-    layout.annotations.push({ xref: "x", yref: "paper", x: r.t, y: ya, xanchor: "left", yanchor: "middle",
-      xshift: 6, showarrow: false, text: "<b>" + Math.round(r.ms) + " ms</b>",
-      font: { size: fs, color: cor }, bgcolor: dark ? "rgba(15,23,42,.85)" : "rgba(255,255,255,.9)" });
     data.push({ type: "scatter", mode: "markers", x: [r.t], y: [r.err], xaxis: "x", yaxis: yref,
       marker: { size: fs - 2, color: dark ? "#0f172a" : "#ffffff", line: { color: cor, width: 3 } },
       hoverinfo: "skip", showlegend: false });
+    if (porMs[ms]) { porMs[ms].cor = dark ? "#cbd5e1" : "#334155"; return; }
+    porMs[ms] = { r: r, ms: ms, cor: cor };
+    grupos.push(porMs[ms]);
+  });
+  var span = dom[1] - dom[0], px = pxh > 0 ? span / pxh : 0;
+  var passo = Math.max(0.07 * span, 22 * px), topo = Math.max(0.06 * span, 14 * px);
+  grupos.forEach(function(g, i) {
+    var ya = dom[1] - topo - i * passo;
+    layout.annotations.push({ xref: "x", yref: "paper", x: g.r.t, y: ya, ax: g.r.t0, ay: ya,
+      axref: "x", ayref: "paper", text: "", showarrow: true, arrowhead: 2, arrowside: "end+start",
+      arrowsize: 0.8, arrowwidth: 1.6, arrowcolor: g.cor });
+    layout.annotations.push({ xref: "x", yref: "paper", x: g.r.t, y: ya, xanchor: "left", yanchor: "middle",
+      xshift: 6, showarrow: false, text: "<b>" + g.ms + " ms</b>",
+      font: { size: fs, color: g.cor }, bgcolor: dark ? "rgba(15,23,42,.85)" : "rgba(255,255,255,.9)" });
   });
 }
 

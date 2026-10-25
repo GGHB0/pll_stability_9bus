@@ -46,18 +46,34 @@ TCC_CASOS: dict[str, str] = {
 }
 
 # Cores (light, dark). Azul = sintonia nominal, laranja = inadequada, como no
-# deck. Nos capítulos só com casos nominais (localização, assimétricas, ONS),
-# escala amarelo → verde → ciano → índigo, do mais perto ao mais longe da
-# usina: os tons de azul não se distinguiam no fundo escuro da apresentação.
+# deck. Nos capítulos só com casos nominais (localização, ONS), escala
+# amarelo → verde → ciano → índigo, do mais perto ao mais longe da usina: os
+# tons de azul não se distinguiam no fundo escuro da apresentação. As
+# assimétricas têm paleta própria (_ASSIM, abaixo).
 _NOM = ("#2563eb", "#60a5fa")
 _BAD = ("#ea580c", "#fb923c")
 _LOC = (("#ca8a04", "#fde047"), ("#16a34a", "#4ade80"),
         ("#0891b2", "#22d3ee"), ("#4f46e5", "#a5b4fc"))
 _REF = ("#94a3b8", "#64748b")
+# Assimétricas: a cor diz a barra (laranja = Barra 7, verde-azulado = Barra
+# 6, longe do azul nominal e do laranja forte da inadequada), o traço diz o
+# curto (contínuo = bifásica, tracejado = monofásica) e a trifásica de
+# referência vai grafite e grossa por cima, senão some colada no zero.
+_B7 = dict(grupo="Barra 7")
+_B6 = dict(grupo="Barra 6")
+_ASSIM = {
+    "bus7/3phase": (("#1f2937", "#e5e7eb"), dict(_B7, larg=4.5, frente=True)),
+    "bus7/2phase": (("#b45309", "#fb923c"), _B7),
+    "bus7/1phase": (("#f59e0b", "#fcd34d"), dict(_B7, dash="dash")),
+    "bus6/2phase": (("#0f766e", "#2dd4bf"), _B6),
+    "bus6/1phase": (("#2dd4bf", "#99f6e4"), dict(_B6, dash="dash")),
+}
 
 # Capítulos da aba "Análise TCC" (demonstração da defesa, slide 16 do deck).
 # Campos: id, curto (botão), titulo, ref (seção/figura do TCC), texto,
-# kind (time/spec/ons/tabela), casos [(key, cor)], sinais (o 1º é o
+# kind (time/spec/ons/tabela), casos [(key, cor) ou (key, cor, estilo), com
+# estilo opcional: dash, larg, grupo (rótulo antes dos chips, respiro entre
+# os cartões) e frente (curva por cima)], sinais (o 1º é o
 # padrão), pres (sinais empilhados no modo apresentação), xrange,
 # metricas (chaves de tccInd nos mini-cartões). O kind "mapa" não tem
 # gráfico: desenha o unifilar e percorre passos (seta → antes de trocar de
@@ -65,12 +81,15 @@ _REF = ("#94a3b8", "#64748b")
 # na Barra 2, ver kb ieee9bus-thevenin), cenario aberto pelo botão, faltas e
 # inadequada (cobertura conforme kb cenarios-simulados).
 # Só no modo apresentação (palco): passos_pres troca a legenda por uma frase
-# por passo (texto, ocultar = casos escondidos naquele passo), lado põe um
+# por passo (texto, ocultar = casos escondidos naquele passo, lado opcional
+# que troca o painel ao lado naquele passo), lado põe um
 # painel ao lado do gráfico ("fasor" ou "minimapa") e destaque escreve um
 # número grande sobre o gráfico (sinal, num, txt, x/y do alvo, ax/ay da
 # caixa; sem x, a caixa fica solta em ax/ay; lado=True põe o número no
-# painel ao lado). Números só os da legenda. faixa_err fixa o eixo do erro
-# de fase (palco e aba) para a faixa de 2° aparecer.
+# painel ao lado); notas põe caixas menores com seta (sinal, txt, x/y do
+# alvo, ax/ay da caixa, cor opcional). Números só os da legenda e dos
+# cartões. faixa_err fixa o eixo do erro de fase (palco e aba) para a faixa
+# de 2° aparecer.
 CAPITULOS: list[dict] = [
     dict(id="faltas", pres=[], curto="Faltas destacadas", kind="mapa",
          titulo="Faltas destacadas", ref="Antes dos resultados",
@@ -142,6 +161,7 @@ CAPITULOS: list[dict] = [
                "inadequada.",
          casos=[("regime", _NOM), ("regime_bad_pll", _BAD)],
          sinais=["err", "vd"], xrange=[0.0, 0.2], metricas=["terr2", "tvd5"],
+         lado="fasor",
          passos_pres=[
              dict(texto="Com a sintonia nominal, o erro de fase entra na faixa "
                         f"de 2° em <b style='color:{_NOM[0]}'>40 ms</b>.",
@@ -160,7 +180,16 @@ CAPITULOS: list[dict] = [
          casos=[("bus7/3phase", _LOC[0]), ("line7_8/3phase", _LOC[1]),
                 ("line8_9/3phase", _LOC[2]), ("bus6/3phase", _LOC[3])],
          sinais=["err", "vd", "P"], xrange=[0.25, 0.6],
-         metricas=["ret", "pico", "ts"], lado="minimapa", faixa_err=[-60, 60]),
+         metricas=["ret", "pico", "ts"], lado="minimapa", faixa_err=[-60, 60],
+         passos_pres=[
+             dict(texto="Quanto mais perto da usina, menos tensão sobra: "
+                        "v<sub>d</sub> retém <b>9,2%</b> na Barra 7 e "
+                        "<b>58,4%</b> na Barra 6.",
+                  ocultar=[], lado="minimapa"),
+             dict(texto="O PLL também se desvia mais: pico do erro de "
+                        "<b>37,3°</b> na Barra 7 e <b>7,3°</b> na Barra 6.",
+                  ocultar=[], lado="fasor"),
+         ]),
     dict(id="sinc", pres=["err", "P"], curto="Perda de sincronismo", kind="time",
          titulo="Barra 7 trifásica: a sintonia decide o sincronismo",
          ref="§5.4 · Figuras 5.18 e 5.19",
@@ -183,12 +212,13 @@ CAPITULOS: list[dict] = [
                "vezes o maior valor das trifásicas (0,0011 pu). O gráfico é o "
                "espectro de v<sub>d</sub> do inversor durante a falta; os cartões "
                "seguem a receita do TCC.",
-         casos=[("bus7/2phase", _LOC[0]), ("bus7/1phase", _LOC[1]),
-                ("bus6/2phase", _LOC[2]), ("bus6/1phase", _LOC[3]),
-                ("bus7/3phase", _REF)],
+         casos=[(k, *_ASSIM[k]) for k in ("bus7/3phase", "bus7/2phase", "bus7/1phase",
+                                          "bus6/2phase", "bus6/1phase")],
          sinais=["spec"], xrange=[0.0, 400.0], metricas=["a120", "pico"],
          destaque=dict(sinal="spec", num="&gt; 250×", x=122, y=0.29, ax=200, ay=0.55,
-                       txt="a menor assimétrica contra<br>a maior trifásica")),
+                       txt="a menor assimétrica contra<br>as trifásicas"),
+         notas=[dict(sinal="spec", x=121, y=0.004, ax=180, ay=0.24,
+                     txt="<b>Barra 7 trifásica</b><br>0,0002 pu")]),
     dict(id="comp", pres=["err", "vd"], curto="Compromisso da sintonia", kind="time",
          titulo="Ganho menor é compromisso, não piora uniforme",
          ref="§5.3 · Tabela 5.3 · Figura 5.14",

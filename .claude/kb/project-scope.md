@@ -76,6 +76,11 @@ ONS concluiu que inversores eólicos/fotovoltaicos tiveram desempenho "aquém do
 | Salto de fase (phase-angle jump) | Pode fazer o PLL perder o lock completamente |
 | Alto RoCoF | Rastreamento de frequência limitado pela largura de banda do PI |
 
+**Fora do escopo, por conceito do trabalho (Victor, 2026-10-21):** incremento
+de carga e, com ele, sobretensão. O estudo trata só de faltas que afundam a
+tensão; nada no TCC, no deck ou no dashboard deve cobrar sobretensão como
+lacuna (ex.: faixa de sobretensão do ONS fora do slide 15, [[defesa-deck-map]]).
+
 ## Métricas de Avaliação
 
 - **IAE** — Integral do Erro Absoluto do ângulo de fase

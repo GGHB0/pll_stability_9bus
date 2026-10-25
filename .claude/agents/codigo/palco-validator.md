@@ -54,16 +54,16 @@ Ids: faltas, energ, local, sinc, seqneg, comp, ons, sintese.
 ## Passo 2: ler as telas
 
 Leia os PNGs dos capítulos alterados e dos vizinhos (o capítulo antes e o
-depois). Não leia os 14 se a mudança foi num só.
+depois). Não leia todos se a mudança foi num só.
 
 ### 1. Números
 
 Todo número escrito na tela (frase, rótulo no gráfico, caixa de destaque,
-mini-mapa) tem de aparecer igual na legenda do capítulo ou num cartão da
-mesma tela: mesmo valor, mesmo arredondamento, mesma unidade. As legendas
+mini-mapa, nota com seta) tem de aparecer igual na legenda do capítulo ou
+num cartão (ou célula da matriz) da mesma tela: mesmo valor, mesmo arredondamento, mesma unidade. As legendas
 e os cartões batem com o TCC; número que só existe no desenho é
 **BLOQUEIA**. Conferir também no código: os textos estão em
-`src/report/roteiro.py` (`texto`, `passos_pres`, `destaque`) e os valores
+`src/report/roteiro.py` (`texto`, `passos_pres`, `destaque`, `notas`, `matriz`) e os valores
 dos cartões vêm de `tccInd` (`_tcc_ind` em `src/report/renderer.py`).
 Regra e exceções aprovadas em `.claude/kb/dashboard/layout/modo-apresentacao.md`.
 

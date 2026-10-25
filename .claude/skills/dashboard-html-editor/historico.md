@@ -100,3 +100,13 @@ retorno à faixa de 2° nos capítulos com falta (seta a partir da eliminação,
 porque o tempo é contado de t_clear). **Lição**: `tickvals` sem `ticktext`
 herda o `hoverformat` (".3f") e escreve "60.000" no eixo; o mesmo erro
 apareceu duas vezes na sessão.
+
+v1.9.0 (2026-10-24, mesma conversa): tela 5 (Sequência negativa) do
+palco. Trifásica da Barra 7 grafite, grossa e por cima, com caixa de seta
+(`notas`); cor = barra e traço = curto (estilo opcional no 3º item de
+`casos`); chips agrupados por barra; cartões trocados por uma matriz barra
+× curto (`matriz`), que traz a trifásica da Barra 6 (0,0011 pu) citada no
+texto e que não aparecia na tela. Prévias por injeção nas duas resoluções
+antes de cada passo. **Lição**: ao injetar painel ou tabela numa prévia,
+chamar `Plotly.relayout` com a largura e a altura novas do `#pres-plot`;
+sem isso o SVG antigo cobre o elemento injetado e a prévia parece quebrada.

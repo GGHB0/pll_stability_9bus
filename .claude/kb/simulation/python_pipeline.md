@@ -14,11 +14,18 @@ src/
 │   └── settings.py     → T_FAULT, T_SETTLE, TOL_RAD, thresholds, paletas, constantes de espectro, caminhos
 ├── pipeline/            → CSV → dados → figuras Plotly
 │   ├── loader.py         → SimData: lê sim_data.csv + sim_data_angles.csv, calcula métricas
+│   ├── pq.py             → leitura do CSV com a correção de escala de P e Q das rodadas antigas
+│   ├── indicadores.py    → receitas dos indicadores do Cap. 5 (mesmas do scripts/medir_tabelas_cap5.py)
 │   ├── chart.py           → ChartBuilder: subplots Plotly (usa t_fast p/ painéis de ângulo)
-│   └── spectrum.py        → SpectrumBuilder: FFT segmentada pré/falta/pós em dB (ver kb/dashboard/graficos/espectro-fourier.md)
+│   └── spectrum.py        → SpectrumBuilder: FFT segmentada pré/falta/pós em pu (ver [[espectro-fourier]])
 └── report/               → figuras → HTML
-    └── renderer.py         → HTMLRenderer: HTML multi-cenário com tema light/dark
+    ├── renderer.py         → HTMLRenderer: HTML multi-cenário com tema light/dark
+    ├── roteiro.py          → casos do TCC e capítulos da aba Análise TCC / palco
+    └── js/                 → JS da aba Análise TCC e do palco (ordem em TCC_JS_FILES)
 ```
+
+Ler `sim_data.csv` sempre por `pq.py`, nunca `pd.read_csv` direto
+([[export-workflow]]).
 
 Reorganizado em subpacotes (2026-07) — antes eram 4 arquivos soltos em `src/`.
 `src/__init__.py` continua a única superfície pública; `app.py` não referencia

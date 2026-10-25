@@ -1,7 +1,7 @@
 ---
 name: roteiro-demonstracao-dashboard
 aliases: [roteiro-demonstracao-dashboard]
-description: Casos do Cap. 5 destacados no dashboard (seletor por seção, mapa azul/cinza, comparativo "Só casos do TCC"), aba "Análise TCC" (7 capítulos com cenários sobrepostos) e modo apresentação em tela cheia da defesa — src/report/roteiro.py
+description: Casos do Cap. 5 destacados no dashboard (seletor por seção, mapa azul/cinza, comparativo "Só casos do TCC"), aba "Análise TCC" (8 capítulos com cenários sobrepostos) e modo apresentação em tela cheia da defesa — src/report/roteiro.py
 ---
 
 # Casos do TCC e aba Análise TCC
@@ -23,8 +23,10 @@ de achar o cenário certo no `<select>` durante a fala.
 - Fora do TCC: Barras 4, 5, 8 e 9 (todas as faltas) e Linha 8-9 bifásica.
 - `CAPITULOS`: os capítulos da aba "Análise TCC". Cada um tem `id`,
   `curto` (botão), `titulo`, `ref`, `texto` (pode ter `<sub>`), `kind`
-  (`time`, `spec`, `ons`, `tabela`), `casos` com cor (light, dark),
-  `sinais` (o 1º é o padrão), `xrange` e `metricas` (mini-cartões).
+  (`mapa`, `time`, `spec`, `ons`, `tabela`), `casos` com cor (light, dark)
+  e estilo opcional, `sinais` (o 1º é o padrão), `xrange` e `metricas`
+  (mini-cartões, ou `matriz` no lugar deles). Campos só do palco e o
+  estilo por caso em [[modo-apresentacao-palco]].
 
 Caso novo no TCC → entrada em `TCC_CASOS`. Número de legenda alterado → ele
 tem de bater com o card do mesmo cenário ([[indicadores-tcc-dashboard]]).
@@ -51,18 +53,21 @@ sobre as abas por cenário (commit `d1a8e8c`). No mesmo dia virou esta aba,
 a pedido do usuário, para comparar os cenários num painel só.
 
 A aba é a primeira e a página abre nela. Cada capítulo sobrepõe no mesmo
-eixo os cenários que o TCC compara: azul = nominal, laranja = inadequada,
-e na localização um degradê de azul do mais perto ao mais longe da usina.
+eixo os cenários que o TCC compara: azul = nominal, laranja = inadequada;
+na localização e no código de rede, amarelo → verde → ciano → índigo do
+mais perto ao mais longe da usina; nas assimétricas, cor = barra e traço =
+tipo de curto.
 
 | # | Capítulo | Casos | Gráfico |
 |---|---|---|---|
-| 1 | Energização | regime × regime inadequada | erro de fase / v_d (0-0,2 s) |
-| 2 | Localização | 4 trifásicas nominais | erro / v_d / P |
-| 3 | Perda de sincronismo | B7 trifásica nas duas sintonias | erro (±180° fixo) / P / Q / v_d |
-| 4 | Sequência negativa | B7 trifásica (grafite, por cima) + 4 assimétricas, agrupadas por barra | espectro de v_d na falta |
-| 5 | Compromisso da sintonia | B6 bifásica nas duas sintonias | erro / v_d |
-| 6 | Código de rede | 4 trifásicas | suportabilidade (V × t) e rampa ONS (i_q × V), lado a lado |
-| 7 | Todos os casos | 17 casos do TCC | tabela (colunas do comparativo) |
+| 1 | Faltas destacadas | os 4 pontos de falta | unifilar com passos ([[faltas-destacadas]]) |
+| 2 | Energização | regime × regime inadequada | erro de fase / v_d (0-0,2 s) |
+| 3 | Localização | 4 trifásicas nominais | erro / v_d / P |
+| 4 | Perda de sincronismo | B7 trifásica nas duas sintonias | erro (±180° fixo) / P / Q / v_d |
+| 5 | Sequência negativa | B7 trifásica (grafite, por cima) + 4 assimétricas, agrupadas por barra; matriz barra × curto no lugar dos cartões | espectro de v_d na falta |
+| 6 | Compromisso da sintonia | B6 bifásica nas duas sintonias | erro / v_d |
+| 7 | Código de rede | 4 trifásicas | suportabilidade (V × t) e rampa ONS (i_q × V), lado a lado |
+| 8 | Todos os casos | 17 casos do TCC | tabela (colunas do comparativo) |
 
 - As curvas vêm das figuras já embutidas em `SCENARIOS` (traço "Erro de
   fase", "V<sub>d</sub> Rede", "P UFV", "Q UFV" do Inversor; "Durante a

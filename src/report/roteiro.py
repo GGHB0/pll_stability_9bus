@@ -5,7 +5,7 @@ O painel tem mais cenários do que o TCC discute (Barras 4, 5, 8 e 9, Linha 8-9
 bifásica). TCC_CASOS diz em que seção do Cap. 5 cada caso aparece, na ordem
 das Tabelas 5.1 a 5.3; o resto vai para o grupo "fora do TCC" do seletor e
 fica esmaecido no mapa unifilar. CAPITULOS organiza a aba "Análise TCC"
-(demonstração da defesa, slide 16 do deck): cada capítulo sobrepõe os
+(demonstração ao vivo da defesa): cada capítulo sobrepõe os
 cenários que o TCC compara, com legenda e mini-cartões.
 
 Os números das legendas são os do TCC (VFinal, Tabelas 5.1 a 5.3, §5.1 e
@@ -69,7 +69,7 @@ _ASSIM = {
     "bus6/1phase": (("#2dd4bf", "#99f6e4"), dict(_B6, dash="dash")),
 }
 
-# Capítulos da aba "Análise TCC" (demonstração da defesa, slide 16 do deck).
+# Capítulos da aba "Análise TCC" (demonstração ao vivo da defesa).
 # Campos: id, curto (botão), titulo, ref (seção/figura do TCC), texto,
 # kind (time/spec/ons/tabela), casos [(key, cor) ou (key, cor, estilo), com
 # estilo opcional: dash, larg, grupo (rótulo antes dos chips, respiro entre

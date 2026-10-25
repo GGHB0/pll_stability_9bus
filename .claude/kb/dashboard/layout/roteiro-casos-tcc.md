@@ -63,11 +63,15 @@ tipo de curto.
 | 1 | Faltas destacadas | os 4 pontos de falta | unifilar com passos ([[faltas-destacadas]]) |
 | 2 | Energização | regime × regime inadequada | erro de fase / v_d (0-0,2 s) |
 | 3 | Localização | 4 trifásicas nominais | erro / v_d / P |
-| 4 | Perda de sincronismo | B7 trifásica nas duas sintonias | erro (±180° fixo) / P / Q / v_d |
-| 5 | Sequência negativa | B7 trifásica (grafite, por cima) + 4 assimétricas, agrupadas por barra; matriz barra × curto no lugar dos cartões | espectro de v_d na falta |
-| 6 | Compromisso da sintonia | B6 bifásica nas duas sintonias | erro / v_d |
+| 4 | Sequência negativa | B7 trifásica (grafite, por cima) + 4 assimétricas, agrupadas por barra; matriz barra × curto no lugar dos cartões | espectro de v_d na falta |
+| 5 | Compromisso da sintonia | B6 bifásica nas duas sintonias | erro / v_d |
+| 6 | Perda de sincronismo | B7 trifásica nas duas sintonias | erro (±180° fixo) / P / Q / v_d |
 | 7 | Código de rede | 4 trifásicas | suportabilidade (V × t) e rampa ONS (i_q × V), lado a lado |
 | 8 | Todos os casos | 17 casos do TCC | tabela (colunas do comparativo) |
+
+A ordem segue o Cap. 5 (§5.3 antes de §5.4): o ganho menor aparece primeiro
+filtrando melhor o 120 Hz e depois perdendo o sincronismo na B7 trifásica,
+para a defesa terminar no argumento a favor da sintonia nominal (2026-10-24).
 
 - As curvas vêm das figuras já embutidas em `SCENARIOS` (traço "Erro de
   fase", "V<sub>d</sub> Rede", "P UFV", "Q UFV" do Inversor; "Durante a

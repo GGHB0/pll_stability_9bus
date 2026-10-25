@@ -1,7 +1,7 @@
 ---
 name: dashboard-html-editor
 description: Edita o pipeline Python que gera o relatório HTML interativo (output/pll_metrics.html) — SimData/ChartBuilder/HTMLRenderer em src/. Ativar sempre que o usuário pedir para mudar/adicionar/remover algo no dashboard: cards, métricas, gráficos, abas, tabela comparativa, tema light/dark, toggle PLL, diagrama unifilar, ou qualquer elemento visual/funcional do relatório. Também usar para regenerar e verificar o HTML após qualquer mudança em src/pipeline ou src/report.
-version: 1.9.0
+version: 1.10.0
 ---
 
 # Dashboard HTML Editor — Skill de Edição do Relatório Interativo
@@ -72,6 +72,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 | Toggle PLL nominal/sintonia inadequada | `renderer.py`, `app.py` | `layout/bad-pll-dashboard-filter.md` |
 | Casos do TCC, capítulos da aba Análise TCC | `roteiro.py` (`TCC_CASOS`, `CAPITULOS`), JS em `src/report/js/` (ordem em `TCC_JS_FILES` no `renderer.py`) | `layout/roteiro-casos-tcc.md` |
 | Palco: passos com frase, painel ao lado (fasor, mini-mapa), número de destaque, notas com seta | campos `passos_pres`/`lado`/`destaque`/`notas` em `CAPITULOS`; `palco.js` (`_renderPres`), `fasor.js`, `minimapa.js`, `tcc.js` (`_destaque`, `_nota`, `_marcaPartida`, `_marcaRetorno`) | `layout/modo-apresentacao.md` |
+| Palco: foco do passo, destaque só num passo, indicador de passo | campos `foco`/`destaque` do passo; `tcc.js` (`_foco`), `navegacao.js` (`_capDestaque`, `_passoInd`) | `layout/modo-apresentacao.md` |
 | Estilo por caso (traço, largura, grupo, por cima) ou matriz no lugar dos cartões | 3º item de `casos` e campo `matriz` em `CAPITULOS`; `tcc.js` (`_tccCases`), `tcc_ui.js` (`_tccChipsHtml`, `_tccMatrizHtml`) | `layout/modo-apresentacao.md` |
 | Narrativa/veredito (story) | `renderer.py` (`_story_html`) | `cards/cards-metricas.md` |
 | Remover aba/gráfico inteiro (feature) | `chart.py` (método build), `app.py` (chamada + chaves do dict), `renderer.py` (chaves `SCENARIOS`, HTML da seção, `TIME_TABS`/guards de `switchTab`, ordem do `goToChart`) | doc do gráfico removido + `layout/{estrutura-html,tabs-navegacao}.md` |
@@ -121,6 +122,15 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
   linhas — fragmentar proativamente.
 - Mudança aprovada sempre ganha entrada no `CHANGELOG.md` **e** atualização
   do doc de KB correspondente — nunca só uma das duas.
+- **Ordem dos capítulos do palco = ordem do Cap. 5 do TCC** (desde
+  2026-10-24). Capítulo novo entra na posição da sua seção. Quando um
+  resultado favorece a sintonia inadequada e outro a derruba, o favorável
+  vem antes e a última frase dele faz a ponte; a defesa termina no
+  argumento decisivo. Detalhes em `layout/roteiro-casos-tcc.md`.
+- **Capítulo do palco com gráfico revela em passos** (desde 2026-10-25):
+  um caso ou uma ideia por passo, `foco` na janela que a frase cita, último
+  passo sem foco (gráfico inteiro) e número de destaque só no passo com
+  `destaque=True`. Capítulo novo com gráfico já nasce assim.
 - **Aba Resumo é cards + diagnóstico, sem gráfico** (desde 2026-07-24) —
   não reintroduzir uma figura ali sem que o usuário peça; era repetitivo
   com Inversor/Sistema e foi removido por esse motivo.
@@ -130,7 +140,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 - [previa-standalone.md](previa-standalone.md): elemento novo de visual
   indefinido (capítulo do palco, diagrama) prototipado num HTML do
   scratchpad, com PNG por passo no Edge headless, antes de tocar em `src/`.
-- [historico.md](historico.md): versões v1.0.0 a v1.8.0 e a lição de cada
+- [historico.md](historico.md): versões v1.0.0 a v1.10.0 e a lição de cada
   rodada. Versão nova ganha entrada lá, não aqui.
 
 Atualizar a tabela e as convenções conforme novas edições no dashboard

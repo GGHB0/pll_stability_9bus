@@ -12,6 +12,26 @@ function _presPassoStep(d) {
   return true;
 }
 
+// indicador de passo: barra em segmentos que enche até o atual, "k de n" embaixo
+function _passoInd(k, n) {
+  var seg = "";
+  for (var i = 0; i < n; i++) seg += "<i" + (i <= k ? " class=\"on\"" : "") + "></i>";
+  return "<span class=\"passo-ind\"><span class=\"passo-seg\">" + seg + "</span>"
+    + "<span class=\"passo-n\"><b>" + (k + 1) + "</b> de " + n + "</span></span>";
+}
+
+// passo atual do palco (null fora do palco ou em capítulo sem passos)
+function _presPassoAtual(cap) {
+  var pp = cap.passos_pres;
+  return (presOn && pp) ? pp[Math.min(presPasso, pp.length - 1)] : null;
+}
+
+// número de destaque: em capítulo com passos, só nos passos com destaque
+function _capDestaque(cap) {
+  var ps = _presPassoAtual(cap);
+  return (ps && !ps.destaque) ? null : cap.destaque;
+}
+
 // ao sair do palco, a aba volta a mostrar todos os casos dos capítulos com passos
 function _presPassoReset() {
   CAPS.forEach(function(c) {

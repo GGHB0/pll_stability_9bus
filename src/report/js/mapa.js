@@ -98,7 +98,7 @@ function _mapaHtml(cap, gid) {
     + "<text x=\"10\" y=\"14\">afundamento mais profundo</text>"
     + "<text x=\"370\" y=\"14\" text-anchor=\"end\">mais raso</text>"
     + "<rect x=\"10\" y=\"26\" width=\"360\" height=\"8\" rx=\"4\" fill=\"url(#" + gid + "-gr)\"/>" + pins + "</svg>"
-    + "<p class=\"mp-step\">passo " + (mapaPasso + 1) + " de " + cap.passos.length + " &nbsp;·&nbsp; seta &rarr; avança</p>";
+    + "<p class=\"mp-step\">" + _passoInd(mapaPasso, cap.passos.length) + "</p>";
   return "<div class=\"mapa\"><div class=\"mapa-svg\">" + _mapaSvg(cap, on, p.id)
     + "<p class=\"mapa-hint\">Clique numa barra ou linha para ver o ponto de falta</p></div>"
     + "<div class=\"mapa-side\">" + side + "</div></div>";

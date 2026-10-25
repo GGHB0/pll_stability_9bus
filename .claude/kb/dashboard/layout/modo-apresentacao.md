@@ -85,13 +85,32 @@ injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
 - **Passos com frase-mensagem** (`passos_pres`, Energização e Localização): cada passo
   troca o parágrafo da legenda por uma frase grande (`.pres-msg`) e esconde
   os casos de `ocultar`. Passo 1 só a nominal ("40 ms"), passo 2 entra a
-  inadequada ("79 ms: quase o dobro"). Indicador "passo N de M" no canto
-  direito da navegação. `_presPassoReset` devolve os casos à aba ao sair.
+  inadequada ("79 ms: quase o dobro"). Indicador de passo no cabeçalho
+  (`_passoInd`, 2026-10-25): barra em segmentos que enche até o atual, com
+  "k de n" embaixo; o mesmo no mapa de "Faltas destacadas". Escolhido entre
+  três prévias (pílulas, segmentos, pílulas + tecla) no lugar do texto
+  "passo N de M · seta → avança". `_presPassoReset` devolve os casos à aba ao sair.
   Na Localização (2026-10-24) os passos trocam o painel ao lado: campo
   `lado` do passo, resolvido por `_presLado()` (o do passo, senão o do
   capítulo). Passo 1 mini-mapa e retenção de v_d (9,2% a 58,4%), passo 2
   fasor e pico do erro (37,3° a 7,3°), Tabela 5.1. O usuário não quis
   perder o mini-mapa e recusou os dois empilhados (espremidos em 1280×720).
+- **Foco do passo** (`foco=[t0, t1]` no passo, 2026-10-25, `_foco` em
+  `tcc.js`): o gráfico fora da janela fica sob um véu branco (72%) e a
+  janela ganha contorno pontilhado azul. Escolhido entre três prévias
+  (trilha de frases no topo empurrava o gráfico sobre os cartões; balão com
+  seta exigia coordenada à mão por passo). Compromisso e Perda de
+  sincronismo têm 3 passos: nominal sozinha com foco, entra a inadequada,
+  frase-ponte ("E numa falta mais severa?") e fecho ("O ganho que filtrava
+  o 120 Hz na Barra 6 é o que perde o sincronismo aqui"). Em capítulo com
+  passos, o `destaque` só aparece no passo com `destaque=True`
+  (`_capDestaque`): o 66,8% chega no passo 3, depois de a curva escorregar.
+  Estendido no mesmo dia: Energização (foco na partida), Localização
+  (foco na falta; passo 3 novo, retorno em até 112 ms no pós-falta) e
+  Sequência negativa (passo 1 só a trifásica, passo 2 as assimétricas com
+  o "> 250×"; foco em 100 a 140 Hz). **O último passo fica sem foco**
+  (pedido de 2026-10-25): o capítulo começa no detalhe e fecha com o
+  gráfico inteiro, em todos os capítulos com passos.
 - **Fasor** (`lado="fasor"`, Energização, Perda de sincronismo e passo 2
   da Localização): círculo
   com a rede (marca preta no topo, cunha verde de ±2°) e um vetor por caso,
@@ -126,8 +145,8 @@ injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
   `grupo`, os chips saem sob o rótulo "Barra 7"/"Barra 6" (sem o prefixo no
   chip) e os cartões ganham um respiro entre os grupos.
 - **Matriz no lugar dos cartões** (`matriz`, 2026-10-24; aba e palco,
-  `_tccMatrizHtml`): linhas × colunas de cenário (chave = prefixo da linha
-  + "/" + sufixo da coluna), 1ª métrica grande e as outras ao lado, coluna
+  `_tccMatrizHtml`): linhas × colunas de cenário (chave = prefixo da
+  linha + "/" + sufixo da coluna), 1ª métrica grande e as outras ao lado, coluna
   `realce` sombreada, clique abre o cenário. Na Sequência negativa: Barra
   7/6 × trifásica/bifásica/monofásica; a trifásica da Barra 6 (0,0011 pu, o
   "maior valor das trifásicas" do texto) entra só na matriz, sem curva,
@@ -136,7 +155,9 @@ injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
 
 Regra: todo número escrito no palco vem da legenda ou de `tccInd`, que
 batem com o TCC ([[defesa-deck-map]]). Nada de número calculado só para a
-tela.
+tela. Os termos também são os do deck e do TCC (revisão de 2026-10-25):
+"escorregamento de ciclo", "sintonia nominal" na 1ª menção do capítulo,
+nominal antes da inadequada nos pares de números.
 
 ## Telas menores que 1920×1080 (2026-10-24)
 

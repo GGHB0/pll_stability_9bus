@@ -82,7 +82,9 @@ _ASSIM = {
 # inadequada (cobertura conforme kb cenarios-simulados).
 # Só no modo apresentação (palco): passos_pres troca a legenda por uma frase
 # por passo (texto, ocultar = casos escondidos naquele passo, lado opcional
-# que troca o painel ao lado naquele passo), lado põe um
+# que troca o painel ao lado naquele passo, foco = [t0, t1] que esmaece o
+# gráfico fora da janela, destaque=True mostra o número de destaque do
+# capítulo, que nos capítulos com passos só aparece nesses), lado põe um
 # painel ao lado do gráfico ("fasor" ou "minimapa") e destaque escreve um
 # número grande sobre o gráfico (sinal, num, txt, x/y do alvo, ax/ay da
 # caixa; sem x, a caixa fica solta em ax/ay; lado=True põe o número no
@@ -167,7 +169,7 @@ CAPITULOS: list[dict] = [
          passos_pres=[
              dict(texto="Com a sintonia nominal, o erro de fase entra na faixa "
                         f"de 2° em <b style='color:{_NOM[0]}'>40 ms</b>.",
-                  ocultar=["regime_bad_pll"]),
+                  ocultar=["regime_bad_pll"], foco=[0.0, 0.06]),
              dict(texto="Com a sintonia inadequada, leva "
                         f"<b style='color:{_BAD[0]}'>79 ms</b>: quase o dobro.",
                   ocultar=[]),
@@ -187,33 +189,22 @@ CAPITULOS: list[dict] = [
              dict(texto="Quanto mais perto da usina, menos tensão sobra: "
                         "v<sub>d</sub> retém <b>9,2%</b> na Barra 7 e "
                         "<b>58,4%</b> na Barra 6.",
-                  ocultar=[], lado="minimapa"),
-             dict(texto="O PLL também se desvia mais: pico do erro de "
+                  ocultar=[], lado="minimapa", foco=[0.3, 0.4]),
+             dict(texto="O erro de fase também cresce: pico de "
                         "<b>37,3°</b> na Barra 7 e <b>7,3°</b> na Barra 6.",
+                  ocultar=[], lado="fasor", foco=[0.3, 0.4]),
+             dict(texto="Com a sintonia nominal, o erro sempre volta à faixa "
+                        "de 2°: em até <b>112 ms</b>.",
                   ocultar=[], lado="fasor"),
          ]),
-    dict(id="sinc", pres=["err", "P"], curto="Perda de sincronismo", kind="time",
-         titulo="Barra 7 trifásica: a sintonia decide o sincronismo",
-         ref="§5.4 · Figuras 5.18 e 5.19",
-         texto="A tensão cai quase igual nas duas sintonias (9,2% e 8,2%). "
-               "Com a nominal, o erro volta à faixa de 2° em 98 ms; com a "
-               "inadequada, percorre toda a faixa de ±180° até o fim da "
-               "simulação, e a usina absorve potência ativa em 66,8% do "
-               "tempo após a eliminação.",
-         casos=[("bus7/3phase", _NOM), ("bus7/3phase_bad_pll", _BAD)],
-         sinais=["err", "P", "Q", "vd"], xrange=[0.25, 0.6],
-         metricas=["ret", "pico", "ts", "fracP"], lado="fasor",
-         destaque=dict(lado=True, num="66,8%",
-                       txt="do tempo absorvendo potência ativa após a "
-                           "eliminação, com a sintonia inadequada")),
     dict(id="seqneg", pres=["spec"], curto="Sequência negativa", kind="spec",
          titulo="Faltas assimétricas: a sequência negativa vira 120 Hz",
          ref="§5.3 · Tabela 5.3 · Figura 5.10",
          texto="Nas faltas assimétricas, a sequência negativa aparece em v<sub>d</sub> "
                "como uma oscilação de 120 Hz, de 0,29 a 0,72 pu: mais de 250 "
                "vezes o maior valor das trifásicas (0,0011 pu). O gráfico é o "
-               "espectro de v<sub>d</sub> do inversor durante a falta; a tabela "
-               "segue a receita do TCC.",
+               "espectro de v<sub>d</sub> do inversor durante a falta; a matriz "
+               "traz os valores da Tabela 5.3.",
          casos=[(k, *_ASSIM[k]) for k in ("bus7/3phase", "bus7/2phase", "bus7/1phase",
                                           "bus6/2phase", "bus6/1phase")],
          sinais=["spec"], xrange=[0.0, 400.0], metricas=["a120", "pico"],
@@ -227,17 +218,66 @@ CAPITULOS: list[dict] = [
                      realce=0, rotulos={"pico": "pico do erro"},
                      nota="Amplitude de 120 Hz em v<sub>d</sub> durante a falta e "
                           "pico do erro de fase. A trifásica da Barra 6 não está "
-                          "traçada: fica sobre a da Barra 7, no zero.")),
+                          "traçada: fica sobre a da Barra 7, no zero."),
+         passos_pres=[
+             dict(texto="Na trifásica, quase nada em 120 Hz: <b>0,0002 pu</b> "
+                        "na Barra 7.",
+                  ocultar=["bus7/2phase", "bus7/1phase", "bus6/2phase",
+                           "bus6/1phase"], foco=[100, 140]),
+             dict(texto="Nas assimétricas, a sequência negativa vira 120 Hz: "
+                        "de <b>0,29</b> a <b>0,72 pu</b>.",
+                  ocultar=[], destaque=True),
+         ]),
     dict(id="comp", pres=["err", "vd"], curto="Compromisso da sintonia", kind="time",
-         titulo="Ganho menor é compromisso, não piora uniforme",
+         titulo="Ganho menor filtra melhor o 120 Hz",
          ref="§5.3 · Tabela 5.3 · Figura 5.14",
          texto="Na falta bifásica da Barra 6, a sintonia inadequada filtra "
                "mais o 120 Hz: o pico na falta cai de 96,0° para 34,5° e o "
-               "retorno de 48 para 30 ms. Na trifásica da Barra 7, a mesma "
-               "sintonia perdeu o sincronismo.",
+               "retorno de 48 para 30 ms. Mas, na trifásica da Barra 7, a "
+               "mesma sintonia perde o sincronismo.",
          casos=[("bus6/2phase", _NOM), ("bus6/2phase_bad_pll", _BAD)],
          sinais=["err", "vd"], xrange=[0.25, 0.6],
-         metricas=["pico", "ts", "a120"]),
+         metricas=["pico", "ts", "a120"],
+         passos_pres=[
+             dict(texto="Com a sintonia nominal, o 120 Hz da falta passa para o erro de "
+                        f"fase: pico de <b style='color:{_NOM[0]}'>96,0°</b>.",
+                  ocultar=["bus6/2phase_bad_pll"], foco=[0.3, 0.4]),
+             dict(texto="Com a inadequada, o 120 Hz em v<sub>d</sub> é quase o "
+                        "mesmo (0,39 e 0,37 pu), mas o erro fica em "
+                        f"<b style='color:{_BAD[0]}'>34,5°</b> e volta em "
+                        f"<b style='color:{_BAD[0]}'>30 ms</b>.",
+                  ocultar=[], foco=[0.3, 0.46]),
+             dict(texto="Aqui, o ganho menor parece vantagem. <b>E numa falta "
+                        "mais severa?</b>",
+                  ocultar=[]),
+         ]),
+    dict(id="sinc", pres=["err", "P"], curto="Perda de sincronismo", kind="time",
+         titulo="Barra 7 trifásica: a sintonia decide o sincronismo",
+         ref="§5.4 · Figuras 5.18 e 5.19",
+         texto="A tensão v<sub>d</sub> retém quase o mesmo nas duas sintonias (9,2% e 8,2%). "
+               "Com a nominal, o erro volta à faixa de 2° em 98 ms; com a "
+               "inadequada, percorre toda a faixa de ±180° até o fim da "
+               "simulação, e a usina absorve potência ativa em 66,8% do "
+               "tempo após a eliminação.",
+         casos=[("bus7/3phase", _NOM), ("bus7/3phase_bad_pll", _BAD)],
+         sinais=["err", "P", "Q", "vd"], xrange=[0.25, 0.6],
+         metricas=["ret", "pico", "ts", "fracP"], lado="fasor",
+         destaque=dict(lado=True, num="66,8%",
+                       txt="do tempo absorvendo potência ativa após a "
+                           "eliminação, com a sintonia inadequada"),
+         passos_pres=[
+             dict(texto="O caso mais severo: com a sintonia nominal, o erro volta à "
+                        f"faixa de 2° em <b style='color:{_NOM[0]}'>98 ms</b>.",
+                  ocultar=["bus7/3phase_bad_pll"], foco=[0.4, 0.5]),
+             dict(texto="A tensão v<sub>d</sub> retém quase o mesmo (9,2% e 8,2%), mas, com "
+                        "a inadequada, o erro percorre toda a faixa de ±180° "
+                        "(escorregamento de ciclo): "
+                        f"<b style='color:{_BAD[0]}'>perde o sincronismo</b>.",
+                  ocultar=[], foco=[0.4, 0.6]),
+             dict(texto="O ganho que filtrava o 120 Hz na Barra 6 é o que perde "
+                        "o sincronismo aqui.",
+                  ocultar=[], destaque=True),
+         ]),
     dict(id="ons", pres=[], curto="Código de rede", kind="ons",
          titulo="Código de rede: permanência e corrente reativa",
          ref="§5.5 · Figuras 2.1 e 2.2 · Tabela 5.2",
@@ -247,7 +287,8 @@ CAPITULOS: list[dict] = [
                "afundamento. A Barra 7 e a Linha 7-8 levam a tensão abaixo de "
                "0,2 pu, onde a desconexão é permitida, e mesmo assim o inversor "
                "fica conectado com i<sub>q</sub> saturado em 1 pu. A Barra 6 fica "
-               "dentro da região, com 0,72 pu contra 0,76 pu previstos.",
+               "dentro da região, com i<sub>q,ref</sub> médio de 0,72 pu contra "
+               "0,76 pu da rampa.",
          casos=[("bus7/3phase", _LOC[0]), ("line7_8/3phase", _LOC[1]),
                 ("line8_9/3phase", _LOC[2]), ("bus6/3phase", _LOC[3])],
          sinais=[], xrange=None, metricas=["Vmed", "rampa", "iqref"]),

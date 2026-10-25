@@ -48,8 +48,10 @@ espremido a ponto de não se ler.
 
 **Telas geradas**: `NN_<id>[_mK|_pK].png`, um por tela, na ordem do
 palco. `mK` = passo K do mapa (capítulo 1), `pK` = passo K de
-`passos_pres`; mais `NN_sinc_fasor_mouse.png` e `NN_sinc_fasor_play.png`.
-Ids: faltas, energ, local, sinc, seqneg, comp, ons, sintese.
+`passos_pres`; nas telas com fasor, mais `<tela>_fasor_mouse.png` e
+`<tela>_fasor_play.png`.
+Ids, na ordem: faltas, energ, local, seqneg, comp, sinc, ons, sintese
+(a ordem vem de `CAPITULOS` em `roteiro.py`; os números NN mudam com ela).
 
 ## Passo 2: ler as telas
 
@@ -79,9 +81,21 @@ some atrás de caixa de destaque.
 Vírgula decimal em tudo que é texto da tela (cartões, mini-mapa, destaque,
 tabela "Todos os casos"); o eixo do Plotly pode seguir o padrão dele.
 Acentos, concordância, o mesmo termo do TCC ("sintonia inadequada", nunca
-"PLL ruim"; "recuperar o sincronismo", nunca "reaquisitar"; sem "EMT").
+"PLL ruim"; "recuperar o sincronismo", nunca "reaquisitar"; "escorregamento de ciclo",
+nunca "cycle slipping"; sem "EMT"). Par de números na ordem nominal,
+inadequada, como nos chips; rótulo de métrica igual ao do slide 19 do deck.
 
-### 4. Coerência com o resto do palco
+### 4. Passos e foco
+
+Em capítulo com `passos_pres`, cada passo revela uma coisa: a frase grande
+fala só do que está visível, e o que ela cita (curva, seta, número) fica
+dentro da janela de `foco` (contorno pontilhado azul, véu branco fora). O
+último passo fica sem foco, com o gráfico inteiro, e o número de destaque
+só aparece no passo com `destaque=True`. Número citado fora da janela ou
+destaque antes da hora vira **BLOQUEIA**. O indicador de passo (segmentos
+azuis + "k de n", no cabeçalho e no mapa) tem de bater com o nome do PNG.
+
+### 5. Coerência com o resto do palco
 
 Elemento novo com a mesma linguagem visual dos existentes: vermelho só para
 falta e destaque, azul nominal, laranja inadequada, verde para faixa de
@@ -94,7 +108,8 @@ tolerância, palco branco. Diferença sem motivo aparente vira observação.
 | Textos, passos, destaques, `lado`, `faixa_err` | `src/report/roteiro.py` (`CAPITULOS`) |
 | Valores dos cartões (`tccInd`) | `_tcc_ind` em `src/report/renderer.py` |
 | Figura, faixas, marcação de acomodação e de retorno, destaque | `src/report/js/tcc.js` |
-| Palco: layout, passos, dica "passo N de M" | `src/report/js/palco.js`, `navegacao.js`; CSS `.pres-*` em `_css` do `renderer.py` |
+| Palco: layout, passos, indicador de passo (`_passoInd`) | `src/report/js/palco.js`, `navegacao.js`; CSS `.pres-*` e `.passo-*` em `_css` do `renderer.py` |
+| Foco do passo, destaque por passo | `_foco` em `tcc.js`; `_capDestaque` em `navegacao.js` |
 | Fasor / mini-mapa | `src/report/js/fasor.js` / `minimapa.js` |
 | Tabela "Todos os casos" | `src/report/js/tcc_ui.js` |
 

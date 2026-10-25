@@ -13,7 +13,7 @@ var SINAIS = {
 };
 var IND_LBL = {
   terr2: "Erro na faixa de 2°", tvd5: "v<sub>d</sub> na faixa de 5%",
-  ret: "Retenção de v<sub>d</sub>", pico: "Pico do erro na falta",
+  ret: "Retenção de v<sub>d</sub>", pico: "Pico do erro de fase",
   ts: "Retorno à faixa de 2°", a120: "120 Hz em v<sub>d</sub>",
   fracP: "P absorvida após a eliminação", Vmed: "Tensão no inversor",
   rampa: "Rampa ONS prevê", iqref: "i<sub>q,ref</sub> médio",
@@ -149,8 +149,10 @@ function _tccFigure(cap, sinais, o) {
         text: "120 Hz", showarrow: false, font: { size: fs - 1 } });
     }
   });
-  if (o.big && cap.destaque && !cap.destaque.lado) _destaque(cap.destaque, sinais, layout);
+  var dest = o.big ? _capDestaque(cap) : null, ps = o.big ? _presPassoAtual(cap) : null;
+  if (dest && !dest.lado) _destaque(dest, sinais, layout);
   if (o.big) (cap.notas || []).forEach(function(N) { _nota(N, sinais, layout); });
+  if (ps && ps.foco && cap.xrange) _foco(ps.foco, cap.xrange, layout);
   layout.xaxis = { anchor: "y" + (n > 1 ? String(n) : ""), gridcolor: grid, zerolinecolor: grid,
     title: { text: spec ? "Frequência (Hz)" : "Tempo (s)" },
     hoverformat: spec ? ".0f" : ".4f" };
@@ -200,6 +202,18 @@ function _nota(N, sinais, layout) {
     axref: "x", ayref: yr, text: N.txt, align: "left", showarrow: true, arrowhead: 2,
     arrowwidth: 2.2, arrowcolor: cor, font: { size: 16, color: cor },
     bgcolor: "rgba(255,255,255,.92)", bordercolor: cor, borderwidth: 1.2, borderpad: 6 });
+}
+
+// Foco do passo (passos_pres[].foco = [t0, t1], só no palco): esmaece o
+// gráfico fora da janela e contorna a janela com pontilhado.
+function _foco(f, xr, layout) {
+  [[xr[0], f[0]], [f[1], xr[1]]].forEach(function(w) {
+    if (w[1] > w[0]) layout.shapes.push({ type: "rect", xref: "x", yref: "paper", layer: "above",
+      x0: w[0], x1: w[1], y0: 0, y1: 1, fillcolor: "rgba(255,255,255,.72)", line: { width: 0 } });
+  });
+  layout.shapes.push({ type: "rect", xref: "x", yref: "paper", layer: "above",
+    x0: f[0], x1: f[1], y0: 0, y1: 1, fillcolor: "rgba(0,0,0,0)",
+    line: { width: 2, color: "#2563eb", dash: "dot" } });
 }
 
 // Capítulos com falta (métrica "ts"): onde o erro volta de vez à faixa de 2°

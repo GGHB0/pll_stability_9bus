@@ -5,6 +5,50 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-25 — Palco: foco também na Energização, Localização e Sequência negativa
+
+Arquivos: `src/report/roteiro.py`, `src/report/js/navegacao.js`,
+`src/report/js/palco.js`, `src/report/js/mapa.js`, `src/report/renderer.py`
+
+A mesma dinâmica de passos com foco foi para os outros capítulos com
+gráfico. Energização: foco na partida (0 a 60 ms, depois 0 a 100 ms).
+Localização: foco na falta nos passos 1 e 2 e um passo 3 novo, "o erro
+sempre volta à faixa de 2°: em até 112 ms", com foco no pós-falta.
+Sequência negativa: dois passos novos, a trifásica sozinha e depois as
+assimétricas com o "> 250×", foco em 100 a 140 Hz. Em todos os
+capítulos, o último passo fica sem foco, com o gráfico inteiro. O texto
+"passo N de M · seta → avança" virou uma barra em segmentos que enche até
+o passo atual, com "k de n" embaixo, no palco e no mapa (`_passoInd` em
+`navegacao.js`, CSS `.passo-*` no `renderer.py`; escolhida entre três
+prévias). Revisão dos textos contra o deck e o TCC: "escorregamento de
+ciclo", "sintonia nominal" na 1ª menção, retenção de v<sub>d</sub> na ordem
+nominal/inadequada, i<sub>q,ref</sub> explícito no Código de rede e cartão
+"Pico do erro de fase", como no slide 19. `verifica_palco.py` sem falhas.
+
+## 2026-10-25 — Palco: passos com foco no Compromisso e na Perda de sincronismo
+
+Arquivos: `src/report/roteiro.py`, `src/report/js/tcc.js`,
+`src/report/js/navegacao.js`, `src/report/js/fasor.js`
+
+As duas telas apareciam inteiras de uma vez, e a do Compromisso já
+anunciava a perda de sincronismo no cabeçalho. Agora cada uma tem 3 passos
+(nominal sozinha, entra a inadequada, frase-ponte ou fecho). Campo novo
+`foco` no passo esmaece o gráfico fora da janela que importa; campo
+`destaque` no passo faz o 66,8% aparecer só no fecho da Perda de
+sincronismo. O texto corrido da aba Análise TCC não mudou.
+
+## 2026-10-24 — Palco: Perda de sincronismo depois do Compromisso
+
+Arquivos: `src/report/roteiro.py`
+
+O palco mostrava a perda de sincronismo da sintonia inadequada (§5.4) antes
+do capítulo em que ela filtra melhor o 120 Hz (§5.3), e o capítulo favorável
+soava como defesa de algo já derrubado. A ordem passou a seguir o TCC:
+Sequência negativa → Compromisso → Perda de sincronismo. O título do
+Compromisso virou "Ganho menor filtra melhor o 120 Hz" e a última frase
+virou ponte ("Mas, na trifásica da Barra 7, a mesma sintonia perde o
+sincronismo").
+
 ## 2026-10-24 — Sequência negativa: trifásica visível, casos agrupados por barra
 
 Arquivos: `src/report/roteiro.py`, `src/report/js/tcc.js`,
@@ -104,37 +148,10 @@ Arquivos: `src/report/renderer.py`, `src/report/js/` (novo, 9 arquivos),
   em ±60° na Localização (`faixa_err`). `indicadores_falta` devolve também
   `err_ts`.
 
-## 2026-10-24 — Palco: passos, fasor, mini-mapa e números de destaque
-
-Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`
-
-Elementos só do modo apresentação, para enriquecer a defesa além dos
-gráficos, configurados por capítulo em `CAPITULOS`:
-- `passos_pres` (Energização): a seta mostra primeiro só a nominal e
-  depois a inadequada, com a legenda trocada por uma frase grande por passo.
-- `lado="fasor"` (Perda de sincronismo): círculo com o ângulo do PLL de cada
-  sintonia contra a rede, seguindo o mouse ou um play de 8 s.
-- `lado="minimapa"` (Localização): unifilar com os pontos na cor das curvas
-  e a retenção de v_d.
-- `destaque`: "> 250×" sobre o espectro e "66,8%" sob o fasor.
-O gráfico do palco passou a receber largura explícita no `Plotly.react`.
-Detalhes em `.claude/kb/dashboard/layout/modo-apresentacao.md`.
-
-## 2026-10-24 — Marcação da acomodação no capítulo "Energização"
-
-Arquivos: `src/pipeline/indicadores.py`, `src/report/renderer.py`
-
-No palco e na aba Análise TCC, o capítulo de energização marca onde cada
-curva entra de vez na faixa: linha tracejada na cor do caso, tempo no topo
-(40/79 ms no erro, 34/42 ms em v_d) e ponto na curva. O painel de v_d ganhou
-a faixa de ±5% do valor final (uma por caso), e o eixo do erro fica em ±20°: em ±150° a
-faixa de 2° não aparecia. `indicadores_partida` passou a devolver o valor
-final de v_d e o valor de cada sinal no instante de acomodação
-(`tccInd.partida`). Escolhida entre três prévias (linha + ponto, etiqueta só
-no erro, setas de duração).
-
 ## Entradas anteriores
 
+- [2026-10-24](docs/changelog/2026-10-24.md) — palco com passos, fasor,
+  mini-mapa e números de destaque; marcação da acomodação na Energização.
 - [2026-10-21](docs/changelog/2026-10-21.md) — capítulo "Faltas destacadas"
   (unifilar com os quatro pontos) e curva de suportabilidade no "Código de rede".
 - [2026-10-20](docs/changelog/2026-10-20.md) — indicadores do Cap. 5 no painel,

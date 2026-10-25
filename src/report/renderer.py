@@ -2209,7 +2209,14 @@ body.pres-on { overflow: hidden }
 .pres-body { flex: 1; min-height: 0; display: flex; gap: 24px; position: relative }
 .pres-plot { flex: 1; min-height: 0; min-width: 0 }
 .pres-msg { font-size: 22px; color: var(--text) }
-.pres-passo { align-self: center; white-space: nowrap; font-size: 13px; font-weight: 600; color: var(--muted) }
+.pres-passo { align-self: center; white-space: nowrap }
+/* indicador de passo (_passoInd): segmentos que enchem até o atual */
+.passo-ind { display: inline-flex; flex-direction: column; align-items: flex-end; gap: 6px }
+.passo-seg { display: inline-flex; gap: 5px }
+.passo-seg i { width: 38px; height: 5px; border-radius: 3px; background: var(--border) }
+.passo-seg i.on { background: var(--accent) }
+.passo-n { font-size: 13px; font-weight: 600; color: var(--muted) }
+.passo-n b { font-size: 15px; color: var(--accent) }
 /* painel ao lado do gráfico (cap.lado): fasor ou mini-mapa */
 .pres-side {
   flex: none; display: flex; flex-direction: column; justify-content: center;
@@ -2331,7 +2338,8 @@ body.pres-on { overflow: hidden }
 .mp-pin { cursor: pointer }
 .mp-pin circle { fill: var(--surface); stroke: var(--text); stroke-width: 2.5 }
 .mp-pin text { fill: var(--text); font-weight: 700; font-size: 12.5px }
-.mp-step { font-size: 12.5px; color: var(--muted); margin: 6px 0 0 }
+.mp-step { margin: 8px 0 0 }
+.mp-step .passo-ind { align-items: flex-start }
 
 /* ── Aba Análise TCC ── */
 .tab-btn.tab-tcc { font-weight: 700 }

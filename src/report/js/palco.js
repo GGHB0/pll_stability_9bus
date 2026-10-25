@@ -51,7 +51,7 @@ function _renderPres() {
   }
   document.getElementById("pres-text").innerHTML = ps ? "<span class=\"pres-msg\">" + ps.texto + "</span>" : cap.texto;
   document.getElementById("pres-passo").innerHTML = ps
-    ? "passo " + (presPasso + 1) + " de " + pp.length + " &nbsp;·&nbsp; seta &rarr; avança" : "";
+    ? _passoInd(presPasso, pp.length) : "";
   document.getElementById("pres-chips").innerHTML = _tccChipsHtml(cap, false, false);
   document.getElementById("pres-dots").innerHTML = CAPS.map(function(c, i) {
     return "<button class=\"pres-dot" + (i === tccCap ? " active" : "") + "\" onclick=\"presGo("

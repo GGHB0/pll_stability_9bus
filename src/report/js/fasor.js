@@ -71,7 +71,7 @@ function _fasorInit(gd, cap) {
     + '<div class="fs-leg">' + leg + '</div>'
     + '<div class="fs-ctl"><button class="fs-play" id="fs-play" onclick="_fasorPlay()">&#9654; play</button>'
     + '<span class="fs-t" id="fs-t"></span><span class="fs-falta" id="fs-falta">falta</span></div>'
-    + (cap.destaque && cap.destaque.lado
+    + (_capDestaque(cap) && cap.destaque.lado
        ? '<div class="fs-dest"><b>' + cap.destaque.num + '</b><span>' + cap.destaque.txt + '</span></div>' : '');
   if (gd.removeAllListeners) gd.removeAllListeners("plotly_hover");
   gd.on("plotly_hover", function(e) { if (!_fasorRaf && e.points.length) _fasorDraw(e.points[0].x); });

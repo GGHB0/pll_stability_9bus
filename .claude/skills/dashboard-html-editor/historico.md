@@ -110,3 +110,20 @@ texto e que não aparecia na tela. Prévias por injeção nas duas resoluções
 antes de cada passo. **Lição**: ao injetar painel ou tabela numa prévia,
 chamar `Plotly.relayout` com a largura e a altura novas do `#pres-plot`;
 sem isso o SVG antigo cobre o elemento injetado e a prévia parece quebrada.
+
+v1.9.1 (2026-10-24, mesma conversa): Perda de sincronismo (§5.4) passou
+para depois do Compromisso (§5.3); a tela 5 da v1.9.0 (Sequência negativa)
+virou a tela 4. **Lição**: o palco estava fora da ordem do TCC, e o
+capítulo favorável à sintonia inadequada vinha depois do que a derruba,
+soando como defesa de algo já descartado. A regra de ordem foi para as
+convenções do SKILL.md.
+
+v1.10.0 (2026-10-25): passos com foco (`foco=[t0, t1]` no passo, `_foco`
+em `tcc.js`) em Energização, Localização, Sequência negativa, Compromisso
+e Perda de sincronismo; `destaque=True` no passo restringe o número de
+destaque a ele (`_capDestaque`). Foco escolhido entre três prévias
+(trilha de frases, balão com seta, foco); último passo de cada capítulo
+sem foco; indicador de passo em segmentos (`_passoInd`) no lugar de
+"passo N de M · seta → avança", também no mapa. **Lição**: capítulo que entra
+inteiro de uma vez entrega a conclusão antes da evidência; revelar caso a
+caso, com o número grande só no último passo, é o padrão do palco.

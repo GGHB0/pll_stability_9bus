@@ -122,3 +122,13 @@ do projeto, sem fonte).
 
 Este conteúdo está também em `output/criterio_acomodacao_srf_pll.pdf`, gerado
 por `scripts/notas/gen_criterio_acomodacao.py` (skill `tcc-pdf-notes`).
+
+## Sobre-elevação real da malha fechada
+
+**O ≈5% é do protótipo sem zero** (`Mp = e^(−πξ/√(1−ξ²))` = 4,3%). A malha
+fechada do PLL, `G(s) = (Kp·s + Ki)/(s² + Kp·s + Ki)` (TCC 3.18), tem o zero
+do PI e, ao degrau de fase, passa **~21%** com a sintonia nominal e ~44% com a
+inadequada (simulação do modelo linear, 2026-10-25). O mesmo cálculo dá banda
+de −3 dB de 669 rad/s (107 Hz) e 242 rad/s (38 Hz), |G(j754)| = 0,63 e 0,13, e
+acomodação a 1% em ~16 ms e ~94 ms. O TCC diz "cerca de 5%"; a resposta para a
+banca está no roteiro de estudo (`scripts/notas/gen_roteiro_estudo_defesa.py`).

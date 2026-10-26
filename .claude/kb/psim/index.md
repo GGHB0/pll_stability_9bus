@@ -14,7 +14,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 | Arquivo | Link | Cobre |
 |---|---|---|
 | [psim_modeling.md](psim_modeling.md) | [[psim-modeling]] | Fase inicial de modelagem do PLL no PSIM (Altair) — cronologia, inventário, parâmetros e Vcc, antes da migração para Simulink |
-| [psim_netlists.md](psim_netlists.md) | [[psim-netlists]] | Topologia dos circuitos PSIM 01 (sistema EMT completo) e 04 (bancada de projeto do controle de corrente), lida das netlists em texto |
+| [psim_netlists.md](psim_netlists.md) | [[psim-netlists]] | Topologia dos circuitos PSIM 01 (sistema completo) e 04 (bancada de projeto do controle de corrente), lida das netlists em texto |
 
 ## Pastas relacionadas
 

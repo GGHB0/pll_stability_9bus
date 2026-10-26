@@ -1,7 +1,7 @@
 ---
 name: harmonic-measurement-conditions
 aliases: [harmonic-measurement-conditions]
-description: Condições de medição de harmônico (IEEE 519-2014 Cl.4 + nota 118 do IEEE 1547.2-2023) confrontadas com a FFT implementada em spectrum.py — o que coincide, o que é inaplicável a uma simulação EMT e o que é divergência corrigível
+description: Condições de medição de harmônico (IEEE 519-2014 Cl.4 + nota 118 do IEEE 1547.2-2023) confrontadas com a FFT implementada em spectrum.py — o que coincide, o que é inaplicável a uma simulação de transitórios e o que é divergência corrigível
 source: IEEE 519-2014 §4.1-4.4 (págs. impressas 4-5 = PDF 16-17); IEEE 1547.2-2023 nota de rodapé 118 (pág. impressa 144)
 references:
   - "IEEE. IEEE Recommended Practice and Requirements for Harmonic Control in Electric Power Systems. IEEE Std 519-2014, 2014."
@@ -77,7 +77,7 @@ espectro de Hann, e o segmento de falta era isento):
 | Resolução de 5 Hz | `df = 1/T` → **5,000 Hz** exatos no pré/pós; 10 Hz durante a falta | conforme onde a janela é de 12 ciclos |
 | Harmônica = **RMS** do bin central + 2 vizinhos | `sqrt((amp[m]**2).sum())` sobre ±1,5 bin em `_harmonics` | **conforme** desde 2026-08-09 |
 | Janela retangular (DFT do IEC) | **retangular na tabela**, Hann só no gráfico exibido | **conforme** na medição; ver a armadilha abaixo |
-| Agregação 3 s (15 janelas) e 10 min (200 valores) | não existe | **inaplicável** — a simulação EMT inteira tem ~1 s |
+| Agregação 3 s (15 janelas) e 10 min (200 valores) | não existe | **inaplicável** — a simulação inteira tem ~1 s |
 | Percentil 99º/95º sobre dia/semana | valor único por segmento | **inaplicável** — mesma razão |
 
 ## Armadilha: RMS de 3 bins exige janela retangular
@@ -114,7 +114,7 @@ e não deve ser chamada assim** no texto do TCC.
 
 O IEEE 1547 §7.3 sai melhor nessa comparação: o §7.3.1 define o requisito como
 condição de **ensaio de tipo em laboratório** (DER servindo carga linear, sem
-outras fontes harmônicas), que é exatamente o que uma simulação EMT de um único
+outras fontes harmônicas), que é exatamente o que uma simulação de um único
 inversor reproduz. É argumento a favor de citar o 1547 como critério primário e
 o 519 como origem histórica dos valores.
 

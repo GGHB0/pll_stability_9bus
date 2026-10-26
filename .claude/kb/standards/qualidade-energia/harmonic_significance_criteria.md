@@ -117,7 +117,7 @@ inferência.
 - **§7.3.1:** o requisito é definido em condição que a norma admite ser
   irrealizável em campo, servindo de base para **ensaio de tipo em
   laboratório**. É o que torna o 1547 metodologicamente compatível com uma
-  simulação EMT de inversor único, ao contrário do 519 (estatístico, de campo).
+  simulação de inversor único, ao contrário do 519 (estatístico, de campo).
 - **§7.3.3:** os limites das Tab. 17/18 só são permitidos se o **transformador
   de conexão não vir mais de 5%** da corrente nominal em harmônico
   (IEEE C57.12.00; metodologia de avaliação no IEEE C57.110).

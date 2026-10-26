@@ -126,7 +126,7 @@ tipo de modelo.
   em simulação dinâmica com o SRF-PLL: resposta de inversor GFL sob rampa de
   despacho/RoCoF, não apenas sob falta.
 - O achado "modelo estático 3–4 kV vs. real 16–17 kV" é citação direta para
-  justificar a escolha metodológica de simulação **EMT/dinâmica** (vs.
+  justificar a escolha metodológica de simulação **de transitórios eletromagnéticos/dinâmica** (vs.
   fluxo de potência) no Cap. 3 — o próprio ENTSO-E documenta a limitação do
   modelo estático no evento real.
 - Contraste RES-Espanha (FP fixo, sem resposta) vs. RES-Portugal (setpoint

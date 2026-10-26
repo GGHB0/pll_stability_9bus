@@ -10,6 +10,13 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-25: sigla de transitórios eletromagnéticos fora do deck (entregue)
+
+- Pedido do Oscar. 7 trocas: legenda do 20 e notas do 20, limites do 22 e
+  notas do 22, subtítulo e "Passo de integração" do 23, notas do 28.
+- 21891b35… → 67a4ceefd33f3c4a486240436d19eede, backup `_20261025_162639`.
+  Diff: só as 7 trocas. Staging `C:\Temp\defesa_semsigla\gen_sem_sigla.py`.
+
 ## 2026-10-24 (noite): referencial dq ao lado da equação, slide 6 (entregue)
 
 - Moldura, cartões e rodapé intactos. Equação 9,09 → 5,45 in à esquerda,
@@ -28,7 +35,7 @@ aliases: [defesa-historico-entregas]
 - 95f02b8b2752954bba02f9cd33e7c27d → a018e6d77e7e4161267d4dfd22d2370f,
   backup `_20261024_150810`. Diff: só 10, 13, 23 ("²" → sobrescrito).
   Staging `C:\Temp\defesa_equacoes\gen_equacoes.py`.
-- Ficam: "EMT"/"params.m" no 23, cabeçalhos "Vd/Vméd/Pméd" no 24, espaço
+- Ficam: a sigla de transitórios eletromagnéticos/"params.m" no 23, cabeçalhos "Vd/Vméd/Pméd" no 24, espaço
   levemente apertado antes do "+" na equação característica do 7.
 
 ## 2026-10-21 (madrugada): layout do 20 e frase de abertura em 20-22 (entregue)
@@ -41,7 +48,7 @@ aliases: [defesa-historico-entregas]
   2ª (22): o canônico virou c581ac8c… só por regravação do PowerPoint (diff
   vazio); entregue → 151946bf8daca45e2b2586816a7c99a8, backup `_20261021_005913`.
 - Ficam na tela, para a passada de texto: travessão nos cartões do 20,
-  "BAD_PLL" no 20, "EMT" na legenda do 20 e nos limites do 22.
+  "BAD_PLL" no 20, a sigla de transitórios eletromagnéticos na legenda do 20 e nos limites do 22.
 
 ## 2026-10-21: lógica do ONS e sistema completo, slides 14-17 (entregue)
 
@@ -82,7 +89,7 @@ aliases: [defesa-historico-entregas]
 - "Fluxo de análise" + frase de abertura; cartões Simulink, Arquivos CSV,
   Python, Painel interativo (§4.3.3); tabela 2 × 5 das métricas (opção T de
   2, a faixa de texto solta foi recusada como feia); rodapé "Dos dados aos
-  resultados" (opção B de 2). Sai o último "EMT" do deck. Ajuste do
+  resultados" (opção B de 2). Sai a última ocorrência da sigla de transitórios eletromagnéticos do deck. Ajuste do
   slide-validator: "Após o 1º ciclo da falta" (o 1º ciclo fica fora).
 - Staging `C:\Temp\defesa_fluxo\` (`gen_fluxo.py`): MD5 74cc0096… →
   a2b58bdf67e259a7e9ba0c649a8d4deb, backup `_20261020_001615`. diff: só o
@@ -98,23 +105,23 @@ aliases: [defesa-historico-entregas]
 
 - O Victor corrigiu a leitura: o fluxo do slide 14 é o da simulação
   consolidada no Simulink, não as ferramentas da modelagem. Slide 14 volta
-  ao original (com "1. Simulação EMT", a decidir na análise conjunta); as
-  trocas de "EMT" dos slides 3, 4 e 8 ficam. Montado a partir do deck
+  ao original (com "1. Simulação" e a sigla, a decidir na análise conjunta); as
+  trocas da sigla nos slides 3, 4 e 8 ficam. Montado a partir do deck
   anterior + só o grupo `g_emt` de `gen_pipeline.py`.
 - O canônico tinha sido regravado depois da entrega anterior (PowerPoint ao
   reabrir e OneDrive: 324c27d6… → 2054f41f… → a2a384ea…, conteúdo igual).
   MD5 a2a384ea… → 74cc0096b7dacaa2c17e990b344ad524; backup `_20261020_000011`.
   diff: só o slide 14 (e ordem de formas no 13); check 0 falha.
 
-## 2026-10-19 (noite, revertida em 2026-10-20): slide 14, fluxo de trabalho e métricas; "EMT" fora do deck (entregue)
+## 2026-10-19 (noite, revertida em 2026-10-20): slide 14, fluxo de trabalho e métricas; sigla de transitórios fora do deck (entregue)
 
 - Slide 14: título curto "Fluxo de trabalho" + frase de abertura; 4 cartões =
   plataformas da §4.2 na ordem da §4.4 (Python, PSIM, MATLAB/Simulink, painel
   em Python); tabela de métricas com as definições do Cap. 5 (retenção, pico a
   partir do 1º ciclo, retorno a 2° da eliminação, 120 Hz, P e Q médias);
-  pergunta do painel à direita (§4.3.3). Saem "EMT", "duas taxas", "sinais
+  pergunta do painel à direita (§4.3.3). Saem a sigla de transitórios, "duas taxas", "sinais
   da rede" e o cartão "mesmo código". Notas reescritas (220 palavras).
-- "EMT" fora do deck a pedido do Victor (o TCC ainda usa): slide 4 na tela
+- A sigla de transitórios eletromagnéticos fora do deck a pedido do Victor (o TCC ainda usava): slide 4 na tela
   ("Identificar o que compromete o rastreamento de fase"), notas 3 e 4
   ("simulação computacional"), notas 8 sem a frase das ferramentas.
 - MD5 87539413… → 324c27d6af1d452eec564a7023ff6151; backup

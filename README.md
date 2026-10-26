@@ -307,7 +307,7 @@ Histórico de mudanças em [`CHANGELOG.md`](CHANGELOG.md) e
 
 ## Ferramentas
 
-- **MATLAB/Simulink + Simscape Electrical:** simulação EMT da rede e do inversor.
+- **MATLAB/Simulink + Simscape Electrical:** simulação de transitórios eletromagnéticos da rede e do inversor.
 - **PSIM:** modelagem inicial e testes de bancada do PLL e do estágio de potência.
 - **Python (NumPy, pandas, Plotly, matplotlib):** cálculo analítico, pós-processamento, figuras e dashboard.
 - **Jupyter:** dimensionamento dos parâmetros.

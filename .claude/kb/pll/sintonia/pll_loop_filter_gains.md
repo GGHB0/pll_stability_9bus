@@ -56,7 +56,7 @@ Kp = 2·√(Ki)·ξ = 2ξωn                                 (10)
 
 O artigo, citando Teodorescu et al. (2011) e Ogata (2009), estabelece:
 
-- `ξ = 0,707` para resposta transitória ótima (overshoot ≈ 5%);
+- `ξ = 0,707` para resposta transitória ótima (overshoot ≈ 5% no protótipo sem zero; com o zero do PI, ~21%: [[pll-ts-criterion-rationale]]);
 - `ts` escolhido **entre um e dois períodos da fundamental** da rede.
 
 A mesma sintonia aparece no Teodorescu §4.2.2.3, p.56, eqs. (4.35)-(4.38), ali

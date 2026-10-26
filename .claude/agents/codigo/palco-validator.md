@@ -82,7 +82,7 @@ Vírgula decimal em tudo que é texto da tela (cartões, mini-mapa, destaque,
 tabela "Todos os casos"); o eixo do Plotly pode seguir o padrão dele.
 Acentos, concordância, o mesmo termo do TCC ("sintonia inadequada", nunca
 "PLL ruim"; "recuperar o sincronismo", nunca "reaquisitar"; "escorregamento de ciclo",
-nunca "cycle slipping"; sem "EMT"). Par de números na ordem nominal,
+nunca "cycle slipping"; sem a sigla de transitórios eletromagnéticos). Par de números na ordem nominal,
 inadequada, como nos chips; rótulo de métrica igual ao do slide 19 do deck.
 
 ### 4. Passos e foco

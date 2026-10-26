@@ -84,4 +84,4 @@ durante grandes perturbações — só o efeito final (disparo de proteção).
 - Casos de não conformidade com Art. 3-10 são exemplos reais de proteção mal
   ajustada, paralelos ao cenário BAD_PLL (kp_pll×0,2) do TCC.
 - A lacuna de dados de PLL em relatórios reais reforça a contribuição do
-  trabalho: simulação EMT detalhada do que os relatórios pós-mortem não captam.
+  trabalho: simulação detalhada de transitórios eletromagnéticos do que os relatórios pós-mortem não captam.

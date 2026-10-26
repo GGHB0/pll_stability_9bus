@@ -10,6 +10,16 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-25 — Sigla de transitórios eletromagnéticos fora do TCC (pedido do Oscar)
+
+5 trocas no VFinal, todas em texto bruto: Resumo ("simulação computacional
+de transitórios eletromagnéticos"), Abstract (espelho, sem comentário: o
+VFinal não tem comentários e ficou assim), objetivo específico 2, dois
+trechos da Conclusão ("simulações computacionais"). A sigla não estava na
+lista de siglas. fb061b4a… → a69b1839c7f0faf1d6ff5801a6d2ff43, backup
+`_backups\VF\..._20261025_162820`. `diff_texto.py`: 5 trechos, 813 → 813
+parágrafos, comentários 0 → 0. O PDF ao lado do VFinal não foi regerado.
+
 ## 2026-10-15 (01h43) — Referências de delimitação de escopo (pedido do Oscar)
 
 Oscar pediu duas referências para o leitor saber que a literatura de

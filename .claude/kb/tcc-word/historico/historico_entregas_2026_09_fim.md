@@ -13,7 +13,7 @@ aliases: [tcc-historico-entregas-2026-09-fim]
 
 - Victor recebeu do Oscar uma cópia comentada (`TCC_Victor_Bruno_V10 (1).docx`,
   baixada em 2026-09-29) com comentários novos datados de 25 e 28/09, além de
-  edições de texto soltas (Figura→Gráfico, "EMT"→"transitórios
+  edições de texto soltas (Figura→Gráfico, sigla→"transitórios
   eletromagnéticos", "IBR"→"Recurso Baseado em Inversor") feitas por
   cima. Pedido explícito: só os comentários do Cap. 5, sem as edições de
   texto.

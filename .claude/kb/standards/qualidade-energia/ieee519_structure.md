@@ -122,7 +122,7 @@ percentil semanal *short* < a tabela.
 
 Base: **% de `IL`**, definido logo abaixo da tabela como a soma das demandas
 máximas dos **12 meses anteriores dividida por 12** — é essa definição que torna
-`IL` incomputável numa simulação EMT de segundos.
+`IL` incomputável numa simulação de segundos.
 
 **É a nossa linha** → `CURR_ODD_LIMIT_PU = 0,04` e o
 `CURR_ODD_LIMIT_11_16_PU = 0,02` (interino). A nota "a" (pares a 25%) **não**

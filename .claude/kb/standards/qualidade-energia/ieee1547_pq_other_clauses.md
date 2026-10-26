@@ -1,7 +1,7 @@
 ---
 name: ieee1547-pq-other-clauses
 aliases: [ieee1547-pq-other-clauses]
-description: Requisitos de QEE do IEEE 1547-2018 que NÃO são de harmônico — RVC (Tabela 16), flicker, sobretensão (§7.4) e o roteiro de estudo de QEE do §7.5, que endossa a metodologia EMT do TCC
+description: Requisitos de QEE do IEEE 1547-2018 que NÃO são de harmônico — RVC (Tabela 16), flicker, sobretensão (§7.4) e o roteiro de estudo de QEE do §7.5, que endossa a metodologia de simulação do TCC
 source: IEEE 1547.2-2023 §7.2, §7.4, §7.5 (págs. impressas 140-148 = PDF 141-149)
 references:
   - "IEEE. IEEE Application Guide for IEEE Std 1547-2018, IEEE Standard for Interconnection and Interoperability of Distributed Energy Resources with Associated Electric Power Systems Interfaces. IEEE Std 1547.2-2023, 2023."
@@ -95,7 +95,7 @@ Passos recomendados pelo guia:
 - Estimar o flicker contribuído pela DER, per IEEE 1453-2015.
 - **"Estimate the harmonics contributed by the DER, per IEEE Std 519-2014."**
 
-**Relevância para o TCC:** a metodologia do trabalho — modelo EMT do IEEE 9
+**Relevância para o TCC:** a metodologia do trabalho — modelo de simulação do IEEE 9
 barras com o inversor, cenários de falta com abertura — é **literalmente o
 roteiro recomendado pelo guia da própria norma**. E o último item fecha o
 circuito normativo: o IEEE 1547 remete a estimativa de harmônicos ao IEEE 519.

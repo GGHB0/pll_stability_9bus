@@ -24,7 +24,6 @@ aliases: [tcc-siglas-inventory]
 | COI | Center of Inertia (Centro de Inércia) |
 | DDSRF-PLL | Decoupled Double Synchronous Reference Frame Phase-Locked Loop |
 | DSO | Distribution System Operator (Operador do Sistema de Distribuição) |
-| EMT | Electromagnetic Transients (Transitórios Eletromagnéticos) |
 | ENTSO-E | European Network of Transmission System Operators for Electricity |
 | FFR | Fast Frequency Response (Resposta Rápida de Frequência) |
 | FRT | Fault Ride-Through |
@@ -67,7 +66,7 @@ figuras). Sigla citada uma vez só (DDSRF-PLL, UFV) e instituição (IEEE,
 CIGRE, ENTSO-E) não entram na regra.
 
 Aplicada no V10 (52 trocas, [[tcc-historico-entregas]]): redefinições
-removidas em PLL, SRF-PLL, PI, CC, SIN, LVRT, PCC, GFL, PWM, VSI, IBR, EMT e
+removidas em PLL, SRF-PLL, PI, CC, SIN, LVRT, PCC, GFL, PWM, VSI, IBR e
 ONS; definição movida para a 1ª ocorrência em IBR (Intro), PI (objetivos,
 Cap. 1), CA (§3.1.2), PWM (§3.1.4) e ONS (Intro, RAP); LCL ganhou definição
 (§4.2). Formas soltas por extenso depois da definição também viraram sigla

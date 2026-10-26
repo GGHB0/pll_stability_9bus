@@ -12,7 +12,7 @@ source: pll_stability_9bus.slx (extraído via XML interno)
 ```matlab
 omega  = 2π × 60          % rad/s
 Vcc    = 136363.6 V       % barramento CC (90909.09 × 1.5) — override de simulação, ver [[params-workflow]]
-Ts     = 5e-6 s           % passo EMT (200 kHz)
+Ts     = 5e-6 s           % passo elétrico (200 kHz)
 fsw    = 5000 Hz          % frequência de chaveamento
 Tsc    = 2e-4 s           % passo do controle (5 kHz)
 
@@ -175,5 +175,5 @@ Ver `.claude/skills/slx-runner/SKILL.md` para uso completo.
 - **PWM é SPWM** (comparador com portadora triangular), não SVPWM.
 - **Controle de corrente sem desacoplamento ωL nem feedforward de v_g:** PI → notch → `m_dq` direto, sem `/V_cc` (Mux com eixo 0 = 0). A teoria da TeseAGP prevê o desacoplamento; a implementação não ([[agp-current-control-theory]]).
 - **Onde entram v_gd e v_gq (tensão da rede em dq):** só no PLL, e só o v_q (o módulo vai para scope). O controle de corrente não recebe tensão nenhuma: as 4 entradas do PWM Control são I_d,ref, I_q,ref, I_d e I_q. A única tensão que chega às referências é o **módulo da tensão do inversor**, filtrado (τ = 5 ms), na MATLAB Function do ONS. Base da Figura 3.1 do TCC (`assets/diagrams/current_control_dq_blocos.svg`).
-- **Ts = 5 µs** (EMT), **Tsc = 200 µs** (controle) — razão de 40× entre passos.
+- **Ts = 5 µs** (elétrico), **Tsc = 200 µs** (controle) — razão de 40× entre passos.
 - `wres = 9068.99 rad/s` → `fres ≈ 1443 Hz` (não confundir rad/s com Hz).

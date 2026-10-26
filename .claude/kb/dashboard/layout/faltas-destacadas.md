@@ -84,7 +84,7 @@ Cuidados na revisão do texto:
   `line7_8/3phase_bad_pll` da safra de 01/10 também perde
   ([[cenarios-simulados]]), e o §5.4 ainda está para ser refeito.
 - "Usina" em vez de "UFV" no texto corrido. Na legenda do desenho, UFV.
-- Sem em-dash e sem "EMT" (regras do deck).
+- Sem em-dash e sem a sigla de transitórios eletromagnéticos (regras do deck).
 
 ## Relacionados
 

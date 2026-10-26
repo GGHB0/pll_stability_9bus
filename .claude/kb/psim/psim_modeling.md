@@ -74,7 +74,7 @@ Consistências com o projeto atual (`CLAUDE.md`):
 
 > **Numeração arbitrária:** os prefixos `01`/`04` dos arquivos não indicam
 > ordem nem sequência — são só rótulos. São dois esquemáticos
-> independentes (um sistema EMT completo e uma bancada de controle).
+> independentes (um sistema completo e uma bancada de controle).
 
 ## Lacunas — PENDENTE (opcional, coletar com o GGHB)
 
@@ -96,7 +96,7 @@ de Thévenin na barra de conexão** (`Rth` = 0,0100 Ω, `Lth` = 1,16 mH). Isolar
 o conversor dessa forma permite validar o controle de corrente e o laço de
 sincronismo sem a influência das demais máquinas. Foram construídos dois
 esquemáticos: uma **bancada de projeto do controle de corrente**
-(planta RL × LCL) e o **sistema EMT completo** (VSC + LCL + SRF-PLL com
+(planta RL × LCL) e o **sistema completo** (VSC + LCL + SRF-PLL com
 PD/PI/VCO + SPWM, com degrau de referência).
 
 ### Cronologia da etapa 1 (relato do Victor, 2026-10-17)

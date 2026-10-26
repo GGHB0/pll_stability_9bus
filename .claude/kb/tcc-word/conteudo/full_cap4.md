@@ -14,7 +14,7 @@ metadata:
 
 ## Introdução do Capítulo 4 *(✅ redigida)*
 
-Este capítulo apresenta a análise e a discussão dos resultados obtidos a partir das simulações de transitórios eletromagnéticos (EMT) realizadas nos ambientes PSIM e MATLAB/Simulink, conforme a metodologia descrita no Capítulo 3. O objetivo central desta etapa consiste em avaliar, de forma quantitativa e crítica, o desempenho dinâmico do algoritmo de sincronismo SRF-PLL, bem como identificar seus limites de robustez quando aplicado a um Inversor Conectado à Rede (ICR) submetido a diferentes contingências do sistema elétrico.
+Este capítulo apresenta a análise e a discussão dos resultados obtidos a partir das simulações de transitórios eletromagnéticos realizadas nos ambientes PSIM e MATLAB/Simulink, conforme a metodologia descrita no Capítulo 3. O objetivo central desta etapa consiste em avaliar, de forma quantitativa e crítica, o desempenho dinâmico do algoritmo de sincronismo SRF-PLL, bem como identificar seus limites de robustez quando aplicado a um Inversor Conectado à Rede (ICR) submetido a diferentes contingências do sistema elétrico.
 
 A análise concentra-se tanto na resposta interna do PLL, quanto nos impactos sistêmicos observados na injeção de potência ativa e reativa pelo inversor. Dessa forma, busca-se estabelecer uma relação direta entre a estabilidade do sincronismo e a qualidade da energia fornecida à rede, aspecto fundamental para o atendimento aos requisitos dos códigos de rede modernos.
 

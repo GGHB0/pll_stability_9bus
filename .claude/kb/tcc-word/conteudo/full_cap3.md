@@ -8,7 +8,7 @@ metadata:
 
 # TCC — Capítulo 3: Metodologia de Projeto e Simulação (texto completo)
 
-A metodologia desenvolvida neste trabalho fundamenta-se em uma abordagem quantitativa e analítica, estruturada sobre a modelagem matemática e a simulação computacional de transitórios eletromagnéticos (EMT). O objetivo central consiste em avaliar a robustez e o desempenho dinâmico do algoritmo de sincronismo SRF-PLL aplicado a inversores conectados à rede frente a diferentes cenários de contingência.
+A metodologia desenvolvida neste trabalho fundamenta-se em uma abordagem quantitativa e analítica, estruturada sobre a modelagem matemática e a simulação computacional de transitórios eletromagnéticos. O objetivo central consiste em avaliar a robustez e o desempenho dinâmico do algoritmo de sincronismo SRF-PLL aplicado a inversores conectados à rede frente a diferentes cenários de contingência.
 
 **Estrutura metodológica — 4 etapas sequenciais:**
 - (i) definição e justificativa técnica do ecossistema multiplataforma de simulação
@@ -38,7 +38,7 @@ A representação do sistema elétrico é necessária para a avaliação da esta
 
 O sistema teste utilizado para a análise sistêmica no ambiente MATLAB/Simulink baseia-se no padrão IEEE 9 barras, conhecido como sistema Anderson-Fouad, cujos dados de parâmetros estão descritos em Anderson e Fouad (2003, p. 38). A principal adaptação realizada consiste na substituição da máquina síncrona originalmente conectada à Barra 2 (G2) pelo modelo do VSI. Desta forma, o sistema passa a ser composto por geradores síncronos (G1 e G3) e pelo Recurso Baseado em Inversor (RBI) conectado à Barra 2.
 
-Para a simulação de transitórios eletromagnéticos (EMT) no PSIM, o sistema de transmissão foi reduzido a um equivalente de Thévenin no Ponto de Conexão Comum (PCC), definido como Barra 2. Essa simplificação é adotada para isolar a análise da dinâmica do VSI e do SRF-PLL, focando no comportamento do ponto de conexão.
+Para a simulação de transitórios eletromagnéticos no PSIM, o sistema de transmissão foi reduzido a um equivalente de Thévenin no Ponto de Conexão Comum (PCC), definido como Barra 2. Essa simplificação é adotada para isolar a análise da dinâmica do VSI e do SRF-PLL, focando no comportamento do ponto de conexão.
 
 A impedância de Thévenin vista pelo inversor foi obtida por meio da matriz de impedância nodal (Z-barra). Inicialmente, procedeu-se à montagem da matriz de admitância nodal (Y-barra) do sistema IEEE 9 barras. Em seguida, a inversão da matriz Y-barra resultou na matriz Z-barra. A impedância de Thévenin é dada pelo elemento diagonal da matriz Z-barra. Essa abordagem garante que a simplificação incorpore a influência das linhas e geradores do sistema base no equivalente utilizado no PSIM.
 

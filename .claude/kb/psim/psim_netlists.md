@@ -1,7 +1,7 @@
 ---
 name: psim-netlists
 aliases: [psim-netlists]
-description: Topologia dos circuitos PSIM 01 (sistema EMT completo) e 04 (bancada de projeto do controle de corrente), lida das netlists em texto
+description: Topologia dos circuitos PSIM 01 (sistema completo) e 04 (bancada de projeto do controle de corrente), lida das netlists em texto
 source: PSim/01_...txt e PSim/04_...txt (netlists PSIM, GGHB, 2026-07-22)
 ---
 
@@ -15,7 +15,7 @@ visão geral em [[psim-modeling]].
 > A numeração dos arquivos (`01`, `04`) é **arbitrária** — não indica ordem
 > nem sequência de circuitos. São dois esquemáticos independentes.
 
-## Sistema completo — EMT (arquivo `01_...`)
+## Sistema completo (arquivo `01_...`)
 
 Inversor trifásico de 2 níveis conectado à rede via filtro LCL, com
 SRF-PLL e SPWM. `.TIME`: passo 20 µs, total 1 s.

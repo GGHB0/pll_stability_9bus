@@ -98,7 +98,7 @@ citando normas distintas:
 | Símbolo | Papel na norma de origem | Usado neste projeto? | Valor aqui |
 |---|---|---|---|
 | `Isc` | corrente de curto-circuito disponível no PCC — só serve para escolher a linha da Tab.2 do IEEE 519-2014 (razão Isc/IL) | **Não.** A nota "c" da Tab.2 fixa a linha `<20` (a mais restritiva) para toda unidade geradora, independente do Isc/IL real na Barra 2 | — |
-| `IL` | corrente de demanda máxima, média móvel de 12 meses de operação real — base de TODOS os limites da Tab.2 do IEEE 519-2014, individuais e do índice agregado (TDD) | **Não.** Não existe numa simulação EMT de segundos | — |
+| `IL` | corrente de demanda máxima, média móvel de 12 meses de operação real — base de TODOS os limites da Tab.2 do IEEE 519-2014, individuais e do índice agregado (TDD) | **Não.** Não existe numa simulação de segundos | — |
 | `I_rated` | corrente nominal do inversor (dado de projeto) — substitui `IL` em toda a Tabela 15 do guia 1547.2-2023: limites individuais **e** o índice agregado, que muda de nome para TRD | **Sim — é a base de todos os limites de corrente do dashboard** | `1,0 pu`, confirmado por `id_ufv_ref_pu = 1,0` constante em regime permanente (`output/results/regime/sim_data.csv`) |
 
 Consequência: os limites de corrente do dashboard (4% h ímpar; 1%/2%/3% em
@@ -119,7 +119,7 @@ percurso até ela.**
 |---|---|
 | o limite numérico (4% ímpar; 1/2/3% na 2ª/4ª/6ª; 3% de tensão) | a razão `Isc/IL` e por que a linha `<20` é a obrigatória (nota "c") |
 | a base do percentual, em linguagem direta ("corrente nominal do inversor", "tensão nominal da Barra 2") | a notação `Isc`/`IL`/`I_rated` e o mapeamento entre normas (tabela acima) |
-| a norma citada de forma curta (IEEE 1547-2018 §7.3; IEEE 519-2014 Tab.1) | por que `IL` foi descartado (não computável em simulação EMT) e a genealogia 519 → 1547 dos valores |
+| a norma citada de forma curta (IEEE 1547-2018 §7.3; IEEE 519-2014 Tab.1) | por que `IL` foi descartado (não computável em simulação de segundos) e a genealogia 519 → 1547 dos valores |
 | o que a cor significa e em quais segmentos vale | os achados de verificação (isenção por segmento, resíduo dq em 60 Hz) |
 | referências em forma curta, para o leitor achar a fonte | a citação bibliográfica completa (`references:` no frontmatter) |
 

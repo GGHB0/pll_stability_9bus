@@ -128,7 +128,7 @@ Whenever the notebook changes any of these:
 These do not come from the notebook; they are simulation configuration:
 
 ```matlab
-Ts   = 5e-6;    % EMT step (200 kHz)
+Ts   = 5e-6;    % passo elétrico (200 kHz)
 fsw  = 5000;    % PWM switching frequency [Hz]
 Tsc  = 2e-4;    % Control step (5 kHz)
 ```

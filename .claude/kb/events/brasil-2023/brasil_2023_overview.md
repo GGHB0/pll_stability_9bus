@@ -58,6 +58,23 @@ abaixo do modelado.
   teleproteção (POTT) na região Nordeste ao longo do primeiro ~1,9 s — ver
   [[brasil-2023-root-causes]] para a árvore de causas completa.
 
+## Valores reais × limites (RAP §2.1, §3.1, §5.6)
+
+| Grandeza | Real | Limite/esperado |
+|---|---|---|
+| Corrente Quixadá–Fortaleza II (T0) | 2.375 A | limite normal 2.390 A |
+| Sobrecorrente ligada ao SOTF (erro de implementação, 100 s) | pickup 2.310 A | deveria ficar acima do carregamento máximo |
+| FNEN / FNESE / FNS | 5.879 / 6.392 / 528 MW | 5.800 / 7.000 / 4.000 MW |
+| P. Dutra–Boa Esperança (T0+530 ms) | 2.153 A; Z a 55 Ω/s | 2.000 A; 1.500 Ω/s separa curto de oscilação |
+| Milagres–Icó (T0+570 ms) | 897 A a 0,54 pu | 810 A |
+| Religamento da linha de origem (T0+5,183 s) | 2.600 A | 2.390 A |
+
+Tensões em T0+530 ms (Fig. 3-4): Icó 0,47; Banabuiú 0,52; Milagres 0,54;
+Açu III e Campo Grande III 0,57; Boa Esperança 0,68 pu. Fig. 5-28 (Açu III):
+a base oficial de modelos prevê retorno a ~1 pu; o PMU cai a ~0,6 pu em 0,6 s.
+O ONS só reproduziu o evento alterando o PPC e a lógica de injeção de corrente
+reativa sob falta dos inversores. Separação do Norte em T0+2,642 s (Fig. 3-77).
+
 ## Separação em ilhas elétricas
 
 O SIN se dividiu em 4 subsistemas, cada um com dinâmica própria:

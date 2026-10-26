@@ -54,8 +54,8 @@ aliases: [defesa-pendencias]
 
 - **Passada de texto em 20-22 (pendente, 2026-10-21)**: layout e frase de
   abertura entregues sem mexer no corpo, a pedido do Victor. Ainda na tela:
-  travessão nos 3 cartões do 20, "BAD_PLL" no cartão 2 do 20, "EMT" na
-  legenda do 20 e nos limites do 22. Só quando o Victor pedir.
+  travessão nos 3 cartões do 20, "BAD_PLL" no cartão 2 do 20, a sigla de transitórios eletromagnéticos na
+  legenda do 20 e nos limites do 22 (esta saiu em 2026-10-25). Só quando o Victor pedir.
 
 - **Reestruturação da MODELAGEM (decidida em 2026-10-18, Alternativa 1)**:
   5 slides na ordem do trabalho real (dq → 9 barras/Thévenin → bancada do
@@ -81,10 +81,10 @@ aliases: [defesa-pendencias]
   Tabela 4.1 desatualizada (+ "I" na monofásica B7; bifásica L8-9 reprovada
   fica fora). Opcional do validador: o regime "N e I" da legenda se apoia no
   §5.1, não no Cap. 4.
-- **Sem "EMT" no deck (Victor, 2026-10-19)**: termo fora de uso para eles,
-  embora o TCC entregue ainda o traga (Resumo, objetivo da §1, Cap. 6). Na
-  tela e na fala: "simulação" / "simulação computacional". Deck limpo desde
-  2026-10-20.
+- **Sem a sigla de transitórios eletromagnéticos (Victor, 2026-10-19; ampliado em 2026-10-25)**: o Oscar não
+  gostou da sigla. Saiu do deck (tela e notas), do TCC canônico (Resumo,
+  Abstract, objetivo da §1, Cap. 6) e de todo o repositório em 2026-10-25. Na
+  tela e na fala: "simulação" / "simulação computacional".
 - **Slide 14 = fluxo da análise (Victor, 2026-10-20)**: Simulink → CSV →
   Python → painel HTML, não as ferramentas da modelagem (Python/PSIM/Simulink
   da §4.2; essa leitura foi entregue e revertida). Entregue no mesmo dia

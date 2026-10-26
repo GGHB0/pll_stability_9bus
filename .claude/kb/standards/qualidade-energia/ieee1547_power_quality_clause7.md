@@ -78,7 +78,7 @@ a genealogia já registrada em
 
 RVC (Tabela 16), flicker, sobretensão e o roteiro de estudo de QEE ficam em
 [ieee1547_pq_other_clauses.md](ieee1547_pq_other_clauses.md) — nenhum é aplicado
-ao dashboard, mas o §7.5 endossa explicitamente a metodologia EMT do TCC.
+ao dashboard, mas o §7.5 endossa explicitamente a metodologia de simulação do TCC.
 
 ## §7.3 — Limitação de distorção de corrente (págs. impressas 144-146)
 
@@ -145,7 +145,7 @@ E então, pág. impressa 145:
 
 **Achado mais forte do capítulo para este TCC.** O requisito é definido numa
 condição idealizada que a própria norma admite ser irrealizável em campo, e que
-existe para **ensaio de tipo**. Uma simulação EMT com um único inversor e sem
+existe para **ensaio de tipo**. Uma simulação com um único inversor e sem
 outras fontes harmônicas **é exatamente essa condição**. Ou seja: o 519 é
 critério **estatístico de campo** (percentis sobre semanas, inaplicável aqui),
 enquanto o 1547 §7.3 é critério de **condição controlada** — metodologicamente

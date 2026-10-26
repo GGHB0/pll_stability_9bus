@@ -49,7 +49,7 @@ Diante do exposto, o objetivo geral deste trabalho é analisar, de forma crític
 
 **Objetivos específicos:**
 1. Desenvolver a modelagem matemática do sistema inversor-rede e suas malhas de controle, com foco na dinâmica do PLL em referencial síncrono (dq)
-2. Identificar, por meio de simulações computacionais em ambiente de transitórios eletromagnéticos (EMT), as condições operacionais que comprometem o rastreamento de fase e frequência
+2. Identificar, por meio de simulações computacionais em ambiente de transitórios eletromagnéticos, as condições operacionais que comprometem o rastreamento de fase e frequência
 3. Avaliar os impactos da perda de desempenho, como oscilações de potência e sobrecorrentes
 4. Analisar a capacidade do inversor em atender aos requisitos de suporte de reativos dos códigos de rede
 5. Identificar os fatores críticos que afetam a estabilidade do sincronismo, como os ganhos do controlador PI e a impedância da rede

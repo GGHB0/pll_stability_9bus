@@ -46,7 +46,7 @@ ONS concluiu que inversores eólicos/fotovoltaicos tiveram desempenho "aquém do
 ## Objetivos Específicos (Cap. 1)
 
 1. Modelagem matemática do sistema inversor-rede (foco na dinâmica do PLL em dq)
-2. Identificar condições que comprometem rastreamento de fase/frequência (via simulação EMT)
+2. Identificar condições que comprometem rastreamento de fase/frequência (via simulação computacional)
 3. Avaliar impactos: oscilações de potência, sobrecorrentes
 4. Analisar capacidade de suporte reativo (LVRT)
 5. Identificar fatores críticos: ganhos Kp/Ki do PI e impedância da rede

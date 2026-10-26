@@ -10,6 +10,12 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-26: revisão final de auditoria sobre a base de 25/10 (entregue)
+
+- Base restaurada do backup _20261025_162639 (MD5 21891b35…, com diagramas dq no 6 e Cambria Math em 7, 10-14, 23-24).
+- Correções aplicadas (C:\Temp\defesa_final_revisao\gen_revisao_final.py): figura da cadeia causal no 4 sem sobreposição e com subscritos reais; rodapé do 19 para o Modo Apresentação; slide 20 com print 16:10 do Modo Apresentação (8 capítulos), frase de abertura, legenda e 3 cartões sem BAD_PLL/68 MB/travessões; slide 21 (9,2% Vd, escorregamento de ciclo, remoção de barra duplicada); limpeza de termos proibidos, travessões e botões de navegação em 22-30; notas sincronizadas nos 30 slides (24,7 min, 48% Bruno / 52% Victor).
+- check_pptx --tcc 0 falhas; MD5 901949dd… → e931c642978da38d41586a4ebb6aa93b, backup _20261026_170904.
+
 ## 2026-10-25: sigla de transitórios eletromagnéticos fora do deck (entregue)
 
 - Pedido do Oscar. 7 trocas: legenda do 20 e notas do 20, limites do 22 e
@@ -184,14 +190,6 @@ aliases: [defesa-historico-entregas]
 - diff: só os títulos; check_pptx 0 falhas; slide-validator sem bloqueio.
   `entrega.ps1` abortou 2× (PowerPoint do finalize ainda saindo): espera
   passou de 30 para 90 s, e a entrega do 8 passou de primeira.
-
-## 2026-10-19: título curto e frase de abertura no slide 5 (entregue)
-
-- Pedido do Victor: título menor. "Fonte renovável" + frase em 20 pt
-  com barra azul (opção C de 4 variantes, `folha_opcoes.py` novo).
-  Staging `C:\Temp\defesa_titulo5\`. MD5 f2c78deb… → 0c7c30ea9529f85012aa5ad8452b810c;
-  backup `_backups\defesa\Defesa_TCC_SRF-PLL_backup_20261019_212538.pptx`.
-  diff: só o título do slide 5; check_pptx 0 falhas; slide-validator sem bloqueio.
 
 ## Antes de 2026-10-19
 

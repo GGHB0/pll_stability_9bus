@@ -48,6 +48,10 @@ RAP_PDF = Path(r"C:\Users\victo\OneDrive\Meus Bagulhos\Arquivos\UERJ\TCC - Victo
                r"\Bibliografia\RAP 2023.08.15 08h030min versão final.pdf")
 
 
+if not RAP_PDF.exists():
+    RAP_PDF = Path.home() / "OneDrive" / "UERJ" / "TCC - Victor e Bruno" / "Bibliografia" / "RAP 2023.08.15 08h030min versão final.pdf"
+
+
 def rap_fig(nome, pagina, clip) -> Path:
     """Recorte de uma figura do RAP-ONS 00012/2023 (página 1-based, clip em pt)."""
     dst = CACHE / f"rap_{nome}.jpg"
@@ -1336,10 +1340,8 @@ eq(r"\Delta f = \frac{1}{T} = \frac{1}{0{,}1\ \mathrm{s}} = 10\ \mathrm{Hz}",
    onde="Com 6 ciclos inteiros, 60 e 120 Hz caem exatamente em pontos do espectro, sem "
         "vazamento. Por isso o gráfico do capítulo 4 tem pontos a cada 10 Hz.")
 nums([["9,2%", "retenção de V<sub>d</sub> na Barra 7, trifásica, nominal (exemplo da fala)"]])
-box("banca", "<b>Dos dados aos resultados.</b> É assim que lemos os resultados: abrimos o "
-    "painel ao vivo.")
-box("cuidado", "O rodapé do slide ainda diz &#8220;primeiro a partida do inversor, depois o "
-    "painel&#8221;: hoje a partida é o capítulo 2 do próprio painel.")
+box("banca", "<b>Dos dados aos resultados.</b> É assim que lemos os resultados: abrimos agora "
+    "o painel interativo ao vivo, no modo apresentação.")
 ponte("slide 20, abrir o painel.")
 
 # =============================================================================
@@ -1362,10 +1364,9 @@ n.p("Número do capítulo (k/8), a referência no TCC (seção, figura, tabela),
     "frase do passo, chips com os casos (clicar liga e desliga), o gráfico e, embaixo, "
     "cartões com os números de cada caso. Clicar num cartão sai do palco e abre o cenário "
     "nas abas.")
-box("cuidado", "Os cartões do slide 20 ainda descrevem a demonstração antiga (três cliques, "
-    "&#8220;BAD_PLL&#8221;, &#8220;cycle slipping&#8221;, "
-    "&#8220;68 MB&#8221;), e as notas também. O roteiro segue o painel como ele está hoje. "
-    "O tempo da demonstração ainda não foi fechado.")
+box("cuidado", "Os três cartões do slide 20 resumem os três blocos do Modo Apresentação "
+    "(Capítulos 1 a 3, Capítulos 4 e 5, e Capítulos 6 a 8), servindo de roteiro visual antes "
+    "de alternar para o navegador.")
 
 # =============================================================================
 # PARTE III
@@ -1635,10 +1636,9 @@ n.p("A classificação clássica de estabilidade (ângulo, frequência, tensão)
 box("banca", "<b>Qual é a conclusão central?</b> Permanecer conectado é insuficiente: a "
     "conformidade deve auditar o erro angular dinâmico durante a falta e em toda a "
     "recomposição.")
-box("cuidado", "O cartão 3 e as notas ainda dizem &#8220;cycle slipping&#8221;; o palco diz "
-    "&#8220;escorregamento de ciclo&#8221;. O TCC diz &#8220;mais de 250 vezes&#8221;; o "
-    "cartão, &#8220;250&#215;&#8221;. As notas falam em &#8220;9,2% de tensão "
-    "residual&#8221;: é retenção de V<sub>d</sub>.")
+box("cuidado", "No slide 21, o cartão 1 traz &#8220;9,2% Vd&#8221; (retenção de V<sub>d</sub> "
+    "na Barra 7), o cartão 2 traz &#8220;250&#215; mais 120 Hz&#8221; (no TCC, &#8220;mais de "
+    "250 vezes&#8221;) e o cartão 3 traz &#8220;escorregamento de ciclo&#8221;.")
 ponte("o que fica para depois.")
 
 slide(22, "Trabalhos futuros e encerramento", "Conclusão", "Victor, Bruno, Victor", "Cap. 7")
@@ -1687,9 +1687,9 @@ tab(["Quando a banca perguntar", "Onde está no slide"], [
     ["Ganhos de corrente e do PLL", "coluna 3: 14,74 e 3.537,8 (corrente); 460 e 105.820; "
      "92 e 21.164"],
 ], [5.0, 9.7])
-box("cuidado", "Vários desses valores não estão no TCC (são do modelo). Leia os números, não "
-    "os rótulos do slide, que ainda trazem &#8220;24 cenários&#8221; e &#8220;params.m&#8221;. Por que o V<sub>cc</sub> é 1,5 vezes o do cálculo: com o valor "
-    "do cálculo, o PWM senoidal sobremodulava na escala de 100 MW.")
+box("cuidado", "Vários desses valores não estão no TCC (são do modelo). Por que o "
+    "V<sub>cc</sub> é 1,5 vezes o do cálculo: com o valor do cálculo, o PWM senoidal "
+    "sobremodulava na escala de 100 MW.")
 
 slide(24, "Tabelas 5.1, 5.2 e 5.3 completas", "Apêndice", "não tem fala", "Cap. 5")
 box("msg", "As três tabelas do Cap. 5 num slide: trifásicas com o suporte do ONS e "
@@ -1698,9 +1698,9 @@ n.p("É a mesma informação do capítulo 8 do painel, em formato de slide. Use 
     "não estiver à mão. O cartão de baixo resume por que o efeito da sintonia se inverte "
     "entre a Barra 6 (a inadequada filtra melhor) e a Barra 7 (a inadequada recupera "
     "devagar): é a história dos capítulos 5 e 6.")
-box("cuidado", "O cartão da esquerda cita &#8220;cycle slipping&#8221; e um ganho efetivo "
-    "&#8220;12 vezes&#8221; menor; prefira a explicação do capítulo 6 deste roteiro "
-    "(&#969;<sub>n</sub> e &#958; caem com &#8730;U).")
+box("cuidado", "O cartão da esquerda menciona um ganho efetivo &#8220;12 vezes&#8221; menor; "
+    "prefira a explicação do capítulo 6 deste roteiro (&#969;<sub>n</sub> e &#958; caem com "
+    "&#8730;U).")
 
 n.h("Slides ocultos: a reserva do painel")
 tab(["Slide", "Substitui o capítulo", "Conteúdo"], [

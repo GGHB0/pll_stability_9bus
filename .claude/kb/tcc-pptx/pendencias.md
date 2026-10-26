@@ -81,6 +81,8 @@ aliases: [defesa-pendencias]
   Tabela 4.1 desatualizada (+ "I" na monofásica B7; bifásica L8-9 reprovada
   fica fora). Opcional do validador: o regime "N e I" da legenda se apoia no
   §5.1, não no Cap. 4.
+- **Exceção aprovada no slide 2 (2026-10-21)**: Gráfico de barras da evolução de capacidade instalada de renováveis variáveis no SIN (2020 a 2025: 25,5 GW para 96,8 GW, +279% vs +24% da carga média nacional de 69,2 para 85,8 GWmed) da apresentação oficial do ONS ao Senado Federal (15/10/2025). Conecta a motivação da tese diretamente ao sistema elétrico brasileiro e aos desafios operacionais de conversores no SIN.
+
 - **Sem a sigla de transitórios eletromagnéticos (Victor, 2026-10-19; ampliado em 2026-10-25)**: o Oscar não
   gostou da sigla. Saiu do deck (tela e notas), do TCC canônico (Resumo,
   Abstract, objetivo da §1, Cap. 6) e de todo o repositório em 2026-10-25. Na

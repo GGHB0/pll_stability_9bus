@@ -26,6 +26,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 - [psim/](../psim/index.md) — saem 0, chegam 4
 - [simulation/](../simulation/index.md) — saem 2, chegam 1
 - [standards/](../standards/index.md) — saem 1, chegam 3
+- [tcc-pptx/](../tcc-pptx/index.md) — saem 0, chegam 2
 
 Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)
 <!-- kb-links:end -->

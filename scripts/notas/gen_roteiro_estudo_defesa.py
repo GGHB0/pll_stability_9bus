@@ -1,5 +1,5 @@
 """Roteiro de estudo da defesa: slide a slide e capítulo a capítulo do palco, na ordem
-da apresentação (PPTX 1-20 → painel HTML → PPTX 21-22), com fundamentos de cada tema
+da apresentação (PPTX 1-21 → painel HTML → PPTX 22-23), com fundamentos de cada tema
 e conteúdo adicional (apêndice) no fim.
 
     python gen_roteiro_estudo_defesa.py [--preview <pasta>]
@@ -105,6 +105,7 @@ KIND = {  # fundo, barra, rótulo
     "alem": ("#EAF4EC", "#3D8A57", "ALÉM DO TCC · para entender e responder, não para a fala"),
     "passo": ("#F4F7F9", "#5A6B78", "PASSOS DO CAPÍTULO"),
     "fala": ("#FBF6EC", "#8A6D3B", "O QUE FALAR · tópicos para dizer com as suas palavras"),
+    "base": ("#EEF2F7", "#34495E", "RELEMBRANDO CONTROLE · em uma frase"),
 }
 
 
@@ -253,10 +254,10 @@ def imagem_palco(png, legenda, alt=8.6):
 # =============================================================================
 n.h("Como usar este roteiro")
 n.p("O roteiro segue a apresentação na ordem real, uma página (ou mais) por slide: os "
-    "slides 1 a 19 no PowerPoint, o slide 20 como porta para o painel HTML, os oito "
-    "capítulos do <b>modo apresentação</b> e a volta ao PowerPoint nos slides 21 e 22. O "
+    "slides 1 a 20 no PowerPoint, o slide 21 como porta para o painel HTML, os oito "
+    "capítulos do <b>modo apresentação</b> e a volta ao PowerPoint nos slides 22 e 23. O "
     "apêndice do deck e os slides ocultos ficam no fim, como <b>conteúdo adicional</b>. Não "
-    "há texto de fala para decorar; na modelagem (slides 5 a 17), uma caixa <b>O que falar</b> "
+    "há texto de fala para decorar; na modelagem (slides 5 a 18), uma caixa <b>O que falar</b> "
     "dá os tópicos de cada um, na ordem e com quem fala.")
 n.p("Cada página tem a miniatura e, embaixo, blocos sempre na mesma ordem:")
 bul("<b>Mensagem</b>: a frase que o slide tem de deixar na cabeça da banca.",
@@ -277,14 +278,14 @@ n.h("O percurso")
 tab(["Trecho", "Onde", "Conteúdo", "Fala"], [
     ["Abertura", "PPTX 1", "Capa, autores, orientadores", "Bruno, Victor"],
     ["Motivação", "PPTX 2-4", "Renováveis, blecautes, problema e objetivos", "Bruno, Victor"],
-    ["Modelagem", "PPTX 5-17", "Inversor, Park, SRF-PLL, rede, sintonia, corrente, ONS",
+    ["Modelagem", "PPTX 5-18", "Inversor, Park, SRF-PLL, rede, sintonia, LCL, corrente, ONS",
      "alternada"],
-    ["Método", "PPTX 18-19", "Protocolo de falta e fluxo de análise", "Bruno, Victor"],
-    ["Porta", "PPTX 20", "Alt+Tab para o navegador, botão Modo apresentação", "Victor"],
+    ["Método", "PPTX 19-20", "Protocolo de falta e fluxo de análise", "Bruno, Victor"],
+    ["Porta", "PPTX 21", "Alt+Tab para o navegador, botão Modo apresentação", "Victor"],
     ["Resultados", "HTML 1-8", "Faltas destacadas ... Todos os casos (passador avança)",
      "a definir"],
-    ["Conclusão", "PPTX 21-22", "Síntese e trabalhos futuros", "Bruno, Victor"],
-    ["Adicional", "PPTX 23-30", "Apêndice e slides ocultos, para perguntas", "os dois"],
+    ["Conclusão", "PPTX 22-23", "Síntese e trabalhos futuros", "Bruno, Victor"],
+    ["Adicional", "PPTX 24-31", "Apêndice e slides ocultos, para perguntas", "os dois"],
 ], [2.3, 2.6, 7.6, 2.2])
 
 n.h("A história em cinco frases")
@@ -368,30 +369,38 @@ FALAS = {
       "saem as referências de corrente."),
      ("Bruno", "Cartão de baixo, à esquerda: é a equação de potência em dq invertida. Só vale com "
       "v<sub>q</sub> = 0, eixo d alinhado, e quem garante isso é o PLL.")],
-13: [("Bruno", "Figura 3.1, eixo por eixo: erro &#8594; PI &#8594; notch na ressonância do LCL "
+13: [("Bruno", "&#8220;Antes da malha de corrente, o filtro que liga o inversor à rede.&#8221; "
+      "Percorra a figura da esquerda para a direita: barramento CC constante, inversor a 5 kHz, "
+      "o LCL e o PCC. Passos 1 e 2: L<sub>1</sub> sai do limite de ondulação da corrente "
+      "(depende de V<sub>cc</sub> e f<sub>sw</sub>); L<sub>2</sub> é proporcional a L<sub>1</sub>; "
+      "somados, L<sub>est</sub> = 30,71 mH, que volta no PI de corrente."),
+     ("Victor", "Passo 3: o capacitor fecha a ressonância em 9.068,99 rad/s; aponte a régua, entre "
+      "a rede e o chaveamento. Passo 4: resistências em série com os indutores e o capacitor "
+      "atenuam o pico. Feche com a caixa da direita: barramento CC em valor constante, para "
+      "manter a margem de modulação.")],
+14: [("Bruno", "Figura 3.1, eixo por eixo: erro &#8594; PI &#8594; notch na ressonância do LCL "
       "&#8594; índice de modulação &#8594; PWM a 5 kHz no inversor de dois níveis."),
-     ("Victor", "O LCL ressoa em 9.068,99 rad/s, entre a fundamental e o chaveamento; o notch corta "
-      "essa frequência. O PI segue a mesma forma canônica do PLL: &#958; = 0,707 e "
+     ("Victor", "O filtro é o do slide anterior; o notch corta a ressonância dele. O PI segue a mesma forma canônica do PLL: &#958; = 0,707 e "
       "&#969;<sub>n</sub> = 4&#8730;2&#183;f<sub>g</sub>, a corrente acomoda em um ciclo; "
       "K<sub>p</sub> = 8f<sub>g</sub>L<sub>est</sub> e K<sub>i</sub> = "
       "32f<sub>g</sub>&#178;L<sub>est</sub>, com L<sub>est</sub> = 30,71 mH. Feche com o rodapé: "
       "são dois PIs, um sincroniza, o outro faz a corrente seguir a referência.")],
-14: [("Bruno", "No modelo final, a referência fixa sai. O esqueleto é o do slide 12, mas "
+15: [("Bruno", "No modelo final, a referência fixa sai. O esqueleto é o do slide 12, mas "
       "i<sub>d</sub> e i<sub>q</sub> vêm do bloco laranja do Submódulo 2.10, que lê a tensão no PCC "
       "e conhece a corrente nominal e a máxima. É a Figura 4.2."),
      ("Victor", "Repare que o PLL aparece duas vezes. Frase para guardar: &#8220;o ONS decide "
       "<b>quanto</b>, o PLL decide <b>em que direção</b>.&#8221;")],
-15: [("Victor", "O bloco faz três coisas. Um: olha a tensão; abaixo de 0,85 pu pede reativo pela "
+16: [("Victor", "O bloco faz três coisas. Um: olha a tensão; abaixo de 0,85 pu pede reativo pela "
       "rampa, zero em 0,85 e nominal em 0,5. Dois: limita ao máximo do conversor."),
      ("Bruno", "Três: a prioridade, o círculo. O eixo d fica com o que sobra, por isso a potência "
       "ativa cai na falta; abaixo de 0,5 pu quase nada sobra. Por quê: dar o suporte de tensão sem "
       "passar do limite do equipamento.")],
-16: [("Bruno", "A mesma lógica, como o código roda: dois testes de tensão escolhem o caminho; na "
+17: [("Bruno", "A mesma lógica, como o código roda: dois testes de tensão escolhem o caminho; na "
       "faixa normal, reativo zero e eixo d na nominal."),
      ("Victor", "Nos caminhos de defeito, primeiro limita o reativo, depois aplica a prioridade, e "
       "as referências vão para a malha de corrente. Rodapé: eliminada a falta, a tensão volta à "
       "faixa normal e a ativa retorna.")],
-17: [("Victor", "Juntando tudo, Figura 4.2. Em cima a potência: inversor, LCL e Barra 2. Embaixo "
+18: [("Victor", "Juntando tudo, Figura 4.2. Em cima a potência: inversor, LCL e Barra 2. Embaixo "
       "o controle: o PLL dá o ângulo, o bloco do ONS dá as referências e as malhas comandam as "
       "chaves."),
      ("Bruno", "Uma frase: &#8220;é esse sistema que as faltas no IEEE 9 barras vão testar.&#8221;")],
@@ -405,7 +414,7 @@ def fala(num):
 # =============================================================================
 # PARTE I
 # =============================================================================
-parte("PARTE I · PowerPoint, slides 1 a 19",
+parte("PARTE I · PowerPoint, slides 1 a 20",
       "Motivação (2-4), modelagem (5-17) e método (18-19). A modelagem é a parte mais "
       "teórica da defesa e a que mais rende pergunta: cada slide dela tem um bloco de "
       "fundamentos.")
@@ -485,7 +494,7 @@ eq(r"\Delta V \approx \dfrac{R\,P + X\,Q}{V} \approx \dfrac{X\,Q}{V} \qquad (X \
    onde="Quem injeta reativo perto da carga reduz a queda e sustenta a tensão; sem esse "
         "suporte, a tensão cai, as cargas puxam mais corrente e a queda piora: é o colapso "
         "de tensão. Por isso o diagnóstico do ONS fala em suporte dinâmico de reativos, e "
-        "por isso o Submódulo 2.10 (slide 15) pede corrente reativa na falta.")
+        "por isso o Submódulo 2.10 (slide 16) pede corrente reativa na falta.")
 sub("Fundamento: seguidor (GFL) e formador de rede (GFM)")
 n.p("O <b>seguidor de rede</b> (grid-following, o deste TCC) mede a tensão, estima o "
     "ângulo com o PLL e injeta corrente nesse ângulo: depende de uma rede que já exista e "
@@ -570,7 +579,7 @@ tab(["Barra (T0 + 530 ms)", "Tensão", "Barra (T0 + 530 ms)", "Tensão"], [
     ["Milagres II", "0,56 pu", "Presidente Dutra", "0,92 pu"],
 ], [4.2, 3.15, 4.2, 3.15])
 n.p("Para ter escala: no Submódulo 2.10, abaixo de 0,85 pu a usina já tem de injetar "
-    "corrente reativa adicional (slide 15), e 0,5 pu fica no meio da rampa. Barras de 230 kV "
+    "corrente reativa adicional (slide 16), e 0,5 pu fica no meio da rampa. Barras de 230 kV "
     "a 0,5 pu sem curto nenhum, meio segundo depois de uma única linha abrir, é a medida da "
     "gravidade.")
 
@@ -968,38 +977,173 @@ ponte("como o PLL encontra &#952;.")
 slide(7, "Estrutura do SRF-PLL", "Modelagem", "Victor, Bruno", "Fig. 4.3, §3.4, Eqs. (3.10)-(3.19)")
 box("msg", "O SRF-PLL gira o referencial dq até alinhar o eixo d com a tensão da rede.")
 fala(7)
-sub("Fundamento: os três blocos")
-bul("<b>Detector de fase (PD)</b>: a própria Park sobre a tensão medida. Como "
-    "v<sub>q</sub> = V&#183;sen(&#916;&#952;) &#8776; V&#183;&#916;&#952; para erro pequeno, "
-    "v<sub>q</sub> é o erro de ângulo multiplicado pela amplitude.",
-    "<b>Filtro de laço (PI)</b>: leva v<sub>q</sub> a zero e entrega a correção de "
-    "frequência &#916;&#969;.",
-    "<b>VCO</b>: em implementação digital, um integrador. Soma &#916;&#969; à nominal "
-    "&#969;<sub>0</sub> e integra para dar &#952;<sub>PLL</sub>, que volta para a Park da "
-    "tensão e para as malhas de corrente.")
-eq(r"\theta_{PLL} = \int(\omega_0 + \Delta\omega)\,dt \qquad "
-   r"\Delta\omega = K_{pPLL}\,v_q + K_{iPLL}\int v_q\,dt")
-sub("Fundamento: o modelo linear (o coração da defesa)")
-n.p("Linearizando, v<sub>q</sub> &#8776; U&#183;(&#952;<sub>g</sub> &#8722; "
-    "&#952;<sub>PLL</sub>), com U a amplitude em pu. A malha aberta tem dois integradores "
-    "(o do PI e o do VCO) e a malha fechada é de segunda ordem:")
+n.p("Este é o slide em que a banca mais pode puxar teoria de controle. A seção abaixo "
+    "remonta o raciocínio do zero, na ordem em que ele se encadeia: o que é uma malha, "
+    "onde cada bloco do PLL entra nela, como sai a função de transferência, como ler polos "
+    "e amortecimento, por que o erro vai a zero e por que o afundamento amolece o laço.")
+
+sub("1. Relembrando: a malha fechada")
+n.p("Toda malha de controle tem as mesmas peças: uma <b>referência</b> (o que se quer), "
+    "uma <b>saída</b> (o que se tem), um <b>comparador</b> que forma o erro, um "
+    "<b>controlador</b> que transforma o erro em ação e uma <b>planta</b> que responde à "
+    "ação. A realimentação faz a saída perseguir a referência: enquanto houver erro, o "
+    "controlador age. O SRF-PLL é exatamente isso, só que a grandeza controlada é um "
+    "<b>ângulo</b>:")
+tab(["Peça da malha", "No SRF-PLL", "Sinal"], [
+    ["Referência", "ângulo real da tensão da rede (não é medido direto)", "&#952;<sub>g</sub>"],
+    ["Saída", "ângulo estimado pelo PLL", "&#952;<sub>PLL</sub>"],
+    ["Comparador / sensor", "Park da tensão medida: compara os dois ângulos sem medir "
+     "&#952;<sub>g</sub>", "v<sub>q</sub> &#8776; U&#183;(&#952;<sub>g</sub> &#8722; "
+     "&#952;<sub>PLL</sub>)"],
+    ["Controlador", "PI (o &#8220;filtro de laço&#8221;)", "&#916;&#969;"],
+    ["Planta (atuador)", "VCO: integrador que transforma frequência em ângulo",
+     "&#952;<sub>PLL</sub> = &#8747;&#969;<sub>PLL</sub>dt"],
+], [3.4, 7.3, 4.0])
+box("base", "O PLL é um controlador de posição angular: a Park mede o erro, o PI decide a "
+    "correção de velocidade e o integrador transforma velocidade em posição.")
+
+sub("2. Os três blocos, um a um")
+bul("<b>Detector de fase (PD)</b>: a própria Park sobre a tensão medida. Como mostrado no "
+    "slide 6, v<sub>q</sub> = U&#183;sen(&#952;<sub>g</sub> &#8722; &#952;<sub>PLL</sub>). "
+    "Para erro pequeno, sen x &#8776; x, e v<sub>q</sub> &#8776; U&#183;&#916;&#952;: o erro "
+    "de ângulo multiplicado pela amplitude. O v<sub>d</sub> &#8776; U do diagrama é a "
+    "amplitude estimada, usada depois nas referências de corrente (slide 12).",
+    "<b>Filtro de laço (PI)</b>: recebe v<sub>q</sub> e entrega a correção de frequência "
+    "&#916;&#969;. A parte proporcional reage ao erro presente; a integral acumula o erro "
+    "passado e é ela que &#8220;memoriza&#8221; um desvio de frequência da rede.",
+    "<b>VCO</b> (oscilador controlado por tensão, nome herdado do PLL analógico): no "
+    "digital, é um integrador. Soma &#916;&#969; à nominal &#969;<sub>0</sub> = 2&#960;&#183;60 "
+    "e integra para dar &#952;<sub>PLL</sub>, que volta à Park da tensão (a realimentação "
+    "tracejada em laranja) e segue para as malhas de corrente.")
+eq(r"\Delta\omega = K_{pPLL}\,v_q + K_{iPLL}\int v_q\,dt \qquad "
+   r"\theta_{PLL} = \int(\omega_0 + \Delta\omega)\,dt")
+n.p("<b>Sinal da correção.</b> Se a rede está adiantada (&#952;<sub>g</sub> &gt; "
+    "&#952;<sub>PLL</sub>), v<sub>q</sub> &gt; 0, o PI aumenta &#916;&#969;, o PLL gira mais "
+    "depressa e alcança a rede. Se está atrasada, o contrário. Quando v<sub>q</sub> = 0, o "
+    "eixo d está sobre a tensão: o PLL travou.")
+n.p("<b>Por que o feed-forward &#969;<sub>0</sub>?</b> O ângulo da rede é uma rampa, "
+    "&#952;<sub>g</sub> = &#969;<sub>0</sub>t + &#966;. Somando &#969;<sub>0</sub> por fora, o "
+    "PI só precisa cuidar do <b>desvio</b> em torno de 60 Hz. Sem ele, a integral teria de "
+    "construir 377 rad/s a partir de zero na partida, com um transitório longo e grande.")
+
+sub("3. Relembrando: Laplace, integrador e PI")
+n.p("Em Laplace, derivar vira multiplicar por s e integrar vira dividir por s. Assim o VCO "
+    "é 1/s e o PI é:")
+eq(r"C(s) = K_p + \frac{K_i}{s} = \frac{K_p\,s + K_i}{s}",
+   onde="Um <b>polo na origem</b> (o integrador do PI) e um <b>zero</b> em s = "
+        "&#8722;K<sub>i</sub>/K<sub>p</sub>. Na sintonia nominal, 105.820/460 = 230 rad/s.")
+box("base", "Polo: valor de s que faz a função ir ao infinito, define o modo natural de "
+    "resposta. Zero: valor de s que zera a função, muda a forma da resposta (no PLL, aumenta "
+    "a sobre-elevação, ver slide 10). Integrador = polo em s = 0.")
+
+sub("4. Montando a malha fechada passo a passo")
+n.p("Com o PD linearizado (ganho U), a malha aberta é o produto dos três blocos:")
+eq(r"L(s) = U\cdot\frac{K_p s + K_i}{s}\cdot\frac{1}{s} = \frac{U(K_p s + K_i)}{s^2}",
+   onde="Da esquerda para a direita: U é o detector (Park linearizada), a fração do meio é "
+        "o PI e 1/s é o VCO. O s&#178; do denominador são os dois integradores.")
+n.p("Fechando a realimentação unitária, G = L/(1 + L):")
 eq(r"G(s) = \frac{\theta_{PLL}(s)}{\theta_g(s)} = "
    r"\frac{U K_p\,s + U K_i}{s^2 + U K_p\,s + U K_i}",
    onde="Com U = 1 pu, é a Eq. (3.18) do TCC. A forma com U é a de Karimi-Ghartemani "
         "(2014), eq. 6.4: s<super>2</super> + h<sub>0</sub>Us + h<sub>1</sub>U = 0.")
+n.p("O denominador é a <b>equação característica</b> (o cartão da direita do slide). "
+    "Igualando à forma canônica de 2ª ordem, termo a termo:")
 eq(r"s^2 + U K_p\,s + U K_i = 0 \quad\Leftrightarrow\quad s^2 + 2\xi\omega_n s + \omega_n^2 = 0",
-   onde="Com U = 1 pu: K<sub>p</sub> = 2&#958;&#969;<sub>n</sub> e K<sub>i</sub> = "
-        "&#969;<sub>n</sub><super>2</super> (TCC 3.19).")
-n.p("<b>A consequência que sustenta o trabalho:</b> na falta, U cai, e os parâmetros "
-    "efetivos do laço caem junto:")
-eq(r"\omega_{n,\mathrm{ef}} = \omega_n\sqrt{U} \qquad \xi_{\mathrm{ef}} = \xi\sqrt{U}",
-   onde="O laço amolece justamente quando mais precisa reagir. Com U = 0,25 pu, "
-        "&#969;<sub>n</sub> e &#958; caem à metade.")
-n.p("<b>Laço tipo 2:</b> com dois integradores, o PLL segue com erro nulo em regime tanto "
-    "um degrau de fase quanto um degrau de frequência. É por isso que, depois da falta, "
-    "ele volta a zero sozinho, desde que não perca o sincronismo no caminho.")
+   onde="Com U = 1 pu: K<sub>p</sub> = 2&#958;&#969;<sub>n</sub> (coeficiente de s) e "
+        "K<sub>i</sub> = &#969;<sub>n</sub><super>2</super> (termo independente), TCC 3.19.")
+box("base", "Dois integradores na malha aberta (PI e VCO) dão uma malha fechada de 2ª ordem. "
+    "Toda a sintonia se resume a escolher onde ficam os dois polos.")
+
+n.p("Como ler &#969;<sub>n</sub> e &#958; nos polos, e como se escolhem os seus valores, "
+    "fica para o slide 10.")
+
+sub("5. Relembrando: tipo do sistema e erro em regime")
+n.p("O <b>tipo</b> de uma malha é o número de integradores na malha aberta L(s). Ele diz "
+    "que entradas a malha segue com erro nulo em regime, pelo teorema do valor final, "
+    "e<sub>&#8734;</sub> = lim<sub>s&#8594;0</sub> s&#183;E(s), com:")
+eq(r"E(s) = \theta_g - \theta_{PLL} = \frac{1}{1+L(s)}\,\theta_g(s) = "
+   r"\frac{s^2}{s^2 + U K_p s + U K_i}\,\theta_g(s)")
+tab(["O que a rede faz", "&#952;<sub>g</sub>(s)", "Só P (tipo 1)", "PI (tipo 2, o do TCC)"], [
+    ["Salto de fase &#916;&#966;", "&#916;&#966;/s", "0", "0"],
+    ["Degrau de frequência &#916;&#969;", "&#916;&#969;/s&#178;",
+     "&#916;&#969;/(U&#183;K<sub>p</sub>), constante", "0"],
+], [4.4, 2.6, 3.9, 3.8])
+n.p("O s&#178; no numerador de E(s) é a assinatura do tipo 2: cancela o s&#178; do degrau "
+    "de frequência e o erro vai a zero. Fisicamente, a integral do PI guarda o "
+    "&#916;&#969; necessário com v<sub>q</sub> = 0. É por isso que, depois da falta, o PLL "
+    "volta a zero sozinho, desde que não perca o sincronismo no caminho.")
+box("prova", "<b>&#8220;Por que PI e não só um ganho proporcional?&#8221;</b> Só com P, o "
+    "laço é tipo 1 (só o integrador do VCO). Se a frequência da rede se desvia, sobra um "
+    "erro de ângulo permanente &#916;&#969;/(U&#183;K<sub>p</sub>): v<sub>q</sub> fica "
+    "diferente de zero e o eixo d nunca alinha de fato. O integrador do PI zera esse erro.")
+
+sub("6. O que o afundamento faz com o laço")
+n.p("Como a tensão é dividida por um valor fixo (o porquê está no slide 10), U fica dentro "
+    "do ganho do detector: em regime U = 1, mas na falta U cai. Casando a equação "
+    "característica com a forma canônica, agora com U livre:")
+eq(r"\omega_{n,\mathrm{ef}}^2 = U K_i \Rightarrow \omega_{n,\mathrm{ef}} = \omega_n\sqrt{U}"
+   r"\qquad 2\xi_{\mathrm{ef}}\omega_{n,\mathrm{ef}} = U K_p \Rightarrow "
+   r"\xi_{\mathrm{ef}} = \xi\sqrt{U}")
+eq(r"t_{s,\mathrm{ef}} = \frac{4{,}6}{\xi_{\mathrm{ef}}\,\omega_{n,\mathrm{ef}}} = "
+   r"\frac{9{,}2}{U K_p} = \frac{20\ \mathrm{ms}}{U}",
+   onde="O laço amolece justamente quando mais precisa reagir: a frequência natural e o "
+        "amortecimento caem com &#8730;U, e o tempo de acomodação (critério de 1% do slide "
+        "10) cresce com 1/U.")
+tab(["U (pu)", "&#969;<sub>n,ef</sub> (rad/s)", "&#958;<sub>ef</sub>", "t<sub>s,ef</sub>",
+     "Leitura"], [
+    ["1,0", "325,3", "0,707", "20 ms", "sintonia nominal"],
+    ["0,5", "230,0", "0,500", "40 ms", "afundamento moderado"],
+    ["0,25", "162,7", "0,354", "80 ms", "&#969;<sub>n</sub> e &#958; à metade"],
+    ["0,2", "145,5", "0,316", "100 ms", "igual à sintonia inadequada"],
+    ["0,09", "97,6", "0,212", "~220 ms", "ordem da tensão na falta (capítulo 6 do painel)"],
+], [1.6, 2.8, 1.6, 1.9, 6.8])
+n.note("Valores do modelo linear, válidos enquanto o erro de ângulo for pequeno. O "
+       "t<sub>s,ef</sub> é um indicador de tendência: a tensão não fica parada num U só "
+       "durante a falta.")
+
+sub("7. Onde o modelo linear deixa de valer")
+n.p("O detector real é v<sub>q</sub> = U&#183;sen(&#916;&#952;), não U&#183;&#916;&#952;. "
+    "A aproximação erra cerca de 5% em 30&#176; e piora depois. Três consequências:")
+bul("<b>Ganho máximo em 90&#176;</b>: acima disso, quanto maior o erro, <b>menor</b> o "
+    "sinal que o PI recebe para corrigir.",
+    "<b>Ponto instável em 180&#176;</b>: se &#916;&#952; passa de 180&#176;, o sinal de "
+    "v<sub>q</sub> inverte e o PLL é empurrado para o próximo ponto de travamento, um ciclo "
+    "à frente. É o escorregamento de ciclo, a forma concreta de perder o sincronismo.",
+    "<b>U perto de zero</b>: numa falta próxima, v<sub>q</sub> fica quase nulo qualquer que "
+    "seja o erro. O PLL fica &#8220;cego&#8221;: a integral segura o último &#916;&#969; e o "
+    "ângulo deriva até a tensão voltar.")
+box("alem", "Por isso a sintonia lenta e pouco amortecida é a mais exposta: com "
+    "&#958;<sub>ef</sub> baixo, a resposta passa do ponto, o erro chega mais longe e fica "
+    "mais perto dos 180&#176; no momento em que a tensão volta.")
+
+sub("8. Por que o travamento importa: a conta do erro de ângulo")
+n.p("Com o eixo d sobre a tensão, i<sub>d</sub> controla só a potência ativa e "
+    "i<sub>q</sub> só a reativa: é o desacoplamento entre P e Q. Se &#952;<sub>PLL</sub> "
+    "erra de &#916;&#952;, a corrente que o controle manda no eixo d sai girada de "
+    "&#916;&#952; em relação à tensão real. Uma fração cos &#916;&#952; vira ativa e sen "
+    "&#916;&#952; vaza para a reativa (e vice-versa para i<sub>q</sub>):")
+tab(["Erro de ângulo", "cos &#916;&#952; (fica no eixo certo)", "sen &#916;&#952; (vaza)"], [
+    ["5&#176;", "99,6%", "8,7%"],
+    ["10&#176;", "98,5%", "17,4%"],
+    ["30&#176;", "86,6%", "50,0%"],
+    ["90&#176;", "0%", "100%: o reativo pedido pelo ONS sai como ativo"],
+], [3.4, 5.0, 6.3])
+n.p("Daí a pergunta do rodapé: o suporte de tensão do ONS depende de injetar reativo "
+    "<b>na direção certa</b>, e quem dá a direção é o PLL.")
 box("banca", "<b>Por que o travamento importa?</b> Um erro em &#952; passa direto às malhas "
     "de corrente e compromete o desacoplamento entre P e Q.")
+
+sub("Glossário de bolso")
+tab(["Termo", "Em uma frase"], [
+    ["Malha aberta L(s)", "produto de tudo que o sinal atravessa do erro até a saída"],
+    ["Malha fechada G(s)", "L/(1+L): como a saída responde à referência"],
+    ["Equação característica", "denominador de G(s) igualado a zero; suas raízes são os polos"],
+    ["&#969;<sub>n</sub>", "frequência natural: o quão rápido o laço se move"],
+    ["&#958;", "amortecimento: o quanto ele oscila antes de assentar (0,707 = clássico)"],
+    ["t<sub>s</sub>", "tempo até a resposta ficar dentro de 1% do final (4,6/&#958;&#969;<sub>n</sub>)"],
+    ["Tipo", "número de integradores em L(s); tipo 2 segue degrau de frequência sem erro"],
+    ["Banda passante", "até onde G(s) segue a entrada; acima, filtra (slide 11)"],
+], [4.2, 10.5])
 ponte("antes de sintonizar, qual rede o PLL enxerga?")
 
 # --- 8
@@ -1033,7 +1177,7 @@ nums([["192 MVA", "máquina original da Barra 2"],
 box("banca", "<b>Por que um Thévenin no PSIM?</b> Representa a rede vista pelo inversor com "
     "boa fidelidade dinâmica e mantém a coerência com o sistema completo do Simulink.")
 box("cuidado", "R<sub>th</sub> = 10,04 m&#937; e L<sub>th</sub> = 1,16 mH não estão no TCC; "
-    "aparecem só no apêndice (slide 23).")
+    "aparecem só no apêndice (slide 24).")
 ponte("com a rede reduzida, deu para testar o PLL sozinho.")
 
 # --- 9
@@ -1053,37 +1197,85 @@ ponte("nesta bancada os ganhos do PI foram dimensionados.")
 slide(10, "Sintonia do PLL", "Modelagem", "Victor, Bruno, Victor", "§3.4, Eqs. (3.10)-(3.20)")
 box("msg", "Fixado o amortecimento, resta um único grau de liberdade: o tempo de acomodação.")
 fala(10)
-sub("Os cinco passos do slide")
-bul("<b>Tensão em pu</b>: a tensão medida é dividida pelo pico nominal de fase, "
-    "16.329,93 V (= 20 kV&#183;&#8730;2/&#8730;3). Assim U = 1 pu e o ganho do detector "
-    "K<sub>pd</sub> vale 1.",
-    "<b>Linearizar</b>: v<sub>q</sub> &#8776; V<sub>m</sub>(&#952;<sub>ref</sub> &#8722; "
-    "&#952;<sub>PLL</sub>).",
-    "<b>Forma canônica</b>: K<sub>i</sub> = &#969;<sub>n</sub><super>2</super>, K<sub>p</sub> "
-    "= 2&#958;&#969;<sub>n</sub>.",
-    "<b>Fixar &#958; = 0,707</b>, o amortecimento clássico (Ogata).",
-    "<b>Escolher t<sub>s</sub></b>: o único que sobra.")
-sub("Fundamento: o sistema de segunda ordem")
-n.p("A resposta de um sistema de 2ª ordem subamortecido é uma senoide amortecida dentro da "
-    "envoltória e<super>&#8722;&#958;&#969;n t</super>. Duas fórmulas resumem tudo:")
-eq(r"M_p = e^{-\pi\xi/\sqrt{1-\xi^2}} \qquad (\xi = 0{,}707 \Rightarrow M_p \approx 4{,}3\%)")
-eq(r"e^{-\xi\omega_n t_s} = 0{,}01 \ \Rightarrow\ t_s = \frac{\ln 100}{\xi\omega_n} "
-   r"= \frac{4{,}6}{\xi\omega_n}", tag="3.20",
-   onde="Critério de 1%: a envoltória cai a 1% do valor inicial. Com 2%, seria "
-        "4/(&#958;&#969;<sub>n</sub>), o critério usado no PI de corrente (slide 13).")
-sub("Fundamento: o compromisso do t<sub>s</sub>")
-n.p("Curto demais alarga a banda: o laço fica rápido, mas deixa passar ruído e "
-    "desequilíbrio. Longo demais: filtra bem, mas não acompanha a rede. O TCC adota 20 ms, "
-    "pouco mais de um ciclo (16,7 ms), seguindo Alves, Dias e Rolim (2020) e Teodorescu, "
-    "Liserre e Rodriguez (2011). A conta inteira:")
-eq(r"\xi\omega_n = \frac{4{,}6}{0{,}020} = 230 \qquad K_p = 2\xi\omega_n = \frac{9{,}2}{t_s} = 460")
-eq(r"\omega_n = \frac{230}{0{,}707} = 325{,}3\ \mathrm{rad/s}\ (51{,}8\ \mathrm{Hz})"
-   r"\qquad K_i = \omega_n^2 = 105\,820")
-nums([["460 / 105.820", "K<sub>pPLL</sub> / K<sub>iPLL</sub> nominais"],
-      ["325,3 rad/s", "&#969;<sub>n</sub> nominal, 51,8 Hz"],
-      ["0,707", "&#958;; 4,3% no protótipo de 2ª ordem (o TCC diz cerca de 5%); ~21% com o "
-                "zero do PI"],
-      ["20 ms", "t<sub>s</sub> pelo critério de 1%"]])
+n.p("O slide 7 deu a <b>forma</b> do laço: uma malha fechada de 2ª ordem com dois ganhos, "
+    "K<sub>p</sub> e K<sub>i</sub>. Este slide responde <b>como se escolhe cada número</b>. "
+    "A lógica em uma linha: tornar o laço independente da tensão (passos 1 e 2), trocar os "
+    "dois ganhos por duas grandezas com significado físico, &#969;<sub>n</sub> e &#958; "
+    "(passo 3), fixar uma delas por um critério clássico (passo 4) e escolher a outra pela "
+    "velocidade desejada (passo 5).")
+
+sub("Passo 1: tensão em pu. De onde vem 16.329,93 V")
+n.p("A rede do lado do inversor é de 20 kV <b>de linha, eficaz</b>. O detector trabalha com "
+    "o <b>pico de fase</b>, então:")
+eq(r"V_{pico,fase} = \frac{20\,000}{\sqrt{3}}\cdot\sqrt{2} = 11\,547\cdot 1{,}414 = "
+   r"16\,329{,}93\ \mathrm{V}",
+   onde="&#8730;3 passa de linha para fase; &#8730;2 passa de eficaz para pico. Com a "
+        "transformada invariante em amplitude (slide 6), é esse pico que aparece inteiro em "
+        "v<sub>d</sub>.")
+n.p("<b>Por que dividir.</b> Sem a divisão, v<sub>q</sub> &#8776; 16.329,93&#183;&#916;&#952; "
+    "volts: o ganho do detector seria 16.329,93, e ele entraria multiplicando os dois ganhos "
+    "do PI. Dividindo, a tensão nominal vale U = 1 pu, o ganho do detector K<sub>pd</sub> vale "
+    "1 e a equação característica do slide 7 fica sem U. É isso que deixa usar as fórmulas "
+    "canônicas direto.")
+n.p("<b>Por que um valor fixo, e não a amplitude medida.</b> O divisor é constante: em "
+    "regime ele dá U = 1, mas na falta a tensão cai e U cai junto. É daí que vem o "
+    "amolecimento do laço (&#969;<sub>n</sub>&#8730;U, &#958;&#8730;U, slide 7, passo 6).")
+box("alem", "<b>A alternativa que o TCC não usa.</b> Dividir v<sub>q</sub> pela amplitude "
+    "medida, &#8730;(v<sub>d</sub>&#178; + v<sub>q</sub>&#178;), torna o laço independente de U "
+    "(Karimi-Ghartemani, 2014). O modelo do TCC normaliza por constante, como a maioria das "
+    "implementações básicas, e é justamente essa dependência que o trabalho explora.")
+
+sub("Passo 2: linearizar")
+n.p("O detector real é v<sub>q</sub> = V<sub>m</sub>&#183;sen(&#952;<sub>ref</sub> &#8722; "
+    "&#952;<sub>PLL</sub>). Para projetar, considera-se o PLL já perto do travamento, com "
+    "erro pequeno, onde sen x &#8776; x:")
+eq(r"v_q \approx V_m(\theta_{ref} - \theta_{PLL}), \qquad V_m = 1\ \mathrm{pu} "
+   r"\Rightarrow K_{pd} = 1")
+n.p("Projetar no ponto de operação e conferir depois em simulação é o procedimento padrão: "
+    "as fórmulas lineares dizem como o laço se comporta em torno do travamento. Longe dele "
+    "(erro grande, falta próxima), quem responde é a simulação (slide 7, passo 7).")
+
+sub("Passo 3: forma canônica. Por que &#8220;um único grau de liberdade&#8221;")
+n.p("Com K<sub>pd</sub> = 1, a equação característica s&#178; + K<sub>p</sub>s + K<sub>i</sub> "
+    "= 0 é comparada termo a termo com a de qualquer sistema de 2ª ordem:")
+eq(r"s^2 + K_p\,s + K_i = s^2 + 2\xi\omega_n s + \omega_n^2 \ \Rightarrow\ "
+   r"K_p = 2\xi\omega_n, \quad K_i = \omega_n^2")
+n.p("São duas incógnitas (K<sub>p</sub>, K<sub>i</sub>) e agora duas grandezas que se sabe "
+    "interpretar (&#969;<sub>n</sub>, &#958;). Escolher os ganhos é o mesmo que escolher "
+    "&#969;<sub>n</sub> e &#958;. Fixado o &#958; (passo 4), sobra uma escolha só: o "
+    "t<sub>s</sub> (passo 5), que define &#969;<sub>n</sub>. É o &#8220;único grau de "
+    "liberdade&#8221; do título.")
+sub("Relembrando: como ler &#969;<sub>n</sub> e &#958; nos polos")
+n.p("As raízes da equação característica, para &#958; &lt; 1, são um par complexo:")
+eq(r"s = -\xi\omega_n \pm j\,\omega_n\sqrt{1-\xi^2}",
+   onde="Parte real &#8722;&#958;&#969;<sub>n</sub>: velocidade com que a envoltória "
+        "e<super>&#8722;&#958;&#969;n t</super> morre; é ela que define o t<sub>s</sub>. "
+        "Parte imaginária: frequência da oscilação amortecida. &#969;<sub>n</sub> é a "
+        "distância do polo à origem; &#958; é o cosseno do ângulo entre o polo e o semieixo "
+        "real negativo.")
+n.p("Na sintonia nominal, os polos ficam em <b>&#8722;230 &#177; j230</b>: a 45&#176;, "
+    "exatamente na diagonal, porque cos 45&#176; = 0,707. Polo mais à esquerda: decai mais "
+    "rápido. Polo mais perto do eixo imaginário: oscila mais. Sobre o eixo imaginário, "
+    "oscilação sem amortecimento; à direita dele, instabilidade.")
+box("alem", "Conta rápida para conferir: parte real = K<sub>p</sub>/2 = 460/2 = 230; parte "
+    "imaginária = &#8730;(K<sub>i</sub> &#8722; 230&#178;) = &#8730;(105.820 &#8722; 52.900) "
+    "&#8776; 230.")
+
+sub("Passo 4: fixar &#958; = 0,707. Por que esse valor")
+n.p("O &#958; decide o formato da resposta, independente da velocidade. A sobre-elevação "
+    "do protótipo de 2ª ordem só depende dele:")
+eq(r"M_p = e^{-\pi\xi/\sqrt{1-\xi^2}}")
+tab(["&#958;", "M<sub>p</sub>", "Polo com o eixo real", "Leitura"], [
+    ["0,316", "35%", "71,6&#176;", "oscila muito (é a sintonia inadequada, slide 11)"],
+    ["0,5", "16%", "60&#176;", "ainda oscila bastante"],
+    ["<b>0,707</b>", "<b>4,3%</b>", "<b>45&#176;</b>", "<b>compromisso clássico</b>"],
+    ["1,0", "0%", "0&#176; (polo duplo real)", "sem oscilação, porém mais lento"],
+], [1.8, 1.6, 3.6, 7.7])
+n.p("Abaixo de 0,707, a resposta passa do ponto e oscila; acima, fica cada vez mais lenta "
+    "para chegar ao valor final, sem ganho real em oscilação. 0,707 é o ponto em que se "
+    "aceita um pequeno sobressinal em troca de rapidez. É também o menor &#958; em que a "
+    "resposta em frequência do protótipo não tem pico de ressonância. É o valor de Ogata e "
+    "o de Alves, Dias e Rolim (2020).")
 box("prova", "<b>&#8220;A sobre-elevação do PLL é mesmo 5%?&#8221;</b> Os 4,3% valem para o "
     "protótipo de 2ª ordem sem zero. A G(s) do PLL (TCC 3.18) tem um zero, que vem do PI, "
     "e com ele a resposta ao degrau de fase passa mais: cerca de 21% com a sintonia "
@@ -1091,6 +1283,53 @@ box("prova", "<b>&#8220;A sobre-elevação do PLL é mesmo 5%?&#8221;</b> Os 4,3
     "&#958; = 0,707 foi escolhido pela forma canônica, como em Ogata e em Alves, Dias e "
     "Rolim; o zero do PI aumenta a sobre-elevação ao degrau de fase, e o tempo de "
     "acomodação continua perto dos 20 ms (cerca de 16 ms no modelo linear).")
+
+sub("Passo 5: escolher t<sub>s</sub>. De onde vem o 4,6")
+n.p("A resposta de 2ª ordem subamortecida é uma senoide que morre dentro da envoltória "
+    "e<super>&#8722;&#958;&#969;n t</super>. O tempo de acomodação é quando essa envoltória "
+    "cai a 1% do valor inicial:")
+eq(r"e^{-\xi\omega_n t_s} = 0{,}01 \ \Rightarrow\ \xi\omega_n t_s = \ln 100 = 4{,}6 "
+   r"\ \Rightarrow\ t_s = \frac{4{,}6}{\xi\omega_n}", tag="3.20",
+   onde="Com o critério de 2%, seria ln 50 &#8776; 3,9, arredondado para 4: é o "
+        "4/(&#958;&#969;<sub>n</sub>) usado no PI de corrente (slide 14). O 1% é mais "
+        "exigente: para o mesmo t<sub>s</sub>, pede um laço um pouco mais rápido.")
+n.p("<b>O compromisso.</b> t<sub>s</sub> curto significa &#969;<sub>n</sub> alto e banda "
+    "larga: o PLL acompanha rápido, mas deixa passar ruído de medição, harmônicos e o "
+    "desequilíbrio (os 120 Hz da sequência negativa, slide 11) para o ângulo. t<sub>s</sub> "
+    "longo filtra bem, mas não acompanha variações reais da rede e demora a retomar o "
+    "sincronismo depois da falta.")
+n.p("<b>Por que 20 ms.</b> Um período de 60 Hz dura 16,7 ms; 20 ms é pouco mais de um "
+    "ciclo, ou seja, o PLL acomoda em pouco mais de um ciclo da rede. É o valor de Alves, "
+    "Dias e Rolim (2020) e de Teodorescu, Liserre e Rodriguez (2011).")
+box("prova", "<b>&#8220;O que acontece se aumentar muito os ganhos?&#8221;</b> &#969;<sub>n</sub> "
+    "e a banda sobem: o PLL acompanha mais rápido, mas deixa passar mais ruído, harmônicos e "
+    "os 120 Hz da sequência negativa para o ângulo. Com os 20 ms, a banda já fica em 107 Hz, "
+    "colada nos 120 Hz (slide 11): ir mais rápido pioraria isso.")
+
+sub("A conta de mão, do t<sub>s</sub> aos ganhos")
+n.p("Com &#958; = 0,707 e t<sub>s</sub> = 20 ms, quatro linhas, cada uma usando só a "
+    "anterior:")
+tab(["", "Conta", "Resultado", "De onde vem"], [
+    ["1", "&#958;&#969;<sub>n</sub> = 4,6 / 0,020", "230 rad/s", "critério de 1% (passo 5)"],
+    ["2", "K<sub>p</sub> = 2&#183;&#958;&#969;<sub>n</sub> = 2&#183;230", "460",
+     "forma canônica (passo 3); o mesmo que 9,2/t<sub>s</sub>"],
+    ["3", "&#969;<sub>n</sub> = 230 / 0,707", "325,3 rad/s (51,8 Hz)",
+     "divide pelo &#958; fixado (passo 4)"],
+    ["4", "K<sub>i</sub> = &#969;<sub>n</sub>&#178; = 325,3&#178;", "105.820",
+     "forma canônica (passo 3)"],
+], [0.7, 5.0, 3.6, 5.4])
+n.p("Repare que K<sub>p</sub> nem precisa do &#958;: 2&#183;&#958;&#969;<sub>n</sub> = "
+    "2&#183;4,6/t<sub>s</sub> = 9,2/t<sub>s</sub>, a forma de Teodorescu. O &#958; só entra "
+    "para tirar &#969;<sub>n</sub> e, com ele, K<sub>i</sub>. Por isso K<sub>p</sub> fixa a "
+    "<b>velocidade</b> e K<sub>i</sub>, junto com K<sub>p</sub>, o <b>amortecimento</b>.")
+box("cuidado", "K<sub>i</sub> depende do arredondamento: com &#969;<sub>n</sub> = 325,3 sai "
+    "105.820, o valor do TCC e do modelo. Sem arredondar o 0,707 e o 4,6 o número muda na "
+    "terceira casa. Na fala, use sempre 105.820.")
+nums([["460 / 105.820", "K<sub>pPLL</sub> / K<sub>iPLL</sub> nominais"],
+      ["325,3 rad/s", "&#969;<sub>n</sub> nominal, 51,8 Hz"],
+      ["0,707", "&#958;; 4,3% no protótipo de 2ª ordem (o TCC diz cerca de 5%); ~21% com o "
+                "zero do PI"],
+      ["20 ms", "t<sub>s</sub> pelo critério de 1%"]])
 box("cuidado", "A régua do slide mostra só &#8220;1 período&#8221; e 20 ms. O porquê do "
     "critério de 1% está em criterio_acomodacao_srf_pll.pdf.")
 ponte("esta é a sintonia nominal; para testar a sensibilidade, uma segunda.")
@@ -1116,6 +1355,8 @@ eq(r"|G(j\omega)| = \frac{\sqrt{K_i^2 + (K_p\,\omega)^2}}"
 box("alem", "Contas com o modelo linear e U = 1 (tabela abaixo).")
 tab(["", "Nominal", "Inadequada"], [
     ["&#969;<sub>n</sub> ; &#958;", "325,3 rad/s ; 0,707", "145,5 rad/s ; 0,316"],
+    ["Polos ; ângulo com o eixo real", "&#8722;230 &#177; j230 ; 45&#176;",
+     "&#8722;46 &#177; j138 ; 71,6&#176;"],
     ["Banda de &#8722;3 dB de G(s)", "669 rad/s (107 Hz)", "242 rad/s (38 Hz)"],
     ["|G(j754)|: quanto do 120 Hz passa", "0,63", "0,13"],
     ["t<sub>s</sub> (critério de 1%)", "20 ms", "~100 ms"],
@@ -1166,13 +1407,95 @@ box("banca", "<b>Por que o PLL importa aqui?</b> A divisão só vale com v<sub>q
 box("cuidado", "&#8220;35 ms&#8221; é o único número fora do TCC neste slide (aprovado). O "
     "TCC se contradiz sobre o desacoplamento (§3.1.4 diz que não há, §3.5 diz que há); o "
     "slide não afirma nenhum dos dois.")
-ponte("com a referência pronta, quem faz a corrente segui-la?")
+ponte("antes da malha de corrente, o filtro que liga o inversor à rede.")
 
 # --- 13
-slide(13, "Controle de corrente", "Modelagem", "Bruno, Victor",
+slide(13, "Filtro LCL", "Modelagem", "Bruno, Victor",
+      "§4.3.2 e §4.3.2.1 (só os resultados; equações fora do TCC)")
+box("msg", "Quatro passos fixam o filtro, com a ressonância entre a rede e o chaveamento.")
+fala(13)
+box("cuidado", "Slide de exceção de método (aprovada em 27/10/2026): o TCC entregue só traz "
+    "os resultados (L<sub>est</sub> = 30,71 mH, &#969;<sub>res</sub> = 9.068,99 rad/s, "
+    "R<sub>d1</sub>, R<sub>d2</sub>, R<sub>d3</sub>), não as equações. Na tela e na fala, só os "
+    "números do TCC. Os intermediários abaixo (L<sub>1</sub>, L<sub>2</sub>, C, V<sub>cc</sub>) "
+    "são do modelo e servem para responder, não para dizer.")
+sub("Fundamento: por que LCL")
+n.p("O inversor chaveia a 5 kHz: a tensão de saída é uma sequência de pulsos, e a corrente "
+    "carrega ondulação nessa frequência. O filtro deixa passar os 60 Hz e barra o "
+    "chaveamento. Um L simples precisaria de indutância enorme; o LCL atenua muito mais "
+    "com menos material (60 dB por década acima da ressonância, contra 20 dB do L). O preço "
+    "é a ressonância, que o passo 3 posiciona e o passo 4 amortece.")
+sub("Os quatro passos, com os números do modelo")
+n.p("Base: 100 MW em 20 kV dão 2.887 A eficazes por fase, ou 4.082 A de pico. "
+    "V<sub>cc</sub> do cálculo = 90,91 kV (o modelo usa 1,5 vez esse valor, ver abaixo).")
+eq(r"L_1 = \frac{V_{cc}}{24\,f_{sw}\,\Delta i_{L1}} = "
+   r"\frac{90\,909}{24\cdot5000\cdot24{,}9} = 30{,}42\ \mathrm{mH}",
+   onde="<b>Passo 1.</b> A ondulação da corrente cresce com V<sub>cc</sub> e cai com "
+        "L<sub>1</sub> e f<sub>sw</sub>; o 24 é o fator de pior caso do VSI de dois níveis "
+        "usado na tese de Alves. A ondulação admitida foi 0,61% do pico (24,9 A).")
+eq(r"L_2 = k\,L_1 = 0{,}0095\cdot30{,}42 = 0{,}289\ \mathrm{mH} \qquad "
+   r"L_{est} = L_1 + L_2 = 30{,}71\ \mathrm{mH}",
+   onde="<b>Passo 2.</b> L<sub>est</sub> é o número do TCC: é a indutância que a malha de "
+        "corrente enxerga em baixa frequência (planta 1/(sL<sub>est</sub>), slide 14).")
+eq(r"C_x = \frac{L_1 + L_2}{L_1 L_2\,(\pi f_{sw})^2} = 14{,}16\ \mu\mathrm{F} \qquad "
+   r"C = 3\,C_x = 42{,}47\ \mu\mathrm{F}",
+   onde="<b>Passo 3.</b> C<sub>x</sub> poria a ressonância exatamente na metade do "
+        "chaveamento (&#960;f<sub>sw</sub> = 15.708 rad/s, 2,5 kHz). O fator 3 a puxa para "
+        "baixo por &#8730;3, com margem.")
+eq(r"\omega_{res} = \sqrt{\frac{L_1 + L_2}{L_1 L_2 C}} = \frac{\pi f_{sw}}{\sqrt{3}} = "
+   r"9\,068{,}99\ \mathrm{rad/s}\ (1\,443\ \mathrm{Hz})",
+   onde="Cerca de 24 vezes a fundamental e 0,29 vez o chaveamento: a &#8220;faixa "
+        "intermediária segura&#8221; do TCC.")
+eq(r"R_{d1} = 0{,}05\,\omega_g L_1 = 0{,}5734\ \Omega \quad "
+   r"R_{d2} = 0{,}05\,\omega_g L_2 = 0{,}0054\ \Omega \quad "
+   r"R_{d3} = \frac{0{,}05}{\omega_g C} = 3{,}1228\ \Omega",
+   onde="<b>Passo 4.</b> Cada resistência vale 5% da reatância do seu elemento em 60 Hz "
+        "(&#969;<sub>g</sub> = 377 rad/s): amortece o pico de ressonância e quase não mexe "
+        "na fundamental.")
+sub("Por que o V<sub>cc</sub> é alto")
+n.p("No TCC: o barramento CC foi &#8220;fixado em valor constante para manter a margem de "
+    "modulação necessária&#8221;. No modelo, V<sub>cc</sub> = 136,36 kV, 1,5 vez os 90,91 kV "
+    "do cálculo. A conta que mostra o porquê (além do TCC):")
+bul("A reatância de L<sub>1</sub> em 60 Hz é 377&#183;30,42 mH = 11,47 &#937;. Com "
+    "2.887 A, a queda nela é cerca de 33,1 kV eficazes por fase.",
+    "A tensão de fase da rede é 11,55 kV eficazes. Somando em quadratura, o inversor precisa "
+    "sintetizar cerca de 35 kV eficazes, ou 49,6 kV de pico por fase.",
+    "No PWM senoidal, o pico de fase máximo sem sobremodular é V<sub>cc</sub>/2. Com 90,91 kV, "
+    "dá 45,5 kV: falta tensão e o PWM sobremodula. Com 136,36 kV, dá 68,2 kV: índice de "
+    "modulação perto de 0,73, com folga.")
+box("prova", "<b>&#8220;L<sub>1</sub> de 30 mH num sistema de 20 kV não é grande demais?&#8221;</b> "
+    "É. Na base de 20 kV e 100 MVA (Z<sub>base</sub> = 4 &#937;), 11,47 &#937; são cerca de "
+    "2,9 pu, quando o usual fica abaixo de 0,1 pu. Vem do critério de ondulação com uma "
+    "ondulação admitida pequena (0,61%). Resposta segura: o filtro foi dimensionado pelo "
+    "critério de ondulação de corrente e mantido igual em todos os cenários, então não "
+    "interfere na comparação entre sintonias, que é o objeto do trabalho; a consequência foi "
+    "exigir um barramento CC maior, para manter a margem de modulação. Otimizar o filtro "
+    "fica fora do escopo.")
+box("prova", "<b>&#8220;Por que o fator 3 no capacitor?&#8221;</b> Sem ele, a ressonância "
+    "cairia na metade do chaveamento, onde ainda há conteúdo do PWM. Triplicando C, ela "
+    "desce por &#8730;3 para 1.443 Hz, longe dos dois lados.")
+box("alem", "O capacitor absorve reativo na fundamental: com X<sub>C</sub> = 1/(377&#183;42,47 "
+    "&#956;F) = 62,5 &#937;, são cerca de 6,4 Mvar, 6,4% dos 100 MVA. Se a banca perguntar, "
+    "é da ordem do limite usual de 5%.")
+box("cuidado", "O TCC associa &#958; = 0,707 ao filtro; não está na tela deste slide (está no "
+    "14). Se perguntarem, é o amortecimento adotado no projeto, o mesmo das malhas; não "
+    "elabore.")
+nums([["30,71 mH", "L<sub>est</sub> = L<sub>1</sub> + L<sub>2</sub> (TCC)"],
+      ["9.068,99 rad/s", "&#969;<sub>res</sub> = &#960;f<sub>sw</sub>/&#8730;3 (TCC), 1.443 Hz"],
+      ["0,5734 / 0,0054 / 3,1228 &#937;", "R<sub>d1</sub> / R<sub>d2</sub> / R<sub>d3</sub> (TCC)"],
+      ["30,42 mH; 0,289 mH; 42,47 &#956;F", "L<sub>1</sub>; L<sub>2</sub>; C (modelo, apêndice)"],
+      ["136,36 kV", "V<sub>cc</sub> do modelo, 1,5 &#215; 90,91 kV (apêndice)"]])
+box("banca", "<b>Por que a ressonância fica no meio?</b> Longe da rede e do chaveamento; o "
+    "amortecimento passivo atenua o pico de ressonância.")
+box("banca", "<b>E o barramento CC?</b> Fixado em valor constante, para manter a margem de "
+    "modulação necessária.")
+ponte("com o filtro definido, a malha que faz a corrente seguir a referência.")
+
+# --- 14
+slide(14, "Controle de corrente", "Modelagem", "Bruno, Victor",
       "Fig. 3.1, §3.5 (Eqs. 3.21-3.23), §4.3.2 (Eq. 4.2)")
 box("msg", "Um PI com notch em cada eixo faz a corrente do inversor seguir a referência.")
-fala(13)
+fala(14)
 sub("Fundamento: a malha, eixo por eixo")
 n.p("Erro (referência menos medida) &#8594; PI &#8594; filtro notch na ressonância do LCL "
     "&#8594; índice de modulação &#8594; PWM a 5 kHz no VSI de dois níveis. Em baixa "
@@ -1187,18 +1510,11 @@ eq(r"K_p = 2\cdot\frac{1}{\sqrt{2}}\cdot4\sqrt{2}\,f_g\,L_{est} = 8 f_g L_{est}"
    r"\qquad K_i = (4\sqrt{2}\,f_g)^2 L_{est} = 32 f_g^2 L_{est}",
    onde="Pelo critério de 2%, a corrente acomoda em 4/(&#958;&#969;<sub>n</sub>) = 16,7 ms: "
         "um ciclo.")
-sub("Fundamento: por que LCL, e por que notch")
-n.p("Um L simples precisaria de indutância enorme para limpar o chaveamento; o LCL atenua "
-    "muito mais com menos material (60 dB por década acima da ressonância, contra 20 dB do "
-    "L). O preço é uma ressonância, uma frequência em que o filtro amplifica em vez de "
-    "atenuar:")
-eq(r"\omega_{res} = \sqrt{\frac{L_1 + L_2}{L_1\,L_2\,C_f}}", tag="4.2",
-   onde="Com L<sub>1</sub> = 30,42 mH, L<sub>2</sub> = 0,289 mH e C<sub>f</sub> = 42,47 "
-        "&#956;F (apêndice): 9.069 rad/s, cerca de 1,44 kHz, entre a fundamental e o "
-        "chaveamento.")
-n.p("Se a malha de corrente excitar essa frequência, a corrente oscila. Duas defesas: "
-    "amortecimento passivo (resistores em série) e o notch, um filtro que corta uma faixa "
-    "estreita em torno de &#969;<sub>res</sub> e deixa o resto passar.")
+sub("Fundamento: por que notch")
+n.p("A ressonância do LCL (slide 13) é uma frequência em que o filtro amplifica em vez de "
+    "atenuar. Se a malha de corrente excitar essa frequência, a corrente oscila. Além do "
+    "amortecimento passivo, o notch é um filtro que corta uma faixa estreita em torno de "
+    "&#969;<sub>res</sub> e deixa o resto passar.")
 nums([["5 kHz", "chaveamento do PWM"],
       ["339,4 rad/s", "&#969;<sub>n</sub> = 4&#8730;2&#183;60 do PI de corrente"],
       ["30,71 mH", "L<sub>est</sub> = L<sub>1</sub> + L<sub>2</sub>"],
@@ -1213,10 +1529,10 @@ box("cuidado", "Nunca confundir os dois: K<sub>p</sub> = 8f<sub>g</sub>L<sub>est
     "interação entre eles está fora do escopo (defesa_qa.pdf, pergunta 4).")
 ponte("no modelo final, a referência deixa de ser fixa.")
 
-# --- 14
-slide(14, "Referência pelo ONS", "Modelagem", "Bruno, Victor", "Fig. 4.2, §4.3.2")
+# --- 15
+slide(15, "Referência pelo ONS", "Modelagem", "Bruno, Victor", "Fig. 4.2, §4.3.2")
 box("msg", "No modelo final, as referências fixas deram lugar ao bloco do Submódulo 2.10.")
-fala(14)
+fala(15)
 n.p("O esqueleto é o do slide 12, mas i<sub>d,ref</sub> e i<sub>q,ref</sub> agora saem de "
     "um bloco que lê a tensão no PCC e conhece a corrente nominal e a máxima do conversor. "
     "O SRF-PLL aparece duas vezes no diagrama: sai da mesma Park que mede a tensão e "
@@ -1226,10 +1542,10 @@ box("banca", "<b>Quem orienta as correntes?</b> O SRF-PLL. O bloco do ONS diz qu
     "i<sub>d</sub> e i<sub>q</sub>; o ângulo &#952;<sub>PLL</sub> diz em que direção.")
 ponte("o que acontece dentro desse bloco.")
 
-# --- 15
-slide(15, "Dentro do Submódulo 2.10", "Modelagem", "Victor, Bruno", "Fig. 2.2, §2.5.2, §5.2")
+# --- 16
+slide(16, "Dentro do Submódulo 2.10", "Modelagem", "Victor, Bruno", "Fig. 2.2, §2.5.2, §5.2")
 box("msg", "A tensão medida define o reativo, e o ativo fica com o que sobra.")
-fala(15)
+fala(16)
 sub("Fundamento: a rampa (Fig. 2.2)")
 eq(r"i_q = \frac{0{,}85 - V}{0{,}35}\quad (0{,}5 \leq V < 0{,}85\ \mathrm{pu}) "
    r"\qquad i_q = 1\ \mathrm{pu}\quad (V < 0{,}5\ \mathrm{pu})",
@@ -1252,25 +1568,25 @@ box("banca", "<b>Por que priorizar o reativo?</b> Para fornecer a corrente reati
     "ultrapassar o limite do equipamento, a usina reduz a potência ativa durante a falta.")
 ponte("a mesma lógica, como o código a executa.")
 
-# --- 16
-slide(16, "Lógica em blocos", "Modelagem", "Bruno, Victor", "Fig. 2.2, §5.2")
+# --- 17
+slide(17, "Lógica em blocos", "Modelagem", "Bruno, Victor", "Fig. 2.2, §5.2")
 box("msg", "No código, a faixa de tensão escolhe o caminho e a prioridade divide a corrente.")
-fala(16)
+fala(17)
 bul("Dois testes de tensão escolhem um de três caminhos: faixa normal (i<sub>q</sub> = 0, "
     "i<sub>d</sub> nominal), subtensão (rampa) ou sobretensão (absorção).",
     "Nos dois caminhos de defeito, primeiro limita-se i<sub>q</sub> a I<sub>max</sub>, "
-    "depois aplica-se a prioridade (círculo do slide 15).",
-    "As duas referências seguem para a malha de corrente do slide 13.")
+    "depois aplica-se a prioridade (círculo do slide 16).",
+    "As duas referências seguem para a malha de corrente do slide 14.")
 nums([["0,85 / 1,1 / 1,2 pu", "início da injeção / início da absorção / fim da rampa de "
                                "absorção (Fig. 2.2); entre 0,85 e 1,1, banda morta"]])
 box("banca", "<b>E quando a falta é eliminada?</b> A tensão volta à faixa normal: o reativo "
     "adicional zera e a ativa retorna ao patamar pré-falta.")
 ponte("juntando tudo.")
 
-# --- 17
-slide(17, "Sistema completo", "Modelagem", "Victor, Bruno", "Fig. 4.2, §4.3.2")
+# --- 18
+slide(18, "Sistema completo", "Modelagem", "Victor, Bruno", "Fig. 4.2, §4.3.2")
 box("msg", "Juntando as partes, este é o inversor usado em todas as simulações.")
-fala(17)
+fala(18)
 sub("Revise em voz alta, de cima para baixo")
 bul("<b>Sincronismo</b>: o SRF-PLL entrega &#952;<sub>PLL</sub> às transformações dq.",
     "<b>Referência</b>: o Submódulo 2.10 define i<sub>d,ref</sub> e i<sub>q,ref</sub> pela "
@@ -1284,8 +1600,8 @@ box("banca", "<b>E agora?</b> Com o modelo fechado, as faltas no IEEE 9 barras t
     "SRF-PLL.")
 ponte("como as faltas foram aplicadas.")
 
-# --- 18
-slide(18, "Protocolo de contingência", "Método", "Bruno, Victor", "§4.3.4, Tab. 4.1, §5.2")
+# --- 19
+slide(19, "Protocolo de contingência", "Método", "Bruno, Victor", "§4.3.4, Tab. 4.1, §5.2")
 box("msg", "Todas as simulações seguem a mesma linha do tempo; muda só o local e o tipo da "
     "falta.")
 sub("A linha do tempo")
@@ -1316,8 +1632,8 @@ box("cuidado", "Não diga quantos cenários: o slide também não diz (28 &#215;
     "janela de 200 ms&#8221;. Os 0,1 s de inicialização são exceção de método.")
 ponte("como os resultados foram extraídos.")
 
-# --- 19
-slide(19, "Fluxo de análise", "Método", "Bruno, Victor, Bruno", "§4.3.3; métricas em §5.1-5.3")
+# --- 20
+slide(20, "Fluxo de análise", "Método", "Bruno, Victor, Bruno", "§4.3.3; métricas em §5.1-5.3")
 box("msg", "Cada simulação do Simulink vira arquivos CSV, tratados em Python até um painel "
     "interativo.")
 n.p("Ao fim de cada simulação o Simulink exporta os sinais em duas taxas de amostragem; o "
@@ -1342,19 +1658,19 @@ eq(r"\Delta f = \frac{1}{T} = \frac{1}{0{,}1\ \mathrm{s}} = 10\ \mathrm{Hz}",
 nums([["9,2%", "retenção de V<sub>d</sub> na Barra 7, trifásica, nominal (exemplo da fala)"]])
 box("banca", "<b>Dos dados aos resultados.</b> É assim que lemos os resultados: abrimos agora "
     "o painel interativo ao vivo, no modo apresentação.")
-ponte("slide 20, abrir o painel.")
+ponte("slide 21, abrir o painel.")
 
 # =============================================================================
 # PARTE II
 # =============================================================================
 parte("PARTE II · A passagem para o painel")
-slide(20, "Demonstração ao vivo", "Porta para o painel", "Victor", "Figs. 5.10, 5.18")
+slide(21, "Demonstração ao vivo", "Porta para o painel", "Victor", "Figs. 5.10, 5.18")
 box("msg", "A partir daqui os resultados são mostrados no painel interativo, no modo "
     "apresentação.")
 sub("O que fazer")
 bul("Antes da defesa: abrir output/pll_metrics.html no navegador do notebook da defesa "
     "(abre sem internet).",
-    "No slide 20: Alt+Tab para o navegador e clicar <b>Modo apresentação</b> no cabeçalho. "
+    "No slide 21: Alt+Tab para o navegador e clicar <b>Modo apresentação</b> no cabeçalho. "
     "O painel entra em tela cheia, com fundo branco.",
     "Seta &#8594; ou PageDown avança; seta &#8592; ou PageUp volta; Esc sai. Nos capítulos "
     "com passos, cada avanço revela um passo; só no último a seta troca de capítulo.",
@@ -1364,7 +1680,7 @@ n.p("Número do capítulo (k/8), a referência no TCC (seção, figura, tabela),
     "frase do passo, chips com os casos (clicar liga e desliga), o gráfico e, embaixo, "
     "cartões com os números de cada caso. Clicar num cartão sai do palco e abre o cenário "
     "nas abas.")
-box("cuidado", "Os três cartões do slide 20 resumem os três blocos do Modo Apresentação "
+box("cuidado", "Os três cartões do slide 21 resumem os três blocos do Modo Apresentação "
     "(Capítulos 1 a 3, Capítulos 4 e 5, e Capítulos 6 a 8), servindo de roteiro visual antes "
     "de alternar para o navegador.")
 
@@ -1415,7 +1731,7 @@ n.p("Durante uma falta franca, a tensão no ponto do defeito vai a quase zero. A
     "quilômetro.")
 box("cuidado", "A régua é proporcional à tensão residual na Barra 2, mas nenhum número "
     "aparece de propósito (não está no TCC). A Barra 6 é a mais distante, não a 8. "
-    "<b>Reserva</b> sem painel: slide 18 (matriz).")
+    "<b>Reserva</b> sem painel: slide 19 (matriz).")
 
 # --- 2
 cap(2, "Energização do inversor", "§5.1 · Figura 5.3 · 2 passos", "02_energ_p2.png",
@@ -1438,7 +1754,7 @@ n.p("A inadequada oscila mais e demora mais, como esperado de um laço mais lent
 nums([["40 / 79 ms", "erro na faixa de 2°, nominal / inadequada (Fig. 5.3)"],
       ["34 / 42 ms", "v<sub>d</sub> na faixa de 5%, nominal / inadequada"]])
 box("cuidado", "Os primeiros milissegundos saem da escala porque a tensão ainda é nula; por "
-    "isso a partida fica fora das métricas. <b>Reserva</b>: slide oculto 25.")
+    "isso a partida fica fora das métricas. <b>Reserva</b>: slide oculto 26.")
 
 # --- 3
 cap(3, "Localização: quanto mais perto, mais severa", "§5.2 · Tabela 5.1 · Figura 5.7 · "
@@ -1466,7 +1782,7 @@ box("prova", "<b>Por que a Linha 8-9 demora mais (112 ms) que a Barra 7, que é 
     "severa?</b> O retorno mede a recuperação depois da eliminação, que depende do "
     "transitório pós-falta de cada topologia, não só da profundidade do afundamento. "
     "Confira no §5.2 se o TCC atribui causa antes de afirmar qualquer uma.")
-box("cuidado", "<b>Reserva</b>: slide oculto 26 (Tabela 5.1, Fig. 5.7).")
+box("cuidado", "<b>Reserva</b>: slide oculto 27 (Tabela 5.1, Fig. 5.7).")
 
 # --- 4
 cap(4, "Sequência negativa", "§5.3 · Tabela 5.3 · Figura 5.10 · 2 passos",
@@ -1492,11 +1808,11 @@ n.p("Na bifásica da B7, o erro passa de 90° em 17,8% do intervalo com a nomina
 box("prova", "<b>Por que não pôr um notch em 120 Hz?</b> Reduz a ondulação, mas um filtro "
     "dentro do laço também atrasa e reduz a banda, que é o recurso de que a recuperação "
     "precisa. A saída estrutural é separar as sequências antes do laço (DDSRF, DSOGI: "
-    "trabalho futuro, slide 22).")
+    "trabalho futuro, slide 23).")
 box("alem", "<b>Bifásica pior que monofásica:</b> é a ligação das redes de sequência do slide "
     "18 (paralelo na bifásica, série na monofásica). <b>Pico em 60 Hz em algumas curvas:</b> "
     "componente contínua transitória nas fases, vista em dq a 60 Hz (slide 6).")
-box("cuidado", "<b>Reserva</b>: slide oculto 27 (Fig. 5.10).")
+box("cuidado", "<b>Reserva</b>: slide oculto 28 (Fig. 5.10).")
 
 # --- 5
 cap(5, "Compromisso da sintonia", "§5.3 · Tabela 5.3 · Figura 5.14 · 3 passos",
@@ -1517,7 +1833,7 @@ n.p("Mas o mesmo ganho menor deixa a recuperação lenta onde a tensão cai mais
     "retorno quase dobra (46 &#8594; 95 ms na monofásica, 51 &#8594; 96 ms na bifásica) e na "
     "trifásica da Barra 6 vai de 76 para 106 ms. <b>A frase-ponte do passo 3 é a virada da "
     "defesa</b>: o capítulo seguinte responde.")
-box("cuidado", "<b>Reserva</b>: slide oculto 28 (Fig. 5.14, Tab. 5.3) e apêndice 24.")
+box("cuidado", "<b>Reserva</b>: slide oculto 29 (Fig. 5.14, Tab. 5.3) e apêndice 25.")
 
 # --- 6
 cap(6, "Perda de sincronismo", "§5.4 · Figuras 5.18 e 5.19 · 3 passos", "06_sinc_p3.png",
@@ -1557,7 +1873,7 @@ nums([["9,2% / 8,2%", "retenção de V<sub>d</sub>, nominal / inadequada"],
       ["66,8%", "tempo pós-falta absorvendo potência ativa, inadequada (média &#8722;0,40 pu)"]])
 box("cuidado", "A tabela de &#969;<sub>n,ef</sub> é conta de bolso (além do TCC). Os cartões "
     "do palco também mostram 44,0° (pico da inadequada) e 5,6% (P absorvida da nominal); o "
-    "número de fala é o 66,8%. <b>Reserva</b>: slides ocultos 27 e 29 (Figs. 5.18 a 5.21).")
+    "número de fala é o 66,8%. <b>Reserva</b>: slides ocultos 28 e 30 (Figs. 5.18 a 5.21).")
 
 # --- 7
 cap(7, "Código de rede", "§5.5 · Figuras 2.1 e 2.2 · Tabela 5.2 · 6 passos",
@@ -1567,7 +1883,7 @@ box("msg", "O inversor cumpre a letra do Submódulo 2.10 nas trifásicas, mas pe
     "conectado não basta.")
 sub("Os dois painéis")
 n.p("Esquerda: tensão da fase mais afundada no inversor contra a curva de suportabilidade "
-    "(Fig. 2.1). Direita: a rampa da Fig. 2.2 (slide 15), com o ponto de operação de cada "
+    "(Fig. 2.1). Direita: a rampa da Fig. 2.2 (slide 16), com o ponto de operação de cada "
     "caso (V médio, i<sub>q,ref</sub> médio).")
 tab(["Curva de suportabilidade (Fig. 2.1)", "Limite"], [
     ["inferior, de 0 a 0,5 s", "0,2 pu: abaixo disso a desconexão é permitida"],
@@ -1602,7 +1918,7 @@ imagem_palco("07_ons_p6.png", "Passo 6 de 6: cartão de fecho, a tese do trabalh
              "tela", alt=6.2)
 box("cuidado", "&#8220;Fora da região&#8221; da B7 e da L7-8 é leitura aprovada como exceção "
     "(o TCC não diz isso com essas palavras). As simulações acabam 0,3 s depois do início da "
-    "falta, então só o patamar de 0,2 pu da curva tem dado. <b>Reserva</b>: slide oculto 30.")
+    "falta, então só o patamar de 0,2 pu da curva tem dado. <b>Reserva</b>: slide oculto 31.")
 
 # --- 8
 cap(8, "Todos os casos", "Tabelas 5.1 a 5.3", "08_sintese.png",
@@ -1611,13 +1927,13 @@ box("msg", "Não é para apresentar linha por linha: é o ponto de apoio para as
 n.p("Cada linha tem a seção do TCC (§5.1 a §5.4), e clicar nela abre o cenário nas abas. As "
     "linhas &#8220;não retorna&#8221; são a Barra 7 e a Linha 7-8 trifásicas inadequadas. "
     "As Barras 4, 5, 8 e 9 não estão aqui, mas estão nas abas por cenário.")
-n.p("<b>Volta ao PowerPoint:</b> Esc (sai da tela cheia) e Alt+Tab para o slide 21.")
+n.p("<b>Volta ao PowerPoint:</b> Esc (sai da tela cheia) e Alt+Tab para o slide 22.")
 
 # =============================================================================
 # PARTE IV
 # =============================================================================
 parte("PARTE IV · De volta ao PowerPoint")
-slide(21, "Síntese dos resultados", "Conclusão", "Bruno, Victor, Bruno, Victor", "Cap. 6")
+slide(22, "Síntese dos resultados", "Conclusão", "Bruno, Victor, Bruno, Victor", "Cap. 6")
 box("msg", "O sincronismo do SRF-PLL é uma decisão de estabilidade do sistema elétrico.")
 sub("Os três cartões")
 bul("<b>Faltas simétricas, 9,2%</b>: com a nominal o PLL reconverge em todos os pontos "
@@ -1636,12 +1952,12 @@ n.p("A classificação clássica de estabilidade (ângulo, frequência, tensão)
 box("banca", "<b>Qual é a conclusão central?</b> Permanecer conectado é insuficiente: a "
     "conformidade deve auditar o erro angular dinâmico durante a falta e em toda a "
     "recomposição.")
-box("cuidado", "No slide 21, o cartão 1 traz &#8220;9,2% Vd&#8221; (retenção de V<sub>d</sub> "
+box("cuidado", "No slide 22, o cartão 1 traz &#8220;9,2% Vd&#8221; (retenção de V<sub>d</sub> "
     "na Barra 7), o cartão 2 traz &#8220;250&#215; mais 120 Hz&#8221; (no TCC, &#8220;mais de "
     "250 vezes&#8221;) e o cartão 3 traz &#8220;escorregamento de ciclo&#8221;.")
 ponte("o que fica para depois.")
 
-slide(22, "Trabalhos futuros e encerramento", "Conclusão", "Victor, Bruno, Victor", "Cap. 7")
+slide(23, "Trabalhos futuros e encerramento", "Conclusão", "Victor, Bruno, Victor", "Cap. 7")
 box("msg", "Dois eixos dão continuidade ao estudo, a partir dos limites deste trabalho.")
 sub("Eixo 1: estruturas de sincronismo")
 n.p("A fragilidade do capítulo 4 vem de o SRF-PLL misturar as duas sequências no mesmo "
@@ -1669,11 +1985,11 @@ ponte("agradecimento e abertura para perguntas, com o painel aberto.")
 # PARTE V
 # =============================================================================
 parte("PARTE V · Conteúdo adicional",
-      "O apêndice do deck (slides 23 e 24) e os slides ocultos (25 a 30) não fazem parte da "
+      "O apêndice do deck (slides 24 e 25) e os slides ocultos (26 a 31) não fazem parte da "
       "apresentação. Servem de apoio quando a banca pergunta algo que pede número de "
       "parâmetro ou a tabela completa. Vale conhecê-los para saber que existem e onde estão.")
 
-slide(23, "Parâmetros: rede, filtro LCL e controle", "Apêndice", "não tem fala",
+slide(24, "Parâmetros: rede, filtro LCL e controle", "Apêndice", "não tem fala",
       "Cap. 3 e 4")
 box("msg", "Todos os parâmetros do modelo num slide: base do sistema, conversor, Thévenin, "
     "filtro LCL e ganhos das duas malhas.")
@@ -1691,7 +2007,7 @@ box("cuidado", "Vários desses valores não estão no TCC (são do modelo). Por 
     "V<sub>cc</sub> é 1,5 vezes o do cálculo: com o valor do cálculo, o PWM senoidal "
     "sobremodulava na escala de 100 MW.")
 
-slide(24, "Tabelas 5.1, 5.2 e 5.3 completas", "Apêndice", "não tem fala", "Cap. 5")
+slide(25, "Tabelas 5.1, 5.2 e 5.3 completas", "Apêndice", "não tem fala", "Cap. 5")
 box("msg", "As três tabelas do Cap. 5 num slide: trifásicas com o suporte do ONS e "
     "assimétricas nas duas sintonias.")
 n.p("É a mesma informação do capítulo 8 do painel, em formato de slide. Use quando o painel "
@@ -1704,12 +2020,12 @@ box("cuidado", "O cartão da esquerda menciona um ganho efetivo &#8220;12 vezes&
 
 n.h("Slides ocultos: a reserva do painel")
 tab(["Slide", "Substitui o capítulo", "Conteúdo"], [
-    ["25", "2 · Energização", "Fig. 5.3, 34/40 ms e 42/79 ms"],
-    ["26", "3 · Localização", "Fig. 5.7 e Tabela 5.1"],
-    ["27", "4 · Sequência negativa", "Figs. 5.10 e 5.18, 250&#215;, 98 ms"],
-    ["28", "5 · Compromisso", "Fig. 5.14 e a parte assimétrica da Tabela 5.3"],
-    ["29", "6 · Perda de sincronismo", "Figs. 5.20 e 5.21, 66,8%, média &#8722;0,40 pu"],
-    ["30", "7 · Código de rede", "Fig. 2.2 e Tabela 5.2, 0,09 pu"],
+    ["26", "2 · Energização", "Fig. 5.3, 34/40 ms e 42/79 ms"],
+    ["27", "3 · Localização", "Fig. 5.7 e Tabela 5.1"],
+    ["28", "4 · Sequência negativa", "Figs. 5.10 e 5.18, 250&#215;, 98 ms"],
+    ["29", "5 · Compromisso", "Fig. 5.14 e a parte assimétrica da Tabela 5.3"],
+    ["30", "6 · Perda de sincronismo", "Figs. 5.20 e 5.21, 66,8%, média &#8722;0,40 pu"],
+    ["31", "7 · Código de rede", "Fig. 2.2 e Tabela 5.2, 0,09 pu"],
 ], [1.6, 5.0, 8.1])
 n.p("Se o navegador falhar, mostre esses slides na ordem da tabela (indo direto pelo número) "
     "e siga o mesmo roteiro da Parte III.")

@@ -16,3 +16,6 @@ files:
   - file: historico_entregas_10_17_18.md
     name: defesa-historico-entregas-10-17-18
     description: "Histórico de entregas ao deck da defesa em 2026-10-17 e 2026-10-18 (deck = TCC final, MODELAGEM reestruturada, figuras dedicadas, slides 5 e 6)"
+  - file: historico_entregas_10_19.md
+    name: defesa-historico-entregas-10-19
+    description: "Histórico de entregas ao deck da defesa em 2026-10-19 (títulos curtos dos slides 5-9, sintonia do PLL em dois, protocolo, fluxo de trabalho)"

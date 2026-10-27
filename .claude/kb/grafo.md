@@ -69,6 +69,7 @@ graph LR
     standards -->|2| tcc_word
     tcc_pptx -->|3| dashboard
     tcc_pptx -->|1| events
+    tcc_pptx -->|2| inverter
     tcc_pptx -->|1| pll
     tcc_pptx -->|4| psim
     tcc_pptx -->|2| simulation

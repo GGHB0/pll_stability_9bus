@@ -13,6 +13,11 @@ aliases: [defesa-pendencias]
 
 ## Em aberto
 
+- **Exceção de método no slide 13, "Filtro LCL" (2026-10-27, aprovada pelo
+  Victor)**: o TCC entregue só traz os resultados do LCL (§4.3.2.1); as
+  equações de projeto (ripple, ressonância, Rd = 5%) vêm de [[lcl-filter]].
+  Na tela, só números do TCC; Vcc sem valor, com a frase do §4.3.2. L1 de
+  ~2,9 pu e o Vcc ×1,5 ficam como pergunta provável no roteiro de estudo.
 - **Exceção de método no slide 6 (2026-10-24, aprovada pelo Victor)**: o
   TCC só tem a Eq. (3.5); o slide ganhou dois desenhos conceituais sem número
   ao lado dela (eixos abc + dq girante com o vetor v projetado em v_d e v_q;

@@ -10,6 +10,17 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-28: slide 21 (demo) só com a tela e o botão (entregue)
+
+- Pedido do Victor: o slide da demo vira só a entrada para o painel, sem
+  informação. Saíram os 3 cartões de resultados, a faixa "Suporte à
+  Arguição" e a legenda; frase de abertura neutra "Os resultados seguem no
+  painel interativo, em modo apresentação"; captura (6,19 × 3,80 in)
+  centrada com o botão logo abaixo, na largura da moldura. Notas intactas.
+- 5ae82aec… → e1306f85c2df6b0ffc5ee680dfda66eb, backup `_20261028_002251`.
+  Diff: só o slide 21. check 0 falha. Staging `C:\Temp\defesa_demo21\`
+  (`gen_demo21.py`).
+
 ## 2026-10-27 (noite): v_d e v_q com o ângulo do PLL no slide 6 (entregue)
 
 - Imagem `assets/diagrams/park_vdq_pll.png` (STIX, θ_PLL em laranja, como a

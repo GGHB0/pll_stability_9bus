@@ -328,7 +328,9 @@ FALAS = {
      "projeta as três fases em dois eixos, d e q, que giram junto com a rede."),
     ("Bruno", "Aponte o painel da direita: girando junto, a senoide de 60 Hz vira uma constante, e "
      "aí o PI funciona. Mas a conta inteira depende de &#952;: &#8220;quem dá esse ângulo é o "
-     "PLL&#8221;.")],
+     "PLL&#8221;. Desça para as duas linhas sob a matriz: com o ângulo do PLL, v<sub>d</sub> é a "
+     "amplitude vezes o cosseno do erro, v<sub>q</sub> vezes o seno; travado, v<sub>q</sub> = 0, "
+     "e é esse v<sub>q</sub> que o PLL zera.")],
 7: [("Victor", "Três blocos, um por área tracejada. O detector de fase é a própria Park: com o eixo "
      "d alinhado, a amplitude toda fica em v<sub>d</sub> e v<sub>q</sub> vale zero. Então "
      "v<sub>q</sub> é o erro de ângulo."),
@@ -954,11 +956,48 @@ eq(r"v_q = -\frac{2}{3}\left[v_a\sin\theta + v_b\sin\left(\theta-\frac{2\pi}{3}\
    r" + v_c\sin\left(\theta+\frac{2\pi}{3}\right)\right]",
    onde="Forma em cosseno; o TCC (Eqs. 3.5 a 3.7) pode usar outra convenção de seno, "
         "cosseno ou sinal. O resultado abaixo é o mesmo em qualquer uma.")
-n.p("Para uma tensão equilibrada de amplitude V e ângulo &#952;<sub>g</sub>, a soma das "
-    "três fases dá (3/2)V, o 2/3 cancela, e sobra:")
-eq(r"v_d = V\cos(\theta_g - \theta) \qquad v_q = V\sin(\theta_g - \theta)",
-   onde="Se &#952; = &#952;<sub>g</sub> (eixo d alinhado), v<sub>d</sub> = V e v<sub>q</sub> "
-        "= 0: as senoides de 60 Hz viraram constantes.")
+sub("Fundamento: as duas linhas embaixo da matriz")
+n.p("A matriz é a transformação geral, com um &#952; qualquer. No inversor, quem fornece "
+    "&#952; é o PLL, então &#952; = &#952;<sub>PLL</sub>. A rede tem o seu próprio ângulo, "
+    "&#952;<sub>ref</sub>, que ninguém mede direto. A linha embaixo da matriz mostra o que "
+    "sai da Park nessa situação. A conta tem três passos.")
+n.p("<b>1. Tensões da rede.</b> Equilibradas, de amplitude de fase V<sub>m</sub>, como no "
+    "TCC (§3.4, logo antes da Equação 3.10):")
+eq(r"v_a = V_m\cos\theta_{ref},\quad v_b = V_m\cos(\theta_{ref} - 2\pi/3),\quad "
+   r"v_c = V_m\cos(\theta_{ref} + 2\pi/3)")
+n.p("<b>2. Produto de cossenos.</b> Na linha de v<sub>d</sub>, cada fase entra como "
+    "cos(&#952;<sub>ref</sub> &#8722; k&#183;2&#960;/3)&#183;cos(&#952; &#8722; k&#183;2&#960;/3). "
+    "A identidade cos A cos B = &#189;[cos(A &#8722; B) + cos(A + B)] separa cada produto em "
+    "duas parcelas:")
+bul("<b>cos(A &#8722; B)</b>: os deslocamentos de 2&#960;/3 se cancelam e sobra "
+    "cos(&#952;<sub>ref</sub> &#8722; &#952;) <b>igual nas três fases</b>. Somadas, dão "
+    "3&#183;&#189; = 3/2.",
+    "<b>cos(A + B)</b>: os deslocamentos se somam (0, &#8722;4&#960;/3, +4&#960;/3), são três "
+    "cossenos defasados de 120&#176; e <b>a soma é zero</b>. É essa parcela que gira a 2&#969; "
+    "e some quando a tensão é equilibrada.")
+n.p("Na linha de v<sub>q</sub> é o mesmo, com cos A sen B no lugar, e sobra o seno da diferença.")
+n.p("<b>3. O 2/3 cancela o 3/2.</b> Por isso a transformação é chamada de invariante em "
+    "amplitude:")
+eq(r"v_d = \frac{2}{3}\cdot\frac{3}{2}\,V_m\cos(\theta_{ref} - \theta_{PLL}) "
+   r"= V_m\cos(\theta_{ref} - \theta_{PLL})")
+eq(r"v_q = \frac{2}{3}\cdot\frac{3}{2}\,V_m\,\mathrm{sen}(\theta_{ref} - \theta_{PLL}) "
+   r"= V_m\,\mathrm{sen}(\theta_{ref} - \theta_{PLL})",
+   onde="A linha de v<sub>q</sub> é a do TCC (§3.4, antes da 3.10). A de v<sub>d</sub> sai da "
+        "mesma conta, mas o TCC não a escreve: se a banca pedir a fonte, é a Equação (3.5) "
+        "com essa substituição.")
+tab(["Situação", "v<sub>d</sub>", "v<sub>q</sub>", "Leitura"], [
+    ["&#952;<sub>PLL</sub> = &#952;<sub>ref</sub> (travado)", "V<sub>m</sub>", "0",
+     "amplitude inteira em d: as senoides viraram constantes"],
+    ["erro pequeno &#916;&#952;", "&#8776; V<sub>m</sub>", "&#8776; V<sub>m</sub>&#183;&#916;&#952;",
+     "v<sub>q</sub> mede o erro de ângulo (slides 7 e 10)"],
+    ["erro de 90&#176;", "0", "V<sub>m</sub>", "o vetor caiu inteiro no eixo q"],
+], [4.2, 2.0, 2.6, 6.2])
+box("base", "O v<sub>d</sub> diz <b>quanto</b> de tensão há e o v<sub>q</sub> diz <b>quanto o "
+    "ângulo está errado</b>. O PLL usa só o v<sub>q</sub>: leva ele a zero e, com isso, alinha o "
+    "eixo d com a tensão da rede.")
+box("alem", "<b>Por que só v<sub>q</sub>, e não v<sub>d</sub>, vai para o PI?</b> Perto do "
+    "travamento, o cosseno é quase 1 e varia pouco com o erro, enquanto o seno varia "
+    "linearmente. Por isso o v<sub>q</sub> é o sinal que carrega o erro de fase.")
 sub("Fundamento: por que o controle quer dq")
 n.p("Um PI zera o erro em regime de um sinal <b>constante</b>: a parte integral acumula até "
     "o erro sumir. Para uma senoide, o integrador nunca para de oscilar e sempre sobra erro "

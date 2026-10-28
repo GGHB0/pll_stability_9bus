@@ -10,6 +10,15 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-27 (noite): v_d e v_q com o ângulo do PLL no slide 6 (entregue)
+
+- Imagem `assets/diagrams/park_vdq_pll.png` (STIX, θ_PLL em laranja, como a
+  matriz) sob a Eq. (3.5); legenda "..., com o ângulo do PLL"; fala do Bruno
+  com v_d/v_q. "K_pd = 1" do slide 10 mantido: está na Eq. (3.10) do TCC.
+- 5b204ca9… → 51ddb76fbf68fa77f7582c1201cbcfef, backup `_20261027_221024`.
+  Diff: só o slide 6. check 0 falha; 26,2 min. Staging
+  `C:\Temp\defesa_kpd\` (`gen_park.py`, `gen_eq_png.py`).
+
 ## 2026-10-27: slide novo "Filtro LCL" (13), deck 30 → 31 (entregue)
 
 - Exceção de método aprovada pelo Victor: equações de projeto do LCL

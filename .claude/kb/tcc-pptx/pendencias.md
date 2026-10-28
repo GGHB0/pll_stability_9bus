@@ -23,6 +23,10 @@ aliases: [defesa-pendencias]
   ao lado dela (eixos abc + dq girante com o vetor v projetado em v_d e v_q;
   senoides abc → Park → v_d e v_q constantes). Rótulos das senoides ficaram
   perto de 11 pt: conferir no projetor.
+- **v_d no slide 6 (2026-10-27, pedido do Victor)**: sob a matriz entrou
+  "com θ = θ_PLL: v_d = V_m cos(θ_ref − θ_PLL), v_q = V_m sen(θ_ref − θ_PLL)".
+  O v_q é do TCC (§3.4, antes da Eq. 3.10); o v_d o TCC não escreve, sai da
+  mesma substituição na (3.5). Conta completa no roteiro de estudo.
 - **Slide 12 (inversor) dividido em três (2026-10-20; 12a e 12b entregues como slides 12 e 13, 12c pendente)**: 12a
   "Referência de corrente" (2ª prévia: diagrama de blocos da 1ª versão no
   PSIM, `assets/diagrams/referencia_corrente_psim.svg`, Pref 1 pu e Qref = 0

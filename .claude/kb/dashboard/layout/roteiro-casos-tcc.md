@@ -66,13 +66,18 @@ tipo de curto.
 | # | Capítulo | Casos | Gráfico |
 |---|---|---|---|
 | 1 | Faltas destacadas | os 4 pontos de falta | unifilar com passos ([[faltas-destacadas]]) |
-| 2 | Energização | regime × regime inadequada | erro de fase / v_d (0-0,2 s) |
+| 2 | Inicialização | regime × regime inadequada | erro de fase / v_d (0-0,2 s) |
 | 3 | Localização | 4 trifásicas nominais | erro / v_d / P |
 | 4 | Sequência negativa | B6 trifásica × bifásica nos passos 1-4; no 5, as duas trifásicas + 4 assimétricas e matriz barra × curto ([[palco-sequencia-negativa]]) | v_abc → v_d/v_q → v_q/erro → espectro de v_d |
 | 5 | Compromisso da sintonia | B6 bifásica nas duas sintonias | erro / v_d |
 | 6 | Perda de sincronismo | B7 trifásica nas duas sintonias | erro (±180° fixo) / P / Q / v_d |
 | 7 | Código de rede | 4 trifásicas | suportabilidade (V × t) e rampa ONS (i_q × V), lado a lado |
 | 8 | Todos os casos | 17 casos do TCC | tabela (colunas do comparativo) |
+
+A Inicialização (era "Energização do inversor" até 2026-10-28) não compara
+as sintonias: geradores, rede e inversor partem juntos em t = 0, e a
+mensagem é que o PLL sincroniza mesmo com a sintonia inadequada (40 e 79 ms,
+sem "quase o dobro").
 
 A ordem segue o Cap. 5 (§5.3 antes de §5.4): o ganho menor aparece primeiro
 filtrando melhor o 120 Hz e depois perdendo o sincronismo na B7 trifásica,
@@ -130,7 +135,7 @@ leitura como exceção à regra do deck exato. As rodadas acabam 0,3 s depois
 do início da falta, então só o patamar de 0,2 pu da curva tem dado.
 
 Desde 2026-10-21, o 1º capítulo é "Faltas destacadas" (`kind="mapa"`):
-o unifilar com os quatro pontos de falta, antes da Energização, e os
+o unifilar com os quatro pontos de falta, antes da Inicialização, e os
 demais passaram para 2 a 8. Design, passos e navegação em
 [[faltas-destacadas]].
 

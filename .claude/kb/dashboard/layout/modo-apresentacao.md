@@ -41,7 +41,7 @@ destacadas", [[faltas-destacadas]]), depois os passos do palco
 (`_presPassoStep`), e só então o capítulo vizinho. Entrando num capítulo
 pela seta ←, cai no último passo.
 
-## Marcação de acomodação (Energização, 2026-10-24)
+## Marcação de acomodação (Inicialização, 2026-10-24)
 
 `_marcaPartida` marca, por caso, linha tracejada na cor da curva, tempo no
 topo (40/79 ms no erro, 34/42 ms em v_d) e ponto onde a curva entra de vez
@@ -84,7 +84,7 @@ Pedidos para "enriquecer a apresentação além dos gráficos"; quatro prévias
 injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
 (`roteiro.py`), sem nada fixo no JS.
 
-- **Passos com frase-mensagem** (`passos_pres`, Energização e Localização): cada passo
+- **Passos com frase-mensagem** (`passos_pres`, Inicialização e Localização): cada passo
   troca o parágrafo da legenda por uma frase grande (`.pres-msg`) e esconde
   os casos de `ocultar`. Passo 1 só a nominal ("40 ms"), passo 2 entra a
   inadequada ("79 ms: quase o dobro"). Indicador de passo no cabeçalho
@@ -108,20 +108,20 @@ injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
   passos, o `destaque` só aparece no passo com `destaque=True`
   (`_capDestaque`). A Perda de sincronismo ficou sem número de destaque desde
   2026-10-28 (o 66,8% de P absorvida saiu do palco a pedido do usuário).
-  Estendido no mesmo dia: Energização (foco na partida), Localização
+  Estendido no mesmo dia: Inicialização (foco na partida), Localização
   (foco na falta; passo 3 novo, retorno em até 112 ms no pós-falta) e
   Sequência negativa (refeita em 2026-10-28 em cinco passos, abc → dq →
   espectro: [[palco-sequencia-negativa]]). **O último passo fica sem foco**
   (pedido de 2026-10-25): o capítulo começa no detalhe e fecha com o
   gráfico inteiro, em todos os capítulos com passos.
-- **Fasor** (`lado="fasor"`, Energização, Perda de sincronismo e passo 2
+- **Fasor** (`lado="fasor"`, Inicialização, Perda de sincronismo e passo 2
   da Localização): círculo
   com a rede (marca preta no topo, cunha verde de ±2°) e um vetor por caso,
   no ângulo do erro de fase. O instante segue o mouse no gráfico
   (`plotly_hover`) e o play percorre a janela do capítulo em 20 s
   (`FASOR_MS`, 20 s desde 2026-10-24: 8 s ficou rápido demais), **sempre a partir do início** (pedido de 2026-10-24: na
-  Energização, t = 0, o PLL girando até travar); trocar de capítulo zera
-  `fasorT`. Na Energização os passos também valem no fasor (passo 1 só o
+  Inicialização, t = 0, o PLL girando até travar); trocar de capítulo zera
+  `fasorT`. Na Inicialização os passos também valem no fasor (passo 1 só o
   vetor nominal). Cursor vertical cinza tracejado
   (`#fs-cursor`) posicionado por `xaxis.l2p`. Os ângulos vêm de
   `gd._fullData` (os `x`/`y` em `SCENARIOS` estão em base64 e não têm

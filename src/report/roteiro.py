@@ -168,20 +168,23 @@ CAPITULOS: list[dict] = [
                   papel="<b>Daqui em diante:</b> os capítulos comparam estes "
                         "casos, nas duas sintonias do PLL."),
          ]),
-    dict(id="energ", pres=["err", "vd"], curto="Energização", kind="time",
-         titulo="Energização do inversor", ref="§5.1 · Figura 5.3",
-         texto="Na partida, o SRF-PLL trava na rede: o erro de fase entra na "
-               "faixa de 2° em 40 ms com a sintonia nominal e em 79 ms com a "
-               "inadequada.",
+    dict(id="energ", pres=["err", "vd"], curto="Inicialização", kind="time",
+         titulo="Inicialização do sistema", ref="§5.1 · Figura 5.3",
+         texto="Na inicialização, todo o sistema parte junto: geradores, rede "
+               "e inversor. O SRF-PLL sincroniza com a rede nas duas "
+               "sintonias: mesmo com a sintonia inadequada, o erro de fase "
+               "entra na faixa de 2°.",
          casos=[("regime", _NOM), ("regime_bad_pll", _BAD)],
          sinais=["err", "vd"], xrange=[0.0, 0.2], metricas=["terr2", "tvd5"],
          lado="fasor",
          passos_pres=[
-             dict(texto="Com a sintonia nominal, o erro de fase entra na faixa "
-                        f"de 2° em <b style='color:{_NOM[0]}'>40 ms</b>.",
+             dict(texto="Todo o sistema parte em t = 0, não só o inversor. "
+                        "Com a sintonia nominal, o PLL sincroniza em "
+                        f"<b style='color:{_NOM[0]}'>40 ms</b>.",
                   ocultar=["regime_bad_pll"], foco=[0.0, 0.06]),
-             dict(texto="Com a sintonia inadequada, leva "
-                        f"<b style='color:{_BAD[0]}'>79 ms</b>: quase o dobro.",
+             dict(texto="Mesmo com a sintonia inadequada, o PLL consegue "
+                        "sincronizar: o erro entra na faixa de 2° em "
+                        f"<b style='color:{_BAD[0]}'>79 ms</b>.",
                   ocultar=[]),
          ]),
     dict(id="local", pres=["err", "vd"], curto="Localização", kind="time",

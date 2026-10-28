@@ -5,6 +5,17 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-28 — Energização vira Inicialização do sistema
+
+Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`
+
+Em t = 0 partem juntos os geradores, a rede e o inversor, não só o
+inversor: o capítulo 2 do palco, o grupo de cartões do Resumo e o item do
+diagnóstico passam a se chamar "Inicialização (do sistema)". O discurso
+deixa de comparar as sintonias ("quase o dobro") e passa a mostrar que o
+PLL sincroniza mesmo com a sintonia inadequada (40 e 79 ms mantidos).
+`verifica_palco.py` sem falhas.
+
 ## 2026-10-28 — Sequência negativa: o porquê do 120 Hz antes do espectro
 
 Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`,

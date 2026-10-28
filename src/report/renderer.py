@@ -1618,7 +1618,7 @@ setPllMode(pllMode);
 
         partida = m.get("partida")
         if partida:
-            groups.append(_group("Energização do inversor", "".join([
+            groups.append(_group("Inicialização do sistema", "".join([
                 _card("v<sub>d</sub> na faixa de 5%", f"{partida['t_vd5']:.0f}", "ms",
                       "desde t = 0",
                       "Último instante com v_d da rede fora de ±5% do valor final "
@@ -1683,7 +1683,7 @@ setPllMode(pllMode);
                               "após a eliminação da falta."))
         partida = m.get("partida")
         if partida:
-            parts.append(("neutral", "Energização",
+            parts.append(("neutral", "Inicialização",
                           f"v<sub>d</sub> entra na faixa de 5% em {partida['t_vd5']:.0f} ms "
                           f"e o erro de fase na de 2° em {partida['t_err2']:.0f} ms."))
 

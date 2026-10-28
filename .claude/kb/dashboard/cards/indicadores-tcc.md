@@ -36,7 +36,7 @@ função.
 | `erro_fase_deg` | `atan2(v_q, v_d)` da rede, em graus |
 | `pico_e_retorno` | pico em `[t_fault + 1 ciclo, t_clear]`; retorno = último \|e\| > 2° após `t_clear`, em ms (`None` = não volta na janela) |
 | `indicadores_falta` | retenção de v_d, v_d médio/mín./máx., 120 Hz (Hann, `[t_fault + 2 ciclos, t_clear]`), % do tempo com \|e\| > 90° em `[t_fault, t_clear]`, \|V\| médio do inversor, rampa ONS, i_q,ref médio, P e Q médios, % do tempo com P < 0 e Q ≥ 0 após `t_clear`; `err_ts` = erro no instante do retorno, que vai com t_clear e ts para `tccInd.retorno` (marcação do palco) |
-| `indicadores_partida` | regime: v_d na faixa de ±5% do valor final (média dos últimos 50 ms) e erro na faixa de 2°, em ms desde t = 0; também `vd_fin` e o valor de cada sinal nesse instante (`vd_t5`, `err_t2`), que vão para `tccInd.partida` e marcam o capítulo Energização |
+| `indicadores_partida` | regime: v_d na faixa de ±5% do valor final (média dos últimos 50 ms) e erro na faixa de 2°, em ms desde t = 0; também `vd_fin` e o valor de cada sinal nesse instante (`vd_t5`, `err_t2`), que vão para `tccInd.partida` e marcam o capítulo Inicialização |
 | `suportabilidade_ons` | falta: amplitude de 60 Hz de cada fase de `v_abc` do inversor (janela móvel de 1 ciclo), mínimo entre fases; "fora" se cai abaixo da borda da Figura 2.1 depois do 1º ciclo (classificado na taxa nativa; a série embutida é reamostrada a 2 ms). Usado só pelo capítulo "Código de rede" ([[ons-voltage-ride-through]]) |
 
 Conferido contra o TCC: Tabelas 5.1 a 5.3 inteiras, 8,2% / 9,7% de retenção
@@ -75,8 +75,8 @@ quebrar o ciclo `loader → indicadores → spectrum → loader`.
     depois do 1º ciclo; subtítulo com o mínimo dela. Clique abre |V| Bus 2,
     onde a curva está desenhada ([[chart-analysis-overlays]]). Nas 4
     trifásicas: B7 e L7-8 fora, B6 e L8-9 dentro.
-  - *Energização do inversor* (regime): 5% de v_d e 2° do erro.
-  - A narrativa ganhou o item "Sincronismo" (falta) ou "Energização" (regime).
+  - *Inicialização do sistema* (regime): 5% de v_d e 2° do erro.
+  - A narrativa ganhou o item "Sincronismo" (falta) ou "Inicialização" (regime).
 - **Tabela comparativa**: 9 colunas novas antes das de V médio; ver
   [[comparison-table]].
 - **Aba Espectro**: destaque com o 120 Hz pela receita do TCC. A tabela de

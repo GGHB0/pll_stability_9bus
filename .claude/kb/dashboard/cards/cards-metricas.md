@@ -7,7 +7,7 @@ description: Cards de severidade do distúrbio (V médio por barra, duração, t
 # Cards de Métricas e Contexto Narrativo (renderer.py)
 
 > **2026-10-20**: acima deste grupo entraram os grupos "Sincronismo do
-> SRF-PLL", "Tensão e suporte de reativo" e "Energização do inversor", com os
+> SRF-PLL", "Tensão e suporte de reativo" e "Inicialização do sistema", com os
 > indicadores do Cap. 5 do TCC; pico e retorno voltaram pela receita do TCC.
 > Ver [[indicadores-tcc-dashboard]]. O histórico abaixo segue valendo para
 > IAE, ISE e Erro R.P.

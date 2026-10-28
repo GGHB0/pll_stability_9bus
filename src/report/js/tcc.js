@@ -21,7 +21,7 @@ var IND_LBL = {
   terr2: "Erro na faixa de 2°", tvd5: "v<sub>d</sub> na faixa de 5%",
   ret: "Retenção de v<sub>d</sub>", pico: "Pico do erro de fase",
   ts: "Retorno à faixa de 2°", a120: "120 Hz em v<sub>d</sub>",
-  fracP: "P absorvida após a eliminação", Vmed: "Tensão no inversor",
+  Vmed: "Tensão no inversor",
   rampa: "Rampa ONS prevê", iqref: "i<sub>q,ref</sub> médio",
 };
 var tccCap = 0, tccState = {}, presOn = false;

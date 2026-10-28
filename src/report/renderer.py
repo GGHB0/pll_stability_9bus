@@ -1443,7 +1443,6 @@ setPllMode(pllMode);
             out["pico"] = f"{ind['pico']:.1f}°"
             out["ts"] = f"{ind['ts']:.0f} ms" if ind["ts"] is not None else "não retorna"
             out["a120"] = f"{self._fmt_a120(ind['a120'])} pu"
-            out["fracP"] = f"{ind['frac_P_absorve']:.1f}%"
             out["Vmed"] = f"{self._fmt(ind['Vmed'])} pu"
             out["rampa"] = f"{self._fmt(ind['iq_rampa_Vmed'])} pu"
             out["iqref"] = f"{self._fmt(ind['iqref'])} pu"
@@ -1577,10 +1576,6 @@ setPllMode(pllMode);
                                   "referencial estimado fora do semiplano da tensão da rede",
                                   "neutral", target="Erro de fase"))
             if ind["ts"] is None:
-                sync.append(_card("P absorvida", f"{ind['frac_P_absorve']:.1f}", "%",
-                                  "do tempo após a eliminação",
-                                  "Fração de [t_clear, fim] com P < 0: o inversor drena "
-                                  "potência ativa da rede", "bad", target="P / Q UFV"))
                 sync.append(_card("Q injetada", f"{ind['frac_Q_injeta']:.1f}", "%",
                                   "do tempo após a eliminação",
                                   "Fração de [t_clear, fim] com Q ≥ 0; no restante o inversor "
@@ -1681,8 +1676,7 @@ setPllMode(pllMode);
                 parts.append(("bad", "Sincronismo",
                               "O erro de fase não volta à faixa de 2° até o fim da "
                               "simulação: o SRF-PLL não recupera o sincronismo na janela "
-                              f"simulada e o inversor absorve potência ativa em "
-                              f"{ind['frac_P_absorve']:.1f}% do tempo após a eliminação."))
+                              "simulada."))
             else:
                 parts.append(("good", "Sincronismo",
                               f"O erro de fase volta à faixa de 2° {ind['ts']:.0f} ms "

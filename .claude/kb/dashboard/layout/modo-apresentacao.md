@@ -106,7 +106,8 @@ injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
   frase-ponte ("E numa falta mais severa?") e fecho ("O ganho que filtrava
   o 120 Hz na Barra 6 é o que perde o sincronismo aqui"). Em capítulo com
   passos, o `destaque` só aparece no passo com `destaque=True`
-  (`_capDestaque`): o 66,8% chega no passo 3, depois de a curva escorregar.
+  (`_capDestaque`). A Perda de sincronismo ficou sem número de destaque desde
+  2026-10-28 (o 66,8% de P absorvida saiu do palco a pedido do usuário).
   Estendido no mesmo dia: Energização (foco na partida), Localização
   (foco na falta; passo 3 novo, retorno em até 112 ms no pós-falta) e
   Sequência negativa (refeita em 2026-10-28 em cinco passos, abc → dq →
@@ -135,8 +136,8 @@ injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
 - **Número de destaque** (`destaque`): caixa vermelha com o número em 46 px
   sobre o gráfico (`_destaque`, só com `o.big`), com seta até o alvo. "> 250×"
   aponta para o pico de 120 Hz da menor assimétrica. Com `lado=True`, o
-  número vai para o painel ao lado: o "66,8%" da perda de sincronismo fica
-  sob o play do fasor, porque sobre o gráfico cobria os vales de P.
+  número vai para o painel ao lado, sob o play do fasor (usado pelo "66,8%"
+  da perda de sincronismo até 2026-10-28, quando saiu).
 - **Notas** (`notas`, 2026-10-24): caixas menores com seta (`_nota`, só com
   `o.big`), para curva que some no gráfico. Na Sequência negativa, a
   trifásica da Barra 7 (0,0002 pu, do cartão) colada no zero em 120 Hz.

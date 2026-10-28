@@ -61,8 +61,10 @@ quebrar o ciclo `loader → indicadores → spectrum → loader`.
   classifica por limiar:
   - *Sincronismo do SRF-PLL*: pico, retorno à faixa de 2° ("não retorna" em
     vermelho), 120 Hz; "Erro acima de 90°" só nas assimétricas (na trifásica
-    a fração vem só do salto de fase da aplicação da falta); "P absorvida" e
-    "Q injetada" só quando não há retorno (§5.4).
+    a fração vem só do salto de fase da aplicação da falta); "Q injetada" só
+    quando não há retorno (§5.4). "P absorvida" saiu dos cards, da frase do
+    resumo e do palco em 2026-10-28, a pedido do usuário (`frac_P_absorve`
+    segue calculado em `indicadores.py`).
   - *Tensão e suporte de reativo*: "Suportabilidade ONS" (dentro/fora,
     desde 2026-10-25), retenção de v_d, v_d médio (mín./máx.), tensão no
     inversor, i_q,ref médio com a rampa ONS no subtítulo, P média.

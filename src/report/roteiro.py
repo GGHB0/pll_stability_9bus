@@ -285,14 +285,10 @@ CAPITULOS: list[dict] = [
          texto="A tensão v<sub>d</sub> retém quase o mesmo nas duas sintonias (9,2% e 8,2%). "
                "Com a nominal, o erro volta à faixa de 2° em 98 ms; com a "
                "inadequada, percorre toda a faixa de ±180° até o fim da "
-               "simulação, e a usina absorve potência ativa em 66,8% do "
-               "tempo após a eliminação.",
+               "simulação.",
          casos=[("bus7/3phase", _NOM), ("bus7/3phase_bad_pll", _BAD)],
          sinais=["err", "P", "Q", "vd"], xrange=[0.25, 0.6],
-         metricas=["ret", "pico", "ts", "fracP"], lado="fasor",
-         destaque=dict(lado=True, num="66,8%",
-                       txt="do tempo absorvendo potência ativa após a "
-                           "eliminação, com a sintonia inadequada"),
+         metricas=["ret", "pico", "ts"], lado="fasor",
          passos_pres=[
              dict(texto="O caso mais severo: com a sintonia nominal, o erro volta à "
                         f"faixa de 2° em <b style='color:{_NOM[0]}'>98 ms</b>.",
@@ -304,7 +300,7 @@ CAPITULOS: list[dict] = [
                   ocultar=[], foco=[0.4, 0.6]),
              dict(texto="O ganho que filtrava o 120 Hz na Barra 6 é o que perde "
                         "o sincronismo aqui.",
-                  ocultar=[], destaque=True),
+                  ocultar=[]),
          ]),
     dict(id="ons", pres=[], curto="Código de rede", kind="ons",
          titulo="Código de rede: permanência e corrente reativa",

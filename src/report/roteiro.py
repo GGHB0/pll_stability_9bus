@@ -308,19 +308,17 @@ CAPITULOS: list[dict] = [
                   ocultar=["bus7/3phase", "line7_8/3phase", "line8_9/3phase",
                            "bus6/3phase"]),
              dict(texto="A Barra 7 e a Linha 7-8 levam a tensão abaixo de "
-                        "0,2 pu, onde a desconexão é permitida, e o inversor "
+                        "0,2 pu, onde a desconexão é permitida. O inversor "
                         "fica conectado com i<sub>q</sub> saturado em "
-                        "<b>1 pu</b>.",
-                  ocultar=["line8_9/3phase", "bus6/3phase"]),
+                        "<b>1 pu</b>, mas, com a tensão retida abaixo de 10% "
+                        "do valor pré-falta, entrega só <b>0,09 pu</b> de "
+                        "reativo.",
+                  ocultar=["line8_9/3phase", "bus6/3phase"], destaque=True),
              dict(texto="Mais longe, a injeção acompanha o afundamento: na "
                         "Barra 6, i<sub>q,ref</sub> médio de <b>0,72 pu</b> "
-                        "contra 0,76 pu da rampa.",
+                        "contra 0,76 pu da rampa. Com mais tensão, a área "
+                        "V · i<sub>q</sub>, o reativo entregue, fica bem maior.",
                   ocultar=[]),
-             dict(texto="Mas a potência é tensão vezes corrente: com a tensão "
-                        "retida abaixo de 10% do valor pré-falta, a corrente "
-                        "máxima entrega só "
-                        "<b>0,09 pu</b> de reativo.",
-                  ocultar=[], realce=["bus7/3phase"], destaque=True),
              dict(texto="Nas assimétricas e na perda de sincronismo, o "
                         "inversor também permanece conectado, mas a potência "
                         "carrega o 120 Hz ou se inverte e drena energia do "

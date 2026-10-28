@@ -26,7 +26,7 @@ Histórico de mudanças por commit: `CHANGELOG.md` na raiz do repo.
 | `layout/` | [bad-pll-dashboard-filter.md](layout/bad-pll-dashboard-filter.md) | Toggle PLL nominal/sintonia inadequada |
 | `layout/` | [roteiro-casos-tcc.md](layout/roteiro-casos-tcc.md) | Casos do Cap. 5 destacados (seletor, mapa, comparativo), capítulos do Cap. 5 e modo apresentação em tela cheia da defesa |
 | `layout/` | [modo-apresentacao.md](layout/modo-apresentacao.md) | Palco da defesa: estrutura, navegação por passos, marcação de acomodação, fasor, mini-mapa e números de destaque |
-| `layout/` | [palco-codigo-de-rede.md](layout/palco-codigo-de-rede.md) | Capítulo "Código de rede" do palco em seis passos: regra, curtos, dilema Q = V·iq, outros curtos e fecho com a Conclusão |
+| `layout/` | [palco-codigo-de-rede.md](layout/palco-codigo-de-rede.md) | Capítulo "Código de rede" do palco em cinco passos: regra, curtos com o dilema Q = V·iq, área V·iq, outros curtos e fecho com a Conclusão |
 | `layout/` | [faltas-destacadas.md](layout/faltas-destacadas.md) | Capítulo 0 do modo apresentação: os quatro pontos de falta no unifilar (kind "mapa", 1º capítulo do palco) |
 | `layout/` | [bad-pll-select-init-bug.md](layout/bad-pll-select-init-bug.md) | Bug corrigido: filtro do select não aplicado na carga inicial (fix 2026-08-18) |
 

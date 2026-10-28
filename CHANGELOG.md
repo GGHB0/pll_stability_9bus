@@ -5,6 +5,18 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-28 — Código de rede: reativo no passo dos curtos fora da região e área V·iq
+
+Arquivos: `src/report/roteiro.py`, `src/report/js/ons.js`
+
+O passo do 0,09 pu de reativo (antes o 4º) entrou no 2º, o da Barra 7 e
+da Linha 7-8 abaixo de 0,2 pu: o capítulo passa de seis para cinco
+passos. Para comparar o reativo entre os pontos de falta sem número que
+não está no TCC, o painel da rampa ganhou, por caso em cena, o retângulo
+da origem ao ponto (V médio, i_q,ref médio), cuja área é V·i_q = Q. As
+áreas batem com o Q médio medido (0,09/0,11/0,48/0,43 pu). O passo 3
+ganhou a frase da área. `verifica_palco.py` sem falhas.
+
 ## 2026-10-25 — Sem a aba Análise TCC; ONS e ganhos nas abas por cenário
 
 Arquivos: `src/report/renderer.py`, `src/report/js/navegacao.js`,

@@ -125,9 +125,24 @@ function _onsFigure(cap, o, layout, visible, mixed, col, grid, fs) {
       name: _onsNome(k), marker: { size: big ? 10 : 8, color: _onsCls(k) === "fora" ? T.redf : T.grey },
       hovertemplate: "<b>" + _onsNome(k) + "</b><br>V = %{x:.2f} pu · i<sub>q,ref</sub> = %{y:.2f} pu<extra></extra>" });
   });
+  // retângulo da origem ao ponto: área = V·i_q ≈ Q entregue (Q = V·i_q)
+  var area = false;
+  visible.forEach(function(c) {
+    var r = SCENARIOS[c.key].tccInd.raw;
+    if (!r || esm(c.key)) return;
+    area = true;
+    [{ fillcolor: col(c), opacity: 0.13, line: { width: 0 } },
+     { line: { color: col(c), width: 1.8, dash: "dot" } }].forEach(function(s) {
+      s.type = "rect"; s.xref = "x2"; s.yref = "y2"; s.layer = "below";
+      s.x0 = 0; s.y0 = 0; s.x1 = r.Vmed; s.y1 = r.iqref;
+      layout.shapes.push(s);
+    });
+  });
+  if (area) nota("2", 0.3, 0.1, "área = V · i<sub>q</sub> = potência reativa", T.ink);
   // rótulos fora da rampa: B7 e L7-8 quase no mesmo ponto, um em cima e
-  // outro embaixo; B6 fica abaixo da rampa, rótulo à esquerda
-  var POS = ["top center", "bottom center", "bottom left", "bottom left"];
+  // outro embaixo à direita (fora da seta do destaque); B6 abaixo da rampa,
+  // rótulo à esquerda
+  var POS = ["top center", "bottom right", "bottom left", "bottom left"];
   visible.forEach(function(c, i) {
     var r = SCENARIOS[c.key].tccInd.raw;
     if (!r) return;
@@ -146,10 +161,10 @@ function _onsFigure(cap, o, layout, visible, mixed, col, grid, fs) {
   faixa("2", 0, 0.5, "rgba(234,179,8,0.10)", "<b>corrente máxima</b>", T.amb);
   faixa("2", 0.5, 0.85, "rgba(37,99,235,0.07)", "<b>proporcional ao afundamento</b>", T.blu);
   faixa("2", 0.85, 1.0, "rgba(148,163,184,0.16)", "<b>banda morta</b>", T.ink);
-  if (!dest) nota("2", 0.25, 0.55, "abaixo de 0,5 pu,<br>i<sub>q</sub> = 1 pu", T.amb);
+  if (!dest && !area) nota("2", 0.25, 0.55, "abaixo de 0,5 pu,<br>i<sub>q</sub> = 1 pu", T.amb);
   var rd = dest && dest.key && SCENARIOS[dest.key] && SCENARIOS[dest.key].tccInd.raw;
   if (rd) layout.annotations.push({ xref: "x2", yref: "y2", x: rd.Vmed, y: rd.iqref,
-    axref: "x2", ayref: "y2", ax: 0.17, ay: 0.72, showarrow: true, arrowhead: 2, arrowwidth: 2.5,
+    axref: "x2", ayref: "y2", ax: 0.14, ay: 0.6, showarrow: true, arrowhead: 2, arrowwidth: 2.5,
     arrowcolor: "#b91c1c", standoff: 14, align: "left", xanchor: "left", yanchor: "middle",
     text: "<b style='font-size:46px'>" + dest.num + "</b><br><span style='font-size:16px'>" + dest.txt + "</span>",
     font: { color: "#b91c1c", size: 16 }, bgcolor: "rgba(255,255,255,.92)", bordercolor: "#fecaca",

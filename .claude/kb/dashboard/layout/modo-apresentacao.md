@@ -196,4 +196,4 @@ ordem em `TCC_JS_FILES`), com `node --check` no pre-commit.
 
 - [[roteiro-demonstracao-dashboard]] — capítulos, casos e cores
 - [[indicadores-tcc-dashboard]] — origem dos números (`tccInd`)
-- [[palco-codigo-de-rede]] — Código de rede em seis passos, com fecho
+- [[palco-codigo-de-rede]] — Código de rede em cinco passos, com fecho

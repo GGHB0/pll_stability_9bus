@@ -22,7 +22,7 @@ graph LR
     standards["standards/"]
     tcc_pptx["tcc-pptx/"]
     tcc_word["tcc-word/"]
-    dashboard -->|3| pll
+    dashboard -->|4| pll
     dashboard -->|2| power_system
     dashboard -->|5| simulation
     dashboard -->|4| standards

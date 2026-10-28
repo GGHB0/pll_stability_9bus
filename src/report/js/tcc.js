@@ -10,7 +10,13 @@ var SINAIS = {
   P:    { lbl: "Potência ativa P", trace: "P UFV", y: "P (pu)", u: " pu" },
   Q:    { lbl: "Potência reativa Q", trace: "Q UFV", y: "Q (pu)", u: " pu" },
   spec: { lbl: "Espectro de v<sub>d</sub> na falta", y: "Amplitude (pu)", u: " pu" },
+  vdi:  { lbl: "v<sub>d</sub> do inversor", trace: "V<sub>d</sub> Inv", y: "v<sub>d</sub> (pu)", u: " pu" },
+  vqi:  { lbl: "v<sub>q</sub> do inversor (entrada do PI do PLL)", trace: "V<sub>q</sub> Inv",
+          y: "v<sub>q</sub> (pu)", u: " pu" },
+  // um painel por caso visível (_tccFigure expande "abc" em "abc|<caso>")
+  abc:  { lbl: "v<sub>abc</sub> do inversor", y: "v (pu)", u: " pu" },
 };
+var FASES_ABC = [["a", "#1d4ed8"], ["b", "#b45309"], ["c", "#15803d"]];
 var IND_LBL = {
   terr2: "Erro na faixa de 2°", tvd5: "v<sub>d</sub> na faixa de 5%",
   ret: "Retenção de v<sub>d</sub>", pico: "Pico do erro de fase",
@@ -98,6 +104,11 @@ function _tccFigure(cap, sinais, o) {
 
   if (cap.kind === "ons") return _onsFigure(cap, o, layout, visible, mixed, col, grid, fs);
 
+  var ps = o.big ? _presPassoAtual(cap) : null, xr = (ps && ps.xrange) || cap.xrange;
+  sinais = [].concat.apply([], sinais.map(function(s) {
+    return s === "abc" ? visible.filter(function(c) { return SCENARIOS[c.key].tccAbc; })
+      .map(function(c) { return "abc|" + c.key; }) : [s];
+  }));
   if (o.big && sinais.length > 1) layout.margin.t = 44;   // espaço para o rótulo do 1º painel
   // vão entre painéis de ao menos 48 px, para o rótulo do 2º não colar no eixo de cima
   var pxPlot = o.height - layout.margin.t - layout.margin.b;
@@ -107,11 +118,24 @@ function _tccFigure(cap, sinais, o) {
     var ax = (i === 0) ? "" : String(i + 1);
     var y1 = 1 - i * (h + gap), y0 = y1 - h;
     doms.push([y0, y1]);
-    var S = SINAIS[sinal];
+    var abcKey = sinal.indexOf("abc|") === 0 ? sinal.slice(4) : null;
+    var S = SINAIS[abcKey ? "abc" : sinal], lblPainel = S.lbl;
     layout["yaxis" + ax] = { domain: [y0, y1], anchor: "x", gridcolor: grid, zerolinecolor: grid,
       title: { text: S.y }, hoverformat: ".3f" };
+    if (abcKey) {   // três fases de um caso, cor por fase
+      layout["yaxis" + ax].range = [-1.45, 1.45];
+      var A = SCENARIOS[abcKey].tccAbc, nm = _tccLabel(abcKey, mixed);
+      FASES_ABC.forEach(function(f) {
+        data.push({ type: "scatter", mode: "lines", x: A.t, y: A[f[0]], name: "fase " + f[0],
+          xaxis: "x", yaxis: "y" + ax, line: { color: f[1], width: o.big ? 2.6 : 1.8 },
+          hovertemplate: nm + " · fase " + f[0] + ": <b>%{y:.3f} pu</b><extra></extra>" });
+      });
+      lblPainel = S.lbl + " · " + nm + "   " + FASES_ABC.map(function(f) {
+        return "<span style='color:" + f[1] + "'>" + f[0] + "</span>";
+      }).join(" ");
+    }
     // casos com frente=True por último, desenhados por cima dos outros
-    visible.filter(function(c) { return !c.frente; })
+    if (!abcKey) visible.filter(function(c) { return !c.frente; })
       .concat(visible.filter(function(c) { return c.frente; })).forEach(function(c) {
       var t = _tccTrace(SCENARIOS[c.key], sinal);
       if (!t) return;
@@ -124,7 +148,7 @@ function _tccFigure(cap, sinais, o) {
     });
     if (n > 1) {
       layout.annotations.push({ xref: "paper", yref: "paper", x: 0, y: y1, xanchor: "left",
-        yanchor: "bottom", yshift: 12, showarrow: false, text: "<b>" + S.lbl + "</b>",
+        yanchor: "bottom", yshift: 12, showarrow: false, text: "<b>" + lblPainel + "</b>",
         font: { size: fs, color: dark ? "#93c5fd" : "#1d4ed8" } });
     }
     if (sinal === "err") {
@@ -155,14 +179,14 @@ function _tccFigure(cap, sinais, o) {
         text: "120 Hz", showarrow: false, font: { size: fs - 1 } });
     }
   });
-  var dest = o.big ? _capDestaque(cap) : null, ps = o.big ? _presPassoAtual(cap) : null;
+  var dest = o.big ? _capDestaque(cap) : null;
   if (dest && !dest.lado) _destaque(dest, sinais, layout);
   if (o.big) (cap.notas || []).forEach(function(N) { _nota(N, sinais, layout); });
-  if (ps && ps.foco && cap.xrange) _foco(ps.foco, cap.xrange, layout);
+  if (ps && ps.foco && xr) _foco(ps.foco, xr, layout);
   layout.xaxis = { anchor: "y" + (n > 1 ? String(n) : ""), gridcolor: grid, zerolinecolor: grid,
     title: { text: spec ? "Frequência (Hz)" : "Tempo (s)" },
     hoverformat: spec ? ".0f" : ".4f" };
-  if (cap.xrange) layout.xaxis.range = cap.xrange;
+  if (xr) layout.xaxis.range = xr;
   if (!spec) {
     var f0 = visible.map(function(c) { return SCENARIOS[c.key]; })
       .filter(function(sc) { return sc.tFault != null; })[0];

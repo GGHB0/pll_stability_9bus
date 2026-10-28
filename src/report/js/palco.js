@@ -19,6 +19,7 @@ function presToggle() {
     _renderPres();
   } else {
     _fasorStop();
+    _seqStop();
     _presPassoReset();
     if (document.fullscreenElement && document.exitFullscreen) {
       try { document.exitFullscreen(); } catch (e) {}
@@ -63,6 +64,7 @@ function _renderPres() {
   var mapaEl = document.getElementById("pres-mapa");
   var bodyEl = document.getElementById("pres-body"), sideEl = document.getElementById("pres-side");
   _fasorStop();
+  _seqStop();
   document.getElementById("fs-cursor").style.display = "none";
   sideEl.style.display = "none"; sideEl.innerHTML = ""; sideEl.className = "pres-side";
   if (cap.kind === "mapa") {
@@ -83,9 +85,11 @@ function _renderPres() {
   bodyEl.style.display = "";
   var lado = _presLado();
   if (lado) { sideEl.className = "pres-side " + lado; sideEl.style.display = ""; }
-  cardsEl.innerHTML = (cap.cartoes_pres === false) ? "" : _tccCardsHtml(cap, false);
+  cardsEl.innerHTML = (cap.cartoes_pres === false || (ps && ps.cartoes === false))
+    ? "" : _tccCardsHtml(cap, false);
   var h = Math.max(260, plotEl.clientHeight);
-  var fig = _tccFigure(cap, cap.pres, { dark: false, height: h, big: true, bg: "#ffffff" });
+  // o passo pode trocar os sinais do gráfico (Sequência negativa: abc, dq, espectro)
+  var fig = _tccFigure(cap, (ps && ps.sinais) || cap.pres, { dark: false, height: h, big: true, bg: "#ffffff" });
   // largura explícita: o react guarda a do capítulo anterior (com ou sem painel ao lado)
   fig.layout.width = plotEl.clientWidth;
   Plotly.react(plotEl, fig.data, fig.layout, PRES_CFG);
@@ -98,6 +102,7 @@ function _renderPres() {
     + "<p class=\"fq-a\">" + ps.fecho.resposta + "</p></div></div>");
   if (lado === "fasor") _fasorInit(plotEl, cap);
   else if (lado === "minimapa") _miniMapa(cap, sideEl);
+  else if (lado === "seq") _seqInit(sideEl);
 }
 
 // painel ao lado do passo atual: o lado do passo, se houver, senão o do capítulo

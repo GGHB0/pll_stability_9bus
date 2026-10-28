@@ -23,7 +23,7 @@ from ..config import (
     VOLT_INDIVIDUAL_LIMIT_PU, DQ_UNBALANCE_WARN_PU, DQ_UNBALANCE_HIGH_PU,
 )
 from ..pipeline.loader import SimData
-from .roteiro import TCC_SECOES, TCC_CASOS, OUTROS_LABEL, CAPITULOS, tcc_secao
+from .roteiro import TCC_SECOES, TCC_CASOS, OUTROS_LABEL, CAPITULOS, ABC_CASOS, tcc_secao
 
 
 class HTMLRenderer:
@@ -141,6 +141,7 @@ class HTMLRenderer:
                 "tcc":       tcc_secao(key),
                 "tccOrd":    (list(TCC_CASOS).index(key) if key in TCC_CASOS else None),
                 "tccInd":    self._tcc_ind(d),
+                "tccAbc":    self._tcc_abc(d) if key in ABC_CASOS else None,
                 "tFault":    d.t_fault,
                 "tClear":    d.t_clear,
                 "tEnd":      d.t[-1] if len(d.t) > 0 else None,
@@ -1411,6 +1412,18 @@ setPllMode(pllMode);
             row["ts"] = {"val": "não retorna", "raw": None, "cls": "bad"}
         return row
 
+    @staticmethod
+    def _tcc_abc(data: SimData) -> dict | None:
+        """v_abc do inversor em volta da falta (capítulo Sequência negativa
+        do palco): 0,26 a 0,42 s, uma amostra a cada 10 (50 µs, ~330 por ciclo)."""
+        if not data.has_vabc_ufv:
+            return None
+        t = data.t_abc
+        m = np.flatnonzero((t >= 0.26) & (t <= 0.42))[::10]
+        r = lambda y: np.round(y[m], 4).tolist()
+        return {"t": np.round(t[m], 6).tolist(), "a": r(data.va_ufv),
+                "b": r(data.vb_ufv), "c": r(data.vc_ufv)}
+
     def _tcc_ind(self, data: SimData) -> dict:
         """Valores formatados dos mini-cartões da aba Análise TCC (e os
         crus e a curva de suportabilidade que o capítulo do ONS usa)."""
@@ -2230,6 +2243,10 @@ body.pres-on { overflow: hidden }
 }
 .pres-side.fasor { width: clamp(340px, 30vw, 430px) }
 .pres-side.minimapa { width: clamp(320px, 31vw, 600px); align-items: stretch }
+.pres-side.seq { width: clamp(300px, 26vw, 400px) }
+#sq-svg { flex: 1 1 auto; min-height: 0; width: 100% }
+#sq-svg svg { width: 100%; height: 100%; display: block }
+.sq-nota { margin: 0; font-size: 14px; font-weight: 600; color: var(--muted); text-align: center }
 .pres-side-h { margin: 0; font-weight: 800; font-size: 18px; color: var(--badge-fg) }
 .pres-side .mapa-svg { min-height: 0; flex: 0 1 auto }
 .pres-side .mapa-svg svg { width: 100%; height: 100%; display: block }
@@ -2462,7 +2479,7 @@ body.pres-on { overflow: hidden }
 # das figuras já embutidas em SCENARIOS, sem aumentar o HTML.
 _JS_DIR = Path(__file__).parent / "js"
 TCC_JS_FILES = ("tcc.js", "ons.js", "tcc_ui.js", "mapa.js", "navegacao.js",
-                "palco.js", "fasor.js", "minimapa.js", "eventos.js")
+                "palco.js", "fasor.js", "seq.js", "minimapa.js", "eventos.js")
 
 
 def _tcc_js() -> str:

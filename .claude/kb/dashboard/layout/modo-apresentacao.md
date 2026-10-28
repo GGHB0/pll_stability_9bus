@@ -109,8 +109,8 @@ injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
   (`_capDestaque`): o 66,8% chega no passo 3, depois de a curva escorregar.
   Estendido no mesmo dia: Energização (foco na partida), Localização
   (foco na falta; passo 3 novo, retorno em até 112 ms no pós-falta) e
-  Sequência negativa (passo 1 só a trifásica, passo 2 as assimétricas com
-  o "> 250×"; foco em 100 a 140 Hz). **O último passo fica sem foco**
+  Sequência negativa (refeita em 2026-10-28 em cinco passos, abc → dq →
+  espectro: [[palco-sequencia-negativa]]). **O último passo fica sem foco**
   (pedido de 2026-10-25): o capítulo começa no detalhe e fecha com o
   gráfico inteiro, em todos os capítulos com passos.
 - **Fasor** (`lado="fasor"`, Energização, Perda de sincronismo e passo 2

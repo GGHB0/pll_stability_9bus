@@ -68,7 +68,7 @@ tipo de curto.
 | 1 | Faltas destacadas | os 4 pontos de falta | unifilar com passos ([[faltas-destacadas]]) |
 | 2 | Energização | regime × regime inadequada | erro de fase / v_d (0-0,2 s) |
 | 3 | Localização | 4 trifásicas nominais | erro / v_d / P |
-| 4 | Sequência negativa | B7 trifásica (grafite, por cima) + 4 assimétricas, agrupadas por barra; matriz barra × curto no lugar dos cartões | espectro de v_d na falta |
+| 4 | Sequência negativa | B6 trifásica × bifásica nos passos 1-4; no 5, as duas trifásicas + 4 assimétricas e matriz barra × curto ([[palco-sequencia-negativa]]) | v_abc → v_d/v_q → v_q/erro → espectro de v_d |
 | 5 | Compromisso da sintonia | B6 bifásica nas duas sintonias | erro / v_d |
 | 6 | Perda de sincronismo | B7 trifásica nas duas sintonias | erro (±180° fixo) / P / Q / v_d |
 | 7 | Código de rede | 4 trifásicas | suportabilidade (V × t) e rampa ONS (i_q × V), lado a lado |

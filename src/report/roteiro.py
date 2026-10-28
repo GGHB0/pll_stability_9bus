@@ -65,9 +65,14 @@ _ASSIM = {
     "bus7/3phase": (("#1f2937", "#e5e7eb"), dict(_B7, larg=4.5, frente=True)),
     "bus7/2phase": (("#b45309", "#fb923c"), _B7),
     "bus7/1phase": (("#f59e0b", "#fcd34d"), dict(_B7, dash="dash")),
+    "bus6/3phase": (("#1f2937", "#e5e7eb"), _B6),
     "bus6/2phase": (("#0f766e", "#2dd4bf"), _B6),
     "bus6/1phase": (("#2dd4bf", "#99f6e4"), dict(_B6, dash="dash")),
 }
+# Sequência negativa: os passos no tempo comparam só as duas da Barra 6
+# (trifásica × bifásica); v_abc do inversor vai embutido só para elas.
+ABC_CASOS = ("bus6/3phase", "bus6/2phase")
+_SO_B6 = ["bus7/3phase", "bus7/2phase", "bus7/1phase", "bus6/1phase"]
 
 # Capítulos da aba "Análise TCC" (demonstração ao vivo da defesa).
 # Campos: id, curto (botão), titulo, ref (seção/figura do TCC), texto,
@@ -203,7 +208,7 @@ CAPITULOS: list[dict] = [
                   ocultar=[], lado="fasor"),
          ]),
     dict(id="seqneg", pres=["spec"], curto="Sequência negativa", kind="spec",
-         titulo="Faltas assimétricas: a sequência negativa vira 120 Hz",
+         titulo="Faltas assimétricas: de onde vem o 120 Hz",
          ref="§5.3 · Tabela 5.3 · Figura 5.10",
          texto="Nas faltas assimétricas, a sequência negativa aparece em v<sub>d</sub> "
                "como uma oscilação de 120 Hz, de 0,29 a 0,72 pu: mais de 250 "
@@ -211,7 +216,7 @@ CAPITULOS: list[dict] = [
                "espectro de v<sub>d</sub> do inversor durante a falta; a matriz "
                "traz os valores da Tabela 5.3.",
          casos=[(k, *_ASSIM[k]) for k in ("bus7/3phase", "bus7/2phase", "bus7/1phase",
-                                          "bus6/2phase", "bus6/1phase")],
+                                          "bus6/3phase", "bus6/2phase", "bus6/1phase")],
          sinais=["spec"], xrange=[0.0, 400.0], metricas=["a120", "pico"],
          destaque=dict(sinal="spec", num="&gt; 250×", x=122, y=0.29, ax=200, ay=0.55,
                        txt="a menor assimétrica contra<br>as trifásicas"),
@@ -222,15 +227,33 @@ CAPITULOS: list[dict] = [
                               ["Monofásica", "1phase"]],
                      realce=0, rotulos={"pico": "pico do erro"},
                      nota="Amplitude de 120 Hz em v<sub>d</sub> durante a falta e "
-                          "pico do erro de fase. A trifásica da Barra 6 não está "
-                          "traçada: fica sobre a da Barra 7, no zero."),
+                          "pico do erro de fase. As duas trifásicas ficam no zero, "
+                          "uma sobre a outra."),
+         # passos no tempo na Barra 6 (a bifásica é o caso do Compromisso) e,
+         # por último, o espectro com todas as assimétricas e a matriz
          passos_pres=[
-             dict(texto="Na trifásica, quase nada em 120 Hz: <b>0,0002 pu</b> "
-                        "na Barra 7.",
-                  ocultar=["bus7/2phase", "bus7/1phase", "bus6/2phase",
-                           "bus6/1phase"], foco=[100, 140]),
-             dict(texto="Nas assimétricas, a sequência negativa vira 120 Hz: "
-                        "de <b>0,29</b> a <b>0,72 pu</b>.",
+             dict(texto="Na trifásica, as três fases caem por igual. Na "
+                        "bifásica, ficam <b>desequilibradas</b>.",
+                  sinais=["abc"], xrange=[0.28, 0.36], ocultar=_SO_B6,
+                  cartoes=False),
+             dict(texto="O desequilíbrio é a soma de duas sequências. O PLL gira "
+                        "junto com a <b>positiva</b>. A <b>negativa</b> gira ao "
+                        "contrário e, vista do PLL, dá a volta a <b>120 Hz</b>.",
+                  sinais=["abc"], xrange=[0.28, 0.36], ocultar=_SO_B6,
+                  cartoes=False, lado="seq"),
+             dict(texto="Em dq, a positiva vira um valor constante e a negativa, "
+                        "uma oscilação de 120 Hz: v<sub>d</sub> e v<sub>q</sub> "
+                        "oscilam só na bifásica.",
+                  sinais=["vdi", "vqi"], xrange=[0.25, 0.6], foco=[0.3, 0.4],
+                  ocultar=_SO_B6, cartoes=False, lado="seq"),
+             dict(texto="v<sub>q</sub> é a entrada do PI do PLL, que lê a oscilação "
+                        "como erro de fase: pico de <b>7,3°</b> na trifásica e "
+                        "<b>96,0°</b> na bifásica.",
+                  sinais=["vqi", "err"], xrange=[0.25, 0.6], foco=[0.3, 0.4],
+                  ocultar=_SO_B6, cartoes=False),
+             dict(texto="No espectro de v<sub>d</sub>, o 120 Hz das assimétricas "
+                        "vai de <b>0,29</b> a <b>0,72 pu</b>: mais de 250 vezes "
+                        "o das trifásicas.",
                   ocultar=[], destaque=True),
          ]),
     dict(id="comp", pres=["err", "vd"], curto="Compromisso da sintonia", kind="time",

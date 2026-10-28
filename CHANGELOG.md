@@ -5,6 +5,20 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-10-28 — Sequência negativa: o porquê do 120 Hz antes do espectro
+
+Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`,
+`src/report/js/tcc.js`, `src/report/js/palco.js`, `src/report/js/seq.js` (novo)
+
+O capítulo 4 do palco abria no espectro, que mostra o 120 Hz sem dizer de
+onde ele vem. Agora são cinco passos na Barra 6 (trifásica × bifásica):
+v_abc desequilibrado; animação da positiva e da negativa vistas da rede e
+do PLL (painel `seq`, ilustrativo, sem número); v_d e v_q do inversor
+oscilando a 120 Hz; v_q como entrada do PI e o pico do erro (7,3° ×
+96,0°); por fim, o espectro com a matriz da Tabela 5.3. Os passos ganharam
+`sinais`, `xrange` e `cartoes`; v_abc é embutido só para os dois casos da
+Barra 6 (`ABC_CASOS`). `verifica_palco.py` sem falhas.
+
 ## 2026-10-28 — Código de rede: reativo no passo dos curtos fora da região e área V·iq
 
 Arquivos: `src/report/roteiro.py`, `src/report/js/ons.js`

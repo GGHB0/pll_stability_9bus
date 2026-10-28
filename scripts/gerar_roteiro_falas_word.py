@@ -139,18 +139,16 @@ SLIDES_ROTEIRO = [
         "titulo": "Capa — Comportamento do SRF-PLL de Inversores Frente a Contingências em Sistemas Elétricos",
         "bloco": "Abertura",
         "tcc": "Capa",
-        "quem": "Bruno → Victor → Bruno",
-        "dur_s": 50,
+        "quem": "Bruno",
+        "dur_s": 40,
         "msg": "Quem somos, o título do trabalho (foco no SRF-PLL sob contingências) e os cinco blocos do percurso.",
         "pontos": [
-            ("Bruno", "Cumprimentar a banca, apresentar a dupla (Bruno e Victor) e anunciar o título delimitando o objeto (o SRF-PLL) e a condição (contingências na rede)."),
-            ("Victor", "Apresentar o percurso em 5 partes: (1) Motivação e blecautes, (2) Modelagem do sistema e do controle, (3) Metodologia de teste, (4) Resultados ao vivo no painel interativo e (5) Conclusões."),
-            ("Bruno", "Agradecer aos orientadores Prof. Dr. Oscar Cuaresma Zevallos e Prof. Dr. André Guilherme Peixoto Alves e fazer a ponte para a motivação."),
+            ("Bruno", "Cumprimentar a banca, apresentar a si e ao parceiro Victor Hugo, e anunciar o título do TCC delimitando o foco no SRF-PLL sob contingências."),
+            ("Bruno", "Apresentar o percurso em 5 blocos: contexto global, fundamentação e modelagem, metodologia de simulação, resultados no painel interativo e conclusões."),
+            ("Bruno", "Agradecer aos orientadores Prof. Dr. Oscar Cuaresma Zevallos e Prof. Dr. André Guilherme Peixoto Alves, e aos membros da banca, abrindo com o contexto que motivou o estudo."),
         ],
         "falas": [
-            ("Bruno", "Bom dia a todos. Eu sou o Bruno Henrique de Oliveira e, junto com o Victor Hugo de Avelar Rezende, apresento o nosso Trabalho de Conclusão de Curso: Comportamento do SRF-PLL de Inversores Frente a Contingências em Sistemas Elétricos."),
-            ("Victor", "Organizamos a apresentação em cinco partes: começamos pelo contexto energético e pelos blecautes recentes que motivam o estudo; passamos pela fundamentação e modelagem da usina, do SRF-PLL e do código de rede; apresentamos o protocolo de contingências e o fluxo de análise; percorremos os resultados no painel interativo em modo apresentação; e fechamos com as conclusões e trabalhos futuros."),
-            ("Bruno", "Agradecemos desde já ao nosso orientador, professor Oscar Cuaresma Zevallos, ao coorientador, professor André Guilherme Peixoto Alves, e aos membros da banca. Vamos começar pelo contexto que motivou este estudo."),
+            ("Bruno", "Bom dia a todos. Eu sou o Bruno Henrique de Oliveira e, junto com o Victor Hugo de Avelar Rezende, apresento o nosso Trabalho de Conclusão de Curso: Comportamento do SRF-PLL de Inversores Frente a Contingências em Sistemas Elétricos.\n\nVamos percorrer cinco blocos hoje: o contexto global, a fundamentação e a modelagem, a metodologia de simulação, os resultados no painel interativo e as conclusões. Agradecemos desde já ao nosso orientador, professor Oscar, ao coorientador, professor André, e aos membros da banca. Vamos começar pelo contexto que motivou este estudo."),
         ],
         "atencao": "Ponte direta para o Slide 2: 'Vamos começar pelo contexto que motivou este estudo.'",
     },
@@ -160,17 +158,16 @@ SLIDES_ROTEIRO = [
         "titulo": "Expansão das renováveis",
         "bloco": "Motivação",
         "tcc": "Cap. 2 (IEA 2026, ONS 2025)",
-        "quem": "Bruno → Victor",
+        "quem": "Bruno",
         "dur_s": 60,
         "msg": "Solar e eólica saltaram de 5% para 17% da geração mundial em uma década; no Brasil a capacidade já passa da carga média.",
         "pontos": [
-            ("Bruno", "Cartão superior direito (IEA, 2026): geração solar mundial cresceu 600 TWh em 2025 (~70% do avanço global da geração elétrica) e o mundo adicionou 800 GW renováveis (23º recorde anual)."),
-            ("Victor", "Gráfico de barras (esquerda) e cartão inferior direito (ONS, 2025): participação mundial de solar + eólica triplicou de ~5% para 17% em uma década (~30% na UE e 35% no Brasil com MMGD, igualando o carvão em 34%). No SIN, 96,8 GW instalados (+279% desde 2020) já superam a carga média nacional de 85,8 GWmed."),
-            ("Victor", "Pergunta do rodapé: A geração nova chega por inversores, enquanto a síncrona (que impõe tensão e frequência pela inércia mecânica) perde espaço — a sustentação da rede migra da física para o algoritmo de controle."),
+            ("Bruno", "Cartão superior direito (IEA, 2026): velocidade da transição energética — geração solar mundial cresceu cerca de 600 TWh em 2025 (~70% do avanço global) e o mundo adicionou 800 GW renováveis."),
+            ("Bruno", "Gráfico de barras e cartão ONS: fatia mundial de solar + eólica triplicou de 5% para 17% em uma década (~30% na UE e 35% no Brasil com MMGD). No SIN, 96,8 GW instalados já superam a carga média nacional de 85,8 GWmed."),
+            ("Bruno", "Pergunta do rodapé: A geração nova chega por inversores e a geração síncrona, que impõe tensão e frequência pela inércia mecânica, perde espaço na matriz."),
         ],
         "falas": [
-            ("Bruno", "A motivação do trabalho parte da velocidade da transição energética. Segundo a Agência Internacional de Energia, em 2025 a geração solar mundial cresceu 600 terawatts-hora, respondendo sozinha por cerca de 70% de todo o avanço da geração elétrica global, num ano em que o mundo adicionou 800 gigawatts renováveis."),
-            ("Victor", "No gráfico à esquerda, vemos que em uma década a fatia mundial de solar e eólica mais que triplicou, de 5% para 17%, chegando a cerca de 30% na União Europeia e a 35% no Brasil considerando a micro e minigeração distribuída. No cartão inferior, dados do ONS mostram que a capacidade eólica e solar no SIN atingiu 96,8 gigawatts em 2025, superando a própria carga média nacional de 85,8 gigawatts médios. A consequência no rodapé é direta: a rede troca máquinas síncronas, que impõem tensão e frequência pela inércia física, por inversores controlados por algoritmos."),
+            ("Bruno", "A motivação do nosso trabalho parte da velocidade da transição energética. Segundo a Agência Internacional de Energia, em 2025, a geração solar mundial cresceu cerca de 600 terawatts-hora. Isso responde sozinha por 70% de todo o avanço da geração elétrica global, num ano em que o mundo adicionou 800 gigawatts renováveis.\n\nNo gráfico à esquerda, vemos que em uma década a fatia mundial de solar e eólica triplicou, de 5% para 17%, chegando a cerca de 30% na União Europeia e 35% no Brasil, se considerarmos a micro e minigeração distribuída. Os dados do ONS mostram que a capacidade eólica e solar no SIN atingiu 96,8 gigawatts em 2025, superando a própria carga média nacional de 85,8 gigawatts médios. E qual a consequência disso para a rede? Como diz o rodapé, a geração nova chega por inversores, e a geração síncrona, que impõe tensão e frequência pela inércia, perde espaço na matriz."),
         ],
         "atencao": "Cuidado: 96,8 GW é capacidade instalada e 85,8 GWmed é carga média (mostra escala, não atendimento exclusivo). MMGD = micro e minigeração distribuída.",
     },
@@ -180,20 +177,17 @@ SLIDES_ROTEIRO = [
         "titulo": "Eventos no mundo real",
         "bloco": "Motivação",
         "tcc": "Cap. 2, §2.4 (RAP-ONS, ENTSO-E, CEN)",
-        "quem": "Victor → Bruno → Victor → Bruno",
-        "dur_s": 90,
+        "quem": "Bruno",
+        "dur_s": 85,
         "msg": "Os grandes blecautes recentes passaram pela geração conectada por inversores.",
         "pontos": [
-            ("Victor", "Cartão 1 — SIN, Brasil (15/08/2023): abertura da LT 500 kV Quixadá–Fortaleza II levou a afundamento de tensão no Nordeste, desligamentos em cascata, formação de 4 ilhas e perda de 23.368 MW (34,5% da carga nacional)."),
-            ("Bruno", "Diagnóstico do RAP-ONS (2023): descartou falta de inércia (~265 GW·s no SIN) e falta de potência de curto; o fator determinante foi o suporte dinâmico de reativos das eólicas e fotovoltaicas muito aquém dos modelos matemáticos."),
-            ("Victor", "Cartão 2 — Península Ibérica (28/04/2025): oscilação forçada de 0,63 Hz classificada pela ENTSO-E como instabilidade guiada por conversores; usinas em fator de potência fixo sem suporte dinâmico de tensão, > 2,5 GW desconectados por sobretensão e perda de sincronismo com a Europa."),
-            ("Bruno", "Cartão 3 — Chile (25/02/2025): abertura em 500 kV dividiu o país em 1,5 s (11.066 MW perdidos com 73% solar e eólica), levando ao colapso de tensão na ilha norte e revisão dos requisitos de GFL e GFM pelo CEN. Rodapé: nos três eventos, o elo crítico foi a resposta de controle e sincronismo dos inversores no transitório."),
+            ("Bruno", "Cartão 1 — SIN, Brasil (15/08/2023): abertura acidental da LT 500 kV Quixadá–Fortaleza II levou a afundamento de tensão no Nordeste, desligamentos em cascata e perda de 23.368 MW (34,5% da carga nacional)."),
+            ("Bruno", "Diagnóstico do RAP-ONS (2023): descartou falta de inércia (~265 GW·s) e falta de curto; colapso de tensão com suporte dinâmico de reativos de eólicas e solares muito aquém do previsto nos modelos."),
+            ("Bruno", "Cartões 2 e 3 (Península Ibérica e Chile, 2025): oscilação de 0,63 Hz guiada por conversores (> 2,5 GW desconectados por sobretensão) e abertura de 500 kV no Chile (11.066 MW perdidos com 73% de renováveis)."),
+            ("Bruno", "Rodapé sintetizador: nos três eventos, o elo crítico sistêmico foi o controle e o sincronismo dos inversores durante o distúrbio."),
         ],
         "falas": [
-            ("Victor", "Quando essa geração baseada em inversores enfrenta perturbações reais, falhas de controle ganham escala sistêmica. No blecaute brasileiro de 15 de agosto de 2023, a abertura de uma linha de 500 kV no Ceará levou a desligamentos em cascata, dividiu o SIN em quatro ilhas e interrompeu 23.368 megawatts, ou 34,5% da carga nacional."),
-            ("Bruno", "No Relatório de Análise de Perturbação, o ONS descartou falta de inércia, que estava em cerca de 265 gigawatts-segundo, e descartou falta de potência de curto-circuito: concluiu que o colapso foi de tensão, porque o suporte dinâmico de potência reativa das usinas eólicas e fotovoltaicas ficou muito aquém do previsto nos modelos."),
-            ("Victor", "Em abril de 2025, na Península Ibérica, uma oscilação de 0,63 hertz classificada pela ENTSO-E como instabilidade guiada por conversores, somada a usinas operando em fator de potência fixo sem controle dinâmico de tensão, levou ao desligamento de mais de 2,5 gigawatts por sobretensão e à separação elétrica da Europa."),
-            ("Bruno", "E em fevereiro de 2025, no Chile, uma abertura em 500 kV num sistema com 73% de geração solar e eólica isolou o norte do país em 1,5 segundo, provocando colapso de tensão e perda de 11.066 megawatts, o que levou o operador chileno a rever os requisitos de inversores seguidores e formadores de rede. Como resume o rodapé, nos três eventos o elo crítico foi o controle e o sincronismo dos inversores durante o distúrbio."),
+            ("Bruno", "Quando essa geração baseada em inversores enfrenta perturbações reais, falhas de controle ganham escala sistêmica. No blecaute brasileiro de 15 de agosto de 2023, a abertura acidental da linha de 500 quilovolts entre Quixadá e Fortaleza II provocou um afundamento de tensão no Nordeste, desligamentos em cascata e a perda de 23.368 megawatts, ou 34,5% da carga nacional.\n\nO diagnóstico do relatório do ONS é o grande motivador do nosso estudo: o operador descartou falta de inércia, já que o SIN tinha cerca de 265 gigawatts-segundo, e descartou falta de potência de curto-circuito. Concluiu-se que o colapso foi de tensão, porque o suporte dinâmico de reativos das usinas eólicas e solares ficou muito aquém do previsto nos modelos.\n\nTivemos padrões semelhantes em 2025. Na Península Ibérica, uma oscilação guiada por conversores levou à perda de mais de 2,5 gigawatts por sobretensão. No Chile, uma abertura em 500 quilovolts num sistema com 73% de renováveis isolou o norte do país, provocando colapso de tensão e a perda de mais de 11 mil megawatts. Como resume o rodapé, nos três eventos o elo crítico sistêmico foi o controle e o sincronismo dos inversores durante o distúrbio."),
         ],
         "atencao": "Citar 23.368 MW (34,5%, §2.4.3 do TCC e RAP-ONS). Se perguntarem sobre o Chile ou Ibéria: o elo comum é a resposta de tensão e sincronismo no transitório.",
     },
@@ -203,20 +197,18 @@ SLIDES_ROTEIRO = [
         "titulo": "Problema e objetivos",
         "bloco": "Motivação",
         "tcc": "Cap. 1",
-        "quem": "Bruno → Victor → Bruno → Victor",
-        "dur_s": 70,
+        "quem": "Bruno",
+        "dur_s": 75,
         "msg": "O SRF-PLL depende de uma tensão limpa, justamente o que a falta na rede destrói.",
         "pontos": [
-            ("Bruno", "Cadeia causal (bloco 1): o inversor seguidor de rede precisa do ângulo da tensão no PCC estimado pelo SRF-PLL, mas a falta degrada justamente essa tensão (afundamento e assimetria em v_abc)."),
-            ("Victor", "Cadeia causal (blocos 2 e 3): em dq, o afundamento derruba v_d (reduzindo o ganho efetivo do laço) e a sequência negativa introduz oscilação de 120 Hz em v_q, gerando desvio angular Δθ ou perda de sincronismo."),
-            ("Bruno", "Cadeia causal (bloco 4): o erro angular contamina as malhas de corrente, desfaz o desacoplamento entre P e Q e pode levar à inversão de fluxo ativo (P < 0, absorção)."),
-            ("Victor", "Caixas inferiores: apresentar o Objetivo Geral (analisar a dinâmica, a sensibilidade à sintonia e a robustez do SRF-PLL de um inversor de 100 MW no IEEE 9 barras) e os Objetivos Específicos (modelar no Simulink, comparar sintonia nominal e inadequada sob faltas simétricas e assimétricas e verificar o suporte LVRT do ONS). Fechar com a pergunta central no rodapé."),
+            ("Bruno", "Cadeia causal (bloco 1): o inversor precisa do ângulo da tensão no PCC estimado pelo SRF-PLL, mas a falta na rede degrada exatamente essa tensão com afundamento e assimetria."),
+            ("Bruno", "Cadeia causal (blocos 2 e 3): o afundamento reduz a componente de eixo direto vd (enfraquecendo o laço); o desequilíbrio introduz oscilação de 120 Hz no eixo em quadratura vq (sinal de erro do PLL), gerando desvio angular ou perda de sincronismo."),
+            ("Bruno", "Cadeia causal (bloco 4): erro angular contamina as malhas de corrente, perde o desacoplamento P-Q, compromete o suporte exigido pelo Submódulo 2.10 do ONS e pode levar à inversão de fluxo ativo."),
+            ("Bruno", "Caixas inferiores: Objetivo Geral (analisar dinâmica, sensibilidade à sintonia e robustez do SRF-PLL de 100 MW no IEEE 9 barras) e Específicos (modelar no Simulink, comparar sintonias sob faltas simétricas/assimétricas, verificar ONS)."),
+            ("Bruno", "Transição: Passar a palavra ao Victor para iniciar o bloco de modelagem no Slide 5."),
         ],
         "falas": [
-            ("Bruno", "Isso nos traz ao problema central do trabalho, ilustrado na cadeia causal. No bloco 1, o inversor seguidor de rede depende do ângulo estimado pelo SRF-PLL a partir da tensão medida no ponto de conexão, mas a falta na rede degrada exatamente essa tensão com afundamento e assimetria."),
-            ("Victor", "Nos blocos 2 e 3, essa degradação entra na transformada de Park: o afundamento reduz a componente de eixo direto vd, enfraquecendo o laço, e o desequilíbrio introduz uma oscilação de 120 hertz na componente de eixo em quadratura vq, que é o sinal de erro do PLL, provocando desvio angular ou perda de sincronismo."),
-            ("Bruno", "No bloco 4, como o controle de corrente usa esse ângulo, o erro angular destrói o desacoplamento entre potência ativa e reativa, podendo levar até à inversão do fluxo ativo durante a recomposição."),
-            ("Victor", "Daí o nosso objetivo geral: analisar a dinâmica, a sensibilidade à sintonia e a robustez do SRF-PLL de um inversor de 100 megawatts frente a contingências no sistema IEEE 9 barras. E nos objetivos específicos: modelar o sistema no Simulink, comparar as sintonias nominal e inadequada sob faltas simétricas e assimétricas, e verificar a conformidade frente ao Submódulo 2.10 do ONS."),
+            ("Bruno", "Isso nos traz ao problema central do trabalho, ilustrado nesta cadeia causal. No primeiro bloco, o inversor precisa do ângulo da tensão no ponto de conexão estimado pelo SRF-PLL, mas a falta na rede degrada exatamente essa tensão com afundamento e assimetria.\n\nNos blocos seguintes, o afundamento reduz a componente de eixo direto, enfraquecendo o laço, e o desequilíbrio introduz uma oscilação de 120 hertz no eixo em quadratura, que é o sinal de erro do PLL. O resultado é desvio angular ou perda de sincronismo. Sem o ângulo correto, o desacoplamento entre potência ativa e reativa se perde, comprometendo o suporte de reativos exigido pelo Submódulo 2.10 do ONS e podendo levar até à inversão do fluxo ativo.\n\nDaí o nosso objetivo geral: analisar a dinâmica, a sensibilidade à sintonia e a robustez do SRF-PLL de um inversor de 100 megawatts frente a contingências no sistema IEEE 9 barras. E nos objetivos específicos: modelar o sistema no Simulink, comparar sintonias sob faltas simétricas e assimétricas, e verificar a conformidade com o ONS.\n\nPasso agora a palavra ao Victor, que vai iniciar o bloco de modelagem."),
         ],
         "atencao": "Não mencionar sobrecorrentes (o TCC conclui que são contidas pela malha rápida de corrente). Fazer ponte para a Modelagem no Slide 5.",
     },
@@ -226,18 +218,18 @@ SLIDES_ROTEIRO = [
         "titulo": "Fonte renovável",
         "bloco": "Modelagem",
         "tcc": "Fig. 3.2, §3.2, §4.1, §4.3.1",
-        "quem": "Victor → Bruno",
+        "quem": "Victor",
         "dur_s": 45,
         "msg": "A usina fotovoltaica ou eólica se conecta à rede por um inversor seguidor de rede.",
         "pontos": [
-            ("Victor", "Apontar a Figura 3.2 à esquerda (Fonte primária) e o Cartão 1: barramento CC ideal (tensão V_dc constante), sem elo CC dinâmico e sem MPPT — isola o fenômeno para que tudo o que se vê na falta venha do lado CA e do sincronismo."),
-            ("Bruno", "Seguir o diagrama da esquerda para a direita (Cartões 2 e 3): o VSI de dois níveis converte CC em CA trifásica a 100 MW, passa pelo filtro de acoplamento LCL e injeta corrente na rede IEEE 9 barras seguindo o ângulo estimado pelo SRF-PLL (destacado em laranja). Fechar com o rodapé: 'Como o inversor segue a rede?'"),
+            ("Victor", "Início da modelagem e fonte primária renovável: escolha de barramento CC ideal, ignorando a dinâmica do elo CC e o rastreamento de máxima potência (MPPTs)."),
+            ("Victor", "Inversor e filtro LCL: inversor faz a conversão trifásica e recebe os comandos do controle; filtro de acoplamento LCL conecta a usina ao ponto de acoplamento comum no sistema IEEE 9 barras."),
+            ("Victor", "Controle digital do SRF-PLL: sinal medido no PCC vai para o controle digital para fazer a realimentação e o rastreamento do ângulo da rede."),
         ],
         "falas": [
-            ("Victor", "Começamos a modelagem pela estrutura da usina, na Figura 3.2 do TCC. À esquerda, representamos a fonte primária como um barramento CC ideal de tensão constante, sem a dinâmica do elo CC e sem rastreamento de máxima potência. Adotamos esse recorte de propósito para isolar o fenômeno: assim, tudo o que observamos durante a falta vem exclusivamente do lado CA e do sincronismo."),
-            ("Bruno", "Seguindo o diagrama para a direita, o inversor fonte de tensão de dois níveis converte a energia CC em CA trifásica, passa pelo filtro de acoplamento LCL e entrega os 100 megawatts à rede. Como ele opera como seguidor de rede, o controle digital precisa medir a tensão trifásica e usar o SRF-PLL, destacado em laranja, para rastrear o ângulo da rede no ponto de acoplamento comum."),
+            ("Victor", "Iniciando a parte de modelagem no slide 5, nós nos deparamos com o modelo do nosso sistema. Começando pela fonte primária, que vai ser uma fonte renovável: nós escolhemos utilizar um barramento CC ideal, ignorando a dinâmica do elo CC e o rastreamento de máxima potência, os MPPTs.\n\nSeguindo para a direita, temos o inversor, que faz a conversão trifásica e é quem vai receber os comandos do controle. Logo após, temos o filtro de acoplamento LCL, conectando a usina ao ponto de acoplamento comum na rede elétrica, o sistema IEEE de 9 barras. O sinal medido ali vai para o controle digital do SRF-PLL para fazer a realimentação e o rastreamento do ângulo da rede."),
         ],
-        "atencao": "Nenhum outro número além de 100 MW. Gancho direto para o Slide 6: 'Como o controle trabalha em dq, precisamos da transformada de Park.'",
+        "atencao": "Gancho direto para a transformada de Park: 'Para poder fazer o rastreamento dessa rede, é utilizada a transformada de Park.'",
     },
     {
         "tipo": "SLIDE",
@@ -245,18 +237,18 @@ SLIDES_ROTEIRO = [
         "titulo": "Transformada de Park",
         "bloco": "Modelagem",
         "tcc": "Eqs. (3.4)-(3.7), §3.1.2, §3.4",
-        "quem": "Victor → Bruno",
+        "quem": "Victor",
         "dur_s": 60,
         "msg": "Girando com a rede, a transformada de Park torna constantes as grandezas trifásicas.",
         "pontos": [
-            ("Victor", "Explicar por que usar Park (Cartão 2): um controlador PI não elimina erro em regime de sinais senoidais de 60 Hz; a Equação 3.5 projeta as fases abc nos eixos d e q que giram na velocidade angular da rede."),
-            ("Bruno", "Apontar os diagramas à direita e as equações sob a matriz: girando junto com a rede, as senoides viram níveis contínuos (Cartão 1). Com o ângulo θ_PLL, v_d = V_m·cos(θ_ref − θ_PLL) e v_q = V_m·sen(θ_ref − θ_PLL); quando o PLL trava (θ_PLL = θ_ref), v_d = V_m e v_q = 0. Fechar com o rodapé: 'E o ângulo θ? Quem estima θ é o PLL.'"),
+            ("Victor", "Conceito básico da transformada de Park: transformar as tensões trifásicas em duas grandezas lineares e constantes, dividindo em vd e vq."),
+            ("Victor", "Matriz de transformação e equações resultantes: objetivo do PLL é referenciar exatamente o ângulo da rede, obtendo cosseno de zero para vd e seno de zero para vq."),
+            ("Victor", "O grande porquê de Park: sinais senoidais no controlador PI propagam erro sem zerar em regime; convertendo para sinais constantes, a ação integral zera o sinal facilmente na detecção de fase."),
         ],
         "falas": [
-            ("Victor", "Por que o controle trabalha no referencial dq? Porque um controlador PI convencional não consegue zerar o erro em regime permanente de uma grandeza senoidal de 60 hertz. A transformada de Park, dada pela Equação 3.5 à esquerda, resolve isso projetando as tensões das fases a, b e c em dois eixos ortogonais, direto e em quadratura, que giram na mesma frequência da rede."),
-            ("Bruno", "Como ilustrado nos diagramas à direita, quando o referencial gira exatamente sincronizado com o vetor espacial da rede, as três senoides se transformam em grandezas contínuas, onde o PI atua sem erro em regime. Nas expressões abaixo da matriz, usando o ângulo estimado pelo PLL, vd fica proporcional ao cosseno do erro angular e vq proporcional ao seno. Quando o referencial trava na rede, vq vale zero: e é exatamente esse vq que o SRF-PLL vai usar como sinal de erro."),
+            ("Victor", "Para poder fazer o rastreamento dessa rede, é utilizada a transformada de Park. O conceito básico dela é transformar as tensões trifásicas em duas grandezas lineares e constantes, dividindo em vd e vq.\n\nComo vocês podem ver, aqui segue a matriz de transformação e, logo abaixo, observamos as equações resultantes dessa multiplicação. O objetivo do PLL é fazer com que o seu ângulo esteja exatamente em referência ao ângulo da rede. Assim, para vd teremos o cosseno de zero, e para vq o seno de zero.\n\nE por que a gente utiliza essa transformada de Park? Porque quando aplicamos sinais senoidais num controlador PI, o erro se propaga e a gente nunca consegue trazer esse erro a zero. Porém, quando convertemos para sinais constantes, a ação integral consegue zerar esse sinal facilmente. Então, esse é o grande porquê de utilizar a transformada de Park na nossa detecção de fase."),
         ],
-        "atencao": "Destaque conceitual: v_d mede quanta tensão há (cosseno) e v_q mede quanto o ângulo está errado (seno).",
+        "atencao": "Destaque conceitual: a ação integral sobre grandezas contínuas zera o erro perfeitamente.",
     },
     {
         "tipo": "SLIDE",
@@ -264,18 +256,18 @@ SLIDES_ROTEIRO = [
         "titulo": "Estrutura do SRF-PLL",
         "bloco": "Modelagem",
         "tcc": "Fig. 4.3, §3.4, Eqs. (3.10)-(3.19)",
-        "quem": "Victor → Bruno",
+        "quem": "Victor",
         "dur_s": 60,
         "msg": "O SRF-PLL gira o referencial dq até alinhar o eixo d com a tensão da rede.",
         "pontos": [
-            ("Victor", "Percorrer as 3 áreas tracejadas da Figura 4.3 (e os 3 cartões inferiores): (1) Detector de fase (Park): calcula v_q, que mede o desalinhamento angular; (2) Controlador PI: recebe v_q e gera a correção de velocidade Δω para levar v_q a zero; (3) VCO (integrador 1/s): soma Δω ao feed-forward ω_0 = 2π·60 e integra para devolver θ_PLL à Park."),
-            ("Bruno", "Cartão da direita ('Sintonia do PI'): fechar a malha com dois integradores (PI + VCO) gera um sistema de 2ª ordem com equação característica s² + K_pPLL·U·s + K_iPLL·U = 0, de onde saem K_pPLL = 2ξω_n e K_iPLL = ω_n². Fechar com o rodapé: qualquer erro em θ passa direto às malhas de corrente e compromete o desacoplamento entre P e Q."),
+            ("Victor", "Modelagem da malha fechada e detector de fase: transformada de Park envia vq para o PI convergir para zero (zerando o erro) e consequentemente vd convergir para a amplitude total da tensão."),
+            ("Victor", "Set point de frequência e VCO: integra o sinal de velocidade angular para obter o ângulo do PLL, que faz a realimentação para a transformada de Park fechando o laço."),
+            ("Victor", "Dimensionamento dos ganhos: equações características de segunda ordem no cartão direito dimensionam os ganhos Kp e Ki do PLL."),
         ],
         "falas": [
-            ("Victor", "Na Figura 4.3 temos a malha fechada do SRF-PLL dividida em três blocos funcionais. O primeiro é o detector de fase, que é a própria transformada de Park: enquanto houver desalinhamento entre o eixo d e a tensão da rede, aparece uma componente vq não nula. O segundo bloco é o filtro de laço PI, que atua sobre vq e produz a correção de frequência delta ômega."),
-            ("Bruno", "No terceiro bloco, o oscilador controlado por tensão soma essa correção à frequência nominal de 60 hertz e integra no tempo para obter o ângulo teta do PLL, que realimenta a transformada de Park pela linha laranja. No cartão à direita, como temos o integrador do PI e o integrador do VCO, a malha fechada é de segunda ordem, governada pelo polinômio característico em que a amplitude da tensão U multiplica os ganhos Kp e Ki. E como alerta o rodapé, qualquer erro nesse ângulo contamina imediatamente as malhas de corrente."),
+            ("Victor", "Passando para o slide 7, a gente consegue verificar a modelagem da nossa malha de controle fechada. Como já explicamos, a transformada de Park vai ser o nosso detector de fase. O objetivo dela é enviar a componente vq para o controlador PI, e nós queremos utilizar o PI para fazer esse vq convergir para zero, zerando o erro. Consequentemente, o vd vai convergir para a amplitude total da tensão.\n\nTendo em vista que referenciamos um set point com a frequência natural da rede, no VCO nós integramos esse sinal de velocidade angular e obtemos o ângulo do PLL. Esse ângulo faz a realimentação de volta para a transformada de Park, fechando o laço. Como a gente pode ver do lado direito, utilizamos as fórmulas da equação característica de segunda ordem para poder dimensionar os ganhos Kp e Ki do nosso PLL."),
         ],
-        "atencao": "Ponto-chave para a banca: U multiplica K_p e K_i na equação característica; quando U cai na falta, ω_n e ξ caem com √U.",
+        "atencao": "Estrutura clássica de 2ª ordem: Park (detector) -> PI -> VCO (integrador) -> realimentação em ângulo.",
     },
     {
         "tipo": "SLIDE",
@@ -283,20 +275,18 @@ SLIDES_ROTEIRO = [
         "titulo": "Sistema IEEE 9 barras",
         "bloco": "Modelagem",
         "tcc": "Fig. 4.1, §4.3.1",
-        "quem": "Victor → Bruno → Victor",
-        "dur_s": 55,
+        "quem": "Victor",
+        "dur_s": 40,
         "msg": "A UFV assume a Barra 2 e enxerga o resto da rede como um equivalente de Thévenin.",
         "pontos": [
-            ("Victor", "Figura 4.1 e Cartão 1 (Substituição): na rede clássica IEEE 9 barras (3 geradores, 3 transformadores, 6 linhas e 3 cargas em 230 kV), o gerador síncrono G2 de 192 MVA na Barra 2 é substituído pela usina fotovoltaica de 100 MW (1 pu na base de 100 MVA); G1 e G3 seguem síncronos carregando a inércia remanescente."),
-            ("Bruno", "Explicar o papel da topologia: aplicar faltas em diferentes barras e linhas permite variar a distância elétrica até a Barra 2 mantendo o nível de curto-circuito fixo."),
-            ("Victor", "Cartão 2 (Redução) e Rodapé: na etapa preliminar no PSIM, a rede vista da Barra 2 é reduzida a um equivalente de Thévenin extraído do elemento diagonal da matriz de impedância nodal Z_barra, garantindo coerência com o sistema completo simulado no Simulink."),
+            ("Victor", "Sistema IEEE 9 barras modificado: máquina síncrona original da Barra 2 substituída pela usina fotovoltaica de 100 MW; G1 e G3 permanecem como fontes síncronas mantendo a inércia da rede."),
+            ("Victor", "Topologia da rede: permite variar a distância elétrica das faltas mantendo o nível de curto-circuito constante."),
+            ("Victor", "Equivalente de Thévenin: redução de toda a rede a um equivalente visto da Barra 2 para os estudos iniciais de controle."),
         ],
         "falas": [
-            ("Victor", "Para avaliar esse efeito em um sistema multimáquinas, adotamos a rede de teste IEEE 9 barras em 230 quilovolts, mostrada na Figura 4.1. Substituímos o gerador síncrono G2 original, de 192 MVA na Barra 2, pela nossa usina fotovoltaica de 100 megawatts, equivalente a 1 por unidade na base de 100 MVA, enquanto G1 e G3 permanecem como geradores síncronos."),
-            ("Bruno", "Essa topologia em anel com três transformadores, seis linhas e três cargas permite variar a localização elétrica das faltas em relação à Barra 2, mantendo o nível de curto-circuito do sistema constante."),
-            ("Victor", "Para a validação preliminar do controle no PSIM, reduzimos toda a rede vista pelo inversor na Barra 2 a um equivalente de Thévenin obtido diretamente da matriz de impedância nodal, o que preserva a fidelidade dinâmica antes da simulação completa no Simulink."),
+            ("Victor", "Podendo passar para o próximo slide, aqui a gente encontra o sistema IEEE de 9 barras modificado. A máquina síncrona original da Barra 2 foi substituída pela nossa usina fotovoltaica de 100 megawatts, enquanto os geradores G1 e G3 permanecem como fontes síncronas mantendo a inércia da rede.\n\nEssa topologia nos permite variar a distância elétrica das faltas mantendo o nível de curto-circuito constante. E para os nossos estudos iniciais de controle, reduzimos toda a rede a um equivalente de Thévenin visto da Barra 2."),
         ],
-        "atencao": "Não citar R_th = 10,04 mΩ nem L_th = 1,16 mH na fala (estão apenas no Apêndice, Slide 22).",
+        "atencao": "Transição suave para o Slide 9 (bancada do PLL com equivalente de Thévenin).",
     },
     {
         "tipo": "SLIDE",
@@ -420,18 +410,18 @@ SLIDES_ROTEIRO = [
         "titulo": "Submódulo 2.10 do ONS",
         "bloco": "Modelagem",
         "tcc": "Fig. 2.2, §2.5.2, §4.3.2, §5.2",
-        "quem": "Victor → Bruno",
-        "dur_s": 60,
+        "quem": "Bruno",
+        "dur_s": 65,
         "msg": "No modelo final, a tensão medida define o reativo e o ativo fica com o que sobra.",
         "pontos": [
-            ("Victor", "Gráfico 1 à esquerda (Rampa da Figura 2.2 do TCC): no modelo final, as referências fixas dão lugar à lógica do Submódulo 2.10 do ONS. Na faixa normal (entre 0,85 e 1,1 pu) o reativo adicional é zero; quando V cai abaixo de 0,85 pu na falta, a usina injeta corrente reativa pela rampa (0,85 − V)/0,35, atingindo 100% (I_max) em 0,5 pu."),
-            ("Bruno", "Gráfico 2 à direita (Círculo de prioridade de raio I_max) e as 2 caixas do rodapé: para não exceder a corrente máxima dos semicondutores, i_q,ref tem prioridade total e o eixo ativo fica com o que cabe no círculo, √(I_max² − i_q,ref²); eliminada a falta, a tensão volta à faixa normal e o ativo retorna ao pré-falta. Caixa direita do rodapé: 'O bloco do ONS diz quanto de i_d e i_q injetar; o ângulo θ_PLL diz em que direção.'"),
+            ("Bruno", "Substituição das referências fixas pela lógica de suporte de subtensão do Submódulo 2.10 do ONS: no gráfico à esquerda, é a tensão que define o reativo. Na faixa normal (0,85 a 1,1 pu), corrente reativa de referência zero e potência ativa nominal."),
+            ("Bruno", "Quando a tensão afunda abaixo de 0,85 durante uma falta, o código de rede exige a injeção de corrente reativa proporcional a esse afundamento, seguindo a rampa da equação até o limite de saturação (em 0,5 pu ou menos, injeta 100% da corrente máxima, ou seja, 1 pu de corrente reativa)."),
+            ("Bruno", "No gráfico à direita, regra de prioridade sobre o limite de corrente: a corrente máxima forma esse raio, e a corrente reativa tem prioridade total para sustentar a tensão. A corrente ativa fica apenas com o que sobra dentro desse círculo."),
         ],
         "falas": [
-            ("Victor", "No modelo final do inversor, substituímos as referências fixas pela lógica de suporte de subtensão do Submódulo 2.10 do ONS, ilustrada neste slide. No gráfico à esquerda, que reproduz a rampa da Figura 2.2 do TCC, enquanto a tensão medida permanece na faixa normal entre 0,85 e 1,1 por unidade, a corrente reativa de referência é zero e o inversor injeta potência ativa nominal. Quando a tensão afunda abaixo de 0,85 pu durante uma falta, o código de rede exige injeção de corrente reativa proporcional ao afundamento pela rampa 0,85 menos V sobre 0,35, saturando em 100% da corrente máxima quando a tensão chega a 0,5 pu."),
-            ("Bruno", "No gráfico à direita vemos a regra de prioridade sob limite de corrente Imax: a corrente reativa iq tem prioridade para sustentar a tensão da rede, e a corrente ativa id fica limitada ao que cabe no círculo de capacidade do conversor, caindo a quase zero em afundamentos abaixo de 0,5 pu. E como sintetizam as duas caixas no rodapé, eliminada a falta a potência ativa retorna ao patamar pré-falta, mas há uma divisão fundamental de papéis: o bloco do ONS define quanto de corrente ativa e reativa injetar, porém quem define em que direção essas correntes entram na rede é o ângulo teta estimado pelo SRF-PLL."),
+            ("Bruno", "No modelo final do nosso inversor, nós substituímos aquelas referências fixas por essa lógica de suporte de subtensão do Submódulo 2.10 do ONS. Como vocês podem ver no gráfico à esquerda, é a tensão que define o reativo. Quando a tensão medida permanece numa faixa normal, entre 0,85 e 1,1 por unidade, a corrente reativa de referência é zero e o inversor injeta potência ativa nominal.\n\nQuando essa tensão afunda abaixo de 0,85 durante uma falta, o código de rede exige a injeção de corrente reativa proporcional a esse afundamento, seguindo essa rampa da equação. Isso vai até o limite de saturação: quando a tensão chega a 0,5 p.u. ou menos, o inversor injeta 100% da corrente máxima, ou seja, 1 p.u. de corrente reativa.\n\nNo gráfico à direita, vemos a nossa regra de prioridade sobre o limite de corrente. A corrente máxima forma esse raio, e a corrente reativa tem prioridade total para sustentar a tensão. A corrente ativa fica apenas com o que sobra dentro desse círculo."),
         ],
-        "atencao": "Slide novo enxuto (unifica a explicação do Submódulo 2.10): destacar a rampa (0,85 a 0,5 pu), o círculo de prioridade (I_max) e a frase-chave 'o ONS diz quanto, o PLL diz em que direção'.",
+        "atencao": "Slide novo enxuto: foco na rampa (0,85 a 0,5 pu) e na prioridade de reativo no círculo de corrente máxima.",
     },
     {
         "tipo": "SLIDE",
@@ -439,18 +429,18 @@ SLIDES_ROTEIRO = [
         "titulo": "Sistema completo",
         "bloco": "Modelagem",
         "tcc": "Fig. 4.2, §4.3.2",
-        "quem": "Victor → Bruno",
+        "quem": "Bruno",
         "dur_s": 40,
         "msg": "Juntando as partes, este é o inversor usado em todas as simulações.",
         "pontos": [
-            ("Victor", "Figura 4.2 do TCC à esquerda e os 3 cartões à direita: (1) Sincronismo: SRF-PLL mede a tensão na Barra 2 e entrega θ_PLL às transformações dq; (2) Referência pelo Submódulo 2.10: antes fixas (P = 1 pu, Q = 0), i_d,ref e i_q,ref seguem a tensão V_PCC; (3) Corrente e PWM: os PIs em dq geram a modulação e o filtro LCL entrega a corrente à Barra 2."),
-            ("Bruno", "Rodapé ('E agora?'): com o modelo completo fechado e validado, aplicamos o protocolo de faltas no sistema IEEE 9 barras para testar a robustez do SRF-PLL."),
+            ("Bruno", "Integração do modelo completo utilizado em todas as simulações, como mostra a Figura 4.2 do TCC."),
+            ("Bruno", "Na parte superior, a etapa de potência com inversor, filtro LCL e ponto de acoplamento da Barra 2; na parte inferior, o controle digital onde tudo se conecta (SRF-PLL entrega o ângulo, Submódulo 2.10 define referências de corrente pela tensão e malhas geram modulação)."),
+            ("Bruno", "Com o modelo fechado, passagem para o método de teste para ver como as contingências vão testar esse SRF-PLL."),
         ],
         "falas": [
-            ("Victor", "Juntando todas as partes na Figura 4.2 do TCC, temos o modelo completo usado nas simulações: na parte superior a etapa de potência, com barramento CC, ponte inversora, filtro LCL e acoplamento na Barra 2; e na parte inferior o controle digital, reunindo o sincronismo pelo SRF-PLL, a geração de referências pelo Submódulo 2.10 a partir de Vpcc e as malhas de corrente com PWM."),
-            ("Bruno", "Com o modelo fechado, passamos agora ao método de teste: como as contingências no sistema IEEE 9 barras foram aplicadas para avaliar esse inversor."),
+            ("Bruno", "Juntando então todas essas partes, chegamos ao nosso modelo completo, que foi utilizado em todas as simulações, como mostra a Figura 4.2 do TCC.\n\nNa parte superior, temos a etapa de potência, com o inversor, o filtro LCL e o ponto de acoplamento da Barra 2. Na parte inferior, o controle digital, onde tudo se conecta: o SRF-PLL entrega o ângulo, o Submódulo 2.10 define as referências de corrente a partir da tensão, e as malhas de controle geram a modulação.\n\nCom o modelo fechado, passamos agora para o nosso método de teste, para ver como as contingências vão testar esse nosso SRF-PLL."),
         ],
-        "atencao": "Slide de fechamento da Modelagem: transição rápida e segura para o Método (Slide 17).",
+        "atencao": "Slide de fechamento da Modelagem: transição direta para o Método de Teste (Slide 17).",
     },
     {
         "tipo": "SLIDE",
@@ -565,19 +555,19 @@ PALCO_ROTEIRO = [
         "titulo": "Falta trifásica: quanto mais perto, mais severa",
         "bloco": "Painel HTML · Cap. 3/8 · 3 passos",
         "tcc": "§5.2 · Tabela 5.1 · Figura 5.7",
-        "quem": "Bruno → Victor",
-        "dur_s": 65,
+        "quem": "Bruno",
+        "dur_s": 75,
         "reserva": "Slide Oculto 25",
         "msg": "A mesma falta trifásica em quatro pontos: quanto mais perto da usina, menos tensão sobra e maior o erro, mas com a sintonia nominal o erro sempre volta à faixa de 2° em até 112 ms.",
         "pontos": [
-            ("Bruno", "Passo 1 (Foco na falta 0,3–0,4 s + Mini-mapa à direita): comparar a retenção de v_d nos 4 pontos sob sintonia nominal: 9,2% na Barra 7, 11,3% na Linha 7-8, 47,1% na Linha 8-9 e 58,4% na Barra 6."),
-            ("Victor", "Passo 2 (Seta → Pico do erro e fasor) e Passo 3 (Seta → Janela completa e retorno a 2°): no Passo 2, o pico do erro de fase vai de 7,3° na Barra 6 até 37,3° na Barra 7 (32,5° na L7-8 e 29,8° na L8-9). No Passo 3, após a eliminação em 0,4 s, as setas superiores mostram que o PLL nominal reconverge em todos os pontos: 98 ms na B7 e L7-8, 112 ms na L8-9 e 76 ms na B6."),
+            ("Bruno", "Passo 1 (Retenção da tensão vd no mini-mapa): aplicação da mesma falta trifásica franca nos 4 pontos sob sintonia nominal. A retenção da tensão vd segue a distância elétrica, caindo para 9,2% na Barra 7 e alcançando 58,4% na Barra 6."),
+            ("Bruno", "Passo 2 (Seta → Pico do erro de fase): acompanha a severidade da falta, atingindo 37,3 graus na Barra 7 contra apenas 7,3 graus na Barra 6."),
+            ("Bruno", "Passo 3 (Seta → Janela pós-falta e setas no topo): na sintonia nominal, o SRF-PLL recupera o sincronismo em todos os casos, retornando a 2 graus em no máximo 112 ms na Linha 8-9 (delay um pouco maior pela dinâmica da linha dupla). Sem sequência negativa, distúrbio puramente transitório."),
         ],
         "falas": [
-            ("Bruno", "No Capítulo 3 aplicamos a mesma falta trifásica franca nos quatro pontos da rede mantendo a sintonia nominal, o que corresponde à Tabela 5.1 e à Figura 5.7 do TCC. No passo 1, o mini-mapa à direita mostra como a retenção da tensão vd segue a distância elétrica: cai para apenas 9,2% na Barra 7 e 11,3% na Linha 7-8, sobe para 47,1% na Linha 8-9 e preserva 58,4% na Barra 6."),
-            ("Victor", "(Seta →) No passo 2, vemos que o pico do erro de fase durante a falta acompanha essa severidade: atinge 37,3 graus na Barra 7 contra apenas 7,3 graus na Barra 6. (Seta →) E no passo 3, abrindo a janela pós-falta a partir de 0,4 segundo, as setas no topo confirmam que com a sintonia nominal o SRF-PLL recupera o sincronismo em todos os casos: retorna à faixa de 2 graus em 98 milissegundos na Barra 7 e na Linha 7-8, 112 milissegundos na Linha 8-9 e 76 milissegundos na Barra 6. Sem sequência negativa, o distúrbio é puramente transitório. (Seta → para o Cap. 4)"),
+            ("Bruno", "Entrando no nosso Capítulo 3 aqui do painel, a gente aplica a mesma falta trifásica franca nos quatro pontos da rede, mantendo a nossa sintonia nominal.\n\nNo passo 1, vocês podem ver no mini-mapa à direita como a retenção da tensão vd segue exatamente a nossa distância elétrica. Ela cai ali para 9,2% quando a gente trata da Barra 7, mas quando a gente trata de um curto lá na Barra 6, a tensão consegue sobreviver ali com quase 60% do valor, cravando 58,4%.\n\n(Seta →) Já aqui no nosso segundo passo, nós vemos que o pico do erro de fase também acompanha essa severidade, né? Ele atinge um pico bem alto ali na Barra 7, de 37,3 graus, contra apenas 7,3 graus na Barra 6.\n\n(Seta →) Bom, abrindo essa janela de pós-falta, as setas no topo confirmam que a sintonia nominal do nosso SRF-PLL recupera o sincronismo em todos os casos. Ele retorna à nossa faixa de 2 graus em, no máximo, 112 milissegundos, que acontece na nossa Linha 8-9 — por ser um circuito duplo, quando uma das linhas sai e a outra fica sozinha após a falta, ele tem esse delay um pouco maior. Então, vocês podem ver que sem a sequência negativa, o distúrbio é puramente transitório, sem problema algum."),
         ],
-        "atencao": "Se a banca perguntar por que a Linha 8-9 leva 112 ms (mais que os 98 ms da B7): o tempo de retorno depende da dinâmica eletromecânica pós-falta de cada topologia quando o curto é extinto, não apenas da tensão residual durante a falta.",
+        "atencao": "Ponto de atenção da Linha 8-9 (112 ms): circuito duplo em que uma das linhas sai na falta e a outra permanece sozinha na recuperação, justificando o tempo de acomodação.",
     },
     {
         "tipo": "PAINEL",
@@ -585,21 +575,21 @@ PALCO_ROTEIRO = [
         "titulo": "Faltas assimétricas: de onde vem o 120 Hz (NOVO: 5 Passos Didáticos)",
         "bloco": "Painel HTML · Cap. 4/8 · 5 passos",
         "tcc": "§5.3 · Tabela 5.3 · Figura 5.10",
-        "quem": "Victor → Bruno",
-        "dur_s": 85,
+        "quem": "Bruno",
+        "dur_s": 80,
         "reserva": "Slide Oculto 26",
         "msg": "Nas faltas assimétricas, a sequência negativa gira ao contrário da rede e aparece no referencial dq do PLL como uma oscilação de 120 Hz (0,29 a 0,72 pu), mais de 250 vezes maior que nas trifásicas.",
         "pontos": [
-            ("Victor", "Passo 1 (Tensões v_abc na Barra 6 trifásica vs. bifásica): mostrar que na falta trifásica as 3 fases afundam por igual, mas na bifásica ficam desequilibradas."),
-            ("Victor", "Passo 2 (Seta → Abre a animação didática de sequências à direita): explicar a animação: em cima (vista da rede), o desequilíbrio é a soma da sequência positiva (gira a +ω) com a negativa (gira ao contrário, a −ω); embaixo (vista do PLL, que gira junto com a positiva), a positiva fica parada no eixo d e a negativa dá a volta no sentido oposto com o dobro da frequência: 2ω = 120 Hz."),
-            ("Bruno", "Passo 3 (Seta → Gráfico muda para v_d e v_q no tempo): mostrar que em dq a falta trifásica fica lisa, enquanto na bifásica v_d e v_q oscilam fortemente a 120 Hz durante toda a falta."),
-            ("Bruno", "Passo 4 (Seta → Gráfico muda para v_q e erro de fase Δθ) e Passo 5 (Seta → Espectro FFT de v_d com destaque '> 250×' e matriz da Tabela 5.3): no Passo 4, como v_q é a entrada do PI, a oscilação de 120 Hz passa pelo controlador (2,32·ω_n) e faz o pico do erro na Barra 6 saltar de 7,3° (trifásica) para 96,0° (bifásica). No Passo 5, o espectro de Fourier de v_d resume todos os casos: o 120 Hz vai de 0,29 pu (B6 mono) a 0,72 pu (B7 bi), mais de 250 vezes o máximo das trifásicas (0,0011 pu)."),
+            ("Bruno", "Passo 1 (Tensões trifásicas na Barra 6): na falta trifásica as três fases caem por igual, enquanto na falta bifásica elas ficam desequilibradas."),
+            ("Bruno", "Passo 2 (Seta → Animação do Teorema de Fortescue à direita): soma da sequência positiva (gira com a rede) com a negativa (sentido oposto). Visto do referencial do PLL, a positiva fica parada no eixo e a negativa gira ao contrário em velocidade dupla: 120 hertz."),
+            ("Bruno", "Passo 3 (Seta → Componentes vd e vq): na trifásica temos praticamente uma falta contínua; a bifásica oscila bastante nesses 120 hertz."),
+            ("Bruno", "Passo 4 (Seta → Entrada do controlador PI em vq): 120 hertz próximo da frequência natural do laço; o PI acaba não conseguindo filtrar e lê essa oscilação como erro de fase, dando um salto bem alto."),
+            ("Bruno", "Passo 5 (Seta → Espectro de Fourier de vd na falta): na trifásica o 120 hertz é quase irrisório; nas assimétricas chega a 0,72 pu na Barra 7, mais de 250 vezes maior do que na trifásica."),
         ],
         "falas": [
-            ("Victor", "No Capítulo 4 entramos nas faltas assimétricas para mostrar fisicamente de onde vem a oscilação de 120 hertz. No passo 1 comparamos as tensões trifásicas na Barra 6: na falta trifásica as três fases caem por igual, mas na falta bifásica elas ficam desequilibradas. (Seta →) No passo 2, a animação à direita mostra o teorema de Fortescue: esse desequilíbrio é a soma de uma sequência positiva, que gira com a rede, e de uma sequência negativa, que gira em sentido oposto. Como o referencial do PLL gira junto com a positiva, na vista do PLL embaixo a positiva fica parada no eixo d, enquanto a negativa gira ao contrário com velocidade dupla, 2 ômega, ou seja, 120 hertz."),
-            ("Bruno", "(Seta →) Avançando ao passo 3, vemos o efeito direto nas componentes vd e vq medidas no inversor: enquanto a trifásica é praticamente contínua na falta, a bifásica oscila severamente a 120 hertz. (Seta →) No passo 4, como vq é exatamente a entrada do controlador PI e 120 hertz está a apenas 2,32 vezes a frequência natural do laço, o PI não filtra essa componente e lê a oscilação como erro de fase: na Barra 6 o pico do erro salta de 7,3 graus na trifásica para 96,0 graus na bifásica. (Seta →) E no passo 5 chegamos à Figura 5.10 e à Tabela 5.3 do TCC, com o espectro de Fourier de vd na falta: nas trifásicas o 120 hertz não passa de 0,0011 pu, mas nas assimétricas vai de 0,29 pu na monofásica da Barra 6 até 0,72 pu na bifásica da Barra 7, mais de 250 vezes maior. (Seta → para o Cap. 5)"),
+            ("Bruno", "(Seta → para abrir o Cap. 4) No Capítulo 4, quando nós falamos de faltas assimétricas, a gente mostra outra face do nosso controlador. No passo 1, comparando as tensões trifásicas na Barra 6, a gente pode ver que na falta trifásica as três fases caem por igual, enquanto na falta bifásica elas ficam desequilibradas.\n\n(Seta →) A animação à direita no passo 2 mostra exatamente isso e explica como esse desequilíbrio funciona através do Teorema de Fortescue. Ele nada mais é do que a soma da sequência positiva, que está girando ali junto com a nossa rede, com a sequência negativa, que gira no sentido oposto. E como o referencial do nosso PLL gira junto com a positiva, na vista dele, a positiva fica exatamente embaixo e parada no eixo, enquanto a negativa gira ao contrário numa velocidade dupla, ou seja, em 120 hertz.\n\n(Seta →) No passo 3, a gente pode ver os efeitos diretos disso nas nossas componentes vd e vq. Enquanto na trifásica temos praticamente uma falta contínua, a bifásica oscila bastante nesses 120 hertz.\n\n(Seta →) E como vq é exatamente a entrada do nosso controlador PI, e esses 120 hertz estão bem próximos da frequência natural desse laço, no passo 4 vemos que o PI acaba não conseguindo filtrar essas componentes, e ele lê essa oscilação como um erro de fase, que dá um salto bem alto.\n\n(Seta →) Aqui no passo 5, a gente demonstra exatamente isso dentro do espectro de Fourier do vd durante a falta. Na trifásica, a gente não consegue nem enxergar um valor para 120 hertz, porque ele é quase irrisório. Já nas assimétricas, no curto mais severo que seria na Barra 7, ele chega a 0,72 p.u. — o que é um valor mais de 250 vezes maior do que na trifásica."),
         ],
-        "atencao": "Atenção à novidade do HTML final: o Capítulo 4 agora tem 5 passos (1: v_abc -> 2: animação das sequências -> 3: v_d e v_q -> 4: v_q e erro -> 5: espectro FFT > 250×).",
+        "atencao": "Capítulo 4 em 5 passos didáticos: 1 (v_abc) -> 2 (Fortescue) -> 3 (v_d e v_q) -> 4 (v_q e erro) -> 5 (espectro FFT > 250×).",
     },
     {
         "tipo": "PAINEL",
@@ -814,19 +804,28 @@ def add_styled_box(doc, title: str, bg_hex: str, border_hex: str, title_color: R
             r_tx.font.color.rgb = C_INK
         elif isinstance(item, tuple) and len(item) == 3:
             speaker, text, w_info = item
-            r_sp = p.add_run(f"[{speaker}] ")
-            r_sp.bold = True
-            r_sp.font.name = "Calibri"
-            r_sp.font.size = Pt(10.5)
-            r_sp.font.color.rgb = C_BRUNO if "Bruno" in speaker else C_VICTOR
-            r_tx = p.add_run(f"“{text}” ")
-            r_tx.font.name = "Calibri"
-            r_tx.font.size = Pt(10.5)
-            r_tx.font.color.rgb = C_INK
-            r_w = p.add_run(w_info)
-            r_w.font.name = "Calibri"
-            r_w.font.size = Pt(8.5)
-            r_w.font.color.rgb = C_MUTED
+            paras = [p_it.strip() for p_it in text.split("\n\n") if p_it.strip()]
+            for p_idx, p_txt in enumerate(paras):
+                p_elem = p if p_idx == 0 else cell.add_paragraph()
+                if p_idx > 0:
+                    p_elem.paragraph_format.space_before = Pt(2)
+                    p_elem.paragraph_format.space_after = Pt(3)
+                    p_elem.paragraph_format.line_spacing = 1.15
+                if p_idx == 0:
+                    r_sp = p_elem.add_run(f"[{speaker}] ")
+                    r_sp.bold = True
+                    r_sp.font.name = "Calibri"
+                    r_sp.font.size = Pt(10.5)
+                    r_sp.font.color.rgb = C_BRUNO if "Bruno" in speaker else C_VICTOR
+                r_tx = p_elem.add_run(f"“{p_txt}”" if len(paras) == 1 else p_txt)
+                r_tx.font.name = "Calibri"
+                r_tx.font.size = Pt(10.5)
+                r_tx.font.color.rgb = C_INK
+                if p_idx == len(paras) - 1:
+                    r_w = p_elem.add_run(f"   {w_info}")
+                    r_w.font.name = "Calibri"
+                    r_w.font.size = Pt(8.5)
+                    r_w.font.color.rgb = C_MUTED
 
     sp = doc.add_paragraph()
     sp.paragraph_format.space_before = Pt(0)
@@ -1101,7 +1100,7 @@ def build_document():
     add_part_banner(
         doc,
         "PARTE I · PowerPoint: Abertura, Motivação, Modelagem e Método (Slides 1 a 18)",
-        "Relógio: 00:00 → 17:15 (17 min 15 s) · Apresentação alternada entre Bruno e Victor.",
+        "Relógio: 00:00 → 17:15 (17 min 15 s) · Bloco 1 (Slides 1 a 4) conduzido integralmente pelo Bruno; slides 5 a 18 alternados entre Victor e Bruno.",
     )
     for it in SLIDES_ROTEIRO[:18]:
         c_start, c_end = item_clocks[idx_global]
@@ -1175,7 +1174,12 @@ def build_document():
         shutil.copy2(str(saved_path), str(OUT_ONEDRIVE))
         print(f"[OK] Cópia salva no OneDrive: {OUT_ONEDRIVE}")
     except Exception as e:
-        print(f"[AVISO] Não foi possível copiar para o OneDrive ({e})")
+        alt_one = OUT_ONEDRIVE.with_name("Roteiro_Falas_e_Tempo_Defesa_TCC_atualizado.docx")
+        try:
+            shutil.copy2(str(saved_path), str(alt_one))
+            print(f"[OK] Cópia atualizada salva no OneDrive (com sufixo): {alt_one}")
+        except Exception as e2:
+            print(f"[AVISO] Não foi possível copiar para o OneDrive ({e} / {e2})")
 
 
 if __name__ == "__main__":

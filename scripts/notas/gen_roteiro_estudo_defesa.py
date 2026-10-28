@@ -276,8 +276,8 @@ bul("<b>Mensagem</b>: a frase que o slide tem de deixar na cabeça da banca.",
 
 n.h("O percurso")
 tab(["Trecho", "Onde", "Conteúdo", "Fala"], [
-    ["Abertura", "PPTX 1", "Capa, autores, orientadores", "Bruno, Victor"],
-    ["Motivação", "PPTX 2-4", "Renováveis, blecautes, problema e objetivos", "Bruno, Victor"],
+    ["Abertura", "PPTX 1", "Capa, autores, orientadores", "Bruno"],
+    ["Motivação", "PPTX 2-4", "Renováveis, blecautes, problema e objetivos", "Bruno"],
     ["Modelagem", "PPTX 5-16", "Inversor, Park, SRF-PLL, rede, sintonia, LCL, corrente, ONS",
      "alternada"],
     ["Método", "PPTX 17-18", "Protocolo de falta e fluxo de análise", "Bruno, Victor"],
@@ -318,33 +318,15 @@ n.note("Sem RoCoF (fora do escopo) e sem citar a contagem exata de cenários: o 
 
 # tópicos de fala da modelagem (5-17), tirados das notas do deck
 FALAS = {
-5: [("Victor", "&#8220;Começamos pela usina.&#8221; Aponte a Figura 3.2: à esquerda, a fonte primária, "
-     "um barramento CC ideal. Diga o porquê numa frase: sem elo CC e sem MPPT, tudo o que se vê "
-     "na falta vem do lado CA e do sincronismo."),
-    ("Bruno", "Siga a figura da esquerda para a direita: o inversor transforma CC em CA, passa pelo "
-     "filtro e entrega os 100 MW na Barra 2. Ele é <b>seguidor de rede</b>: mede a tensão e o "
-     "SRF-PLL, em laranja, estima o ângulo. Feche com a pergunta do rodapé: como ele segue a rede?")],
-6: [("Victor", "Comece pelo problema: um PI não zera o erro de uma senoide. A transformada de Park "
-     "projeta as três fases em dois eixos, d e q, que giram junto com a rede."),
-    ("Bruno", "Aponte o painel da direita: girando junto, a senoide de 60 Hz vira uma constante, e "
-     "aí o PI funciona. Mas a conta inteira depende de &#952;: &#8220;quem dá esse ângulo é o "
-     "PLL&#8221;. Desça para as duas linhas sob a matriz: com o ângulo do PLL, v<sub>d</sub> é a "
-     "amplitude vezes o cosseno do erro, v<sub>q</sub> vezes o seno; travado, v<sub>q</sub> = 0, "
-     "e é esse v<sub>q</sub> que o PLL zera.")],
-7: [("Victor", "Três blocos, um por área tracejada. O detector de fase é a própria Park: com o eixo "
-     "d alinhado, a amplitude toda fica em v<sub>d</sub> e v<sub>q</sub> vale zero. Então "
-     "v<sub>q</sub> é o erro de ângulo."),
-    ("Bruno", "O PI recebe v<sub>q</sub> e devolve a correção &#916;&#969;; somada aos 60 Hz, entra "
-     "no VCO, um integrador, que devolve &#952; para a Park e para as correntes. Cartão da "
-     "direita: com o PI, o laço é de segunda ordem, K<sub>p</sub> = 2&#958;&#969;<sub>n</sub> e "
-     "K<sub>i</sub> = &#969;<sub>n</sub>&#178;. Se &#952; erra, a corrente sai orientada errado.")],
-8: [("Victor", "O sistema de teste: IEEE 9 barras. O G2, de 192 MVA, sai; a usina de 100 MW entra "
-     "na Barra 2. G1 e G3 continuam síncronos e carregam a inércia que sobra."),
-    ("Bruno", "Três geradores, três transformadores, seis linhas e três cargas, em 230 kV; os 100 MW "
-     "são 1 pu na base de 100 MVA. As faltas mudam de lugar para variar a distância elétrica, com "
-     "o nível de curto fixo (é uma limitação, volta no fim)."),
-    ("Victor", "Duas ferramentas: no PSIM, a rede vira um Thévenin na Barra 2, tirado da matriz de "
-     "impedância nodal; no Simulink, roda o sistema completo.")],
+5: [("Victor", "Iniciando a parte de modelagem no slide 5, nós nos deparamos com o modelo do nosso sistema. Começando pela fonte primária, que vai ser uma fonte renovável: nós escolhemos utilizar um barramento CC ideal, ignorando a dinâmica do elo CC e o rastreamento de máxima potência, os MPPTs."),
+    ("Victor", "Seguindo para a direita, temos o inversor, que faz a conversão trifásica e é quem vai receber os comandos do controle. Logo após, temos o filtro de acoplamento LCL, conectando a usina ao ponto de acoplamento comum na rede elétrica, o sistema IEEE de 9 barras. O sinal medido ali vai para o controle digital do SRF-PLL para fazer a realimentação e o rastreamento do ângulo da rede.")],
+6: [("Victor", "Para poder fazer o rastreamento dessa rede, é utilizada a transformada de Park. O conceito básico dela é transformar as tensões trifásicas em duas grandezas lineares e constantes, dividindo em v<sub>d</sub> e v<sub>q</sub>."),
+    ("Victor", "Como vocês podem ver, aqui segue a matriz de transformação e, logo abaixo, observamos as equações resultantes dessa multiplicação. O objetivo do PLL é fazer com que o seu ângulo esteja exatamente em referência ao ângulo da rede. Assim, para v<sub>d</sub> teremos o cosseno de zero, e para v<sub>q</sub> o seno de zero."),
+    ("Victor", "E por que a gente utiliza essa transformada de Park? Porque quando aplicamos sinais senoidais num controlador PI, o erro se propaga e a gente nunca consegue trazer esse erro a zero. Porém, quando convertemos para sinais constantes, a ação integral consegue zerar esse sinal facilmente. Então, esse é o grande porquê de utilizar a transformada de Park na nossa detecção de fase.")],
+7: [("Victor", "Passando para o slide 7, a gente consegue verificar a modelagem da nossa malha de controle fechada. Como já explicamos, a transformada de Park vai ser o nosso detector de fase. O objetivo dela é enviar a componente v<sub>q</sub> para o controlador PI, e nós queremos utilizar o PI para fazer esse v<sub>q</sub> convergir para zero, zerando o erro. Consequentemente, o v<sub>d</sub> vai convergir para a amplitude total da tensão."),
+    ("Victor", "Tendo em vista que referenciamos um set point com a frequência natural da rede, no VCO nós integramos esse sinal de velocidade angular e obtemos o ângulo do PLL. Esse ângulo faz a realimentação de volta para a transformada de Park, fechando o laço. Como a gente pode ver do lado direito, utilizamos as fórmulas da equação característica de segunda ordem para poder dimensionar os ganhos K<sub>p</sub> e K<sub>i</sub> do nosso PLL.")],
+8: [("Victor", "Podendo passar para o próximo slide, aqui a gente encontra o sistema IEEE de 9 barras modificado. A máquina síncrona original da Barra 2 foi substituída pela nossa usina fotovoltaica de 100 megawatts, enquanto os geradores G1 e G3 permanecem como fontes síncronas mantendo a inércia da rede."),
+    ("Victor", "Essa topologia nos permite variar a distância elétrica das faltas mantendo o nível de curto-circuito constante. E para os nossos estudos iniciais de controle, reduzimos toda a rede a um equivalente de Thévenin visto da Barra 2.")],
 9: [("Bruno", "Antes do inversor, uma bancada no PSIM: duas fontes ideais ligadas pela impedância "
      "da rede. Sem chaves e sem LCL, só o laço do PLL."),
     ("Victor", "O que se olhou ali: v<sub>q</sub> indo a zero e o ângulo travando. Os ganhos do "
@@ -387,19 +369,26 @@ FALAS = {
       "K<sub>p</sub> = 8f<sub>g</sub>L<sub>est</sub> e K<sub>i</sub> = "
       "32f<sub>g</sub>&#178;L<sub>est</sub>, com L<sub>est</sub> = 30,71 mH. Feche com o rodapé: "
       "são dois PIs, um sincroniza, o outro faz a corrente seguir a referência.")],
-15: [("Bruno", "No modelo final, as referências fixas da primeira versão dão lugar ao bloco do "
-      "Submódulo 2.10 do ONS, que lê a tensão no PCC. Na faixa normal (0,85 a 1,1 pu), reativo "
-      "zero e eixo d na corrente nominal; abaixo de 0,85 pu, pede reativo pela rampa da Fig. 2.2, "
-      "atingindo 1 pu em 0,5 pu, limitado a I<sub>max</sub>."),
-     ("Victor", "Círculo à direita: o reativo tem prioridade e o eixo d fica só com a folga dentro "
-      "de I<sub>max</sub>, reduzindo o ativo na falta e retornando ao pré-falta após a eliminação. "
-      "Rodapé da direita: o ONS decide <b>quanto</b> injetar, e o SRF-PLL decide <b>em que "
-      "direção</b>.")],
-16: [("Victor", "Juntando tudo, Figura 4.2. Em cima a potência: inversor, LCL e Barra 2. Embaixo "
-      "o controle: o PLL dá o ângulo às transformações dq, o Submódulo 2.10 dá as referências "
-      "i<sub>d,ref</sub> e i<sub>q,ref</sub> em função de V<sub>PCC</sub> e as malhas comandam "
-      "as chaves."),
-     ("Bruno", "Uma frase: &#8220;é esse sistema que as faltas no IEEE 9 barras vão testar.&#8221;")],
+15: [("Bruno", "No modelo final do nosso inversor, nós substituímos aquelas referências fixas por "
+      "essa lógica de suporte de subtensão do Submódulo 2.10 do ONS. Como vocês podem ver no "
+      "gráfico à esquerda, é a tensão que define o reativo. Quando a tensão medida permanece numa "
+      "faixa normal, entre 0,85 e 1,1 por unidade, a corrente reativa de referência é zero e o "
+      "inversor injeta potência ativa nominal."),
+     ("Bruno", "Quando essa tensão afunda abaixo de 0,85 durante uma falta, o código de rede exige a "
+      "injeção de corrente reativa proporcional a esse afundamento, seguindo essa rampa da equação. "
+      "Isso vai até o limite de saturação: quando a tensão chega a 0,5 p.u. ou menos, o inversor "
+      "injeta 100% da corrente máxima, ou seja, 1 p.u. de corrente reativa."),
+     ("Bruno", "No gráfico à direita, vemos a nossa regra de prioridade sobre o limite de corrente. "
+      "A corrente máxima forma esse raio, e a corrente reativa tem prioridade total para sustentar a "
+      "tensão. A corrente ativa fica apenas com o que sobra dentro desse círculo.")],
+16: [("Bruno", "Juntando então todas essas partes, chegamos ao nosso modelo completo, que foi "
+      "utilizado em todas as simulações, como mostra a Figura 4.2 do TCC."),
+     ("Bruno", "Na parte superior, temos a etapa de potência, com o inversor, o filtro LCL e o "
+      "ponto de acoplamento da Barra 2. Na parte inferior, o controle digital, onde tudo se conecta: "
+      "o SRF-PLL entrega o ângulo, o Submódulo 2.10 define as referências de corrente a partir da "
+      "tensão, e as malhas de controle geram a modulação."),
+     ("Bruno", "Com o modelo fechado, passamos agora para o nosso método de teste, para ver como as "
+      "contingências vão testar esse nosso SRF-PLL.")],
 }
 
 
@@ -416,7 +405,7 @@ parte("PARTE I · PowerPoint, slides 1 a 18",
       "fundamentos.")
 
 # --- 1
-slide(1, "Capa", "Abertura", "Bruno abre, Victor lista os blocos, Bruno agradece", "capa")
+slide(1, "Capa", "Abertura", "Bruno", "capa")
 box("msg", "Quem somos, o título e os cinco blocos: contexto, fundamentação e modelagem, "
     "metodologia, resultados e conclusões.")
 n.p("O título já diz o objeto (o SRF-PLL, não o inversor inteiro) e a condição "
@@ -426,7 +415,7 @@ n.p("O título já diz o objeto (o SRF-PLL, não o inversor inteiro) e a condiç
 ponte("&#8220;Vamos começar pelo contexto que motivou este estudo.&#8221;")
 
 # --- 2
-slide(2, "Expansão das renováveis", "Motivação", "Bruno, Victor", "Cap. 2 (IEA 2026, ONS 2025)")
+slide(2, "Expansão das renováveis", "Motivação", "Bruno", "Cap. 2 (IEA 2026, ONS 2025)")
 box("msg", "Solar e eólica saltaram de 5% para 17% da geração mundial em uma década; no "
     "Brasil a capacidade já passa da carga média.")
 sub("Fundamento: o que a máquina síncrona faz sem ninguém mandar")
@@ -463,7 +452,7 @@ ponte("se a rede depende do controle, falhas de controle deveriam aparecer em ev
       "reais. E aparecem.")
 
 # --- 3
-slide(3, "Eventos no mundo real", "Motivação", "Victor, Bruno, Victor, Bruno",
+slide(3, "Eventos no mundo real", "Motivação", "Bruno",
       "Cap. 2, §2.4 (RAP do ONS, ENTSO-E, CEN)")
 box("msg", "Os três grandes blecautes recentes passaram pela geração conectada por "
     "inversores.")
@@ -879,7 +868,7 @@ box("cuidado", "A introdução do TCC traz 22.547 MW (31%) e a §2.4.3 traz 23.3
 ponte("por que o sincronismo falha justamente no afundamento?")
 
 # --- 4
-slide(4, "Problema e objetivos", "Motivação", "Bruno, Victor, Bruno, Victor", "Cap. 1")
+slide(4, "Problema e objetivos", "Motivação", "Bruno", "Cap. 1")
 box("msg", "O SRF-PLL depende de uma tensão limpa, justamente o que a falta na rede destrói.")
 sub("Fundamento: os três estragos da falta na tensão medida")
 bul("<b>Afundamento</b>: a amplitude cai. Como a amplitude multiplica o ganho do laço do "
@@ -912,10 +901,10 @@ box("banca", "<b>Qual é a pergunta central?</b> Como a sintonia do PI do SRF-PL
     "fronteira entre manter o suporte de tensão e perder o sincronismo durante a falta?")
 box("cuidado", "As notas falam em sobrecorrentes; o TCC conclui que elas não se manifestam "
     "(defesa_qa.pdf, pergunta 2). Não puxe o assunto.")
-ponte("para responder, primeiro o modelo: como a usina se liga à rede.")
+ponte("Passo agora a palavra ao Victor, que vai iniciar o bloco de modelagem.")
 
 # --- 5
-slide(5, "Fonte renovável", "Modelagem", "Victor, Bruno", "Fig. 3.2, §3.2, §4.1, §4.3.1")
+slide(5, "Fonte renovável", "Modelagem", "Victor", "Fig. 3.2, §3.2, §4.1, §4.3.1")
 box("msg", "A usina fotovoltaica ou eólica se conecta à rede por um inversor seguidor de rede.")
 fala(5)
 sub("Fundamento: a cadeia da figura")
@@ -936,7 +925,7 @@ box("banca", "<b>Como o inversor segue a rede?</b> O controle trabalha em dq, e 
 ponte("&#8220;trabalha em dq&#8221; pede a transformada de Park.")
 
 # --- 6
-slide(6, "Transformada de Park", "Modelagem", "Victor, Bruno", "Eqs. (3.4)-(3.7), §3.1.2")
+slide(6, "Transformada de Park", "Modelagem", "Victor", "Eqs. (3.4)-(3.7), §3.1.2")
 box("msg", "Girando com a rede, a transformada de Park torna constantes as grandezas "
     "trifásicas.")
 fala(6)
@@ -1007,7 +996,7 @@ box("banca", "<b>E o ângulo &#952;?</b> A transformação só vale se &#952; fo
 ponte("como o PLL encontra &#952;.")
 
 # --- 7
-slide(7, "Estrutura do SRF-PLL", "Modelagem", "Victor, Bruno", "Fig. 4.3, §3.4, Eqs. (3.10)-(3.19)")
+slide(7, "Estrutura do SRF-PLL", "Modelagem", "Victor", "Fig. 4.3, §3.4, Eqs. (3.10)-(3.19)")
 box("msg", "O SRF-PLL gira o referencial dq até alinhar o eixo d com a tensão da rede.")
 fala(7)
 n.p("Este é o slide em que a banca mais pode puxar teoria de controle. A seção abaixo "
@@ -1180,7 +1169,7 @@ tab(["Termo", "Em uma frase"], [
 ponte("antes de sintonizar, qual rede o PLL enxerga?")
 
 # --- 8
-slide(8, "Sistema IEEE 9 barras", "Modelagem", "Victor, Bruno, Victor", "Fig. 4.1, §4.3.1")
+slide(8, "Sistema IEEE 9 barras", "Modelagem", "Victor", "Fig. 4.1, §4.3.1")
 box("msg", "A UFV assume a Barra 2 e enxerga o resto da rede como um equivalente de "
     "Thévenin.")
 fala(8)
@@ -1563,7 +1552,7 @@ box("cuidado", "Nunca confundir os dois: K<sub>p</sub> = 8f<sub>g</sub>L<sub>est
 ponte("no modelo final, a referência deixa de ser fixa.")
 
 # --- 15
-slide(15, "Submódulo 2.10 do ONS", "Modelagem", "Bruno, Victor", "Fig. 2.2, Fig. 4.2, §2.5.2, §4.3.2, §5.2")
+slide(15, "Submódulo 2.10 do ONS", "Modelagem", "Bruno", "Fig. 2.2, Fig. 4.2, §2.5.2, §4.3.2, §5.2")
 box("msg", "No modelo final, a tensão medida define o reativo e o ativo fica com o que sobra.")
 fala(15)
 n.p("No modelo final, as referências fixas da primeira versão (slide 12) dão lugar ao bloco "
@@ -1599,7 +1588,7 @@ box("banca", "<b>Por que priorizar o reativo?</b> Sustenta a tensão sem exceder
 ponte("juntando todas as partes no sistema completo.")
 
 # --- 16
-slide(16, "Sistema completo", "Modelagem", "Victor, Bruno", "Fig. 4.2, §4.3.2")
+slide(16, "Sistema completo", "Modelagem", "Bruno", "Fig. 4.2, §4.3.2")
 box("msg", "Juntando as partes, este é o inversor usado em todas as simulações.")
 fala(16)
 sub("Revise em voz alta, de cima para baixo")
@@ -1613,7 +1602,7 @@ n.p("Uma forma de amarrar: são laços com velocidades parecidas, um dentro do o
     "200 &#956;s. Se der para contar este slide sem olhar, a modelagem está estudada.")
 box("banca", "<b>E agora?</b> Com o modelo fechado, as faltas no IEEE 9 barras testam o "
     "SRF-PLL.")
-ponte("como as faltas foram aplicadas.")
+ponte("Passamos agora para o nosso método de teste, para ver como as contingências vão testar esse nosso SRF-PLL.")
 
 # --- 17
 slide(17, "Protocolo de contingência", "Método", "Bruno, Victor", "§4.3.4, Tab. 4.1, §5.2")

@@ -6,7 +6,7 @@ aliases: [defesa-deck-map]
 
 # Deck da defesa — mapa slide a slide
 
-> Estado em 2026-10-27: 31 slides, com o "Filtro LCL" novo no 13 (da linha
+> Estado em 2026-10-28: 29 slides, com os 4 slides do ONS + Sistema completo (antigos 15-18) condensados em 2 slides enxutos: 15 ("Submódulo 2.10 do ONS", mantendo `ons_logica_defesa.svg` + 2 caixas lado a lado no rodapé) e 16 ("Sistema completo", Fig. 4.2 com cartão 2 unificado). Em 2026-10-27: 31 slides, com o "Filtro LCL" novo no 13 (da linha
 > "13 Controle de corrente" em diante, somar +1). Em 2026-10-21: 30 slides (12 e 13 do inversor, 14-17 do ONS e
 > sistema completo; as linhas abaixo do 17 ainda usam a numeração antiga:
 > somar +5; outra sessão também passou a demo para antes da energização). Em 2026-10-19: 29 slides, 16:9, com a **demonstração ao vivo do

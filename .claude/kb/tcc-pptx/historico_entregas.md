@@ -10,6 +10,25 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-28: ONS enxugado em 2 slides (15-16) e Conclusão (20) focada nos 3 pontos (entregue)
+
+- Pedido do usuário: (1) condensar a sequência ONS + Sistema completo em 2 slides
+  enxutos (saíram "Referência pelo ONS" e "Lógica em blocos", deck 31 → 29);
+  (2) no slide de Conclusão (antigo 22, atual 20, "Síntese dos resultados"),
+  remover os 3 valores soltos no topo dos cartões (`9,2% Vd`, `250× mais 120 Hz`,
+  `66,8% do tempo`) e focar nos 3 pontos principais de apoio à conclusão já
+  escritos no slide (`1. Faltas simétricas`, `2. Faltas assimétricas`,
+  `3. Sensibilidade de ganhos`), redimensionados com divisória e destaques em negrito.
+- Slide 15 ("Submódulo 2.10 do ONS"): manteve `ons_logica_defesa.svg` (gráfico
+  aprovado) e dividiu o rodapé em 2 caixas lado a lado ("Por que priorizar o
+  reativo?" e "Quem orienta as correntes?").
+- Slide 16 ("Sistema completo"): manteve a Fig. 4.2 do TCC e atualizou o
+  cartão 2 ("2. Referência pelo Submódulo 2.10: Antes fixas (P = 1 pu, Q = 0),
+  i_d,ref e i_q,ref seguem a tensão V_PCC"). Roteiros PDF/Word sincronizados.
+- e1306f85… → d5ae8c30… (backup `_20261028_005224`) → 7d7d9daca13d2baeecd6041af304f3e1
+  (backup `_20261028_012205`). check_pptx 0 falhas, 0 avisos no 20; tempo 25,1 min.
+  Staging `C:\Temp\defesa_ons_2slides\` e `C:\Temp\defesa_s20_conclusao\`.
+
 ## 2026-10-28: slide 21 (demo) só com a tela e o botão (entregue)
 
 - Pedido do Victor: o slide da demo vira só a entrada para o painel, sem

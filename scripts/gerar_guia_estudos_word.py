@@ -213,49 +213,47 @@ SLIDE_SPEECHES = {
         "o SRF-PLL."
     ),
     13: (
+        "[Bruno] Antes da malha de corrente, o filtro que liga o inversor à rede. A figura mostra "
+        "uma fase: o inversor de dois níveis, alimentado por um barramento CC de valor constante, "
+        "chaveia a 5 kHz, e o filtro LCL atenua as componentes do chaveamento antes do ponto de "
+        "conexão. O projeto tem quatro passos. O L1, do lado do inversor, sai do limite de ondulação "
+        "da corrente, que depende da tensão do barramento e da frequência de chaveamento. O L2 é "
+        "proporcional ao L1, e os dois somados dão a indutância Lest, de 30,71 mH, que volta no PI de corrente.\n\n"
+        "[Victor] O capacitor fecha a ressonância, que ficou em 9.068,99 rad/s, numa faixa "
+        "intermediária segura entre a frequência fundamental da rede e a de chaveamento, como mostra "
+        "a régua embaixo. Por último, o amortecimento passivo: resistências em série com os indutores "
+        "e com o capacitor, para mitigar o pico de ressonância e atenuar oscilações no ponto de "
+        "conexão. O barramento CC fica em valor constante, para manter a margem de modulação necessária."
+    ),
+    14: (
         "[Bruno] Aberta, a malha de corrente é a Figura 3.1 do TCC: em cada eixo, o erro entre a "
         "referência e a corrente medida passa pelo PI e por um filtro notch na ressonância do LCL, "
         "gerando o índice de modulação que o PWM a 5 kHz aplica no inversor de dois níveis.\n\n"
-        "[Victor] O filtro LCL ressoa em 9.068,99 rad/s, entre a fundamental e o chaveamento, com "
-        "amortecimento de 0,707 e indutância total Lest de 30,71 mH. O PI de corrente segue a mesma "
-        "forma canônica do PLL: amortecimento de 0,707 e frequência natural de 4 raiz de 2 vezes a "
-        "fundamental, acomodando a corrente em um ciclo da rede. Daí saem Kp igual a 8 fg Lest e Ki "
-        "igual a 32 fg ao quadrado Lest. São dois PIs distintos: o do PLL sincroniza, e o de corrente "
-        "faz id e iq seguirem a referência."
-    ),
-    14: (
-        "[Bruno] Com a malha de corrente ajustada, trocamos a referência fixa pela lógica do ONS. "
-        "O esqueleto é o mesmo do slide 12, mas agora as referências id e iq saem do bloco laranja "
-        "do Submódulo 2.10, que lê a tensão no ponto de conexão e recebe a corrente nominal e a "
-        "corrente máxima do conversor, como na Figura 4.2 do TCC.\n\n"
-        "[Victor] Repare que o SRF-PLL aparece duas vezes no diagrama: ele sai da mesma transformação "
-        "que mede a tensão e orienta as correntes na malha. O bloco do ONS decide quanto injetar; "
-        "o PLL decide em que direção."
+        "[Victor] O filtro LCL é o do slide anterior. O PI de corrente segue a mesma forma canônica "
+        "do PLL: amortecimento de 0,707 e frequência natural de 4 raiz de 2 vezes a fundamental, "
+        "acomodando a corrente em um ciclo da rede. Daí saem Kp igual a 8 fg Lest e Ki igual a 32 fg "
+        "ao quadrado Lest. São dois PIs distintos: o do PLL sincroniza, e o de corrente faz id e iq "
+        "seguirem a referência."
     ),
     15: (
-        "[Victor] Por dentro, o bloco faz três coisas. Primeiro, olha a faixa da tensão medida: "
-        "abaixo de 0,85 pu, pede corrente reativa pela rampa da Figura 2.2, nula em 0,85 e igual à "
-        "nominal em 0,5 pu. Segundo, limita essa corrente ao máximo do conversor.\n\n"
-        "[Bruno] Terceiro, aplica a prioridade mostrada no círculo à direita: o eixo d fica só com a "
-        "parcela de corrente que o suporte de reativo deixa livre, e por isso a potência ativa cai "
-        "durante a falta. Abaixo de 0,5 pu quase nada sobra para o ativo, garantindo o suporte de "
-        "tensão sem ultrapassar o limite do equipamento."
+        "[Bruno] Com a malha de corrente ajustada, trocamos as referências fixas da primeira versão "
+        "pelo bloco do Submódulo 2.10 do ONS, que lê a tensão no ponto de conexão. Na faixa normal, "
+        "o reativo adicional fica em zero e o eixo d na corrente nominal; abaixo de 0,85 pu, o bloco "
+        "pede corrente reativa pela rampa da Figura 2.2, atingindo 1 pu em 0,5 pu, limitada ao máximo "
+        "do conversor.\n\n"
+        "[Victor] Ao mesmo tempo, aplica-se a prioridade mostrada no círculo à direita: o eixo d fica "
+        "só com a parcela de corrente que o suporte de reativo deixa livre dentro de Imax, reduzindo a "
+        "potência ativa durante a falta e retornando ao patamar pré-falta após a eliminação. O bloco do "
+        "ONS define quanto injetar de id e iq; o ângulo do SRF-PLL define em que direção."
     ),
     16: (
-        "[Bruno] No código, a mesma lógica vira esta sequência em blocos: dois testes de tensão "
-        "escolhem o caminho, e na faixa normal o reativo fica em zero e o eixo d na corrente nominal.\n\n"
-        "[Victor] Nos dois caminhos de defeito, primeiro limita-se a corrente reativa e depois "
-        "aplica-se a prioridade. Quando a falta é eliminada, a tensão volta à faixa normal, o "
-        "reativo adicional zera e a potência ativa retorna ao patamar pré-falta."
-    ),
-    17: (
-        "[Victor] Juntando todas as partes, este é o sistema completo da Figura 4.2 do TCC: em cima, "
-        "o inversor de dois níveis, o filtro LCL e o ponto de acoplamento na Barra 2; embaixo, o "
-        "controle digital, onde o SRF-PLL entrega o ângulo, o Submódulo 2.10 define as referências e "
-        "os PIs de corrente comandam o PWM.\n\n"
+        "[Victor] Juntando todas as partes, este é o sistema completo da Figura 4.2 do TCC: em cima, o "
+        "inversor de dois níveis, o filtro LCL e o ponto de acoplamento na Barra 2; embaixo, o controle "
+        "digital, onde o SRF-PLL orienta as transformações dq, o Submódulo 2.10 define as referências id "
+        "e iq pela tensão no ponto de conexão e os PIs de corrente comandam o PWM.\n\n"
         "[Bruno] É esse sistema completo que as contingências no IEEE 9 barras vão testar a partir de agora."
     ),
-    18: (
+    17: (
         "[Bruno] Todas as simulações seguem a mesma linha do tempo. Nos primeiros 0,1 s o modelo "
         "inicializa e o PLL trava; esse trecho fica fora das métricas. A falta é aplicada em 0,3 s e "
         "eliminada em 0,4 s, seis ciclos a 60 Hz, e o sistema é observado até 0,6 s, 200 ms após a "
@@ -266,7 +264,7 @@ SLIDE_SPEECHES = {
         "maior esforço ao sincronismo. A sintonia inadequada foi avaliada nas Barras 7 e 6 e na "
         "Linha 7-8, enquanto as demais barras em cinza ficam disponíveis para consulta no painel."
     ),
-    19: (
+    18: (
         "[Bruno] Antes de abrir os resultados, veja como eles foram extraídos. Ao fim de cada "
         "simulação, o Simulink exporta os sinais em duas taxas de amostragem; um código em Python "
         "alinha as duas num eixo de tempo comum e calcula os mesmos indicadores para todos os "
@@ -279,27 +277,27 @@ SLIDE_SPEECHES = {
         "[Bruno] Tudo isso alimenta o nosso painel interativo, que vamos abrir agora para percorrer "
         "os resultados."
     ),
-    20: (
+    19: (
         "[Victor] A partir deste slide, apresentamos todos os resultados do Capítulo 5 diretamente "
         "no painel interativo em tela cheia, no Modo Apresentação. (Aperta Alt+Tab para o navegador "
         "e clica no botão Modo apresentação no cabeçalho)."
     ),
-    21: (
-        "[Bruno] De volta aos slides para concluir. No primeiro cartão, sob faltas simétricas, com a "
-        "sintonia nominal o SRF-PLL preserva o sincronismo e reconverge em todos os pontos, mesmo "
-        "com retenção de vd de apenas 9,2% na Barra 7, sendo a severidade ditada pela distância "
+    20: (
+        "[Bruno] De volta aos slides para concluir nos três pontos centrais. Primeiro, sob faltas "
+        "simétricas: com a sintonia nominal, o SRF-PLL preserva o sincronismo e reconverge em todos "
+        "os pontos da rede, sendo a severidade do afundamento ditada diretamente pela distância "
         "elétrica até a usina.\n\n"
-        "[Victor] No segundo cartão, sob faltas assimétricas, a sequência negativa expõe uma "
-        "fragilidade estrutural do algoritmo: a componente de 120 Hz é mais de 250 vezes maior que "
-        "nas trifásicas, o PI não a rejeita e essa oscilação contamina as potências ativa e reativa.\n\n"
-        "[Bruno] No terceiro cartão, reduzir os ganhos do PI filtra melhor a falta moderada, mas "
-        "retarda a recuperação e, na falta severa da Barra 7, leva à perda de sincronismo por "
-        "escorregamento de ciclo, fazendo a usina absorver potência ativa da rede em 66,8% do tempo pós-falta.\n\n"
+        "[Victor] Segundo, sob faltas assimétricas: a fragilidade do algoritmo é estrutural, porque "
+        "a componente de sequência negativa introduz uma oscilação de 120 Hz que o controlador PI "
+        "não consegue rejeitar, contaminando as potências injetadas P e Q.\n\n"
+        "[Bruno] Terceiro, na sensibilidade de ganhos: reduzir os ganhos do PI atenua a falta "
+        "moderada, mas retarda o restabelecimento e leva ao escorregamento de ciclo na falta severa "
+        "da Barra 7, fazendo o inversor drenar potência ativa da rede.\n\n"
         "[Victor] Por isso, o sincronismo do SRF-PLL é uma decisão de estabilidade do sistema "
-        "elétrico: permanecer conectado não basta; a verificação de conformidade precisa auditar a "
-        "qualidade do rastreamento angular durante a falta e em toda a recomposição."
+        "elétrico: permanecer conectado é insuficiente; a conformidade regulatória deve auditar o "
+        "erro angular dinâmico durante a falta e em toda a recomposição da rede."
     ),
-    22: (
+    21: (
         "[Victor] Como limites deste trabalho, utilizamos o sistema IEEE 9 barras com nível de "
         "curto-circuito fixo, duas sintonias contrastantes e janela de 200 ms pós-falta: ou seja, "
         "o trabalho identifica e explica um mecanismo físico-dinâmico, e não um envelope universal "
@@ -312,16 +310,16 @@ SLIDE_SPEECHES = {
         "[Victor] Encerramos agradecendo novamente ao professor Oscar, ao professor André, aos "
         "membros da banca e à UERJ. Ficamos à disposição para as perguntas, com o painel aberto."
     ),
-    23: "[Bruno] Slide de apêndice para a arguição: reúne os parâmetros da rede, do equivalente de Thévenin, do filtro LCL e das malhas de controle.",
-    24: "[Victor] Slide de apêndice para a arguição: reúne as Tabelas 5.1, 5.2 e 5.3 completas do Capítulo 5.",
-    25: (
+    22: "[Bruno] Slide de apêndice para a arguição: reúne os parâmetros da rede, do equivalente de Thévenin, do filtro LCL e das malhas de controle.",
+    23: "[Victor] Slide de apêndice para a arguição: reúne as Tabelas 5.1, 5.2 e 5.3 completas do Capítulo 5.",
+    24: (
         "[Victor] (Reserva do Capítulo 2 do painel) Na energização, com a sintonia nominal, vd "
         "acomoda em 34 ms e o erro de fase entra na faixa de 2 graus em 40 ms. Com a sintonia "
         "inadequada, são 42 ms e 79 ms, quase o dobro do tempo.\n\n"
         "[Bruno] Em regime permanente, porém, as duas chegam ao mesmo ponto de operação antes da "
         "falta em 0,3 s: a sintonia inadequada é lenta, não quebrada, e a diferença aparece nas contingências."
     ),
-    26: (
+    25: (
         "[Bruno] (Reserva do Capítulo 3 do painel) Nas faltas trifásicas com sintonia nominal, "
         "quanto mais perto da usina, mais severo o afundamento: a retenção de vd vai de 58,4% na "
         "Barra 6 a 9,2% na Barra 7, e o pico do erro sobe de 7,3 para 37,3 graus.\n\n"
@@ -329,7 +327,7 @@ SLIDE_SPEECHES = {
         "abaixo de 0,0011 pu, o erro é apenas transitório e o PLL nominal retorna à faixa de 2 graus "
         "em todos os pontos, entre 76 e 112 ms."
     ),
-    27: (
+    26: (
         "[Victor] (Reserva do Capítulo 4 do painel) Nas faltas assimétricas, a sequência negativa "
         "aparece em dq como uma oscilação de 120 Hz entre 0,29 e 0,72 pu, mais de 250 vezes maior "
         "que nas trifásicas.\n\n"
@@ -337,7 +335,7 @@ SLIDE_SPEECHES = {
         "essa componente. Já no gráfico da direita, na trifásica da Barra 7, a nominal recupera em "
         "98 ms enquanto a inadequada perde o sincronismo por escorregamento de ciclo."
     ),
-    28: (
+    27: (
         "[Bruno] (Reserva do Capítulo 5 do painel) Na bifásica da Barra 6, onde a tensão residual "
         "sustenta o laço, a menor banda da sintonia inadequada filtra o 120 Hz: o pico do erro cai "
         "de 96,0 para 34,5 graus e o retorno cai de 48 para 30 ms.\n\n"
@@ -345,7 +343,7 @@ SLIDE_SPEECHES = {
         "recuperação: o tempo de retorno quase dobra, passando de 46 para 95 ms na monofásica e de "
         "51 para 96 ms na bifásica."
     ),
-    29: (
+    28: (
         "[Bruno] (Reserva do Capítulo 6 do painel) No pós-falta da Barra 7 trifásica com sintonia "
         "inadequada, o inversor passa 66,8% do tempo absorvendo potência ativa da rede, com média de "
         "menos 0,40 pu, comportando-se como uma carga oscilante.\n\n"
@@ -353,7 +351,7 @@ SLIDE_SPEECHES = {
         "continuamente em escorregamento de ciclo, a corrente comandada no eixo d troca de sinal em "
         "relação à tensão da rede."
     ),
-    30: (
+    29: (
         "[Bruno] (Reserva do Capítulo 7 do painel) Pelo Submódulo 2.10 do ONS, nas faltas trifásicas "
         "com sintonia nominal o inversor cumpre a rampa: satura iq em 1,0 pu na Barra 7 e na Linha "
         "7-8 e entrega 0,72 pu frente a 0,76 pu na Barra 6.\n\n"
@@ -387,25 +385,25 @@ EXTRA_FALAS_TOPICOS = {
         ("Bruno", "Diagrama passo 4: com erro em teta, perde-se o desacoplamento entre P e Q e o suporte do Submódulo 2.10 falha."),
         ("Victor", "Cartões da direita: ler o objetivo geral (100 MW no IEEE 9 barras) e os específicos, fechando na pergunta central do rodapé."),
     ],
-    18: [
+    17: [
         ("Bruno", "Linha do tempo no topo: 0 a 0,1 s inicialização (fora das métricas), falta de 0,3 a 0,4 s (100 ms = 6 ciclos) e pós-falta até 0,6 s (200 ms de observação)."),
         ("Victor", "Matriz embaixo: colunas azuis analisadas da mais perto à mais longe (B7, L7-8, L8-9, B6); colunas cinzas consultáveis no painel; N = nominal e I = inadequada."),
     ],
-    19: [
+    18: [
         ("Bruno", "Quatro blocos superiores: Simulink exporta CSV em duas taxas -> Python alinha no tempo e calcula as métricas automaticamente -> Painel interativo."),
         ("Victor", "Tabela das 5 métricas: retenção de Vd (9,2% na B7 nominal), pico do erro após o 1º ciclo, retorno a ±2° desde a eliminação, 120 Hz no espectro de Vd e P/Q médios."),
-        ("Bruno", "Ponte do rodapé: passar para o slide 20 e abrir o painel ao vivo."),
+        ("Bruno", "Ponte do rodapé: passar para o slide 19 e abrir o painel ao vivo."),
     ],
-    20: [
+    19: [
         ("Victor", "Anunciar que os resultados serão mostrados no painel interativo em tela cheia: apertar Alt+Tab para o navegador e clicar em 'Modo apresentação'."),
     ],
-    21: [
-        ("Bruno", "Cartão 1 (9,2% Vres): nas trifásicas com sintonia nominal, o PLL reconverge em todos os pontos (98 ms na B7); severidade segue a distância elétrica."),
-        ("Victor", "Cartão 2 (250× mais 120 Hz): nas assimétricas, a fragilidade é estrutural; o PI não filtra os 120 Hz da sequência negativa, contaminando P e Q."),
-        ("Bruno", "Cartão 3 (66,8% do tempo): reduzir os ganhos filtra na B6, mas atrasa a recuperação e causa escorregamento de ciclo na B7, drenando potência ativa em 66,8% do pós-falta."),
-        ("Victor", "Rodapé: o sincronismo é decisão de estabilidade; permanecer conectado é insuficiente, é preciso auditar o rastreamento angular."),
+    20: [
+        ("Bruno", "Cartão 1 (1. Faltas simétricas): com a sintonia nominal, o SRF-PLL reconverge em todos os pontos; a severidade do afundamento depende diretamente da distância elétrica até a usina."),
+        ("Victor", "Cartão 2 (2. Faltas assimétricas): a fragilidade é estrutural; a sequência negativa introduz oscilação de 120 Hz que o PI não rejeita, contaminando P e Q."),
+        ("Bruno", "Cartão 3 (3. Sensibilidade de ganhos): reduzir os ganhos atenua a falta, mas retarda o restabelecimento e leva ao escorregamento de ciclo na B7, fazendo o inversor drenar potência da rede."),
+        ("Victor", "Rodapé: o sincronismo é decisão de estabilidade; permanecer conectado é insuficiente, é preciso auditar o erro angular dinâmico."),
     ],
-    22: [
+    21: [
         ("Victor", "Caixa de limites (sem defensividade): IEEE 9 barras com nível de curto fixo, duas sintonias e janela de 200 ms pós-falta -> explica um mecanismo físico-dinâmico."),
         ("Bruno", "Dois eixos futuros: (1) DDSRF-PLL e DSOGI-PLL para separar as sequências antes do PI e eliminar o 120 Hz sem perder banda; (2) varrer SCR e múltiplos inversores."),
         ("Victor", "Agradecimento final aos orientadores, à banca e à UERJ, mantendo o painel aberto para perguntas."),
@@ -450,17 +448,18 @@ PALCO_SPEECHES = {
          "laço tipo 2 do PLL sempre recupera o sincronismo. (Seta → para o Cap. 4)", C_VICTOR),
     ],
     4: [
-        ("[Victor] (Passo 1 — Espectro da trifásica na Barra 7): ",
-         "No Capítulo 4 passamos às faltas assimétricas, olhando o espectro da tensão vd durante a falta, que é a "
-         "Figura 5.10 do TCC. No passo 1, na falta trifásica da Barra 7 em grafite, a componente em 120 Hz é "
-         "praticamente zero: 0,0002 pu.", C_VICTOR),
-        ("[Bruno] (Passo 2 — Entram as assimétricas, destaque > 250× e matriz): ",
-         "(Seta →) No passo 2, ao ligar as faltas monofásicas e bifásicas nas Barras 6 e 7, aparece o pico em "
-         "120 Hz de 0,29 pu na monofásica da Barra 6 até 0,72 pu na bifásica da Barra 7: mais de 250 vezes o maior "
-         "valor das trifásicas. Essa oscilação vem da sequência negativa girando a menos ômega, que o referencial "
-         "dq enxerga a 2 ômega, 754 rad/s, apenas 2,32 vezes a frequência natural do PLL. Quase dois terços "
-         "passam pelo PI e contaminam o ângulo: na bifásica da Barra 7 o erro chega a 180 graus nas duas sintonias. "
-         "(Seta → para o Cap. 5)", C_BRUNO),
+        ("[Victor] (Passos 1 e 2 — Tensões v_abc na Barra 6 e animação das sequências positiva e negativa): ",
+         "No Capítulo 4 mostramos fisicamente de onde vem o 120 Hz nas faltas assimétricas. No passo 1, nas tensões "
+         "abc da Barra 6, a falta trifásica cai por igual, mas a bifásica fica desequilibrada. (Seta →) No passo 2, "
+         "a animação à direita mostra que esse desequilíbrio soma uma sequência positiva e uma negativa girando em "
+         "sentidos opostos: como o PLL gira junto com a positiva, vista do PLL a negativa dá a volta com o dobro "
+         "da frequência, a 120 Hz.", C_VICTOR),
+        ("[Bruno] (Passos 3, 4 e 5 — Oscilação em dq, passagem pelo PI e espectro FFT > 250×): ",
+         "(Seta →) No passo 3, em dq, a positiva vira constante e a negativa faz vd e vq oscilarem a 120 Hz na "
+         "bifásica. (Seta →) No passo 4, como vq entra no PI e 120 Hz é apenas 2,32 vezes ômega n, o PI lê a "
+         "oscilação como erro de fase: na Barra 6 o pico salta de 7,3 graus na trifásica para 96,0 graus na bifásica. "
+         "(Seta →) E no passo 5, no espectro de vd da Figura 5.10 e Tabela 5.3, o 120 Hz das assimétricas vai de "
+         "0,29 a 0,72 pu, mais de 250 vezes o das trifásicas. (Seta → para o Cap. 5)", C_BRUNO),
     ],
     5: [
         ("[Bruno] (Passos 1 e 2 — Bifásica na Barra 6, nominal vs. inadequada): ",
@@ -490,20 +489,19 @@ PALCO_SPEECHES = {
          "(Seta → para o Cap. 7)", C_BRUNO),
     ],
     7: [
-        ("[Bruno] (Passos 1 a 3 — Curva de suportabilidade e rampa de corrente reativa do ONS): ",
+        ("[Bruno] (Passos 1 e 2 — Regra do Submódulo 2.10, Barra 7/Linha 7-8 e o dilema dos 0,09 pu): ",
          "No Capítulo 7 confrontamos os resultados com o Submódulo 2.10 do ONS: à esquerda a curva de "
          "suportabilidade da Figura 2.1 e à direita a rampa de corrente reativa da Figura 2.2. (Seta →) No passo 2, "
-         "na Barra 7 e na Linha 7-8 a tensão cai abaixo de 0,2 pu, onde a desconexão seria permitida, mas o "
-         "inversor permanece conectado e satura iq em 1,0 pu. (Seta →) No passo 3, nos pontos mais distantes a "
-         "injeção segue a rampa, entregando 0,72 pu na Barra 6 contra 0,76 pu previstos.", C_BRUNO),
-        ("[Victor] (Passos 4 a 6 — O dilema dos 0,09 pu, outros curtos e o cartão de fecho): ",
-         "(Seta →) O passo 4 mostra o dilema físico na Barra 7: com a tensão retida abaixo de 10%, em 0,10 pu, "
-         "mesmo a corrente máxima de 1,0 pu entrega apenas 0,09 pu de potência reativa à rede. (Seta →) No passo 5, "
-         "acendendo os demais curtos, vemos que nas faltas assimétricas e na perda de sincronismo o inversor "
-         "também permanece conectado, mas entrega potência oscilando em 120 Hz ou drena energia da rede. "
-         "(Seta →) Daí o cartão de fecho no passo 6: perguntar apenas se o inversor permaneceu conectado é "
-         "insuficiente; é preciso acompanhar a qualidade do rastreamento angular durante toda a contingência e na "
-         "recuperação. (Seta → para o Cap. 8)", C_VICTOR),
+         "na Barra 7 e na Linha 7-8 a tensão cai abaixo de 0,2 pu, onde a desconexão seria permitida, e o inversor "
+         "permanece conectado com iq saturado em 1,0 pu; porém, como a tensão retida é de apenas 0,10 pu, a corrente "
+         "máxima entrega só 0,09 pu de potência reativa à rede.", C_BRUNO),
+        ("[Victor] (Passos 3, 4 e 5 — Barra 6 na rampa, demais curtos e cartão de fecho): ",
+         "(Seta →) No passo 3, mais longe da falta a injeção acompanha a rampa, com 0,72 contra 0,76 pu na Barra 6, "
+         "entregando muito mais reativo porque há tensão. (Seta →) No passo 4, acendendo os demais curtos, vemos que "
+         "nas assimétricas e na perda de sincronismo o inversor também permanece conectado, mas a potência carrega "
+         "120 Hz ou se inverte e drena energia. (Seta →) Daí o cartão de fecho no passo 5: perguntar apenas se o "
+         "inversor permaneceu conectado é insuficiente; é preciso acompanhar a qualidade do rastreamento angular "
+         "ao longo de toda a contingência e na recuperação. (Seta → para o Cap. 8)", C_VICTOR),
     ],
     8: [
         ("[Victor] (Tabela síntese de todos os casos e retorno ao PowerPoint): ",
@@ -967,7 +965,7 @@ class WordRoteiroBuilder:
             self.box("fala", *topicos)
 
         speech_raw = SLIDE_SPEECHES.get(slide_num, "")
-        if not speech_raw or slide_num in (23, 24):
+        if not speech_raw or slide_num in (22, 23):
             return
         paras = [p.strip() for p in speech_raw.split("\n\n") if p.strip()]
         formatted_lines = []
@@ -984,10 +982,10 @@ class WordRoteiroBuilder:
             else:
                 formatted_lines.append(p_txt)
 
-        rot_Kind = "script" if slide_num <= 22 else "palco_s"
+        rot_Kind = "script" if slide_num <= 21 else "palco_s"
         label = (
             f"ORDEM DE FALAS PRONTA DO SLIDE {slide_num:02d} ({tot_w} palavras ~ {format_mmss(tot_w/130)})"
-            if slide_num <= 22
+            if slide_num <= 21
             else f"FALA DE RESERVA DO SLIDE OCULTO {slide_num:02d} ({tot_w} palavras ~ {format_mmss(tot_w/130)})"
         )
         self.box(rot_Kind, *formatted_lines, titulo=label)
@@ -1025,7 +1023,7 @@ def inject_30min_schedule_and_tcc_map(wb: WordRoteiroBuilder):
     b_total = 0
     v_total = 0
 
-    # 1. Slides 1 a 20
+    # 1. Slides 1 a 19
     slide_titles = {
         1: "Capa e abertura",
         2: "Expansão das renováveis (IEA / ONS)",
@@ -1039,17 +1037,16 @@ def inject_30min_schedule_and_tcc_map(wb: WordRoteiroBuilder):
         10: "Sintonia nominal do PLL (ts = 20 ms)",
         11: "Duas sintonias do PLL (nominal × inadequada)",
         12: "Referência de corrente (1ª versão PSIM)",
-        13: "Controle de corrente e filtro LCL (Fig. 3.1)",
-        14: "Referência pelo ONS (Submódulo 2.10)",
-        15: "Dentro do Submódulo 2.10 (rampa e círculo)",
-        16: "Lógica em blocos do Submódulo 2.10",
-        17: "Sistema completo (Fig. 4.2)",
-        18: "Protocolo de contingência e matriz (Tab. 4.1)",
-        19: "Fluxo de análise e 5 métricas",
-        20: "Porta para o painel (Alt+Tab -> Modo apresentação)",
+        13: "Filtro LCL (equivalente por fase)",
+        14: "Controle de corrente (Fig. 3.1)",
+        15: "Submódulo 2.10 do ONS (rampa e círculo)",
+        16: "Sistema completo (Fig. 4.2)",
+        17: "Protocolo de contingência e matriz (Tab. 4.1)",
+        18: "Fluxo de análise e 5 métricas",
+        19: "Porta para o painel (Alt+Tab -> Modo apresentação)",
     }
 
-    for s_num in range(1, 21):
+    for s_num in range(1, 20):
         txt = SLIDE_SPEECHES[s_num]
         w = len(txt.split())
         cum_w += w
@@ -1104,8 +1101,8 @@ def inject_30min_schedule_and_tcc_map(wb: WordRoteiroBuilder):
             format_mmss(cum_w / 130),
         ])
 
-    # 3. Slides 21 e 22
-    for s_num, t_str in [(21, "Síntese dos resultados (Cap. 6)"), (22, "Trabalhos futuros e encerramento (Cap. 7)")]:
+    # 3. Slides 20 e 21
+    for s_num, t_str in [(20, "Síntese dos resultados (Cap. 6)"), (21, "Trabalhos futuros e encerramento (Cap. 7)")]:
         txt = SLIDE_SPEECHES[s_num]
         w = len(txt.split())
         cum_w += w
@@ -1163,18 +1160,18 @@ def inject_30min_schedule_and_tcc_map(wb: WordRoteiroBuilder):
 
 def inject_defesa_qa_and_hidden_slides(wb: WordRoteiroBuilder, slides_jpg_fn):
     """Adiciona no final da Parte V os slides ocultos 25-30 com fala de reserva e as 9 perguntas do defesa_qa.pdf."""
-    wb.h("Detalhamento dos Slides Ocultos de Reserva (Slides 25 a 30)")
+    wb.h("Detalhamento dos Slides Ocultos de Reserva (Slides 24 a 29)")
     wb.p(
         "Caso o navegador falhe no dia da apresentação, estes 6 slides no final do PowerPoint "
         "substituem diretamente os Capítulos 2 a 7 do Modo Apresentação:"
     )
     hidden_meta = [
-        (25, "Energização (Reserva do Painel 2)", "§5.1 · Figura 5.3 · 34/40 ms vs. 42/79 ms"),
-        (26, "Faltas trifásicas (Reserva do Painel 3)", "§5.2 · Figura 5.7 e Tabela 5.1 · 9,2% a 58,4%"),
-        (27, "Sequência negativa e perda de sincronismo (Reserva dos Painéis 4 e 6)", "§5.3 e §5.4 · Figuras 5.10 e 5.18 · > 250× e 98 ms"),
-        (28, "Compromisso da sintonia nas assimétricas (Reserva do Painel 5)", "§5.3 · Figura 5.14 e Tabela 5.3 · 96,0° &#8594; 34,5° na B6; retorno dobra na B7"),
-        (29, "Dinâmica pós-falta e absorção de potência (Reserva do Painel 6)", "§5.4 · Figuras 5.20 e 5.21 · 66,8% do tempo absorvendo P (média −0,40 pu)"),
-        (30, "Conformidade com o Submódulo 2.10 do ONS (Reserva do Painel 7)", "§5.5 · Figura 2.2 e Tabela 5.2 · Q = 0,09 pu na Barra 7"),
+        (24, "Energização (Reserva do Painel 2)", "§5.1 · Figura 5.3 · 34/40 ms vs. 42/79 ms"),
+        (25, "Faltas trifásicas (Reserva do Painel 3)", "§5.2 · Figura 5.7 e Tabela 5.1 · 9,2% a 58,4%"),
+        (26, "Sequência negativa e perda de sincronismo (Reserva dos Painéis 4 e 6)", "§5.3 e §5.4 · Figuras 5.10 e 5.18 · > 250× e 98 ms"),
+        (27, "Compromisso da sintonia nas assimétricas (Reserva do Painel 5)", "§5.3 · Figura 5.14 e Tabela 5.3 · 96,0° &#8594; 34,5° na B6; retorno dobra na B7"),
+        (28, "Dinâmica pós-falta e absorção de potência (Reserva do Painel 6)", "§5.4 · Figuras 5.20 e 5.21 · 66,8% do tempo absorvendo P (média −0,40 pu)"),
+        (29, "Conformidade com o Submódulo 2.10 do ONS (Reserva do Painel 7)", "§5.5 · Figura 2.2 e Tabela 5.2 · Q = 0,09 pu na Barra 7"),
     ]
     for s_num, tit, ref in hidden_meta:
         wb.faixa("RESERVA", s_num, tit, ref, imagem=slides_jpg_fn(s_num))
@@ -1319,7 +1316,7 @@ def build_word_document():
         if kind == "msg":
             if current_context["type"] == "slide":
                 s_num = current_context["num"]
-                if s_num not in range(5, 18):
+                if s_num not in range(5, 17):
                     wb.add_slide_speech_box(s_num)
             elif current_context["type"] == "cap":
                 c_num = current_context["num"]
@@ -1414,11 +1411,18 @@ def build_word_document():
     exec(body_code, exec_env)
 
     OUT_LOCAL.parent.mkdir(parents=True, exist_ok=True)
-    doc.save(str(OUT_LOCAL))
-    print(f"[OK] Guia de Estudos Word atualizado salvo em: {OUT_LOCAL} ({OUT_LOCAL.stat().st_size:,} bytes)")
+    saved_path = OUT_LOCAL
+    try:
+        doc.save(str(OUT_LOCAL))
+        print(f"[OK] Guia de Estudos Word atualizado salvo em: {OUT_LOCAL} ({OUT_LOCAL.stat().st_size:,} bytes)")
+    except PermissionError:
+        alt_local = OUT_LOCAL.with_name("Roteiro_e_Guia_de_Estudos_Defesa_TCC_atualizado.docx")
+        doc.save(str(alt_local))
+        saved_path = alt_local
+        print(f"[OK] (Original aberto no Word) Guia atualizado salvo em: {alt_local} ({alt_local.stat().st_size:,} bytes)")
 
     try:
-        shutil.copy2(str(OUT_LOCAL), str(OUT_ONEDRIVE))
+        shutil.copy2(str(saved_path), str(OUT_ONEDRIVE))
         print(f"[OK] Cópia atualizada no OneDrive: {OUT_ONEDRIVE}")
     except Exception as e:
         print(f"[AVISO] Não foi possível sobrescrever no OneDrive ({e}).")

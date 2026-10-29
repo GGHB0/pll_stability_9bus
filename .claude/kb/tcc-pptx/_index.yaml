@@ -19,3 +19,6 @@ files:
   - file: historico_entregas_10_19.md
     name: defesa-historico-entregas-10-19
     description: "Histórico de entregas ao deck da defesa em 2026-10-19 (títulos curtos dos slides 5-9, sintonia do PLL em dois, protocolo, fluxo de trabalho)"
+  - file: historico_entregas_10_20_21.md
+    name: defesa-historico-entregas-10-20-21
+    description: "Histórico de entregas ao deck da defesa em 2026-10-20 e 2026-10-21 (slide 12 dividido, slide 14 e fluxo de análise, ONS e sistema completo, frase de abertura em 20-22)"

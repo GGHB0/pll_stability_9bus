@@ -57,7 +57,15 @@ eq(r"\omega_n = \sqrt{21\,164} = 145{,}5\ \mathrm{rad/s} \qquad "
    onde="Como K<sub>i</sub> cai 5 vezes, &#969;<sub>n</sub> cai &#8730;5 &#8776; 2,24 vezes; "
         "&#958; cai na mesma proporção. Pelo mesmo critério, t<sub>s</sub> sobe para cerca "
         "de 100 ms.")
-sub("Fundamento: o cartão 2&#969;<sub>0</sub> = 2,32&#183;&#969;<sub>n</sub>")
+sub("Fundamento: o cartão t<sub>s</sub>: 20 &#8594; 100 ms")
+n.p("É a régua do slide anterior aplicada às duas colunas. Como &#958;&#969;<sub>n</sub> = "
+    "K<sub>p</sub>/2, o t<sub>s</sub> só depende de K<sub>p</sub>: 4,6/230 = 20 ms na nominal e "
+    "4,6/46 = 100 ms na inadequada. K<sub>p</sub> &#215; 0,2 deixa o laço 5 vezes mais lento, "
+    "e 100 ms é a duração inteira da falta (0,1 s).")
+box("banca", "<b>O 100 ms está no TCC?</b> Não escrito: o TCC dá só os 20 ms. Sai da "
+    "Eq. (3.20), t<sub>s</sub> = 4,6/(&#958;&#969;<sub>n</sub>), com &#958; e &#969;<sub>n</sub> "
+    "da tabela. Se perguntarem, refazer a conta.")
+sub("Para o slide 25: 754 rad/s = 2,32&#183;&#969;<sub>n</sub>")
 n.p("A oscilação da sequência negativa é de 120 Hz, ou 754 rad/s: só 2,32 vezes a "
     "&#969;<sub>n</sub> nominal. Um laço de segunda ordem só atenua bem o que está muito "
     "acima da sua &#969;<sub>n</sub>. Quanto passa sai do módulo de G(j&#969;):")
@@ -83,7 +91,7 @@ box("alem", "<b>A inadequada não é artificial.</b> Pela fórmula do slide 7, a
     "banca questionar o fator 0,2.")
 nums([["92 / 21.164", "K<sub>p</sub> / K<sub>i</sub> inadequados (nominais &#215; 0,2)"],
       ["145,5 rad/s; 0,316", "&#969;<sub>n</sub> (23,2 Hz); &#958;"],
-      ["754 rad/s = 2,32&#183;&#969;<sub>n</sub>", "120 Hz contra a &#969;<sub>n</sub> nominal"]])
+      ["t<sub>s</sub>: 20 &#8594; 100 ms", "4,6/(&#958;&#969;<sub>n</sub>), laço 5 vezes mais lento"]])
 box("banca", "<b>Por que reduzir os ganhos?</b> Simula uma malha de sincronismo mais lenta "
     "e menos amortecida; no caso-limite, o SRF-PLL deixa de recuperar o sincronismo após a "
     "eliminação da falta.")

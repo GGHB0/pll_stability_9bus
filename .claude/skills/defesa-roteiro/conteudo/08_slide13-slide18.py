@@ -149,6 +149,15 @@ box("msg", "Cada simulação do Simulink vira arquivos CSV, tratados em Python a
 n.p("Ao fim de cada simulação o Simulink exporta os sinais em duas taxas de amostragem; o "
     "Python alinha as duas num eixo de tempo comum e calcula os mesmos indicadores para "
     "todos os cenários. Nenhuma métrica é lida à mão no gráfico.")
+sub("Ferramentas (cartões 3 e 4)")
+n.p("No Python, o pandas trata os dados e o Plotly desenha os gráficos. O painel usa HTML, "
+    "CSS e JavaScript, que não dominávamos: foi construído com um agente de inteligência "
+    "artificial num modelo de harness. Nós definimos as regras, as ferramentas e as "
+    "verificações; o agente programa dentro desses limites, e cada número do painel foi "
+    "conferido contra a simulação.")
+box("banca", "<b>Quem garante os números do painel?</b> O agente só escreveu o código. Os "
+    "indicadores saem dos CSV do Simulink pelo mesmo cálculo para todos os cenários, e "
+    "os valores do Cap. 5 do TCC foram conferidos contra a simulação.")
 sub("As cinco métricas (saiba definir cada uma)")
 tab(["Métrica", "Definição"], [
     ["Retenção de V<sub>d</sub>", "v<sub>d</sub> durante a falta em % do valor pré-falta"],

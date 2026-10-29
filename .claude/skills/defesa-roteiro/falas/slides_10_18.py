@@ -33,11 +33,11 @@ SLIDES_10_18 = [
         "msg": "A sintonia inadequada reduz os dois ganhos em 80%: laço mais lento e menos amortecido.",
         "pontos": [
             ("Bruno", "Tabela comparativa (esquerda) e Rodapé: para investigar a sensibilidade paramétrica, a sintonia inadequada multiplica K_pPLL e K_iPLL por 0,2 (caindo para 92 e 21.164). Com isso, ω_n cai de 325,3 para 145,5 rad/s e ξ cai de 0,707 para 0,316 — uma malha mais lenta e menos amortecida que, no caso-limite, não recupera o sincronismo."),
-            ("Victor", "Cartão da direita (2ω_0 = 2,32·ω_n): sob falta assimétrica, a sequência negativa oscila a 120 Hz (754 rad/s) em v_q, o que representa apenas 2,32 vezes a frequência natural nominal (325,3 rad/s) — perto demais da banda do PI para ser atenuada de forma significativa."),
+            ("Victor", "Cartão da direita (t_s: 20 → 100 ms): pelo critério de 1%, t_s = 4,6/(ξω_n). Com os ganhos ×0,2, o laço fica 5 vezes mais lento e leva tanto quanto a própria falta (0,1 s) para acomodar."),
         ],
         "falas": [
             ("Bruno", "Para testar a sensibilidade do sincronismo à escolha de projeto, comparamos na tabela duas parametrizações: a sintonia nominal em azul e a sintonia inadequada em laranja, obtida reduzindo ambos os ganhos em 80%, para Kp igual a 92 e Ki igual a 21.164. Como Ki cai cinco vezes, a frequência natural cai pela raiz de 5, para 145,5 radianos por segundo, e o amortecimento cai na mesma proporção, para 0,316, tornando o laço mais lento e subamortecido."),
-            ("Victor", "No cartão à direita destacamos o segundo problema que motiva nossos testes: sob faltas assimétricas, a oscilação de 120 hertz corresponde a 754 radianos por segundo, o que representa apenas 2,32 vezes a frequência natural da sintonia nominal. Como um filtro de segunda ordem só atenua bem frequências muito acima de ômega n, o controlador PI não rejeita essa componente, e é o compromisso entre filtrar os 120 hertz e não perder o sincronismo que vamos investigar."),
+            ("Victor", "No cartão à direita, o efeito prático: muda o tempo de acomodação. Com a mesma fórmula do slide anterior, 4,6 sobre xi ômega n, ele passa de 20 para 100 ms: o laço fica 5 vezes mais lento e leva tanto quanto a própria falta, de 0,1 s, para acomodar. São essas duas sintonias que comparamos nos resultados."),
         ],
         "atencao": "Sempre dizer 'sintonia inadequada' (nunca dizer BAD_PLL ou PLL ruim).",
     },
@@ -165,14 +165,15 @@ SLIDES_10_18 = [
         "dur_s": 60,
         "msg": "Cada simulação do Simulink vira arquivos CSV, tratados em Python até um painel interativo.",
         "pontos": [
-            ("Bruno", "Quatro cartões superiores (1. Simulink → 2. Arquivos CSV → 3. Python → 4. Painel interativo): cada cenário exporta tensões, correntes, P, Q e variáveis internas do SRF-PLL; o script em Python processa os dados de forma padronizada até gerar o painel interativo."),
+            ("Bruno", "Quatro cartões superiores (1. Simulink → 2. Arquivos CSV → 3. Python → 4. Painel interativo): cada cenário exporta tensões, correntes, P, Q e variáveis internas do SRF-PLL; o script em Python (pandas nos dados, Plotly nos gráficos) processa os dados de forma padronizada até gerar o painel interativo."),
+            ("Bruno", "Cartão 4: o painel (HTML, CSS e JavaScript) foi construído com um agente de IA num modelo de harness: regras, ferramentas e verificações definidas por nós, cada número conferido contra a simulação."),
             ("Victor", "Tabela das 5 métricas: (1) Retenção de V_d (% do valor pré-falta durante a falta, ex.: 9,2% na Barra 7 nominal); (2) Pico do erro de fase |Δθ| na falta após descartar o 1º ciclo; (3) Tempo de retorno definitivo à faixa de ±2° contado da eliminação em 0,4 s; (4) Componente de 120 Hz extraída pela FFT de V_d na janela de 6 ciclos da falta (resolução de 10 Hz); e (5) Potências P e Q médias na falta."),
             ("Bruno", "Rodapé ('Dos dados aos resultados'): fazer a ponte direta para o Slide 19 e a abertura do painel ao vivo."),
         ],
         "falas": [
-            ("Bruno", "Para garantir que todos os cenários fossem avaliados pelo mesmo critério, automatizamos o fluxo de análise em quatro etapas: cada rodada no Simulink exporta arquivos CSV com as variáveis da rede, do inversor e do SRF-PLL, que são processados em Python para extrair os indicadores e montar o painel interativo."),
-            ("Victor", "Na tabela estão as cinco métricas calculadas automaticamente: a retenção de vd em porcentagem do valor pré-falta; o pico do erro de fase durante a falta, medido após o primeiro ciclo para descartar o salto instantâneo da aplicação do curto; o tempo de retorno definitivo à faixa de mais ou menos 2 graus após a eliminação da falta; a amplitude da componente de 120 hertz no espectro de Fourier de vd durante os 6 ciclos da falta; e as potências ativa e reativa médias."),
-            ("Bruno", "Como indica o rodapé, é com essas cinco métricas que lemos os resultados: passamos agora ao próximo slide para abrir o painel interativo ao vivo."),
+            ("Bruno", "Antes de abrir os resultados, veja como eles foram extraídos. Ao fim de cada simulação, o Simulink exporta os sinais em duas taxas de amostragem; um código em Python, com a biblioteca pandas no tratamento dos dados e a Plotly nos gráficos, alinha as duas num eixo de tempo comum e calcula os mesmos indicadores para todos os cenários, sem nenhuma leitura manual no gráfico."),
+            ("Victor", "Na tabela estão as cinco métricas: a retenção da tensão de eixo direto em percentual do pré-falta, que na Barra 7 nominal é de 9,2%; o pico do erro de fase após o primeiro ciclo; o tempo de retorno à faixa de 2 graus desde a eliminação; a componente de 120 Hz extraída pela transformada de Fourier de vd na janela de 6 ciclos da falta; e as potências médias."),
+            ("Bruno", "O painel foi construído com o auxílio de um agente de inteligência artificial. Ele permitiu usar ferramentas que não dominávamos, como HTML, CSS e JavaScript, num modelo de harness: nós definimos as regras, as ferramentas e as verificações, o agente programa dentro desses limites, e cada número que ele mostra foi conferido contra a simulação. Tudo isso alimenta o nosso painel interativo, que vamos abrir agora para percorrer os resultados."),
         ],
         "atencao": "Saber explicar por que a FFT na janela de 0,1 s (6 ciclos) é exata em 120 Hz: Δf = 1/0,1 s = 10 Hz, então 60 e 120 Hz caem exatamente em bins inteiros sem vazamento espectral.",
     },

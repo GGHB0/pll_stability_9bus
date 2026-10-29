@@ -61,6 +61,21 @@ aliases: [defesa-pendencias]
   Equações do 12c e do 13 a revisar juntas. Deck 26 → 30, fala 29,9 min:
   **rodada de tempo pendente** (slides 5, 6, 7, 9 sem fala; 10 com 384 palavras).
 
+- **ts = 100 ms da sintonia inadequada (2026-10-29, exceção pedida pelo
+  Victor)**: cartão do slide 10 "ts: 20 → 100 ms". O TCC só tem os 20 ms; os
+  100 ms saem da (3.20) do TCC, 4,6/(ξωn) = 4,6/(0,316·145,5), ou Kp/2 ×0,2.
+  O 2,32·ωn saiu do 10 e fica só no 25.
+
+- **pandas/Plotly e agente de IA no slide 17 (2026-10-29, exceção pedida
+  pelo Victor)**: linha cinza nos cartões 3 ("Com pandas e Plotly.") e 4
+  ("HTML, CSS e JavaScript, com um agente de IA."), e fala do Bruno com o
+  modelo de harness. O TCC (§4.3.3) só cita Python com NumPy e Pandas.
+
+- **Bancada do PLL sem slide próprio (2026-10-28, pedido do professor)**: a
+  exceção de método das fontes ideais segue, mas só como meia linha do
+  cartão PSIM no slide 8 e na fala do Bruno. Pendente: alinhar a fonte de
+  falas da skill defesa-roteiro (numeração muda do 9 em diante).
+
 - **Passada de texto em 20-22 (pendente, 2026-10-21)**: layout e frase de
   abertura entregues sem mexer no corpo, a pedido do Victor. Ainda na tela:
   travessão nos 3 cartões do 20, "BAD_PLL" no cartão 2 do 20, a sigla de transitórios eletromagnéticos na

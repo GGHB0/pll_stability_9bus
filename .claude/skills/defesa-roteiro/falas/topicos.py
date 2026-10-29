@@ -28,9 +28,9 @@ FALAS = {
 11: [("Bruno", "Aponte a coluna laranja: a sintonia inadequada multiplica os dois ganhos por 0,2, "
       "92 e 21.164. A &#969;<sub>n</sub> cai para 145,5 rad/s e o &#958; para 0,316: laço mais lento "
       "e menos amortecido. No caso-limite, o PLL não recupera o sincronismo depois da falta."),
-     ("Victor", "Cartão da direita, a ponte para os resultados: na falta assimétrica, a sequência "
-      "negativa vira 120 Hz em v<sub>q</sub>, 754 rad/s, só 2,32 vezes a &#969;<sub>n</sub>. O PI "
-      "não atenua e a oscilação passa para o ângulo. &#8220;É esse mecanismo que investigamos.&#8221;")],
+     ("Victor", "Cartão da direita: o t<sub>s</sub> vai de 20 para 100 ms pela mesma fórmula, "
+      "4,6/(&#958;&#969;<sub>n</sub>). Laço 5 vezes mais lento, tanto quanto a própria falta "
+      "(0,1 s). &#8220;São essas duas sintonias que comparamos nos resultados.&#8221;")],
 12: [("Victor", "Agora o inversor. Na primeira versão, no PSIM, pede-se 1 pu de ativo (os 100 MW) "
       "num degrau aos 35 ms e reativo zero. Cada um é dividido pelo v<sub>d</sub> que vem do PLL, e "
       "saem as referências de corrente."),

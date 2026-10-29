@@ -1,6 +1,6 @@
 ---
 name: defesa-roteiro
-description: Gera os materiais de ensaio da defesa do TCC a partir de uma fonte única de falas — roteiro de falas e tempo (.docx), guia de estudos (.docx), roteiro de estudo (PDF) e áudios de ensaio (edge-tts). Ativar quando o usuário pedir para mudar uma fala, um tópico, o cronograma de 30 min, o guia ou o roteiro de estudo, gerar os áudios, ou alinhar esses materiais a uma mudança no deck ou no palco do dashboard. Não edita o deck (ver tcc-pptx-editor) nem o palco (ver dashboard-html-editor).
+description: Gera os materiais de ensaio da defesa do TCC a partir de uma fonte única de falas — roteiro de falas e tempo (.docx), guia de estudos (.docx), roteiro de estudo (PDF), deck só com as falas (.pptx) e áudios de ensaio (edge-tts). Ativar quando o usuário pedir para mudar uma fala, um tópico, o cronograma de 30 min, o guia ou o roteiro de estudo, gerar os áudios, ou alinhar esses materiais a uma mudança no deck ou no palco do dashboard. Não edita o deck (ver tcc-pptx-editor) nem o palco (ver dashboard-html-editor).
 version: 1.0.0
 ---
 
@@ -14,12 +14,12 @@ do repo, sem subagente: serve igual para Claude Code, Antigravity ou outro agent
 
 | Pasta | O que guarda | Quem lê |
 |---|---|---|
-| `falas/` | **Fonte única** das falas: slides 1-21, palco 1-8, apêndice e reserva, tópicos "O que falar" da modelagem | os quatro geradores |
+| `falas/` | **Fonte única** das falas: slides 1-21, palco 1-8, apêndice e reserva, tópicos "O que falar" da modelagem | os cinco geradores |
 | `conteudo/` | Texto do roteiro de estudo (fundamentos, números, caixas, perguntas da banca), em arquivos numerados | PDF e guia |
-| `scripts/` | Geradores e layout (`rf_*` roteiro, `gw_*` guia, `pdf_*` PDF, `au_*` áudios) | `gerar.py` |
+| `scripts/` | Geradores e layout (`rf_*` roteiro, `gw_*` guia, `pdf_*` PDF, `au_*` áudios, `falas_pptx.py` deck de falas) | `gerar.py` |
 
 Nenhum gerador guarda fala própria. Mudou uma fala → muda num lugar só, e os
-quatro materiais saem iguais depois de gerados de novo.
+cinco materiais saem iguais depois de gerados de novo.
 
 ## Como gerar
 
@@ -28,12 +28,13 @@ quatro materiais saem iguais depois de gerados de novo.
 .venv\Scripts\python.exe .claude\skills\defesa-roteiro\scripts\gerar.py audios
 ```
 
-- Alvos: `roteiro`, `guia`, `pdf`, `audios`, `docs` (= roteiro + guia + pdf).
+- Alvos: `roteiro`, `guia`, `pdf`, `falas`, `audios`, `docs` (= roteiro + guia + pdf + falas).
 - Saídas em `output/` (não versionado): `Roteiro_Falas_e_Tempo_Defesa_TCC.docx`,
   `Roteiro_e_Guia_de_Estudos_Defesa_TCC.docx`, `roteiro_estudo_defesa.pdf`,
-  `audios_defesa/`.
-- Os dois `.docx` também são copiados para `Template Modelo TCC` no OneDrive
-  (pasta compartilhada entre Victor e Bruno). Para testar sem mexer no OneDrive:
+  `Falas_Defesa_TCC.pptx`, `audios_defesa/`.
+- Os dois `.docx` e o `.pptx` também são copiados para `Template Modelo TCC` no OneDrive
+  (pasta compartilhada entre Victor e Bruno). Arquivo aberto no Word/PowerPoint →
+  a cópia sai com sufixo `_atualizado`. Para testar sem mexer no OneDrive:
   `gerar.py docs --sem-onedrive`.
 - `audios` precisa de internet e leva minutos (uma chamada de síntese por fala).
 
@@ -62,6 +63,20 @@ quatro materiais saem iguais depois de gerados de novo.
 | Fundamentos, números, caixas de banca/cuidado, legendas | `conteudo/NN_*.py` (procurar `slide(N,` ou `cap(N,`) |
 | Cronograma de 30 min e mapa do TCC no guia | `scripts/gw_cronograma.py` |
 | Visual de um documento | `scripts/rf_*.py`, `scripts/gw_*.py`, `scripts/pdf_*.py` |
+
+### Numeração: skill × deck atual
+
+`falas/`, `conteudo/` e os `.docx` ainda seguem o deck antigo de 21 slides (Bancada
+do PLL no 9). O deck atual tirou a bancada (virou cartão do slide 8): do 10 em diante
+tudo desce uma posição (Filtro LCL = 12, Submódulo 2.10 = 14, Síntese = 19). Só o
+`falas_pptx.py` já converte (`no_deck`). Renumerar a skill inteira é pendência.
+
+### Deck de falas (`falas_pptx.py`)
+
+Um slide por item, só com a fala; `(Seta →)` abre linha nova em cinza. Negrito azul
+nos trechos da lista `DESTAQUES` (conceitos centrais, números de resultado, frases de
+conclusão): termo novo que mereça destaque entra ali. O negrito vive só no PPTX; a
+fonte em `falas/` fica em texto puro (os áudios leriam a marcação).
 
 Formato de uma fala: lista de tuplas `("Bruno" | "Victor", "texto")`. No palco,
 `(Seta →)` marca o clique; os áudios tiram essas rubricas sozinhos. Não usar

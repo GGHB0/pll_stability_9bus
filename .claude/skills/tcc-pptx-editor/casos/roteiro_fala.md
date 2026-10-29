@@ -49,3 +49,10 @@ Depois: `tempo_fala.py` e reportar ao Victor o tempo antes × depois.
 
 Para treinar, um PDF com slide + notas sai pelo PowerPoint (Imprimir →
 Anotações). Não gerar por script sem o Victor pedir.
+
+O **roteiro final** de falas (texto de Victor e Bruno de 2026-10-29) mora na
+skill [defesa-roteiro](../../defesa-roteiro/SKILL.md) (`falas/`), não nas
+notas do deck: as notas são versão anterior e podem divergir. O deck só com
+as falas (`Falas_Defesa_TCC.pptx`) sai de lá (`gerar.py falas`), nunca deste
+pipeline. Pedido de "mudar a fala do slide N" → editar `falas/` e gerar de
+novo; copiar para as notas do deck só se o Victor pedir.

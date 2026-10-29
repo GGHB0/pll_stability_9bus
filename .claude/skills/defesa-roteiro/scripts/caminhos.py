@@ -33,7 +33,7 @@ def _tcc_dir() -> Path:
 
 
 TCC_DIR = _tcc_dir()
-TEMPLATE_DIR = TCC_DIR / "Template Modelo TCC"  # onde as cópias dos .docx são entregues
+TEMPLATE_DIR = TCC_DIR / "Template Modelo TCC"  # onde as cópias dos .docx e .pptx são entregues
 RAP_PDF = TCC_DIR / "Bibliografia" / "RAP 2023.08.15 08h030min versão final.pdf"
 
 # Miniaturas dos slides (s01.png...): render.ps1 da skill tcc-pptx-editor sobre uma cópia do deck
@@ -51,7 +51,7 @@ def conteudo_texto() -> str:
 
 
 def entregar(origem: Path, nome: str):
-    """Copia o .docx para a pasta do template no OneDrive (com sufixo se estiver aberto)."""
+    """Copia o .docx/.pptx para a pasta do template no OneDrive (com sufixo se estiver aberto)."""
     import shutil
     if not ENTREGAR:
         return

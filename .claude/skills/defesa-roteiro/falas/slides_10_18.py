@@ -7,7 +7,7 @@ SLIDES_10_18 = [
         "titulo": "Sintonia do PLL",
         "bloco": "Modelagem",
         "tcc": "§3.4, Eqs. (3.10)-(3.20)",
-        "quem": "Victor → Bruno → Victor",
+        "quem": "Victor",
         "dur_s": 75,
         "msg": "Fixado o amortecimento, resta um único grau de liberdade: o tempo de acomodação.",
         "pontos": [
@@ -16,9 +16,7 @@ SLIDES_10_18 = [
             ("Victor", "Etapa 5 (Régua do t_s) e Caixa de cálculo: t_s muito curto deixa passar ruído e desequilíbrio; muito longo não acompanha a rede. Pelo critério de 1% (t_s = 4,6/(ξω_n)), adota-se t_s = 20 ms (pouco mais de 1 período da rede, conforme Alves, Dias e Rolim, 2020 e Teodorescu et al., 2011), resultando em K_pPLL = 9,2/t_s = 460, ω_n = 325,3 rad/s (51,8 Hz) e K_iPLL = 105.820."),
         ],
         "falas": [
-            ("Victor", "Este slide mostra como chegamos aos ganhos nominais do PLL em cinco etapas. Na etapa 1, a tensão na entrada do PLL é normalizada em por unidade pelo valor de pico nominal de fase, 16.329,93 volts, de modo que em regime nominal a amplitude vale 1 pu e o ganho do detector de fase é unitário."),
-            ("Bruno", "Nas etapas 2 a 4, linearizando o detector para pequenos desvios em torno do travamento, igualamos a equação característica à forma canônica de segunda ordem, obtendo Ki igual a ômega n ao quadrado e Kp igual a 2 ksi ômega n. Fixamos então o amortecimento em 0,707, valor clássico de Ogata que limita a sobre-elevação a cerca de 5%, restando um único grau de liberdade: o tempo de acomodação ts."),
-            ("Victor", "Na régua à direita vemos o compromisso de projeto: um ts curto demais amplia a banda e deixa passar ruído e desequilíbrio; longo demais atrasa o rastreamento da rede. Adotando o critério de 1%, em que ts é 4,6 sobre ksi ômega n, escolhemos ts igual a 20 milissegundos, pouco mais de um período da fundamental, conforme Alves, Dias e Rolim e Teodorescu, Liserre e Rodriguez. Na caixa inferior, isso fornece Kp igual a 460, frequência natural de 325,3 radianos por segundo, ou 51,8 hertz, e Ki igual a 105.820."),
+            ("Victor", "Neste slide, mostramos o dimensionamento dos ganhos do PLL. Igualando a nossa equação de malha fechada à forma canônica, fixamos o fator de amortecimento em 0,707, que é o valor clássico que garante uma sobre-elevação controlada na casa dos 5%. Pelo critério de 1% para a acomodação, definimos o tempo ts em 20 milissegundos. Realizando as contas, chegamos aos ganhos nominais: Kp igual a 460 e Ki igual a 105.820."),
         ],
         "atencao": "Não citar '16,7 ms' neste slide (a régua traz apenas '1 período' e '20 ms'). Usar sempre Ki = 105.820.",
     },
@@ -28,7 +26,7 @@ SLIDES_10_18 = [
         "titulo": "Duas sintonias do PLL",
         "bloco": "Modelagem",
         "tcc": "§3.4 (eq. 3.20), §4.3",
-        "quem": "Bruno → Victor",
+        "quem": "Victor",
         "dur_s": 55,
         "msg": "A sintonia inadequada reduz os dois ganhos em 80%: laço mais lento e menos amortecido.",
         "pontos": [
@@ -36,8 +34,7 @@ SLIDES_10_18 = [
             ("Victor", "Cartão da direita (t_s: 20 → 100 ms): pelo critério de 1%, t_s = 4,6/(ξω_n). Com os ganhos ×0,2, o laço fica 5 vezes mais lento e leva tanto quanto a própria falta (0,1 s) para acomodar."),
         ],
         "falas": [
-            ("Bruno", "Para testar a sensibilidade do sincronismo à escolha de projeto, comparamos na tabela duas parametrizações: a sintonia nominal em azul e a sintonia inadequada em laranja, obtida reduzindo ambos os ganhos em 80%, para Kp igual a 92 e Ki igual a 21.164. Como Ki cai cinco vezes, a frequência natural cai pela raiz de 5, para 145,5 radianos por segundo, e o amortecimento cai na mesma proporção, para 0,316, tornando o laço mais lento e subamortecido."),
-            ("Victor", "No cartão à direita, o efeito prático: muda o tempo de acomodação. Com a mesma fórmula do slide anterior, 4,6 sobre xi ômega n, ele passa de 20 para 100 ms: o laço fica 5 vezes mais lento e leva tanto quanto a própria falta, de 0,1 s, para acomodar. São essas duas sintonias que comparamos nos resultados."),
+            ("Victor", "Para avaliar a sensibilidade paramétrica do sincronismo, criamos uma sintonia inadequada reduzindo esses ganhos em 80%. A malha fica propositalmente mais lenta e menos amortecida: a frequência natural cai para 145,5 radianos por segundo e o amortecimento para 0,316. O cartão à direita mostra o efeito prático: pelo mesmo critério de 1%, o tempo de acomodação passa de 20 para 100 milissegundos, um laço 5 vezes mais lento, que leva tanto quanto a própria falta para acomodar."),
         ],
         "atencao": "Sempre dizer 'sintonia inadequada' (nunca dizer BAD_PLL ou PLL ruim).",
     },
@@ -47,7 +44,7 @@ SLIDES_10_18 = [
         "titulo": "Referência de corrente",
         "bloco": "Modelagem",
         "tcc": "§3.1.3-3.1.4, Eqs. (3.8)-(3.9)",
-        "quem": "Victor → Bruno",
+        "quem": "Bruno",
         "dur_s": 45,
         "msg": "Na primeira versão do inversor, a referência de corrente saía direto da potência desejada.",
         "pontos": [
@@ -55,8 +52,7 @@ SLIDES_10_18 = [
             ("Bruno", "Cartão inferior esquerdo (Eq. 3.9 invertida: i_d,ref = 2P/(3v_d) e i_q,ref = −2Q/(3v_d)) e Rodapé: em pu o fator 3/2 desaparece, mas essa divisão simples só desacopla P e Q porque assume v_q = 0 — e quem alinha o eixo d com a tensão para zerar v_q é o SRF-PLL."),
         ],
         "falas": [
-            ("Victor", "Passamos agora à construção do inversor em etapas. Na primeira versão montada no PSIM, mostrada no diagrama, as referências de potência eram fixas: um degrau de 1 por unidade de potência ativa, os 100 megawatts, aplicado aos 35 milissegundos, e potência reativa nula, divididos diretamente pela tensão vd estimada pelo SRF-PLL."),
-            ("Bruno", "No cartão inferior esquerdo temos a Equação 3.9 do TCC invertida: id de referência igual a 2P sobre 3 vd e iq de referência igual a menos 2Q sobre 3 vd. Como destaca o rodapé, essa relação direta só é válida quando vq é igual a zero, ou seja, quem garante o alinhamento do eixo d e o desacoplamento entre potência ativa e reativa é o próprio SRF-PLL."),
+            ("Bruno", "Com o sincronismo resolvido, passamos para o inversor neste slide. Na nossa primeira versão, injetamos um degrau de potência ativa e reativo zero. Dividindo essas potências pela tensão vd, geramos as referências de corrente id e iq. Porém, como destaca o rodapé, essa equação de divisão simples só garante o desacoplamento se o vq for zero. E quem alinha o eixo e garante isso é o SRF-PLL."),
         ],
         "atencao": "'t = 35 ms' é o único número de etapa de modelagem (PSIM) aprovado neste slide.",
     },
@@ -66,7 +62,7 @@ SLIDES_10_18 = [
         "titulo": "Filtro LCL",
         "bloco": "Modelagem",
         "tcc": "§4.3.2 e §4.3.2.1",
-        "quem": "Bruno → Victor",
+        "quem": "Victor",
         "dur_s": 60,
         "msg": "Quatro passos fixam o filtro, com a ressonância entre a rede e o chaveamento.",
         "pontos": [
@@ -74,8 +70,7 @@ SLIDES_10_18 = [
             ("Victor", "Passos 3 e 4, Régua de frequência e Rodapé: no Passo 3, o capacitor C posiciona a frequência de ressonância em ω_res = 9.068,99 rad/s (na régua, longe dos 60 Hz da rede e dos 5 kHz do chaveamento); no Passo 4, as resistências de amortecimento passivo valem 5% da reatância em 60 Hz (R_d1 = 0,5734 Ω, R_d2 = 0,0054 Ω e R_d3 = 3,1228 Ω). Na caixa direita do rodapé: barramento CC fixado em valor constante para manter a margem de modulação."),
         ],
         "falas": [
-            ("Bruno", "Antes de fechar a malha de corrente, dimensionamos o filtro LCL que conecta o inversor à Barra 2, seguindo quatro passos. No circuito à esquerda, o inversor chaveia a 5 quilohertz. Nos passos 1 e 2 à direita, o indutor L1 é fixado pelo limite de ondulação da corrente na saída das chaves e L2 é tomado proporcional a L1, resultando na indutância equivalente Lest de 30,71 milihenrys."),
-            ("Victor", "No passo 3, o capacitor posiciona a frequência de ressonância em 9.068,99 radianos por segundo: como mostra a régua, numa faixa intermediária segura entre os 60 hertz da rede e os 5 quilohertz do chaveamento. No passo 4, inserimos resistências de amortecimento passivo iguais a 5% da reatância de cada ramo em 60 hertz: 0,5734, 0,0054 e 3,1228 ohms, suprimindo o pico de ressonância, enquanto o barramento CC é mantido constante para garantir a margem de modulação."),
+            ("Victor", "Antes da malha de corrente, o filtro que liga o inversor à rede. O projeto tem quatro passos: L1 sai do limite de ondulação da corrente; L2 é proporcional a L1, e os dois somam 30,71 milihenries; o capacitor fecha a ressonância em cerca de 9.068 radianos por segundo, entre a frequência da rede e a de chaveamento; e os resistores de amortecimento valem 5% da reatância em 60 hertz."),
         ],
         "atencao": "Citar apenas os números que estão na tela (L_est = 30,71 mH, ω_res = 9.068,99 rad/s, R_d1/R_d2/R_d3, 60 Hz e 5 kHz). Os valores individuais de L_1, L_2, C e V_cc ficam apenas para perguntas no Apêndice (Slide 21).",
     },
@@ -85,7 +80,7 @@ SLIDES_10_18 = [
         "titulo": "Controle de corrente",
         "bloco": "Modelagem",
         "tcc": "Fig. 3.1, §3.5 (Eqs. 3.21-3.23), §4.3.2",
-        "quem": "Bruno → Victor",
+        "quem": "Victor",
         "dur_s": 55,
         "msg": "Um PI com notch em cada eixo faz a corrente do inversor seguir a referência.",
         "pontos": [
@@ -93,8 +88,7 @@ SLIDES_10_18 = [
             ("Victor", "Cartões 2 e 3 (Filtro LCL e PI de corrente) + Rodapé: em baixa frequência o filtro LCL equivale à indutância L_est = 30,71 mH (com ω_res = 9.068,99 rad/s e ξ = 0,707). Pela mesma forma canônica do PLL, fixa-se ξ = 0,707 e ω_n = 4√2·f_g para acomodar em 1 ciclo da rede, resultando em K_p = 8·f_g·L_est e K_i = 32·f_g²·L_est. Rodapé: o PI do PLL entrega o ângulo; o PI de corrente faz i_d e i_q seguirem a referência."),
         ],
         "falas": [
-            ("Bruno", "Na Figura 3.1 temos a malha interna de controle de corrente nos eixos d e q. Em cada eixo, o erro entre a corrente de referência e a corrente medida passa por um controlador PI, atravessa um filtro notch sintonizado exatamente na frequência de ressonância do LCL e gera o índice de modulação para o chaveamento PWM a 5 quilohertz."),
-            ("Victor", "Nos cartões à direita, como em baixa frequência o filtro LCL se comporta como a indutância equivalente Lest de 30,71 milihenrys, sintonizamos o PI de corrente pela mesma forma canônica de segunda ordem: com amortecimento de 0,707 e frequência natural de 4 raiz de 2 vezes a frequência da rede, a corrente acomoda em um ciclo, resultando em Kp igual a 8 fg Lest e Ki igual a 32 fg ao quadrado Lest. Como resume o rodapé, são dois PIs independentes: o do PLL entrega o ângulo e o de corrente faz id e iq seguirem as referências."),
+            ("Victor", "Aberta a malha de corrente, o sinal de erro em cada eixo passa pelo PI e por um filtro notch sintonizado na ressonância do LCL, indo para o PWM a 5 quilohertz. Dimensionamos o PI de corrente para ser rápido, acomodando em um ciclo da rede. O importante no rodapé é a separação funcional: o PI do PLL entrega o ângulo, e o PI de corrente faz as correntes seguirem as referências."),
         ],
         "atencao": "Nunca confundir os dois PIs: os ganhos do PI de corrente ficaram fixos em todos os cenários; só a sintonia do SRF-PLL varia.",
     },
@@ -104,7 +98,7 @@ SLIDES_10_18 = [
         "titulo": "Submódulo 2.10 do ONS",
         "bloco": "Modelagem",
         "tcc": "Fig. 2.2, §2.5.2, §4.3.2, §5.2",
-        "quem": "Bruno",
+        "quem": "Victor → Bruno",
         "dur_s": 65,
         "msg": "No modelo final, a tensão medida define o reativo e o ativo fica com o que sobra.",
         "pontos": [
@@ -113,7 +107,8 @@ SLIDES_10_18 = [
             ("Bruno", "No gráfico à direita, regra de prioridade sobre o limite de corrente: a corrente máxima forma esse raio, e a corrente reativa tem prioridade total para sustentar a tensão. A corrente ativa fica apenas com o que sobra dentro desse círculo."),
         ],
         "falas": [
-            ("Bruno", "No modelo final do nosso inversor, nós substituímos aquelas referências fixas por essa lógica de suporte de subtensão do Submódulo 2.10 do ONS. Como vocês podem ver no gráfico à esquerda, é a tensão que define o reativo. Quando a tensão medida permanece numa faixa normal, entre 0,85 e 1,1 por unidade, a corrente reativa de referência é zero e o inversor injeta potência ativa nominal.\n\nQuando essa tensão afunda abaixo de 0,85 durante uma falta, o código de rede exige a injeção de corrente reativa proporcional a esse afundamento, seguindo essa rampa da equação. Isso vai até o limite de saturação: quando a tensão chega a 0,5 p.u. ou menos, o inversor injeta 100% da corrente máxima, ou seja, 1 p.u. de corrente reativa.\n\nNo gráfico à direita, vemos a nossa regra de prioridade sobre o limite de corrente. A corrente máxima forma esse raio, e a corrente reativa tem prioridade total para sustentar a tensão. A corrente ativa fica apenas com o que sobra dentro desse círculo."),
+            ("Victor", "Com a malha de corrente ajustada, trocamos as referências fixas pela lógica do Submódulo 2.10 do ONS, que lê a tensão no ponto de conexão. O bloco do ONS decide quanto injetar; o SRF-PLL decide em que direção."),
+            ("Bruno", "Olhando por dentro dessa lógica, como vocês podem ver no gráfico à esquerda, é a tensão que define o reativo. Na faixa normal, entre 0,85 e 1,1 p.u., a corrente reativa de referência é zero. Quando a tensão afunda abaixo de 0,85, o código de rede exige a injeção de corrente reativa por essa rampa, até o limite de saturação. Abaixo de 0,5 p.u., o inversor injeta 100% da corrente máxima, ou seja, 1 p.u. de corrente reativa.\n\nNo gráfico à direita, vemos a regra de prioridade. A corrente máxima forma o raio do círculo, e a corrente reativa tem prioridade total para sustentar a tensão. A corrente ativa fica apenas com o que sobra."),
         ],
         "atencao": "Slide novo enxuto: foco na rampa (0,85 a 0,5 pu) e na prioridade de reativo no círculo de corrente máxima.",
     },
@@ -132,7 +127,7 @@ SLIDES_10_18 = [
             ("Bruno", "Com o modelo fechado, passagem para o método de teste para ver como as contingências vão testar esse SRF-PLL."),
         ],
         "falas": [
-            ("Bruno", "Juntando então todas essas partes, chegamos ao nosso modelo completo, que foi utilizado em todas as simulações, como mostra a Figura 4.2 do TCC.\n\nNa parte superior, temos a etapa de potência, com o inversor, o filtro LCL e o ponto de acoplamento da Barra 2. Na parte inferior, o controle digital, onde tudo se conecta: o SRF-PLL entrega o ângulo, o Submódulo 2.10 define as referências de corrente a partir da tensão, e as malhas de controle geram a modulação.\n\nCom o modelo fechado, passamos agora para o nosso método de teste, para ver como as contingências vão testar esse nosso SRF-PLL."),
+            ("Bruno", "Juntando todas essas partes, chegamos ao modelo completo utilizado em todas as simulações, como mostra a Figura 4.2. Na parte superior, a etapa de potência, com o inversor e o filtro LCL conectados na Barra 2. Na parte inferior, o controle digital, onde o SRF-PLL entrega o ângulo, o Submódulo 2.10 define as referências de corrente, e as malhas geram a modulação."),
         ],
         "atencao": "Slide de fechamento da Modelagem: transição direta para o Método de Teste (Slide 16).",
     },
@@ -142,7 +137,7 @@ SLIDES_10_18 = [
         "titulo": "Protocolo de contingência",
         "bloco": "Método",
         "tcc": "§4.3.4, Tab. 4.1, §5.2",
-        "quem": "Bruno → Victor",
+        "quem": "Bruno",
         "dur_s": 60,
         "msg": "Todas as simulações seguem a mesma linha do tempo; muda só o local e o tipo da falta.",
         "pontos": [
@@ -150,8 +145,7 @@ SLIDES_10_18 = [
             ("Victor", "Matriz de cenários e caixas inferiores: colunas azuis analisadas no texto da mais próxima à mais distante da UFV (Barra 7, Linha 7-8, Linha 8-9 e Barra 6) e colunas cinzas (Barras 4, 5, 8 e 9) simuladas e consultáveis no painel. Faltas trifásicas nos 4 pontos e faltas assimétricas (monofásica e bifásica, que injetam sequência negativa) nas Barras 7 e 6, comparando sintonia nominal (N) e inadequada (I). Rodapé: a janela de 200 ms pós-falta delimita o alcance das conclusões sobre recuperação."),
         ],
         "falas": [
-            ("Bruno", "Entrando na metodologia, todas as simulações seguem rigorosamente a mesma linha do tempo no topo do slide: de 0 a 0,1 segundo ocorre a inicialização do modelo, que fica fora das métricas; de 0,1 a 0,3 segundo o sistema opera em regime permanente pré-falta; em t igual a 0,3 segundo aplicamos a falta por 100 milissegundos, ou seja, 6 ciclos de 60 hertz; e de 0,4 a 0,6 segundo observamos os 200 milissegundos de recomposição pós-falta."),
-            ("Victor", "Na matriz abaixo estão as combinações de local e tipo de curto-circuito. Nas colunas em azul estão os quatro pontos analisados em detalhe no texto, ordenados do mais próximo ao mais distante da usina: Barra 7, Linha 7-8, Linha 8-9 e Barra 6; e em cinza as demais barras, também simuladas e disponíveis no painel. Aplicamos faltas trifásicas nos quatro locais e faltas monofásicas e bifásicas nas Barras 7 e 6, confrontando a sintonia nominal N e a inadequada I."),
+            ("Bruno", "Com o modelo fechado, definimos o método de teste. Todas as simulações seguem a mesma linha do tempo: inicializamos o sistema, aplicamos a falta aos 0,3 segundos com duração exata de 6 ciclos, e observamos a recomposição por 200 milissegundos pós-falta. Na matriz abaixo, aplicamos as faltas em quatro pontos distintos da rede, variando a severidade da mais próxima à mais distante da usina, combinando os tipos de curto e as duas sintonias do PLL."),
         ],
         "atencao": "Não citar número total de cenários (o slide não traz contagem). Dizer que 'não retorna' significa 'não retorna dentro da janela de 200 ms pós-falta'.",
     },
@@ -161,7 +155,7 @@ SLIDES_10_18 = [
         "titulo": "Fluxo de análise",
         "bloco": "Método",
         "tcc": "§4.3.3; métricas em §5.1-5.3",
-        "quem": "Bruno → Victor → Bruno",
+        "quem": "Victor",
         "dur_s": 60,
         "msg": "Cada simulação do Simulink vira arquivos CSV, tratados em Python até um painel interativo.",
         "pontos": [
@@ -171,9 +165,7 @@ SLIDES_10_18 = [
             ("Bruno", "Rodapé ('Dos dados aos resultados'): fazer a ponte direta para o Slide 18 e a abertura do painel ao vivo."),
         ],
         "falas": [
-            ("Bruno", "Antes de abrir os resultados, veja como eles foram extraídos. Ao fim de cada simulação, o Simulink exporta os sinais em duas taxas de amostragem; um código em Python, com a biblioteca pandas no tratamento dos dados e a Plotly nos gráficos, alinha as duas num eixo de tempo comum e calcula os mesmos indicadores para todos os cenários, sem nenhuma leitura manual no gráfico."),
-            ("Victor", "Na tabela estão as cinco métricas: a retenção da tensão de eixo direto em percentual do pré-falta, que na Barra 7 nominal é de 9,2%; o pico do erro de fase após o primeiro ciclo; o tempo de retorno à faixa de 2 graus desde a eliminação; a componente de 120 Hz extraída pela transformada de Fourier de vd na janela de 6 ciclos da falta; e as potências médias."),
-            ("Bruno", "O painel foi construído com o auxílio de um agente de inteligência artificial. Ele permitiu usar ferramentas que não dominávamos, como HTML, CSS e JavaScript, num modelo de harness: nós definimos as regras, as ferramentas e as verificações, o agente programa dentro desses limites, e cada número que ele mostra foi conferido contra a simulação. Tudo isso alimenta o nosso painel interativo, que vamos abrir agora para percorrer os resultados."),
+            ("Victor", "Para garantir o mesmo critério de avaliação, automatizamos a extração dos dados do Simulink via Python. Na tabela, computamos cinco métricas padronizadas para cada cenário: retenção de tensão, pico de erro de fase, tempo de retorno definitivo à faixa de 2 graus, oscilação de 120 hertz e as potências médias. Tudo isso alimenta o nosso painel interativo."),
         ],
         "atencao": "Saber explicar por que a FFT na janela de 0,1 s (6 ciclos) é exata em 120 Hz: Δf = 1/0,1 s = 10 Hz, então 60 e 120 Hz caem exatamente em bins inteiros sem vazamento espectral.",
     },

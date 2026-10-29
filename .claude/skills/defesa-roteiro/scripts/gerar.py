@@ -3,8 +3,9 @@
     .venv\\Scripts\\python.exe .claude\\skills\\defesa-roteiro\\scripts\\gerar.py <alvo>...
 
 Alvos: roteiro (falas e tempo, .docx), guia (guia de estudos, .docx), pdf (roteiro de
-estudo), audios (edge-tts, precisa de internet), docs (roteiro + guia + pdf).
---sem-onedrive: gera só em output/, sem copiar os .docx para o template no OneDrive.
+estudo), falas (só as falas, .pptx), audios (edge-tts, precisa de internet),
+docs (roteiro + guia + pdf + falas).
+--sem-onedrive: gera só em output/, sem copiar .docx e .pptx para o template no OneDrive.
 """
 import importlib
 import sys
@@ -19,8 +20,8 @@ if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import caminhos  # noqa: E402,F401  (ajusta o sys.path para falas/ e pdfnote)
 
-ALVOS = {"roteiro": "roteiro_falas", "guia": "guia", "pdf": "pdf", "audios": "audios"}
-GRUPOS = {"docs": ["roteiro", "guia", "pdf"]}
+ALVOS = {"roteiro": "roteiro_falas", "guia": "guia", "pdf": "pdf", "falas": "falas_pptx", "audios": "audios"}
+GRUPOS = {"docs": ["roteiro", "guia", "pdf", "falas"]}
 
 
 def main(args):

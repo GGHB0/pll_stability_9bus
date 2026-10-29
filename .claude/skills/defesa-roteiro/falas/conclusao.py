@@ -10,7 +10,7 @@ SLIDES_CONCLUSAO = [
         "titulo": "Síntese dos resultados (Conclusão)",
         "bloco": "Conclusão",
         "tcc": "Cap. 6",
-        "quem": "Bruno → Victor → Bruno → Victor",
+        "quem": "Bruno",
         "dur_s": 70,
         "msg": "O sincronismo do SRF-PLL é uma decisão de estabilidade do sistema elétrico.",
         "pontos": [
@@ -20,10 +20,7 @@ SLIDES_CONCLUSAO = [
             ("Victor", "Caixa de rodapé ('Qual é a conclusão central da defesa?'): permanecer conectado é insuficiente para garantir a estabilidade; a conformidade regulatória deve auditar o erro angular dinâmico durante a falta e em toda a recomposição da rede."),
         ],
         "falas": [
-            ("Bruno", "De volta aos slides para sintetizar nossas conclusões nos três pontos principais de apoio. Primeiro, nas faltas simétricas: com a sintonia nominal, o SRF-PLL preserva a estabilidade e reconverge em todos os pontos da rede, sendo a severidade do afundamento ditada diretamente pela distância elétrica até a usina."),
-            ("Victor", "Segundo, nas faltas assimétricas: demonstramos que a fragilidade do SRF-PLL clássico é estrutural, pois a componente de sequência negativa introduz uma oscilação de 120 hertz que o controlador PI não consegue rejeitar, contaminando diretamente as potências ativa e reativa injetadas."),
-            ("Bruno", "Terceiro, na sensibilidade de ganhos: reduzir os ganhos do PI atenua a oscilação durante faltas distantes, mas retarda o restabelecimento pós-falta e leva à perda de sincronismo por escorregamento de ciclo na falta severa da Barra 7, fazendo o inversor drenar potência ativa da rede."),
-            ("Victor", "Por tudo isso, nossa conclusão central no rodapé é que o sincronismo do SRF-PLL é uma decisão de estabilidade do sistema elétrico: permanecer conectado não basta; a verificação de conformidade precisa auditar o erro angular dinâmico durante a falta e em toda a recomposição da rede."),
+            ("Bruno", "Para sintetizar nossas conclusões em três pontos: Primeiro, nas faltas simétricas, a sintonia nominal do SRF-PLL preserva a estabilidade e reconverge, com a severidade sendo puramente um fator de distância elétrica.\n\nSegundo, nas assimétricas, a fragilidade é estrutural: a componente de sequência negativa de 120 hertz não é rejeitada pelo PI, contaminando as potências injetadas.\n\nTerceiro, reduzir os ganhos atenua a falta moderada, mas causa escorregamento de ciclo nas faltas severas, drenando a rede. A conclusão central é que permanecer conectado não basta; a verificação de conformidade precisa auditar o erro angular dinâmico."),
         ],
         "atencao": "Slide 19 atualizado: foco 100% nos 3 pontos conceituais dos cartões (sem números isolados no topo).",
     },
@@ -33,7 +30,7 @@ SLIDES_CONCLUSAO = [
         "titulo": "Trabalhos futuros e encerramento",
         "bloco": "Conclusão",
         "tcc": "Cap. 7",
-        "quem": "Victor → Bruno → Victor",
+        "quem": "Victor",
         "dur_s": 60,
         "msg": "Dois eixos dão continuidade ao estudo, a partir dos limites deste trabalho.",
         "pontos": [
@@ -42,9 +39,7 @@ SLIDES_CONCLUSAO = [
             ("Victor", "Cartão azul à direita ('Obrigado!'): agradecer novamente aos orientadores Prof. Oscar e Prof. André, aos membros da banca e à UERJ, colocando-se à disposição para a arguição com o painel interativo aberto."),
         ],
         "falas": [
-            ("Victor", "Para encerrar, registramos com transparência os limites metodológicos deste trabalho: analisamos o sistema IEEE 9 barras com nível de curto-circuito fixo, duas sintonias contrastantes e janela de observação de 200 milissegundos pós-falta; portanto, nossos resultados caracterizam um mecanismo físico-dinâmico e não um envelope universal de projeto."),
-            ("Bruno", "A partir desses limites, dois eixos dão continuidade direta à pesquisa: o primeiro é implementar estruturas avançadas de sincronismo, como o DDSRF-PLL e o DSOGI-PLL, capazes de separar as componentes de sequência antes do filtro PI para rejeitar a oscilação de 120 hertz preservando a largura de banda e a rapidez de recomposição; o segundo é varrer a relação de curto-circuito da rede para mapear a fronteira crítica de perda de sincronismo e investigar a interação entre múltiplos inversores em redes fracas."),
-            ("Victor", "Agradecemos mais uma vez aos nossos orientadores, professor Oscar e professor André, aos membros da banca pela leitura cuidadosa e à UERJ. Muito obrigado, e estamos à disposição para as perguntas da banca."),
+            ("Victor", "Como limites deste trabalho, operamos com nível de curto-circuito fixo e janela de 200 milissegundos pós-falta, focando na explicação do mecanismo dinâmico.\n\nA partir disso, dois eixos dão continuidade ao estudo: implementar estruturas avançadas de sincronismo como DDSRF e DSOGI-PLL, que separam as componentes de sequência antes do filtro; e varrer a relação de curto-circuito da rede para mapear a fronteira crítica em redes fracas.\n\nMuito obrigado pela atenção, e estamos à disposição para as perguntas da banca."),
         ],
         "atencao": "Não propor salto de fase nem RoCoF como trabalhos futuros (foram descartados). Deixar o painel interativo pronto para abrir no botão da tela durante as perguntas.",
     },

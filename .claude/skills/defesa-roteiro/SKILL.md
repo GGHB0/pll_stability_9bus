@@ -73,9 +73,11 @@ tudo desce uma posição (Filtro LCL = 12, Submódulo 2.10 = 14, Síntese = 19).
 
 ### Deck de falas (`falas_pptx.py`)
 
-Um slide por item, só com a fala; `(Seta →)` abre linha nova em cinza. Negrito azul
-nos trechos da lista `DESTAQUES` (conceitos centrais, números de resultado, frases de
-conclusão): termo novo que mereça destaque entra ali. O negrito vive só no PPTX; a
+Um slide por item, só com a fala; `(Seta →)` abre linha nova em cinza. Negrito
+**vermelho** (`ALERTA`) no que escapa da memória na hora: todo número com unidade (regex
+`NUMERO`) e a lista `DESTAQUES` (nomes, datas, locais, listas, frases-chave). Conceito
+que ninguém esquece ("SRF-PLL", "sintonia nominal") fica sem destaque, para o vermelho
+não perder força. Oradores: Bruno azul, Victor verde-azulado (laranja colidia com o vermelho). O negrito vive só no PPTX; a
 fonte em `falas/` fica em texto puro (os áudios leriam a marcação).
 
 Formato de uma fala: lista de tuplas `("Bruno" | "Victor", "texto")`. No palco,

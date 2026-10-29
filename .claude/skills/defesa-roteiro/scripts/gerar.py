@@ -10,6 +10,12 @@ import importlib
 import sys
 from pathlib import Path
 
+if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import caminhos  # noqa: E402,F401  (ajusta o sys.path para falas/ e pdfnote)
 
@@ -22,7 +28,7 @@ def main(args):
     if not alvos or any(a not in ALVOS for a in alvos):
         sys.exit(__doc__)
     for alvo in alvos:
-        print(f"── {alvo}")
+        print(f"-- {alvo}")
         mod = importlib.import_module(ALVOS[alvo])
         if alvo == "audios":
             import asyncio

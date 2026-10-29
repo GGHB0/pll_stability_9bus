@@ -1,10 +1,10 @@
-"""Falas e pontos do slide 19 (fonte única)."""
+"""Falas e pontos do slide 18 (fonte única)."""
 
 SLIDE_19 = [
     # -------------------------------------------------------------------------
     {
         "tipo": "SLIDE",
-        "num": 19,
+        "num": 18,
         "titulo": "Demonstração ao vivo",
         "bloco": "Porta para o painel",
         "tcc": "Cap. 5 (no painel HTML)",

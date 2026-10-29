@@ -66,7 +66,7 @@ def ambiente(wb):
         if kind == "msg":
             if current_context["type"] == "slide":
                 s_num = current_context["num"]
-                if s_num not in range(5, 17):
+                if s_num not in range(5, 16):
                     wb.add_slide_speech_box(s_num)
             elif current_context["type"] == "cap":
                 c_num = current_context["num"]
@@ -79,7 +79,7 @@ def ambiente(wb):
 
     def fala_hook(num):
         wb.box("fala", *[f"<b>{quem}:</b> {texto}" for quem, texto in FALAS[num]])
-        # E logo abaixo dos tópicos do Victor nos slides 5 a 17, colocamos o texto completo cronometrado!
+        # E logo abaixo dos tópicos do Victor nos slides 5 a 15, colocamos o texto completo cronometrado!
         wb.add_slide_speech_box(num)
 
     def slide_hook(num, titulo, bloco, quem, tcc):
@@ -115,7 +115,7 @@ def ambiente(wb):
 
     def tab_hook(header, rows, widths):
         wb.table(header, rows, widths)
-        # Se acabamos de colocar a tabela "Outros materiais" na Parte V, injetamos os Slides Ocultos 25-30 e o Q&A!
+        # Se acabamos de colocar a tabela "Outros materiais" na Parte V, injetamos os Slides Ocultos 23-28 e o Q&A!
         if header == ["Material", "Para quê"]:
             inject_defesa_qa_and_hidden_slides(wb, lambda s_n: jpg(SLIDES_PNG / f"s{s_n:02d}.png"))
 

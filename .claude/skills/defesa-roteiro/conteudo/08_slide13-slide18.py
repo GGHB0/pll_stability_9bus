@@ -19,11 +19,11 @@ box("banca", "<b>E o barramento CC?</b> Fixado em valor constante, para manter a
     "modulação necessária.")
 ponte("com o filtro definido, a malha que faz a corrente seguir a referência.")
 
-# --- 14
-slide(14, "Controle de corrente", "Modelagem", "Bruno, Victor",
+# --- 13
+slide(13, "Controle de corrente", "Modelagem", "Bruno, Victor",
       "Fig. 3.1, §3.5 (Eqs. 3.21-3.23), §4.3.2 (Eq. 4.2)")
 box("msg", "Um PI com notch em cada eixo faz a corrente do inversor seguir a referência.")
-fala(14)
+fala(13)
 sub("Fundamento: a malha, eixo por eixo")
 n.p("Erro (referência menos medida) &#8594; PI &#8594; filtro notch na ressonância do LCL "
     "&#8594; índice de modulação &#8594; PWM a 5 kHz no VSI de dois níveis. Em baixa "
@@ -39,7 +39,7 @@ eq(r"K_p = 2\cdot\frac{1}{\sqrt{2}}\cdot4\sqrt{2}\,f_g\,L_{est} = 8 f_g L_{est}"
    onde="Pelo critério de 2%, a corrente acomoda em 4/(&#958;&#969;<sub>n</sub>) = 16,7 ms: "
         "um ciclo.")
 sub("Fundamento: por que notch")
-n.p("A ressonância do LCL (slide 13) é uma frequência em que o filtro amplifica em vez de "
+n.p("A ressonância do LCL (slide 12) é uma frequência em que o filtro amplifica em vez de "
     "atenuar. Se a malha de corrente excitar essa frequência, a corrente oscila. Além do "
     "amortecimento passivo, o notch é um filtro que corta uma faixa estreita em torno de "
     "&#969;<sub>res</sub> e deixa o resto passar.")
@@ -57,11 +57,11 @@ box("cuidado", "Nunca confundir os dois: K<sub>p</sub> = 8f<sub>g</sub>L<sub>est
     "interação entre eles está fora do escopo (defesa_qa.pdf, pergunta 4).")
 ponte("no modelo final, a referência deixa de ser fixa.")
 
-# --- 15
-slide(15, "Submódulo 2.10 do ONS", "Modelagem", "Bruno", "Fig. 2.2, Fig. 4.2, §2.5.2, §4.3.2, §5.2")
+# --- 14
+slide(14, "Submódulo 2.10 do ONS", "Modelagem", "Bruno", "Fig. 2.2, Fig. 4.2, §2.5.2, §4.3.2, §5.2")
 box("msg", "No modelo final, a tensão medida define o reativo e o ativo fica com o que sobra.")
-fala(15)
-n.p("No modelo final, as referências fixas da primeira versão (slide 12) dão lugar ao bloco "
+fala(14)
+n.p("No modelo final, as referências fixas da primeira versão (slide 11) dão lugar ao bloco "
     "do Submódulo 2.10, que lê a tensão no PCC e conhece a corrente nominal e a máxima do "
     "conversor. Separação de papéis: o bloco do ONS decide o <b>módulo</b> de cada componente "
     "(i<sub>d,ref</sub> e i<sub>q,ref</sub>); o SRF-PLL decide a <b>direção</b> do eixo "
@@ -93,10 +93,10 @@ box("banca", "<b>Por que priorizar o reativo?</b> Sustenta a tensão sem exceder
     "e i<sub>q</sub> injetar; o ângulo &#952;<sub>PLL</sub> diz em que direção.")
 ponte("juntando todas as partes no sistema completo.")
 
-# --- 16
-slide(16, "Sistema completo", "Modelagem", "Bruno", "Fig. 4.2, §4.3.2")
+# --- 15
+slide(15, "Sistema completo", "Modelagem", "Bruno", "Fig. 4.2, §4.3.2")
 box("msg", "Juntando as partes, este é o inversor usado em todas as simulações.")
-fala(16)
+fala(15)
 sub("Revise em voz alta, de cima para baixo")
 bul("<b>Sincronismo</b>: o SRF-PLL entrega &#952;<sub>PLL</sub> às transformações dq.",
     "<b>Referência pelo Submódulo 2.10</b>: antes fixas (P = 1 pu, Q = 0), i<sub>d,ref</sub> "
@@ -110,8 +110,8 @@ box("banca", "<b>E agora?</b> Com o modelo fechado, as faltas no IEEE 9 barras t
     "SRF-PLL.")
 ponte("Passamos agora para o nosso método de teste, para ver como as contingências vão testar esse nosso SRF-PLL.")
 
-# --- 17
-slide(17, "Protocolo de contingência", "Método", "Bruno, Victor", "§4.3.4, Tab. 4.1, §5.2")
+# --- 16
+slide(16, "Protocolo de contingência", "Método", "Bruno, Victor", "§4.3.4, Tab. 4.1, §5.2")
 box("msg", "Todas as simulações seguem a mesma linha do tempo; muda só o local e o tipo da "
     "falta.")
 sub("A linha do tempo")
@@ -142,8 +142,8 @@ box("cuidado", "Não diga quantos cenários: o slide também não diz (28 &#215;
     "janela de 200 ms&#8221;. Os 0,1 s de inicialização são exceção de método.")
 ponte("como os resultados foram extraídos.")
 
-# --- 18
-slide(18, "Fluxo de análise", "Método", "Bruno, Victor, Bruno", "§4.3.3; métricas em §5.1-5.3")
+# --- 17
+slide(17, "Fluxo de análise", "Método", "Bruno, Victor, Bruno", "§4.3.3; métricas em §5.1-5.3")
 box("msg", "Cada simulação do Simulink vira arquivos CSV, tratados em Python até um painel "
     "interativo.")
 n.p("Ao fim de cada simulação o Simulink exporta os sinais em duas taxas de amostragem; o "
@@ -177,13 +177,13 @@ eq(r"\Delta f = \frac{1}{T} = \frac{1}{0{,}1\ \mathrm{s}} = 10\ \mathrm{Hz}",
 nums([["9,2%", "retenção de V<sub>d</sub> na Barra 7, trifásica, nominal (exemplo da fala)"]])
 box("banca", "<b>Dos dados aos resultados.</b> É assim que lemos os resultados: abrimos agora "
     "o painel interativo ao vivo, no modo apresentação.")
-ponte("slide 19, abrir o painel.")
+ponte("slide 18, abrir o painel.")
 
 # =============================================================================
 # PARTE II
 # =============================================================================
 parte("PARTE II · A passagem para o painel")
-slide(19, "Demonstração ao vivo", "Porta para o painel", "Victor", "Figs. 5.10, 5.18")
+slide(18, "Demonstração ao vivo", "Porta para o painel", "Victor", "Figs. 5.10, 5.18")
 box("msg", "A partir daqui os resultados são mostrados no painel interativo, no modo "
     "apresentação.")
 sub("O que fazer")

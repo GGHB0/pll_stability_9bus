@@ -23,7 +23,7 @@ tab(["Situação", "v<sub>d</sub>", "v<sub>q</sub>", "Leitura"], [
     ["&#952;<sub>PLL</sub> = &#952;<sub>ref</sub> (travado)", "V<sub>m</sub>", "0",
      "amplitude inteira em d: as senoides viraram constantes"],
     ["erro pequeno &#916;&#952;", "&#8776; V<sub>m</sub>", "&#8776; V<sub>m</sub>&#183;&#916;&#952;",
-     "v<sub>q</sub> mede o erro de ângulo (slides 7 e 10)"],
+     "v<sub>q</sub> mede o erro de ângulo (slides 7 e 9)"],
     ["erro de 90&#176;", "0", "V<sub>m</sub>", "o vetor caiu inteiro no eixo q"],
 ], [4.2, 2.0, 2.6, 6.2])
 box("base", "O v<sub>d</sub> diz <b>quanto</b> de tensão há e o v<sub>q</sub> diz <b>quanto o "
@@ -80,7 +80,7 @@ bul("<b>Detector de fase (PD)</b>: a própria Park sobre a tensão medida. Como 
     "slide 6, v<sub>q</sub> = U&#183;sen(&#952;<sub>g</sub> &#8722; &#952;<sub>PLL</sub>). "
     "Para erro pequeno, sen x &#8776; x, e v<sub>q</sub> &#8776; U&#183;&#916;&#952;: o erro "
     "de ângulo multiplicado pela amplitude. O v<sub>d</sub> &#8776; U do diagrama é a "
-    "amplitude estimada, usada depois nas referências de corrente (slide 12).",
+    "amplitude estimada, usada depois nas referências de corrente (slide 11).",
     "<b>Filtro de laço (PI)</b>: recebe v<sub>q</sub> e entrega a correção de frequência "
     "&#916;&#969;. A parte proporcional reage ao erro presente; a integral acumula o erro "
     "passado e é ela que &#8220;memoriza&#8221; um desvio de frequência da rede.",
@@ -107,7 +107,7 @@ eq(r"C(s) = K_p + \frac{K_i}{s} = \frac{K_p\,s + K_i}{s}",
         "&#8722;K<sub>i</sub>/K<sub>p</sub>. Na sintonia nominal, 105.820/460 = 230 rad/s.")
 box("base", "Polo: valor de s que faz a função ir ao infinito, define o modo natural de "
     "resposta. Zero: valor de s que zera a função, muda a forma da resposta (no PLL, aumenta "
-    "a sobre-elevação, ver slide 10). Integrador = polo em s = 0.")
+    "a sobre-elevação, ver slide 9). Integrador = polo em s = 0.")
 
 sub("4. Montando a malha fechada passo a passo")
 n.p("Com o PD linearizado (ganho U), a malha aberta é o produto dos três blocos:")
@@ -128,7 +128,7 @@ box("base", "Dois integradores na malha aberta (PI e VCO) dão uma malha fechada
     "Toda a sintonia se resume a escolher onde ficam os dois polos.")
 
 n.p("Como ler &#969;<sub>n</sub> e &#958; nos polos, e como se escolhem os seus valores, "
-    "fica para o slide 10.")
+    "fica para o slide 9.")
 
 sub("5. Relembrando: tipo do sistema e erro em regime")
 n.p("O <b>tipo</b> de uma malha é o número de integradores na malha aberta L(s). Ele diz "
@@ -151,7 +151,7 @@ box("prova", "<b>&#8220;Por que PI e não só um ganho proporcional?&#8221;</b> 
     "diferente de zero e o eixo d nunca alinha de fato. O integrador do PI zera esse erro.")
 
 sub("6. O que o afundamento faz com o laço")
-n.p("Como a tensão é dividida por um valor fixo (o porquê está no slide 10), U fica dentro "
+n.p("Como a tensão é dividida por um valor fixo (o porquê está no slide 9), U fica dentro "
     "do ganho do detector: em regime U = 1, mas na falta U cai. Casando a equação "
     "característica com a forma canônica, agora com U livre:")
 eq(r"\omega_{n,\mathrm{ef}}^2 = U K_i \Rightarrow \omega_{n,\mathrm{ef}} = \omega_n\sqrt{U}"

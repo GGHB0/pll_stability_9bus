@@ -37,14 +37,13 @@ tab(["Termo", "Em uma frase"], [
     ["&#958;", "amortecimento: o quanto ele oscila antes de assentar (0,707 = clássico)"],
     ["t<sub>s</sub>", "tempo até a resposta ficar dentro de 1% do final (4,6/&#958;&#969;<sub>n</sub>)"],
     ["Tipo", "número de integradores em L(s); tipo 2 segue degrau de frequência sem erro"],
-    ["Banda passante", "até onde G(s) segue a entrada; acima, filtra (slide 11)"],
+    ["Banda passante", "até onde G(s) segue a entrada; acima, filtra (slide 10)"],
 ], [4.2, 10.5])
 ponte("antes de sintonizar, qual rede o PLL enxerga?")
 
 # --- 8
-slide(8, "Sistema IEEE 9 barras", "Modelagem", "Victor", "Fig. 4.1, §4.3.1")
-box("msg", "A UFV assume a Barra 2 e enxerga o resto da rede como um equivalente de "
-    "Thévenin.")
+slide(8, "Sistema IEEE 9 barras", "Modelagem", "Victor, Bruno, Victor", "Fig. 4.1, §4.1, §4.3.1")
+box("msg", "O PLL foi modelado no PSIM; a rede, com as máquinas síncronas, vem pronta no Simulink.")
 fala(8)
 sub("Fundamento: o sistema")
 n.p("O caso clássico tem três geradores, três transformadores, seis linhas e três cargas, "
@@ -56,42 +55,28 @@ n.p("Tudo é dividido por uma base: potência de 100 MVA e a tensão nominal de 
 eq(r"Z_{base} = \frac{V_{base}^2}{S_{base}}",
    onde="20 kV: 4 &#937;; 230 kV: 529 &#937;. Em pu, os 100 MW da usina valem 1 pu e os "
         "transformadores ideais somem das contas.")
-sub("Fundamento: Thévenin pela matriz de impedância nodal")
+sub("Fundamento: Thévenin e os dois softwares")
 n.p("A Z<sub>barra</sub> é a inversa da matriz de admitâncias da rede. O elemento "
-    "diagonal Z<sub>22</sub> é, por definição, a impedância vista da Barra 2 com as fontes "
-    "anuladas: é a impedância de Thévenin que o inversor enxerga. No PSIM, a rede inteira foi "
-    "reduzida a uma fonte atrás dessa impedância; no Simulink, roda o sistema completo.")
+    "diagonal Z<sub>22</sub> é a impedância de Thévenin vista da Barra 2. No PSIM, modelamos "
+    "o inversor chave a chave sob esse equivalente para validar os ganhos; no Simulink, "
+    "roda o sistema IEEE 9 barras completo com máquinas síncronas e nível de curto fixo.")
 box("alem", "<b>Força da rede (SCR).</b> A relação de curto-circuito é a potência de curto "
     "no ponto de conexão dividida pela potência do inversor; com o inversor em 1 pu, é "
-    "aproximadamente 1/|Z<sub>th</sub>| em pu. Rede &#8220;fraca&#8221; é a de SCR baixo, "
-    "onde a corrente do inversor mexe muito na própria tensão que o PLL mede. O TCC mantém "
-    "o nível de curto fixo e varia o local da falta: varrer o SCR é trabalho futuro.")
+    "aproximadamente 1/|Z<sub>th</sub>| em pu. O TCC mantém o nível de curto fixo e varia o "
+    "local da falta: varrer o SCR é trabalho futuro.")
 nums([["192 MVA", "máquina original da Barra 2"],
       ["100 MW = 1 pu", "UFV, na base de 100 MVA, 60 Hz"],
       ["230 kV / 20 kV", "rede de transmissão / tensão do lado do inversor"]])
-box("banca", "<b>Por que um Thévenin no PSIM?</b> Representa a rede vista pelo inversor com "
-    "boa fidelidade dinâmica e mantém a coerência com o sistema completo do Simulink.")
+box("banca", "<b>Por que dois softwares?</b> O PSIM modela o conversor chave a chave; o "
+    "Simulink traz o IEEE 9 barras completo com máquinas síncronas (§4.1 do TCC).")
 box("cuidado", "R<sub>th</sub> = 10,04 m&#937; e L<sub>th</sub> = 1,16 mH não estão no TCC; "
-    "aparecem só no apêndice (slide 24).")
-ponte("com a rede reduzida, deu para testar o PLL sozinho.")
+    "aparecem só no apêndice (slide 21).")
+ponte("com a rede e o método definidos, passa-se à sintonia dos ganhos do PLL.")
 
 # --- 9
-slide(9, "Bancada do PLL", "Modelagem", "Bruno, Victor", "fora do TCC (exceção de método)")
-box("msg", "Antes do inversor, o SRF-PLL foi testado isolado entre duas fontes ideais.")
-fala(9)
-n.p("A geração é uma fonte trifásica ideal; a rede é outra fonte (barramento infinito) "
-    "atrás da impedância de Thévenin. Sem chaves e sem filtro, só o laço PD-PI-VCO. É o "
-    "princípio de testar um subsistema de cada vez: se o PLL falha aqui, o problema é do "
-    "laço, não do conversor. É etapa de método aprovada como exceção à regra &#8220;deck = "
-    "TCC&#8221;: entra sem nenhum número.")
-box("banca", "<b>Por que começar por fontes ideais?</b> Separa o sincronismo do resto: se o "
-    "PLL falha aqui, o problema é do laço.")
-ponte("nesta bancada os ganhos do PI foram dimensionados.")
-
-# --- 10
-slide(10, "Sintonia do PLL", "Modelagem", "Victor, Bruno, Victor", "§3.4, Eqs. (3.10)-(3.20)")
+slide(9, "Sintonia do PLL", "Modelagem", "Victor, Bruno, Victor", "§3.4, Eqs. (3.10)-(3.20)")
 box("msg", "Fixado o amortecimento, resta um único grau de liberdade: o tempo de acomodação.")
-fala(10)
+fala(9)
 n.p("O slide 7 deu a <b>forma</b> do laço: uma malha fechada de 2ª ordem com dois ganhos, "
     "K<sub>p</sub> e K<sub>i</sub>. Este slide responde <b>como se escolhe cada número</b>. "
     "A lógica em uma linha: tornar o laço independente da tensão (passos 1 e 2), trocar os "
@@ -161,7 +146,7 @@ n.p("O &#958; decide o formato da resposta, independente da velocidade. A sobre-
     "do protótipo de 2ª ordem só depende dele:")
 eq(r"M_p = e^{-\pi\xi/\sqrt{1-\xi^2}}")
 tab(["&#958;", "M<sub>p</sub>", "Polo com o eixo real", "Leitura"], [
-    ["0,316", "35%", "71,6&#176;", "oscila muito (é a sintonia inadequada, slide 11)"],
+    ["0,316", "35%", "71,6&#176;", "oscila muito (é a sintonia inadequada, slide 10)"],
     ["0,5", "16%", "60&#176;", "ainda oscila bastante"],
     ["<b>0,707</b>", "<b>4,3%</b>", "<b>45&#176;</b>", "<b>compromisso clássico</b>"],
     ["1,0", "0%", "0&#176; (polo duplo real)", "sem oscilação, porém mais lento"],

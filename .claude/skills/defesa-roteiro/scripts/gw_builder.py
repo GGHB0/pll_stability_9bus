@@ -5,7 +5,7 @@ from gw_texto import _Texto
 from gw_util import *  # noqa: F401,F403
 
 # Tópicos curtos dos slides sem caixa "O que falar" no roteiro de estudo (1-4, 17-21)
-EXTRA_FALAS_TOPICOS = {n: PONTOS[n] for n in (1, 2, 3, 4, 17, 18, 19, 20, 21)}
+EXTRA_FALAS_TOPICOS = {n: PONTOS[n] for n in (1, 2, 3, 4, 16, 17, 18, 19, 20)}
 # Falas do palco no formato da caixa: (rótulo, texto, cor)
 PALCO_SPEECHES = {
     cap: [(f"[{quem}] ", texto, C_BRUNO if quem == "Bruno" else C_VICTOR) for quem, texto in falas]
@@ -18,13 +18,13 @@ class WordRoteiroBuilder(_Texto, _Blocos):
     enriquecido com as falas completas de 30 minutos e o mapa do TCC."""
 
     def add_slide_speech_box(self, slide_num: int):
-        """Adiciona os tópicos resumidos (se não estiverem no FALAS de 5-17) e a fala completa cronometrada."""
+        """Adiciona os tópicos resumidos (se não estiverem no FALAS de 5-15) e a fala completa cronometrada."""
         if slide_num in EXTRA_FALAS_TOPICOS:
             topicos = [f"<b>{quem}:</b> {txt}" for quem, txt in EXTRA_FALAS_TOPICOS[slide_num]]
             self.box("fala", *topicos)
 
         speech_raw = SLIDE_SPEECHES.get(slide_num, "")
-        if not speech_raw or slide_num in (22, 23):
+        if not speech_raw or slide_num in (21, 22):
             return
         paras = [p.strip() for p in speech_raw.split("\n\n") if p.strip()]
         formatted_lines = []
@@ -43,10 +43,10 @@ class WordRoteiroBuilder(_Texto, _Blocos):
             spk_color = C_BRUNO if curr_spk == "Bruno" else C_VICTOR
             formatted_lines.append((f"[{curr_spk}] ({w_c} pal. ~ {format_mmss(w_c/130)}): ", body, spk_color))
 
-        rot_Kind = "script" if slide_num <= 21 else "palco_s"
+        rot_Kind = "script" if slide_num <= 20 else "palco_s"
         label = (
             f"ORDEM DE FALAS PRONTA DO SLIDE {slide_num:02d} ({tot_w} palavras ~ {format_mmss(tot_w/130)})"
-            if slide_num <= 21
+            if slide_num <= 20
             else f"FALA DE RESERVA DO SLIDE OCULTO {slide_num:02d} ({tot_w} palavras ~ {format_mmss(tot_w/130)})"
         )
         self.box(rot_Kind, *formatted_lines, titulo=label)

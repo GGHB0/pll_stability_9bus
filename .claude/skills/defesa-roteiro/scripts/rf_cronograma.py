@@ -30,7 +30,7 @@ def cabecalho_e_cronograma(doc):
     p_sub.paragraph_format.space_after = Pt(8)
     r_s = p_sub.add_run(
         "Defesa de TCC (UERJ 2026) · Bruno Henrique de Oliveira & Victor Hugo de Avelar Rezende\n"
-        "Sincronizado com o Deck Final (29 slides: 1–21 Corpo + 22–29 Apêndice/Reserva), "
+        "Sincronizado com o Deck Final (28 slides: 1–20 Corpo + 21–28 Apêndice/Reserva), "
         "o Guia em PDF e o Painel Interativo Final (output/pll_metrics.html)"
     )
     r_s.font.name = "Calibri"

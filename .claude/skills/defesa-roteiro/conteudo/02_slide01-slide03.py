@@ -2,8 +2,8 @@
 # =============================================================================
 # PARTE I
 # =============================================================================
-parte("PARTE I · PowerPoint, slides 1 a 18",
-      "Motivação (2-4), modelagem (5-16) e método (17-18). A modelagem é a parte mais "
+parte("PARTE I · PowerPoint, slides 1 a 17",
+      "Motivação (2-4), modelagem (5-15) e método (16-17). A modelagem é a parte mais "
       "teórica da defesa e a que mais rende pergunta: cada slide dela tem um bloco de "
       "fundamentos.")
 
@@ -82,7 +82,7 @@ eq(r"\Delta V \approx \dfrac{R\,P + X\,Q}{V} \approx \dfrac{X\,Q}{V} \qquad (X \
    onde="Quem injeta reativo perto da carga reduz a queda e sustenta a tensão; sem esse "
         "suporte, a tensão cai, as cargas puxam mais corrente e a queda piora: é o colapso "
         "de tensão. Por isso o diagnóstico do ONS fala em suporte dinâmico de reativos, e "
-        "por isso o Submódulo 2.10 (slide 16) pede corrente reativa na falta.")
+        "por isso o Submódulo 2.10 (slide 14) pede corrente reativa na falta.")
 sub("Fundamento: seguidor (GFL) e formador de rede (GFM)")
 n.p("O <b>seguidor de rede</b> (grid-following, o deste TCC) mede a tensão, estima o "
     "ângulo com o PLL e injeta corrente nesse ângulo: depende de uma rede que já exista e "
@@ -167,7 +167,7 @@ tab(["Barra (T0 + 530 ms)", "Tensão", "Barra (T0 + 530 ms)", "Tensão"], [
     ["Milagres II", "0,56 pu", "Presidente Dutra", "0,92 pu"],
 ], [4.2, 3.15, 4.2, 3.15])
 n.p("Para ter escala: no Submódulo 2.10, abaixo de 0,85 pu a usina já tem de injetar "
-    "corrente reativa adicional (slide 16), e 0,5 pu fica no meio da rampa. Barras de 230 kV "
+    "corrente reativa adicional (slide 14), e 0,5 pu fica no meio da rampa. Barras de 230 kV "
     "a 0,5 pu sem curto nenhum, meio segundo depois de uma única linha abrir, é a medida da "
     "gravidade.")
 

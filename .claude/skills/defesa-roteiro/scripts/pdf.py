@@ -8,10 +8,11 @@ uma cópia do deck) e telas do palco de scripts/verifica_palco.py, convertidas p
 JPEG reduzido em CACHE antes de entrar no PDF.
 """
 import sys
+from pathlib import Path
 
 import pdf_base
 import pdf_blocos
-from caminhos import conteudo_texto
+from caminhos import conteudo_texto, entregar
 from falas import FALAS
 
 
@@ -24,6 +25,7 @@ def main():
     exec(conteudo_texto(), env)
     out = pdf_base.n.build()
     print(out)
+    entregar(Path(out), Path(out).name)
     if "--preview" in sys.argv:
         print(pdf_base.render_preview(out, sys.argv[sys.argv.index("--preview") + 1]))
 

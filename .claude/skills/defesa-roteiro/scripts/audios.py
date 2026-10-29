@@ -1,4 +1,4 @@
-"""Áudios de estudo e ensaio da defesa (slides 1-21 e palco 1-8), com edge-tts.
+"""Áudios de estudo e ensaio da defesa (slides 1-20 e palco 1-8), com edge-tts.
 
 Gera em output/audios_defesa/: <item>_com_guia.mp3 (orientações + fala),
 <item>_fala_pura.mp3 e Defesa_Completa_Ensaio_Continuo.mp3. Texto em falas/.
@@ -61,23 +61,23 @@ async def gerar_item(identificador: str, titulo: str, meta: dict, blocos_fala: l
 
 async def main():
     print("=" * 70)
-    print("GERANDO TODOS OS ÁUDIOS DA APRESENTAÇÃO DE TCC (SLIDES 1-21 + PALCO 1-8)")
+    print("GERANDO TODOS OS ÁUDIOS DA APRESENTAÇÃO DE TCC (SLIDES 1-20 + PALCO 1-8)")
     print("=" * 70)
     
     arquivos_fala_pura_ordenados = []
     
     # =========================================================================
-    # PARTE I: Slides 1 a 19 (PowerPoint - Contexto, Fundamentos e Metodologia)
+    # PARTE I: Slides 1 a 18 (PowerPoint - Contexto, Fundamentos e Metodologia)
     # =========================================================================
-    print("\n--- PARTE I: Slides 1 a 19 (PowerPoint) ---")
-    for s_idx in range(1, 20):
+    print("\n--- PARTE I: Slides 1 a 18 (PowerPoint) ---")
+    for s_idx in range(1, 19):
         speech = SLIDE_SPEECHES.get(s_idx, "")
         meta = SLIDE_META.get(s_idx, {})
         titulo = meta.get("titulo", f"Slide {s_idx}")
         blocos = parse_falas_slide(speech)
         ident = f"Slide_{s_idx:02d}"
         
-        print(f"[{s_idx:02d}/29] Processando {ident}: {titulo}...")
+        print(f"[{s_idx:02d}/28] Processando {ident}: {titulo}...")
         # 1. Versão com guia
         c_guia, _ = await gerar_item(ident, titulo, meta, blocos, incluir_guia=True)
         # 2. Versão fala pura
@@ -96,7 +96,7 @@ async def main():
         blocos = parse_falas_palco(cap_entries)
         ident = f"Palco_Cap_{c_idx:02d}"
         
-        print(f"[{19+c_idx:02d}/29] Processando {ident}: {titulo}...")
+        print(f"[{18+c_idx:02d}/28] Processando {ident}: {titulo}...")
         # 1. Versão com guia
         c_guia, _ = await gerar_item(ident, titulo, meta, blocos, incluir_guia=True)
         # 2. Versão fala pura
@@ -107,15 +107,15 @@ async def main():
     # =========================================================================
     # PARTE III: Slides 20 e 21 (PowerPoint - Síntese, Trabalhos Futuros e Fim)
     # =========================================================================
-    print("\n--- PARTE III: Conclusão e Encerramento (Slides 20 e 21) ---")
-    for s_idx in [20, 21]:
+    print("\n--- PARTE III: Conclusão e Encerramento (Slides 19 e 20) ---")
+    for s_idx in [19, 20]:
         speech = SLIDE_SPEECHES.get(s_idx, "")
         meta = SLIDE_META.get(s_idx, {})
         titulo = meta.get("titulo", f"Slide {s_idx}")
         blocos = parse_falas_slide(speech)
         ident = f"Slide_{s_idx:02d}"
         
-        print(f"[{8+s_idx:02d}/29] Processando {ident}: {titulo}...")
+        print(f"[{8+s_idx:02d}/28] Processando {ident}: {titulo}...")
         c_guia, _ = await gerar_item(ident, titulo, meta, blocos, incluir_guia=True)
         c_pura, bytes_pura = await gerar_item(ident, titulo, meta, blocos, incluir_guia=False)
         arquivos_fala_pura_ordenados.append(bytes_pura)

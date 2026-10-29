@@ -1,8 +1,8 @@
-"""Falas e pontos dos slides 1 a 9 (fonte única)."""
+"""Falas e pontos dos slides 1 a 8 (fonte única)."""
 
 SLIDES_01_09 = [
     # -------------------------------------------------------------------------
-    # PARTE I: SLIDES 1 A 18
+    # PARTE I: SLIDES 1 A 17
     # -------------------------------------------------------------------------
     {
         "tipo": "SLIDE",
@@ -145,37 +145,20 @@ SLIDES_01_09 = [
         "num": 8,
         "titulo": "Sistema IEEE 9 barras",
         "bloco": "Modelagem",
-        "tcc": "Fig. 4.1, §4.3.1",
-        "quem": "Victor",
-        "dur_s": 40,
-        "msg": "A UFV assume a Barra 2 e enxerga o resto da rede como um equivalente de Thévenin.",
+        "tcc": "Fig. 4.1, §4.1, §4.3.1",
+        "quem": "Victor → Bruno → Victor",
+        "dur_s": 70,
+        "msg": "O PLL foi modelado no PSIM; a rede, com as máquinas síncronas, vem pronta no Simulink.",
         "pontos": [
-            ("Victor", "Sistema IEEE 9 barras modificado: máquina síncrona original da Barra 2 substituída pela usina fotovoltaica de 100 MW; G1 e G3 permanecem como fontes síncronas mantendo a inércia da rede."),
-            ("Victor", "Topologia da rede: permite variar a distância elétrica das faltas mantendo o nível de curto-circuito constante."),
-            ("Victor", "Equivalente de Thévenin: redução de toda a rede a um equivalente visto da Barra 2 para os estudos iniciais de controle."),
+            ("Victor", "Sistema IEEE 9 barras modificado (Cartão 1 — Substituição): máquina síncrona original da Barra 2 (192 MVA) substituída pela usina fotovoltaica de 100 MW (1 pu); G1 e G3 permanecem como fontes síncronas mantendo a inércia da rede."),
+            ("Bruno", "Modelagem no PSIM (Cartão 2 — PSIM: o PLL e o inversor): primeiro o SRF-PLL sozinho com fonte ideal para validar os ganhos; depois conversor completo com PWM e filtro LCL sob o equivalente de Thévenin da Barra 2."),
+            ("Victor", "Simulação no Simulink (Cartão 3 — Simulink: a rede completa): rede IEEE 9 barras pronta (máquinas, 3 trafos, 6 LTs, 3 cargas, 230 kV) com nível de curto fixo para simular todas as contingências."),
         ],
         "falas": [
-            ("Victor", "Podendo passar para o próximo slide, aqui a gente encontra o sistema IEEE de 9 barras modificado. A máquina síncrona original da Barra 2 foi substituída pela nossa usina fotovoltaica de 100 megawatts, enquanto os geradores G1 e G3 permanecem como fontes síncronas mantendo a inércia da rede.\n\nEssa topologia nos permite variar a distância elétrica das faltas mantendo o nível de curto-circuito constante. E para os nossos estudos iniciais de controle, reduzimos toda a rede a um equivalente de Thévenin visto da Barra 2."),
+            ("Victor", "O sistema de teste é o IEEE de 9 barras modificado. A máquina síncrona da Barra 2, que no caso original tinha 192 MVA, foi substituída pela usina fotovoltaica de 100 MW, e a Barra 2 passa a ser o ponto de conexão do inversor. Os geradores G1 e G3 permanecem como fontes síncronas, mantendo a inércia remanescente no sistema."),
+            ("Bruno", "Usamos duas ferramentas complementares. No PSIM modelamos o PLL e o inversor em nível de circuito: primeiro o SRF-PLL sozinho, com a geração como fonte ideal, onde validamos os ganhos do próximo slide; depois o conversor com PWM e filtro LCL. Ali a rede é reduzida a um equivalente de Thévenin na Barra 2, obtido da matriz de impedância nodal."),
+            ("Victor", "No Simulink usamos o IEEE 9 barras já pronto, com as máquinas síncronas, três transformadores, seis linhas de transmissão e três cargas, em 230 kV. É nele que rodam todas as faltas, com o nível de curto-circuito mantido fixo, uma limitação que retomamos no final. Os 100 MW da usina correspondem a 1 pu na base de 100 MVA."),
         ],
-        "atencao": "Transição suave para o Slide 9 (bancada do PLL com equivalente de Thévenin).",
-    },
-    {
-        "tipo": "SLIDE",
-        "num": 9,
-        "titulo": "Bancada do PLL",
-        "bloco": "Modelagem",
-        "tcc": "Exceção de método (PSIM)",
-        "quem": "Bruno → Victor",
-        "dur_s": 35,
-        "msg": "Antes do inversor, o SRF-PLL foi testado isolado entre duas fontes ideais.",
-        "pontos": [
-            ("Bruno", "Apontar o diagrama da bancada no PSIM (Cartão 1 — Sem conversor): geração representada como fonte trifásica ideal à esquerda e rede como equivalente de Thévenin + barramento infinito à direita; sem chaveamento PWM e sem filtro LCL."),
-            ("Victor", "Cartões 2 e 3 + Rodapé: serviu para validar o travamento (v_q → 0 e θ_PLL seguindo θ_rede) e dimensionar os ganhos K_pPLL e K_iPLL de forma isolada — se o PLL falhasse ali, o problema seria do laço, não do conversor."),
-        ],
-        "falas": [
-            ("Bruno", "Antes de conectar o inversor completo, montamos no PSIM esta bancada isolada: à esquerda uma fonte trifásica ideal representando a geração e, à direita, a rede com a impedância de Thévenin e o barramento infinito, sem chaves semicondutoras e sem filtro LCL."),
-            ("Victor", "O objetivo metodológico dessa etapa, destacado no rodapé, é isolar o subsistema de sincronismo: validamos ali o erro vq indo a zero, o travamento do ângulo e o dimensionamento dos ganhos do controlador PI que detalhamos no próximo slide."),
-        ],
-        "atencao": "Exceção de método aprovada: não citar nenhum número neste slide.",
+        "atencao": "Por que dois softwares? O PSIM modela o conversor chave a chave; o Simulink traz o IEEE 9 barras completo com máquinas síncronas (§4.1 do TCC).",
     },
 ]

@@ -2,11 +2,11 @@
 eq(r"e^{-\xi\omega_n t_s} = 0{,}01 \ \Rightarrow\ \xi\omega_n t_s = \ln 100 = 4{,}6 "
    r"\ \Rightarrow\ t_s = \frac{4{,}6}{\xi\omega_n}", tag="3.20",
    onde="Com o critério de 2%, seria ln 50 &#8776; 3,9, arredondado para 4: é o "
-        "4/(&#958;&#969;<sub>n</sub>) usado no PI de corrente (slide 14). O 1% é mais "
+        "4/(&#958;&#969;<sub>n</sub>) usado no PI de corrente (slide 13). O 1% é mais "
         "exigente: para o mesmo t<sub>s</sub>, pede um laço um pouco mais rápido.")
 n.p("<b>O compromisso.</b> t<sub>s</sub> curto significa &#969;<sub>n</sub> alto e banda "
     "larga: o PLL acompanha rápido, mas deixa passar ruído de medição, harmônicos e o "
-    "desequilíbrio (os 120 Hz da sequência negativa, slide 11) para o ângulo. t<sub>s</sub> "
+    "desequilíbrio (os 120 Hz da sequência negativa, slide 10) para o ângulo. t<sub>s</sub> "
     "longo filtra bem, mas não acompanha variações reais da rede e demora a retomar o "
     "sincronismo depois da falta.")
 n.p("<b>Por que 20 ms.</b> Um período de 60 Hz dura 16,7 ms; 20 ms é pouco mais de um "
@@ -15,7 +15,7 @@ n.p("<b>Por que 20 ms.</b> Um período de 60 Hz dura 16,7 ms; 20 ms é pouco mai
 box("prova", "<b>&#8220;O que acontece se aumentar muito os ganhos?&#8221;</b> &#969;<sub>n</sub> "
     "e a banda sobem: o PLL acompanha mais rápido, mas deixa passar mais ruído, harmônicos e "
     "os 120 Hz da sequência negativa para o ângulo. Com os 20 ms, a banda já fica em 107 Hz, "
-    "colada nos 120 Hz (slide 11): ir mais rápido pioraria isso.")
+    "colada nos 120 Hz (slide 10): ir mais rápido pioraria isso.")
 
 sub("A conta de mão, do t<sub>s</sub> aos ganhos")
 n.p("Com &#958; = 0,707 e t<sub>s</sub> = 20 ms, quatro linhas, cada uma usando só a "
@@ -45,11 +45,11 @@ box("cuidado", "A régua do slide mostra só &#8220;1 período&#8221; e 20 ms. O
     "critério de 1% está em criterio_acomodacao_srf_pll.pdf.")
 ponte("esta é a sintonia nominal; para testar a sensibilidade, uma segunda.")
 
-# --- 11
-slide(11, "Duas sintonias do PLL", "Modelagem", "Bruno, Victor", "§3.4 (eq. 3.20), §4.3")
+# --- 10
+slide(10, "Duas sintonias do PLL", "Modelagem", "Bruno, Victor", "§3.4 (eq. 3.20), §4.3")
 box("msg", "A sintonia inadequada reduz os dois ganhos em 80%: laço mais lento e menos "
     "amortecido.")
-fala(11)
+fala(10)
 sub("Fundamento: a conta da inadequada")
 eq(r"K_p = 0{,}2\cdot460 = 92 \qquad K_i = 0{,}2\cdot105\,820 = 21\,164")
 eq(r"\omega_n = \sqrt{21\,164} = 145{,}5\ \mathrm{rad/s} \qquad "
@@ -97,12 +97,12 @@ box("banca", "<b>Por que reduzir os ganhos?</b> Simula uma malha de sincronismo 
     "eliminação da falta.")
 ponte("com o sincronismo resolvido, o inversor.")
 
-# --- 12
-slide(12, "Referência de corrente", "Modelagem", "Victor, Bruno",
+# --- 11
+slide(11, "Referência de corrente", "Modelagem", "Victor, Bruno",
       "§3.1.3-3.1.4, Eqs. (3.8)-(3.9); diagrama: exceção de método (PSIM)")
 box("msg", "Na primeira versão do inversor, a referência de corrente saía direto da "
     "potência desejada.")
-fala(12)
+fala(11)
 sub("Fundamento: potência em dq")
 eq(r"P = \frac{3}{2}\left(v_d i_d + v_q i_q\right) \qquad "
    r"Q = \frac{3}{2}\left(v_q i_d - v_d i_q\right)", tag="3.8",
@@ -128,11 +128,11 @@ box("cuidado", "&#8220;35 ms&#8221; é o único número fora do TCC neste slide 
     "slide não afirma nenhum dos dois.")
 ponte("antes da malha de corrente, o filtro que liga o inversor à rede.")
 
-# --- 13
-slide(13, "Filtro LCL", "Modelagem", "Bruno, Victor",
+# --- 12
+slide(12, "Filtro LCL", "Modelagem", "Bruno, Victor",
       "§4.3.2 e §4.3.2.1 (só os resultados; equações fora do TCC)")
 box("msg", "Quatro passos fixam o filtro, com a ressonância entre a rede e o chaveamento.")
-fala(13)
+fala(12)
 box("cuidado", "Slide de exceção de método (aprovada em 27/10/2026): o TCC entregue só traz "
     "os resultados (L<sub>est</sub> = 30,71 mH, &#969;<sub>res</sub> = 9.068,99 rad/s, "
     "R<sub>d1</sub>, R<sub>d2</sub>, R<sub>d3</sub>), não as equações. Na tela e na fala, só os "
@@ -155,7 +155,7 @@ eq(r"L_1 = \frac{V_{cc}}{24\,f_{sw}\,\Delta i_{L1}} = "
 eq(r"L_2 = k\,L_1 = 0{,}0095\cdot30{,}42 = 0{,}289\ \mathrm{mH} \qquad "
    r"L_{est} = L_1 + L_2 = 30{,}71\ \mathrm{mH}",
    onde="<b>Passo 2.</b> L<sub>est</sub> é o número do TCC: é a indutância que a malha de "
-        "corrente enxerga em baixa frequência (planta 1/(sL<sub>est</sub>), slide 14).")
+        "corrente enxerga em baixa frequência (planta 1/(sL<sub>est</sub>), slide 13).")
 eq(r"C_x = \frac{L_1 + L_2}{L_1 L_2\,(\pi f_{sw})^2} = 14{,}16\ \mu\mathrm{F} \qquad "
    r"C = 3\,C_x = 42{,}47\ \mu\mathrm{F}",
    onde="<b>Passo 3.</b> C<sub>x</sub> poria a ressonância exatamente na metade do "

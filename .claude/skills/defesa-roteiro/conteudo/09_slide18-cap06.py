@@ -1,7 +1,7 @@
 # Executado por exec() pelo pdf.py e pelo guia.py, nesta ordem: não importar.
 bul("Antes da defesa: abrir output/pll_metrics.html no navegador do notebook da defesa "
     "(abre sem internet).",
-    "No slide 19: Alt+Tab para o navegador e clicar <b>Modo apresentação</b> no cabeçalho. "
+    "No slide 18: Alt+Tab para o navegador e clicar <b>Modo apresentação</b> no cabeçalho. "
     "O painel entra em tela cheia, com fundo branco.",
     "Seta &#8594; ou PageDown avança; seta &#8592; ou PageUp volta; Esc sai. Nos capítulos "
     "com passos, cada avanço revela um passo; só no último a seta troca de capítulo.",
@@ -11,7 +11,7 @@ n.p("Número do capítulo (k/8), a referência no TCC (seção, figura, tabela),
     "frase do passo, chips com os casos (clicar liga e desliga), o gráfico e, embaixo, "
     "cartões com os números de cada caso. Clicar num cartão sai do palco e abre o cenário "
     "nas abas.")
-box("cuidado", "O slide 19 funciona como porta direta para os oito capítulos do Modo Apresentação (Capítulos 1 a 8) antes resumem os três blocos do Modo Apresentação "
+box("cuidado", "O slide 18 funciona como porta direta para os oito capítulos do Modo Apresentação (Capítulos 1 a 8) antes resumem os três blocos do Modo Apresentação "
     "(Capítulos 1 a 3, Capítulos 4 e 5, e Capítulos 6 a 8), servindo de roteiro visual antes "
     "de alternar para o navegador.")
 
@@ -62,7 +62,7 @@ n.p("Durante uma falta franca, a tensão no ponto do defeito vai a quase zero. A
     "quilômetro.")
 box("cuidado", "A régua é proporcional à tensão residual na Barra 2, mas nenhum número "
     "aparece de propósito (não está no TCC). A Barra 6 é a mais distante, não a 8. "
-    "<b>Reserva</b> sem painel: slide 17 (matriz).")
+    "<b>Reserva</b> sem painel: slide 16 (matriz).")
 
 # --- 2
 cap(2, "Energização do inversor", "§5.1 · Figura 5.3 · 2 passos", "02_energ_p2.png",
@@ -141,11 +141,11 @@ n.p("Na bifásica da B7, o erro passa de 90° em 17,8% do intervalo com a nomina
 box("prova", "<b>Por que não pôr um notch em 120 Hz?</b> Reduz a ondulação, mas um filtro "
     "dentro do laço também atrasa e reduz a banda, que é o recurso de que a recuperação "
     "precisa. A saída estrutural é separar as sequências antes do laço (DDSRF, DSOGI: "
-    "trabalho futuro, slide 21).")
+    "trabalho futuro, slide 20).")
 box("alem", "<b>Bifásica pior que monofásica:</b> é a ligação das redes de sequência do slide "
-    "17 (paralelo na bifásica, série na monofásica). <b>Pico em 60 Hz em algumas curvas:</b> "
+    "16 (paralelo na bifásica, série na monofásica). <b>Pico em 60 Hz em algumas curvas:</b> "
     "componente contínua transitória nas fases, vista em dq a 60 Hz (slide 6).")
-box("cuidado", "<b>Reserva</b>: slide oculto 26 (Fig. 5.10).")
+box("cuidado", "<b>Reserva</b>: slide oculto 25 (Fig. 5.10).")
 
 # --- 5
 cap(5, "Compromisso da sintonia", "§5.3 · Tabela 5.3 · Figura 5.14 · 3 passos",
@@ -159,14 +159,14 @@ box("passo", "<b>1.</b> Com a nominal, o 120 Hz da falta passa para o erro de fa
     "<b>3.</b> Aqui, o ganho menor parece vantagem. E numa falta mais severa? (sem foco)")
 sub("O que explicar")
 n.p("A perturbação na tensão é a mesma nas duas; o que muda é quanto dela chega ao ângulo. "
-    "Pela tabela do slide 11, a nominal deixa passar 0,63 do 120 Hz e a inadequada 0,13. Na "
+    "Pela tabela do slide 10, a nominal deixa passar 0,63 do 120 Hz e a inadequada 0,13. Na "
     "Barra 6 a tensão positiva que sobra (v<sub>d</sub> médio de 0,72 pu) sustenta o "
     "sincronismo, e a filtragem vence.")
 n.p("Mas o mesmo ganho menor deixa a recuperação lenta onde a tensão cai mais: na Barra 7 o "
     "retorno quase dobra (46 &#8594; 95 ms na monofásica, 51 &#8594; 96 ms na bifásica) e na "
     "trifásica da Barra 6 vai de 76 para 106 ms. <b>A frase-ponte do passo 3 é a virada da "
     "defesa</b>: o capítulo seguinte responde.")
-box("cuidado", "<b>Reserva</b>: slide oculto 27 (Fig. 5.14, Tab. 5.3) e apêndice 23.")
+box("cuidado", "<b>Reserva</b>: slide oculto 26 (Fig. 5.14, Tab. 5.3) e apêndice 22.")
 
 # --- 6
 cap(6, "Perda de sincronismo", "§5.4 · Figuras 5.18 e 5.19 · 3 passos", "06_sinc_p3.png",

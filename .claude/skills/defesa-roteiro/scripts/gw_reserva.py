@@ -5,19 +5,19 @@ from gw_util import *  # noqa: F401,F403
 
 
 def inject_defesa_qa_and_hidden_slides(wb: WordRoteiroBuilder, slides_jpg_fn):
-    """Adiciona no final da Parte V os slides ocultos 25-30 com fala de reserva e as 9 perguntas do defesa_qa.pdf."""
-    wb.h("Detalhamento dos Slides Ocultos de Reserva (Slides 24 a 29)")
+    """Adiciona no final da Parte V os slides ocultos 23-28 com fala de reserva e as 9 perguntas do defesa_qa.pdf."""
+    wb.h("Detalhamento dos Slides Ocultos de Reserva (Slides 23 a 28)")
     wb.p(
         "Caso o navegador falhe no dia da apresentação, estes 6 slides no final do PowerPoint "
         "substituem diretamente os Capítulos 2 a 7 do Modo Apresentação:"
     )
     hidden_meta = [
-        (24, "Energização (Reserva do Painel 2)", "§5.1 · Figura 5.3 · 34/40 ms vs. 42/79 ms"),
-        (25, "Faltas trifásicas (Reserva do Painel 3)", "§5.2 · Figura 5.7 e Tabela 5.1 · 9,2% a 58,4%"),
-        (26, "Sequência negativa e perda de sincronismo (Reserva dos Painéis 4 e 6)", "§5.3 e §5.4 · Figuras 5.10 e 5.18 · > 250× e 98 ms"),
-        (27, "Compromisso da sintonia nas assimétricas (Reserva do Painel 5)", "§5.3 · Figura 5.14 e Tabela 5.3 · 96,0° &#8594; 34,5° na B6; retorno dobra na B7"),
-        (28, "Dinâmica pós-falta e absorção de potência (Reserva do Painel 6)", "§5.4 · Figuras 5.20 e 5.21 · 66,8% do tempo absorvendo P (média −0,40 pu)"),
-        (29, "Conformidade com o Submódulo 2.10 do ONS (Reserva do Painel 7)", "§5.5 · Figura 2.2 e Tabela 5.2 · Q = 0,09 pu na Barra 7"),
+        (23, "Energização (Reserva do Painel 2)", "§5.1 · Figura 5.3 · 34/40 ms vs. 42/79 ms"),
+        (24, "Faltas trifásicas (Reserva do Painel 3)", "§5.2 · Figura 5.7 e Tabela 5.1 · 9,2% a 58,4%"),
+        (25, "Sequência negativa e perda de sincronismo (Reserva dos Painéis 4 e 6)", "§5.3 e §5.4 · Figuras 5.10 e 5.18 · > 250× e 98 ms"),
+        (26, "Compromisso da sintonia nas assimétricas (Reserva do Painel 5)", "§5.3 · Figura 5.14 e Tabela 5.3 · 96,0° &#8594; 34,5° na B6; retorno dobra na B7"),
+        (27, "Dinâmica pós-falta e absorção de potência (Reserva do Painel 6)", "§5.4 · Figuras 5.20 e 5.21 · 66,8% do tempo absorvendo P (média −0,40 pu)"),
+        (28, "Conformidade com o Submódulo 2.10 do ONS (Reserva do Painel 7)", "§5.5 · Figura 2.2 e Tabela 5.2 · Q = 0,09 pu na Barra 7"),
     ]
     for s_num, tit, ref in hidden_meta:
         wb.faixa("RESERVA", s_num, tit, ref, imagem=slides_jpg_fn(s_num))
@@ -38,7 +38,7 @@ def inject_defesa_qa_and_hidden_slides(wb: WordRoteiroBuilder, slides_jpg_fn):
          "limita a referência de corrente antes disso; e a impedância da rede foi observada variando a "
          "distância elétrica da falta (da Barra 7 à Barra 6) com nível de curto fixo."),
         ("3. Quais são os valores de Vcc, L1, L2, Cf e Rd que não estão no texto do Cap. 4?",
-         "Estão no modelo Simulink e no Slide 23 (Apêndice): V<sub>cc</sub> = 136,36 kV (1,5 &#215; 90,91 kV "
+         "Estão no modelo Simulink e no Slide 21 (Apêndice): V<sub>cc</sub> = 136,36 kV (1,5 &#215; 90,91 kV "
          "do cálculo para evitar sobremodulação do PWM na escala de 100 MW), L<sub>1</sub> = 30,42 mH, "
          "L<sub>2</sub> = 0,289 mH (L<sub>est</sub> = 30,71 mH), C<sub>f</sub> = 42,47 &#956;F e resistores "
          "de amortecimento passivo R<sub>d</sub> em série."),

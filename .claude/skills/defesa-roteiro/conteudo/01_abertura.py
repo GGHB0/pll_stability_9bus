@@ -7,7 +7,7 @@ n.p("O roteiro segue a apresentação na ordem real, uma página (ou mais) por s
     "slides 1 a 18 no PowerPoint, o slide 19 como porta para o painel HTML, os oito "
     "capítulos do <b>modo apresentação</b> e a volta ao PowerPoint nos slides 20 e 21. O "
     "apêndice do deck e os slides ocultos ficam no fim, como <b>conteúdo adicional</b>. Não "
-    "há texto de fala para decorar; na modelagem (slides 5 a 16), uma caixa <b>O que falar</b> "
+    "há texto de fala para decorar; na modelagem (slides 5 a 15), uma caixa <b>O que falar</b> "
     "dá os tópicos de cada um, na ordem e com quem fala.")
 n.p("Cada página tem a miniatura e, embaixo, blocos sempre na mesma ordem:")
 bul("<b>Mensagem</b>: a frase que o slide tem de deixar na cabeça da banca.",
@@ -28,14 +28,14 @@ n.h("O percurso")
 tab(["Trecho", "Onde", "Conteúdo", "Fala"], [
     ["Abertura", "PPTX 1", "Capa, autores, orientadores", "Bruno"],
     ["Motivação", "PPTX 2-4", "Renováveis, blecautes, problema e objetivos", "Bruno"],
-    ["Modelagem", "PPTX 5-16", "Inversor, Park, SRF-PLL, rede, sintonia, LCL, corrente, ONS",
+    ["Modelagem", "PPTX 5-15", "Inversor, Park, SRF-PLL, rede, sintonia, LCL, corrente, ONS",
      "alternada"],
-    ["Método", "PPTX 17-18", "Protocolo de falta e fluxo de análise", "Bruno, Victor"],
-    ["Porta", "PPTX 19", "Alt+Tab para o navegador, botão Modo apresentação", "Victor"],
+    ["Método", "PPTX 16-17", "Protocolo de falta e fluxo de análise", "Bruno, Victor"],
+    ["Porta", "PPTX 18", "Alt+Tab para o navegador, botão Modo apresentação", "Victor"],
     ["Resultados", "HTML 1-8", "Faltas destacadas ... Todos os casos (passador avança)",
      "a definir"],
-    ["Conclusão", "PPTX 20-21", "Síntese e trabalhos futuros", "Bruno, Victor"],
-    ["Adicional", "PPTX 22-29", "Apêndice e slides ocultos, para perguntas", "os dois"],
+    ["Conclusão", "PPTX 19-20", "Síntese e trabalhos futuros", "Bruno, Victor"],
+    ["Adicional", "PPTX 21-28", "Apêndice e slides ocultos, para perguntas", "os dois"],
 ], [2.3, 2.6, 7.6, 2.2])
 
 n.h("A história em cinco frases")

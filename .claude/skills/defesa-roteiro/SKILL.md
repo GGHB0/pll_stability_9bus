@@ -6,8 +6,8 @@ version: 1.0.0
 
 # Skill: defesa-roteiro
 
-Materiais de ensaio da defesa (30 min: PPTX 1-19 → palco do dashboard 1-8 →
-PPTX 20-21, mais apêndice e reserva 22-29). Tudo roda com o Python do `.venv`
+Materiais de ensaio da defesa (30 min: PPTX 1-18 → palco do dashboard 1-8 →
+PPTX 19-20, mais apêndice e reserva 21-28). Tudo roda com o Python do `.venv`
 do repo, sem subagente: serve igual para Claude Code, Antigravity ou outro agente.
 
 ## Estrutura
@@ -53,12 +53,12 @@ quatro materiais saem iguais depois de gerados de novo.
 
 | Pedido | Arquivo |
 |---|---|
-| Fala de um slide (1-19) | `falas/slides_*.py` / `falas/slide_19.py`: campo `falas` do slide |
+| Fala de um slide (1-18) | `falas/slides_*.py` / `falas/slide_19.py`: campo `falas` do slide |
 | Fala de um capítulo do palco | `falas/palco.py`: campo `falas` do capítulo |
-| Fala dos slides 20-21 ou fala curta do apêndice/reserva | `falas/conclusao.py` |
-| Fala completa de reserva (22-29), só no guia | `falas/reserva.py` |
+| Fala dos slides 19-20 ou fala curta do apêndice/reserva | `falas/conclusao.py` |
+| Fala completa de reserva (21-28), só no guia | `falas/reserva.py` |
 | Pontos a comentar, mensagem, tempo-alvo (`dur_s`), atenção | mesmo item em `falas/`: `pontos`, `msg`, `dur_s`, `atencao` |
-| Tópicos "O que falar" da modelagem (5-16) | `falas/topicos.py` |
+| Tópicos "O que falar" da modelagem (5-15) | `falas/topicos.py` |
 | Fundamentos, números, caixas de banca/cuidado, legendas | `conteudo/NN_*.py` (procurar `slide(N,` ou `cap(N,`) |
 | Cronograma de 30 min e mapa do TCC no guia | `scripts/gw_cronograma.py` |
 | Visual de um documento | `scripts/rf_*.py`, `scripts/gw_*.py`, `scripts/pdf_*.py` |

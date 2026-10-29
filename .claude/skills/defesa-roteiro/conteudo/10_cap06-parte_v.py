@@ -1,5 +1,5 @@
 # Executado por exec() pelo pdf.py e pelo guia.py, nesta ordem: não importar.
-n.p("É a equação do slide 12 com &#916;&#952; girando. Com a corrente comandada no eixo d:")
+n.p("É a equação do slide 11 com &#916;&#952; girando. Com a corrente comandada no eixo d:")
 eq(r"P = \frac{3}{2}V\,i_d\cos\Delta\theta",
    onde="Modelo qualitativo (despreza o i<sub>q</sub> do ONS e a variação de V): se "
         "&#916;&#952; varre todos os ângulos, cos&#916;&#952; troca de sinal e P oscila "
@@ -21,7 +21,7 @@ nums([["9,2% / 8,2%", "retenção de V<sub>d</sub>, nominal / inadequada"],
       ["66,8%", "tempo pós-falta absorvendo potência ativa, inadequada (média &#8722;0,40 pu)"]])
 box("cuidado", "A tabela de &#969;<sub>n,ef</sub> é conta de bolso (além do TCC). Os cartões "
     "do palco também mostram 44,0° (pico da inadequada) e 5,6% (P absorvida da nominal); o "
-    "número de fala é o 66,8%. <b>Reserva</b>: slides ocultos 26 e 28 (Figs. 5.18 a 5.21).")
+    "número de fala é o 66,8%. <b>Reserva</b>: slides ocultos 25 e 27 (Figs. 5.18 a 5.21).")
 
 # --- 7
 cap(7, "Código de rede", "§5.5 · Figuras 2.1 e 2.2 · Tabela 5.2 · 5 passos",
@@ -31,7 +31,7 @@ box("msg", "O inversor cumpre a letra do Submódulo 2.10 nas trifásicas, mas pe
     "conectado não basta.")
 sub("Os dois painéis")
 n.p("Esquerda: tensão da fase mais afundada no inversor contra a curva de suportabilidade "
-    "(Fig. 2.1). Direita: a rampa da Fig. 2.2 (slide 15), com o ponto de operação de cada "
+    "(Fig. 2.1). Direita: a rampa da Fig. 2.2 (slide 14), com o ponto de operação de cada "
     "caso (V médio, i<sub>q,ref</sub> médio).")
 tab(["Curva de suportabilidade (Fig. 2.1)", "Limite"], [
     ["inferior, de 0 a 0,5 s", "0,2 pu: abaixo disso a desconexão é permitida"],
@@ -65,7 +65,7 @@ imagem_palco("07_ons_p5.png", "Passo 5 de 5: cartão de fecho, a tese do trabalh
              "tela", alt=6.2)
 box("cuidado", "&#8220;Fora da região&#8221; da B7 e da L7-8 é leitura aprovada como exceção "
     "(o TCC não diz isso com essas palavras). As simulações acabam 0,3 s depois do início da "
-    "falta, então só o patamar de 0,2 pu da curva tem dado. <b>Reserva</b>: slide oculto 29.")
+    "falta, então só o patamar de 0,2 pu da curva tem dado. <b>Reserva</b>: slide oculto 28.")
 
 # --- 8
 cap(8, "Todos os casos", "Tabelas 5.1 a 5.3", "08_sintese.png",
@@ -74,13 +74,13 @@ box("msg", "Não é para apresentar linha por linha: é o ponto de apoio para as
 n.p("Cada linha tem a seção do TCC (§5.1 a §5.4), e clicar nela abre o cenário nas abas. As "
     "linhas &#8220;não retorna&#8221; são a Barra 7 e a Linha 7-8 trifásicas inadequadas. "
     "As Barras 4, 5, 8 e 9 não estão aqui, mas estão nas abas por cenário.")
-n.p("<b>Volta ao PowerPoint:</b> Esc (sai da tela cheia) e Alt+Tab para o slide 20.")
+n.p("<b>Volta ao PowerPoint:</b> Esc (sai da tela cheia) e Alt+Tab para o slide 19.")
 
 # =============================================================================
 # PARTE IV
 # =============================================================================
 parte("PARTE IV · De volta ao PowerPoint")
-slide(20, "Síntese dos resultados", "Conclusão", "Bruno, Victor, Bruno, Victor", "Cap. 6")
+slide(19, "Síntese dos resultados", "Conclusão", "Bruno, Victor, Bruno, Victor", "Cap. 6")
 box("msg", "O sincronismo do SRF-PLL é uma decisão de estabilidade do sistema elétrico.")
 sub("Os três pontos de apoio à conclusão")
 bul("<b>1. Faltas simétricas</b>: com a sintonia nominal, o SRF-PLL reconverge em todos os "
@@ -101,12 +101,12 @@ n.p("A classificação clássica de estabilidade (ângulo, frequência, tensão)
 box("banca", "<b>Qual é a conclusão central?</b> Permanecer conectado é insuficiente: a "
     "conformidade deve auditar o erro angular dinâmico durante a falta e em toda a "
     "recomposição.")
-box("cuidado", "No slide 20, os três cartões destacam diretamente os três pontos conceituais "
+box("cuidado", "No slide 19, os três cartões destacam diretamente os três pontos conceituais "
     "de apoio à conclusão (sem números isolados no topo), pois todos os indicadores quantitativos "
     "acabaram de ser percorridos no painel interativo.")
 ponte("o que fica para depois.")
 
-slide(21, "Trabalhos futuros e encerramento", "Conclusão", "Victor, Bruno, Victor", "Cap. 7")
+slide(20, "Trabalhos futuros e encerramento", "Conclusão", "Victor, Bruno, Victor", "Cap. 7")
 box("msg", "Dois eixos dão continuidade ao estudo, a partir dos limites deste trabalho.")
 sub("Eixo 1: estruturas de sincronismo")
 n.p("A fragilidade do capítulo 4 vem de o SRF-PLL misturar as duas sequências no mesmo "
@@ -134,11 +134,11 @@ ponte("agradecimento e abertura para perguntas, com o painel aberto.")
 # PARTE V
 # =============================================================================
 parte("PARTE V · Conteúdo adicional",
-      "O apêndice do deck (slides 22 e 23) e os slides ocultos (24 a 29) não fazem parte da "
+      "O apêndice do deck (slides 21 e 22) e os slides ocultos (23 a 28) não fazem parte da "
       "apresentação. Servem de apoio quando a banca pergunta algo que pede número de "
       "parâmetro ou a tabela completa. Vale conhecê-los para saber que existem e onde estão.")
 
-slide(22, "Parâmetros: rede, filtro LCL e controle", "Apêndice", "não tem fala",
+slide(21, "Parâmetros: rede, filtro LCL e controle", "Apêndice", "não tem fala",
       "Cap. 3 e 4")
 box("msg", "Todos os parâmetros do modelo num slide: base do sistema, conversor, Thévenin, "
     "filtro LCL e ganhos das duas malhas.")
@@ -156,7 +156,7 @@ box("cuidado", "Vários desses valores não estão no TCC (são do modelo). Por 
     "V<sub>cc</sub> é 1,5 vezes o do cálculo: com o valor do cálculo, o PWM senoidal "
     "sobremodulava na escala de 100 MW.")
 
-slide(23, "Tabelas 5.1, 5.2 e 5.3 completas", "Apêndice", "não tem fala", "Cap. 5")
+slide(22, "Tabelas 5.1, 5.2 e 5.3 completas", "Apêndice", "não tem fala", "Cap. 5")
 box("msg", "As três tabelas do Cap. 5 num slide: trifásicas com o suporte do ONS e "
     "assimétricas nas duas sintonias.")
 n.p("É a mesma informação do capítulo 8 do painel, em formato de slide. Use quando o painel "
@@ -169,12 +169,12 @@ box("cuidado", "O cartão da esquerda menciona um ganho efetivo &#8220;12 vezes&
 
 n.h("Slides ocultos: a reserva do painel")
 tab(["Slide", "Substitui o capítulo", "Conteúdo"], [
-    ["24", "2 · Energização", "Fig. 5.3, 34/40 ms e 42/79 ms"],
-    ["25", "3 · Localização", "Fig. 5.7 e Tabela 5.1"],
-    ["26", "4 · Sequência negativa", "Figs. 5.10 e 5.18, 250&#215;, 98 ms"],
-    ["27", "5 · Compromisso", "Fig. 5.14 e a parte assimétrica da Tabela 5.3"],
-    ["28", "6 · Perda de sincronismo", "Figs. 5.20 e 5.21, 66,8%, média &#8722;0,40 pu"],
-    ["29", "7 · Código de rede", "Fig. 2.2 e Tabela 5.2, 0,09 pu"],
+    ["23", "2 · Energização", "Fig. 5.3, 34/40 ms e 42/79 ms"],
+    ["24", "3 · Localização", "Fig. 5.7 e Tabela 5.1"],
+    ["25", "4 · Sequência negativa", "Figs. 5.10 e 5.18, 250&#215;, 98 ms"],
+    ["26", "5 · Compromisso", "Fig. 5.14 e a parte assimétrica da Tabela 5.3"],
+    ["27", "6 · Perda de sincronismo", "Figs. 5.20 e 5.21, 66,8%, média &#8722;0,40 pu"],
+    ["28", "7 · Código de rede", "Fig. 2.2 e Tabela 5.2, 0,09 pu"],
 ], [1.6, 5.0, 8.1])
 n.p("Se o navegador falhar, mostre esses slides na ordem da tabela (indo direto pelo número) "
     "e siga o mesmo roteiro da Parte III.")

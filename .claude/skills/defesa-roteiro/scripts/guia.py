@@ -29,7 +29,7 @@ def main():
     wb.add_header_banner(
         title="Roteiro e Guia Completo de Estudo da Defesa (30 Minutos)",
         subtitle="Slide a slide e capítulo a capítulo, na ordem em que a apresentação acontece "
-                 "(PPTX 1–20, Painel HTML Modo Apresentação 1–8 e volta ao PPTX 21–22), com os "
+                 "(PPTX 1–18, Painel HTML Modo Apresentação 1–8 e volta ao PPTX 19–20), com os "
                  "fundamentos de cada tema, a sequência do TCC e as falas completas cronometradas",
         meta_left="<b>Victor Hugo de Avelar Rezende e Bruno Henrique de Oliveira</b><br/>"
                   "Comportamento do SRF-PLL de Inversores Frente a Contingências em Sistemas Elétricos",

@@ -1,9 +1,9 @@
-"""Falas e pontos dos slides 10 a 18 (fonte única)."""
+"""Falas e pontos dos slides 9 a 17 (fonte única)."""
 
 SLIDES_10_18 = [
     {
         "tipo": "SLIDE",
-        "num": 10,
+        "num": 9,
         "titulo": "Sintonia do PLL",
         "bloco": "Modelagem",
         "tcc": "§3.4, Eqs. (3.10)-(3.20)",
@@ -24,7 +24,7 @@ SLIDES_10_18 = [
     },
     {
         "tipo": "SLIDE",
-        "num": 11,
+        "num": 10,
         "titulo": "Duas sintonias do PLL",
         "bloco": "Modelagem",
         "tcc": "§3.4 (eq. 3.20), §4.3",
@@ -43,7 +43,7 @@ SLIDES_10_18 = [
     },
     {
         "tipo": "SLIDE",
-        "num": 12,
+        "num": 11,
         "titulo": "Referência de corrente",
         "bloco": "Modelagem",
         "tcc": "§3.1.3-3.1.4, Eqs. (3.8)-(3.9)",
@@ -62,7 +62,7 @@ SLIDES_10_18 = [
     },
     {
         "tipo": "SLIDE",
-        "num": 13,
+        "num": 12,
         "titulo": "Filtro LCL",
         "bloco": "Modelagem",
         "tcc": "§4.3.2 e §4.3.2.1",
@@ -77,11 +77,11 @@ SLIDES_10_18 = [
             ("Bruno", "Antes de fechar a malha de corrente, dimensionamos o filtro LCL que conecta o inversor à Barra 2, seguindo quatro passos. No circuito à esquerda, o inversor chaveia a 5 quilohertz. Nos passos 1 e 2 à direita, o indutor L1 é fixado pelo limite de ondulação da corrente na saída das chaves e L2 é tomado proporcional a L1, resultando na indutância equivalente Lest de 30,71 milihenrys."),
             ("Victor", "No passo 3, o capacitor posiciona a frequência de ressonância em 9.068,99 radianos por segundo: como mostra a régua, numa faixa intermediária segura entre os 60 hertz da rede e os 5 quilohertz do chaveamento. No passo 4, inserimos resistências de amortecimento passivo iguais a 5% da reatância de cada ramo em 60 hertz: 0,5734, 0,0054 e 3,1228 ohms, suprimindo o pico de ressonância, enquanto o barramento CC é mantido constante para garantir a margem de modulação."),
         ],
-        "atencao": "Citar apenas os números que estão na tela (L_est = 30,71 mH, ω_res = 9.068,99 rad/s, R_d1/R_d2/R_d3, 60 Hz e 5 kHz). Os valores individuais de L_1, L_2, C e V_cc ficam apenas para perguntas no Apêndice (Slide 22).",
+        "atencao": "Citar apenas os números que estão na tela (L_est = 30,71 mH, ω_res = 9.068,99 rad/s, R_d1/R_d2/R_d3, 60 Hz e 5 kHz). Os valores individuais de L_1, L_2, C e V_cc ficam apenas para perguntas no Apêndice (Slide 21).",
     },
     {
         "tipo": "SLIDE",
-        "num": 14,
+        "num": 13,
         "titulo": "Controle de corrente",
         "bloco": "Modelagem",
         "tcc": "Fig. 3.1, §3.5 (Eqs. 3.21-3.23), §4.3.2",
@@ -100,7 +100,7 @@ SLIDES_10_18 = [
     },
     {
         "tipo": "SLIDE",
-        "num": 15,
+        "num": 14,
         "titulo": "Submódulo 2.10 do ONS",
         "bloco": "Modelagem",
         "tcc": "Fig. 2.2, §2.5.2, §4.3.2, §5.2",
@@ -119,7 +119,7 @@ SLIDES_10_18 = [
     },
     {
         "tipo": "SLIDE",
-        "num": 16,
+        "num": 15,
         "titulo": "Sistema completo",
         "bloco": "Modelagem",
         "tcc": "Fig. 4.2, §4.3.2",
@@ -134,11 +134,11 @@ SLIDES_10_18 = [
         "falas": [
             ("Bruno", "Juntando então todas essas partes, chegamos ao nosso modelo completo, que foi utilizado em todas as simulações, como mostra a Figura 4.2 do TCC.\n\nNa parte superior, temos a etapa de potência, com o inversor, o filtro LCL e o ponto de acoplamento da Barra 2. Na parte inferior, o controle digital, onde tudo se conecta: o SRF-PLL entrega o ângulo, o Submódulo 2.10 define as referências de corrente a partir da tensão, e as malhas de controle geram a modulação.\n\nCom o modelo fechado, passamos agora para o nosso método de teste, para ver como as contingências vão testar esse nosso SRF-PLL."),
         ],
-        "atencao": "Slide de fechamento da Modelagem: transição direta para o Método de Teste (Slide 17).",
+        "atencao": "Slide de fechamento da Modelagem: transição direta para o Método de Teste (Slide 16).",
     },
     {
         "tipo": "SLIDE",
-        "num": 17,
+        "num": 16,
         "titulo": "Protocolo de contingência",
         "bloco": "Método",
         "tcc": "§4.3.4, Tab. 4.1, §5.2",
@@ -157,7 +157,7 @@ SLIDES_10_18 = [
     },
     {
         "tipo": "SLIDE",
-        "num": 18,
+        "num": 17,
         "titulo": "Fluxo de análise",
         "bloco": "Método",
         "tcc": "§4.3.3; métricas em §5.1-5.3",
@@ -168,7 +168,7 @@ SLIDES_10_18 = [
             ("Bruno", "Quatro cartões superiores (1. Simulink → 2. Arquivos CSV → 3. Python → 4. Painel interativo): cada cenário exporta tensões, correntes, P, Q e variáveis internas do SRF-PLL; o script em Python (pandas nos dados, Plotly nos gráficos) processa os dados de forma padronizada até gerar o painel interativo."),
             ("Bruno", "Cartão 4: o painel (HTML, CSS e JavaScript) foi construído com um agente de IA num modelo de harness: regras, ferramentas e verificações definidas por nós, cada número conferido contra a simulação."),
             ("Victor", "Tabela das 5 métricas: (1) Retenção de V_d (% do valor pré-falta durante a falta, ex.: 9,2% na Barra 7 nominal); (2) Pico do erro de fase |Δθ| na falta após descartar o 1º ciclo; (3) Tempo de retorno definitivo à faixa de ±2° contado da eliminação em 0,4 s; (4) Componente de 120 Hz extraída pela FFT de V_d na janela de 6 ciclos da falta (resolução de 10 Hz); e (5) Potências P e Q médias na falta."),
-            ("Bruno", "Rodapé ('Dos dados aos resultados'): fazer a ponte direta para o Slide 19 e a abertura do painel ao vivo."),
+            ("Bruno", "Rodapé ('Dos dados aos resultados'): fazer a ponte direta para o Slide 18 e a abertura do painel ao vivo."),
         ],
         "falas": [
             ("Bruno", "Antes de abrir os resultados, veja como eles foram extraídos. Ao fim de cada simulação, o Simulink exporta os sinais em duas taxas de amostragem; um código em Python, com a biblioteca pandas no tratamento dos dados e a Plotly nos gráficos, alinha as duas num eixo de tempo comum e calcula os mesmos indicadores para todos os cenários, sem nenhuma leitura manual no gráfico."),
@@ -178,5 +178,5 @@ SLIDES_10_18 = [
         "atencao": "Saber explicar por que a FFT na janela de 0,1 s (6 ciclos) é exata em 120 Hz: Δf = 1/0,1 s = 10 Hz, então 60 e 120 Hz caem exatamente em bins inteiros sem vazamento espectral.",
     },
     # -------------------------------------------------------------------------
-    # PARTE II: SLIDE 19 (PORTA PARA O PAINEL)
+    # PARTE II: SLIDE 18 (PORTA PARA O PAINEL)
 ]

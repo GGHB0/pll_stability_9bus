@@ -10,6 +10,15 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-10-28 (noite): V_dc → V_cc na figura do slide 5 (entregue)
+
+- Pedido do usuário: padronizar corrente contínua como "cc". Só o subscrito
+  em `assets/diagrams/vsi_grid_blocos_defesa.svg`; PNG reexportado (3420×1035)
+  e trocado na moldura por `troca_imagem.py`. Staging `C:\Temp\defesa_cc\`.
+  MD5 938f4ce7… → ad173d7c6c2c2d371cc95844b5523066; backup `_20261028_234806`.
+- diff: só a imagem do slide 5; check_pptx 0 falhas. A Fig. 3.2 do TCC
+  (`vsi_grid_blocos.svg`) segue com V_dc.
+
 ## 2026-10-28: ONS enxugado em 2 slides (15-16) e Conclusão (20) focada nos 3 pontos (entregue)
 
 - Pedido do usuário: (1) condensar a sequência ONS + Sistema completo em 2 slides

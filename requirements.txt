@@ -16,3 +16,5 @@ six==1.17.0
 tzdata==2026.2
 python-pptx==1.0.2
 playwright==1.64.1
+python-docx==1.2.0
+edge-tts==7.3.1

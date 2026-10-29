@@ -70,11 +70,12 @@ saiu e hoje ele abre no **Resumo**, com os capítulos do Cap. 5 só no botão
 
 ## Roteiro de estudo (PDF)
 
-`scripts/notas/gen_roteiro_estudo_defesa.py` → `output/roteiro_estudo_defesa.pdf`
+Skill [defesa-roteiro](../../skills/defesa-roteiro/SKILL.md) (`gerar.py pdf`, desde
+2026-10-28; antes `scripts/notas/gen_roteiro_estudo_defesa.py`) → `output/roteiro_estudo_defesa.pdf`
 (2026-10-25): slide a slide e capítulo a capítulo do palco, na ordem PPTX 1-19 →
 slide 20 → palco 1-8 → PPTX 21-22 → apêndice, sem fala decorada; na
 modelagem (5-17) a caixa "O que falar" dá os tópicos por pessoa, tirados das
-notas do deck e apontando para a parte do slide (dicionário `FALAS`; mudou a
+notas do deck e apontando para a parte do slide (`falas/topicos.py` da skill; mudou a
 nota ou a posição de um cartão → ajustar ali). Miniaturas: slides
 renderizados pelo `render.ps1` em `C:\Temp\defesa_roteiro\png` e prints de
 `output/verifica_palco/1920x1080/`. Mudou o deck ou o palco → renderizar de

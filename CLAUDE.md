@@ -30,7 +30,7 @@ em inversores conectados à rede sob contingências severas, motivado pela pertu
 | `output/` | Gerado em runtime, não versionado (`results/`, `pll_metrics.html`) |
 | [assets/](assets/) | Diagramas, gráficos, banner |
 | [CHANGELOG.md](CHANGELOG.md), [docs/changelog/](docs/changelog/) | Histórico de mudanças do dashboard |
-| [.claude/](.claude/INDEX.md) | Base de conhecimento, skills, agentes, regras |
+| [.claude/](.claude/INDEX.md) | Base de conhecimento, skills, agentes, regras. Skill = `.claude/skills/<nome>/SKILL.md`: qualquer agente (Claude Code, Antigravity) lê o do tema antes da tarefa |
 
 ## Fluxo de trabalho
 

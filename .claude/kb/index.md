@@ -32,6 +32,7 @@ Mapa de relações entre pastas: [grafo.md](grafo.md)
 ## Skills
 
 - [dashboard-html-editor](../skills/dashboard-html-editor/SKILL.md) — [historico](../skills/dashboard-html-editor/historico.md) · [previa-standalone](../skills/dashboard-html-editor/previa-standalone.md)
+- [defesa-roteiro](../skills/defesa-roteiro/SKILL.md)
 - [pdf-kb-updater](../skills/pdf-kb-updater/SKILL.md) — [examples](../skills/pdf-kb-updater/examples.md) · [scripts](../skills/pdf-kb-updater/scripts.md) · [section-maps](../skills/pdf-kb-updater/section-maps.md)
 - [slx-explorer](../skills/slx-explorer/SKILL.md)
 - [slx-runner](../skills/slx-runner/SKILL.md)

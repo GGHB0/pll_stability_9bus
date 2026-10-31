@@ -10,6 +10,19 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-10-31 — Revisão da banca examinadora (Prof. Cleiton) com alterações em vermelho
+
+Atendimento integral aos apontamentos do Prof. Cleiton (leitura, apresentação oral e anotações a caneta no PDF). 100% das alterações ressaltadas na cor VERMELHA (#FF0000):
+- Padrão UERJ: Introdução e Conclusão sem indicativo numérico, seções 1 a 4 em caixa alta, Trabalhos Futuros como subseção da Conclusão.
+- Seção 2.3.2: Deslocamento da arquitetura de controle, explicação da divisão dos ganhos por 4 (Zbase = 4,0 Ω) e remissões corrigidas das Figuras 2.1 e 2.2.
+- Seção 3.3.1: Cálculo formal de Scc = 914,2 MVA, SCR = 9,14 e classificação de rede forte (IEEE Std 1204 / CIGRE TB 671).
+- Seções 2.4 e 3.3.2.3: Formulação analítica de largura de banda do SRF-PLL (Teodorescu) e valores nominais (106,5 Hz) e inadequados (38,5 Hz).
+- Seções 1.5.2 e 3.3.2: Lógica do Submódulo 2.10 do ONS (Figura 3.3), priorização de corrente reativa com saturação quadrática e renumeração da Figura 3.4.
+- Conclusão: Premissa de elo CC ideal e linha de MPPT/controle CC em Trabalhos Futuros.
+- Apêndice A: Painel interativo com visão geral e sequência de telas guiadas em 1080p (Figuras A.1 a A.5).
+- Referências, pontuação e texto: 5 novas referências (CEN, Gu & Green, IEA, Kundur, GitHub), pontuação nas Equações (3.1) a (3.23), termos em itálico e correções textuais.
+Backup datado em _backups\Revisao_Banca_Cleiton_Vermelho_Total.
+
 ## 2026-10-25 — Sigla de transitórios eletromagnéticos fora do TCC (pedido do Oscar)
 
 5 trocas no VFinal, todas em texto bruto: Resumo ("simulação computacional

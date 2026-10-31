@@ -49,12 +49,12 @@ checklist = [
     ("4.1", "Pontuação Eq (3.1) a (3.23)", 'w:val="FF0000"/><w:szCs w:val="24"/></w:rPr><m:t>.</m:t></m:r></m:oMath>'),
 
     # 5. Potência de Curto-Circuito e SCR (Leitura 6)
-    ("5.1", "Cálculo Scc = 914,2 MVA e SCR = 9,14", "SCR = Scc / Pinv,nom = 914,2 MVA / 100 MVA = 9,14"),
-    ("5.2", "Normas IEEE Std 1204 e CIGRE TB 671", "IEEE Std 1204-1997 e CIGRE Technical Brochure 671"),
+    ("5.1", "Cálculo Scc = 914,2 MVA e SCR = 9,14", "SCR = Scc / Pinv,nom = 9,14"),
+    ("5.2", "Normas IEEE Std 1204 e CIGRE TB 671", "IEEE Std 1204-1997 e CIGRE TB 671"),
 
     # 6. Elo CC como Bateria (Defesa 1)
     ("6.1", "Premissa de bateria ideal 800 V (Seção 3.3.2)", "fonte de tensão ideal de 800 V (bateria)"),
-    ("6.2", "Trabalhos Futuros: MPPT e lado CC", "modelagem integrada do lado CC da planta fotovoltaica"),
+    ("6.2", "Trabalhos Futuros: MPPT e lado CC", "modelagem integrada do lado CC"),
 
     # 7. Largura de Banda do PLL (Defesa 3)
     ("7.1", "Fórmula analítica de Teodorescu (Seção 2.4)", "Teodorescu, Liserre e Rodríguez (2011, §4.2.2.3, p. 56)"),
@@ -71,14 +71,14 @@ checklist = [
 
     # 9. Apêndice A (Defesa 5)
     ("9.1", "Título do Apêndice A", "APÊNDICE A – PAINEL INTERATIVO DE ANÁLISE DINÂMICA"),
-    ("9.2", "Texto introdutório do ecossistema Python / Plotly", "ecossistema processa os dados transitórios"),
+    ("9.2", "Texto introdutório do ecossistema Python / Plotly", "desenvolveu-se um painel interativo web em Python e Plotly"),
     ("9.3", "Legenda da Figura A.1 e Fonte", "Figura A.1 – Interface do painel interativo de métricas"),
     ("9.4", "Subseção B (Sequência de Telas do Modo Apresentação)", "B. Sequência de Telas do Modo Apresentação no Texto"),
     ("9.5", "Figuras A.2 a A.5 com narrativas e legendas", "Figura A.2 – Módulo de animação fasorial"),
     ("9.6", "Citação do Repositório GitHub", "https://github.com/bruno-victor-uerj/pll-stability-dashboard"),
 
     # 10. Transição Barra 6 vs Barra 7 (Leitura/Defesa)
-    ("10.1", "Texto do paradoxo de controle Barra 6 vs 7", "A comparação entre as faltas aplicadas na Barra 6 e na Barra 7 sintetiza esse paradoxo"),
+    ("10.1", "Texto do paradoxo de controle Barra 6 vs 7", "A comparação entre as Barras 6 e 7 ilustra o paradoxo da sintonia"),
 
     # 11. Correções do PDF / Tablet
     ("11.1", "Pág. 16: geração renovável variável", "fontes de geração renovável variável apresentam"),

@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "Se usar este software, cite-o conforme os metadados abaixo."
+type: software
+title: "Painel interativo para análise dinâmica do SRF-PLL sob contingências em redes elétricas"
+abstract: >-
+  Modelo MATLAB/Simulink do sistema IEEE 9 barras com inversor fotovoltaico
+  na Barra 2 e painel interativo em Python (pandas e Plotly) que calcula os
+  indicadores de desempenho do SRF-PLL (erro de fase, retenção da tensão de
+  eixo direto, componente de 120 Hz, tempo de acomodação) e a conformidade
+  com o Submódulo 2.10 do ONS em faltas simétricas e assimétricas. Trabalho
+  de Conclusão de Curso em Engenharia Elétrica, UERJ, 2026.
+authors:
+  - family-names: "Oliveira"
+    given-names: "Bruno Henrique de"
+    affiliation: "Universidade do Estado do Rio de Janeiro"
+  - family-names: "Rezende"
+    given-names: "Victor Hugo de Avelar"
+    affiliation: "Universidade do Estado do Rio de Janeiro"
+version: "1.0"
+repository-code: "https://github.com/GGHB0/pll_stability_9bus"
+keywords:
+  - SRF-PLL
+  - inversores conectados à rede
+  - IEEE 9 barras
+  - faltas assimétricas
+  - sequência negativa
+  - MATLAB/Simulink

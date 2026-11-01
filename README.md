@@ -11,6 +11,7 @@
   <img alt="Jupyter Notebook" src="https://img.shields.io/badge/Jupyter-Notebook-F37626?style=for-the-badge&logo=jupyter&logoColor=white">
   <img alt="Plotly" src="https://img.shields.io/badge/Plotly-Interactive-3F4F75?style=for-the-badge&logo=plotly&logoColor=white">
   <img alt="Power Systems" src="https://img.shields.io/badge/IEEE-9%20Barras-0F766E?style=for-the-badge">
+  <a href="https://doi.org/10.5281/zenodo.23866787"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.23866787.svg" alt="DOI"></a>
 </p>
 
 **TCC — Engenharia Elétrica (Sistemas de Potência)**
@@ -328,7 +329,7 @@ Em formato ABNT:
 > OLIVEIRA, Bruno Henrique de; REZENDE, Victor Hugo de Avelar. **Painel
 > interativo para análise dinâmica do SRF-PLL sob contingências em redes
 > elétricas**. Versão 1.0. Rio de Janeiro: UERJ, 2026. Disponível em:
-> <https://github.com/GGHB0/pll_stability_9bus>.
+> <https://github.com/GGHB0/pll_stability_9bus>. DOI: 10.5281/zenodo.23866787.
 
 ---
 

@@ -17,7 +17,12 @@ authors:
     given-names: "Victor Hugo de Avelar"
     affiliation: "Universidade do Estado do Rio de Janeiro"
 version: "1.0"
+doi: "10.5281/zenodo.23866787"
+date-released: "2026-11-01"
 repository-code: "https://github.com/GGHB0/pll_stability_9bus"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23866787"
 keywords:
   - SRF-PLL
   - inversores conectados à rede

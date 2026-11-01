@@ -54,3 +54,13 @@ Atendendo às solicitações da banca e ajustes identificados:
 - **Item 4 (Harmonização da Seção 2.5 com Seção 2.3.2)**: Parágrafos 535 e 536 atualizados para refletir que os controladores PI possuem filtro notch e não desacoplamento ativo, tratando o acoplamento cruzado e a rede como perturbações e modelando a planta equivalente puramente indutiva para sintonia (em total alinhamento com a Figura 2.2 e [[agp-current-control-theory]]).
 - **Item 1 (Escolha do SRF-PLL - Prof. Rafael, Comentário 4)**: Inserido parágrafo na Seção 2.4 justificando a opção pelo SRF-PLL sobre DSOGI-PLL e DDSRF-PLL (padrão comercial dominante em grid-following, menor demanda computacional e linha de base para contingências severas), formatado em azul (#0070C0), e incluída a sigla DSOGI-PLL na Lista de Siglas.
 - **Validação**: audit_docx 0 falhas, 0 avisos; diff_texto com 4 trechos (899 -> 901 parágrafos). Backup em _backups\VF\TCC_Victor_Bruno_VFinal_backup_20261101_165411.docx.
+
+## Registro do DOI Zenodo e Repositório GitHub (17h11)
+
+- **DOI Oficial**: [10.5281/zenodo.23866787](https://doi.org/10.5281/zenodo.23866787).
+- **Repositório Oficial**: https://github.com/GGHB0/pll_stability_9bus.
+- **Seção 3.3.3**: Citação (OLIVEIRA; REZENDE, 2026) e remissão ao Apêndice A em azul (#0070C0).
+- **Referências Bibliográficas**: Entrada formatada em ABNT com link oficial do GitHub e DOI permanente.
+- **Apêndice A**: Atualizado o parágrafo final com o repositório e DOI.
+- **CITATION.cff e README.md**: Metadados de citação atualizados e badge do DOI adicionado.
+- **Auditoria**: audit_docx 0 falhas, 0 avisos; diff_texto com 3 trechos (901 parágrafos mantidos). Backup datado em _backups\VF\TCC_Victor_Bruno_VFinal_backup_20261101_171104.docx.

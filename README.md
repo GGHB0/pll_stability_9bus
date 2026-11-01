@@ -63,7 +63,7 @@ aparece no centro do problema, e o algoritmo mais usado para isso é o
 Analisar o desempenho dinâmico do SRF-PLL de um inversor fotovoltaico
 conectado à rede frente a faltas simétricas e assimétricas, avaliando o
 rastreamento de fase, a injeção de potência e o suporte de reativo exigido
-pelo ONS, com a sintonia nominal do PLL e com uma sintonia inadequada.
+pelo ONS, com a sintonia nominal do PLL e com uma sintonia lenta.
 
 ---
 
@@ -109,10 +109,10 @@ junto com o filtro LCL e os ganhos dos controladores.
 
 O VSI alimenta o filtro **LCL**, que se conecta à rede pelo equivalente de
 Thévenin da Barra 2. O SRF-PLL lê a tensão trifásica no PCC e devolve o ângulo
-estimado θ̂ ao controle de corrente.
+estimado θ<sub>PLL</sub> ao controle de corrente.
 
 <p align="center">
-  <img src="assets/diagrams/pll_system_circuit.svg" alt="Circuito unifilar do inversor grid-tied com filtro LCL e amostragem do PCC pelo SRF-PLL" width="100%">
+  <img src="assets/diagrams/pll_system_circuit.svg" alt="Unifilar do inversor: VSI, filtro LCL, Thévenin da Barra 2 e rede; o SRF-PLL mede v_abc no PCC e devolve θ_PLL ao controle de corrente" width="100%">
 </p>
 
 ### Sistema completo: potência e controle digital
@@ -127,7 +127,7 @@ lógica do Submódulo 2.10 gerando `id_ref`/`iq_ref`, PIs de corrente em dq e PW
 ### Laço do SRF-PLL
 
 O detector de fase é a própria transformada de Park: o PI zera `v_q`, e quando
-`v_q → 0` vale `θ̂ → θ` e `v_d → U`. A malha é de **tipo 2** (integrador do PI
+`v_q → 0` vale `θ_PLL → θ` e `v_d → U`. A malha é de **tipo 2** (integrador do PI
 mais o integrador do VCO), então rastreia degrau de frequência sem erro em regime.
 
 <p align="center">
@@ -138,7 +138,7 @@ mais o integrador do VCO), então rastreia degrau de frequência sem erro em reg
 
 Afundamento simétrico reduz `U` e, com ele, o ganho do laço. Afundamento
 assimétrico injeta sequência negativa, que aparece em dq como oscilação de
-**120 Hz** em `v_q` e contamina θ̂.
+**120 Hz** em `v_q` e contamina θ<sub>PLL</sub>.
 
 <p align="center">
   <img src="assets/diagrams/contingencies_attack.svg" alt="Afundamento simétrico e assimétrico: tensões abc no PCC e o que o PLL enxerga em dq (v_d e v_q)" width="100%">
@@ -150,17 +150,17 @@ assimétrico injeta sequência negativa, que aparece em dq como oscilação de
 
 Antes da rede de 9 barras, o SRF-PLL foi testado no PSIM entre duas fontes
 ideais. Com tempo de acomodação de 20 ms chegou-se à **sintonia nominal**. A
-**sintonia inadequada** reduz Kp e Ki em 80% e representa um PLL lento e
+**sintonia lenta** reduz Kp e Ki em 80% e representa um PLL lento e
 subamortecido.
 
 | Sintonia | Kp | Ki | ωn (rad/s) | ξ |
 |---|---|---|---|---|
 | Nominal | 460 | 105 820 | 325,3 | 0,707 |
-| Inadequada (×0,2) | 92 | 21 164 | 145,5 | 0,316 |
+| Lenta (×0,2) | 92 | 21 164 | 145,5 | 0,316 |
 
 Como o laço é normalizado por uma tensão constante, ωn e ξ caem com √U durante
 um afundamento. Com U = 0,2 pu, os ganhos nominais equivalem exatamente à
-sintonia inadequada: o cenário inadequado não é artificial, é o que um PLL
+sintonia lenta: o cenário lento não é artificial, é o que um PLL
 nominal enxerga numa falta profunda.
 
 > Os ganhos do PI do PLL são independentes dos ganhos do controlador de
@@ -170,7 +170,7 @@ nominal enxerga numa falta profunda.
 
 ## Cenários simulados
 
-| Local da falta | Sintonia nominal | Sintonia inadequada |
+| Local da falta | Sintonia nominal | Sintonia lenta |
 |---|---|---|
 | Barras 4, 5, 8, 9 | 1φ-terra, 2φ, 3φ | — |
 | Barras 6 e 7 | 1φ-terra, 2φ, 3φ | 1φ-terra, 2φ, 3φ |
@@ -178,7 +178,7 @@ nominal enxerga numa falta profunda.
 | Linha 8-9 | 3φ | — |
 | Regime (sem falta) | energização | energização |
 
-São 29 cenários válidos: 21 com a sintonia nominal e 8 com a inadequada.
+São 29 cenários válidos: 21 com a sintonia nominal e 8 com a lenta.
 Protocolo: falta aplicada em **0,3 s**, eliminada em **0,4 s** (100 ms) e
 observação até **0,6 s**. Cada rodada é validada por
 `scripts/validar_cenarios.py`, que reprova cópias e assinaturas incoerentes
@@ -207,7 +207,7 @@ IEEE 1547-2018 entra como referência de suportabilidade no dashboard.
   <img src="assets/diagrams/ons_reactive_current_curve.svg" alt="Injeção de corrente reativa sob defeito (ONS Submódulo 2.10)" width="80%">
 </p>
 
-A conformidade depende do PLL: se θ̂ está errado, a corrente "reativa" é
+A conformidade depende do PLL: se θ<sub>PLL</sub> está errado, a corrente "reativa" é
 injetada na direção errada mesmo com a lógica de suporte ativa.
 
 ---
@@ -216,14 +216,14 @@ injetada na direção errada mesmo com a lógica de suporte ativa.
 
 - **Inicialização do sistema:** geradores, rede e inversor partem juntos em
   t = 0, e o PLL sincroniza com as duas sintonias (erro de fase dentro de 2°
-  em 40 ms com a nominal e em 79 ms com a inadequada).
+  em 40 ms com a nominal e em 79 ms com a lenta).
 - **Faltas trifásicas:** quanto mais próxima da Barra 2, mais severa. Com a
   sintonia nominal, o PLL sempre reconverge: retenção de `v_d` entre 9,2% e
   58,4%, pico de erro de fase entre 7,3° e 37,3° e retorno entre 76 e 112 ms.
 - **Faltas assimétricas:** a sequência negativa gera a oscilação de 120 Hz em
   `v_q` e expõe a fragilidade estrutural do SRF-PLL, mais acentuada com a
-  sintonia inadequada.
-- **Perda de sincronismo:** com a sintonia inadequada, as faltas trifásicas na
+  sintonia lenta.
+- **Perda de sincronismo:** com a sintonia lenta, as faltas trifásicas na
   Barra 7 e na linha 7-8 fazem o erro de fase girar continuamente após a
   eliminação, e a potência ativa se inverte.
 - **Suporte de reativo:** ficar conectado não basta. Com a corrente saturada,
@@ -261,7 +261,7 @@ output/results/<barra|linha>/<falta>/  ──►  output/pll_metrics.html
 1. No MATLAB, editar `FAULT_TYPE`, `FAULT_BUS`/`FAULT_LINE` e `BAD_PLL` em
    [`params.m`](params.m), rodar `>> params` e simular o modelo. O `StopFcn`
    grava os CSVs e o `fault_info.json` na pasta do cenário (`_bad_pll` quando
-   a sintonia é inadequada).
+   a sintonia é lenta).
 2. Validar as rodadas: `.venv\Scripts\python.exe scripts\validar_cenarios.py`.
 3. Gerar o relatório: `.venv\Scripts\python.exe app.py` (ou `run.bat`).
 
@@ -277,9 +277,9 @@ output/results/<barra|linha>/<falta>/  ──►  output/pll_metrics.html
 sem internet e sem servidor.
 
 - **Filtros:** local da falta, tipo de falta e sintonia do PLL (nominal ou
-  inadequada), com mapa unifilar clicável. Os 17 casos discutidos no TCC
+  lenta), com mapa unifilar clicável. Os 17 casos discutidos no TCC
   aparecem agrupados por seção do Capítulo 5 e destacados em azul no mapa.
-- **Abas:** Resumo (cards de severidade), Inversor UFV (θ̂, erro de fase,
+- **Abas:** Resumo (cards de severidade), Inversor UFV (θ<sub>PLL</sub>, erro de fase,
   frequência, correntes e tensões dq, P/Q), Barras de Geração (barras e
   geradores G1/G3) e Espectro FFT (pré-falta, falta e pós-falta, tabelas de
   harmônicas com destaque normativo IEEE 519 / IEEE 1547).

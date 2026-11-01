@@ -1,0 +1,100 @@
+---
+name: resimulacao-abc
+aliases: [resimulacao-abc]
+description: Runbook de re-simulação (Bruno) — regenerar os 18 cenários para exportar sim_data_abc.csv (correntes e tensões trifásicas, painéis abc do espectro)
+---
+
+# Re-simulação para export abc (runbook)
+
+**Responsável: Bruno.** Objetivo: re-rodar os cenários já existentes para que
+o export gere o novo `sim_data_abc.csv` (correntes `iabc_inverter`/`iabc_grid`
+e, desde 2026-07-12, tensões `vabc_inverter`/`vabc_grid`) — alimenta os
+painéis "Corrente i_a UFV (abc)" e "Tensão v_a UFV (abc)" do espectro de
+Fourier no dashboard ([[espectro-fourier]]).
+
+⚠️ **Desta vez o `.slx` também mudou**, não só o script: foi habilitado o
+signal logging de `Vabc_inverter`/`Vabc_grid` em `UFV Model/Scopes` (mesmo
+padrão das correntes `iabc_*`, já logadas). Por isso, `git pull` **antes**
+de abrir o modelo é obrigatório — sem o `.slx` atualizado a tensão abc não
+sai (o script de export continua rodando normalmente, só pula essas
+colunas). Detalhes do export: [[export-workflow]].
+
+## Passo a passo (por cenário)
+
+1. `git pull` (traz o `.slx` com o logging de tensão + o script atualizado).
+2. Abrir `pll_stability_9bus.slx` (raiz do repo) no MATLAB.
+3. Editar o topo de `params.m` com o cenário da tabela abaixo e rodar
+   `>> params` no Command Window.
+4. Simular (▶). Ao terminar, o `StopFcn` exporta sozinho — conferir no
+   Command Window a linha `Correntes/tensões abc: N amostras → ...`.
+5. Verificar que `sim_data_abc.csv` apareceu na pasta do cenário em
+   `output/results/` e que tem as colunas `va_ufv_pu`/`vb_ufv_pu`/`vc_ufv_pu`
+   (abrir o CSV ou `head` rápido) — não só as `ia/ib/ic_ufv_pu`.
+
+> ⚠️ Se a linha "Correntes/tensões abc" **não** aparecer no log, o sinal
+> `iabc_inverter` não está no logsout (a função pula em silêncio) —
+> avisar o Victor. Se a linha aparecer mas o CSV não tiver as colunas
+> `va/vb/vc_ufv_pu`, o `.slx` local está desatualizado (falta o `git pull`).
+
+## Checklist — 18 cenários (estado de 2026-07-12)
+
+Variáveis em `params.m`: `FAULT_BUS`, `FAULT_LINE`, `FAULT_TYPE`, `BAD_PLL`.
+
+| # | Pasta | FAULT_BUS | FAULT_LINE | FAULT_TYPE | BAD_PLL |
+|---|---|---|---|---|---|
+| 1 | `regime` | 0 | `[]` | `'regime'` | false |
+| 2 | `regime_bad_pll` | 0 | `[]` | `'regime'` | **true** |
+| 3 | `bus4/3phase` | 4 | `[]` | `'3phase'` | false |
+| 4 | `bus5/3phase` | 5 | `[]` | `'3phase'` | false |
+| 5 | `bus6/1phase` | 6 | `[]` | `'1phase'` | false |
+| 6 | `bus6/2phase` | 6 | `[]` | `'2phase'` | false |
+| 7 | `bus6/3phase` | 6 | `[]` | `'3phase'` | false |
+| 8 | `bus6/3phase_bad_pll` | 6 | `[]` | `'3phase'` | **true** |
+| 9 | `bus7/1phase` | 7 | `[]` | `'1phase'` | false |
+| 10 | `bus7/3phase` | 7 | `[]` | `'3phase'` | false |
+| 11 | `bus7/3phase_bad_pll` | 7 | `[]` | `'3phase'` | **true** |
+| 12 | `bus8/3phase` | 8 | `[]` | `'3phase'` | false |
+| 13 | `bus8/3phase_bad_pll` | 8 | `[]` | `'3phase'` | **true** |
+| 14 | `bus9/3phase` | 9 | `[]` | `'3phase'` | false |
+| 15 | `line7_8/1phase` | 0 | `[7 8]` | `'1phase'` | false |
+| 16 | `line7_8/2phase_ground` | 0 | `[7 8]` | `'2phase_ground'` | false |
+| 17 | `line7_8/3phase` | 0 | `[7 8]` | `'3phase'` | false |
+| 18 | `line7_8/3phase_bad_pll` | 0 | `[7 8]` | `'3phase'` | **true** |
+
+A pasta de saída é montada sozinha pelo export a partir dessas variáveis —
+não precisa criar pasta nem mover arquivo. Cenários `_bad_pll` usam o
+`kp_pll × 0.2` automático do `params.m` (ver [[cenarios-simulados]]).
+
+> ✅ **Resolvido em 01/10/2026** (nenhuma pasta da safra antiga restou). Histórico: **bug de tempo de falta nos CSVs `_bad_pll` (2026-07-21).** Os
+> cenários `_bad_pll` foram exportados com a falta em `t_fault = 0.6 s` /
+> `t_clear = 0.7 s` (janela até 1.0 s), enquanto os nominais usam
+> `t_fault = 0.3 s` / `t_clear = 0.4 s`. Com esse timing errado o PLL parece
+> "nunca acomodar" (erro de fase fora de ±1,15° até o fim) — **é artefato do
+> dado, não comportamento físico**. Re-simular os `_bad_pll` com a **mesma
+> falta dos nominais (0.3/0.4 s)**; corrigido, o PLL estabiliza em ~0,51 s e o
+> marcador tₛ volta a aparecer no painel "Erro de fase" — o pipeline Python já
+> trata; só depende do CSV certo. (O card **Erro R.P.**, citado aqui até
+> 2026-08-09, não existe mais — ver [[cards-metricas]].)
+
+Prioridade se não der tempo de rodar tudo: **#5 (bus6/1phase)** — é a falta
+assimétrica com a assinatura de sequência negativa mais clara.
+
+## Depois de simular
+
+```powershell
+.venv\Scripts\python.exe scripts\validar_cenarios.py   # antes de qualquer figura
+.venv\Scripts\python.exe app.py
+```
+
+O validador reprova pasta cujo `sim_data.csv` é cópia de outra rodada ou cuja
+falta não bate com o nome (ex.: monofásica com afundamento equilibrado). Em
+01/10/2026 ele pegou `bus7/1phase_bad_pll` e `bus7/1phase_ground_bad_pll`
+(cópias de trifásicas) e `line8_9/2phase` (trifásica). Antes de exportar,
+conferir no Simulink que a rodada terminou e que `FAULT_TYPE` foi trocado.
+Detalhe em [[cenarios-simulados]].
+
+Regenera `output/pll_metrics.html`; os painéis de corrente e tensão abc
+aparecem automaticamente em cada cenário que tiver as colunas correspondentes
+no `sim_data_abc.csv`. Cenários ainda não re-simulados (ou re-simulados antes
+do `git pull` do `.slx`) continuam funcionando com os 3 painéis dq — os
+painéis abc são opcionais e independentes um do outro.

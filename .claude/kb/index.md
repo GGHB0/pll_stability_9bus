@@ -1,0 +1,64 @@
+---
+name: kb-index
+description: Porta de entrada do KB — pastas, skills, agentes e regras (gerado por scripts/kb_links.py)
+aliases: [kb-index]
+---
+
+# Knowledge Base — índice geral
+
+Gerado por `scripts/kb_links.py index`. Links `[[slug]]` abrem no Obsidian (vault = `.claude/`) ou no VS Code com Foam. Convenção em [rules/kb-links.md](../rules/kb-links.md); ponteiro legado em [INDEX.md](../INDEX.md).
+
+<!-- kb-links:begin -->
+## Pastas do KB
+
+| Pasta | Docs | Índice |
+|---|---|---|
+| dashboard/ | 22 | [dashboard/index.md](dashboard/index.md) |
+| events/ | 9 | [events/index.md](events/index.md) |
+| inverter/ | 5 | [inverter/index.md](inverter/index.md) |
+| pll/ | 13 | [pll/index.md](pll/index.md) |
+| power-system/ | 9 | [power-system/index.md](power-system/index.md) |
+| psim/ | 2 | [psim/index.md](psim/index.md) |
+| python/ | 11 | [python/index.md](python/index.md) |
+| simulation/ | 6 | [simulation/index.md](simulation/index.md) |
+| standards/ | 16 | [standards/index.md](standards/index.md) |
+| tcc-pptx/ | 7 | [tcc-pptx/index.md](tcc-pptx/index.md) |
+| tcc-word/ | 38 | [tcc-word/index.md](tcc-word/index.md) |
+
+Soltos na raiz: [project-scope.md](project-scope.md)
+
+Mapa de relações entre pastas: [grafo.md](grafo.md)
+
+## Skills
+
+- [dashboard-html-editor](../skills/dashboard-html-editor/SKILL.md) — [historico](../skills/dashboard-html-editor/historico.md) · [previa-standalone](../skills/dashboard-html-editor/previa-standalone.md)
+- [defesa-roteiro](../skills/defesa-roteiro/SKILL.md)
+- [pdf-kb-updater](../skills/pdf-kb-updater/SKILL.md) — [examples](../skills/pdf-kb-updater/examples.md) · [scripts](../skills/pdf-kb-updater/scripts.md) · [section-maps](../skills/pdf-kb-updater/section-maps.md)
+- [slx-explorer](../skills/slx-explorer/SKILL.md)
+- [slx-runner](../skills/slx-runner/SKILL.md)
+- [svg-diagrams](../skills/svg-diagrams/SKILL.md) — [armadilhas](../skills/svg-diagrams/armadilhas.md) · [data_charts](../skills/svg-diagrams/data_charts.md) · [export_png](../skills/svg-diagrams/export_png.md) · [legibilidade](../skills/svg-diagrams/legibilidade.md)
+- [tcc-abnt-layout](../skills/tcc-abnt-layout/SKILL.md) — [decisoes](../skills/tcc-abnt-layout/decisoes.md) · [decisoes_2](../skills/tcc-abnt-layout/decisoes_2.md) · [regras_abnt](../skills/tcc-abnt-layout/regras_abnt.md)
+- [tcc-docx-editor](../skills/tcc-docx-editor/SKILL.md) — [fragmento_externo](../skills/tcc-docx-editor/casos/fragmento_externo.md) · [mesclagem_comentarios](../skills/tcc-docx-editor/casos/mesclagem_comentarios.md) · [mesclagem_no_canonico](../skills/tcc-docx-editor/casos/mesclagem_no_canonico.md) · [revisao_pt](../skills/tcc-docx-editor/casos/revisao_pt.md) · [armadilhas](../skills/tcc-docx-editor/referencia/armadilhas.md) · [entrega](../skills/tcc-docx-editor/referencia/entrega.md) · [padroes_revisao](../skills/tcc-docx-editor/referencia/padroes_revisao.md)
+- [tcc-pdf-notes](../skills/tcc-pdf-notes/SKILL.md)
+- [tcc-pptx-editor](../skills/tcc-pptx-editor/SKILL.md) — [figura_dedicada](../skills/tcc-pptx-editor/casos/figura_dedicada.md) · [roteiro_fala](../skills/tcc-pptx-editor/casos/roteiro_fala.md) · [sincronia_tcc](../skills/tcc-pptx-editor/casos/sincronia_tcc.md) · [troca_figura](../skills/tcc-pptx-editor/casos/troca_figura.md) · [troca_template](../skills/tcc-pptx-editor/casos/troca_template.md) · [armadilhas](../skills/tcc-pptx-editor/referencia/armadilhas.md) · [design](../skills/tcc-pptx-editor/referencia/design.md) · [entrega](../skills/tcc-pptx-editor/referencia/entrega.md)
+
+## Agentes
+
+- [code-reviewer](../agents/codigo/code-reviewer.md) — /
+- [code-runner](../agents/codigo/code-runner.md) — /
+- [palco-validator](../agents/codigo/palco-validator.md) — /
+- [pdf-extractor](../agents/kb/pdf-extractor.md) — /
+- [note-validator](../agents/notas/note-validator.md) — /
+- [pdf-note-runner](../agents/notas/pdf-note-runner.md) — /
+- [docx-runner](../agents/tcc-docx/docx-runner.md) — /
+- [docx-scripter](../agents/tcc-docx/docx-scripter.md) — /
+- [pptx-runner](../agents/tcc-pptx/pptx-runner.md) — /
+- [pptx-scripter](../agents/tcc-pptx/pptx-scripter.md) — /
+- [slide-validator](../agents/tcc-pptx/slide-validator.md) — /
+
+## Regras
+
+- [kb-links](../rules/kb-links.md) — Interligação dos .md do KB
+- [limits](../rules/limits.md) — Limites de Arquivo
+- [references](../rules/references.md) — Referências Bibliográficas Completas
+<!-- kb-links:end -->

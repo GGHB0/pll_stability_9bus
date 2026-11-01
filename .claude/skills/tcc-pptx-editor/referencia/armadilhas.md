@@ -1,0 +1,103 @@
+# Armadilhas do pipeline PPTX
+
+Continuação de `SKILL.md`. Ordem: ambiente, python-pptx, PowerPoint, conteúdo.
+
+## Ambiente
+
+- `python-pptx` está **só no `.venv`** (`requirements.txt`). O `python` do
+  sistema não tem: sempre `C:\projetos\pll_stability_9bus\.venv\Scripts\python.exe`.
+- Script por caminho de arquivo, nunca `python -c` com regex (PowerShell
+  quebra `[...]`). `sys.stdout.reconfigure(encoding="utf-8")` (ou
+  `pptx_util.utf8()`): o console é cp1252 e morre em `→`, `ξ`, `ω`.
+- `python -I` ignora `PYTHONIOENCODING`: o reconfigure é o que resolve.
+- **Não gerar trecho de `gen_*.py` por heredoc + `str.replace` em Python**:
+  caminho Windows e `
+` dentro do texto injetado viram caractere de
+  controle (`` = bell em `...9busssets`, `	` = tab em `...ons	cc_fig`,
+  `
+` quebra a string das notas). Aconteceu 4 vezes em 2026-10-20/21.
+  Usar Write/Edit no script, ou caminhos com `/`.
+
+## python-pptx
+
+- **Nome de forma não é único**: o deck tem vários "Text 2" no mesmo slide
+  e "Cartão de destaque" ×3. Localizar por nome **e** índice do
+  `dump_slides.py`, e conferir o texto antigo antes de trocar.
+- `shape.text = ...` / `text_frame.text = ...` **apaga a formatação** dos
+  runs (tamanho, cor, negrito). Para trocar texto mantendo o estilo:
+  escrever no primeiro run (`p.runs[0].text = novo`) e esvaziar os demais,
+  ou copiar o `rPr` do run antigo para o novo.
+- Texto com dois estilos na mesma linha ("**Justificativa de ouro:** Por
+  que...") são runs distintos: trocar run a run.
+- Tabela: `cell.text = x` também perde a formatação; usar
+  `cell.text_frame.paragraphs[0].runs[0].text`. Linha nova = deepcopy de
+  `tbl.tr` existente + ajustar a altura da forma (a tabela não cresce sozinha
+  no arquivo; o PowerPoint recalcula só ao abrir).
+- Notas: `slide.notes_slide.notes_text_frame`. Acessar `notes_slide` **cria**
+  as notas se não existirem: checar `slide.has_notes_slide` antes de ler.
+- Duplicar slide não existe na API: deepcopy do `spTree` num slide novo do
+  mesmo layout + copiar as relações de imagem (`get_or_add_image_part`).
+  Mover slide: reordenar `prs.slides._sldIdLst`.
+- Remover slide: tirar do `_sldIdLst` **e** `drop_rel` na presentation part,
+  senão o slide fica órfão no pacote e o PowerPoint pode pedir reparo.
+- **`a:pPr` solto entre runs** (herança do gerador do esboço; 7 restam no
+  deck): o PowerPoint tolera, mas remover o run que vem antes dele deixa dois
+  `a:pPr` seguidos no início do parágrafo, e aí ele **recusa o arquivo**
+  inteiro (2026-10-16, remoção do rótulo "Justificativa de ouro:"). Ao tirar
+  run, apagar todo `a:pPr` do parágrafo além do primeiro. Arquivo recusado →
+  bisseção por grupo de edição (`gen_*.py <grupos> <saída>`), um render por
+  variante.
+- **Slide novo** (2026-10-18): usar `Edicao.duplica_slide` + `move_slides`.
+  Três pegadinhas que ela já resolve: o `notes_slide` de slide criado por
+  `add_slide` nasce **sem placeholder de corpo** (`notes_text_frame` é
+  `None`), então a árvore das notas é copiada da origem; imagem copiada
+  precisa de `relate_to` com a mídia da origem; e copiar a mesma forma duas
+  vezes no slide repete o `id` do `cNvPr`, o que pede `renumera_ids`. O
+  número do slide é campo (`a:fld type="slidenum"`): reordenar não o quebra.
+- Depois da entrega o `entrega.ps1` **reabre** o canônico no PowerPoint, e
+  o python-pptx não lê o arquivo aberto (`PackageNotFoundError`). Rodar o
+  `diff_slides.py` contra o `final.pptx` do staging, que tem o mesmo MD5.
+  Com slide inserido o diff é posicional: conferir os slides deslocados
+  pelo texto (antigo k → novo k+1), não pelo diff cru.
+- O `.venv\Scripts\python.exe` é Windows nativo: chamado do Bash, recebe
+  caminho `C:\Temp\...` entre aspas simples, nunca `/c/Temp/...`
+  (`folha_opcoes.py` deu FileNotFoundError em 2026-10-19).
+- `add_picture` com só `width` mantém a proporção; com width e height
+  deforma. Para trocar figura, usar `troca_imagem.py`.
+
+## PowerPoint (COM)
+
+- **Instância única**: `New-Object -ComObject PowerPoint.Application` se
+  pendura no PowerPoint que o Victor tiver aberto. `Quit()` fecharia a
+  apresentação dele: `render.ps1` e `pptx_finalize.ps1` só dão Quit se não
+  havia PowerPoint rodando antes. O processo some alguns segundos depois do
+  Quit; não matar.
+- **Instância órfã**: se o `Open` falhar fora do `try`, o PowerPoint sem
+  janela fica vivo (fora da ROT, `GetActiveObject` não acha), as chamadas
+  seguintes se penduram nele com `jaRodava = true` e nunca dão Quit, e o
+  `entrega.ps1` aborta com "PowerPoint não fechou". `New-Object -ComObject`
+  alcança a órfã para listar e fechar as apresentações; se o processo
+  persistir vazio, quem encerra é o Victor (o modo automático nega
+  `Stop-Process`). `render.ps1` corrigido em 2026-10-16.
+- `Presentations.Open(path, ReadOnly, Untitled, WithWindow)`: sem janela,
+  arquivo corrompido vira exceção em vez de diálogo de reparo travado.
+- Export de slide em PNG usa as fontes instaladas na máquina: o render
+  daqui vale para o notebook da defesa só se as fontes forem as mesmas
+  (Arial/Calibri, sem risco). Levar também o PDF (`-Pdf`).
+
+- `a:pPr` tem ordem de filhos fixa (`lnSpc`, `spcBef`, `spcAft`, `bu*`):
+  `spcBef` acrescentado depois de `buNone` é ignorado sem erro. Inserir na
+  posição certa (`ppr.insert(0, ...)` quando o `pPr` só tem `buNone`).
+
+## Conteúdo
+
+- O deck veio de um gerador (nomes "Text N", mídia `image-<slide>-<n>.png`):
+  as notas terminam às vezes com o número do slide solto ("... 22"). O
+  `pptx_util.falas` ignora esse resto; ao reescrever notas, não repetir.
+- Legenda "Figura X.Y do TCC" é texto fixo, não campo: renumeração no TCC
+  não chega aqui sozinha. `check_pptx.py --tcc` pega número inexistente,
+  **não** pega número que existe mas aponta para outra figura: conferir o
+  título da legenda do TCC contra a imagem.
+- Número de simulação: o TCC canônico manda. P e Q do UFV de rodada antiga
+  estão em escala errada (CLAUDE.md); número de P/Q que não esteja no TCC
+  passa por `src/pipeline/pq.py`, nunca por leitura direta do CSV.

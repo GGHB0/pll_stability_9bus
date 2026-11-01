@@ -1,0 +1,145 @@
+---
+name: psim-modeling
+aliases: [psim-modeling]
+description: Fase inicial de modelagem do PLL no PSIM (Altair) — cronologia, inventário, parâmetros e Vcc, antes da migração para Simulink
+source: pasta PSim/ (netlists .txt + parameters100MVA.txt, GGHB, 2026-07-22); relato do Victor (2026-10-17)
+references:
+  - "YAZDANI, Amirnaser; IRAVANI, Reza. Voltage-Sourced Converters in Power Systems: Modeling, Control, and Applications. Hoboken: John Wiley & Sons / IEEE Press, 2010. ISBN 978-0-470-52156-4."
+  - "ALVES, André Gustavo Pereira. Metodologia para Auto-Ajuste de Controladores de Corrente em Conversores Fonte de Tensão Conectados a Redes Sujeitas a Distúrbios Harmônicos. Tese (Doutorado em Engenharia Elétrica) — COPPE/UFRJ, Rio de Janeiro, 2022."
+---
+
+# Modelagem Inicial no PSIM (Fase Pré-Simulink)
+
+Antes de o sistema ser migrado para o Simulink atual
+(`pll_stability_9bus.slx`), o inversor conectado à rede com SRF-PLL foi
+**primeiro modelado no PSIM** (Altair Engineering). Esta é a fase inicial
+do trabalho — relevante para o TCC ao descrever *como a implementação
+começou*.
+
+- **Quem tem o PSIM:** GGHB. Arquivos binários commitados em 2026-07-21
+  (`0a364aa`); **netlists em texto** commitadas em 2026-07-22 na branch
+  `agent-include-output-folder` ("Add PSim text exports").
+- **Objetivo destes arquivos no repo:** registro histórico. **Não** há
+  intenção de reaproveitar os dados do PSIM na análise atual (essa roda em
+  Simulink → Python).
+- **Topologia dos circuitos:** ver [[psim-netlists]].
+
+## Inventário dos Arquivos (`PSim/`)
+
+| Arquivo | Tipo | Legível? |
+|---|---|---|
+| `01_..._100MVA (backup)1.psimsch` | Esquemático (v25.1.0) | ✗ binário |
+| `01_..._100MVA.smv` | Resultados SimView (14,8 MB) | ✗ binário |
+| `04_...Filtro 100MVA.psimsch` | Esquemático (v25.0.0) | ✗ binário |
+| `04_...Filtro 100MVA.smv` | Resultados SimView (245 KB) | ✗ binário |
+| `01_..._100MVA (backup)1.txt` | **Netlist do circuito 01** | ✓ texto |
+| `04_...Filtro 100MVA.txt` | **Netlist do circuito 04** | ✓ texto |
+| `parameters100MVA.txt` | **Parâmetros** (UTF-16) | ✓ texto |
+
+- `.psimsch`/`.smv` são **binários proprietários da Altair** — só abrem no
+  PSIM/SimView, corpo ofuscado (não zip/zlib), sem tabela de sinais. Não
+  tentar parsear por script (já verificado).
+- Os `.txt` são **exports em texto do próprio PSIM** (netlist + parâmetros)
+  — é por eles que a topologia foi documentada.
+
+## Parâmetros (`parameters100MVA.txt`) — base 100 MVA
+
+| Símbolo | Valor | Nota |
+|---|---|---|
+| `Vcc` | **90 909 V (90,9 kV)** | valor base (= notebook/AGP) |
+| `L1` | 0,030421 / 4 | indutor lado inversor |
+| `L2` | 0,00028900 / 4 | indutor lado rede |
+| `C1` | 4,2471e-5 / 4 | capacitor do LCL |
+| `Rd1`,`Rd2`,`Rd3` | 0,57342 / 0,0054475 / 3,1228 (÷4) | resistências série/amortecimento |
+| `Kp` | 29,4815 / 4 = **7,370** | PI de corrente |
+| `Ki` | 7075,56 / 4 = **1768,89** | PI de corrente |
+| `qsi` (ξ) | 0,707 | amortecimento do notch |
+| `wres` | **9068,997 rad/s** | ressonância do LCL |
+| `Rth`,`Lth` | 0,010039 / 0,0011602 | impedância de Thévenin |
+
+Consistências com o projeto atual (`CLAUDE.md`):
+- `wres`, `ξ`, `fs = 5 kHz`, e a **divisão por 4** dos ganhos/impedâncias
+  (conversão pu, `Z_base = 4 Ω`) batem com a modelagem atual.
+- **A divisão por 4 é uniforme na planta inteira**, não um ajuste aplicado
+  aos ganhos: `L1`, `L2`, `C1`, `Rd1-3`, `Kp` e `Ki` são todos divididos por
+  4. O `/4` em `Kp`/`Ki` é **consequência** do `/4` nas indutâncias, já que
+  `Kp = 8·fg·(L1+L2+Lest)` é proporcional a `L`. Não confundir com
+  compensação de normalização do SPWM. Ver [[pll-gains-methodology]].
+- **`Lth` aqui não é `Lest`**: é a indutância da fonte equivalente que
+  representava a rede nesta fase, não a indutância vista pelo controlador.
+- **Vcc — o override já existia no PSIM:** o arquivo base usa 90,9 kV, mas
+  a netlist do circuito 01 referencia `parameters100MVA_VCCnovo.txt` e usa
+  **VDC = 136,4 kV** (o `VDC4` da ponte). É a origem da divergência
+  registrada em [[params-workflow]].
+
+> **Numeração arbitrária:** os prefixos `01`/`04` dos arquivos não indicam
+> ordem nem sequência — são só rótulos. São dois esquemáticos
+> independentes (um sistema completo e uma bancada de controle).
+
+## Lacunas — PENDENTE (opcional, coletar com o GGHB)
+
+- `parameters100MVA_VCCnovo.txt` (variante com Vcc = 136,4 kV usada no
+  sistema completo) — **não** foi exportado; só temos o arquivo base.
+- Formas de onda do SimView — **não necessárias** (não vamos reprocessar).
+- **Bancada do PLL entre duas fontes ideais** (passo 1 da cronologia
+  abaixo): o esquemático não está no repo, só uma captura de tela enviada
+  pelo Victor em 2026-10-18.
+
+## Fio Narrativo para o TCC
+
+Confirmado pelo Victor (2026-08-04): a modelagem foi feita em **duas etapas
+declaradas**, e o PSIM é a etapa 1.
+
+**Etapa 1 (PSIM).** O conversor, o filtro LCL, o controlador de corrente e o
+SRF-PLL foram implementados contra uma rede representada por um **equivalente
+de Thévenin na barra de conexão** (`Rth` = 0,0100 Ω, `Lth` = 1,16 mH). Isolar
+o conversor dessa forma permite validar o controle de corrente e o laço de
+sincronismo sem a influência das demais máquinas. Foram construídos dois
+esquemáticos: uma **bancada de projeto do controle de corrente**
+(planta RL × LCL) e o **sistema completo** (VSC + LCL + SRF-PLL com
+PD/PI/VCO + SPWM, com degrau de referência).
+
+### Cronologia da etapa 1 (relato do Victor, 2026-10-17)
+
+O trabalho todo começou no PSIM, e só se passou ao Simulink depois de PLL
+e inversor fechados. A modelagem inteira foi no PSIM por ser mais fácil e
+visual; **o afundamento (faltas) só existiu no Simulink**, e o ramo de
+curto que aparece na captura da bancada não foi usado nesta fase:
+
+1. **SRF-PLL entre duas fontes trifásicas ideais**, até confirmar que ele
+   seguia a rede. É um primeiro teste e entra no TCC só como menção breve.
+   Pela captura (2026-10-18): "Barramento infinito" → "Sistema Equivalente
+   da Rede" (RL série, o Thévenin) → PCC → RL → "Tensão da Geração" (a fonte
+   que faz o papel do inversor). O PLL mede Va/Vb/Vc no PCC, em três blocos:
+   PD (abc→dq com FasePLL), PI (+ wRede) e VCO (integrador → FasePLL). Há um
+   ramo de curto (chaves scA/scB/scC por pulso, RL à terra) e uma FFT de Va.
+   Desativados em cinza: Clarke/Park separados (S1/S2) e uma fonte de
+   "Ângulo Teta", aparentemente de uma versão anterior. **O Thévenin já
+   estava nesta bancada**, e foi nela que os ganhos do PI do PLL
+   (`Kp` 460, `Ki` 105 820) foram calculados ([[pll-loop-filter-gains]]).
+2. **Inversor só com PWM.** A primeira tentativa seguiu o YAZDANI e IRAVANI
+   (2010) ([[vsc-reference]]); o projeto só andou com a TeseAGP (ALVES,
+   2022), que passou a ser a referência de projeto ([[agp-current-control-theory]]).
+3. **Filtro LCL**, com ajustes e testes de valores ([[lcl-filter]]). A
+   bancada do PI de corrente (circuito `04`, RL × LCL) é desse passo.
+4. **Escala para 100 MW:** o Vdc teve de subir de 90,9 kV para 136,4 kV, o
+   que não ocorria nos 10 MW da TeseAGP. Justificativa física em
+   [[params-workflow]] (índice de modulação do SPWM).
+5. **Sistema completo** (circuito `01`) contra o Thévenin da Barra 2
+   ([[ieee9bus-thevenin]]).
+
+No texto do TCC, o passo 2 entra como escolha metodológica (Yazdani como
+base teórica do VSC, TeseAGP como referência de projeto), não como relato
+de tentativa.
+
+**Etapa 2 (Simulink).** Verificado o funcionamento, o mesmo conjunto migrou
+para `pll_stability_9bus.slx`, onde o conversor substitui a geração da
+**Barra 2 do sistema IEEE de 9 barras** e passa a interagir com os geradores
+síncronos remanescentes e com as contingências aplicadas à rede
+(ver [[export-workflow]] e `kb/inverter/simulink_model.md`) → análise em
+**Python** ([[python-pipeline]]).
+
+> **O `.slx` é a plataforma oficial.** Todos os resultados do TCC vêm da
+> etapa 2. O PSIM entra no texto como etapa metodológica declarada, não como
+> fonte de resultados. Nenhum número do PSIM deve ser apresentado como
+> resultado nem usado para justificar escolhas de projeto do modelo atual.

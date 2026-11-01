@@ -1,0 +1,72 @@
+---
+name: estrutura-html
+aliases: [estrutura-html]
+description: Esqueleto do relatório HTML — header, filter-bar, seções, objeto SCENARIOS, fluxo switchScenario e mapa SVG clicável
+---
+
+# Estrutura do HTML (renderer.py)
+
+Arquivo único e portátil: Plotly 2.35 embutido (`assets/vendor/`, abre sem internet, desde 2026-10-16; CDN só se faltar o arquivo), logo UERJ em base64
+([[header-branding]]), CSS em `_css()` (string plana — **chaves simples**),
+JS no template f-string (**chaves duplas** `{{}}`). Todo estado por cenário é
+pré-computado em Python e embutido no objeto `SCENARIOS`.
+
+## Ordem vertical
+
+1. `header` — título, subtítulo dinâmico (`#header-sub`), badge UERJ, toggle
+   de tema.
+2. `.filter-bar` — `<select>` de cenário, toggle PLL
+   ([[bad-pll-dashboard-filter]], só se houver cenário BAD_PLL), botões:
+   Mapa IEEE 9-bus, Comparativo, Zoom na falta ([[dashboard-zoom-export]]).
+   Botão "Comparar PLL" (overlay fantasma) removido em 2026-07-25.
+3. `#diagram-section` — SVG unifilar clicável.
+4. `#table-section` — comparativo, oculto por padrão ([[comparison-table]]).
+5. `.tab-bar` + painéis de aba `#sec-res`/`#sec-inv`/`#sec-sys`/`#sec-spec`.
+   `#sec-res` não tem figura própria — contém `#cards-area`/`#story-area`
+   (HTML pré-gerado, [[cards-metricas]]; cards clicáveis → `goToChart`,
+   [[tabs-navegacao]]); os demais têm figuras Plotly (espectro —
+   [[espectro-fourier]]). Só a aba ativa fica visível/renderizada;
+   detalhes em [[tabs-navegacao]].
+6. `.footer`.
+
+> Até 2026-07-24, cards+diagnóstico ficavam soltos entre o mapa e a
+> tab-bar (visíveis em toda aba) e a aba Resumo tinha gráfico próprio
+> (`build_resume`). Ambos mudaram: cards+diagnóstico moraram para dentro
+> de `#sec-res` (só aparecem nessa aba) e o gráfico da aba Resumo foi
+> removido por ser repetitivo com Inversor/Sistema.
+
+## Objeto SCENARIOS
+
+`{key: {invData, sysData, specData, invLight/invDark/invIdx (trace_map),
+sysLight/…, specLight/…, label, cardsHtml, storyHtml, metricsRow, hasRes,
+hasInv, hasSys, hasSpec, badPll, tFault, tClear, tEnd}}`. As chaves por
+figura seguem o padrão `{t}Data/{t}Light/…` com `t ∈ {inv, sys, spec}` —
+`res` não tem essas chaves (sem figura); `hasRes` é sempre `true`. O JS
+acessa genericamente (`sc[which + "Data"]`).
+`key` = pasta do cenário, ex. `"bus7/3phase"`, `"line7_8/3phase_bad_pll"`.
+
+## Fluxo `switchScenario(key)`
+
+1. `_syncCtrlButtons()` — habilita/desabilita zoom (sem `tFault`).
+2. `updateFaultUI(sc)` — subtítulo do header + badges "Falta: t = …" dos
+   painéis de aba (ocultos em regime).
+3. Marca todos os gráficos como sujos e chama `switchTab(activeTab)` — só a
+   aba ativa sofre `Plotly.react` (render preguiçoso, [[tabs-navegacao]]);
+   o zoom na falta NÃO se aplica ao spec, cujo eixo x é em Hz.
+4. Injeta `cardsHtml`/`storyHtml`, `highlightSVG(key)`,
+   `renderComparisonTable()`.
+
+Toggles de UI (`toggleDiagram`, `toggleTable`, tema): o label do botão sempre
+descreve a **próxima ação** — regra registrada em [[header-branding]].
+
+## Mapa SVG clicável
+
+SVG unifilar embutido (autoral, ver `kb/power-system/ieee9bus/ieee9bus_topology.md`).
+Na carga, `svgLocMap` agrupa os keys de `SCENARIOS` por local
+(prefixo antes da `/`, ex. `bus7`, `line7_8`); elementos do SVG com
+`data-loc` correspondente ganham `.has-data` + listener de clique →
+`selectLocation(loc, el)` seleciona o cenário daquele local.
+`highlightSVG(key)` marca o local da falta ativa com `.svg-active`.
+
+Temas via atributo `data-theme` no `<html>` + CSS vars (`--accent`, cores de
+card etc.); o re-tema das figuras Plotly é à parte — [[dark-mode-theming]].

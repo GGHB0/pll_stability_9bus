@@ -1,0 +1,21 @@
+folder: simulation
+description: Workflows de simulação — exportação Simulink→Python, params.m, e notas de reuniões técnicas
+files:
+  - file: export_workflow.md
+    name: export-workflow
+    description: Workflow validado Simulink → MATLAB → Python (logsout, sinais de barra P/Q/V, normalização pu, sim_data.csv)
+  - file: python_pipeline.md
+    name: python-pipeline
+    description: Arquitetura Python (src/) que consome sim_data.csv — SimData, ChartBuilder, painéis, métricas
+  - file: params_workflow.md
+    name: params-workflow
+    description: Workflow notebook → MATLAB/Simulink separando cálculos teóricos AGP dos valores runtime em params.m, incluindo a divergência intencional de Vcc
+  - file: reuniao_2026_05_inercia_pll.md
+    name: reuniao-2026-05-inercia-pll
+    description: Texto de apoio para reunião sobre novos testes de inércia, reatância de curto, colapso do PLL e tentativas de filtragem notch (semana 2026-05)
+  - file: cenarios_simulados.md
+    name: cenarios-simulados
+    description: "Inventário dos cenários exportados em output/results — 22 nominais + 8 com sintonia inadequada, as duas configurações temporais de falta e as lacunas de cobertura"
+  - file: resimulacao-abc.md
+    name: resimulacao-abc
+    description: "Runbook de re-simulação (Bruno) — regenerar os 18 cenários para exportar sim_data_abc.csv (correntes e tensões trifásicas, painéis abc do espectro)"

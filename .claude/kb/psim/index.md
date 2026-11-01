@@ -1,0 +1,29 @@
+---
+name: kb-index-psim
+description: Índice da pasta psim/ do KB (gerado por scripts/kb_links.py)
+aliases: [kb-index-psim]
+---
+
+# KB — psim/
+
+Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
+
+<!-- kb-links:begin -->
+## Documentos
+
+| Arquivo | Link | Cobre |
+|---|---|---|
+| [psim_modeling.md](psim_modeling.md) | [[psim-modeling]] | Fase inicial de modelagem do PLL no PSIM (Altair) — cronologia, inventário, parâmetros e Vcc, antes da migração para Simulink |
+| [psim_netlists.md](psim_netlists.md) | [[psim-netlists]] | Topologia dos circuitos PSIM 01 (sistema completo) e 04 (bancada de projeto do controle de corrente), lida das netlists em texto |
+
+## Pastas relacionadas
+
+- [inverter/](../inverter/index.md) — saem 4, chegam 0
+- [pll/](../pll/index.md) — saem 4, chegam 1
+- [power-system/](../power-system/index.md) — saem 1, chegam 0
+- [simulation/](../simulation/index.md) — saem 4, chegam 1
+- [standards/](../standards/index.md) — saem 1, chegam 0
+- [tcc-pptx/](../tcc-pptx/index.md) — saem 0, chegam 4
+
+Voltar: [índice do KB](../index.md) · [grafo](../grafo.md)
+<!-- kb-links:end -->

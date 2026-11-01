@@ -10,6 +10,47 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-11-01 (01h14) — A2 do André: "Mvar" na Figura 3.1 (verde)
+
+Única ocorrência de VAr no TCC: cargas do unifilar. SVG com "Mvar" e vírgula
+decimal (25 valores), PNG reexportado e recortado sem a faixa de título
+(topo 285 px, 2760×1740) por `troca_imagem.py`; legenda da Figura 3.1 em
+verde (imagem não tem cor de marca). Texto idêntico (`diff_texto` 0
+trechos); backup `_backups\VF\..._20261101_011444`. Ver [[ieee9bus-topology]].
+
+## 2026-11-01 (00h53) — A1 do André: "sintonia lenta" (verde)
+
+52 trocas de "sintonia inadequada" por "sintonia lenta" (texto, legendas,
+Lista de Ilustrações, células da Tabela 4.3, Resumo; "slow-tuning" no
+Abstract), frase do compromisso de banda no §3.3.2.3 e 13 figuras
+regeneradas com a legenda nova (Tabela 3.1 com a marca "L"). Script
+`C:\Temp\tcc_banca_lenta\gen_banca_lenta.py` + `troca_figuras.py`; backup
+`_backups\VF\..._20261101_005325`. Armadilhas: palavra partida em dois runs
+("inadequad" | "a") e run com `lastRenderedPageBreak`, contar por `<w:t>`.
+Entradas abaixo desta mantêm o nome antigo. Ver [[cenarios-simulados]].
+
+## 2026-10-31 (22h39) — Banca: Rafael em azul, André em verde (1ª rodada)
+
+Cores da revisão da banca: Cleiton `FF0000` (Bruno), Rafael `0070C0`, André
+`00B050`; pinta só o texto alterado. Script em
+`C:\Temp\tcc_banca_rafael_andre\gen_banca_r7_a3.py`; backup da origem em
+`_backups\VF\..._backup_20261031_223646.docx`.
+- **R7 (azul):** §3.3.3 ganhou a teoria p-q do bloco de P e Q, Eq. (3.1)
+  e ref. AKAGI; WATANABE; AREDES (2017, 2. ed.; o PDF da Bibliografia
+  se chama "2007_..." mas é a 2ª ed.). Ver [[simulink-model]].
+- **A3 (verde):** §3.3.3, método da FFT: 2 ciclos descartados, 3 ciclos
+  (50 ms) analisados, Hann, df = 20 Hz. O código usa 3 dos 4 ciclos que
+  sobram (opção "descrever como está", aprovada; números do Cap. 4 intactos).
+- **Vermelho (resto da renumeração do Cleiton):** rótulos e 38 menções
+  (3.N) → (2.N) no Cap. 2; legenda da Figura 3.3 (ONS) virou campo SEQ (era
+  texto fixo e, com os campos atualizados, dava duas 3.3); 5 runs com espaço
+  de borda sem `xml:space` ("AFigura", "ressalvas.As") recebem preserve.
+- **Pendentes da banca:** R1 GitHub (CITATION.cff no repositório; DOI do
+  Zenodo a caminho; URL do TCC dá 404), R2, R3 GFL×GFM, R4/R9 DSOGI,
+  R5 2º parágrafo da Introdução, R6 gráficos e componentes simétricas,
+  R8 Roteiro UERJ, A2 Mvar na
+  Figura 3.1; Apêndice A com afirmações a corrigir.
+
 ## 2026-10-31 — Revisão da banca examinadora (Prof. Cleiton) com alterações em vermelho
 
 Atendimento integral aos apontamentos do Prof. Cleiton (leitura, apresentação oral e anotações a caneta no PDF). 100% das alterações ressaltadas na cor VERMELHA (#FF0000):
@@ -149,5 +190,6 @@ Ver `historico_entregas_v8.md` (fragmentado em 2026-07-22 por limite de linhas).
 
 ## Relacionados
 
+- [[tcc-historico-entregas-2026-11-01]] — Figura 2.2 com a planta LCL (2026-11-01 03h12)
 - [[tcc-historico-entregas-2026-08]] — histórico detalhado de agosto
 - [[tcc-historico-entregas-2026-09-26]] — entregas de 2026-09-26 (V10)

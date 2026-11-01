@@ -76,8 +76,9 @@ graph LR
     tcc_pptx -->|3| tcc_word
     tcc_word -->|2| dashboard
     tcc_word -->|2| events
+    tcc_word -->|3| inverter
     tcc_word -->|12| pll
-    tcc_word -->|9| power_system
+    tcc_word -->|10| power_system
     tcc_word -->|11| simulation
     tcc_word -->|4| standards
 ```

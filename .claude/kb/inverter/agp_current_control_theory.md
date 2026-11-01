@@ -57,7 +57,7 @@ Termos cruzados `ω(L1+L2)` — mesmo acoplamento discutido em [[vsc-reference]]
 > 2026-10-02).** O PWM Control (SID 3974) é só PI + notch por eixo: sem
 > termos `±ωL·i` nem feedforward de `v_g`. O acoplamento e a tensão da rede
 > ficam como perturbação que o integral do PI rejeita. Diagrama fiel em
-> `assets/diagrams/current_control_dq_blocos.svg`; ver [[simulink-model]].
+> `assets/diagrams/current_control_dq_blocos.svg` (planta = LCL da eq. 3.49, ver §3.2 abaixo); ver [[simulink-model]].
 
 ### Projeto por cancelamento polo-zero (eqs. 3.10-3.14)
 
@@ -124,6 +124,22 @@ com `A` contendo os termos de acoplamento `1/L1`, `1/L2`, `1/C1` entre os
 três estados — modelo de 3ª ordem, mais complexo que o RL de 1ª ordem, com
 frequência de ressonância própria (mesmo fenômeno dimensionado no projeto
 via [[lcl-filter]], `ω_res`).
+
+### Funções de transferência do LCL (§3.2.1, p. 74 do PDF)
+
+Sem resistências, a partir de `[iL1, iL2, vC1]`:
+```
+IL1/Vinv = (1/sL1)·(s²+ωr²)/(s²+ωres²)        (3.48)
+IL2/Vinv = 1/(s·L1·L2·C1) · 1/(s²+ωres²)      (3.49)
+ωres² = (L1+L2)/(L1·L2·C1);  ωr² = 1/(L2·C1)  (3.52, 3.53)
+```
+Diagramas de controle da tese, no referencial síncrono: Fig. 3.11 (realimenta
+`iL1`, sem notch), Fig. 3.21 (`iL2` com atraso z⁻¹/ZOH) e **Fig. 3.23** (`iL2`
+com PI, notch, 2/Vdc, atraso e^(−sTd), Vdc/2 e planta da eq. 3.49). A Fig. 3.1
+do TCC segue a 3.23 (sem o bloco de atraso, que o .slx não tem), com a planta
+escrita como duas frações, como na tese. O notch N(s) = (s²+ωnf²)/(s²+2ξp·ωnf·s+ωnf²)
+é a eq. 3.55; com ωnf = ωres, os zeros dele cancelam os polos ressonantes da
+planta. A malha aberta vem logo abaixo da figura (sem número) e na eq. 3.56.
 
 ## Estratégias de Amortecimento (§3.3-3.4)
 

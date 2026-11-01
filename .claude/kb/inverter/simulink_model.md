@@ -2,7 +2,9 @@
 name: simulink-model
 aliases: [simulink-model]
 description: Arquitetura completa do modelo pll_stability_9bus.slx — hierarquia de subsistemas, parâmetros do InitFcn e implementação do controle
-source: pll_stability_9bus.slx (extraído via XML interno)
+source: pll_stability_9bus.slx (extraído via XML interno); Akagi-Watanabe-Aredes 2017 p.44-47
+references:
+  - "AKAGI, Hirofumi; WATANABE, Edson Hirokazu; AREDES, Mauricio. Instantaneous Power Theory and Applications to Power Conditioning. 2. ed. Hoboken: Wiley-IEEE Press, 2017. ISBN 978-1-118-36210-5."
 ---
 
 # Modelo Simulink — Arquitetura
@@ -41,9 +43,9 @@ system_root (IEEE 9 barras)
 ├── Bus1..Bus9 (Simscape electrical buses)
 ├── TF 4-1, TF 7-2, TF 9-3 (transformadores)
 ├── B4-B5, B4-B6, B5-B7, B6-B9, B7-B8, B8-B9 (linhas 50-100 km)
-├── Load A: 125 MW/50 MVAr  (Bus5)
-│   Load B:  90 MW/30 MVAr  (Bus6)
-│   Load C: 100 MW/35 MVAr  (Bus8)
+├── Load A: 125 MW/50 Mvar  (Bus5)
+│   Load B:  90 MW/30 Mvar  (Bus6)
+│   Load C: 100 MW/35 Mvar  (Bus8)
 ├── Gen1@Bus1  [Swing]  — AVR + Exciter + Governor + Prime Mover
 ├── Gen2@Bus2  [PV, 163 MW, 1.025 pu] — ainda presente no modelo*
 ├── Gen3@Bus3  [PV, 85 MW, 1.025 pu]  — AVR + Governor
@@ -61,8 +63,8 @@ UFV Model
 ├── mH, mH1, mH2   — L1, L2, Lth (filtro LCL, Simscape)
 ├── Inverter        — ponte VSI 3 fases (Simscape)
 ├── Gate driver     — 6 sinais de gate → Six-Pulse Gate Multiplexer
-├── Measurement inverter   — sensores I/V entre L1 e C1
-├── Measurement inverter1  — sensores I/V entre C1 e L2
+├── Measurement inverter, inverter1 — sensores I/V; a corrente realimentada no
+│                           controle é iL2 (depois de L2), conferido no .slx em 2026-11-01
 ├── Optimal controller     — controle principal (PLL + corrente)
 ├── Fourier Analysis (×2)  — análise harmônica
 └── Scopes
@@ -128,7 +130,7 @@ Entradas: id_ref, Vabc_grid, Iabc (pu)
 | `Bus 1`…`Bus 9` | 4138…4392 | 4396 monitor | p1→P, p2→Q, p3→V por barra |
 | `Ang barra` | 4494 | root | p1 → ângulo de barra Simscape |
 
-> **P/Q do monitor de barras saem em unidades físicas (W/VAr), não pu** — taps
+> **P/Q do monitor de barras saem em unidades físicas (W/var), não pu** — taps
 > `Goto`/`From` diretos das Busbars (SID 1887 Bus1, SID 3494 Bus3) via
 > `PS-Simulink Converter`, sem nenhum Gain de normalização. Diferente do bloco
 > "Inverter Active & Reactive Power" (SID 4055, alimenta `Pinverter`/`Qinverter`),
@@ -141,6 +143,12 @@ Entradas: id_ref, Vabc_grid, Iabc (pu)
 > nos dois (Gain1 SID 4060 → P, Gain SID 4059 → Q): P saía ×√3/2 (pré-falta
 > 0,87 pu com id = 1) e Q ×1,5. Hoje 2/3 e 2/(3*sqrt(3)); rodadas antigas são
 > reescaladas na leitura, ver [[export-workflow]].
+>
+> **Teoria de potência do SID 4055:** é a teoria p-q em coordenadas abc
+> (Akagi, Watanabe e Aredes, 2017, eq. 3.17 p. 44 e eq. 3.35 p. 47):
+> p = Σv·i e q = (1/√3)(v_bc·i_a + v_ca·i_b + v_ab·i_c), conferido nas ligações
+> (Demux → Minus/Minus1/Minus2 → Mux) em 2026-10-31; o 2/3 é só a base de pico.
+> Citada no TCC, §3.3.3, Eq. (3.1), a pedido da banca (Rafael).
 
 ### Cadeia Fourier → Ângulo Absoluto (subsistema UFV, SID 3896)
 
@@ -174,6 +182,7 @@ Ver `.claude/skills/slx-runner/SKILL.md` para uso completo.
 - **PLL montado com blocos, não o de biblioteca:** Park → v_q → PI (`kp_pll`/`ki_pll` do `params.m`, Gains do SID 4614) → integrador com wrap. O `Sinusoidal Measurement (PLL, Three-Phase)` continua no diagrama, com `Kp_LF`/`Ki_LF` gravados, mas **sem nenhuma ligação** (conferido no grafo em 2026-10-02; a KB dizia o contrário até então). Ganhos: [[pll-loop-filter-gains]], **não** o `Kp`/`Ki` de [[pll-gains-methodology]], que é o controlador de corrente.
 - **PWM é SPWM** (comparador com portadora triangular), não SVPWM.
 - **Controle de corrente sem desacoplamento ωL nem feedforward de v_g:** PI → notch → `m_dq` direto, sem `/V_cc` (Mux com eixo 0 = 0). A teoria da TeseAGP prevê o desacoplamento; a implementação não ([[agp-current-control-theory]]).
-- **Onde entram v_gd e v_gq (tensão da rede em dq):** só no PLL, e só o v_q (o módulo vai para scope). O controle de corrente não recebe tensão nenhuma: as 4 entradas do PWM Control são I_d,ref, I_q,ref, I_d e I_q. A única tensão que chega às referências é o **módulo da tensão do inversor**, filtrado (τ = 5 ms), na MATLAB Function do ONS. Base da Figura 3.1 do TCC (`assets/diagrams/current_control_dq_blocos.svg`).
+- **Onde entram v_gd e v_gq (tensão da rede em dq):** só no PLL, e só o v_q (o módulo vai para scope). O controle de corrente não recebe tensão nenhuma: as 4 entradas do PWM Control são I_d,ref, I_q,ref, I_d e I_q. A única tensão que chega às referências é o **módulo da tensão do inversor**, filtrado (τ = 5 ms), na MATLAB Function do ONS. Base da Figura 3.1 do TCC (`assets/diagrams/current_control_dq_blocos.svg`), cuja planta é o LCL sem resistências de [[agp-current-control-theory]] (eq. 3.49).
 - **Ts = 5 µs** (elétrico), **Tsc = 200 µs** (controle) — razão de 40× entre passos.
+- **Rd3 está em paralelo com C1** no .slx (bloco ParallelRC), enquanto o notebook (`Rd3 = 0,05/(ωg·C1)`) e os desenhos do filtro o tratam como série. A figura 3.1 usa o LCL sem resistências, então não é afetada; conferir com o Bruno antes de descrever o amortecimento passivo no texto.
 - `wres = 9068.99 rad/s` → `fres ≈ 1443 Hz` (não confundir rad/s com Hz).

@@ -15,7 +15,7 @@ Destino padrão: `assets/diagrams/` para diagramas técnicos; `assets/` para art
 gerais (banner etc.). Na dúvida sobre o destino, pergunte.
 
 Antes de desenhar, olhe 1-2 SVGs existentes em `assets/diagrams/` (ex.:
-`pll_system_circuit.svg`, `current_control_dq_blocos.svg`) para absorver o
+`vsi_lcl_pwm_circuit.svg`, `current_control_dq_blocos.svg`) para absorver o
 estilo real, não só a tabela abaixo.
 
 ## Mapa da skill

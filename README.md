@@ -105,23 +105,16 @@ junto com o filtro LCL e os ganhos dos controladores.
 
 ## Arquitetura do SRF-PLL
 
-### Circuito do inversor e amostragem do PCC
+### Inversor e controle digital
 
-O VSI alimenta o filtro **LCL**, que se conecta à rede pelo equivalente de
-Thévenin da Barra 2. O SRF-PLL lê a tensão trifásica no PCC e devolve o ângulo
-estimado θ<sub>PLL</sub> ao controle de corrente.
-
-<p align="center">
-  <img src="assets/diagrams/pll_system_circuit.svg" alt="Unifilar do inversor: VSI, filtro LCL, Thévenin da Barra 2 e rede; o SRF-PLL mede v_abc no PCC e devolve θ_PLL ao controle de corrente" width="100%">
-</p>
-
-### Sistema completo: potência e controle digital
-
-VSI de dois níveis, filtro LCL com medição, e a cadeia de controle: SRF-PLL,
-lógica do Submódulo 2.10 gerando `id_ref`/`iq_ref`, PIs de corrente em dq e PWM.
+O VSI de dois níveis alimenta o filtro **LCL**, que se conecta à rede no PCC
+(Barra 2). O SRF-PLL mede a tensão trifásica no PCC e entrega θ<sub>PLL</sub>
+às transformações abc/dq do controle. A lógica do Submódulo 2.10 gera
+`id_ref`/`iq_ref`, os PIs de corrente em dq fecham a malha e o PWM comanda as
+chaves.
 
 <p align="center">
-  <img src="assets/diagrams/vsi_lcl_pwm_circuit.svg" alt="Sistema GFL completo: VSI trifásico, filtro LCL, medição e controle digital com SRF-PLL, ONS 2.10 e PWM" width="100%">
+  <img src="assets/diagrams/vsi_lcl_pwm_circuit.svg" alt="Sistema GFL completo: VSI trifásico, filtro LCL, medição no PCC e controle digital com SRF-PLL, ONS 2.10, PIs de corrente e PWM" width="100%">
 </p>
 
 ### Laço do SRF-PLL

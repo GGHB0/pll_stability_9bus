@@ -80,3 +80,13 @@ tcc_*_final.docx
 # C:\Temp\defesa_<tema>\ — o deck vive no OneDrive, nunca no repo
 *.pptx
 defesa_*/
+
+# ==============================================================================
+# Arquivos de instrução e ferramentas internas de automação de texto (locais)
+# Mantidos no disco local para os autores, mas não expostos no repositório público
+# ==============================================================================
+CLAUDE.md
+AGENTS.md
+.claude/
+scripts/tcc_banca/
+scripts/notas/

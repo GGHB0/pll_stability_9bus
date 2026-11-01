@@ -34,7 +34,7 @@ Orientador: Prof. Dr. Oscar Cuaresma Zevallos | Coorientador: Prof. Dr. André G
 - [Como reproduzir](#como-reproduzir)
 - [Dashboard interativo](#dashboard-interativo)
 - [Conteúdo do repositório](#conteúdo-do-repositório)
-- [Ferramentas](#ferramentas)
+- [Tecnologias e Ferramentas](#tecnologias-e-ferramentas-de-suporte)
 - [Como citar](#como-citar)
 - [Referências](#referências)
 
@@ -301,22 +301,25 @@ Histórico de mudanças em [`CHANGELOG.md`](CHANGELOG.md) e
 | [`params.m`](params.m) | Parâmetros de runtime e escolha do cenário |
 | [`notebooks/`](notebooks/) | Cálculo analítico (Ybarra/Zbarra, Thévenin, LCL, ganhos) e notebook didático dos cards |
 | [`app.py`](app.py), [`src/`](src/) | Pipeline do dashboard: `pipeline/` (loader, pq, chart, spectrum), `report/` (renderer), `config/` |
-| [`scripts/`](scripts/) | Validação de cenários, geradores das figuras do TCC (`gen_*.py`), notas técnicas em PDF (`notas/`), export MATLAB, auditoria do KB (`kb_links.py`) |
+| [`scripts/`](scripts/) | Validação de cenários, geradores das figuras do TCC (`gen_*.py`), export MATLAB, cálculo de métricas e gráficos analíticos |
 | [`simulink/`](simulink/) | Modelos auxiliares standalone (modelo de referência MathWorks, sandbox, falta isolada) |
 | [`PSim/`](PSim/) | Fase inicial de modelagem no PSIM (bancada do PLL e controle de corrente), com netlists `.txt` |
 | [`assets/`](assets/) | Diagramas SVG/PNG ([`diagrams/`](assets/diagrams/)), gráficos do TCC ([`charts/`](assets/charts/)), banner e Plotly embutido |
 | [`CITATION.cff`](CITATION.cff) | Metadados de citação do repositório |
-| [`.claude/`](.claude/INDEX.md) | Base de conhecimento do projeto (teoria, simulação, normas, eventos, dashboard), skills e regras |
+| [`docs/`](docs/) | Documentação técnica complementar e histórico de versões do projeto |
 | `output/` | Gerado em runtime, não versionado |
 
 ---
 
-## Ferramentas
+## Tecnologias e Ferramentas de Suporte
 
-- **MATLAB/Simulink + Simscape Electrical:** simulação computacional da rede e do inversor.
-- **PSIM:** modelagem inicial e testes de bancada do PLL e do estágio de potência.
-- **Python (NumPy, pandas, Plotly, matplotlib):** cálculo analítico, pós-processamento, figuras e dashboard.
-- **Jupyter:** dimensionamento dos parâmetros.
+Este repositório consolida o ecossistema computacional de apoio desenvolvido para o Trabalho de Conclusão de Curso em Engenharia Elétrica (UERJ, 2026):
+
+- **Ambiente de Simulação Elétrica:** MATLAB/Simulink (Simscape Electrical) para a modelagem eletromagnética transitória do sistema IEEE 9 barras e controle do VSI;
+- **Dashboard Interativo & Pipeline de Dados:** Python 3.11+, Plotly e Pandas, viabilizando a exploração interativa dos 28 cenários dinâmicos de contingência, análise espectral e verificação dos limites normativos do Submódulo 2.10 do ONS;
+- **Diagramação Vetorial e Reprodutibilidade:** Ilustrações em SVG/PNG em alta definição para suporte didático e reprodutibilidade científica (DOI: [10.5281/zenodo.23866787](https://doi.org/10.5281/zenodo.23866787));
+- **Modelagem Inicial:** PSIM para testes preliminares de bancada do PLL e do estágio de potência;
+- **Ferramentas Auxiliares:** Ferramentas digitais e modelos de assistência computacional foram empregados como suporte à prototipagem das rotinas de código do painel interativo, automação do pipeline de dados e diagramação vetorial das ilustrações. Toda a concepção metodológica, parametrização física, análises de estabilidade e conclusões de engenharia são de autoria e responsabilidade técnica integral dos autores.
 
 ---
 
@@ -348,5 +351,4 @@ Em formato ABNT:
 - COORDINADOR ELÉCTRICO NACIONAL (Chile). *Estudio para Análisis de Falla del 25 de febrero de 2025 (EAF 089/2025)*, 2025.
 - IEA. *Global Energy Review 2026*.
 
-Citações por seção e referências completas: [`.claude/kb/`](.claude/kb/index.md)
-(cada documento traz `source:` e `references:` no frontmatter).
+Citações completas e detalhamento metodológico constam na monografia do TCC e nas referências acima.

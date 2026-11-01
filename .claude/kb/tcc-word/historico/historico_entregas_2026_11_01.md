@@ -30,3 +30,19 @@ Rodapé da figura: ωres² = (L1+L2)/(L1·L2·C1) e "N(s): filtro notch". O rest
 desacoplamento" e que cada eixo vira "planta de primeira ordem". O modelo não
 tem desacoplamento e a planta é LCL (ver [[agp-current-control-theory]],
 [[simulink-model]]); a Seção 2.3.2 já diz isso certo. Decidir com o Victor.
+
+## Promoção da versão do Victor e Equação (3.1) do ONS (16h39)
+
+Promovido o backup mais recente do Victor (_20261101_042452, 897 parágrafos,
+com todas as revisões de Rafael em azul, André em verde e Cleiton em vermelho)
+para o arquivo canônico TCC_Victor_Bruno_VFinal.docx.
+
+Formatação formal da restrição de corrente reativa do ONS (§3.3.2.1):
+- A fórmula em pseudo-código id,ref = min(1.0, sqrt(Imax² - iq,ref²)) foi
+  removida do texto corrido e convertida na Equação (3.1) em tabela sem
+  bordas com OMML nativo: id,ref = min(1,0; sqrt(Imax² - iq,ref²)).
+  Rótulo (3.1) e texto introdutório mantidos em vermelho (#FF0000, Prof. Cleiton).
+- A teoria p-q de Akagi (§3.3.3) foi renumerada de (3.1) para (3.2)
+  (menção no texto e rótulo na tabela), mantendo a cor azul (#0070C0, Prof. Rafael).
+- audit_docx: 0 falhas, 0 avisos; diff_texto: 3 trechos (897 → 899 parágrafos).
+  Backup datado em _backups\VF\TCC_Victor_Bruno_VFinal_backup_20261101_163920.docx.

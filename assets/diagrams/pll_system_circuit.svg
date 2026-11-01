@@ -11,7 +11,7 @@
   <rect width="920" height="400" fill="#ffffff"/>
 
   <text x="460" y="26" text-anchor="middle" font-size="15" font-weight="700" fill="#0B132B">
-    Inversor grid-tied: filtro LCL + SRF-PLL amostrando o PCC (diagrama unifilar)
+    Inversor conectado à rede: filtro LCL e SRF-PLL medindo o PCC (unifilar)
   </text>
 
   <!-- ============= DC bus / battery symbol ============= -->
@@ -21,7 +21,7 @@
     <line x1="35" y1="158" x2="65" y2="158" stroke-width="3"/>
     <line x1="42" y1="166" x2="58" y2="166" stroke-width="2"/>
   </g>
-  <text x="50" y="125" text-anchor="middle" font-size="12" font-style="italic" fill="#0B132B">V<tspan baseline-shift="sub" font-size="75%">dc</tspan></text>
+  <text x="30" y="159" text-anchor="end" font-size="13" font-style="italic" fill="#0B132B">V<tspan baseline-shift="sub" font-size="75%">cc</tspan></text>
 
   <line x1="50" y1="125" x2="120" y2="125" stroke="#0B132B" stroke-width="2"/>
   <line x1="50" y1="125" x2="50" y2="142" stroke="#0B132B" stroke-width="2"/>
@@ -48,7 +48,7 @@
 
   <!-- ============= PCC node ============= -->
   <circle cx="405" cy="152" r="5" fill="#0B132B"/>
-  <text x="405" y="135" text-anchor="middle" font-size="12" font-weight="700" fill="#F97316">PCC</text>
+  <text x="398" y="140" text-anchor="end" font-size="12" font-weight="700" fill="#F97316">PCC</text>
 
   <!-- ============= Cf + Rd branch to ground from PCC ============= -->
   <line x1="405" y1="152" x2="405" y2="205" stroke="#0B132B" stroke-width="2"/>
@@ -75,11 +75,11 @@
   <!-- ============= Grid Thevenin: R_th + L_th ============= -->
   <text x="640" y="112" text-anchor="middle" font-size="12" font-weight="600" fill="#0B132B">Z<tspan baseline-shift="sub" font-size="75%">th</tspan> (Barra 2 · IEEE 9)</text>
   <rect x="595" y="142" width="30" height="20" fill="white" stroke="#0B132B" stroke-width="2"/>
-  <text x="610" y="137" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">R<tspan baseline-shift="sub" font-size="75%">th</tspan></text>
+  <text x="610" y="131" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">R<tspan baseline-shift="sub" font-size="75%">th</tspan></text>
   <line x1="625" y1="152" x2="640" y2="152" stroke="#0B132B" stroke-width="2"/>
   <path d="M 640 152 q 7.5 -12 15 0 q 7.5 -12 15 0 q 7.5 -12 15 0"
         fill="none" stroke="#0B132B" stroke-width="2"/>
-  <text x="662" y="137" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">L<tspan baseline-shift="sub" font-size="75%">th</tspan></text>
+  <text x="662" y="131" text-anchor="middle" font-size="11" font-style="italic" fill="#0B132B">L<tspan baseline-shift="sub" font-size="75%">th</tspan></text>
   <line x1="685" y1="152" x2="740" y2="152" stroke="#0B132B" stroke-width="2"/>
 
   <!-- ============= AC source (grid) ============= -->
@@ -96,10 +96,10 @@
   <text x="423" y="60" font-size="11" font-style="italic" fill="#1971c2">u<tspan baseline-shift="sub" font-size="75%">abc</tspan>(PCC)</text>
 
   <!-- Path from voltmeter to PLL block (routed right of L2 to avoid the inductor) -->
-  <path d="M 416 70 L 560 70 L 560 333" fill="none" stroke="#1971c2" stroke-width="1.5" marker-end="url(#arrB)"/>
+  <path d="M 416 70 L 560 70 L 560 144 A 8 8 0 0 1 560 160 L 560 333" fill="none" stroke="#1971c2" stroke-width="1.5" marker-end="url(#arrB)"/>
 
   <!-- ============= PLL block (amber, banner accent) ============= -->
   <rect x="170" y="338" width="580" height="50" fill="#fff7ed" stroke="#F97316" stroke-width="2" rx="6"/>
   <text x="460" y="361" text-anchor="middle" font-size="13" font-weight="700" fill="#0B132B">SRF-PLL</text>
-  <text x="460" y="378" text-anchor="middle" font-size="11" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">abc</tspan> → Park → PI(K<tspan baseline-shift="sub" font-size="75%">pPLL</tspan>, K<tspan baseline-shift="sub" font-size="75%">iPLL</tspan>) ⊕ ω<tspan baseline-shift="sub" font-size="75%">n</tspan> → 1/s → φ̂  (entregue ao controlador dq)</text>
+  <text x="460" y="378" text-anchor="middle" font-size="11" fill="#0B132B">u<tspan baseline-shift="sub" font-size="75%">abc</tspan> → Park → PI(K<tspan baseline-shift="sub" font-size="75%">pPLL</tspan>, K<tspan baseline-shift="sub" font-size="75%">iPLL</tspan>) ⊕ ω<tspan baseline-shift="sub" font-size="75%">0</tspan> → 1/s → θ<tspan baseline-shift="sub" font-size="75%">PLL</tspan> (entregue ao controle de corrente dq)</text>
 </svg>

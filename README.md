@@ -1,7 +1,7 @@
 # Comportamento do SRF-PLL de Inversores Frente a Contingências em Sistemas Elétricos
 
 <p align="center">
-  <img src="assets/banner.svg" alt="PLL Stability banner" width="100%">
+  <img src="assets/banner.svg" alt="SRF-PLL sob contingências: inversor fotovoltaico na rede IEEE 9 barras" width="100%">
 </p>
 
 <p align="center">
@@ -33,6 +33,8 @@ Orientador: Prof. Dr. Oscar Cuaresma Zevallos | Coorientador: Prof. Dr. André G
 - [Como reproduzir](#como-reproduzir)
 - [Dashboard interativo](#dashboard-interativo)
 - [Conteúdo do repositório](#conteúdo-do-repositório)
+- [Ferramentas](#ferramentas)
+- [Como citar](#como-citar)
 - [Referências](#referências)
 
 ---
@@ -91,7 +93,7 @@ pelo ONS, com a sintonia nominal do PLL e com uma sintonia inadequada.
 | Capacitor do filtro `Cf` | 42,47 µF |
 | Frequência de ressonância do LCL | 9 069 rad/s (≈ 1,44 kHz) |
 | Frequência de chaveamento | 5 kHz |
-| Passo de simulação / de controle | 50 µs / 200 µs |
+| Passo de simulação / de controle | 5 µs / 200 µs |
 | Thévenin visto da Barra 2 (`R_th`, `L_th`) | 0,0100 Ω, 1,160 mH |
 
 O equivalente de Thévenin vem do elemento diagonal da matriz de impedância
@@ -176,6 +178,7 @@ nominal enxerga numa falta profunda.
 | Linha 8-9 | 3φ | — |
 | Regime (sem falta) | energização | energização |
 
+São 29 cenários válidos: 21 com a sintonia nominal e 8 com a inadequada.
 Protocolo: falta aplicada em **0,3 s**, eliminada em **0,4 s** (100 ms) e
 observação até **0,6 s**. Cada rodada é validada por
 `scripts/validar_cenarios.py`, que reprova cópias e assinaturas incoerentes
@@ -211,8 +214,9 @@ injetada na direção errada mesmo com a lógica de suporte ativa.
 
 ## Principais resultados
 
-- **Energização:** com a sintonia inadequada, o PLL leva cerca do dobro do
-  tempo para travar.
+- **Inicialização do sistema:** geradores, rede e inversor partem juntos em
+  t = 0, e o PLL sincroniza com as duas sintonias (erro de fase dentro de 2°
+  em 40 ms com a nominal e em 79 ms com a inadequada).
 - **Faltas trifásicas:** quanto mais próxima da Barra 2, mais severa. Com a
   sintonia nominal, o PLL sempre reconverge: retenção de `v_d` entre 9,2% e
   58,4%, pico de erro de fase entre 7,3° e 37,3° e retorno entre 76 e 112 ms.
@@ -273,14 +277,21 @@ output/results/<barra|linha>/<falta>/  ──►  output/pll_metrics.html
 sem internet e sem servidor.
 
 - **Filtros:** local da falta, tipo de falta e sintonia do PLL (nominal ou
-  inadequada), com mapa unifilar clicável.
-- **Abas:** Resumo (cards de severidade), Inversor (θ̂, erro de fase,
-  frequência, correntes e tensões dq, P/Q), Sistema (barras e geradores G1/G3)
-  e Espectro (FFT pré-falta, falta e pós-falta, tabelas de harmônicas com
-  destaque normativo IEEE 519 / IEEE 1547).
-- **Métricas:** pico do erro de fase, tempo de retorno a ±2°, retenção de
-  `v_d`, variações de P e Q, envelope de suportabilidade.
-- **Tabela comparativa** de todos os cenários, ordenável.
+  inadequada), com mapa unifilar clicável. Os 17 casos discutidos no TCC
+  aparecem agrupados por seção do Capítulo 5 e destacados em azul no mapa.
+- **Abas:** Resumo (cards de severidade), Inversor UFV (θ̂, erro de fase,
+  frequência, correntes e tensões dq, P/Q), Barras de Geração (barras e
+  geradores G1/G3) e Espectro FFT (pré-falta, falta e pós-falta, tabelas de
+  harmônicas com destaque normativo IEEE 519 / IEEE 1547).
+- **Métricas:** pico do erro de fase, tempo de retorno à faixa de 2°,
+  retenção de `v_d`, componente de 120 Hz, P e Q médias na falta, envelope de
+  suportabilidade.
+- **Tabela comparativa** de todos os cenários, ordenável, com o filtro "Só
+  casos do TCC".
+- **Modo apresentação:** palco em tela cheia usado na defesa, com oito
+  capítulos na ordem do Capítulo 5 (faltas destacadas, inicialização,
+  localização, sequência negativa, compromisso da sintonia, perda de
+  sincronismo, código de rede e todos os casos), navegação pelas setas.
 - Tema claro/escuro, zoom sincronizado na janela da falta e exportação PNG.
 
 Histórico de mudanças em [`CHANGELOG.md`](CHANGELOG.md) e
@@ -300,6 +311,7 @@ Histórico de mudanças em [`CHANGELOG.md`](CHANGELOG.md) e
 | [`simulink/`](simulink/) | Modelos auxiliares standalone (modelo de referência MathWorks, sandbox, falta isolada) |
 | [`PSim/`](PSim/) | Fase inicial de modelagem no PSIM (bancada do PLL e controle de corrente), com netlists `.txt` |
 | [`assets/`](assets/) | Diagramas SVG/PNG ([`diagrams/`](assets/diagrams/)), gráficos do TCC ([`charts/`](assets/charts/)), banner e Plotly embutido |
+| [`CITATION.cff`](CITATION.cff) | Metadados de citação do repositório |
 | [`.claude/`](.claude/INDEX.md) | Base de conhecimento do projeto (teoria, simulação, normas, eventos, dashboard), skills e regras |
 | `output/` | Gerado em runtime, não versionado |
 
@@ -307,10 +319,23 @@ Histórico de mudanças em [`CHANGELOG.md`](CHANGELOG.md) e
 
 ## Ferramentas
 
-- **MATLAB/Simulink + Simscape Electrical:** simulação de transitórios eletromagnéticos da rede e do inversor.
+- **MATLAB/Simulink + Simscape Electrical:** simulação computacional da rede e do inversor.
 - **PSIM:** modelagem inicial e testes de bancada do PLL e do estágio de potência.
 - **Python (NumPy, pandas, Plotly, matplotlib):** cálculo analítico, pós-processamento, figuras e dashboard.
 - **Jupyter:** dimensionamento dos parâmetros.
+
+---
+
+## Como citar
+
+O repositório traz um [`CITATION.cff`](CITATION.cff), então o GitHub mostra
+o botão **"Cite this repository"** com a referência pronta em APA e BibTeX.
+Em formato ABNT:
+
+> OLIVEIRA, Bruno Henrique de; REZENDE, Victor Hugo de Avelar. **Painel
+> interativo para análise dinâmica do SRF-PLL sob contingências em redes
+> elétricas**. Versão 1.0. Rio de Janeiro: UERJ, 2026. Disponível em:
+> <https://github.com/GGHB0/pll_stability_9bus>.
 
 ---
 

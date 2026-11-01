@@ -202,3 +202,4 @@ print(f"7. Arquivo canônico promovido e atualizado com sucesso:\n   {CANONICAL_
 print("=" * 80)
 print("PROMOÇÃO E FORMATAÇÃO DA EQUAÇÃO CONCLUÍDAS COM SUCESSO!")
 print("=" * 80)
+

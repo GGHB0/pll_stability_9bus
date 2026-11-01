@@ -46,3 +46,11 @@ Formatação formal da restrição de corrente reativa do ONS (§3.3.2.1):
   (menção no texto e rótulo na tabela), mantendo a cor azul (#0070C0, Prof. Rafael).
 - audit_docx: 0 falhas, 0 avisos; diff_texto: 3 trechos (897 → 899 parágrafos).
   Backup datado em _backups\VF\TCC_Victor_Bruno_VFinal_backup_20261101_163920.docx.
+
+## Aplicação dos Itens 1, 4 e 5 da Banca (16h54)
+
+Atendendo às solicitações da banca e ajustes identificados:
+- **Item 5 (Remissão cruzada no Cap. 4)**: Corrigida a remissão de 'Figuras 4.12 e 5.13' para 'Figuras 4.12 e 4.13'.
+- **Item 4 (Harmonização da Seção 2.5 com Seção 2.3.2)**: Parágrafos 535 e 536 atualizados para refletir que os controladores PI possuem filtro notch e não desacoplamento ativo, tratando o acoplamento cruzado e a rede como perturbações e modelando a planta equivalente puramente indutiva para sintonia (em total alinhamento com a Figura 2.2 e [[agp-current-control-theory]]).
+- **Item 1 (Escolha do SRF-PLL - Prof. Rafael, Comentário 4)**: Inserido parágrafo na Seção 2.4 justificando a opção pelo SRF-PLL sobre DSOGI-PLL e DDSRF-PLL (padrão comercial dominante em grid-following, menor demanda computacional e linha de base para contingências severas), formatado em azul (#0070C0), e incluída a sigla DSOGI-PLL na Lista de Siglas.
+- **Validação**: audit_docx 0 falhas, 0 avisos; diff_texto com 4 trechos (899 -> 901 parágrafos). Backup em _backups\VF\TCC_Victor_Bruno_VFinal_backup_20261101_165411.docx.

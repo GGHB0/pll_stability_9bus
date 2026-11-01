@@ -64,3 +64,14 @@ Atendendo às solicitações da banca e ajustes identificados:
 - **Apêndice A**: Atualizado o parágrafo final com o repositório e DOI.
 - **CITATION.cff e README.md**: Metadados de citação atualizados e badge do DOI adicionado.
 - **Auditoria**: audit_docx 0 falhas, 0 avisos; diff_texto com 3 trechos (901 parágrafos mantidos). Backup datado em _backups\VF\TCC_Victor_Bruno_VFinal_backup_20261101_171104.docx.
+
+## Inserção de Componentes Simétricas (Figura 2.4) e Trabalhos Futuros (17h40)
+
+- **Item 2 (Componentes Simétricas de Fortescue e Figura 2.4)**:
+  - Inserido na Seção 2.4 texto formal definindo as componentes de Fortescue (sequência positiva girando a +ω0, sequência negativa girando a -ω0) e o mecanismo físico da velocidade relativa Δω = 2ω0 (120 Hz) sobre o referencial síncrono dq, que contamina a malha do SRF-PLL.
+  - Inserida a **Figura 2.4 – Decomposição em componentes simétricas e projeção da oscilação de 120 Hz no referencial dq** (arte vetorial de 3 painéis: sequência positiva, negativa e projeção em dq; 3000x1260 px) com legenda e fonte, e registrada na Lista de Ilustrações.
+  - Na Seção 4.3 (§4.3), amarrada a raia de 120 Hz da FFT da Figura 4.10 diretamente à Figura 2.4 e à fundamentação da Seção 2.4.
+- **Item 3 (Trabalhos Futuros e Técnicas Avançadas)**:
+  - Acrescentado ao §6.1 (Trabalhos Futuros) o compromisso operacional da injeção de correntes puramente simétricas diante de tensão desbalanceada, resultando em potências ativa e reativa oscilantes a 120 Hz que estressam o barramento CC.
+- **Destaques**: Todas as adições destacadas em azul (#0070C0) para o Prof. Rafael.
+- **Auditoria**: audit_docx 0 falhas, 0 avisos; diff_texto com 4 trechos (901 -> 906 parágrafos). Backup datado em _backups\VF\TCC_Victor_Bruno_VFinal_backup_20261101_174017.docx.

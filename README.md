@@ -141,7 +141,7 @@ assimétrico injeta sequência negativa, que aparece em dq como oscilação de
 **120 Hz** em `v_q` e contamina θ̂.
 
 <p align="center">
-  <img src="assets/diagrams/contingencies_attack.svg" alt="Circuito de referência com marcadores de contingência e painéis de impacto em v_q" width="100%">
+  <img src="assets/diagrams/contingencies_attack.svg" alt="Afundamento simétrico e assimétrico: tensões abc no PCC e o que o PLL enxerga em dq (v_d e v_q)" width="100%">
 </p>
 
 ---

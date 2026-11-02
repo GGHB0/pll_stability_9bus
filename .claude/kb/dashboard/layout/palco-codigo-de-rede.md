@@ -20,7 +20,7 @@ do trabalho.
 | 1 | Só a região (Fig. 2.1) e a rampa (Fig. 2.2), sem casos | §5.5, 1º parágrafo |
 | 2 | Barra 7 e Linha 7-8: abaixo de 0,2 pu, i<sub>q</sub> = 1 pu, mas só 0,09 pu de reativo (caixa com seta ao ponto da Barra 7) | Tabela 5.2 e texto da Fig. 5.8 (§5.2) |
 | 3 | Os quatro casos; Barra 6 a 0,72 contra 0,76 pu da rampa; áreas V·i<sub>q</sub> maiores | Tabela 5.2 |
-| 4 | Outros curtos acesos (assimétricas e inadequada) | §5.5, 2º e 3º parágrafos |
+| 4 | Outros curtos acesos (assimétricas e lenta) | §5.5, 2º e 3º parágrafos |
 | 5 | Gráfico velado, cartão "O que a verificação de hoje pergunta / O que os resultados mostram" | Conclusão (Cap. 6) |
 
 Em 2026-10-28 o dilema do reativo (antes passo 4, com a Barra 7 realçada)

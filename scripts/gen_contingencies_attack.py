@@ -68,7 +68,7 @@ def card(kind,ox):
     lines = (["v<tspan baseline-shift='sub' font-size='75%'>d</tspan> cai para U e v<tspan baseline-shift='sub' font-size='75%'>q</tspan> segue em zero.",
               "O ganho do laço é proporcional a U: ω<tspan baseline-shift='sub' font-size='75%'>n</tspan> e ξ",
               "caem com √U e o PLL fica mais lento.",
-              "Com U = 0,2 pu, vira a sintonia inadequada."] if sim else
+              "Com U = 0,2 pu, vira a sintonia lenta."] if sim else
              ["A sequência negativa gira no sentido oposto",
               "e aparece em dq como oscilação de 120 Hz.",
               "Como v<tspan baseline-shift='sub' font-size='75%'>q</tspan> é a entrada do PI, o PLL corrige",

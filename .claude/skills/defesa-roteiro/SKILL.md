@@ -100,10 +100,10 @@ ponto entre dois comandos e renumerar os seguintes.
 - Frases do palco seguem o que a tela mostra: o texto do palco mora em
   `src/report/roteiro.py`. Mudou o capítulo no dashboard → ajustar `falas/palco.py`
   e a caixa do capítulo em `conteudo/`.
-- Termos: "sintonia inadequada" (nunca BAD_PLL), "escorregamento de ciclo",
+- Termos: "sintonia lenta" (nunca BAD_PLL), "escorregamento de ciclo",
   "simulação computacional" (sem a sigla de transitórios eletromagnéticos),
   "recuperar o sincronismo" (nunca "reaquisitar"), sem RoCoF.
-- Cores: azul = nominal, laranja = inadequada.
+- Cores: azul = nominal, laranja = lenta.
 
 ## Conferência
 

@@ -823,7 +823,7 @@ function _findEquiv(key, mode) {{
       ? parts[0] + "/" + parts[1] + "_bad_pll"
       : key + "_bad_pll";
     if (SCENARIOS[badKey]) return badKey;
-    // a monofásica inadequada da Barra 6 foi exportada como 1phase_ground
+    // a monofásica lenta da Barra 6 foi exportada como 1phase_ground
     var gKey = badKey.replace("/1phase_bad_pll", "/1phase_ground_bad_pll");
     return SCENARIOS[gKey] ? gKey : _firstOfMode(true);
   }} else {{
@@ -1009,7 +1009,7 @@ setPllMode(pllMode);
             '<button class="pll-btn active" data-mode="nominal" '
             'onclick="setPllMode(\'nominal\')">Nominal</button>'
             '<button class="pll-btn" data-mode="bad" '
-            'onclick="setPllMode(\'bad\')">Sintonia inadequada</button>'
+            'onclick="setPllMode(\'bad\')">Sintonia lenta</button>'
             '</div>'
             f'<span class="pll-gains" id="pll-gains" data-nominal="{nom}" '
             f'data-bad="ganhos ×0,2: {bad}" title="Ganhos do PI do SRF-PLL; ωn e ξ com U = 1 pu (Seção 3.4)">'

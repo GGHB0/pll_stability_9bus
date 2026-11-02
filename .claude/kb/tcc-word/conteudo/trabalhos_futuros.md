@@ -71,7 +71,7 @@ congelamento do PLL") **não convenceu** o usuário. Reformulado a partir de
 - Logo `ω_n = √(Ki·U)` e `ξ = (Kp/2)·√(U/Ki)`: a sintonia **degrada sozinha**
   conforme a tensão afunda.
 - `U = 0,2 pu` com ganhos nominais dá `ω_n = 145,5` / `ξ = 0,316` —
-  **exatamente** o cenário de sintonia inadequada (ganhos ×0,2). Equivalência
+  **exatamente** o cenário de sintonia lenta (ganhos ×0,2). Equivalência
   algébrica exata no modelo linearizado.
 
 Proposta resultante, mais específica e mais barata que a primeira versão:

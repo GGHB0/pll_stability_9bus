@@ -56,7 +56,7 @@ conteúdo, divida em duas figuras, ou oriente o usuário a inserir a imagem maio
 melhora **nitidez**, não o tamanho aparente do texto na página.
 
 Ao **aumentar fontes de um SVG existente**, lembre que os grupos de texto empilhados
-(ex.: R/X/B de linha, kV de trafo, MW/MVAr de carga) têm espaçamento de linha fixo —
+(ex.: R/X/B de linha, kV de trafo, MW/Mvar de carga) têm espaçamento de linha fixo —
 aumente o `font-size` **e** reposicione os `y` (espaçamento ≈ 1,15× a fonte) senão as
 linhas colidem. Confira sempre no PNG rasterizado antes de dar por pronto.
 

@@ -17,7 +17,7 @@ Ver oscilações em [[iberia-2025-oscillations]] e causas raiz em
 ## 4.1.2 — Recursos de potência reativa: por que nada respondeu
 
 Três modos de controle de reativo definidos pelo relatório (NC RfG Art. 21):
-**controle de Q** (setpoint em MVAr), **controle de V** (setpoint de tensão) e
+**controle de Q** (setpoint em Mvar), **controle de V** (setpoint de tensão) e
 **fator de potência fixo** (Q proporcional a P instantâneo).
 
 - **RES espanholas (inversorizadas)**: travadas em **fator de potência fixo**
@@ -33,7 +33,7 @@ Três modos de controle de reativo definidos pelo relatório (NC RfG Art. 21):
   não desenvolvido); sem definição explícita de velocidade de resposta.
   Alguns geradores participavam voluntariamente de um **projeto-piloto** com
   setpoint direto de tensão enviado a cada minuto — a maioria não.
-- **Reatores shunt** (~90 unidades, 13.300 MVAr): operação **manual** na
+- **Reatores shunt** (~90 unidades, 13.300 Mvar): operação **manual** na
   Espanha (RTE na França tem ~50% automatizado, resposta 5–10 s). Sem tempo
   de decisão hábil para responder a uma subida de ~1 minuto.
 - **STATCOM**: apenas **1 em operação** no dia; outro em testes de comissionamento.
@@ -47,7 +47,7 @@ via SCADA, tipicamente de tensão; **PV solar faz controle de tensão inclusive
 à noite**, sem geração ativa.
 
 **Tabela 4-2 (resumo)**: de todos os ativos, RES tinha a maior capacidade
-remanescente não utilizada — equivalente a 7 reatores de 150 MVAr às
+remanescente não utilizada — equivalente a 7 reatores de 150 Mvar às
 12:33:00, contra 3 equivalentes para os geradores PO 7.4.
 
 ## 4.1.3 — Gestão de tensão: fatores concorrentes
@@ -79,7 +79,7 @@ remanescente não utilizada — equivalente a 7 reatores de 150 MVAr às
 [[iberia-2025-oscillations]]). Ações de amortecimento: 6 linhas conectadas
 (12:00–12:20); 3 reatores desconectados por baixa tensão + 4 linhas 400 kV
 conectadas (12:20–12:25, protocolo bilateral "oscillation and low damping");
-5 reatores conectados (700 MVAr, 12:25–12:29) — tensão volta à faixa até 12:30.
+5 reatores conectados (700 Mvar, 12:25–12:29) — tensão volta à faixa até 12:30.
 
 **Mecanismo de retroalimentação positiva (12:30–12:33)**: mudança de
 despacho (~0,4–0,5 GW, redução de exportação Espanha→Portugal) + aFRR
@@ -90,13 +90,13 @@ oscilação agora amplifica a rampa de despacho.
 
 - **Evento "A" — 400 kV TS1 Granada** (12:32:57, 1ª desconexão por
   sobretensão): tensão subiu de 400,6→417,2 kV em 1 min (22,6 kV/min); Q
-  subiu de −165→−96 MVAr (+94 MVAr/min); sensibilidade **0,24 kV por MVAr**.
+  subiu de −165→−96 Mvar (+94 Mvar/min); sensibilidade **0,24 kV por Mvar**.
   3 geradores RES (150 MW) reduziram P em 78,8 MW (123,4→41,6 MW) em 24 s,
-  reduzindo absorção de Q em 33,3 MVAr. Transformador 400/220 kV disparou por
+  reduzindo absorção de Q em 33,3 Mvar. Transformador 400/220 kV disparou por
   sobretensão no lado 220 kV (tap fixo durante a subida rápida → relação de
   transformação amplificou a tensão pu no lado 220 kV) — proteção sem atraso
   (1,1 pu, 0 s), não coordenada com a proteção de transmissão.
-- **Evento "B" — 400 kV TS1 Badajoz** (19 s depois): mais 165 MVAr de
+- **Evento "B" — 400 kV TS1 Badajoz** (19 s depois): mais 165 Mvar de
   absorção perdidos. Assimetria de fase de até ~9 kV observada (fase B mais alta).
 - Após "B": mais 12 desconexões por sobretensão em 2,5 s → cascata →
   fenômenos de frequência → blackout.
@@ -115,7 +115,7 @@ tipo de modelo.
   6,6→3,6 kV em UCTE; 8,5→7,9 kV em CGMES) — confirma que sair do FP fixo ajudaria.
 - Variação de tap em TS1 Granada: +1,19 kV/tap (lado 220 kV), −0,78 kV/tap
   (lado 400 kV) — CGMES.
-- Reator shunt em TS1 Badajoz: 3–4 kV por 150 MVAr (0,023 kV/MVAr).
+- Reator shunt em TS1 Badajoz: 3–4 kV por 150 Mvar (0,023 kV/Mvar).
 - **Achado crítico**: variação máxima de tensão calculada por injeção de P/Q
   em TS1 Granada foi de **3–4 kV**, contra **16–17 kV medidos no SCADA real**
   — o modelo estático subestima em ~4–5× o efeito observado.
@@ -132,6 +132,6 @@ tipo de modelo.
 - Contraste RES-Espanha (FP fixo, sem resposta) vs. RES-Portugal (setpoint
   de V em tempo real, inclusive à noite) é material de discussão para
   recomendações de modo de controle do inversor — ver [[iberia-2025-ibr-lessons]].
-- Sensibilidade de tensão medida em campo (0,24 kV/MVAr, TS1 Granada) é
+- Sensibilidade de tensão medida em campo (0,24 kV/Mvar, TS1 Granada) é
   referência de ordem de grandeza para validar a resposta de Q do modelo
   IEEE 9 barras sob variação de despacho.

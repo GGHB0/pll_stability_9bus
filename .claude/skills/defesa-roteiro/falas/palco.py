@@ -33,13 +33,13 @@ PALCO_ROTEIRO = [
         "quem": "Victor",
         "dur_s": 50,
         "reserva": "Slide Oculto 24",
-        "msg": "Na partida, o SRF-PLL trava na rede: o erro de fase entra na faixa de 2° em 40 ms com a sintonia nominal e em 79 ms com a inadequada, quase o dobro.",
+        "msg": "Na partida, o SRF-PLL trava na rede: o erro de fase entra na faixa de 2° em 40 ms com a sintonia nominal e em 79 ms com a lenta, quase o dobro.",
         "pontos": [
             ("Victor", "Passo 1 (Nominal em azul, foco 0 a 60 ms): sem falta na rede, o erro de fase entra na faixa verde de ±2° em 40 ms (e v_d entra em ±5% em 34 ms)."),
-            ("Bruno", "Passo 2 (Seta → Entra a inadequada em laranja + Fasor à direita): com ganhos reduzidos em 80%, o erro oscila mais e leva 79 ms para entrar em ±2° (quase o dobro; v_d leva 42 ms). Ao clicar em '▶ play' no fasor, os dois vetores convergem para o topo antes de 0,1 s: em regime permanente as duas sintonias funcionam igual — a inadequada é lenta, não quebrada."),
+            ("Bruno", "Passo 2 (Seta → Entra a lenta em laranja + Fasor à direita): com ganhos reduzidos em 80%, o erro oscila mais e leva 79 ms para entrar em ±2° (quase o dobro; v_d leva 42 ms). Ao clicar em '▶ play' no fasor, os dois vetores convergem para o topo antes de 0,1 s: em regime permanente as duas sintonias funcionam igual — a lenta demora mais, mas não falha."),
         ],
         "falas": [
-            ("Victor", "No Capítulo 2, verificamos a energização do inversor. No passo 1, com a sintonia nominal, o erro de fase converge para a faixa de 2 graus em 40 milissegundos. (Seta →) Ao ligar a sintonia inadequada em laranja, o travamento leva 79 milissegundos, quase o dobro. Pelo fasor à direita, vemos que em regime permanente as duas sintonias travam normalmente e chegam ao mesmo ponto de operação. A diferença só aparecerá durante as faltas."),
+            ("Victor", "No Capítulo 2, verificamos a energização do inversor. No passo 1, com a sintonia nominal, o erro de fase converge para a faixa de 2 graus em 40 milissegundos. (Seta →) Ao ligar a sintonia lenta em laranja, o travamento leva 79 milissegundos, quase o dobro. Pelo fasor à direita, vemos que em regime permanente as duas sintonias travam normalmente e chegam ao mesmo ponto de operação. A diferença só aparecerá durante as faltas."),
         ],
         "atencao": "Deixar claro que às vésperas da falta (t = 0,3 s) as duas sintonias estão perfeitamente travadas no mesmo ponto de operação.",
     },
@@ -96,11 +96,11 @@ PALCO_ROTEIRO = [
         "reserva": "Slide Oculto 27",
         "msg": "Na bifásica da Barra 6, o ganho menor filtra melhor o 120 Hz (pico cai de 96,0° para 34,5° e retorno de 48 para 30 ms), mas retarda a recuperação onde a falta é severa.",
         "pontos": [
-            ("Bruno", "Passo 1 (Nominal em azul na B6 bifásica) e Passo 2 (Seta → Inadequada em laranja): no Passo 1, com banda nominal, o 120 Hz leva o erro a 96,0°. No Passo 2, embora o 120 Hz em v_d seja quase idêntico (0,39 vs. 0,37 pu), a menor banda da sintonia inadequada atenua a oscilação e reduz o pico do erro para 34,5° e o retorno de 48 para 30 ms."),
+            ("Bruno", "Passo 1 (Nominal em azul na B6 bifásica) e Passo 2 (Seta → Lenta em laranja): no Passo 1, com banda nominal, o 120 Hz leva o erro a 96,0°. No Passo 2, embora o 120 Hz em v_d seja quase idêntico (0,39 vs. 0,37 pu), a menor banda da sintonia lenta atenua a oscilação e reduz o pico do erro para 34,5° e o retorno de 48 para 30 ms."),
             ("Victor", "Passo 3 (Seta → Visão completa e pergunta-ponte): explicar por que funcionou na Barra 6 (a tensão residual positiva v_d = 0,72 pu ainda sustenta o laço) e apontar o preço pago na Barra 7 (onde o tempo de retorno quase dobra: 46 → 95 ms na monofásica e 51 → 96 ms na bifásica). Fechar com a pergunta na tela: 'E numa falta mais severa?'"),
         ],
         "falas": [
-            ("Victor", "No Capítulo 5, testamos a redução de ganhos. Na falta bifásica da Barra 6, com a sintonia nominal, o erro chega a 96 graus. (Seta →) Com a sintonia inadequada, a menor largura de banda filtra melhor o 120 hertz: o pico do erro cai para 34,5 graus e o retorno de 48 para 30 milissegundos. (Seta →) Pareceu vantajoso porque a tensão residual na Barra 6 ainda sustentava o laço. Porém, numa falta severa como a da Barra 7, essa mesma lentidão faz o tempo de recuperação quase dobrar. O que nos leva à próxima etapa."),
+            ("Victor", "No Capítulo 5, testamos a redução de ganhos. Na falta bifásica da Barra 6, com a sintonia nominal, o erro chega a 96 graus. (Seta →) Com a sintonia lenta, a menor largura de banda filtra melhor o 120 hertz: o pico do erro cai para 34,5 graus e o retorno de 48 para 30 milissegundos. (Seta →) Pareceu vantajoso porque a tensão residual na Barra 6 ainda sustentava o laço. Porém, numa falta severa como a da Barra 7, essa mesma lentidão faz o tempo de recuperação quase dobrar. O que nos leva à próxima etapa."),
         ],
         "atencao": "O Passo 3 deste capítulo é o clímax que prepara a perda de sincronismo do Capítulo 6.",
     },
@@ -113,13 +113,13 @@ PALCO_ROTEIRO = [
         "quem": "Victor",
         "dur_s": 70,
         "reserva": "Slide Oculto 28",
-        "msg": "Na Barra 7 trifásica, a sintonia decide o sincronismo: com a nominal o erro volta em 98 ms; com a inadequada sofre escorregamento de ciclo (±180°) e a usina absorve potência ativa em 66,8% do pós-falta.",
+        "msg": "Na Barra 7 trifásica, a sintonia decide o sincronismo: com a nominal o erro volta em 98 ms; com a lenta sofre escorregamento de ciclo (±180°) e a usina absorve potência ativa em 66,8% do pós-falta.",
         "pontos": [
-            ("Victor", "Passo 1 (Nominal em azul na B7 trifásica) e Passo 2 (Seta → Inadequada em laranja): no Passo 1, mesmo com retenção de 9,2% de v_d, a sintonia nominal recupera a faixa de 2° em 98 ms. No Passo 2, com a sintonia inadequada (retenção similar de 8,2%), o amortecimento efetivo colapsa na falta e o PLL entra em escorregamento de ciclo, varrendo ±180° sem parar até 0,6 s."),
+            ("Victor", "Passo 1 (Nominal em azul na B7 trifásica) e Passo 2 (Seta → Lenta em laranja): no Passo 1, mesmo com retenção de 9,2% de v_d, a sintonia nominal recupera a faixa de 2° em 98 ms. No Passo 2, com a sintonia lenta (retenção similar de 8,2%), o amortecimento efetivo colapsa na falta e o PLL entra em escorregamento de ciclo, varrendo ±180° sem parar até 0,6 s."),
             ("Bruno", "Passo 3 (Seta → Potência ativa P e destaque '66,8%' sob o fasor): o mesmo ganho que filtrava o 120 Hz na Barra 6 perde o sincronismo aqui. Como o referencial gira sem parar em relação à rede (visível no vetor laranja dando voltas no fasor), P = (3/2)·V·i_d·cos(Δθ) inverte de sinal e a usina absorve potência ativa da rede em 66,8% do tempo pós-falta (média de −0,40 pu)."),
         ],
         "falas": [
-            ("Victor", "O Capítulo 6 traz a falta trifásica na Barra 7. (Seta →) Com a sintonia nominal, mesmo retendo apenas 9,2% de tensão, o PLL recupera o sincronismo em 98 milissegundos. (Seta →) Com a sintonia inadequada, o laço subamortecido colapsa e o PLL sofre escorregamento de ciclo, varrendo de mais a menos 180 graus sem recuperar o sincronismo. (Seta →) A consequência está no gráfico de baixo: o mesmo ganho menor que parecia bom na Barra 6 perdeu o referencial aqui. Com o referencial girando continuamente, a usina passa a absorver potência ativa da rede em 66,8% do tempo pós-falta, virando uma carga."),
+            ("Victor", "O Capítulo 6 traz a falta trifásica na Barra 7. (Seta →) Com a sintonia nominal, mesmo retendo apenas 9,2% de tensão, o PLL recupera o sincronismo em 98 milissegundos. (Seta →) Com a sintonia lenta, o laço subamortecido colapsa e o PLL sofre escorregamento de ciclo, varrendo de mais a menos 180 graus sem recuperar o sincronismo. (Seta →) A consequência está no gráfico de baixo: o mesmo ganho menor que parecia bom na Barra 6 perdeu o referencial aqui. Com o referencial girando continuamente, a usina passa a absorver potência ativa da rede em 66,8% do tempo pós-falta, virando uma carga."),
         ],
         "atencao": "Se quiser, clicar em '▶ play' sob o fasor no Passo 3 para mostrar o vetor azul travado no topo e o laranja girando sem parar.",
     },

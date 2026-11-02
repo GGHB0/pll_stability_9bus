@@ -6,9 +6,9 @@ RESERVA_SPEECHES = {
     23: (
         "[Victor] (Reserva do Capítulo 2 do painel) Na energização, com a sintonia nominal, vd "
         "acomoda em 34 ms e o erro de fase entra na faixa de 2 graus em 40 ms. Com a sintonia "
-        "inadequada, são 42 ms e 79 ms, quase o dobro do tempo.\n\n"
+        "lenta, são 42 ms e 79 ms, quase o dobro do tempo.\n\n"
         "[Bruno] Em regime permanente, porém, as duas chegam ao mesmo ponto de operação antes da "
-        "falta em 0,3 s: a sintonia inadequada é lenta, não quebrada, e a diferença aparece nas contingências."
+        "falta em 0,3 s: a sintonia lenta demora mais, mas não falha, e a diferença aparece nas contingências."
     ),
     24: (
         "[Bruno] (Reserva do Capítulo 3 do painel) Nas faltas trifásicas com sintonia nominal, "
@@ -24,11 +24,11 @@ RESERVA_SPEECHES = {
         "que nas trifásicas.\n\n"
         "[Bruno] Como 754 rad/s é apenas 2,32 vezes a frequência natural do laço, o PI não filtra "
         "essa componente. Já no gráfico da direita, na trifásica da Barra 7, a nominal recupera em "
-        "98 ms enquanto a inadequada perde o sincronismo por escorregamento de ciclo."
+        "98 ms enquanto a lenta perde o sincronismo por escorregamento de ciclo."
     ),
     26: (
         "[Bruno] (Reserva do Capítulo 5 do painel) Na bifásica da Barra 6, onde a tensão residual "
-        "sustenta o laço, a menor banda da sintonia inadequada filtra o 120 Hz: o pico do erro cai "
+        "sustenta o laço, a menor banda da sintonia lenta filtra o 120 Hz: o pico do erro cai "
         "de 96,0 para 34,5 graus e o retorno cai de 48 para 30 ms.\n\n"
         "[Victor] Porém, na Barra 7, onde o afundamento é severo, essa lentidão cobra o preço na "
         "recuperação: o tempo de retorno quase dobra, passando de 46 para 95 ms na monofásica e de "
@@ -36,7 +36,7 @@ RESERVA_SPEECHES = {
     ),
     27: (
         "[Bruno] (Reserva do Capítulo 6 do painel) No pós-falta da Barra 7 trifásica com sintonia "
-        "inadequada, o inversor passa 66,8% do tempo absorvendo potência ativa da rede, com média de "
+        "lenta, o inversor passa 66,8% do tempo absorvendo potência ativa da rede, com média de "
         "menos 0,40 pu, comportando-se como uma carga oscilante.\n\n"
         "[Victor] A malha de corrente não falhou, mas como o referencial estimado pelo PLL gira "
         "continuamente em escorregamento de ciclo, a corrente comandada no eixo d troca de sinal em "

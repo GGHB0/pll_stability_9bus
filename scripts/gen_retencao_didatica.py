@@ -18,7 +18,7 @@ aplicacao da falta, que domina o trecho inicial e nao representa o afundamento.
 
 Saidas (SVG + PNG, mesma convencao de gen_fault_waveforms.py):
   retencao_construcao.svg  -- painel unico, caso nominal (bus7/3phase)
-  retencao_comparacao.svg  -- painel duplo nominal x sintonia inadequada,
+  retencao_comparacao.svg  -- painel duplo nominal x sintonia lenta,
                               usado na Secao 5.4: mostra que as bases pre-falta
                               diferem (0,989 x 0,823 pu) mas as razoes quase
                               coincidem, que e o que autoriza atribuir a
@@ -26,7 +26,7 @@ Saidas (SVG + PNG, mesma convencao de gen_fault_waveforms.py):
                               severidade da perturbacao.
 
 No painel duplo o eixo X e o tempo RELATIVO ao inicio da falta, porque t_fault
-difere entre os cenarios (0,3 s no nominal, 0,6 s na sintonia inadequada); o
+difere entre os cenarios (0,3 s no nominal, 0,6 s na sintonia lenta); o
 eixo Y e compartilhado, pois e justamente a diferenca das bases pre-falta que a
 figura precisa deixar visivel (mesmo motivo de YLIM_GROUPS em
 gen_fault_waveforms.py).
@@ -217,7 +217,7 @@ def fig_comparacao():
     """Painel duplo da Secao 5.4: bases pre-falta diferentes, razoes proximas."""
     paineis = [
         ("bus7/3phase", "(a) Sintonia nominal"),
-        ("bus7/3phase_bad_pll", "(b) Sintonia inadequada"),
+        ("bus7/3phase_bad_pll", "(b) Sintonia lenta"),
     ]
     # figsize escolhido pela LEGIBILIDADE NO DOCX, nao pelo visual isolado: a
     # figura entra na pagina com 6,5 in de largura, entao a fonte efetiva vale

@@ -30,8 +30,8 @@ def inject_defesa_qa_and_hidden_slides(wb: WordRoteiroBuilder, slides_jpg_fn):
     )
     qa_list = [
         ("1. Quantos cenários foram simulados (28 na Tabela 4.1 vs. 29 no Cap. 5)?",
-         "Foram simulados <b>29 cenários: 21 com a sintonia nominal e 8 com a sintonia inadequada</b> "
-         "(28 com falta e 1 em regime permanente). Na Tabela 4.1 faltam a marca da Linha 7-8 inadequada "
+         "Foram simulados <b>29 cenários: 21 com a sintonia nominal e 8 com a sintonia lenta</b> "
+         "(28 com falta e 1 em regime permanente). Na Tabela 4.1 faltam a marca da Linha 7-8 lenta "
          "e a linha de regime permanente, mas ambas estão descritas e analisadas no Capítulo 5 (§5.1 e §5.4)."),
         ("2. Por que os objetivos da Introdução citam sobrecorrentes e impedância da rede?",
          "O Capítulo 6 registra as duas ressalvas: as sobrecorrentes não se manifestam porque o controle "
@@ -55,7 +55,7 @@ def inject_defesa_qa_and_hidden_slides(wb: WordRoteiroBuilder, slides_jpg_fn):
          "O valor consolidado oficial é <b>23.368 MW (34,5% da demanda do momento)</b>, do Relatório de "
          "Análise de Perturbação do ONS (RAP-ONS 00012/2023) detalhado na §2.4.3."),
         ("7. Onde ocorre o escorregamento de ciclo (cycle slipping)?",
-         "Ocorre com a <b>sintonia inadequada nas faltas trifásicas severas: Barra 7 e Linha 7-8</b> (§5.4, "
+         "Ocorre com a <b>sintonia lenta nas faltas trifásicas severas: Barra 7 e Linha 7-8</b> (§5.4, "
          "Fig. 5.18), onde o erro gira continuamente após a eliminação e não retorna até 0,6 s. Nas faltas "
          "assimétricas (§5.3), a fragilidade é a oscilação estacionária de 120 Hz."),
         ("8. Por que a potência reativa na Barra 7 é de apenas 0,09 pu com corrente reativa saturada em 1,0 pu?",

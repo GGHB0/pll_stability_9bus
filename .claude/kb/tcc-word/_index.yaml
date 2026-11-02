@@ -7,9 +7,6 @@ files:
   - file: content_map.md
     name: tcc-docx-content-map
     description: Mapa seção a seção — estado atual, problemas estruturais e inventário de figuras; revisão completa jun/2026 (307 parágrafos)
-  - file: historico/historico_entregas_2026_11_01.md
-    name: tcc-historico-entregas-2026-11-01
-    description: "Entrega de 2026-11-01 (03h12): Figura 2.2 com a planta LCL da TeseAGP no lugar do RL, fonte com Alves (2022)"
 subfolders:
   - folder: conteudo
     description: Texto completo de cada seção do TCC (prefácio, introdução, Cap.2-4, trabalhos futuros) e inventário de siglas
@@ -93,6 +90,12 @@ subfolders:
       - file: historico_entregas.md
         name: tcc-historico-entregas
         description: Histórico de entregas do Claude no DOCX canônico, mais recente primeiro (entregas antigas nos arquivos _2026_07 e _v8)
+      - file: historico_entregas_2026_11_01.md
+        name: tcc-historico-entregas-2026-11-01
+        description: "Entrega de 2026-11-01 (03h12): Figura 2.2 com a planta LCL da TeseAGP no lugar do RL, fonte com Alves (2022)"
+      - file: historico_entregas_2026_10_15.md
+        name: tcc-historico-entregas-2026-10-15
+        description: "Entregas de 2026-10-15 no TCC: referências de delimitação de escopo (Oscar) e Figura 3.2 só em blocos (André)"
       - file: historico_entregas_2026_10_12.md
         name: tcc-historico-entregas-2026-10-12
         description: "Entregas de 2026-10-12 no VF - Copia — comentários do Oscar de 11/10, P e Q reaplicados, 180° = oposição de fase, ANEXOS removido, salto de fase"

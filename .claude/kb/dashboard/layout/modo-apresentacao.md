@@ -46,8 +46,8 @@ pela seta ←, cai no último passo.
 `_marcaPartida` marca, por caso, linha tracejada na cor da curva, tempo no
 topo (40/79 ms no erro, 34/42 ms em v_d) e ponto onde a curva entra de vez
 na faixa. O painel de v_d ganhou a faixa de ±5% do valor final, uma por
-caso em volta do próprio valor final (0,983 nominal, 0,996 inadequada; com
-uma só, o ponto da inadequada caía fora dela, achado do code-reviewer). O eixo do
+caso em volta do próprio valor final (0,983 nominal, 0,996 lenta; com
+uma só, o ponto da lenta caía fora dela, achado do code-reviewer). O eixo do
 erro fica em ±20°: em ±150° a faixa de 2° sumia. Valores de
 `tccInd.partida` ([[indicadores-tcc-dashboard]]). Vale no palco e na aba.
 Escolhida entre três prévias (linha + ponto, etiqueta só no erro, setas de
@@ -87,7 +87,7 @@ injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
 - **Passos com frase-mensagem** (`passos_pres`, Inicialização e Localização): cada passo
   troca o parágrafo da legenda por uma frase grande (`.pres-msg`) e esconde
   os casos de `ocultar`. Passo 1 só a nominal ("40 ms"), passo 2 entra a
-  inadequada ("79 ms: quase o dobro"). Indicador de passo no cabeçalho
+  lenta ("79 ms: quase o dobro"). Indicador de passo no cabeçalho
   (`_passoInd`, 2026-10-25): barra em segmentos que enche até o atual, com
   "k de n" embaixo; o mesmo no mapa de "Faltas destacadas". Escolhido entre
   três prévias (pílulas, segmentos, pílulas + tecla) no lugar do texto
@@ -102,7 +102,7 @@ injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
   janela ganha contorno pontilhado azul. Escolhido entre três prévias
   (trilha de frases no topo empurrava o gráfico sobre os cartões; balão com
   seta exigia coordenada à mão por passo). Compromisso e Perda de
-  sincronismo têm 3 passos: nominal sozinha com foco, entra a inadequada,
+  sincronismo têm 3 passos: nominal sozinha com foco, entra a lenta,
   frase-ponte ("E numa falta mais severa?") e fecho ("O ganho que filtrava
   o 120 Hz na Barra 6 é o que perde o sincronismo aqui"). Em capítulo com
   passos, o `destaque` só aparece no passo com `destaque=True`
@@ -125,7 +125,7 @@ injetadas no palco real, aprovadas juntas. Configurados em `CAPITULOS`
   vetor nominal). Cursor vertical cinza tracejado
   (`#fs-cursor`) posicionado por `xaxis.l2p`. Os ângulos vêm de
   `gd._fullData` (os `x`/`y` em `SCENARIOS` estão em base64 e não têm
-  `.length`). O fasor não mostra número. Legenda: "PLL nominal/inadequada"
+  `.length`). O fasor não mostra número. Legenda: "PLL nominal/lenta"
   quando o capítulo mistura sintonias, senão o rótulo do ponto no mapa (B7...).
 - **Mini-mapa** (`lado="minimapa"`, Localização): o unifilar de
   `_mapaSvg` (capítulo "Faltas destacadas"), com cada ponto na cor da curva
@@ -160,7 +160,7 @@ Regra: todo número escrito no palco vem da legenda ou de `tccInd`, que
 batem com o TCC ([[defesa-deck-map]]). Nada de número calculado só para a
 tela. Os termos também são os do deck e do TCC (revisão de 2026-10-25):
 "escorregamento de ciclo", "sintonia nominal" na 1ª menção do capítulo,
-nominal antes da inadequada nos pares de números.
+nominal antes da lenta nos pares de números.
 
 ## Telas menores que 1920×1080 (2026-10-24)
 

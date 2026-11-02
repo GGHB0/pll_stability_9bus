@@ -33,7 +33,7 @@ def levantar():
     """Devolve {local: {tipo: (tem_nominal, tem_inadequada)}} e o par do regime.
     So conta cenario aprovado em validar_cenarios.py (pasta duplicada ou com
     assinatura de falta errada fica de fora; `1phase_ground_bad_pll` conta
-    como monofasica inadequada)."""
+    como monofasica lenta)."""
     from validar_cenarios import cenario_ok, pasta_inadequada
     m = {}
     for local in ORDEM:
@@ -55,13 +55,13 @@ def chip(x, y, letra, cor):
             texto(x + 15, y + 16, letra, 14, "#ffffff", centro=True, negrito=True))
 
 
-def celula(cx, cy, nominal, inadequada):
+def celula(cx, cy, nominal, lenta):
     """Chips centrados em cx; cy e o topo do chip."""
-    if not nominal and not inadequada:
+    if not nominal and not lenta:
         return (texto(cx, cy + 16, "–", 16, CINZA, centro=True),)
-    if nominal and inadequada:
-        return chip(cx - 34, cy, "N", NAVY) + chip(cx + 4, cy, "I", LARANJA)
-    return chip(cx - 15, cy, "N" if nominal else "I", NAVY if nominal else LARANJA)
+    if nominal and lenta:
+        return chip(cx - 34, cy, "N", NAVY) + chip(cx + 4, cy, "L", LARANJA)
+    return chip(cx - 15, cy, "N" if nominal else "L", NAVY if nominal else LARANJA)
 
 
 def montar():
@@ -112,15 +112,15 @@ def montar():
     y_leg = y_fim + 32
     s.extend(chip(196, y_leg, "N", NAVY))
     s.append(texto(234, y_leg + 16, "sintonia nominal"))
-    s.extend(chip(400, y_leg, "I", LARANJA))
-    s.append(texto(438, y_leg + 16, "sintonia inadequada"))
+    s.extend(chip(400, y_leg, "L", LARANJA))
+    s.append(texto(438, y_leg + 16, "sintonia lenta"))
     s.append(texto(380, y_leg + 50,
-                   "%d cenários exportados: %d com sintonia nominal e %d com sintonia inadequada."
+                   "%d cenários exportados: %d com sintonia nominal e %d com sintonia lenta."
                    % (n_nom + n_ina, n_nom, n_ina), 14, "#6b7280", centro=True))
     s.append('</svg>')
 
     SAIDA.write_text("\n".join(s) + "\n", encoding="utf-8")
-    print("%s | %d nominais + %d inadequadas = %d" % (SAIDA.name, n_nom, n_ina, n_nom + n_ina))
+    print("%s | %d nominais + %d lentas = %d" % (SAIDA.name, n_nom, n_ina, n_nom + n_ina))
 
 
 if __name__ == "__main__":

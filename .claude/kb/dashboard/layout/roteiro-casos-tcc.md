@@ -17,8 +17,8 @@ de achar o cenário certo no `<select>` durante a fala.
   permanente, §5.2 Faltas simétricas, §5.3 Faltas assimétricas, §5.4 Perda de
   sincronismo). O resto vai para "Outros cenários (fora do TCC)".
 - `TCC_CASOS`: caso → seção, na ordem das Tabelas 5.1 a 5.3, conferidos no
-  VFinal. Na §5.4 ficam a Barra 7 trifásica inadequada e as trifásicas
-  inadequadas da Linha 7-8 (9,7% de retenção) e da Barra 6 (106 ms), que o
+  VFinal. Na §5.4 ficam a Barra 7 trifásica lenta e as trifásicas
+  com sintonia lenta da Linha 7-8 (9,7% de retenção) e da Barra 6 (106 ms), que o
   texto usa como contraste.
 - Fora do TCC: Barras 4, 5, 8 e 9 (todas as faltas) e Linha 8-9 bifásica.
 - `CAPITULOS`: os capítulos do modo apresentação. Cada um tem `id`,
@@ -34,7 +34,7 @@ tem de bater com o card do mesmo cenário ([[indicadores-tcc-dashboard]]).
 ## Destaque no seletor, no mapa e no comparativo
 
 - **Seletor**: `<optgroup>` por seção. Com o toggle PLL, grupos sem opção
-  visível somem; na sintonia inadequada aparecem §5.1, §5.3 e §5.4.
+  visível somem; na sintonia lenta aparecem §5.1, §5.3 e §5.4.
 - **Mapa unifilar**: o JS marca `.tcc-loc` (linha e rótulo em azul) onde
   algum caso do ponto está no TCC e `.svg-extra` (opacidade 0,45) no resto,
   que segue clicável. Legenda abaixo do mapa. É a convenção do slide 13 do
@@ -58,7 +58,7 @@ Resumo. Saíram com ela `tccGo`, `tccStep`, `_renderTcc`, o HTML de
 mostrava). `_tccRefresh` agora só redesenha o palco.
 
 Cada capítulo sobrepõe no mesmo
-eixo os cenários que o TCC compara: azul = nominal, laranja = inadequada;
+eixo os cenários que o TCC compara: azul = nominal, laranja = lenta;
 na localização e no código de rede, amarelo → verde → ciano → índigo do
 mais perto ao mais longe da usina; nas assimétricas, cor = barra e traço =
 tipo de curto.
@@ -66,7 +66,7 @@ tipo de curto.
 | # | Capítulo | Casos | Gráfico |
 |---|---|---|---|
 | 1 | Faltas destacadas | os 4 pontos de falta | unifilar com passos ([[faltas-destacadas]]) |
-| 2 | Inicialização | regime × regime inadequada | erro de fase / v_d (0-0,2 s) |
+| 2 | Inicialização | regime × regime lenta | erro de fase / v_d (0-0,2 s) |
 | 3 | Localização | 4 trifásicas nominais | erro / v_d / P |
 | 4 | Sequência negativa | B6 trifásica × bifásica nos passos 1-4; no 5, as duas trifásicas + 4 assimétricas e matriz barra × curto ([[palco-sequencia-negativa]]) | v_abc → v_d/v_q → v_q/erro → espectro de v_d |
 | 5 | Compromisso da sintonia | B6 bifásica nas duas sintonias | erro / v_d |
@@ -76,7 +76,7 @@ tipo de curto.
 
 A Inicialização (era "Energização do inversor" até 2026-10-28) não compara
 as sintonias: geradores, rede e inversor partem juntos em t = 0, e a
-mensagem é que o PLL sincroniza mesmo com a sintonia inadequada (40 e 79 ms,
+mensagem é que o PLL sincroniza mesmo com a sintonia lenta (40 e 79 ms,
 sem "quase o dobro").
 
 A ordem segue o Cap. 5 (§5.3 antes de §5.4): o ganho menor aparece primeiro

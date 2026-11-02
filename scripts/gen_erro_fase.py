@@ -13,13 +13,13 @@ revisao_fragmento_cap5_metricas.md -- os numeros anotados nas figuras saem
 daqui, calculados na hora, para nao divergirem do texto a cada re-simulacao.
 
 Figuras (SVG + PNG):
-  erro_fase_regime          -- 5.1: energizacao, nominal x inadequada
+  erro_fase_regime          -- 5.1: energizacao, nominal x lenta
   erro_fase_simetricas      -- 5.2: trifasica nominal nos 4 pontos (2x2)
-  erro_fase_assimetricas    -- 5.3: pares nominal x inadequada (2x2)
-  erro_fase_perda_sincronismo -- 5.4: trifasica na Barra 7, nominal x inadequada
+  erro_fase_assimetricas    -- 5.3: pares nominal x lenta (2x2)
+  erro_fase_perda_sincronismo -- 5.4: trifasica na Barra 7, nominal x lenta
 
 Eixo x em tempo relativo a aplicacao da falta: os cenarios com sintonia
-inadequada de safras diferentes nao aplicam a falta no mesmo instante
+lenta de safras diferentes nao aplicam a falta no mesmo instante
 (ver kb/simulation/cenarios_simulados.md).
 """
 import json
@@ -43,7 +43,7 @@ PRE_MS, POS_MS = 20, 200       # janela: 20 ms antes da falta ate 200 ms apos a 
 CINZA = "#64748b"
 
 NOMINAL = dict(color=AZUL, label="Sintonia nominal")
-INADEQ = dict(color=LARANJA, label="Sintonia inadequada")
+INADEQ = dict(color=LARANJA, label="Sintonia lenta")
 
 
 def num(x, casas=1):
@@ -176,7 +176,7 @@ def fig_simetricas():
     save(fig, "erro_fase_simetricas")
 
 
-# ── 5.3 e 5.4: pares nominal x inadequada ───────────────────────────────────
+# ── 5.3 e 5.4: pares nominal x lenta ───────────────────────────────────
 ASSIMETRICAS = [("bus6/2phase", "Bifásica na Barra 6"), ("bus7/1phase", "Monofásica na Barra 7"),
                 ("bus6/1phase", "Monofásica na Barra 6"), ("bus7/2phase", "Bifásica na Barra 7")]
 
@@ -199,13 +199,13 @@ def plot_par(ax, folder, lim=None):
         pico, ts = metrics(fi, t, e)
         linhas.append((st, pico, ts))
     # numeros acima do eixo, nunca em caixa sobre o traco: com escorregamento
-    # de ciclo a curva da sintonia inadequada ocupa o eixo inteiro
+    # de ciclo a curva da sintonia lenta ocupa o eixo inteiro
     for k, (st, p, ts) in enumerate(reversed(linhas)):
-        rot = "nominal" if st is NOMINAL else "inadequada"
+        rot = "nominal" if st is NOMINAL else "lenta"
         ax.text(0.0, 1.02 + 0.085 * (k + (bad is None)), resumo(rot, p, ts), transform=ax.transAxes,
                 fontsize=9.5, color=st["color"], ha="left", va="bottom")
     if bad is None:
-        ax.text(0.0, 1.02, "inadequada: fora da comparação", transform=ax.transAxes,
+        ax.text(0.0, 1.02, "lenta: fora da comparação", transform=ax.transAxes,
                 fontsize=9.5, color=INADEQ["color"], ha="left", va="bottom", style="italic")
     return linhas
 

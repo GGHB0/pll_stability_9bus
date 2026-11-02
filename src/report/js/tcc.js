@@ -63,7 +63,7 @@ function _tccMixed(cap) {
 
 function _tccLabel(k, mixed) {
   var sc = SCENARIOS[k];
-  if (sc.badPll) return sc.label + " · inadequada";
+  if (sc.badPll) return sc.label + " · lenta";
   return mixed ? sc.label + " · nominal" : sc.label;
 }
 

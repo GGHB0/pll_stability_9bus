@@ -86,7 +86,7 @@ function _tccTableHtml() {
   var head = "<th>Cenário</th>" + CMP_HEAD.map(function(h) { return "<th>" + h + "</th>"; }).join("");
   var rows = keys.map(function(k) {
     var sc = SCENARIOS[k], r = sc.metricsRow;
-    var bad = sc.badPll ? "<span class=\"tcc-bad-tag\">inadequada</span>" : "";
+    var bad = sc.badPll ? "<span class=\"tcc-bad-tag\">lenta</span>" : "";
     return "<tr class=\"cmp-row\" onclick=\"_openScenario('" + k + "')\">"
       + "<td class=\"cmp-label\">" + sc.label + bad
       + "<span class=\"tcc-tag\">§" + sc.tcc + "</span></td>"

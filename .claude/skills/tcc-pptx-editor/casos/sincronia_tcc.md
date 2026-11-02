@@ -28,7 +28,7 @@ TCC: número, figura ou afirmação diferente no slide vira pergunta.
   arredondamento e a mesma unidade (ms × s, % × pu, rad/s × Hz). Refazer as
   contas que forem refazíveis (ωn = √Ki, ξ = Kp/2ωn, 4,6/(ξ·ωn)) com o
   python, sem confiar no texto.
-- **Contagens de cenários**: "N cenários, X nominais e Y inadequados" e
+- **Contagens de cenários**: "N cenários, X nominais e Y com sintonia lenta" e
   "falta F na barra B só com a sintonia nominal" mudam a cada rodada nova.
   Conferir na Tabela 4.1 do TCC e em `cenarios_simulados.md`.
 - **Legendas**: `check_pptx.py --tcc "<DOCX_TCC>"` confere se o número

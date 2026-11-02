@@ -56,7 +56,7 @@ exatamente quando o laço mais precisa dele.
 
 ## A equivalência com o cenário BAD_PLL
 
-O cenário de **sintonia inadequada** multiplica `kp_pll` **e** `ki_pll` por 0,2
+O cenário de **sintonia lenta** multiplica `kp_pll` **e** `ki_pll` por 0,2
 (ver [[cenarios-simulados]]), resultando em `ω_n = 145,5` e `ξ = 0,316`
 — registrados em §4.3.2.3 do TCC.
 

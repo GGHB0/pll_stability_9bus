@@ -39,7 +39,7 @@
   <text x="30" y="376" font-size="12.5" fill="#0B132B">v<tspan baseline-shift='sub' font-size='75%'>d</tspan> cai para U e v<tspan baseline-shift='sub' font-size='75%'>q</tspan> segue em zero.</text>
   <text x="30" y="394" font-size="12.5" fill="#0B132B">O ganho do laço é proporcional a U: ω<tspan baseline-shift='sub' font-size='75%'>n</tspan> e ξ</text>
   <text x="30" y="412" font-size="12.5" fill="#0B132B">caem com √U e o PLL fica mais lento.</text>
-  <text x="30" y="430" font-size="12.5" fill="#0B132B">Com U = 0,2 pu, vira a sintonia inadequada.</text>
+  <text x="30" y="430" font-size="12.5" fill="#0B132B">Com U = 0,2 pu, vira a sintonia lenta.</text>
   </g>
   <g transform="translate(470,52)">
   <rect x="0" y="0" width="430" height="452" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>

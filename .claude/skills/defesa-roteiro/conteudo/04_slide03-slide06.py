@@ -131,7 +131,7 @@ n.p("Tensão degradada &#8594; erro de ângulo &#8594; correntes d e q orientada
     "suporte de reativo que o Submódulo 2.10 pede. <b>Objetivo geral:</b> analisar a "
     "dinâmica, a sensibilidade à sintonia e a robustez do SRF-PLL de um inversor de 100 MW "
     "sob contingências no IEEE 9 barras. <b>Específicos:</b> modelar no Simulink, comparar "
-    "sintonia nominal e inadequada sob faltas simétricas e assimétricas, verificar o suporte "
+    "sintonia nominal e lenta sob faltas simétricas e assimétricas, verificar o suporte "
     "de subtensão (ONS).")
 box("banca", "<b>Qual é a pergunta central?</b> Como a sintonia do PI do SRF-PLL define a "
     "fronteira entre manter o suporte de tensão e perder o sincronismo durante a falta?")

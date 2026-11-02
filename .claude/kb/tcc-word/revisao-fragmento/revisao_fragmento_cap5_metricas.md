@@ -73,9 +73,9 @@ cai no fim e o recorte inicial pouco importa.
 Progressão monotônica confirmada em todas as colunas. O "até 100 ms" do texto
 antigo era furado pela Linha 8-9 (112 ms); o texto agora diz 112 ms.
 
-## 5.3 — pares nominal × sintonia inadequada
+## 5.3 — pares nominal × sintonia lenta
 
-Valores de 2026-10-03 (Tabela 5.3 do TCC). A sintonia inadequada foi
+Valores de 2026-10-03 (Tabela 5.3 do TCC). A sintonia lenta foi
 re-simulada em 01/10 com a janela de falta do nominal; os números de 08-23
 (t_s 99 / 78 / 47 ms) eram da safra antiga, com falta em 0,6-0,7 s.
 `bus7/1phase_bad_pll` foi simulada em 13/10 e está na Tabela 5.3 do VFinal
@@ -99,7 +99,7 @@ assimétricas é de **mais de duas ordens de grandeza**.
 
 `v_d` da rede chega a −0,154 pu: o vetor de tensão cruza para o semiplano de
 eixo direto negativo e o erro satura em ±180° **nas duas sintonias**. O erro
-instantâneo passa de 90° em 17,8% da janela (nominal) e 14,3% (inadequada).
+instantâneo passa de 90° em 17,8% da janela (nominal) e 14,3% (lenta).
 
 Não é *cycle slipping*: é desalinhamento momentâneo imposto pela sequência
 negativa, que desaparece com a eliminação da falta. Manter essa distinção no
@@ -112,7 +112,7 @@ texto, por causa da pendência do Cap. 4.
 | Picos 5.2: 53,9 / 44,3 / 23,5 / 21,0° | 37,3 / 32,5 / 29,8 / 7,3° | receita desconhecida |
 | `bus7/2phase`: 40,1° → 34,2° | 180° → 180° (satura) | contradiz a figura ao lado |
 | `bus6/1phase`: 15,0° → 9,2° | 12,0° → 13,2° | **sentido invertido** |
-| t_s inadequado: 187 / 103 / 95 ms | 99 / 78 / 47 ms | ~2× altos |
+| t_s lenta: 187 / 103 / 95 ms | 99 / 78 / 47 ms | ~2× altos |
 | `bus7/1phase` nominal: ~190 ms | 46 ms | ~4× alto |
 | 120 Hz trifásicas: 0,008–0,014 pu | 0,0001–0,0013 pu | ~20× alto |
 | `i_q,ref` 0,97 / 0,67 pu | 1,000 / 0,776 pu | arredondamento errado |
@@ -137,7 +137,7 @@ numeração de 08-23; "Hoje" após as inserções até 2026-10-03):
 |---|---|---|---|
 | 5.7 | 5.11 | `bus7_2phase_tensao_dq_rede` | caso severo, perda de alinhamento |
 | 5.8 | 5.12 | `bus6_2phase_tensao_dq_rede` | nominal |
-| 5.9 | 5.13 | `bus6_2phase_bad_pll_tensao_dq_rede` | inadequada (figura nova) |
+| 5.9 | 5.13 | `bus6_2phase_bad_pll_tensao_dq_rede` | lenta (figura nova) |
 | 5.10 | 5.15 | `bus6_2phase_bad_pll_potencia_pq` | era a 5.9 |
 
 As Figuras 5.12 e 5.13 (numeração atual) são comparação controlada: mesma barra, mesma falta, mesma escala

@@ -10,17 +10,17 @@ sub("Fundamento: por que só a combinação colapsa")
 n.p("Pela fórmula do slide 7, com U &#8776; 0,09 pu na falta (&#8730;U &#8776; 0,3):")
 tab(["Na falta (U &#8776; 0,09 pu)", "&#969;<sub>n,ef</sub>", "&#958;<sub>ef</sub>"], [
     ["Nominal", "&#8776; 98 rad/s", "&#8776; 0,21"],
-    ["Inadequada", "&#8776; 44 rad/s", "&#8776; 0,09"],
+    ["Lenta", "&#8776; 44 rad/s", "&#8776; 0,09"],
 ], [6.7, 4.0, 4.0])
-n.p("A inadequada atravessa a falta praticamente sem amortecimento. Nenhum fator isolado "
-    "explica o colapso: a nominal na Barra 7 recupera (98 ms) e a inadequada na trifásica "
+n.p("A lenta atravessa a falta praticamente sem amortecimento. Nenhum fator isolado "
+    "explica o colapso: a nominal na Barra 7 recupera (98 ms) e a lenta na trifásica "
     "da Barra 6 também (106 ms). O colapso aparece na combinação de falta severa com "
-    "sintonia inadequada, e ocorre também na Linha 7-8 (retenção de 9,7%).")
-nums([["9,2% / 8,2%", "retenção de V<sub>d</sub>, nominal / inadequada"],
+    "sintonia lenta, e ocorre também na Linha 7-8 (retenção de 9,7%).")
+nums([["9,2% / 8,2%", "retenção de V<sub>d</sub>, nominal / lenta"],
       ["98 ms / não retorna", "retorno à faixa de 2° (dentro dos 200 ms)"],
-      ["66,8%", "tempo pós-falta absorvendo potência ativa, inadequada (média &#8722;0,40 pu)"]])
+      ["66,8%", "tempo pós-falta absorvendo potência ativa, lenta (média &#8722;0,40 pu)"]])
 box("cuidado", "A tabela de &#969;<sub>n,ef</sub> é conta de bolso (além do TCC). Os cartões "
-    "do palco também mostram 44,0° (pico da inadequada) e 5,6% (P absorvida da nominal); o "
+    "do palco também mostram 44,0° (pico da lenta) e 5,6% (P absorvida da nominal); o "
     "número de fala é o 66,8%. <b>Reserva</b>: slides ocultos 25 e 27 (Figs. 5.18 a 5.21).")
 
 # --- 7
@@ -72,7 +72,7 @@ cap(8, "Todos os casos", "Tabelas 5.1 a 5.3", "08_sintese.png",
     "Tabela com os indicadores de todos os casos do TCC")
 box("msg", "Não é para apresentar linha por linha: é o ponto de apoio para as perguntas.")
 n.p("Cada linha tem a seção do TCC (§5.1 a §5.4), e clicar nela abre o cenário nas abas. As "
-    "linhas &#8220;não retorna&#8221; são a Barra 7 e a Linha 7-8 trifásicas inadequadas. "
+    "linhas &#8220;não retorna&#8221; são a Barra 7 e a Linha 7-8 trifásicas com sintonia lenta. "
     "As Barras 4, 5, 8 e 9 não estão aqui, mas estão nas abas por cenário.")
 n.p("<b>Volta ao PowerPoint:</b> Esc (sai da tela cheia) e Alt+Tab para o slide 19.")
 
@@ -161,7 +161,7 @@ box("msg", "As três tabelas do Cap. 5 num slide: trifásicas com o suporte do O
     "assimétricas nas duas sintonias.")
 n.p("É a mesma informação do capítulo 8 do painel, em formato de slide. Use quando o painel "
     "não estiver à mão. O cartão de baixo resume por que o efeito da sintonia se inverte "
-    "entre a Barra 6 (a inadequada filtra melhor) e a Barra 7 (a inadequada recupera "
+    "entre a Barra 6 (a lenta filtra melhor) e a Barra 7 (a lenta recupera "
     "devagar): é a história dos capítulos 5 e 6.")
 box("cuidado", "O cartão da esquerda menciona um ganho efetivo &#8220;12 vezes&#8221; menor; "
     "prefira a explicação do capítulo 6 deste roteiro (&#969;<sub>n</sub> e &#958; caem com "

@@ -30,7 +30,7 @@ def inject_30min_schedule_and_tcc_map(wb: WordRoteiroBuilder):
         7: "Estrutura do SRF-PLL (Fig. 4.3)",
         8: "Sistema IEEE 9 barras e Thévenin (Fig. 4.1)",
         9: "Sintonia nominal do PLL (ts = 20 ms)",
-        10: "Duas sintonias do PLL (nominal × inadequada)",
+        10: "Duas sintonias do PLL (nominal × lenta)",
         11: "Referência de corrente (1ª versão PSIM)",
         12: "Filtro LCL (equivalente por fase)",
         13: "Controle de corrente (Fig. 3.1)",

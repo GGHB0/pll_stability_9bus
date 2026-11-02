@@ -44,7 +44,7 @@ para frequência. Vários casos no relatório (Pampa Camarones, Nueva Renca, CMP
 Pacífico) tiveram ajuste de proteção **mais permissivo do que a curva exige**,
 desconectando cedo demais (48 Hz/100 ms) ou com parametrização não conforme —
 padrão de erro comparável ao que o TCC busca capturar com o cenário BAD_PLL
-(sintonia inadequada, [[iberia-2025-oscillations]]).
+(sintonia lenta, [[iberia-2025-oscillations]]).
 
 ## Física da sobretensão: efeito Ferranti em linha aberta
 

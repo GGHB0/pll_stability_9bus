@@ -24,7 +24,7 @@ E.aplica()
 # caixa da imagem no slide (in): slide 13, 15 (moldura alargada), 16 esq./dir.
 CAIXA = {"5.3": (6.26, 3.04), "5.7": (5.52, 3.05), "5.10": (5.15, 2.79), "5.18": (4.89, 2.79)}
 NOMINAL = dict(color=E.AZUL, label="Sintonia nominal")
-INADEQ = dict(color=E.LARANJA, label="Sintonia inadequada")
+INADEQ = dict(color=E.LARANJA, label="Sintonia lenta")
 FAIXA = (lambda: E.plt.Rectangle((0, 0), 1, 1, color=E.VERDE, alpha=0.35), "faixa de ±2°")
 
 
@@ -39,7 +39,7 @@ def marca_falta(ax, dur_ms, rotulos="fora"):
 
 
 def fig_5_3():
-    """Energização, nominal x inadequada (Fig. 5.3). Ficam as marcas de 40 e 79 ms."""
+    """Energização, nominal x lenta (Fig. 5.3). Ficam as marcas de 40 e 79 ms."""
     fig, ax = E.figura(CAIXA["5.3"])
     YLIM, T_MAX = 65, 200
     for folder, st, y_txt in (("regime", NOMINAL, 30), ("regime_bad_pll", INADEQ, 50)):
@@ -105,7 +105,7 @@ def fig_5_10():
 
 
 def fig_5_18():
-    """Trifásica na Barra 7, nominal x inadequada (Fig. 5.18). O 98 ms está no cartão do slide."""
+    """Trifásica na Barra 7, nominal x lenta (Fig. 5.18). O 98 ms está no cartão do slide."""
     fig, ax = E.figura(CAIXA["5.18"])
     folder = "bus7/3phase"
     pares = [(folder, NOMINAL), (pasta_inadequada(folder), INADEQ)]

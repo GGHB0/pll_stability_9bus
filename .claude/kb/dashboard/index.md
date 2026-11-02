@@ -23,7 +23,7 @@ Histórico de mudanças por commit: `CHANGELOG.md` na raiz do repo.
 | `layout/` | [dark-mode-theming.md](layout/dark-mode-theming.md) | Temas light/dark: themedLayout, Fix 1-3 (annotations/shapes/eixos, gotcha dotted-key) |
 | `layout/` | [dark-mode-legend-title-fixes.md](layout/dark-mode-legend-title-fixes.md) | Continuação: Fix 4 (legenda invisível) e Fix 5 (barra de título re-temada por engano) |
 | `layout/` | [header-branding.md](layout/header-branding.md) | Logo UERJ base64, regra de label de toggle |
-| `layout/` | [bad-pll-dashboard-filter.md](layout/bad-pll-dashboard-filter.md) | Toggle PLL nominal/sintonia inadequada |
+| `layout/` | [bad-pll-dashboard-filter.md](layout/bad-pll-dashboard-filter.md) | Toggle PLL nominal/sintonia lenta |
 | `layout/` | [roteiro-casos-tcc.md](layout/roteiro-casos-tcc.md) | Casos do Cap. 5 destacados (seletor, mapa, comparativo), capítulos do Cap. 5 e modo apresentação em tela cheia da defesa |
 | `layout/` | [modo-apresentacao.md](layout/modo-apresentacao.md) | Palco da defesa: estrutura, navegação por passos, marcação de acomodação, fasor, mini-mapa e números de destaque |
 | `layout/` | [palco-sequencia-negativa.md](layout/palco-sequencia-negativa.md) | Capítulo "Sequência negativa" do palco em cinco passos: abc desequilibrado, animação positiva × negativa, 120 Hz em v_d/v_q, v_q no PI, espectro |

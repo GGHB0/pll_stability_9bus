@@ -15,11 +15,11 @@ puro, paleta do projeto), mas com duas diferencas de estrutura:
    "bad_pll" do fault_info.json, ver cenarios_simulados.md):
      - Nominal: T_SETTLE = 0,1 s (constante oficial, src/config/settings.py).
        t_fault = 0,3 s cai sempre depois.
-     - Sintonia inadequada (Kp/Ki_pll x0,2), safra de agosto/2026 (falta em
+     - Sintonia lenta (Kp/Ki_pll x0,2), safra de agosto/2026 (falta em
        0,6 s): energizacao lenta e oscilatoria (xi=0,316) -- corta em ~0,55 s.
        A safra de 01/10/2026 (falta em 0,3 s, v_d pre-falta ~1,0 pu) assenta
        em < 0,1 s e usa T_SETTLE como o nominal (ver settle_de()).
-   Cenarios com sintonia inadequada passam por validar_cenarios.py: pasta
+   Cenarios com sintonia lenta passam por validar_cenarios.py: pasta
    reprovada (duplicada, assinatura de falta errada) e pulada; o monofasico
    usa a pasta nova `1phase_ground_bad_pll` quando valida (pasta_inadequada()).
 3. Escala Y compartilhada nos pares de figuras que o TCC compara lado a
@@ -65,7 +65,7 @@ GRID_COLOR = "#e2e8f0"
 # (src/config/settings.py). So vale para o modelo NOMINAL. Cenarios de falta
 # nominais aplicam a falta em 0,3 s, sempre depois -- ver cenarios_simulados.md.
 T_SETTLE = 0.1
-# Sintonia inadequada assenta muito mais devagar (xi=0,316) -- mesmo valor
+# Sintonia lenta assenta muito mais devagar (xi=0,316) -- mesmo valor
 # empirico usado em gen_regime_waveforms.py (regime_bad_pll), nao T_SETTLE
 # global. Vale so para a safra antiga (falta em 0,6 s); ver settle_de().
 BAD_PLL_SETTLE = 0.55
@@ -135,10 +135,10 @@ SCENARIOS = [
 YLIM_GROUPS = {
     # Trifasicas (Secoes 5.2 e 5.4; o numero da figura muda a cada insercao,
     # entao fica so o papel). Barra 7 e Barra 6 nominais dao o gradiente de
-    # localizacao; a Barra 7 com sintonia inadequada (perda de sincronismo) so
+    # localizacao; a Barra 7 com sintonia lenta (perda de sincronismo) so
     # e legivel contra a Barra 7 nominal se as duas dividirem a escala vertical.
     "sim_localizacao": ["bus7/3phase", "bus6/3phase", "bus7/3phase_bad_pll"],
-    # Secao 5.3: efeito da sintonia, bifasica na Barra 6 (nominal x inadequada)
+    # Secao 5.3: efeito da sintonia, bifasica na Barra 6 (nominal x lenta)
     "assim_sintonia": ["bus6/2phase", "bus6/2phase_bad_pll"],
 }
 
@@ -186,7 +186,7 @@ def legend_above(ax, handles, labels, ncol):
 
 def set_title(ax, text, pad=None):
     """Titulo com fonte reduzida conforme o comprimento -- os cenarios de
-    sintonia inadequada acrescentam "(sintonia inadequada)" ao sufixo, e no
+    sintonia lenta acrescentam "(sintonia lenta)" ao sufixo, e no
     fontsize padrao (11, bold) o texto ficava mais largo que a figura e
     cortava na borda direita do PNG/SVG."""
     if len(text) > 78:
@@ -263,7 +263,7 @@ def gen_scenario(sc):
     settle_t = settle_de(fault_info)
     suf = f" -- falta {FAULT_TYPE_LABEL[sc['fault_type']]} na {sc['bus']}"
     if bad_pll:
-        suf += " (sintonia inadequada)"
+        suf += " (sintonia lenta)"
 
     # janelas de linha do tempo completa comecam no assentamento do modelo
     # (settle_t), nao em 0 (ver docstring do modulo) -- filtra antes de

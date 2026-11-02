@@ -51,7 +51,7 @@ O texto de §5.4 passou a ser **puramente qualitativo**: o erro de fase não
 retorna a um valor estável, cresce de forma contínua, o referencial estimado
 gira de forma persistente em relação ao vetor da rede e o SRF-PLL não recupera
 o sincronismo dentro da janela simulada. A tese da seção (perda de sincronismo
-só na combinação afundamento profundo + sintonia inadequada) não depende de
+só na combinação afundamento profundo + sintonia lenta) não depende de
 nenhum dos três números.
 
 Edições via python-docx (backups na pasta `Fragmentos/` do TCC no OneDrive,
@@ -75,7 +75,7 @@ seção "Definições fechadas" do arquivo pai (média em
 | Cenário | `t_fault` / `t_clear` | média pré-falta (`v_d`) | média durante a falta (`v_d`, >2 ciclos) | retenção |
 |---|---|---|---|---|
 | Nominal `bus7/3phase` | 0,3 / 0,4 s | 0,9891 pu | 0,0908 pu | 9,18% ≈ 9,2% |
-| Sintonia inadequada `bus7/3phase_bad_pll` | 0,6 / 0,7 s | 0,8229 pu | 0,0676 pu | 8,22% ≈ 8,2% |
+| Sintonia lenta `bus7/3phase_bad_pll` | 0,6 / 0,7 s | 0,8229 pu | 0,0676 pu | 8,22% ≈ 8,2% |
 
 O ponto que a tabela deixa explícito: os **denominadores diferem**
 (0,989 pu contra 0,823 pu, o ponto de operação degradado da Seção 5.1), mas a
@@ -98,13 +98,13 @@ mesma convenção de `gen_fault_waveforms.py`). Produz duas figuras:
 
 | Arquivo | Conteúdo | Destino |
 |---|---|---|
-| `retencao_comparacao` | painel duplo nominal × sintonia inadequada | §5.4 (escolhido) |
+| `retencao_comparacao` | painel duplo nominal × sintonia lenta | §5.4 (escolhido) |
 | `retencao_construcao` | painel único, só o caso nominal | gerado a pedido do usuário, sem destino definido no TCC |
 
 Decisões de desenho do painel duplo:
 
 - **Eixo X em tempo relativo ao início da falta**, porque `t_fault` difere entre
-  os cenários (0,3 s no nominal, 0,6 s na sintonia inadequada). Sem isso os dois
+  os cenários (0,3 s no nominal, 0,6 s na sintonia lenta). Sem isso os dois
   painéis não alinham. É a única figura do Cap. 5 que não usa tempo absoluto.
 - **Eixo Y compartilhado** (`sharey`), pelo mesmo motivo do `YLIM_GROUPS` de
   `gen_fault_waveforms.py`: é justamente a diferença das bases pré-falta
@@ -176,8 +176,8 @@ Nem a profundidade nem a sintonia, isoladas, produzem o fenômeno:
 | | Retenção | t_s pós-falta |
 |---|---|---|
 | Barra 7, sintonia nominal | 9,2% | 98 ms |
-| Barra 6, sintonia inadequada | 58,4% | 106 ms |
-| **Barra 7, sintonia inadequada** | **8,2%** | **não recupera** |
+| Barra 6, sintonia lenta | 58,4% | 106 ms |
+| **Barra 7, sintonia lenta** | **8,2%** | **não recupera** |
 
 `line7_8/3phase_bad_pll` **não** entra nessa comparação, apesar de caber nela:
 é o run anômalo descartado em [[cenarios-simulados]].

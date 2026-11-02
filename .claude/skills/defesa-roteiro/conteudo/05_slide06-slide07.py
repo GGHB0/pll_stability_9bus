@@ -167,7 +167,7 @@ tab(["U (pu)", "&#969;<sub>n,ef</sub> (rad/s)", "&#958;<sub>ef</sub>", "t<sub>s,
     ["1,0", "325,3", "0,707", "20 ms", "sintonia nominal"],
     ["0,5", "230,0", "0,500", "40 ms", "afundamento moderado"],
     ["0,25", "162,7", "0,354", "80 ms", "&#969;<sub>n</sub> e &#958; à metade"],
-    ["0,2", "145,5", "0,316", "100 ms", "igual à sintonia inadequada"],
+    ["0,2", "145,5", "0,316", "100 ms", "igual à sintonia lenta"],
     ["0,09", "97,6", "0,212", "~220 ms", "ordem da tensão na falta (capítulo 6 do painel)"],
 ], [1.6, 2.8, 1.6, 1.9, 6.8])
 n.note("Valores do modelo linear, válidos enquanto o erro de ângulo for pequeno. O "

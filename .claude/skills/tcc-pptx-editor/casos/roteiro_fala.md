@@ -25,7 +25,7 @@ os dois autores, com o marcador no início de cada trecho:
   "145,5 rad/s", mas sem fórmula com símbolo que não se lê em voz alta).
   O roteiro explica o slide; não repete o texto da tela palavra por palavra.
 - Mesmas regras do TCC: sem travessão, sem nome de código ("sintonia
-  inadequada", não "BAD_PLL"), sem RoCoF, sem "reaquisitar".
+  lenta", não "BAD_PLL"), sem RoCoF, sem "reaquisitar".
 - **Só o que o TCC diz, também em definição**: termo explicado com
   palavra própria ("ts é quanto o PLL leva para voltar a...") é
   acréscimo; o slide-validator barra (2026-10-19). Usar a frase do TCC

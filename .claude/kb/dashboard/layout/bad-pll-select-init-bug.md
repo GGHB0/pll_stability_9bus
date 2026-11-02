@@ -12,8 +12,8 @@ Ver design geral do toggle em [[bad-pll-dashboard-filter]].
 
 Ao abrir o HTML pela primeira vez, com o toggle "Nominal" ativo, o
 `<select>` de cenário mostrava (e permitia abrir) todos os casos de
-sintonia inadequada (`_bad_pll`) também. Só depois de alternar manualmente
-para "Sintonia inadequada" e voltar para "Nominal" o filtro passava a
+sintonia lenta (`_bad_pll`) também. Só depois de alternar manualmente
+para "Sintonia lenta" e voltar para "Nominal" o filtro passava a
 funcionar corretamente.
 
 ## Causa
@@ -49,7 +49,7 @@ só passa a aplicar o filtro do `<select>` desde o primeiro carregamento.
 No browser pane (via `http.server` local, `file://` não carrega o Plotly
 CDN — ver armadilha em `dashboard-html-editor` SKILL.md): na carga inicial,
 30 opções totais, 22 visíveis, 0 `_bad_pll` visíveis (as 8 corretamente
-ocultas). Alternância manual "Sintonia inadequada" ↔ "Nominal" continua
+ocultas). Alternância manual "Sintonia lenta" ↔ "Nominal" continua
 funcionando nos dois sentidos.
 
 ## Lição

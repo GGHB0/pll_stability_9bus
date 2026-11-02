@@ -80,10 +80,10 @@ some atrás de caixa de destaque.
 
 Vírgula decimal em tudo que é texto da tela (cartões, mini-mapa, destaque,
 tabela "Todos os casos"); o eixo do Plotly pode seguir o padrão dele.
-Acentos, concordância, o mesmo termo do TCC ("sintonia inadequada", nunca
+Acentos, concordância, o mesmo termo do TCC ("sintonia lenta", nunca
 "PLL ruim"; "recuperar o sincronismo", nunca "reaquisitar"; "escorregamento de ciclo",
 nunca "cycle slipping"; sem a sigla de transitórios eletromagnéticos). Par de números na ordem nominal,
-inadequada, como nos chips; rótulo de métrica igual ao do slide 19 do deck.
+lenta, como nos chips; rótulo de métrica igual ao do slide 19 do deck.
 
 ### 4. Passos e foco
 
@@ -102,7 +102,7 @@ cruzar texto, nas duas resoluções ([[palco-codigo-de-rede]]).
 ### 5. Coerência com o resto do palco
 
 Elemento novo com a mesma linguagem visual dos existentes: vermelho só para
-falta e destaque, azul nominal, laranja inadequada, verde para faixa de
+falta e destaque, azul nominal, laranja lenta, verde para faixa de
 tolerância, palco branco. Diferença sem motivo aparente vira observação.
 
 ## Onde está cada elemento no código

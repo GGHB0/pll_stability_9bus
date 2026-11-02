@@ -69,7 +69,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
 | Aba de navegação | `renderer.py` (tab-bar + `switchTab`) | `layout/tabs-navegacao.md` |
 | Tema light/dark | `renderer.py` (`_css`, `toggleTheme`) | `layout/dark-mode-theming.md` |
 | Header/branding/botões da filter-bar | `renderer.py` | `layout/header-branding.md`, `layout/estrutura-html.md` |
-| Toggle PLL nominal/sintonia inadequada | `renderer.py`, `app.py` | `layout/bad-pll-dashboard-filter.md` |
+| Toggle PLL nominal/sintonia lenta | `renderer.py`, `app.py` | `layout/bad-pll-dashboard-filter.md` |
 | Casos do TCC, capítulos do palco | `roteiro.py` (`TCC_CASOS`, `CAPITULOS`), JS em `src/report/js/` (ordem em `TCC_JS_FILES` no `renderer.py`) | `layout/roteiro-casos-tcc.md` |
 | Palco: passos com frase, painel ao lado (fasor, mini-mapa), número de destaque, notas com seta | campos `passos_pres`/`lado`/`destaque`/`notas` em `CAPITULOS`; `palco.js` (`_renderPres`), `fasor.js`, `minimapa.js`, `tcc.js` (`_destaque`, `_nota`, `_marcaPartida`, `_marcaRetorno`) | `layout/modo-apresentacao.md` |
 | Palco: foco do passo, destaque só num passo, indicador de passo | campos `foco`/`destaque` do passo; `tcc.js` (`_foco`), `navegacao.js` (`_capDestaque`, `_passoInd`) | `layout/modo-apresentacao.md` |
@@ -125,7 +125,7 @@ por `app.py`, saída `output/pll_metrics.html`). Esta skill é sobre o
   do doc de KB correspondente — nunca só uma das duas.
 - **Ordem dos capítulos do palco = ordem do Cap. 5 do TCC** (desde
   2026-10-24). Capítulo novo entra na posição da sua seção. Quando um
-  resultado favorece a sintonia inadequada e outro a derruba, o favorável
+  resultado favorece a sintonia lenta e outro a derruba, o favorável
   vem antes e a última frase dele faz a ponte; a defesa termina no
   argumento decisivo. Detalhes em `layout/roteiro-casos-tcc.md`.
 - **Capítulo do palco com gráfico revela em passos** (desde 2026-10-25):

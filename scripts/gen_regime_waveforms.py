@@ -1,6 +1,6 @@
 """
 Gera os graficos dos cenarios 'regime' e 'regime_bad_pll' (regime permanente,
-sem falta -- PLL nominal e sintonia inadequada) em assets/charts/ -- um SVG +
+sem falta -- PLL nominal e sintonia lenta) em assets/charts/ -- um SVG +
 PNG por grafico, sem Plotly, matplotlib puro, com a paleta do projeto
 (src/config/settings.py). Corrente dq segue a convencao do dashboard (medido
 solido + ref tracejado, mesmos eixos -- ver src/pipeline/chart.py
@@ -87,7 +87,7 @@ SCENARIOS = [
          ylim_dq=YLIM_DQ_REGIME,
          settle_label="transitório de partida excluído dos cálculos\n(T$_{settle}$ = 0,1 s)"),
     dict(folder="regime_bad_pll", prefix="regime_bad_pll", t_end=0.6, window=(0.55, 0.60),
-         settle_t=0.1, title_suffix=" -- sintonia inadequada",
+         settle_t=0.1, title_suffix=" -- sintonia lenta",
          ylim_dq=YLIM_DQ_REGIME,
          settle_label="transitório de partida excluído dos cálculos\n(T$_{settle}$ = 0,1 s)"),
 ]
@@ -126,7 +126,7 @@ def decimate_envelope(t, y, target_points=4000):
     """Decimacao por envelope (min+max por bin) em vez de subamostragem
     ingenua (pegar 1 a cada N amostras). Sinais com ondulacao mais rapida que
     a taxa decimada -- caso do batimento em v_q/v_d durante a "barriga" de
-    sintonia inadequada -- aliasavam em zigue-zague artificial quando so 1
+    sintonia lenta -- aliasavam em zigue-zague artificial quando so 1
     amostra por bin sobrevivia (pontos escolhidos caiam em fases aleatorias
     da oscilacao real). Manter o min E o max de cada bin preserva o envelope
     verdadeiro sem cortar picos nem inventar ruido; em trechos suaves (sem
@@ -181,7 +181,7 @@ def gen_scenario(sc):
     # antes) escolhe a MESMA fase de amostragem p/ todo mundo, o que aliasa
     # em zigue-zague qualquer coluna cuja ondulacao seja mais rapida que a
     # taxa decimada (visivel sobretudo em v_q durante a "barriga" de batimento
-    # da sintonia inadequada).
+    # da sintonia lenta).
     t_full = d_pq_full.t_s.values
 
     def dec(col):

@@ -99,11 +99,11 @@ metadata:
   - **4.3.2** Projeto do conversor e dos controladores — 4.3.2.1 filtro LCL
     (Figura 4.2; `ω_res` = 9068,99 rad/s, R_d1/R_d2/R_d3), 4.3.2.2 controle de
     corrente, 4.3.2.3 SRF-PLL (Figura 4.3; `K_pPLL` = 460 / `K_iPLL` = 105 820,
-    sintonia inadequada a 20% → `ω_n` = 145,5, ξ = 0,316)
+    sintonia lenta a 20% → `ω_n` = 145,5, ξ = 0,316)
   - **4.3.3** Configuração do sistema de monitoramento e tratamento de dados —
     Tabela 4.1 (organização dos cenários por falta e sintonia; era a Figura 4.4)
   - **4.3.4** Protocolos de contingência — falta de 0,1 s (6 ciclos); nominal
-    0,3→0,4 s com janela até 0,6 s, inadequada 0,6→0,7 s com janela até 1,0 s
+    0,3→0,4 s com janela até 0,6 s, lenta 0,6→0,7 s com janela até 1,0 s
 - ✅ **4.4** Síntese da metodologia
 
 > ⚠️ O Cap. 4 ficou **mais raso** que o anterior: saíram a modelagem dinâmica
@@ -128,7 +128,7 @@ metadata:
 - ✅ **5.5** Conformidade com o código de rede
 - ✅ **5.6** Resumo e conclusões do capítulo
 
-> Tese: a sintonia inadequada é um **compromisso** entre imunidade durante a
+> Tese: a sintonia lenta é um **compromisso** entre imunidade durante a
 > falta e velocidade na recuperação, com um caso-limite em que o compromisso
 > deixa de valer e o SRF-PLL não recupera o sincronismo dentro da janela
 > simulada. Instrução do Oscar de **não** implementar salto de fase segue

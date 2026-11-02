@@ -12,7 +12,7 @@ Adicionados em 2026-07 junto com [[chart-analysis-overlays]].
 > (`#ghost-toggle`) sobrepunha os traces do cenário equivalente do outro modo
 > PLL — removido a pedido do usuário por não estar sendo usado. Saíram
 > `ghostMode`, `_exactEquiv`, `_ghostData`, `toggleGhost` e o bloco `gbtn` em
-> `_syncCtrlButtons`; o toggle nominal/sintonia inadequada
+> `_syncCtrlButtons`; o toggle nominal/sintonia lenta
 > ([[bad-pll-dashboard-filter]]) é uma feature separada e não foi afetado.
 
 ## Zoom na falta

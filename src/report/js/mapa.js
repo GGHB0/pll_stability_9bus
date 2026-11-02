@@ -80,7 +80,7 @@ function _mapaHtml(cap, gid) {
     side += "<div class=\"mp-facts\">" + ["trifásica", "bifásica", "monofásica"].map(function(f) {
       return "<span" + (p.faltas.indexOf(f) === -1 ? " class=\"off\"" : "") + ">" + f + "</span>";
     }).join("") + "<span>sintonia nominal</span><span" + (p.inadequada ? "" : " class=\"off\"")
-      + ">sintonia inadequada</span></div>";
+      + ">sintonia lenta</span></div>";
   }
   if (p.cenario && SCENARIOS[p.cenario]) {
     side += "<button class=\"mp-open\" onclick=\"_openScenario('" + p.cenario + "')\">Abrir no painel &rarr;</button>";

@@ -10,6 +10,25 @@ aliases: [defesa-historico-entregas]
 > depois, backup gravado, o que o `diff_slides.py` mostrou. Mesmo formato
 > de [[tcc-historico-entregas]] (o do TCC DOCX). Mapa em [[defesa-deck-map]].
 
+## 2026-11-01: "sintonia lenta" no deck e no deck de falas (entregue)
+
+- Pedido do Prof. André na banca. 40 trocas no deck (tela, tabelas, notas;
+  marca "I" → "L" na matriz do slide 16) e 4 no deck de falas; figuras dos
+  slides 23 e 25 (`gen_figs_defesa.py 5.3,5.18`) e 26-27 (charts do TCC)
+  regeneradas. Nota do 23 reescrita ("demora mais, mas não falha").
+  MD5 68a83f35… → 14291a86…; falas → e715cb7d…. diff: só 4, 10, 16, 17,
+  21-23, 25-27. `check_pptx` acusa 7 legendas "Figura 5.x" que não existem
+  mais: o TCC foi renumerado (Cap. 5 → 4) na revisão do Cleiton; pendente.
+
+## 2026-10-29: SRF-PLL por extenso no slide 7 (entregue)
+
+- Pedido do Victor: a sigla não aparecia por extenso em nenhum slide. Ao
+  lado do título "Estrutura do SRF-PLL", na mesma linha, "Synchronous
+  Reference Frame Phase-Locked Loop" em 16 pt itálico `accent5` (grafia do
+  Resumo e da lista de siglas do TCC). Staging `C:\Temp\defesa_srfpll\gen_srfpll.py`.
+  MD5 9c6e9342… → 68a83f35760b3c3a115c3639b6cd1153; backup `_20261029_015030`.
+  diff: só o título do 7; check_pptx 0 falhas.
+
 ## 2026-10-29: pandas/Plotly e agente de IA no slide 17 (entregue)
 
 - Pedido do Victor: linha cinza menor nos cartões 3 e 4 do "Fluxo de

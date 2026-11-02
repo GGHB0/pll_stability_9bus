@@ -28,7 +28,7 @@ abaixo) fica para depois.
   como itens dedicados (presentes no canônico como 4.3.3.1/4.3.3.2, ver
   `content_map.md`).
 - Cap. 5: adiciona uma seção nova de validação em regime permanente (nominal
-  vs. sintonia inadequada, sem falta) e perde a seção dedicada de impacto dos
+  vs. sintonia lenta, sem falta) e perde a seção dedicada de impacto dos
   ganhos do PLL (5.3 no canônico) — a reconciliar quando chegarmos no Cap. 5.
 
 ## Decisões de terminologia — §4.3.3 (equivalente ao 4.3.3.3 canônico)
@@ -124,11 +124,11 @@ usuário:
 2. **Ganhos numéricos do PLL** — **incluído** em §4.3.2.2: `Kp,PLL = 460` /
    `Ki,PLL = 105 820` (ωn = 325,3 rad/s, ξ = 0,707, ts = 20 ms) no nominal;
    redução de 80% (`Kp,PLL = 92` / `Ki,PLL = 21 164`, ωn = 145,5 rad/s,
-   ξ = 0,316) na sintonia inadequada. Valores conferem com
+   ξ = 0,316) na sintonia lenta. Valores conferem com
    `content_map.md` (Cap.4/§4.3.3 canônico) e a memória `project_bad_pll`.
 3. **Tempos de falta** — **incluído** em §4.3.4: duração 0,1 s (6 ciclos) em
    ambos os cenários; nominal aplicada 0,3-0,4 s com janela até 0,6 s;
-   sintonia inadequada aplicada 0,6-0,7 s com janela até 1,0 s. Confere com
+   sintonia lenta aplicada 0,6-0,7 s com janela até 1,0 s. Confere com
    `pendencias.md` item 17 e `kb/simulation/cenarios_simulados.md`.
 4. **Parâmetros do filtro LCL** — **incluído** em §4.3.2.1: ωres =
    9068,99 rad/s, ξ = 0,707, Lest (L1+L2) = 30,71 mH, resistências de
@@ -163,7 +163,7 @@ legibilidade em [[tcc-revisao-fragmento-cap4-figuras]].
 | Índice | Parágrafo | O que a remissão faz |
 |---|---|---|
 | 5 | §4.1 Foco do estudo | dá destino a "mecanismos de perda de sincronismo", que estava solto |
-| 22 | §4.3.2.3 SRF-PLL | aponta o caso-limite da sintonia inadequada, onde ela é apresentada |
+| 22 | §4.3.2.3 SRF-PLL | aponta o caso-limite da sintonia lenta, onde ela é apresentada |
 | 28 | §4.3.3 painel | "cycle slipping" virou "escorregamento de ciclo, ou cycle slipping, caracterizado na Seção 5.4" |
 | 33 | §4.3.4 protocolos | liga a janela até 1,0 s à ressalva dos 300 ms da Seção 5.4 |
 

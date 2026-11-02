@@ -2,7 +2,7 @@
 Gera a figura do PLANO P-Q pos-falta em assets/charts/.
 
 Motivacao (2026-09-01): o paragrafo do Cap. 5 que comenta as potencias da falta
-trifasica na Barra 7 com sintonia inadequada era uma enumeracao de valores todos
+trifasica na Barra 7 com sintonia lenta era uma enumeracao de valores todos
 legiveis no proprio oscilograma (ver .claude/kb/tcc-word/
 revisao_fragmento_cap5_analise.md). Esta figura mostra no plano P-Q o que a serie
 temporal nao mostra: o ponto de operacao deixa de ser um ponto e vira uma orbita
@@ -23,7 +23,7 @@ transitorio de comutacao da ELIMINACAO da falta, que no caso nominal leva P a
 descarte de 2 ciclos na figura da retencao.
 
 Saidas (SVG + PNG, mesma convencao de gen_fault_waveforms.py):
-  plano_pq_comparacao.svg -- painel duplo nominal x sintonia inadequada
+  plano_pq_comparacao.svg -- painel duplo nominal x sintonia lenta
 
 Eixos COMPARTILHADOS entre os paineis (uniao dos extremos): a diferenca de
 extensao da orbita e justamente o que a figura precisa deixar visivel.
@@ -64,7 +64,7 @@ ALVO_PONTOS = 5000         # decimacao da trajetoria
 
 CENARIOS = [
     ("bus7/3phase", "Sintonia nominal"),
-    ("bus7/3phase_bad_pll", "Sintonia inadequada"),
+    ("bus7/3phase_bad_pll", "Sintonia lenta"),
 ]
 
 plt.rcParams.update({

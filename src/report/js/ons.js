@@ -19,7 +19,7 @@ function _onsOutros(cap) {
 }
 
 function _onsNome(k) {
-  return SCENARIOS[k].label.replace(" — ", " · ") + (SCENARIOS[k].badPll ? " (inadequada)" : "");
+  return SCENARIOS[k].label.replace(" — ", " · ") + (SCENARIOS[k].badPll ? " (lenta)" : "");
 }
 
 function _onsFigure(cap, o, layout, visible, mixed, col, grid, fs) {

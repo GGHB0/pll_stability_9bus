@@ -21,7 +21,7 @@ FALAS = {
       "pouco mais de um ciclo, como em Alves, Dias e Rolim (2020) e Teodorescu, Liserre e "
       "Rodriguez (2011). Leia a caixa final: K<sub>p</sub> = 460, &#969;<sub>n</sub> = 325,3 rad/s "
       "(51,8 Hz), K<sub>i</sub> = 105.820.")],
-10: [("Bruno", "Aponte a coluna laranja: a sintonia inadequada multiplica os dois ganhos por 0,2, "
+10: [("Bruno", "Aponte a coluna laranja: a sintonia lenta multiplica os dois ganhos por 0,2, "
       "92 e 21.164. A &#969;<sub>n</sub> cai para 145,5 rad/s e o &#958; para 0,316: laço mais lento "
       "e menos amortecido. No caso-limite, o PLL não recupera o sincronismo depois da falta."),
      ("Victor", "Cartão da direita: o t<sub>s</sub> vai de 20 para 100 ms pela mesma fórmula, "

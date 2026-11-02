@@ -51,7 +51,7 @@ estilo padrão do Office.
 ## Cores
 
 Tons de azul pedidos pelo Victor sobre o cinza do template; o laranja do
-HTML segue como destaque (azul = nominal, laranja = inadequada, como nas
+HTML segue como destaque (azul = nominal, laranja = lenta, como nas
 figuras). O deck mistura RGB fixo (`srgbClr`, ~1.100 lugares) e cor de
 tema (`schemeClr`): trocar uma cor exige tratar os dois (ver
 `casos/troca_template.md`).
@@ -63,7 +63,7 @@ tema (`schemeClr`): trocar uma cor exige tratar os dois (ver
 | Bloco cheio: cabeçalho de tabela, "Contribuição", "Número", "Círculo do ícone" | RGB fixo | `1E3A8A` (marinho) |
 | Título de cartão, pergunta da caixa de rodapé, acentos de texto | `accent1` | `2563EB` |
 | Caixa de ênfase ("Pergunta da banca", "Nota", "Síntese") | RGB fixo | `DBEAFE` |
-| Destaque (laranja): número que a banca deve ver, linha "inadequada"/Barra 7 em tabela | `accent2` | `EA580C` |
+| Destaque (laranja): número que a banca deve ver, linha "lenta"/Barra 7 em tabela | `accent2` | `EA580C` |
 | Bloco comum (cartão, moldura) | `bg1` | `FFFFFF` |
 | Texto secundário, legenda de figura | `accent5` | `64748B` |
 | Divisória fina (capa, tabela) | RGB fixo | `CBCBCB` / `CBD5E1` |

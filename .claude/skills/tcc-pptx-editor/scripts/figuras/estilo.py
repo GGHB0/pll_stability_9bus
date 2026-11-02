@@ -2,7 +2,7 @@
 
 A figura nasce no tamanho da caixa da imagem no slide (polegadas), então o
 tamanho de fonte aqui é o tamanho na tela: piso de 12 pt, acima dos 11 pt do
-design.md. Cores do design.md (azul = nominal, laranja = inadequada).
+design.md. Cores do design.md (azul = nominal, laranja = lenta).
 """
 import sys
 from pathlib import Path

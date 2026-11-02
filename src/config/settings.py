@@ -14,7 +14,7 @@ T_FAULT  = 0.2        # fallback (s) se fault_info.json não existir
 T_SETTLE = 0.1        # s — transitório de partida do PLL, excluído de TODO cálculo
                       # (FFT, janela de tensão média, tₛ). Medido nos dados
                       # (bus6/1phase): pior sinal é |V| Bus 2, acomoda em 0.078 s
-# Ganhos do PI do SRF-PLL (espelham params.m) e fator da sintonia inadequada
+# Ganhos do PI do SRF-PLL (espelham params.m) e fator da sintonia lenta
 # (BAD_PLL: os dois ganhos ×0,2). Só alimentam o rótulo do toggle PLL.
 KP_PLL = 460.0
 KI_PLL = 105820.0

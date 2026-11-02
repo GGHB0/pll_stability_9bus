@@ -25,7 +25,7 @@ na mesma entrega**, sem esperar o Victor aprovar a tradução no chat.
 
 O Resumo diz o que o trabalho trata; resultado, número e desfecho de cenário
 ficam no Cap. 5 e na Conclusão. Uma primeira versão com o desfecho da
-sintonia inadequada ("perde o sincronismo e não o recupera") foi recusada.
+sintonia lenta ("perde o sincronismo e não o recupera") foi recusada.
 Ver `feedback_tcc_conclusion_altitude` na memória, que vai no sentido oposto
 (a Conclusão sobe de altitude; o Resumo fica na de abertura).
 
@@ -84,7 +84,7 @@ no texto).
 
 Definido pelo Victor em 2026-10-01. O parágrafo "A Figura X mostra…" fica
 **acima** da legenda, nunca depois do "Fonte". Figuras lidas lado a lado
-(ex.: nominal × inadequada) têm um texto só, acima do par. Parágrafos de
+(ex.: nominal × lenta) têm um texto só, acima do par. Parágrafos de
 análise que não apresentam a figura continuam onde estão. Ilustração nova
 entra já assim; ao mover, levar o `w:p` inteiro (as âncoras de comentário
 precisam abrir e fechar no mesmo parágrafo).

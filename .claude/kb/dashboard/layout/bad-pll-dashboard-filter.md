@@ -13,13 +13,13 @@ Quando `BAD_PLL=true` no MATLAB, os CSVs vão para pastas com sufixo `_bad_pll`
 os nominais → chaves coexistem no dict `SCENARIOS` do JS.
 
 > Inventário dos cenários existentes e as **duas configurações temporais**
-> (nominal: falta em 0,3 s, janela até 0,6 s; sintonia inadequada: falta em
+> (nominal: falta em 0,3 s, janela até 0,6 s; sintonia lenta: falta em
 > 0,6 s, janela até 1,0 s) em [[cenarios-simulados]]. Os eixos de tempo dos
 > dois modos **não** são comparáveis diretamente.
 
 O dashboard precisa de um **toggle PLL** para:
 - exibir label limpa (sem `_bad_pll` no texto)
-- filtrar o `<select>` por modo ativo (nominal / sintonia inadequada)
+- filtrar o `<select>` por modo ativo (nominal / sintonia lenta)
 - trocar automaticamente para o cenário equivalente ao mudar o modo
 - filtrar o tooltip do SVG pelo modo ativo
 
@@ -88,7 +88,7 @@ Toggle só é renderizado se `has_bad_pll == True`:
   PLL Nominal
 </button>
 <button class="pll-btn" data-mode="bad" onclick="setPllMode('bad')">
-  Sintonia inadequada
+  Sintonia lenta
 </button>
 ```
 

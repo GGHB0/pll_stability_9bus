@@ -88,7 +88,7 @@ em [[tcc-pendencias]].
 
 ## Cargas
 
-| Carga   | Barra | P (MW) | Q (MVAr) | V_rated |
+| Carga   | Barra | P (MW) | Q (Mvar) | V_rated |
 |---------|-------|--------|----------|---------|
 | Load A  | 5     | 125    | 50       | 230 kV  |
 | Load B  | 6     | 90     | 30       | 230 kV  |

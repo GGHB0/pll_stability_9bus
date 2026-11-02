@@ -55,7 +55,7 @@ blackout por 24 h.
 |---|---|---|
 | Gatilho | Abertura de linha 500 kV (Quixadá–Fortaleza II) | Subida descontrolada de tensão |
 | Fenômeno dominante | Desconexão em cascata de eólicas/PV por atuação de proteções durante transitório | Cascata de trips por sobretensão, maioria IBR |
-| Papel do controle do conversor | Suspeita de resposta inadequada de controles (foco do TCC: PLL) | Converter-driven forced oscillation confirmada (0,63 Hz) |
+| Papel do controle do conversor | Suspeita de resposta lenta de controles (foco do TCC: PLL) | Converter-driven forced oscillation confirmada (0,63 Hz) |
 | Perda | 23.368 MW (~34,5 % da carga do SIN) | > 2,5 GW pré-colapso; blackout total ES/PT |
 | Lição comum | Comportamento de IBR sob contingência severa e ajustes de proteção determinam se o distúrbio se contém ou cascateia | idem |
 

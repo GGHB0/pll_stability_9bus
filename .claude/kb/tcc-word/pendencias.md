@@ -17,7 +17,7 @@ Texto direto já aplicado ([[tcc-historico-entregas]], 12/10). Faltam:
 - ~~**180° no erro de fase (Tabela 5.3) e §5.4**~~ — ✅ FEITO 12/10 18h40 ([[tcc-historico-entregas]]).
 - **Primeiro ciclo = "transitório de comutação" (§5.2, #131):** ✅ FEITO 12/10
   21h02: salto de fase (BOLLEN, 2000); [[pll-phase-jump-fault-inception]].
-- **Monofásica na Barra 7 com sintonia inadequada (#150, #164):** ✅ FEITO
+- **Monofásica na Barra 7 com sintonia lenta (#150, #164):** ✅ FEITO
   14/10 00h58: rodada válida do Bruno em 13/10 ([[cenarios-simulados]]),
   linha na Tabela 5.3, Figura 5.14 completa, §579/580/588; "Feito." nos dois.
   Resposta do Bruno no #164 ("monofásico terra") ficou sem correção (regra:
@@ -74,7 +74,7 @@ Texto direto já aplicado ([[tcc-historico-entregas]], 12/10). Faltam:
     cse.cigre.org/cse-n037). A entrada foi fechada como `… n. 37, jun. 2025.
     Elaborado por M. Lindner et al.` e o §2.3 passou a `(CIGRE, 2025)`.
 17. ~~**Tempos de falta a re-simular**~~ — ✅ RESOLVIDO (2026-08-11/12): a
-    lacuna de falta assimétrica com sintonia inadequada foi preenchida
+    lacuna de falta assimétrica com sintonia lenta foi preenchida
     (`bus6`/`bus7` × 1phase/2phase_bad_pll). **Mas ver achado novo em
     2026-08-22**: esses cenários são de uma safra de modelo diferente da dos
     `_bad_pll` trifásicos/regime de julho (`v_d` pré-falta 0,99 vs. 0,80 pu) —
@@ -163,14 +163,14 @@ Texto direto já aplicado ([[tcc-historico-entregas]], 12/10). Faltam:
     oscilogramas do Cap. 5 (título no matplotlib).
 27. **Revisão visual das figuras do Cap. 5 (2026-10-01)** — os valores batem
     com o CSV atual (P pré-falta 1,01 pu desde a correção de escala; só a tensão
-    pré-falta da inadequada mudou, 0,82 → 1,00 pu). Defeitos de desenho:
+    pré-falta da lenta mudou, 0,82 → 1,00 pu). Defeitos de desenho:
     - **5.20** (ex-5.18, `gen_potencia_didatica.py`): "antes: −0,00 pu" em Q (sinal
       de zero negativo) e caixa "antes: 1,01 pu" tapando o traço de P.
     - **5.1 e 5.2** (`gen_regime_waveforms.py`): rótulo "transitório de
       partida excluído dos cálculos" contradiz o §5.1, que mede 34/40/42/79 ms
       dentro dessa faixa. Trocar por "transitório de partida".
     - **5.16** (ex-5.14, `gen_retencao_didatica.py`): traço de `v_d` sai pelo topo
-      após a eliminação no painel nominal e pelo pé no inadequado.
+      após a eliminação no painel nominal e pelo pé no lento.
     - **5.21** (ex-5.19, `gen_fault_waveforms.py`): legenda tapa o `i_q` medido no
       canto inferior direito.
     Corrigir nos geradores e trocar só a mídia no V10.

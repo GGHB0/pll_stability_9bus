@@ -45,7 +45,7 @@ Setup (uma vez por clone): `python -m venv .venv`,
 `git config core.hooksPath .githooks` (ativa o pre-commit que audita o KB).
 
 - Export, sinais do `logsout` e taxas de amostragem: [export_workflow.md](.claude/kb/simulation/export_workflow.md)
-- Cenários simulados (nominais e sintonia inadequada): [cenarios_simulados.md](.claude/kb/simulation/cenarios_simulados.md)
+- Cenários simulados (nominais e sintonia lenta): [cenarios_simulados.md](.claude/kb/simulation/cenarios_simulados.md)
 - Re-simulação: [resimulacao-abc.md](.claude/kb/simulation/resimulacao-abc.md)
 - Pipeline do dashboard e métricas: [kb/dashboard/](.claude/kb/dashboard/index.md)
 
@@ -70,7 +70,7 @@ Convenção de links `[[slug]]`: [rules/kb-links.md](.claude/rules/kb-links.md).
   `src/pipeline/pq.py`, nunca `pd.read_csv` direto: [export_workflow.md](.claude/kb/simulation/export_workflow.md).
 - **Sinais em duas taxas** (rápida e lenta), interpolar sobre o eixo lento; **não
   existe abc do lado da rede**: [export_workflow.md](.claude/kb/simulation/export_workflow.md).
-- **Cenário de sintonia inadequada (BAD_PLL):** `kp_pll` e `ki_pll` ×0,2; desde a rodada
+- **Cenário de sintonia lenta (BAD_PLL):** `kp_pll` e `ki_pll` ×0,2; desde a rodada
   de 01/10/2026 a janela de falta é a mesma do nominal: [cenarios_simulados.md](.claude/kb/simulation/cenarios_simulados.md).
 - **`.slx` é um ZIP de XML:** inspecionar sem MATLAB pela skill `slx-explorer`; mapa
   de subsistemas e SIDs em [simulink_model.md](.claude/kb/inverter/simulink_model.md).

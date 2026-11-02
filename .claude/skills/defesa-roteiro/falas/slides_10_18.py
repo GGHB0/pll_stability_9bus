@@ -28,15 +28,15 @@ SLIDES_10_18 = [
         "tcc": "§3.4 (eq. 3.20), §4.3",
         "quem": "Victor",
         "dur_s": 55,
-        "msg": "A sintonia inadequada reduz os dois ganhos em 80%: laço mais lento e menos amortecido.",
+        "msg": "A sintonia lenta reduz os dois ganhos em 80%: laço mais lento e menos amortecido.",
         "pontos": [
-            ("Bruno", "Tabela comparativa (esquerda) e Rodapé: para investigar a sensibilidade paramétrica, a sintonia inadequada multiplica K_pPLL e K_iPLL por 0,2 (caindo para 92 e 21.164). Com isso, ω_n cai de 325,3 para 145,5 rad/s e ξ cai de 0,707 para 0,316 — uma malha mais lenta e menos amortecida que, no caso-limite, não recupera o sincronismo."),
+            ("Bruno", "Tabela comparativa (esquerda) e Rodapé: para investigar a sensibilidade paramétrica, a sintonia lenta multiplica K_pPLL e K_iPLL por 0,2 (caindo para 92 e 21.164). Com isso, ω_n cai de 325,3 para 145,5 rad/s e ξ cai de 0,707 para 0,316 — uma malha mais lenta e menos amortecida que, no caso-limite, não recupera o sincronismo."),
             ("Victor", "Cartão da direita (t_s: 20 → 100 ms): pelo critério de 1%, t_s = 4,6/(ξω_n). Com os ganhos ×0,2, o laço fica 5 vezes mais lento e leva tanto quanto a própria falta (0,1 s) para acomodar."),
         ],
         "falas": [
-            ("Victor", "Para avaliar a sensibilidade paramétrica do sincronismo, criamos uma sintonia inadequada reduzindo esses ganhos em 80%. A malha fica propositalmente mais lenta e menos amortecida: a frequência natural cai para 145,5 radianos por segundo e o amortecimento para 0,316. O cartão à direita mostra o efeito prático: pelo mesmo critério de 1%, o tempo de acomodação passa de 20 para 100 milissegundos, um laço 5 vezes mais lento, que leva tanto quanto a própria falta para acomodar."),
+            ("Victor", "Para avaliar a sensibilidade paramétrica do sincronismo, criamos uma sintonia lenta reduzindo esses ganhos em 80%. A malha fica propositalmente mais lenta e menos amortecida: a frequência natural cai para 145,5 radianos por segundo e o amortecimento para 0,316. O cartão à direita mostra o efeito prático: pelo mesmo critério de 1%, o tempo de acomodação passa de 20 para 100 milissegundos, um laço 5 vezes mais lento, que leva tanto quanto a própria falta para acomodar."),
         ],
-        "atencao": "Sempre dizer 'sintonia inadequada' (nunca dizer BAD_PLL ou PLL ruim).",
+        "atencao": "Sempre dizer 'sintonia lenta' (nunca dizer BAD_PLL ou PLL ruim).",
     },
     {
         "tipo": "SLIDE",
@@ -142,7 +142,7 @@ SLIDES_10_18 = [
         "msg": "Todas as simulações seguem a mesma linha do tempo; muda só o local e o tipo da falta.",
         "pontos": [
             ("Bruno", "Linha do tempo no topo: 0 a 0,1 s = Inicialização (partida do modelo e travamento inicial do PLL, fora das métricas); 0,1 a 0,3 s = Pré-falta (regime permanente, base para as métricas em %); 0,3 a 0,4 s = Falta (100 ms = 6 ciclos de 60 Hz); 0,4 a 0,6 s = Pós-falta (janela de 200 ms para observar a recuperação)."),
-            ("Victor", "Matriz de cenários e caixas inferiores: colunas azuis analisadas no texto da mais próxima à mais distante da UFV (Barra 7, Linha 7-8, Linha 8-9 e Barra 6) e colunas cinzas (Barras 4, 5, 8 e 9) simuladas e consultáveis no painel. Faltas trifásicas nos 4 pontos e faltas assimétricas (monofásica e bifásica, que injetam sequência negativa) nas Barras 7 e 6, comparando sintonia nominal (N) e inadequada (I). Rodapé: a janela de 200 ms pós-falta delimita o alcance das conclusões sobre recuperação."),
+            ("Victor", "Matriz de cenários e caixas inferiores: colunas azuis analisadas no texto da mais próxima à mais distante da UFV (Barra 7, Linha 7-8, Linha 8-9 e Barra 6) e colunas cinzas (Barras 4, 5, 8 e 9) simuladas e consultáveis no painel. Faltas trifásicas nos 4 pontos e faltas assimétricas (monofásica e bifásica, que injetam sequência negativa) nas Barras 7 e 6, comparando sintonia nominal (N) e lenta (I). Rodapé: a janela de 200 ms pós-falta delimita o alcance das conclusões sobre recuperação."),
         ],
         "falas": [
             ("Bruno", "Com o modelo fechado, definimos o método de teste. Todas as simulações seguem a mesma linha do tempo: inicializamos o sistema, aplicamos a falta aos 0,3 segundos com duração exata de 6 ciclos, e observamos a recomposição por 200 milissegundos pós-falta. Na matriz abaixo, aplicamos as faltas em quatro pontos distintos da rede, variando a severidade da mais próxima à mais distante da usina, combinando os tipos de curto e as duas sintonias do PLL."),

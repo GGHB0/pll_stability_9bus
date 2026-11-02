@@ -146,7 +146,7 @@ n.p("O &#958; decide o formato da resposta, independente da velocidade. A sobre-
     "do protótipo de 2ª ordem só depende dele:")
 eq(r"M_p = e^{-\pi\xi/\sqrt{1-\xi^2}}")
 tab(["&#958;", "M<sub>p</sub>", "Polo com o eixo real", "Leitura"], [
-    ["0,316", "35%", "71,6&#176;", "oscila muito (é a sintonia inadequada, slide 10)"],
+    ["0,316", "35%", "71,6&#176;", "oscila muito (é a sintonia lenta, slide 10)"],
     ["0,5", "16%", "60&#176;", "ainda oscila bastante"],
     ["<b>0,707</b>", "<b>4,3%</b>", "<b>45&#176;</b>", "<b>compromisso clássico</b>"],
     ["1,0", "0%", "0&#176; (polo duplo real)", "sem oscilação, porém mais lento"],

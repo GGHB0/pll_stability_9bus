@@ -5,6 +5,17 @@ para revisão posterior. Detalhes técnicos de cada item estão em
 `.claude/kb/dashboard/` (docs separados por dados/graficos/cards/layout).
 Entradas antigas: `docs/changelog/` (arquivadas pelo limite de 200 linhas).
 
+## 2026-11-01 — "Sintonia inadequada" passa a se chamar "sintonia lenta"
+
+Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`,
+`src/report/js/{fasor,mapa,ons,tcc,tcc_ui}.js`, `src/config/settings.py`
+
+Pedido do Prof. André na banca: o cenário com `kp_pll` e `ki_pll` ×0,2 é um
+PLL de banda estreita, que filtra melhor e sincroniza mais devagar, não um
+ajuste errado. Só o texto visível mudou (toggle, etiquetas, fasor "PLL
+lento", falas do palco); `BAD_PLL`, `_bad_pll` e `badPll` ficam. Entradas
+antigas deste changelog mantêm o nome da época. `verifica_palco.py` sem falhas.
+
 ## 2026-10-28 — Energização vira Inicialização do sistema
 
 Arquivos: `src/report/roteiro.py`, `src/report/renderer.py`
@@ -132,18 +143,6 @@ anunciava a perda de sincronismo no cabeçalho. Agora cada uma tem 3 passos
 `foco` no passo esmaece o gráfico fora da janela que importa; campo
 `destaque` no passo faz o 66,8% aparecer só no fecho da Perda de
 sincronismo. O texto corrido da aba Análise TCC não mudou.
-
-## 2026-10-24 — Palco: Perda de sincronismo depois do Compromisso
-
-Arquivos: `src/report/roteiro.py`
-
-O palco mostrava a perda de sincronismo da sintonia inadequada (§5.4) antes
-do capítulo em que ela filtra melhor o 120 Hz (§5.3), e o capítulo favorável
-soava como defesa de algo já derrubado. A ordem passou a seguir o TCC:
-Sequência negativa → Compromisso → Perda de sincronismo. O título do
-Compromisso virou "Ganho menor filtra melhor o 120 Hz" e a última frase
-virou ponte ("Mas, na trifásica da Barra 7, a mesma sintonia perde o
-sincronismo").
 
 ## Entradas anteriores
 

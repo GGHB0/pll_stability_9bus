@@ -110,7 +110,7 @@ imagem, fora de escopo).
 
 ### `regime_bad_pll_v2` — criado e removido
 
-Existiu entre 22 e 23/08 como regime da sintonia inadequada da safra de
+Existiu entre 22 e 23/08 como regime da sintonia lenta da safra de
 agosto, construído a partir da **janela pré-falta** de `bus6/1phase_bad_pll`
 truncada em 0,6 s (campo `t_max` no gerador).
 

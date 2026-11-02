@@ -22,7 +22,7 @@ TCC_SECOES = (
 OUTROS_LABEL = "Outros cenários (fora do TCC)"
 
 # caso → seção do Cap. 5. A ordem dentro de cada seção é a das tabelas.
-# As trifásicas com sintonia inadequada da Linha 7-8 e da Barra 6 aparecem
+# As trifásicas com sintonia lenta da Linha 7-8 e da Barra 6 aparecem
 # no texto como contraste da Barra 7 (9,7% de retenção, 106 ms) e ficam
 # junto dela na §5.4.
 TCC_CASOS: dict[str, str] = {
@@ -45,7 +45,7 @@ TCC_CASOS: dict[str, str] = {
     "bus6/3phase_bad_pll":        "5.4",
 }
 
-# Cores (light, dark). Azul = sintonia nominal, laranja = inadequada, como no
+# Cores (light, dark). Azul = sintonia nominal, laranja = lenta, como no
 # deck. Nos capítulos só com casos nominais (localização, ONS), escala
 # amarelo → verde → ciano → índigo, do mais perto ao mais longe da usina: os
 # tons de azul não se distinguiam no fundo escuro da apresentação. As
@@ -56,7 +56,7 @@ _LOC = (("#ca8a04", "#fde047"), ("#16a34a", "#4ade80"),
         ("#0891b2", "#22d3ee"), ("#4f46e5", "#a5b4fc"))
 _REF = ("#94a3b8", "#64748b")
 # Assimétricas: a cor diz a barra (laranja = Barra 7, verde-azulado = Barra
-# 6, longe do azul nominal e do laranja forte da inadequada), o traço diz o
+# 6, longe do azul nominal e do laranja forte da lenta), o traço diz o
 # curto (contínuo = bifásica, tracejado = monofásica) e a trifásica de
 # referência vai grafite e grossa por cima, senão some colada no zero.
 _B7 = dict(grupo="Barra 7")
@@ -84,7 +84,7 @@ _SO_B6 = ["bus7/3phase", "bus7/2phase", "bus7/1phase", "bus6/1phase"]
 # gráfico: desenha o unifilar e percorre passos (seta → antes de trocar de
 # capítulo), cada um com id do ponto, rotulo e pos na régua (∝ tensão residual
 # na Barra 2, ver kb ieee9bus-thevenin), cenario aberto pelo botão, faltas e
-# inadequada (cobertura conforme kb cenarios-simulados).
+# lenta (cobertura conforme kb cenarios-simulados).
 # Só no modo apresentação (palco): passos_pres troca a legenda por uma frase
 # por passo (texto, ocultar = casos escondidos naquele passo, lado opcional
 # que troca o painel ao lado naquele passo, foco = [t0, t1] que esmaece o
@@ -172,7 +172,7 @@ CAPITULOS: list[dict] = [
          titulo="Inicialização do sistema", ref="§5.1 · Figura 5.3",
          texto="Na inicialização, todo o sistema parte junto: geradores, rede "
                "e inversor. O SRF-PLL sincroniza com a rede nas duas "
-               "sintonias: mesmo com a sintonia inadequada, o erro de fase "
+               "sintonias: mesmo com a sintonia lenta, o erro de fase "
                "entra na faixa de 2°.",
          casos=[("regime", _NOM), ("regime_bad_pll", _BAD)],
          sinais=["err", "vd"], xrange=[0.0, 0.2], metricas=["terr2", "tvd5"],
@@ -182,7 +182,7 @@ CAPITULOS: list[dict] = [
                         "Com a sintonia nominal, o PLL sincroniza em "
                         f"<b style='color:{_NOM[0]}'>40 ms</b>.",
                   ocultar=["regime_bad_pll"], foco=[0.0, 0.06]),
-             dict(texto="Mesmo com a sintonia inadequada, o PLL consegue "
+             dict(texto="Mesmo com a sintonia lenta, o PLL consegue "
                         "sincronizar: o erro entra na faixa de 2° em "
                         f"<b style='color:{_BAD[0]}'>79 ms</b>.",
                   ocultar=[]),
@@ -262,7 +262,7 @@ CAPITULOS: list[dict] = [
     dict(id="comp", pres=["err", "vd"], curto="Compromisso da sintonia", kind="time",
          titulo="Ganho menor filtra melhor o 120 Hz",
          ref="§5.3 · Tabela 5.3 · Figura 5.14",
-         texto="Na falta bifásica da Barra 6, a sintonia inadequada filtra "
+         texto="Na falta bifásica da Barra 6, a sintonia lenta filtra "
                "mais o 120 Hz: o pico na falta cai de 96,0° para 34,5° e o "
                "retorno de 48 para 30 ms. Mas, na trifásica da Barra 7, a "
                "mesma sintonia perde o sincronismo.",
@@ -273,7 +273,7 @@ CAPITULOS: list[dict] = [
              dict(texto="Com a sintonia nominal, o 120 Hz da falta passa para o erro de "
                         f"fase: pico de <b style='color:{_NOM[0]}'>96,0°</b>.",
                   ocultar=["bus6/2phase_bad_pll"], foco=[0.3, 0.4]),
-             dict(texto="Com a inadequada, o 120 Hz em v<sub>d</sub> é quase o "
+             dict(texto="Com a lenta, o 120 Hz em v<sub>d</sub> é quase o "
                         "mesmo (0,39 e 0,37 pu), mas o erro fica em "
                         f"<b style='color:{_BAD[0]}'>34,5°</b> e volta em "
                         f"<b style='color:{_BAD[0]}'>30 ms</b>.",
@@ -287,7 +287,7 @@ CAPITULOS: list[dict] = [
          ref="§5.4 · Figuras 5.18 e 5.19",
          texto="A tensão v<sub>d</sub> retém quase o mesmo nas duas sintonias (9,2% e 8,2%). "
                "Com a nominal, o erro volta à faixa de 2° em 98 ms; com a "
-               "inadequada, percorre toda a faixa de ±180° até o fim da "
+               "lenta, percorre toda a faixa de ±180° até o fim da "
                "simulação.",
          casos=[("bus7/3phase", _NOM), ("bus7/3phase_bad_pll", _BAD)],
          sinais=["err", "P", "Q", "vd"], xrange=[0.25, 0.6],
@@ -297,7 +297,7 @@ CAPITULOS: list[dict] = [
                         f"faixa de 2° em <b style='color:{_NOM[0]}'>98 ms</b>.",
                   ocultar=["bus7/3phase_bad_pll"], foco=[0.4, 0.5]),
              dict(texto="A tensão v<sub>d</sub> retém quase o mesmo (9,2% e 8,2%), mas, com "
-                        "a inadequada, o erro percorre toda a faixa de ±180° "
+                        "a lenta, o erro percorre toda a faixa de ±180° "
                         "(escorregamento de ciclo): "
                         f"<b style='color:{_BAD[0]}'>perde o sincronismo</b>.",
                   ocultar=[], foco=[0.4, 0.6]),

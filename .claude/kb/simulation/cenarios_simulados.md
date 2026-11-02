@@ -1,7 +1,7 @@
 ---
 name: cenarios-simulados
 aliases: [cenarios-simulados]
-description: Inventário dos cenários exportados em output/results, validação depois de cada pull (validar_cenarios.py), as safras de modelo dos cenários com sintonia inadequada e as lacunas de cobertura
+description: Inventário dos cenários exportados em output/results, validação depois de cada pull (validar_cenarios.py), as safras de modelo dos cenários com sintonia lenta e as lacunas de cobertura
 source: output/results/*/fault_info.json (levantamento 2026-10-01); scripts/validar_cenarios.py; params.m linhas 13-17, 36-61
 ---
 
@@ -13,16 +13,16 @@ Levantado direto dos `fault_info.json` e dos CSVs. Complementa
 
 ## Configuração temporal
 
-| | Nominal | Sintonia inadequada |
+| | Nominal | Sintonia lenta |
 |---|---|---|
 | `kp_pll` / `ki_pll` | 460 / 105 820 | 92 / 21 164 (×0,2 nos dois) |
 | `ω_n` / ξ | 325,3 rad/s / 0,707 | 145,5 rad/s / 0,316 |
 | Falta / eliminação / fim | 0,3 / 0,4 / 0,6 s | 0,3 / 0,4 / 0,6 s (safra de 01/10/2026) |
 
-Até 30/09/2026 a sintonia inadequada usava falta em 0,6 s, eliminação em
+Até 30/09/2026 a sintonia lenta usava falta em 0,6 s, eliminação em
 0,7 s e fim em 1,0 s. A justificativa era que o modelo antigo levava ~0,55 s
 para assentar a energização. Na re-simulação de 01/10/2026, o modelo com
-sintonia inadequada assenta em ~74 ms (nominal: ~45 ms; critério P/Q a
+sintonia lenta assenta em ~74 ms (nominal: ~45 ms; critério P/Q a
 0,08 pu do valor final), e o Bruno passou para a mesma janela do nominal.
 A última pasta da safra antiga, `bus6/1phase_bad_pll`, foi apagada em
 01/10/2026; a monofásica da Barra 6 agora é `bus6/1phase_ground_bad_pll`.
@@ -43,7 +43,7 @@ A última pasta da safra antiga, `bus6/1phase_bad_pll`, foi apagada em
 | ERRO | `duplicado` | `sim_data.csv` idêntico byte a byte a outra pasta, e esta é a cópia (assinatura errada) |
 | ERRO | `assinatura` | trifásica desequilibrada, ou mono/bifásica com afundamento equilibrado nas tensões abc do inversor |
 | AVISO | `duplicado` | idêntico a outra pasta, mas esta tem a assinatura coerente (é o original) |
-| AVISO | `safra` | sintonia inadequada com falta fora de 0,3 s |
+| AVISO | `safra` | sintonia lenta com falta fora de 0,3 s |
 | AVISO | `redundante` | `1phase_bad_pll` e `1phase_ground_bad_pll` na mesma barra |
 
 Assinatura: RMS de cada fase (30 ms após a falta até a eliminação) dividido
@@ -76,7 +76,7 @@ apagada (`git rm`) à espera da rodada nova.
 
 ## Inventário (30 pastas, 29 aprovadas)
 
-| Local | Nominal | Sintonia inadequada |
+| Local | Nominal | Sintonia lenta |
 |---|---|---|
 | `bus4`, `bus5`, `bus8`, `bus9` | 1phase, 2phase, 3phase | — |
 | `bus6` | 1phase, 2phase, 3phase | 1phase_ground, 2phase, 3phase |
@@ -90,7 +90,7 @@ A matriz de cenários é gerada por `scripts/gen_matriz_cenarios.py`
 [[tcc-revisao-fragmento-cap4]]) e conta só pasta aprovada. O PNG sai pelo
 Edge headless (ver a skill svg-diagrams).
 
-## Safras de modelo dos cenários com sintonia inadequada
+## Safras de modelo dos cenários com sintonia lenta
 
 | Safra | Cenários | `v_d` pré-falta | Falta |
 |---|---|---|---|
@@ -115,7 +115,7 @@ energização, conferir o grupo.
 Medido por `scripts/gen_erro_fase.py`, com a receita de
 [[tcc-revisao-fragmento-cap5-metricas]]. Os nominais batem com o texto.
 
-| Cenário com sintonia inadequada | Pico na falta | Retorno a ±2° | Antes (V10 ou safra antiga) |
+| Cenário com sintonia lenta | Pico na falta | Retorno a ±2° | Antes (V10 ou safra antiga) |
 |---|---|---|---|
 | regime (energização) | — | 79 ms | 563 ms (V10) |
 | `bus6/2phase` | 34,5° | 30 ms | 34,9° / 78 ms (V10) |
@@ -125,7 +125,7 @@ Medido por `scripts/gen_erro_fase.py`, com a receita de
 | `bus7/3phase` | 44,0° | não retorna | perda de sincronismo |
 | `line7_8/3phase` | 34,6° | não retorna | (sem texto) |
 
-Recuperação (t_s) nominal → inadequada: `bus6/2phase` 48 → 30 ms,
+Recuperação (t_s) nominal → lenta: `bus6/2phase` 48 → 30 ms,
 `bus6/1phase` 39 → 31 ms, `bus7/1phase` 46 → 95 ms, `bus7/2phase` 51 → 96 ms, `bus6/3phase` 76 →
 106 ms. Retenção `v_d`: `bus7/3phase` 9,2% → 8,2% (pré-falta 0,989 → 1,002
 pu), `line7_8/3phase_bad_pll` 9,7%. Já aplicado ao texto do V10 em 01/10
@@ -139,7 +139,7 @@ precisam ser refeitos (ver [[tcc-revisao-fragmento-cap5-metricas-54]]).
 
 ## Lacunas de cobertura
 
-1. `bus4`, `bus5`, `bus8`, `bus9` e `line8_9` não têm sintonia inadequada.
+1. `bus4`, `bus5`, `bus8`, `bus9` e `line8_9` não têm sintonia lenta.
 2. `line7_8` só tem trifásica; `line8_9` não tem monofásica, e a bifásica foi
    reprovada.
 3. Nenhuma falta em `bus1`, `bus2` (barra do inversor) ou `bus3`.

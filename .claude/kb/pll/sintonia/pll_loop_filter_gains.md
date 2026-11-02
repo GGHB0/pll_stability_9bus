@@ -195,5 +195,5 @@ kp' = 0,2·kp,  ki' = 0,2·ki
 
 Ou seja, o cenário degrada **banda e amortecimento simultaneamente**
 (`ωn` e `ξ` ambos por `√0,2`), não só a velocidade de rastreamento — leitura
-útil ao descrever a "sintonia inadequada" no TCC. Ver [[cenarios-simulados]] e
+útil ao descrever a "sintonia lenta" no TCC. Ver [[cenarios-simulados]] e
 [[pll-reactive-inertia]].

@@ -31,7 +31,7 @@ redesenhada dos mesmos dados**, no tamanho da caixa do slide.
   2026-10-18): a banca acha a figura no texto e o `check_pptx.py --tcc`
   segue conferindo o número.
 - Cores do `design.md` (azul `2563EB` nominal, laranja `EA580C`
-  inadequada); fonte Calibri; piso 12 pt na tela.
+  lenta); fonte Calibri; piso 12 pt na tela.
 
 ## Onde fica o código
 

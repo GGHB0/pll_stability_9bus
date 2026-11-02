@@ -55,7 +55,7 @@ indica. Descartado. Valores refeitos com as definições de
 
 ## Decisões do usuário (2026-08-22)
 
-Optou por **não re-simular**. Os cenários de sintonia inadequada passam a ter
+Optou por **não re-simular**. Os cenários de sintonia lenta passam a ter
 papel ilustrativo do impacto de um PLL mal dimensionado, não de matriz
 comparativa completa.
 
@@ -121,7 +121,7 @@ excluir o transitório de comutação, ver
   o `regime_bad_pll`: 0,983 pu (nominal) contra 0,808 pu, ainda subindo ao
   final da janela. Texto reescrito em 2026-08-23.
 - O critério de ±1,15° (`TOL_RAD`, `src/config/settings.py`) **nunca** é
-  atingido: a ondulação residual é de ~2,0° (nominal) e ~3,1° (inadequada).
+  atingido: a ondulação residual é de ~2,0° (nominal) e ~3,1° (lenta).
   O capítulo usa ±2° para erro de fase e ±5% para `v_d`.
 - **2026-08-31:** o parágrafo 95 do §5.4 perdeu **todas as métricas de
   escorregamento** e ficou puramente qualitativo. Saíram, em três passadas: o

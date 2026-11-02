@@ -25,7 +25,7 @@ n.p("Oito capítulos, na ordem do Cap. 5 do TCC. A sequência conta uma históri
     "como o ganho menor parece ajudar, como ele perde o sincronismo e o que isso diz sobre "
     "o código de rede.")
 tab(["Cor", "Significado"], [
-    ["azul / laranja", "sintonia nominal / inadequada"],
+    ["azul / laranja", "sintonia nominal / lenta"],
     ["amarelo &#8594; verde &#8594; ciano &#8594; índigo", "capítulos só com a nominal: do "
      "ponto mais perto ao mais longe da usina"],
     ["cor = barra, traço = curto", "capítulo 4: laranja B7, verde-azulado B6; contínuo "
@@ -68,22 +68,22 @@ box("cuidado", "A régua é proporcional à tensão residual na Barra 2, mas nen
 cap(2, "Energização do inversor", "§5.1 · Figura 5.3 · 2 passos", "02_energ_p2.png",
     "Passo 2 de 2: as duas sintonias, marcas de acomodação e o fasor")
 box("msg", "Na partida, o SRF-PLL trava na rede: o erro de fase entra na faixa de 2° em "
-    "40 ms com a nominal e em 79 ms com a inadequada, quase o dobro.")
+    "40 ms com a nominal e em 79 ms com a lenta, quase o dobro.")
 box("passo", "<b>1.</b> Só a nominal, com foco na partida: 40 ms.",
-    "<b>2.</b> Entra a inadequada: 79 ms. Embaixo, v<sub>d</sub> entra em &#177;5% do valor "
+    "<b>2.</b> Entra a lenta: 79 ms. Embaixo, v<sub>d</sub> entra em &#177;5% do valor "
     "final em 34 e 42 ms.")
 sub("Como ler o fasor")
 n.p("O círculo à direita mostra o ângulo do PLL contra a rede: a marca preta no topo é a "
     "rede, a cunha verde é a faixa de &#177;2°, e cada vetor é uma sintonia. O play percorre "
     "a janela a partir de t = 0: os vetores giram até parar no topo, que é o travamento.")
 sub("O que explicar")
-n.p("A inadequada oscila mais e demora mais, como esperado de um laço mais lento e menos "
+n.p("A lenta oscila mais e demora mais, como esperado de um laço mais lento e menos "
     "amortecido (&#958; = 0,316, &#969;<sub>n</sub> 2,24 vezes menor). Mas, em regime, as "
     "duas chegam ao mesmo ponto de operação, e a falta só começa em 0,3 s, com as duas "
-    "travadas: <b>a inadequada é lenta, não quebrada</b>. A diferença só aparece nas "
+    "travadas: <b>a lenta demora mais, mas não falha</b>. A diferença só aparece nas "
     "contingências.")
-nums([["40 / 79 ms", "erro na faixa de 2°, nominal / inadequada (Fig. 5.3)"],
-      ["34 / 42 ms", "v<sub>d</sub> na faixa de 5%, nominal / inadequada"]])
+nums([["40 / 79 ms", "erro na faixa de 2°, nominal / lenta (Fig. 5.3)"],
+      ["34 / 42 ms", "v<sub>d</sub> na faixa de 5%, nominal / lenta"]])
 box("cuidado", "Os primeiros milissegundos saem da escala porque a tensão ainda é nula; por "
     "isso a partida fica fora das métricas. <b>Reserva</b>: slide oculto 24.")
 
@@ -137,7 +137,7 @@ tab(["120 Hz em v<sub>d</sub> (pico do erro)", "Trifásica", "Bifásica", "Monof
     ["Barra 6", "0,0011 pu (7,3°)", "0,39 pu (96,0°)", "0,29 pu (12,0°)"],
 ], [5.0, 3.2, 3.3, 3.2])
 n.p("Na bifásica da B7, o erro passa de 90° em 17,8% do intervalo com a nominal e em 14,0% "
-    "com a inadequada: nenhuma preserva o alinhamento.")
+    "com a lenta: nenhuma preserva o alinhamento.")
 box("prova", "<b>Por que não pôr um notch em 120 Hz?</b> Reduz a ondulação, mas um filtro "
     "dentro do laço também atrasa e reduz a banda, que é o recurso de que a recuperação "
     "precisa. A saída estrutural é separar as sequências antes do laço (DDSRF, DSOGI: "
@@ -149,17 +149,17 @@ box("cuidado", "<b>Reserva</b>: slide oculto 25 (Fig. 5.10).")
 
 # --- 5
 cap(5, "Compromisso da sintonia", "§5.3 · Tabela 5.3 · Figura 5.14 · 3 passos",
-    "05_comp_p2.png", "Passo 2 de 3: Barra 6 bifásica, nominal e inadequada")
+    "05_comp_p2.png", "Passo 2 de 3: Barra 6 bifásica, nominal e lenta")
 box("msg", "Na bifásica da Barra 6, o ganho menor filtra melhor o 120 Hz: o pico do erro cai "
     "de 96,0° para 34,5° e o retorno de 48 para 30 ms.")
 box("passo", "<b>1.</b> Com a nominal, o 120 Hz da falta passa para o erro de fase: pico de "
     "96,0°.",
-    "<b>2.</b> Com a inadequada, o 120 Hz em v<sub>d</sub> é quase o mesmo (0,39 e 0,37 pu), "
+    "<b>2.</b> Com a lenta, o 120 Hz em v<sub>d</sub> é quase o mesmo (0,39 e 0,37 pu), "
     "mas o erro fica em 34,5° e volta em 30 ms.",
     "<b>3.</b> Aqui, o ganho menor parece vantagem. E numa falta mais severa? (sem foco)")
 sub("O que explicar")
 n.p("A perturbação na tensão é a mesma nas duas; o que muda é quanto dela chega ao ângulo. "
-    "Pela tabela do slide 10, a nominal deixa passar 0,63 do 120 Hz e a inadequada 0,13. Na "
+    "Pela tabela do slide 10, a nominal deixa passar 0,63 do 120 Hz e a lenta 0,13. Na "
     "Barra 6 a tensão positiva que sobra (v<sub>d</sub> médio de 0,72 pu) sustenta o "
     "sincronismo, e a filtragem vence.")
 n.p("Mas o mesmo ganho menor deixa a recuperação lenta onde a tensão cai mais: na Barra 7 o "
@@ -173,10 +173,10 @@ cap(6, "Perda de sincronismo", "§5.4 · Figuras 5.18 e 5.19 · 3 passos", "06_s
     "Passo 3 de 3: erro de fase e P na Barra 7 trifásica; o &#8220;66,8%&#8221; fica sob "
     "o fasor")
 box("msg", "Na Barra 7 trifásica, a sintonia decide o sincronismo: com a nominal o erro volta "
-    "em 98 ms; com a inadequada percorre toda a faixa de &#177;180° até o fim, e a usina "
+    "em 98 ms; com a lenta percorre toda a faixa de &#177;180° até o fim, e a usina "
     "absorve potência ativa em 66,8% do tempo após a eliminação.")
 box("passo", "<b>1.</b> O caso mais severo: com a nominal, o erro volta à faixa de 2° em 98 ms.",
-    "<b>2.</b> A tensão retém quase o mesmo (9,2% e 8,2%), mas com a inadequada o erro "
+    "<b>2.</b> A tensão retém quase o mesmo (9,2% e 8,2%), mas com a lenta o erro "
     "percorre toda a faixa de &#177;180° (escorregamento de ciclo): perde o sincronismo.",
     "<b>3.</b> O ganho que filtrava o 120 Hz na Barra 6 é o que perde o sincronismo aqui.")
 sub("Fundamento: escorregamento de ciclo")

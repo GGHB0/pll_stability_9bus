@@ -62,7 +62,7 @@ def cabecalho_e_cronograma(doc):
             ("Tempo total planejado (fala + cliques no painel)", f"{fmt_mmss(total_dur_s)} min ({total_dur_s // 60} min exatos), deixando margem de segurança para transições."),
             ("Volume total de fala no corpo da defesa", f"{total_words} palavras (~{total_words / 130:.1f} min de fala pura a 130 palavras/min + ~{30 - total_words / 130:.1f} min para cliques e animações no Modo Apresentação)."),
             ("Divisão equilibrada entre a dupla", f"Bruno: {words_bruno} palavras ({words_bruno * 100 / total_words:.1f}%)   |   Victor: {words_victor} palavras ({words_victor * 100 / total_words:.1f}%)."),
-            ("Convenções obrigatórias para a banca", "Usar sempre 'sintonia inadequada' (nunca BAD_PLL), 'escorregamento de ciclo' (nunca cycle slipping), 'simulação computacional' (sem a sigla de transitórios eletromagnéticos) e 'recuperar o sincronismo' (nunca reaquisitar)."),
+            ("Convenções obrigatórias para a banca", "Usar sempre 'sintonia lenta' (nunca BAD_PLL), 'escorregamento de ciclo' (nunca cycle slipping), 'simulação computacional' (sem a sigla de transitórios eletromagnéticos) e 'recuperar o sincronismo' (nunca reaquisitar)."),
         ],
     )
 

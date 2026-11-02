@@ -56,12 +56,12 @@ n.gap(6)
 
 n.h("Convenções que valem para tudo")
 tab(["Use", "Evite", "Por quê"], [
-    ["sintonia inadequada", "BAD_PLL, PLL ruim", "nome de código não vai para a banca"],
+    ["sintonia lenta", "BAD_PLL, PLL ruim", "nome de código não vai para a banca"],
     ["escorregamento de ciclo", "cycle slipping", "é o termo do palco"],
     ["simulação computacional", "a sigla de transitórios eletromagnéticos",
      "o orientador não gostou; fora do deck e do TCC"],
     ["recuperar o sincronismo", "reaquisitar", "a palavra não existe"],
-    ["azul = nominal, laranja = inadequada", "trocar as cores", "vale no deck e no painel"],
+    ["azul = nominal, laranja = lenta", "trocar as cores", "vale no deck e no painel"],
 ], [4.6, 4.2, 5.9])
 n.note("Sem RoCoF (fora do escopo) e sem citar a contagem exata de cenários: o TCC tem 28 na "
        "Tabela 4.1 e usa 29 no Cap. 5 (defesa_qa.pdf, pergunta 1).")

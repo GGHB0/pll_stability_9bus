@@ -1,6 +1,6 @@
 ---
 name: tcc-historico-entregas-2026-10-12
-description: "Entregas de 2026-10-12 no VF - Copia — comentários do Oscar de 11/10, P e Q reaplicados, 180° = oposição de fase, ANEXOS removido, salto de fase"
+description: "Entregas de 2026-10-12 a 14 no VF - Copia — restauração de 13/10, monofásica na Barra 7, comentários do Oscar de 11/10, P e Q reaplicados, 180° = oposição de fase, ANEXOS removido, salto de fase"
 aliases: [tcc-historico-entregas-2026-10-12]
 ---
 
@@ -99,6 +99,27 @@ backup `_backups\VF\…_backup_20261012_193225.docx`.
   [Claude]. `C:\Temp\tcc_oscar1012\gen_oscar1012.py` (troca mínima por
   prefixo/sufixo comum, preserva âncoras) → finalize 82 págs → audit 0 →
   entregue `cbaf969d…`, backup `_backups/VF/…_20261012_173752`.
+
+## 2026-10-14 (00h58) — Monofásica na Barra 7 com sintonia inadequada (#150, #164)
+
+Rodada do Bruno de 13/10 ([[cenarios-simulados]]): Tabela 5.3 ganhou
+"Inadequada 0,64 | 0,55 | 70,6 | 95"; §579 (pico 89,7° → 70,6°), §580
+(abaixo de 90° na falta, −88° ~30 ms após a eliminação) e §588 (retorno
+dobra nas duas assimétricas da Barra 7: 46 → 95 ms na mono). Figuras 5.7,
+5.14 e 5.18 trocadas: legenda "1º ciclo (comutação…)" virou "salto de
+fase", alinhada ao #130. "Feito." nos dois; diff: 3 trechos, 33
+comentários, 9 "Feito.". MD5 7560ba58…; backup `_005804`.
+
+## 2026-10-13 (23h54) — Restauração da entrega de 12/10 (VF - Copia)
+
+O Bruno salvou às 00h59 de 13/10 uma cópia aberta às 17h56 de 12/10: texto
+idêntico ao backup `_175643`, perdendo as 6 entregas de 18h23 a 21h02
+(#130 Bollen, Tabela 5.2, médias de P e Q, ANEXOS, notas [Claude]; "Feito."
+7 → 2). Achado pelo `diff_texto` contra cada backup do dia. De novo, só 4
+resoluções (2 do Oscar, 2 notas [Claude] já apagadas). Entregue o
+`final.docx` das 21h02, com as 2 resoluções do Oscar refeitas pelo
+`word_finalize.ps1 -Resolve` (novo). Diff contra 21h02: 0 trechos, 31
+comentários, 7 "Feito."; backup `_235421` guarda a versão do Bruno.
 
 ## Relacionados
 

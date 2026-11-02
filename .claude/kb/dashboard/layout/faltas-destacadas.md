@@ -16,7 +16,7 @@ implementado no mesmo dia como 1º capítulo (no palco aparece como "1/8").
 
 - `roteiro.py`: entrada `id="faltas"`, `kind="mapa"`, com `passos` (id do
   ponto, `rotulo`, `pos` na régua, `cenario` do botão, `faltas`,
-  `inadequada`, `tom` da etiqueta, `texto`, `papel`; `resumo=True` acende
+  `lenta`, `tom` da etiqueta, `texto`, `papel`; `resumo=True` acende
   tudo). Textos e cobertura ficam ali, não no JS.
 - `src/report/js/mapa.js`: `_mapaSvg` monta o unifilar como string a
   cada passo; `_mapaHtml(cap, gid)` monta SVG, cartão e régua (o `gid`
@@ -33,7 +33,7 @@ implementado no mesmo dia como 1º capítulo (no palco aparece como "1/8").
 
 ## Os quatro pontos (definidos pelo usuário)
 
-| Ponto | Papel | Faltas simuladas | Sintonia inadequada |
+| Ponto | Papel | Faltas simuladas | Sintonia lenta |
 |---|---|---|---|
 | Barra 7 | mais próxima da usina (só T2 no meio) | 3φ, 2φ, 1φ | sim |
 | Linha 7-8 | circuito simples | 3φ | sim |

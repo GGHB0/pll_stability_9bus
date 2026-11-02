@@ -2,7 +2,7 @@
 Gera a versao DIDATICA do oscilograma de potencia em assets/charts/.
 
 Motivacao (2026-09-01): o grafico de P/Q da falta trifasica na Barra 7 com
-sintonia inadequada (bus7_3phase_bad_pll_potencia_pq, Figura 5.13 do fragmento)
+sintonia lenta (bus7_3phase_bad_pll_potencia_pq, Figura 5.13 do fragmento)
 mostra o fenomeno mas nao carrega nenhum conceito -- o paragrafo ao lado tinha
 que enumerar nove valores em prosa para dizer o que estava acontecendo (ver
 .claude/kb/tcc-word/revisao-fragmento/revisao_fragmento_cap5_analise.md).
@@ -228,7 +228,7 @@ def main():
                bbox_to_anchor=(0.5, -0.06), fontsize=8.8)
 
     fig.suptitle("Potência injetada pelo inversor: falta trifásica na Barra 7 "
-                 "com sintonia inadequada", fontsize=11.5, fontweight="bold",
+                 "com sintonia lenta", fontsize=11.5, fontweight="bold",
                  y=0.995)
     fig.tight_layout(rect=(0, 0.085, 1, 0.98))
 

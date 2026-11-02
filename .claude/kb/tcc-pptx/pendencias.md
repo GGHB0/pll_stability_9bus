@@ -61,7 +61,7 @@ aliases: [defesa-pendencias]
   Equações do 12c e do 13 a revisar juntas. Deck 26 → 30, fala 29,9 min:
   **rodada de tempo pendente** (slides 5, 6, 7, 9 sem fala; 10 com 384 palavras).
 
-- **ts = 100 ms da sintonia inadequada (2026-10-29, exceção pedida pelo
+- **ts = 100 ms da sintonia lenta (2026-10-29, exceção pedida pelo
   Victor)**: cartão do slide 10 "ts: 20 → 100 ms". O TCC só tem os 20 ms; os
   100 ms saem da (3.20) do TCC, 4,6/(ξωn) = 4,6/(0,316·145,5), ou Kp/2 ×0,2.
   O 2,32·ωn saiu do 10 e fica só no 25.
@@ -121,7 +121,7 @@ aliases: [defesa-pendencias]
   0,1 s" saiu do slide 10 por isso.
 - **Inconsistências do próprio TCC entregue** (o deck evita os dois lados):
   Tabela 4.1 diz 28 cenários (21 + 7), mas a Tabela 5.3 já usa a
-  monofásica na Barra 7 inadequada (29 = 21 + 8); a introdução traz
+  monofásica na Barra 7 lenta (29 = 21 + 8); a introdução traz
   22.547 MW (31%) e a §2.4.3, 23.368 MW (34,5%), que é o número do deck.
 - **Demo (slide 16)**: ~~cartão mostra "V residual médio B2", não a
   retenção~~ resolvido em 2026-10-20: o painel ganhou os indicadores do Cap. 5
@@ -174,10 +174,10 @@ aliases: [defesa-pendencias]
 
 ## Resolvidas em 2026-10-16 (entregues na rodada da noite)
 
-1. Monofásica na Barra 7 com sintonia inadequada: slide 10 "com as duas
+1. Monofásica na Barra 7 com sintonia lenta: slide 10 "com as duas
    sintonias"; linha nova nas tabelas dos slides 18 e 21 (Tabela 5.3 do TCC:
    0,64 / 0,55 / 70,6° / 95 ms; ver [[cenarios-simulados]]); notas 10, 18, 21.
-2. Contagem: 29 cenários, 21 nominais e 8 inadequados.
+2. Contagem: 29 cenários, 21 nominais e 8 com sintonia lenta.
 3. Roteiro: 30,9 → 24,6 min (3.195 palavras), Bruno 47% / Victor 53%; só
    repetição cortada, explicações úteis à banca devolvidas pelo validador.
 4. "BAD_PLL" fora da tela (slide 8) e da fala.

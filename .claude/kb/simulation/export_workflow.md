@@ -25,7 +25,7 @@ description: Workflow validado Simulink → MATLAB → Python para o modelo pll_
 | `Vdq_rede` | **Mux [Vd_rede, Vq_rede, ...]** tensão dq da rede | ≥2 colunas (1=d, 2=q) | Tsc |
 | `Ang_G1`, `Ang_G3` | Ângulo do rotor (rad elétrico) | escalar | Tsc |
 | `Pe_G1`, `Pe_G3` | Potência elétrica do gerador (pu — já normalizada pela máquina) | escalar | Tsc |
-| `P_bus1`, `Q_bus1`, `P_bus3`, `Q_bus3` | P/Q medidos na barra (**MW/MVAr brutos**, não pu) | escalar (Mux coluna 1 relevante) | Tsc |
+| `P_bus1`, `Q_bus1`, `P_bus3`, `Q_bus3` | P/Q medidos na barra (**MW/Mvar brutos**, não pu) | escalar (Mux coluna 1 relevante) | Tsc |
 
 > `Ang_pll` e `iabc` rodam a Ts (eixo rápido); demais sinais a Tsc (eixo lento).
 > `V_bus{N}` é escalar de magnitude — **não** aplicar transformada de Clarke.
@@ -56,7 +56,7 @@ que computa `P/Q` a partir de `Vabc_inverter`/`Iabc_inverter` — sinais **já e
 desde a etapa de medição upstream (escala de P/Q certa só desde 2026-10-03, ver abaixo). `P_bus1/Q_bus1/P_bus3/Q_bus3` são taps `Goto`/`From`
 diretos das Busbars Simscape (SID 1887 "Bus1 16.5kV", SID 3494 "Bus3 13.8kV") via
 blocos `PS-Simulink Converter` **sem nenhum Gain/Product de normalização** — saem em
-unidades físicas (W, VAr). Por isso o script de export precisa dividir por `S_base`
+unidades físicas (W, var). Por isso o script de export precisa dividir por `S_base`
 explicitamente (ver abaixo), diferente de `Pinverter`/`Qinverter`.
 
 ### Estrutura interna de `id` e `Iq`
@@ -87,7 +87,7 @@ em todo o pipeline Python (ver `V_base = 20 kV, S_base = 100 MVA` em
 `kb/power-system/ieee9bus/ieee9bus_topology.md`).
 
 > ⚠️ **Gotcha unidade**: `P_bus1/3`, `Q_bus1/3` saem do Busbar (Simscape) já em
-> **MW/MVAr**, não em W/VAr — confirmado pelo usuário (2026-07). Dividir por
+> **MW/Mvar**, não em W/var — confirmado pelo usuário (2026-07). Dividir por
 > `100e6` (achando que era W) gera pu ~1e6× menor que o correto; a base certa
 > para esses 4 sinais é `100` (MVA), não `100e6` (VA).
 
@@ -153,7 +153,7 @@ e o formato legado (sem essas colunas) continua carregando sem erro.
 
 ## Flag BAD_PLL
 
-Simula PLL com sintonia inadequada (poorly tuned PLL): **ambos** os ganhos do
+Simula PLL com sintonia lenta (poorly tuned PLL): **ambos** os ganhos do
 laço reduzidos a 20% do nominal.
 
 ```matlab

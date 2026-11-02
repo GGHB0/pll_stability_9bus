@@ -43,7 +43,7 @@ Pastas: `referencia/` (lido em toda edição), `casos/` (fluxos ocasionais),
   Duas linhas no máximo em 28 pt. Exceção aprovada (slide 5, 2026-10-19):
   título curto + **frase de abertura** logo abaixo (`referencia/design.md`).
 - **Sem travessão "—"**, como no TCC. Sem nome de código na tela
-  (`BAD_PLL`, `params.m`): na tela e na fala é "sintonia inadequada".
+  (`BAD_PLL`, `params.m`): na tela e na fala é "sintonia lenta".
 - **Sem RoCoF, sem "reaquisitar"** (memória do projeto, valem aqui também).
 - **Deck = TCC entregue, sem acréscimo** (regra do Victor, 2026-10-17):
   todo número e afirmação da tela **e das notas** é o do TCC, com o mesmo

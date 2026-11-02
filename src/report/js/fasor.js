@@ -56,14 +56,14 @@ function _fasorDraw(t) {
 
 function _fasorInit(gd, cap) {
   var side = document.getElementById("pres-side");
-  // nominal × inadequada: legenda pela sintonia; só nominais (Localização):
+  // nominal × lenta: legenda pela sintonia; só nominais (Localização):
   // pelo rótulo do ponto no mapa (B7, L7-8...)
   var mixed = _tccMixed(cap), rot = {};
   CAPS.forEach(function(c) {
     (c.kind === "mapa" ? c.passos : []).forEach(function(q) { if (q.cenario) rot[q.cenario] = q.rotulo; });
   });
   var leg = _tccVisible(cap).map(function(v) {
-    var nome = mixed ? "PLL " + (SCENARIOS[v.key].badPll ? "inadequada" : "nominal")
+    var nome = mixed ? "PLL " + (SCENARIOS[v.key].badPll ? "lento" : "nominal")
                      : (rot[v.key] || SCENARIOS[v.key].label);
     return '<span style="color:' + v.light + '">&#9644; ' + nome + '</span>';
   }).join("") + "<span>&#9660; rede</span>";

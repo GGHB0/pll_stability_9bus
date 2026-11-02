@@ -10,7 +10,7 @@ Checagens (ERRO = o cenario nao pode ir para figura; AVISO = usar com cuidado):
   ERRO  assinatura   o tipo de falta da pasta nao bate com as tensoes abc do
                      inversor durante a falta: trifasica tem de afundar as 3
                      fases por igual, mono/bifasica tem de desequilibrar.
-  AVISO safra        sintonia inadequada com falta fora de 0,3-0,4 s (safra de
+  AVISO safra        sintonia lenta com falta fora de 0,3-0,4 s (safra de
                      agosto/2026, v_d pre-falta ~0,82 pu no modelo da epoca).
   AVISO redundante   existem `1phase_bad_pll` e `1phase_ground_bad_pll` na mesma
                      barra: o export novo grava `1phase_ground`, o nome antigo
@@ -95,7 +95,7 @@ def cenario_ok(folder):
 
 
 def pasta_inadequada(folder):
-    """Pasta de sintonia inadequada valida para o cenario nominal `folder`, ou
+    """Pasta de sintonia lenta valida para o cenario nominal `folder`, ou
     None. Prefere o nome novo (`1phase_ground_bad_pll`) e a safra atual."""
     cand = [folder + "_bad_pll"]
     if folder.endswith("/1phase"):

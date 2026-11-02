@@ -121,7 +121,7 @@ quando teria sido valioso — recomendação de alarme/reativação automática.
   metodológica para caracterizar oscilações de origem inversorizada —
   dialoga com o espectro dq segmentado do dashboard.
 - A ressonância forçada→inter-área é candidata a cenário do Cap. 4:
-  inversor GFL com sintonia inadequada (cenário BAD_PLL) injetando
+  inversor GFL com sintonia lenta (cenário BAD_PLL) injetando
   oscilação sustentada em rede com modo pouco amortecido.
 - O achado "inércia não resolve" reforça a motivação de estudar o PLL
   (controle), não apenas inércia — ver [[virtual-inertia]].

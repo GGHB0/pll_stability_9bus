@@ -124,7 +124,7 @@ tab(["Trecho", "Intervalo", "O que acontece"], [
 sub("A matriz")
 n.p("Analisadas, da mais próxima à mais distante da usina: Barra 7, Linha 7-8, Linha 8-9 e "
     "Barra 6 (em azul). Trifásica nos quatro; monofásica e bifásica nas Barras 7 e 6. "
-    "Sintonia inadequada nas Barras 7 e 6 (os três tipos) e na Linha 7-8 (trifásica). "
+    "Sintonia lenta nas Barras 7 e 6 (os três tipos) e na Linha 7-8 (trifásica). "
     "Barras 4, 5, 8 e 9: simuladas, em cinza, consultáveis no painel. Regime sem falta nas "
     "duas sintonias.")
 sub("Fundamento: os tipos de falta e as redes de sequência")

@@ -100,7 +100,7 @@ end
 % ═══════════════════════════════════════════════════════════════════════════
 function export_slow(ds, out_dir, T_FAULT)
 % CSV 2: potência, correntes dq e tensões a Tsc (eixo lento).
-    S_BASE_MVA = 100;  % MVA — P_bus/Q_bus (Busbar/Simscape) já vêm em MW/MVAr, não em W/VAr
+    S_BASE_MVA = 100;  % MVA — P_bus/Q_bus (Busbar/Simscape) já vêm em MW/Mvar, não em W/var
 
     t = ds.get('Pinverter').Values.Time;
 
@@ -197,8 +197,8 @@ end
 function T = add_power_col(T, ds, t, sig_name, col_name, S_base_mva)
 % Adiciona coluna de potência em pu (base S_base_mva, em MVA), extraindo a
 % coluna (1) de sinais Mux (ex.: P_bus1, Q_bus1). Diferente de add_scalar_col:
-% estes sinais vêm de medições Simscape (Busbar) já em MW/MVAr, sem conversão
-% adicional no modelo — não confundir com W/VAr (base seria 100e6, não 100).
+% estes sinais vêm de medições Simscape (Busbar) já em MW/Mvar, sem conversão
+% adicional no modelo — não confundir com W/var (base seria 100e6, não 100).
     sig = ds.get(sig_name);
     if isempty(sig), return; end
     t_s = sig.Values.Time;

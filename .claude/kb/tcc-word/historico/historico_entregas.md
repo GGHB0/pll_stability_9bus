@@ -13,7 +13,7 @@ aliases: [tcc-historico-entregas]
 ## 2026-11-02 (00h56) — Revisão depois das entregas do Bruno
 
 Remissões "Figuras 4.5 e 5.6" → 4.6 e o 4.13 do Bruno com o número em azul;
-sigla FFT na lista (verde, A3); MPPT por extenso na Conclusão (uso único,
+sigla FFT na lista (verde, A3); MPPT por extenso no Cap. 3, "O elo CC..." (uso único,
 vermelho); §2.5 reescrito pelo Bruno pintado de azul a partir de "associados".
 R4: sem "padrão dominante na indústria" (sem fonte), apoiado na frase anterior
 do §2.4 (TEODORESCU; LISERRE; RODRIGUEZ, 2011), siglas por extenso completas e

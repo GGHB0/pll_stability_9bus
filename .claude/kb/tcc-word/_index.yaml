@@ -93,6 +93,9 @@ subfolders:
       - file: historico_entregas_2026_11_01.md
         name: tcc-historico-entregas-2026-11-01
         description: "Entrega de 2026-11-01 (03h12): Figura 2.2 com a planta LCL da TeseAGP no lugar do RL, fonte com Alves (2022)"
+      - file: historico_entregas_2026_10_25.md
+        name: tcc-historico-entregas-2026-10-25
+        description: "Entregas ao TCC de 25 a 31/10/2026: sigla pedida pelo Oscar fora, revisão do Cleiton em vermelho, 1ª rodada Rafael/André"
       - file: historico_entregas_2026_10_15.md
         name: tcc-historico-entregas-2026-10-15
         description: "Entregas de 2026-10-15 no TCC: referências de delimitação de escopo (Oscar) e Figura 3.2 só em blocos (André)"

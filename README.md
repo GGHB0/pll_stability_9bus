@@ -315,7 +315,7 @@ Histórico de mudanças em [`CHANGELOG.md`](CHANGELOG.md) e
 
 Este repositório consolida o ecossistema computacional de apoio desenvolvido para o Trabalho de Conclusão de Curso em Engenharia Elétrica (UERJ, 2026):
 
-- **Ambiente de Simulação Elétrica:** MATLAB/Simulink (Simscape Electrical) para a modelagem eletromagnética transitória do sistema IEEE 9 barras e controle do VSI;
+- **Ambiente de Simulação Elétrica:** MATLAB/Simulink (Simscape Electrical) para a simulação computacional do sistema IEEE 9 barras e controle do VSI;
 - **Dashboard Interativo & Pipeline de Dados:** Python 3.11+, Plotly e Pandas, viabilizando a exploração interativa dos 28 cenários dinâmicos de contingência, análise espectral e verificação dos limites normativos do Submódulo 2.10 do ONS;
 - **Diagramação Vetorial e Reprodutibilidade:** Ilustrações em SVG/PNG em alta definição para suporte didático e reprodutibilidade científica (DOI: [10.5281/zenodo.23866787](https://doi.org/10.5281/zenodo.23866787));
 - **Modelagem Inicial:** PSIM para testes preliminares de bancada do PLL e do estágio de potência;

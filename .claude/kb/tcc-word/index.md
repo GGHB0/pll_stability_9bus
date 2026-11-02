@@ -56,6 +56,7 @@ Gerado por `scripts/kb_links.py index`; texto fora dos marcadores é preservado.
 | [historico_entregas_2026_10_03.md](historico/historico_entregas_2026_10_03.md) | [[tcc-historico-entregas-2026-10-03]] | Entregas de 2026-10-03 no V10 — comentários do Oscar após a Figura 5.8, \"Referência\" no §5.1, Figura 4.2 com letras maiores, escala de P… |
 | [historico_entregas_2026_10_12.md](historico/historico_entregas_2026_10_12.md) | [[tcc-historico-entregas-2026-10-12]] | Entregas de 2026-10-12 a 14 no VF - Copia — restauração de 13/10, monofásica na Barra 7, comentários do Oscar de 11/10, P e Q reaplicados,… |
 | [historico_entregas_2026_10_15.md](historico/historico_entregas_2026_10_15.md) | [[tcc-historico-entregas-2026-10-15]] | Entregas de 2026-10-15 no TCC: referências de delimitação de escopo (Oscar) e Figura 3.2 só em blocos (André) |
+| [historico_entregas_2026_10_25.md](historico/historico_entregas_2026_10_25.md) | [[tcc-historico-entregas-2026-10-25]] | Entregas ao TCC de 25 a 31/10/2026: sigla pedida pelo Oscar fora, revisão do Cleiton em vermelho, 1ª rodada Rafael/André |
 | [historico_entregas_2026_11_01.md](historico/historico_entregas_2026_11_01.md) | [[tcc-historico-entregas-2026-11-01]] | Entrega de 2026-11-01 (03h12): Figura 2.2 com a planta LCL da TeseAGP no lugar do RL, fonte com Alves (2022) |
 | [historico_entregas_v8.md](historico/historico_entregas_v8.md) | [[tcc-historico-entregas-v8]] | Histórico de entregas da versão V8 do TCC: seção 3.3, correções dos comentários do Oscar |
 

@@ -61,8 +61,8 @@ Convenção de links `[[slug]]`: [rules/kb-links.md](.claude/rules/kb-links.md).
 - **Ganhos de corrente ≠ ganhos do PLL.** `Kp = 8·fg·Lest` (TeseAGP) é do controlador
   de corrente ([pll_gains_methodology.md](.claude/kb/pll/sintonia/pll_gains_methodology.md)).
   O PI do PLL tem projeto próprio ([pll_loop_filter_gains.md](.claude/kb/pll/sintonia/pll_loop_filter_gains.md)).
-- **Ganhos de corrente divididos por 4 (`Kp/4` e `Ki/(4s)` na Figura 2.2) — DÚVIDA EM ABERTO (Prof. Cleiton):**
-  o Prof. Cleiton anotou *"porque o 4?"* no diagrama de blocos da malha de corrente. No modelo/notebook os ganhos sofrem divisão por 4 ([simulink_model.md](.claude/kb/inverter/simulink_model.md)), mas **esta é uma dúvida ainda não sanada por Bruno e Victor** (não sabemos responder com certeza se a origem exata é normalização por $Z_{base}$, fator de sintonia ou dupla divisão entre notebook e Simulink). **Instrução para o Claude na máquina do Victor/Bruno:** manter como pergunta em aberto sem inserir explicação no texto da Seção 2.3.2 até termos todos os comentários da banca e decidirmos juntos.
+- **Fator de escala nos ganhos de corrente (`Kp/4` e `Ki/(4s)` na Figura 2.2):**
+  No diagrama de blocos da malha de corrente e nas rotinas analíticas, os ganhos sofrem divisão por 4 ([simulink_model.md](.claude/kb/inverter/simulink_model.md)). A parametrização analítica e a correspondência com a base de impedância ($Z_{base}$) são mantidas alinhadas ao modelo de simulação no Simulink.
 - **Vcc diverge de propósito:** `params.m` usa ×1,5 do valor do notebook:
   [params_workflow.md](.claude/kb/simulation/params_workflow.md).
 - **P e Q do UFV em escala errada nas rodadas antigas** (ganho do `.slx` corrigido

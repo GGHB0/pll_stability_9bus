@@ -10,6 +10,14 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-11-03 (12h47) — Unificação canônica (Bruno + Victor) + Figura 2.2 sem /4 + §3.3.2.2 e Tabela 3.1
+
+Partindo de `_backups\VF\TCC_Victor_Bruno_VFinal_backup_20261102_011844.docx` (`57ea8075`), que reúne todas as edições do Bruno (`01/11`) e do Victor (`02/11`, incluindo R3/Tabela 2.1 GFL × GFM):
+- Limpeza de `"de transitórios eletromagnéticos"` no Resumo, Abstract e 2º objetivo específico.
+- Figura 2.2 sem `/4` nos blocos PI (`current_control_dq_blocos.svg` / `.png` → `Kp + Ki/s`).
+- §3.3.2.2 (vermelho `#FF0000`): texto explicativo do ajuste empírico por fator de 4 (Alves (2022); Yazdani e Iravani (2010)) e **Tabela 3.1** (parâmetros e ganhos já divididos por 4: Kp = 7,37 e Ki = 1768,9); tabela de cenários renumerada para **Tabela 3.2**.
+- Entregue em `01_TCC_Monografia_Final` e `comentado` (DOCX MD5 `b46f89ae25dd39b0e88f3e822c78f6ae`, PDF MD5 `e8b843d93d798240be4e3ba8b8b7baf4`, backup `_20261103_124729`). Regra reforçada em `entrega.md`: sempre checar todos os backups mais recentes antes de editar ou entregar a versão final.
+
 ## 2026-11-02 (00h56) — Revisão depois das entregas do Bruno
 
 Remissões "Figuras 4.5 e 5.6" → 4.6 e o 4.13 do Bruno com o número em azul;

@@ -18,6 +18,7 @@ powershell -ExecutionPolicy Bypass -File scripts\entrega.ps1 `
 O checklist abaixo é o que o script garante (e o caminho manual, se ele
 falhar):
 
+0. **Checagem obrigatória de todos os backups mais recentes (`_backups/VF/`):** ANTES de iniciar qualquer edição ou enviar a versão final, listar e comparar todos os arquivos em `01_TCC_Monografia_Final\_backups\VF\` e `comentado\_backups\VF\` (timestamps, MD5 e diff de texto contra o arquivo da raiz) para garantir que nenhuma alteração recente do Bruno ou do Victor tenha ficado em um backup mais novo que o arquivo da raiz.
 1. Word fechado (`tasklist | grep -i winword`) e sem lock `~$*` na pasta.
    Se estiver aberto: fechar pelo COM, salvando (`referencia/padroes_revisao.md` §3).
 2. **MD5 do OneDrive igual ao do staging.** Timestamp e bytes não bastam (o

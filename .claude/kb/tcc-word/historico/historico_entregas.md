@@ -10,6 +10,13 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-11-03 (19h21) — Ficha Catalográfica Oficial (Rede Sirius / CTC/B) e Atualização de Folhas (91 f.)
+
+- Inserida a Ficha Catalográfica oficial elaborada pela biblioteca (Bibliotecária Júlia Vieira – CRB7/6022) no verso da folha de rosto (página 3), substituindo a caixa de texto temporária de template.
+- Atualizada a contagem de folhas para `91  f.` na ficha catalográfica e para `91 f.` na referência do Resumo (página 8), correspondente à última folha numerada do documento canônico (92 páginas totais no PDF, folha final do Apêndice A impressa como 91).
+- Processado via `word_finalize.ps1` (0 campos com erro, 92 páginas, 0 órfãs no `audit_pdf_whitespaces.py`, 0 falhas e 0 avisos no `audit_docx.py`).
+- Entregue em `01_TCC_Monografia_Final` e `comentado` (DOCX MD5 `6d9b4aec07d018ca0a3ced723223c910`, PDF MD5 `99361bde8889c8d7e7e421e44acd8841`, backup `_20261103_192133`).
+
 ## 2026-11-03 (17h36) — Afiliação do Prof. Dr. Rafael Cavalcanti Neto na Folha de Aprovação (UFPE)
 
 - Atualizada a afiliação institucional do examinador da banca Prof. Dr. Rafael Cavalcanti Neto na Folha de Aprovação (página 4) de `"Faculdade de Engenharia – UERJ"` para `"Universidade Federal de Pernambuco – UFPE"`.

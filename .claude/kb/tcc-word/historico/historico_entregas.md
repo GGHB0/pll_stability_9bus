@@ -10,6 +10,13 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-11-03 (17h36) — Afiliação do Prof. Dr. Rafael Cavalcanti Neto na Folha de Aprovação (UFPE)
+
+- Atualizada a afiliação institucional do examinador da banca Prof. Dr. Rafael Cavalcanti Neto na Folha de Aprovação (página 4) de `"Faculdade de Engenharia – UERJ"` para `"Universidade Federal de Pernambuco – UFPE"`.
+- Atualizados também os scripts utilitários `gen_clean_folha.py`, `apply_folha_aprovacao_canonico.py` e `surgical_folha.py` em `scripts/tcc_banca/`.
+- Processado via `word_finalize.ps1` (0 campos com erro, 92 páginas, 0 órfãs no `audit_pdf_whitespaces.py`, 0 erros no `audit_docx.py`).
+- Entregue em `01_TCC_Monografia_Final` e `comentado` (DOCX MD5 `d0cd19421b41f0046ab4991655feb243`, PDF MD5 `5407addc52060791e330a571ef8d971d`, backup `_20261103_173615`).
+
 ## 2026-11-03 (14h25) — Revisão do Apêndice A (sem "módulos" / "alta definição") e itálico em *cycle slipping* / *notch*
 
 - Reescritos os parágrafos e legendas do Apêndice A (`Figuras A.1` a `A.5`) descrevendo diretamente cada tela do painel interativo, sem chamar de "módulos", sem mencionar "alta definição (1920x1080)" e removendo o subtítulo órfão `"B. Sequência de Telas..."`.

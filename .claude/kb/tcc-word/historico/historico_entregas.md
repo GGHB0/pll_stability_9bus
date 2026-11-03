@@ -10,6 +10,12 @@ aliases: [tcc-historico-entregas]
 > 200 linhas. Padrões XML e registro de IDs continuam em `docx_structure.md`.
 > Ordem: mais recente primeiro.
 
+## 2026-11-03 (14h25) — Revisão do Apêndice A (sem "módulos" / "alta definição") e itálico em *cycle slipping* / *notch*
+
+- Reescritos os parágrafos e legendas do Apêndice A (`Figuras A.1` a `A.5`) descrevendo diretamente cada tela do painel interativo, sem chamar de "módulos", sem mencionar "alta definição (1920x1080)" e removendo o subtítulo órfão `"B. Sequência de Telas..."`.
+- Aplicado itálico (`<w:i/>`) nas ocorrências restantes de *cycle slipping* (§4.3 `488D5DFE`, Apêndice A `69F1F49F` e legenda da `Figura A.4`) e *notch* (§2.5 `6158680C`), além de subscritos em $v_d$ e $i_q$ no Apêndice A.
+- Entregue em `01_TCC_Monografia_Final` e `comentado` (DOCX MD5 `9933482ba0575d16034d9685c9f14f38`, PDF MD5 `31d4a084dd81fda430f44edb15600444`).
+
 ## 2026-11-03 (12h47) — Unificação canônica (Bruno + Victor) + Figura 2.2 sem /4 + §3.3.2.2 e Tabela 3.1
 
 Partindo de `_backups\VF\TCC_Victor_Bruno_VFinal_backup_20261102_011844.docx` (`57ea8075`), que reúne todas as edições do Bruno (`01/11`) e do Victor (`02/11`, incluindo R3/Tabela 2.1 GFL × GFM):
